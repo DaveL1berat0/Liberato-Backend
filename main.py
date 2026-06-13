@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-FLASHALPHA_KEY = os.getenv("FLASHALPHA_KEY", "HBBqRgMkQWk0rSZeIy9sHAfCNsfcTaFabOVUpqQ0")
+FLASHALPHA_KEY = os.getenv("FLASHALPHA_KEY", "")
 BASE = "https://lab.flashalpha.com"
 NY = ZoneInfo("America/New_York")
 PROXIES = {"NQ": "QQQ", "ES": "SPY", "GC": "GLD"}
