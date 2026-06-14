@@ -40,6 +40,8 @@ async def fetch_flashalpha(asset: str):
     headers = {"X-Api-Key": FLASHALPHA_KEY}
     async with httpx.AsyncClient(timeout=15, headers=headers) as client:
         r = await client.get(f"{FA_BASE}/v1/stock/{ticker}/summary")
+        if r.status_code == 429:
+            raise RuntimeError("FlashAlpha 429 (rate limit) — usando caché")
         if r.status_code == 200:
             d = r.json()
             px = d.get("price", {}) or {}
@@ -66,9 +68,13 @@ async def fetch_flashalpha(asset: str):
                 "gamma_flip": d.get("gamma_flip"), "net_gex": d.get("net_gex"),
                 "regime": d.get("net_gex_label"), "ticker": ticker, "source": "gex",
             }
-        raise HTTPException(status_code=r.status_code, detail=f"FlashAlpha {r.status_code}")
+        if r.status_code == 429:
+            raise RuntimeError("FlashAlpha 429 (rate limit) — usando caché")
+        raise RuntimeError(f"FlashAlpha {r.status_code}")
 
 async def refresh_gex(asset="NQ"):
+    """Refresca GEX. Si FlashAlpha falla (429/timeout), MANTIENE los últimos
+    datos válidos (stale) — nunca los borra. Regla de tolerancia a fallos."""
     try:
         data = await fetch_flashalpha(asset)
         data["_ts"] = time.time()
@@ -76,43 +82,143 @@ async def refresh_gex(asset="NQ"):
         cache["health"]["flashalpha"] = "online"
         print(f"[gex] {asset} ok: {data.get('source')}")
     except Exception as e:
-        cache["health"]["flashalpha"] = "stale" if cache["gex"].get(asset) else "offline"
-        print(f"[gex] error {asset}: {e}")
+        # Si ya tenemos datos previos, mantenerlos (stale). Solo offline si nunca hubo datos.
+        if cache["gex"].get(asset):
+            cache["health"]["flashalpha"] = "stale"
+            print(f"[gex] {asset} fallo ({e}) — manteniendo último dato válido")
+        else:
+            cache["health"]["flashalpha"] = "offline"
+            print(f"[gex] error {asset}: {e}")
 
 # ═══════════════════════════════════════════════════════════
 #  SERVICIO 2: Finnhub — CALENDARIO MACRO (Fuente 1)
 # ═══════════════════════════════════════════════════════════
-# Eventos macro permitidos (filtro por keywords en el nombre del evento)
-ALLOWED_EVENTS = [
-    "CPI", "Core CPI", "PPI", "Core PPI", "PCE", "Core PCE",
-    "FOMC", "Fed Interest Rate", "Interest Rate Decision", "Federal Funds",
-    "Fed Minutes", "Powell", "Fed Chair",
-    "Non Farm", "Nonfarm", "Unemployment Rate", "Average Hourly Earnings",
-    "GDP", "Retail Sales", "ISM Manufacturing", "ISM Services",
-    "ISM Non-Manufacturing", "JOLTS", "ADP",
-    "Michigan", "Consumer Sentiment", "Consumer Expectations",
-    "Current Conditions", "Inflation Expectations",
-    "Initial Jobless", "Continuing Claims", "Jobless Claims",
-    "Wholesale Inventories", "Durable Goods", "Housing Starts", "Building Permits",
-    # Aliases que usa Forex Factory:
-    "Unemployment Claims",      # = Initial Jobless Claims
-    "Non-Farm Employment Change", "ADP Non-Farm Employment Change",
-    "FOMC Statement", "FOMC Press Conference", "FOMC Economic Projections",
-    "Federal Funds Rate", "Fed Chair",
-    "Prelim GDP", "Final GDP", "Advance GDP", "GDP Price Index",
-    "Core PCE Price Index", "PCE Price Index",
-    "Core Retail Sales", "Empire State", "Philly Fed",
-    "Flash Manufacturing PMI", "Flash Services PMI",
-    "Pending Home Sales", "New Home Sales", "Existing Home Sales",
-    "CB Consumer Confidence", "Revised UoM",
-    "Trade Balance", "Factory Orders", "Treasury Currency Report",
+#  FILTRO DE CALENDARIO — lógica estilo Finviz
+#  En vez de lista blanca rígida, usamos:
+#   1) BLOCKLIST de ruido (auctions, EIA, reportes agrícolas...)
+#   2) SCORING de relevancia para el NQ/QQQ/ES/SPY
+#  Así nunca perdemos eventos macro relevantes nuevos.
+# ═══════════════════════════════════════════════════════════
+
+# Ruido que NUNCA es relevante para el trader de índices (se descarta siempre)
+EVENT_BLOCKLIST = [
+    # Subastas de deuda (no mueven índices)
+    "bill auction", "bond auction", "note auction", "tips auction", "frn auction",
+    "3-month", "6-month", "4-week", "8-week", "6-week", "17-week", "52-week",
+    "15-year", "20-year", "5-year", "2-year", "3-year", "7-year", "10-year", "30-year",
+    # Energía / commodities (ruido para NQ)
+    "nopa crush", "baker hughes", "rig count", "wasde", "grain stocks",
+    "eia ", "api crude", "crude oil stock", "natural gas stock",
+    "cushing", "distillate", "gasoline production", "gasoline stock",
+    "heating oil", "refinery", "crude runs", "crude oil imports",
+    # Hipotecas (irrelevante intradía)
+    "mba ", "mortgage rate", "mortgage application", "mortgage market",
+    "mortgage refinance", "purchase index",
+    # Flujos / balances técnicos
+    "fed balance sheet", "foreign bond investment", "tic flows",
+    "net capital flows", "capital flows", "money supply",
+    # Indicadores menores / encuestas privadas de bajo impacto
+    "redbook", "lmi logistics", "rcm/tipp", "tipp economic",
+    "used car prices", "corporate profits", "current account",
+    "stress test",
 ]
 
-def _event_allowed(name: str) -> bool:
+# Eventos de ALTA relevancia para índices (siempre mostrar si aparecen)
+HIGH_RELEVANCE = [
+    "cpi", "core cpi", "ppi", "core ppi", "pce", "core pce",
+    "fomc", "fed interest rate", "interest rate decision", "federal funds",
+    "fed minutes", "powell", "fed chair", "fed press conference",
+    "rate projection", "economic projection",
+    # Discursos de miembros del Fed (mueven mercado)
+    "fed speech", "goolsbee", "waller", "williams", "bostic", "kashkari",
+    "daly", "barkin", "logan", "bowman", "jefferson", "cook", "barr",
+    "fed governor", "fed president", "speech",
+    "non farm", "nonfarm", "non-farm", "unemployment rate", "average hourly earnings",
+    "gdp", "retail sales", "ism manufacturing", "ism services", "ism non-manufacturing",
+    "jolts", "adp", "initial jobless", "continuing jobless", "jobless claims", "unemployment claims",
+    "empire state", "philadelphia fed", "philly fed",
+    "consumer confidence", "consumer sentiment", "michigan",
+    "durable goods",
+]
+
+# Eventos de relevancia MEDIA para índices
+MEDIUM_RELEVANCE = [
+    # Vivienda
+    "housing starts", "building permits", "new home sales", "existing home sales",
+    "pending home sales", "nahb", "housing market index", "case-shiller", "home price",
+    # Comercio exterior
+    "import prices", "export prices", "trade balance", "balance of trade",
+    "goods trade balance", "exports", "imports",
+    # Producción / inventarios
+    "factory orders", "industrial production", "manufacturing production",
+    "capacity utilization", "business inventories", "wholesale inventories", "retail inventories",
+    # Consumo / sentimiento
+    "cb leading", "leading index", "inflation expectations", "consumer expectations",
+    "current conditions", "consumer inflation", "personal income", "personal spending",
+    "real personal spending", "consumer credit", "vehicle sales", "construction spending",
+    # Fed regionales (índices manufactureros)
+    "chicago pmi", "chicago fed", "dallas fed", "richmond fed", "kansas fed",
+    "fed services", "services activity",
+    # Empleo secundario
+    "challenger", "productivity", "labor costs", "participation rate",
+    "manufacturing payrolls", "government payrolls", "nonfarm payrolls private",
+    "u-6 unemployment", "average weekly hours",
+    # ISM sub-líneas (secundario al PMI principal)
+    "ism manufacturing", "ism services",
+]
+
+# Feriados US — mercado cerrado (Finviz los muestra; el trader debe saberlo)
+US_HOLIDAYS = [
+    "independence day", "juneteenth", "memorial day", "labor day",
+    "thanksgiving", "christmas", "new year", "martin luther king",
+    "washington", "presidents day", "columbus day", "veterans day",
+    "bank holiday", "markets closed",
+]
+
+def _is_holiday(name: str) -> bool:
     if not name:
         return False
     n = name.lower()
-    return any(kw.lower() in n for kw in ALLOWED_EVENTS)
+    return any(h in n for h in US_HOLIDAYS)
+
+def _event_allowed(name: str) -> bool:
+    """Estilo Finviz: rechaza ruido conocido, acepta cualquier macro relevante."""
+    if not name:
+        return False
+    n = name.lower()
+    # Feriados SÍ se muestran (mercado cerrado)
+    if _is_holiday(name):
+        return True
+    # 1) Descartar ruido explícito
+    for bad in EVENT_BLOCKLIST:
+        if bad in n:
+            return False
+    # 2) Aceptar si está en alta o media relevancia
+    for kw in HIGH_RELEVANCE:
+        if kw in n:
+            return True
+    for kw in MEDIUM_RELEVANCE:
+        if kw in n:
+            return True
+    return False
+
+def _event_relevance(name: str, ff_impact: str) -> str:
+    """Determina el impacto final combinando la categoría del evento + el impacto de la fuente.
+    Estilo Finviz: ciertos eventos son siempre high aunque la fuente diga medium."""
+    n = (name or "").lower()
+    # Feriados: impacto especial "holiday" (el frontend lo muestra distinto)
+    if _is_holiday(name):
+        return "holiday"
+    # Eventos que SIEMPRE son alto impacto para índices
+    for kw in HIGH_RELEVANCE:
+        if kw in n:
+            return "high"
+    # El resto que pasó el filtro es al menos medium
+    for kw in MEDIUM_RELEVANCE:
+        if kw in n:
+            # Respetar 'high' si la fuente lo marcó así, sino medium
+            return "high" if ff_impact == "high" else "medium"
+    return ff_impact or "medium"
 
 def _impact_label(impact) -> str:
     # Finnhub usa 1/2/3 o low/medium/high
@@ -157,7 +263,10 @@ async def fetch_calendar():
                 name = ev.get("title", "") or ev.get("event", "")
                 if not _event_allowed(name):
                     continue
-                impact = _ff_impact(ev.get("impact"))
+                # Impacto final = relevancia del evento para índices (estilo Finviz)
+                ff_imp = _ff_impact(ev.get("impact"))
+                impact = _event_relevance(name, ff_imp)
+                # Solo mostramos high + medium (descartamos lo que quedó en low)
                 if impact == "low":
                     continue
                 actual = ev.get("actual", "")
@@ -175,8 +284,17 @@ async def fetch_calendar():
                 })
     if not out:
         raise RuntimeError("Forex Factory sin eventos US (o no respondió)")
-    out.sort(key=lambda e: e.get("time") or "")
-    return out
+    # Dedup: mismo evento+hora (FF a veces repite). Mantener cronológico.
+    seen = set()
+    deduped = []
+    for e in out:
+        k = (e["title"].lower().strip(), e["time"][:16])
+        if k in seen:
+            continue
+        seen.add(k)
+        deduped.append(e)
+    deduped.sort(key=lambda e: e.get("time") or "")
+    return deduped
 
 async def refresh_calendar(retry=True):
     """Con retry 2s/5s y stale-data (regla)."""
@@ -361,11 +479,17 @@ async def gamma_levels(asset: str):
     asset = asset.upper()
     if asset not in PROXIES:
         raise HTTPException(400, "Activo no soportado")
-    if asset not in cache["gex"] or time.time() - cache["gex"][asset].get("_ts", 0) > 6 * 3600:
+    # Servir SIEMPRE del caché. Solo refrescar si no hay datos, o si son MUY viejos (>12h).
+    # Esto minimiza llamadas a FlashAlpha (evita el 429 por exceso de peticiones).
+    cached = cache["gex"].get(asset)
+    age = time.time() - cached.get("_ts", 0) if cached else 1e9
+    if not cached or age > 12 * 3600:
         await refresh_gex(asset)
-    if asset not in cache["gex"]:
-        raise HTTPException(502, "Sin datos de FlashAlpha")
-    return {**cache["gex"][asset], "asset": asset, "credits_used": 0}
+        cached = cache["gex"].get(asset)
+    if not cached:
+        # Sin datos aún (FlashAlpha caído y nunca cargó) — error suave, el frontend muestra "--"
+        raise HTTPException(503, "GEX temporalmente no disponible")
+    return {**cached, "asset": asset, "credits_used": 0}
 
 @app.get("/api/calendar")
 async def get_calendar():
@@ -442,6 +566,13 @@ async def get_dashboard():
 # ═══════════════════════════════════════════════════════════
 scheduler = AsyncIOScheduler(timezone=NY)
 
+async def recover_gex_if_down():
+    """Si FlashAlpha está stale/offline, reintenta 1 vez. Recuperación tras 429.
+    Solo actúa si hace falta — no gasta llamadas si todo está bien."""
+    if cache["health"]["flashalpha"] != "online":
+        print("[gex] recuperación: reintentando FlashAlpha...")
+        await refresh_gex("NQ")
+
 @app.on_event("startup")
 async def startup():
     # GEX: 9:00, 9:30, 9:45 ET lun-vie
@@ -451,6 +582,15 @@ async def startup():
     scheduler.add_job(refresh_calendar, IntervalTrigger(minutes=5))
     # Movers: cada 60s (Finnhub free tier — 30s gastaría demasiadas llamadas)
     scheduler.add_job(refresh_movers, IntervalTrigger(seconds=60))
+    # Recuperación GEX: cada 30 min, reintenta SOLO si FlashAlpha está caído (tras 429)
+    scheduler.add_job(recover_gex_if_down, IntervalTrigger(minutes=30))
     scheduler.start()
-    # Primera carga al arrancar (no bloquea si una falla)
-    await asyncio.gather(refresh_gex("NQ"), refresh_calendar(), refresh_movers(), return_exceptions=True)
+    # Primera carga al arrancar. Calendario y movers son seguros (límites altos/gratis).
+    # GEX: intento único — si da 429, el scheduler lo reintentará en el próximo cron
+    # (9:00/9:30/9:45 ET). Así no insistimos y evitamos agravar el rate limit.
+    await asyncio.gather(refresh_calendar(), refresh_movers(), return_exceptions=True)
+    # GEX por separado, tolerante a fallo (no rompe el arranque)
+    try:
+        await refresh_gex("NQ")
+    except Exception as e:
+        print(f"[startup] GEX inicial falló (reintentará en cron): {e}")
