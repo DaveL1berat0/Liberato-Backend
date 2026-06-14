@@ -268,7 +268,7 @@ async def fetch_movers():
     """Noticias relevantes para el NQ desde Finnhub /news (gratis). Máx 5 por score."""
     if not FINNHUB_KEY:
         raise RuntimeError("FINNHUB_KEY no configurada")
-    async with httpx.AsyncClient(timeout=3) as client:  # timeout 3s
+    async with httpx.AsyncClient(timeout=8) as client:  # /news puede tardar
         r = await client.get(f"{FH_BASE}/news",
                              params={"category": "general", "token": FINNHUB_KEY})
         if r.status_code != 200:
@@ -377,7 +377,17 @@ async def get_calendar():
 
 @app.get("/api/movers")
 async def get_movers():
-    """Movers Ultra. Lee del caché."""
+    """Movers Ultra. Refresca al vuelo si está vacío o lleva +2 min."""
+    last = cache["movers"]["last_update"]
+    need = not cache["movers"]["data"]
+    if last and not need:
+        try:
+            age = (datetime.now(NY) - datetime.fromisoformat(last)).total_seconds()
+            need = age > 120
+        except Exception:
+            need = True
+    if need:
+        await refresh_movers()
     return {
         "market_movers": cache["movers"]["data"],
         "last_update": cache["movers"]["last_update"],
