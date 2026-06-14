@@ -278,12 +278,11 @@ async def fetch_movers():
     seen_titles = set()
     for n in rows:
         title = n.get("headline", "") or ""
-        # Dedup por título normalizado
         key = title.lower().strip()[:60]
         if key in seen_titles:
             continue
         score, sym = _score_headline(title)
-        if score < 60:   # solo lo relevante
+        if score < 60:
             continue
         seen_titles.add(key)
         scored.append({
@@ -296,9 +295,26 @@ async def fetch_movers():
             "type": "mover",
             "symbol": sym,
         })
-    # Ordenar SIEMPRE por score (regla), no por hora; quedarse con top 5
     scored.sort(key=lambda x: x["score"], reverse=True)
-    return scored[:5]
+    # Dedup por TEMA: máx 1 noticia por símbolo para dar variedad.
+    # (evita mostrar 5 noticias del mismo evento, ej. 5x Trump)
+    out, used_syms = [], set()
+    for m in scored:
+        s = m["symbol"]
+        if s in used_syms:
+            continue
+        used_syms.add(s)
+        out.append(m)
+        if len(out) >= 5:
+            break
+    # Si no llegamos a 5 con símbolos únicos, rellenar con los siguientes por score
+    if len(out) < 5:
+        for m in scored:
+            if m not in out:
+                out.append(m)
+                if len(out) >= 5:
+                    break
+    return out[:5]
 
 async def refresh_movers(retry=True):
     delays = [0, 2, 5]
