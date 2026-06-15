@@ -494,18 +494,11 @@ def _earn_impact(symbol: str) -> str:
     return "normal"
 
 def _is_relevant_earning(ev: dict) -> bool:
-    """Filtra ruido: nos quedamos con empresas que tienen datos (EPS o revenue
-    estimado) O que están en nuestras listas de impacto. Descarta los símbolos
-    raros sin ningún dato (shells, SPACs, OTC sin estimados)."""
+    """Solo mostramos empresas NOTABLES (como EarningsHub): las que están en
+    nuestras listas de impacto (extreme/high/medium). Las cientos de small caps
+    sin relevancia para índices se descartan — el trader de NQ no las vigila."""
     sym = (ev.get("symbol") or "").upper()
-    if _earn_impact(sym) != "normal":
-        return True  # siempre incluir empresas conocidas
-    # Para el resto: solo si tiene EPS estimado o revenue estimado (señal de cobertura analista)
-    has_eps = ev.get("epsEstimate") is not None
-    has_rev = ev.get("revenueEstimate") not in (None, 0)
-    # Símbolos "normales" (3-4 letras, sin sufijos raros) con datos
-    clean_sym = sym.isalpha() and 1 <= len(sym) <= 5
-    return clean_sym and (has_eps or has_rev)
+    return _earn_impact(sym) != "normal"
 
 async def fetch_earnings(days_ahead=45):
     """Trae el calendario de earnings de Finnhub para las próximas semanas."""
