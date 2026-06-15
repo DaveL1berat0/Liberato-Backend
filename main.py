@@ -29,6 +29,7 @@ cache = {
     "gex":      {},                                    # { "NQ": {...} }
     "calendar": {"data": [], "last_update": None, "status": "offline"},
     "movers":   {"data": [], "last_update": None, "status": "offline"},
+    "earnings": {"data": [], "last_update": None, "status": "offline"},
     "health":   {"flashalpha": "offline", "finnhub": "offline"},
 }
 
@@ -457,6 +458,114 @@ async def refresh_movers(retry=True):
     print("[movers] usando datos previos (stale)")
 
 # ═══════════════════════════════════════════════════════════
+#  SERVICIO 4: Finnhub — EARNINGS CALENDAR
+#  Trae earnings de empresas US, etiqueta impacto en el NQ.
+# ═══════════════════════════════════════════════════════════
+
+# Magnificent 7 + mega-caps → impacto EXTREMO en el NQ
+EARN_EXTREME = {
+    "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL", "GOOG", "TSLA",
+    "AVGO", "NFLX",
+}
+# Big tech NQ-100 / movers importantes → impacto ALTO
+EARN_HIGH = {
+    "AMD", "INTC", "QCOM", "MU", "TSM", "ASML", "ORCL", "CRM", "ADBE",
+    "CSCO", "TXN", "AMAT", "LRCX", "PANW", "CRWD", "SNOW", "PLTR", "SMCI",
+    "MRVL", "ARM", "DELL", "NOW", "INTU", "IBM", "UBER", "SHOP", "COIN",
+    "PYPL", "SBUX", "PEP", "COST", "CMCSA", "TMUS", "AMGN", "GILD", "BKNG",
+    "ABNB", "MRNA", "REGN", "ADP", "ADI", "KLAC", "MCHP", "WDAY", "FTNT",
+    "DDOG", "ZS", "NXPI",
+}
+# Empresas grandes conocidas (S&P, no NQ-100) → impacto MEDIO
+EARN_MEDIUM = {
+    "JPM", "BAC", "WFC", "C", "GS", "MS", "V", "MA", "AXP", "BLK",
+    "UNH", "JNJ", "LLY", "PFE", "ABBV", "MRK", "TMO", "DHR", "ABT",
+    "WMT", "HD", "MCD", "NKE", "DIS", "KO", "PG", "XOM", "CVX", "CAT",
+    "BA", "GE", "HON", "RTX", "GM", "F", "T", "VZ", "FDX", "UPS",
+    "ACN", "NOW", "ISRG", "TGT", "LOW", "DAL", "UAL", "GIS", "STZ",
+    "KMX", "JBL", "LEN", "KBH", "NKE", "MKC", "PAYX", "WBA",
+}
+
+def _earn_impact(symbol: str) -> str:
+    s = (symbol or "").upper()
+    if s in EARN_EXTREME: return "extreme"
+    if s in EARN_HIGH:    return "high"
+    if s in EARN_MEDIUM:  return "medium"
+    return "normal"
+
+def _is_relevant_earning(ev: dict) -> bool:
+    """Filtra ruido: nos quedamos con empresas que tienen datos (EPS o revenue
+    estimado) O que están en nuestras listas de impacto. Descarta los símbolos
+    raros sin ningún dato (shells, SPACs, OTC sin estimados)."""
+    sym = (ev.get("symbol") or "").upper()
+    if _earn_impact(sym) != "normal":
+        return True  # siempre incluir empresas conocidas
+    # Para el resto: solo si tiene EPS estimado o revenue estimado (señal de cobertura analista)
+    has_eps = ev.get("epsEstimate") is not None
+    has_rev = ev.get("revenueEstimate") not in (None, 0)
+    # Símbolos "normales" (3-4 letras, sin sufijos raros) con datos
+    clean_sym = sym.isalpha() and 1 <= len(sym) <= 5
+    return clean_sym and (has_eps or has_rev)
+
+async def fetch_earnings(days_ahead=45):
+    """Trae el calendario de earnings de Finnhub para las próximas semanas."""
+    if not FINNHUB_KEY:
+        raise RuntimeError("Sin FINNHUB_KEY")
+    today = datetime.now(NY).date()
+    frm = today.isoformat()
+    to = (today + timedelta(days=days_ahead)).isoformat()
+    url = f"{FH_BASE}/calendar/earnings?from={frm}&to={to}&token={FINNHUB_KEY}"
+    async with httpx.AsyncClient(timeout=8) as client:
+        r = await client.get(url)
+        if r.status_code != 200:
+            raise RuntimeError(f"Finnhub earnings {r.status_code}")
+        data = r.json()
+    rows = data.get("earningsCalendar", []) if isinstance(data, dict) else []
+    out = []
+    for ev in rows:
+        if not _is_relevant_earning(ev):
+            continue
+        sym = (ev.get("symbol") or "").upper()
+        out.append({
+            "symbol": sym,
+            "date": ev.get("date"),
+            "hour": ev.get("hour") or "",          # bmo / amc / dmh / ""
+            "quarter": ev.get("quarter"),
+            "year": ev.get("year"),
+            "epsEstimate": ev.get("epsEstimate"),
+            "epsActual": ev.get("epsActual"),
+            "revenueEstimate": ev.get("revenueEstimate"),
+            "revenueActual": ev.get("revenueActual"),
+            "impact": _earn_impact(sym),
+        })
+    # Ordenar por fecha y luego por impacto (extremo primero dentro del día)
+    impact_rank = {"extreme": 0, "high": 1, "medium": 2, "normal": 3}
+    out.sort(key=lambda e: (e.get("date") or "", impact_rank.get(e["impact"], 9), e["symbol"]))
+    return out
+
+async def refresh_earnings(retry=True):
+    delays = [0, 2, 5]
+    for i, d in enumerate(delays):
+        if d:
+            await asyncio.sleep(d)
+        try:
+            t0 = time.time()
+            data = await fetch_earnings()
+            cache["earnings"]["data"] = data
+            cache["earnings"]["last_update"] = datetime.now(NY).isoformat()
+            cache["earnings"]["status"] = "fresh"
+            cache["health"]["finnhub"] = "online"
+            print(f"[earnings] ok: {len(data)} empresas en {time.time()-t0:.2f}s")
+            return
+        except Exception as e:
+            print(f"[earnings] intento {i+1} fallo: {e}")
+    if cache["earnings"]["data"]:
+        cache["earnings"]["status"] = "stale"
+    else:
+        cache["earnings"]["status"] = "offline"
+    print("[earnings] usando datos previos (stale)")
+
+# ═══════════════════════════════════════════════════════════
 #  ENDPOINTS
 # ═══════════════════════════════════════════════════════════
 @app.get("/")
@@ -472,6 +581,8 @@ def health():
         "calendar_count": len(cache["calendar"]["data"]),
         "movers_status": cache["movers"]["status"],
         "movers_count": len(cache["movers"]["data"]),
+        "earnings_status": cache["earnings"]["status"],
+        "earnings_count": len(cache["earnings"]["data"]),
     }
 
 @app.get("/api/market/gamma-levels/{asset}")
@@ -535,6 +646,27 @@ async def get_movers():
         "count": len(cache["movers"]["data"]),
     }
 
+@app.get("/api/earnings")
+async def get_earnings():
+    """Calendario de earnings (Finnhub). Refresca si está vacío o lleva +6h.
+    Los earnings cambian poco durante el día, así que el caché largo basta."""
+    last = cache["earnings"]["last_update"]
+    need = not cache["earnings"]["data"]
+    if last and not need:
+        try:
+            age = (datetime.now(NY) - datetime.fromisoformat(last)).total_seconds()
+            need = age > 6 * 3600
+        except Exception:
+            need = True
+    if need:
+        await refresh_earnings()
+    return {
+        "earnings": cache["earnings"]["data"],
+        "last_update": cache["earnings"]["last_update"],
+        "status": cache["earnings"]["status"],
+        "count": len(cache["earnings"]["data"]),
+    }
+
 @app.get("/api/dashboard")
 async def get_dashboard():
     """Endpoint ÚNICO que consume el frontend. Junta calendario + movers + health."""
@@ -582,13 +714,14 @@ async def startup():
     scheduler.add_job(refresh_calendar, IntervalTrigger(minutes=5))
     # Movers: cada 60s (Finnhub free tier — 30s gastaría demasiadas llamadas)
     scheduler.add_job(refresh_movers, IntervalTrigger(seconds=60))
+    scheduler.add_job(refresh_earnings, IntervalTrigger(hours=6))
     # Recuperación GEX: cada 30 min, reintenta SOLO si FlashAlpha está caído (tras 429)
     scheduler.add_job(recover_gex_if_down, IntervalTrigger(minutes=30))
     scheduler.start()
     # Primera carga al arrancar. Calendario y movers son seguros (límites altos/gratis).
     # GEX: intento único — si da 429, el scheduler lo reintentará en el próximo cron
     # (9:00/9:30/9:45 ET). Así no insistimos y evitamos agravar el rate limit.
-    await asyncio.gather(refresh_calendar(), refresh_movers(), return_exceptions=True)
+    await asyncio.gather(refresh_calendar(), refresh_movers(), refresh_earnings(), return_exceptions=True)
     # GEX por separado, tolerante a fallo (no rompe el arranque)
     try:
         await refresh_gex("NQ")
