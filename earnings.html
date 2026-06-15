@@ -1429,8 +1429,17 @@ async function loadRealEarnings(){
       ALLWEEKS=weeks;
       weekIdx=0;
       // Posicionar en la semana que contiene "hoy"
+      var foundToday=false;
       for(var i=0;i<ALLWEEKS.length;i++){
-        if(ALLWEEKS[i].days.some(function(x){return x.today;})){ weekIdx=i; break; }
+        if(ALLWEEKS[i].days.some(function(x){return x.today;})){ weekIdx=i; foundToday=true; break; }
+      }
+      // Si "hoy" no está en el rango (estamos entre temporadas de earnings),
+      // saltar a la primera semana que tenga empresas reportando.
+      if(!foundToday){
+        for(var j=0;j<ALLWEEKS.length;j++){
+          var hasEarnings=ALLWEEKS[j].days.some(function(x){return (x.open.length+x.close.length)>0;});
+          if(hasEarnings){ weekIdx=j; break; }
+        }
       }
       EARNINGS_MAP=null; // forzar reconstrucción
       return true;
