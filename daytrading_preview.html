@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06070D">
+<title>Liberato Community — Institutional Terminal</title>
+<!-- Fuentes del sistema — sin dependencia externa, funciona en file:// y en server -->
+<style>
+/* System font stack: visualmente idéntico a Space Grotesk / JetBrains / Cormorant */
+@font-face{font-family:'LBC-Mono';src:local('JetBrains Mono'),local('Fira Code'),local('Cascadia Code'),local('Source Code Pro'),local('Menlo'),local('Consolas'),local('Courier New');}
+@font-face{font-family:'LBC-Sans';src:local('Inter'),local('SF Pro Display'),local('-apple-system'),local('Segoe UI'),local('Helvetica Neue');}
+@font-face{font-family:'LBC-Serif';src:local('Georgia'),local('Times New Roman');}
+</style>
+<style>
+/* ════════════════════════════════════════════════════════════════
+   LIBERATO · INSTITUTIONAL TERMINAL — FINAL Vol.1
+   Identity: Flux (gold + subtle neon, glass depth)
+   5 blocks: Market Regime · Institutional Map · Catalysts
+             · Correlations · Institutional Summary
+   Every animation reflects REAL data. Regla #1 intact.
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  /* Brand — gold reserved for pivots & identity only */
+  --gold:#CCA94F; --gold-bright:#E8D080; --gold-faint:rgba(204,169,79,0.06);
+  --gold-glow:rgba(204,169,79,0.35); --gold-line:rgba(204,169,79,0.18);
+  /* Surfaces */
+  --bg:#05060C; --bg-1:#080A11; --bg-2:#0C0F18; --panel:rgba(12,15,23,0.65);
+  /* Ink — stronger contrast hierarchy */
+  --ink:#F2EFE8; --ink-2:rgba(242,239,232,0.78); --ink-3:rgba(242,239,232,0.45);
+  --ink-4:rgba(242,239,232,0.26); --ink-5:rgba(242,239,232,0.14);
+  /* State */
+  --up:#2EE8A4; --up-2:rgba(46,232,164,0.45); --up-dim:rgba(46,232,164,0.1);
+  --up-glow:rgba(46,232,164,0.38);
+  /* Down = violet/purple (unique, modern) */
+  --down:#B197FC; --down-2:rgba(177,151,252,0.45); --down-dim:rgba(177,151,252,0.1);
+  --down-glow:rgba(177,151,252,0.35);
+  /* Accents */
+  --warn:#FFC247; --warn-dim:rgba(255,194,71,0.1);
+  --info:#6BA6FF; --info-dim:rgba(107,166,255,0.1);
+  --cyan:#3DD9E8; --cyan-glow:rgba(61,217,232,0.28);
+  --violet:#B197FC;
+  /* Borders */
+  --hair:rgba(242,239,232,0.07); --hair-2:rgba(242,239,232,0.038);
+  --glass-brd:rgba(255,255,255,0.07);
+  /* Geometry */
+  --r-xl:20px; --r-lg:14px; --r-md:10px; --r-sm:7px; --r-pill:999px;
+  /* Motion */
+  --ease:cubic-bezier(0.4,0,0.2,1); --spring:cubic-bezier(0.34,1.4,0.64,1);
+  --smooth:cubic-bezier(0.16,1,0.3,1);
+  /* Typography — system fonts, no external dependency */
+  --mono:ui-monospace,'Cascadia Code','Fira Code','Menlo','Consolas',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+  /* ─ Spacing system (8px grid) ─ */
+  --sp1:8px; --sp2:12px; --sp3:16px; --sp4:24px; --sp5:32px; --sp6:48px;
+  /* ─ Unified animation language ─ */
+  --dur-fast:180ms; --dur-base:260ms; --dur-slow:420ms;
+  --ease-out:cubic-bezier(0.16,1,0.3,1); --ease-in-out:cubic-bezier(0.4,0,0.2,1);
+  --trans-base:var(--dur-base) var(--ease-out);
+  --trans-fast:var(--dur-fast) var(--ease-in-out);
+  /* ─ Glow intensity (single source) ─ */
+  --glow-sm:0 0 10px; --glow-md:0 0 20px; --glow-lg:0 0 35px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*,*::before,*::after{font-variant-numeric:tabular-nums;}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;letter-spacing:-0.012em;font-size:15px;line-height:1.5;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;isolation:isolate;
+  background:
+    radial-gradient(ellipse 120% 50% at 50% -5%,rgba(204,169,79,0.06),transparent 55%),
+    radial-gradient(ellipse 50% 80% at 0% 60%,rgba(61,217,232,0.018),transparent 50%),
+    radial-gradient(ellipse 50% 80% at 100% 60%,rgba(177,151,252,0.016),transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 110%,rgba(46,232,164,0.014),transparent 55%),
+    linear-gradient(180deg,rgba(6,7,13,0.4),transparent 40%,rgba(6,7,13,0.3));
+  animation:fieldDrift 40s ease-in-out infinite alternate;will-change:opacity;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle 300px at 20% 30%,rgba(204,169,79,0.025),transparent),
+    radial-gradient(circle 300px at 80% 70%,rgba(177,151,252,0.02),transparent);
+  animation:fieldDrift2 25s ease-in-out infinite alternate;}
+@keyframes fieldDrift2{0%{opacity:0.4;transform:scale(1);}100%{opacity:1;transform:scale(1.08) translateX(-1%);}}
+@keyframes fieldDrift{0%{opacity:0.8;transform:scale(1);}50%{opacity:1;transform:scale(1.025) translateY(-0.5%);}100%{opacity:0.85;transform:scale(1.01) translateY(0.5%);}}
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
+@media(prefers-reduced-motion:reduce){#particle-canvas{display:none;}}
+.app{position:relative;z-index:1;}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--gold);}
+
+/* ════ TOP BAR ════ */
+.bar{position:sticky;top:0;z-index:100;padding-top:var(--safe-top);background:linear-gradient(180deg,rgba(6,7,13,0.92),rgba(6,7,13,0.55));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border-bottom:1px solid var(--hair);}
+.bar-in{display:flex;align-items:center;justify-content:space-between;height:58px;padding:0 22px;gap:16px;max-width:1600px;margin:0 auto;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand-l{font-family:var(--serif);font-size:16px;font-weight:500;letter-spacing:0.01em;}
+.brand-l .a{color:var(--gold);}
+.brand-p{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);padding:4px 11px;border-radius:var(--r-pill);background:var(--gold-faint);border:1px solid rgba(204,169,79,0.2);}
+.bar-r{display:flex;align-items:center;gap:18px;}
+.bar-nq{display:flex;align-items:baseline;gap:8px;}
+.bar-nq-l{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+.bar-nq-px{font-family:var(--mono);font-size:18px;font-weight:800;transition:color 0.25s var(--ease);}
+.bar-nq-px.up{color:var(--up);} .bar-nq-px.down{color:var(--down);}
+.bar-nq-px.fl-up{animation:flUp 0.4s var(--ease-out);} .bar-nq-px.fl-dn{animation:flDn 0.4s var(--ease-out);}
+@keyframes flUp{0%{text-shadow:0 0 22px var(--up-glow);}100%{text-shadow:none;}}
+@keyframes flDn{0%{text-shadow:0 0 22px var(--down-glow);}100%{text-shadow:none;}}
+.bar-nq-c{font-family:var(--mono);font-size:11px;font-weight:600;}
+.bar-nq-c.up{color:var(--up);} .bar-nq-c.down{color:var(--down);}
+.bar-clock{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+.bar-st{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:5px 13px;border-radius:var(--r-pill);border:1px solid var(--hair);color:var(--ink-3);}
+.bar-st.live{color:var(--up);border-color:rgba(52,224,161,0.3);background:var(--up-dim);}
+.bar-st.pre{color:var(--gold);border-color:rgba(204,169,79,0.3);background:var(--gold-faint);}
+.bar-st.after{color:var(--info);border-color:rgba(107,166,255,0.3);background:var(--info-dim);}
+.bar-st.holiday{color:var(--violet);border-color:rgba(177,151,252,0.3);background:rgba(177,151,252,0.08);animation:pul 2.5s ease-in-out infinite;}
+.bar-st-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.bar-st.live .bar-st-dot{animation:pul 2s infinite;box-shadow:0 0 8px currentColor;}
+@keyframes pul{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(1.5);}}
+@media(max-width:680px){.brand-p,.bar-clock{display:none;}}
+
+.wrap{max-width:1600px;margin:0 auto;padding:var(--sp3) var(--sp4) var(--sp6);display:flex;flex-direction:column;gap:var(--sp3);}
+
+/* glass primitive */
+.g{position:relative;background:var(--panel);border:1px solid var(--glass-brd);border-radius:var(--r-lg);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);overflow:hidden;transition:border-color var(--trans-base),box-shadow var(--trans-base),transform var(--trans-base);}
+.g:hover{border-color:rgba(204,169,79,0.2);box-shadow:0 10px 36px -14px rgba(0,0,0,0.55);transform:translateY(-1px);}
+.g-ic{transition:transform var(--dur-base) var(--ease-out),background var(--dur-base) var(--ease-in-out);}
+.g:hover .g-ic{transform:scale(1.1) rotate(-4deg);background:rgba(204,169,79,0.14);}
+.g::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent 42%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.6;}
+.g-hd{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2) var(--sp3);border-bottom:1px solid var(--hair);position:relative;z-index:1;background:rgba(0,0,0,0.12);}
+.g-hd-l{display:flex;align-items:center;gap:10px;}
+.g-ic{width:25px;height:25px;border-radius:var(--r-sm);background:var(--gold-faint);border:1px solid rgba(204,169,79,0.2);display:flex;align-items:center;justify-content:center;color:var(--gold);}
+.g-ic svg{width:12px;height:12px;}
+.g-ttl{font-size:11px;font-weight:700;color:var(--ink-2);letter-spacing:0.07em;text-transform:uppercase;}
+.g-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);}
+.g-live{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--up);}
+.g-live .bl{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 7px var(--up);}
+
+/* ════ BLOCK 1 · MARKET REGIME ════ */
+.regime{position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--panel);border:1px solid var(--glass-brd);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);}
+.regime::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+.regime::after{content:'';position:absolute;inset:0;opacity:0.5;transition:background 0.8s var(--ease);pointer-events:none;}
+.regime.bull::after{background:linear-gradient(90deg,rgba(52,224,161,0.1),transparent 40%);}
+.regime.bear::after{background:linear-gradient(90deg,rgba(255,107,129,0.1),transparent 40%);}
+.regime.neut::after{background:linear-gradient(90deg,rgba(204,169,79,0.08),transparent 40%);}
+.rg-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 22px 0;position:relative;z-index:1;}
+.rg-hd-title{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);} /* WHITE always */
+.rg-hd-dot{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 2s infinite,liveBreath 4s ease-in-out infinite;box-shadow:0 0 6px var(--up);}
+.rg-hd-meta{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+.rg-in{position:relative;z-index:1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:0;padding-top:4px;}
+@media(max-width:980px){.rg-in{grid-template-columns:1fr;}}
+.rg-verdict{padding:18px 26px 24px;border-right:1px solid var(--hair);}
+@media(max-width:980px){.rg-verdict{border-right:none;border-bottom:1px solid var(--hair);}}
+.rg-dir{font-family:var(--serif);font-weight:600;font-size:62px;line-height:0.88;transition:color var(--dur-slow) var(--ease-in-out),text-shadow var(--dur-slow) var(--ease-in-out);letter-spacing:-0.02em;}
+.rg-dir.up{color:var(--up);text-shadow:0 0 50px var(--up-glow);}
+.rg-dir.down{color:var(--down);text-shadow:0 0 50px var(--down-glow);}
+.rg-dir.neut{color:var(--gold);text-shadow:0 0 40px var(--gold-glow);}
+.rg-conf{display:flex;align-items:center;gap:9px;margin-top:14px;}
+.rg-conf-l{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+.rg-conf-p{font-family:var(--mono);font-size:10px;font-weight:700;padding:4px 13px;border-radius:var(--r-pill);}
+.rg-conf-p.high{color:var(--up);background:var(--up-dim);} .rg-conf-p.moderate{color:var(--gold);background:var(--gold-faint);} .rg-conf-p.low{color:var(--ink-3);background:rgba(239,236,227,0.05);}
+
+/* STRUCTURE METER — radial speedometer · CHOP / RANGE / TREND */
+.rg-meter{padding:var(--sp3) var(--sp4);display:flex;align-items:center;justify-content:center;gap:var(--sp4);}
+.struct{position:relative;width:200px;flex-shrink:0;}
+.structmeter{position:relative;width:200px;height:118px;}
+.structmeter svg{width:100%;height:100%;overflow:visible;}
+.sm-track{fill:none;stroke:rgba(239,236,227,0.07);stroke-width:10;stroke-linecap:round;}
+/* three colored arc segments behind, dim until active */
+.sm-seg{fill:none;stroke-width:10;stroke-linecap:butt;opacity:0.18;transition:opacity 0.5s var(--ease),filter 0.5s var(--ease);}
+.sm-seg.chop{stroke:var(--warn);}
+.sm-seg.range{stroke:var(--info);}
+.sm-seg.trend{stroke:var(--up);}
+.sm-seg.on{opacity:1;}
+.sm-seg.chop.on{filter:drop-shadow(0 0 6px rgba(255,194,71,0.6));}
+.sm-seg.range.on{filter:drop-shadow(0 0 6px rgba(107,166,255,0.6));}
+.sm-seg.trend.on{filter:drop-shadow(0 0 6px var(--up-glow));}
+.sm-needle{transition:transform 1.1s var(--spring);transform-origin:100px 100px;animation:needleBreath 3.5s ease-in-out infinite;}
+.sm-needle line{stroke:var(--ink);stroke-width:3;stroke-linecap:round;}@keyframes needleBreath{0%,100%{transform:rotate(var(--nb,0deg));}40%{transform:rotate(calc(var(--nb,0deg) + 1.5deg));}70%{transform:rotate(calc(var(--nb,0deg) - 1deg));}}
+.sm-needle circle{fill:var(--ink);}
+.sm-hub{fill:var(--bg-2);stroke:var(--glass-brd);stroke-width:1;}
+.sm-ctr{position:absolute;left:0;right:0;bottom:4px;text-align:center;}
+.sm-ctr-v{font-family:var(--mono);font-size:18px;font-weight:800;line-height:1;letter-spacing:0.02em;transition:color 0.5s var(--ease);}
+.sm-ctr-v.chop{color:var(--warn);} .sm-ctr-v.range{color:var(--info);} .sm-ctr-v.trend{color:var(--up);}
+.sm-ctr-l{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-4);margin-top:3px;}
+.sm-poles{display:flex;justify-content:space-between;width:200px;margin-top:-2px;padding:0 6px;}
+.sm-pole{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.4s var(--ease);}
+.sm-pole.chop{color:rgba(255,194,71,0.55);} .sm-pole.range{color:rgba(107,166,255,0.55);} .sm-pole.trend{color:rgba(52,224,161,0.55);}
+.rg-meter-stats{display:flex;flex-direction:column;gap:var(--sp2);min-width:0;}
+.rg-ms{display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.rg-ms-k{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);}
+.rg-ms-v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);}
+.rg-ms-v.gold{color:var(--gold);} .rg-ms-v.up{color:var(--up);} .rg-ms-v.down{color:var(--down);}
+.rg-vol{padding:16px 26px;display:flex;flex-direction:column;justify-content:center;gap:11px;min-width:210px;border-left:1px solid var(--hair);}
+@media(max-width:980px){.rg-vol{border-left:none;border-top:1px solid var(--hair);}}
+.rg-vol-l{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4);}
+.rg-vol-c{font-family:var(--mono);font-size:13px;font-weight:700;text-align:center;padding:11px;border-radius:var(--r-md);border:1px solid var(--hair);color:var(--ink-2);transition:all 0.5s var(--ease);}
+.rg-vol-c.slow{color:var(--info);border-color:rgba(107,166,255,0.3);background:var(--info-dim);}
+.rg-vol-c.normal{color:var(--gold);border-color:rgba(204,169,79,0.3);background:var(--gold-faint);}
+.rg-vol-c.aggressive{color:var(--down);border-color:rgba(255,107,129,0.3);background:var(--down-dim);box-shadow:0 0 22px -10px var(--down-glow);}
+.rg-vol-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+
+/* ════ BLOCK 2 · INSTITUTIONAL MAP (horizontal energy field) ════ */
+.imap{
+  position:relative;height:260px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(3,4,8,0.99),rgba(5,6,12,1));
+}
+.imap-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(90deg,rgba(239,236,227,0.013) 1px,transparent 1px);
+  background-size:7.69% 100%;z-index:1;
+}
+.imap-axis{
+  position:absolute;left:0;right:0;top:50%;height:1px;
+  background:rgba(239,236,227,0.04);z-index:1;
+}
+/* ── ZONE BACKGROUNDS ── */
+.imap-zone{
+  position:absolute;top:0;bottom:0;
+  transition:left 0.9s var(--smooth),width 0.9s var(--smooth),opacity 0.6s;
+  pointer-events:none;z-index:1;
+  animation:zoneBreathe 6s ease-in-out infinite;
+}
+@keyframes zoneBreathe{0%,100%{opacity:1;}50%{opacity:0.36;}}
+.imap-zone.call{background:linear-gradient(90deg,transparent 0%,rgba(46,232,164,0.04) 35%,rgba(46,232,164,0.13) 50%,rgba(46,232,164,0.04) 65%,transparent 100%);}
+.imap-zone.put{background:linear-gradient(90deg,transparent 0%,rgba(210,50,70,0.05) 35%,rgba(210,50,70,0.15) 50%,rgba(210,50,70,0.05) 65%,transparent 100%);}
+.imap-zone.flip{background:linear-gradient(90deg,transparent 0%,rgba(204,169,79,0.05) 35%,rgba(204,169,79,0.11) 50%,rgba(204,169,79,0.05) 65%,transparent 100%);}
+.imap-zone.vwap{background:linear-gradient(90deg,transparent 0%,rgba(79,214,224,0.03) 35%,rgba(79,214,224,0.08) 50%,rgba(79,214,224,0.03) 65%,transparent 100%);}
+/* ── NEON VERTICAL LINES ── */
+.imap-line{position:absolute;top:0;bottom:0;width:2px;transition:left 0.9s var(--smooth);z-index:5;}
+/* CALL WALL — verde esmeralda */
+.imap-line.call{
+  background:linear-gradient(180deg,transparent 0%,rgba(46,232,164,0.3) 7%,#2EE8A4 24%,#2EE8A4 76%,rgba(46,232,164,0.3) 93%,transparent 100%);
+  box-shadow:0 0 6px 2px rgba(46,232,164,0.68),0 0 16px 5px rgba(46,232,164,0.26),0 0 30px 8px rgba(46,232,164,0.10);
+}
+/* PUT WALL — rojo */
+.imap-line.put{
+  background:linear-gradient(180deg,transparent 0%,rgba(210,50,70,0.3) 7%,#e03050 24%,#e03050 76%,rgba(210,50,70,0.3) 93%,transparent 100%);
+  box-shadow:0 0 6px 2px rgba(210,50,70,0.70),0 0 16px 5px rgba(210,50,70,0.26),0 0 30px 8px rgba(177,100,140,0.10);
+}
+/* GAMMA FLIP — dorado dashed */
+.imap-line.flip{
+  background:repeating-linear-gradient(180deg,rgba(204,169,79,0.95) 0 7px,transparent 7px 13px);
+  box-shadow:0 0 7px 2px rgba(204,169,79,0.48),0 0 14px 4px rgba(204,169,79,0.16);
+}
+/* VWAP — cyan pulsante */
+.imap-line.vwap{
+  background:repeating-linear-gradient(180deg,rgba(79,214,224,0.9) 0 4px,transparent 4px 9px);
+  box-shadow:0 0 6px 2px rgba(79,214,224,0.42);
+  animation:vwapPulse 2.8s ease-in-out infinite;
+}
+@keyframes vwapPulse{0%,100%{box-shadow:0 0 6px 2px rgba(79,214,224,0.38);opacity:0.84;}50%{box-shadow:0 0 16px 4px rgba(79,214,224,0.68),0 0 28px rgba(79,214,224,0.18);opacity:1;}}
+.imap-line.atr{background:linear-gradient(180deg,transparent,rgba(239,236,227,0.18),transparent);width:1px;}
+/* ── LEVEL TAGS ── */
+.imap-tag{
+  position:absolute;top:12px;
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:0.09em;text-transform:uppercase;
+  padding:4px 11px;border-radius:20px;
+  background:rgba(4,5,10,0.92);
+  transform:translateX(-50%);z-index:6;
+  white-space:nowrap;transition:left 0.9s var(--smooth);
+  border:1px solid transparent;
+}
+.imap-tag.call{color:#2EE8A4;border-color:rgba(46,232,164,0.48);}
+.imap-tag.put{color:#e05060;border-color:rgba(210,50,70,0.48);}
+.imap-tag.flip{color:var(--gold);border-color:rgba(204,169,79,0.48);}
+.imap-tag.vwap{color:var(--cyan);border-color:rgba(79,214,224,0.38);top:37px;}
+/* ── BOTTOM VALUES ── */
+.imap-val{
+  position:absolute;bottom:10px;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  transform:translateX(-50%);z-index:6;
+  background:rgba(4,5,10,0.90);padding:3px 8px;border-radius:5px;
+  transition:left 0.9s var(--smooth);
+}
+.imap-val.call{color:#2EE8A4;}.imap-val.put{color:#e05060;}
+.imap-val.flip{color:var(--gold);}.imap-val.vwap{color:var(--cyan);}
+/* ── PRICE PARTICLE — bola dorada que sigue el precio ── */
+.imap-particle{
+  position:absolute;top:50%;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 38% 36%,#fff8cc 0%,#FFD700 28%,var(--gold-bright) 55%,rgba(204,169,79,0.4) 100%);
+  box-shadow:0 0 0 3px rgba(204,169,79,0.20),0 0 12px 5px rgba(204,169,79,0.62),0 0 28px 8px rgba(204,169,79,0.20);
+  transform:translate(-50%,-50%);
+  transition:left 0.25s cubic-bezier(0.22,1,0.36,1);
+  z-index:7;
+}
+.imap-particle::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1.5px solid rgba(204,169,79,0.48);opacity:0.62;
+  animation:ripple 2.1s ease-out infinite;
+}
+@keyframes ripple{0%{transform:scale(1);opacity:0.62;}100%{transform:scale(3.0);opacity:0;}}
+/* ── PRICE TAG encima de la bola ── */
+.imap-ptag{
+  position:absolute;top:calc(50% - 30px);
+  font-family:var(--mono);font-size:12px;font-weight:800;
+  color:var(--gold-bright);
+  transform:translateX(-50%);z-index:8;
+  transition:left 0.25s cubic-bezier(0.22,1,0.36,1);
+  text-shadow:0 0 12px rgba(204,169,79,0.88),0 0 24px rgba(204,169,79,0.38);
+  background:rgba(4,5,10,0.74);padding:2px 7px;border-radius:4px;white-space:nowrap;
+}
+/* ── PRESSURE BARS ── */
+.imap-press{
+  position:absolute;top:50%;height:3px;
+  transform:translateY(-50%);border-radius:2px;
+  transition:width 0.9s var(--smooth),left 0.25s cubic-bezier(0.22,1,0.36,1);
+  z-index:3;opacity:0.68;
+}
+.imap-press.call{background:linear-gradient(90deg,transparent,#2EE8A4);box-shadow:0 0 7px var(--up-glow);}
+.imap-press.put{background:linear-gradient(270deg,transparent,rgba(210,50,70,0.78));box-shadow:0 0 7px rgba(177,100,140,0.38);}
+
+/* readout */
+.imap-ro{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border-top:1px solid var(--hair);}
+.iro{background:var(--bg-1);padding:var(--sp2) var(--sp3);display:flex;flex-direction:column;gap:4px;}
+.iro-k{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);font-weight:600;}
+.iro-v{font-family:var(--mono);font-size:16px;font-weight:700;}
+.iro-v.up{color:var(--up);} .iro-v.down{color:var(--down);} .iro-v.gold{color:var(--gold);} .iro-v.cyan{color:var(--cyan);}
+@media(max-width:680px){.imap-ro{grid-template-columns:repeat(2,1fr);}}
+.imap-tf{display:flex;align-items:center;gap:var(--sp1);padding:var(--sp2) var(--sp3);border-top:1px solid var(--hair);}
+.tf{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-3);padding:var(--sp1) var(--sp2);border-radius:var(--r-sm);border:1px solid transparent;background:transparent;cursor:pointer;transition:all 0.2s var(--ease);}
+.tf:hover{color:var(--ink-2);background:rgba(239,236,227,0.04);}
+.tf.active{color:var(--gold);background:var(--gold-faint);border-color:rgba(204,169,79,0.3);}
+.tf-n{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--ink-4);}
+.chart-stage{position:relative;min-height:340px;background:rgba(4,5,11,0.5);}
+.chart-load{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;}
+.chart-ring{width:28px;height:28px;border:2.5px solid var(--hair);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.chart-load-t{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+
+/* ════ MID GRID: catalysts | correlations (2 cols) ════ */
+.mid{display:block;}
+
+
+/* CATALYSTS */
+.cat-list{display:flex;flex-direction:column;min-height:180px;}
+.cat-item{padding:var(--sp3);border-bottom:1px solid var(--hair-2);transition:background var(--trans-fast);}
+.cat-item:last-child{border-bottom:none;}
+.cat-item:hover{background:rgba(239,236,227,0.02);}
+.cat-top{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.cat-stars{display:flex;gap:1px;}
+.cat-star{font-size:10px;color:var(--gold);}
+.cat-star.dim{color:rgba(204,169,79,0.18);}
+.cat-badge{margin-left:auto;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);}
+.cat-badge.vhigh{color:var(--down);background:var(--down-dim);} .cat-badge.high{color:var(--warn);background:var(--warn-dim);} .cat-badge.med{color:var(--info);background:var(--info-dim);} .cat-badge.low{color:var(--ink-3);background:rgba(239,236,227,0.05);}
+.cat-tick{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink);}
+.cat-nm{font-size:11px;color:var(--ink-3);margin:3px 0 10px;}
+.cat-meta{display:flex;flex-direction:column;gap:6px;}
+.cat-mrow{display:flex;align-items:center;justify-content:space-between;}
+.cat-mk{font-family:var(--mono);font-size:9px;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-4);}
+.cat-mv{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-2);}
+.cat-mv.hot{color:var(--warn);}
+.cat-empty{padding:var(--sp4);text-align:center;}
+.cat-empty-t{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+
+/* CORRELATIONS — live bars */
+.cr-risk{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2) var(--sp3);border-bottom:1px solid var(--hair);}
+.cr-risk-l{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);}
+.cr-risk-b{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:var(--r-pill);transition:all 0.4s var(--ease);}
+.cr-risk-b.low{color:var(--up);background:var(--up-dim);box-shadow:0 0 18px -8px var(--up-glow);}
+.cr-risk-b.med{color:var(--warn);background:var(--warn-dim);}
+.cr-risk-b.high{color:var(--down);background:var(--down-dim);box-shadow:0 0 18px -8px var(--down-glow);}
+.cr-risk-dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+.cr-risk-b.high .cr-risk-dot{animation:pul 1.4s infinite;}
+.cr-risk-v{font-family:var(--mono);font-size:11px;font-weight:700;}
+.cr-assets{padding:var(--sp2) var(--sp3);display:flex;flex-direction:column;gap:var(--sp2);}
+.cr-asset{display:flex;align-items:center;gap:10px;}
+.cr-asset-sym{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);width:42px;flex-shrink:0;}
+.cr-asset-track{flex:1;height:6px;background:rgba(239,236,227,0.05);border-radius:3px;position:relative;overflow:hidden;}
+.cr-asset-fill{position:absolute;top:0;bottom:0;left:50%;border-radius:3px;transition:all 0.9s var(--smooth);}
+.cr-asset-fill.up{background:linear-gradient(90deg,var(--up-2),var(--up));}
+.cr-asset-fill.down{background:linear-gradient(270deg,rgba(177,151,252,0.45),var(--down));right:50%;left:auto;}
+.cr-asset-v{font-family:var(--mono);font-size:11px;font-weight:700;width:54px;text-align:right;flex-shrink:0;color:var(--ink);}
+.cr-asset-c{font-family:var(--mono);font-size:9px;width:48px;text-align:right;flex-shrink:0;}
+.cr-asset-c.up{color:var(--up);} .cr-asset-c.down{color:var(--down);} .cr-asset-c.flat{color:var(--ink-4);}
+.cr-interp{margin:0 var(--sp3) var(--sp3);padding:12px 14px;border-radius:var(--r-md);font-size:11px;line-height:1.5;color:var(--ink-2);background:rgba(0,0,0,0.2);border-left:3px solid var(--gold);}
+.cr-interp.bull{border-left-color:var(--up);}.cr-interp.bear{border-left-color:rgba(177,151,252,0.7);}
+
+/* BLOCK 5 · INSTITUTIONAL SUMMARY — briefing paragraph */
+.summary{position:relative;}
+.sm-inner{padding:var(--sp4) var(--sp5);}
+.sm-brief{font-size:14px;line-height:1.72;color:var(--ink-2);max-width:none;font-weight:400;}
+.sm-brief strong{color:var(--ink);font-weight:600;}
+.sm-brief .hl-up{color:var(--up);font-weight:600;}
+.sm-brief .hl-dn{color:var(--down);font-weight:600;}
+.sm-brief .hl-gold{color:var(--gold);font-weight:600;}
+@media(min-width:900px){.sm-brief{font-size:14.5px;}}
+.sm-ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);padding:4px 10px;border:1px solid rgba(204,169,79,0.25);border-radius:var(--r-pill);background:var(--gold-faint);}
+.skel{display:inline-block;height:1em;width:60%;border-radius:4px;background:linear-gradient(90deg,rgba(239,236,227,0.04),rgba(239,236,227,0.1),rgba(239,236,227,0.04));background-size:200% 100%;animation:shim 1.6s infinite;}
+@keyframes shim{to{background-position:-200% 0;}}
+
+/* divider between new design and legacy section */
+.legacy-divider{display:flex;align-items:center;gap:14px;margin:8px 0 0;padding:0 4px;}
+.legacy-divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--hair),transparent);}
+.legacy-divider-txt{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-4);white-space:nowrap;}
+
+.t-footer{max-width:1600px;margin:0 auto;padding:28px 22px calc(28px + var(--safe-bottom));border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;}
+.t-footer-l{font-family:var(--serif);font-size:16px;color:var(--ink-2);}
+.t-footer-l span{color:var(--gold);}
+.t-footer-m{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+
+/* ════ NQ PRICE — integrated in Market Regime verdict ════ */
+.rg-price{margin-top:16px;padding:13px 15px;border-radius:var(--r-md);background:rgba(0,0,0,0.25);border:1px solid var(--glass-brd);transition:border-color 0.35s var(--ease),background 0.35s var(--ease);}
+.rg-price:hover{border-color:rgba(204,169,79,0.28);}
+.rg-price-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.rg-price-lbl{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4);}
+.rg-price-live{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--up);}
+.rg-price-live .d{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite,liveBreath 3s ease-in-out infinite;box-shadow:0 0 6px var(--up);}
+.rg-price-row{display:flex;align-items:baseline;gap:11px;}
+.rg-price-px{font-family:var(--mono);font-weight:800;font-size:34px;line-height:1;letter-spacing:-0.02em;transition:color 0.3s var(--ease);}
+.rg-price-px.up{color:var(--up);} .rg-price-px.down{color:var(--down);} .rg-price-px.neut{color:var(--ink);}
+.rg-price-px.fl-up{animation:flUp 0.4s var(--ease-out);} .rg-price-px.fl-dn{animation:flDn 0.4s var(--ease-out);}
+.rg-price-chg{font-family:var(--mono);font-size:12px;font-weight:700;}
+.rg-price-chg.up{color:var(--up);} .rg-price-chg.down{color:var(--down);}
+
+/* ════ DIAGNOSTICS / API HEALTH PANEL ════ */
+.diag{border-radius:var(--r-lg);overflow:hidden;background:rgba(10,13,20,0.7);border:1px solid var(--glass-brd);backdrop-filter:blur(14px);}
+.diag-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--hair);background:rgba(0,0,0,0.2);}
+.diag-hd-l{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-2);}
+.diag-hd-ic{color:var(--gold);display:flex;}
+.diag-badge{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);background:var(--warn-dim);color:var(--warn);border:1px solid rgba(255,194,71,0.25);}
+.diag-rows{display:flex;flex-direction:column;}
+.diag-row{display:grid;grid-template-columns:1.4fr 1fr 0.8fr 0.9fr 0.7fr;align-items:center;gap:var(--sp2);padding:var(--sp2) var(--sp3);border-bottom:1px solid var(--hair-2);}
+.diag-row:last-child{border-bottom:none;}
+.diag-row.head{background:rgba(0,0,0,0.15);}
+.diag-row.head span{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+.diag-api{display:flex;align-items:center;gap:9px;}
+.diag-api-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.diag-api-dot.connected{background:var(--up);box-shadow:0 0 7px var(--up);}
+.diag-api-dot.error{background:var(--down);box-shadow:0 0 7px var(--down);animation:pul 1.4s infinite;}
+.diag-api-dot.disconnected{background:var(--ink-4);}
+.diag-api-dot.loading{background:var(--warn);box-shadow:0 0 7px var(--warn);animation:pul 1s infinite;}
+.diag-api-name{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);}
+.diag-api-desc{font-family:var(--mono);font-size:8px;color:var(--ink-4);}
+.diag-status{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.04em;}
+.diag-status.connected{color:var(--up);} .diag-status.error{color:var(--down);} .diag-status.disconnected{color:var(--ink-3);} .diag-status.loading{color:var(--warn);}
+.diag-sync{font-family:var(--mono);font-size:9px;color:var(--ink-3);}
+.diag-lat{font-family:var(--mono);font-size:10px;font-weight:600;}
+.diag-lat.good{color:var(--up);} .diag-lat.ok{color:var(--warn);} .diag-lat.slow{color:var(--down);} .diag-lat.none{color:var(--ink-4);}
+.diag-src{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 7px;border-radius:var(--r-sm);text-align:center;}
+.diag-src.real{color:var(--up);background:var(--up-dim);} .diag-src.mock{color:var(--warn);background:var(--warn-dim);} .diag-src.cache{color:var(--info);background:var(--info-dim);} .diag-src.none{color:var(--ink-4);background:rgba(239,236,227,0.05);}
+@media(max-width:760px){.diag-row{grid-template-columns:1.4fr 0.9fr 0.7fr;}.diag-sync,.diag-lat{display:none;}.diag-row.head .diag-sync-h,.diag-row.head .diag-lat-h{display:none;}}
+.diag-foot{padding:var(--sp2) var(--sp3);border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;}
+.diag-foot-txt{font-family:var(--mono);font-size:8px;color:var(--ink-4);letter-spacing:0.04em;}
+.diag-refresh{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--gold);background:var(--gold-faint);border:1px solid rgba(204,169,79,0.2);border-radius:var(--r-sm);padding:5px 12px;cursor:pointer;transition:all 0.2s var(--ease);}
+.diag-refresh:hover{background:rgba(204,169,79,0.12);}
+/* mock data ribbon */
+.mock-ribbon{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:var(--r-sm);background:var(--warn-dim);color:var(--warn);border:1px solid rgba(255,194,71,0.25);margin-left:8px;vertical-align:middle;}
+
+/* ════ SESSION MOMENTUM — modern buyers vs sellers ════ */
+.mom{padding:var(--sp3);border-top:1px solid var(--hair);}
+.mom-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp2);}
+.mom-hd-l{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);}
+.mom-hd-net{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 11px;border-radius:var(--r-pill);transition:all 0.5s var(--ease);}
+.mom-hd-net.buy{color:var(--up);background:var(--up-dim);} .mom-hd-net.sell{color:var(--down);background:var(--down-dim);}
+/* the bar */
+.mom-bar{position:relative;display:flex;height:40px;border-radius:var(--r-md);overflow:hidden;background:rgba(8,10,18,0.5);border:1px solid var(--glass-brd);}
+.mom-buy{position:relative;display:flex;align-items:center;padding:0 14px;background:linear-gradient(90deg,rgba(46,232,164,0.18),rgba(46,232,164,0.5),rgba(46,232,164,0.18));background-size:200% 100%;animation:momWave 2.4s linear infinite;transition:width 1s var(--smooth);overflow:hidden;}
+.mom-buy::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(52,224,161,0.4),transparent);transform:translateX(-100%);animation:momSheen 3s ease-in-out infinite;}
+.mom-sell{position:relative;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;background:linear-gradient(270deg,rgba(177,151,252,0.18),rgba(177,151,252,0.5),rgba(177,151,252,0.18));background-size:200% 100%;animation:momWave 2.4s linear infinite reverse;transition:width 1s var(--smooth);overflow:hidden;}
+.mom-sell::after{content:'';position:absolute;inset:0;background:linear-gradient(270deg,transparent,rgba(255,107,129,0.4),transparent);transform:translateX(100%);animation:momSheen 3s ease-in-out infinite;}
+@keyframes momWave{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}@keyframes momSheen{0%,100%{transform:translateX(-100%);}50%{transform:translateX(100%);}}
+.mom-buy-v{position:relative;z-index:1;font-family:var(--mono);font-size:12px;font-weight:800;color:#04140d;text-shadow:0 0 8px rgba(52,224,161,0.5);}
+.mom-sell-v{position:relative;z-index:1;font-family:var(--mono);font-size:12px;font-weight:800;color:#0d0820;text-shadow:0 0 8px rgba(177,151,252,0.5);}
+/* center divider that moves */
+.mom-divider{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);box-shadow:0 0 10px rgba(239,236,227,0.6);z-index:2;transition:left 1s var(--smooth);transform:translateX(-50%);}
+.mom-divider::before{content:'';position:absolute;top:50%;left:50%;width:9px;height:9px;border-radius:50%;background:var(--ink);transform:translate(-50%,-50%);box-shadow:0 0 8px rgba(239,236,227,0.8);}
+.mom-labels{display:flex;justify-content:space-between;margin-top:var(--sp1);font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);}
+.mom-labels .buy{color:rgba(52,224,161,0.7);} .mom-labels .sell{color:rgba(255,107,129,0.7);}
+
+/* ════ LEGACY · CATALIZADORES + MOVERS (new design language) ════ */
+/* ════ PREMIUM CALENDAR CARDS ════ */
+.lg-next{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2) var(--sp3);background:rgba(46,232,164,0.04);border-bottom:1px solid rgba(46,232,164,0.12);}
+.lg-next-l{display:flex;align-items:center;gap:10px;}
+.lg-next-tag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);}
+.lg-next-name{font-family:var(--sans);font-size:11px;font-weight:500;color:var(--ink-2);}
+.lg-next-time{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--gold);}
+.lg-tabs{display:flex;gap:4px;padding:12px 18px 0;border-bottom:1px solid var(--hair);}
+.lg-tabs{display:flex;gap:0;border-bottom:1px solid var(--hair);}
+.lg-tab{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);padding:var(--sp2) var(--sp4);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;transition:all var(--trans-fast);flex:1;text-align:center;}
+.lg-tab:hover{color:var(--ink-2);background:rgba(255,255,255,0.03);}
+.lg-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(204,169,79,0.04);}
+
+.lg-pane{display:none;padding:var(--sp3);min-height:220px;}
+.lg-pane.active{display:block;}
+/* day group header */
+.lg-day{display:flex;align-items:center;gap:var(--sp1);margin:var(--sp2) 0 var(--sp2);}
+.lg-day-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.lg-day-txt{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-2);}
+.lg-day.future .lg-day-dot{background:var(--ink-4);box-shadow:none;}
+.lg-day.future .lg-day-txt{color:var(--ink-4);}
+/* event card */
+.lg-ev{border-radius:var(--r-md);background:rgba(0,0,0,0.24);border:1px solid var(--hair);border-left:3px solid transparent;margin-bottom:var(--sp2);overflow:hidden;transition:border-color var(--trans-base),transform var(--trans-base);}
+.lg-ev:hover{transform:translateX(2px);border-color:rgba(255,255,255,0.1);}
+.lg-ev.high{border-left-color:rgba(255,80,100,0.8);background:linear-gradient(135deg,rgba(255,70,90,0.05),rgba(0,0,0,0.22));}
+.lg-ev.med{border-left-color:rgba(255,194,71,0.7);background:linear-gradient(135deg,rgba(255,194,71,0.04),rgba(0,0,0,0.22));}
+.lg-ev.holiday{border-left-color:rgba(177,151,252,0.6);background:linear-gradient(135deg,rgba(177,151,252,0.04),rgba(0,0,0,0.22));}
+.lg-ev.active-event{border-color:rgba(46,232,164,0.35);box-shadow:0 0 20px -8px rgba(46,232,164,0.2);}
+.lg-ev-inner{padding:var(--sp2) var(--sp3) var(--sp2) var(--sp3);}
+.lg-ev-top{display:flex;align-items:flex-start;gap:var(--sp3);margin-bottom:var(--sp2);}
+.lg-ev-time{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--ink-2);flex-shrink:0;letter-spacing:-0.02em;min-width:54px;}
+.lg-ev-time.upcoming{color:var(--gold);}
+.lg-ev-body{flex:1;min-width:0;}
+.lg-ev-name{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.lg-ev-status{font-family:var(--mono);font-size:9px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;}
+.lg-ev-soon{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:700;color:#ff5064;padding:5px 12px;border-radius:var(--r-pill);background:rgba(255,70,90,0.12);border:1px solid rgba(255,70,90,0.3);letter-spacing:0.02em;}
+.lg-ev-soon .d{width:6px;height:6px;border-radius:50%;background:#ff5064;animation:pul 1.2s infinite;box-shadow:0 0 6px #ff5064;}
+.lg-ev-badge{flex-shrink:0;font-family:var(--mono);font-size:8px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:var(--r-sm);}
+.lg-ev-badge.high{color:#ff5064;background:rgba(255,70,90,0.12);border:1px solid rgba(255,70,90,0.3);}
+.lg-ev-badge.med{color:var(--warn);background:var(--warn-dim);border:1px solid rgba(255,194,71,0.25);}
+.lg-ev-badge.holiday{color:var(--violet);background:rgba(177,151,252,0.1);border:1px solid rgba(177,151,252,0.25);}
+.lg-ev-data{display:grid;gap:1px;background:var(--hair);margin-top:var(--sp2);}
+.lg-ev-cell{background:var(--bg-1);padding:var(--sp2) var(--sp2);}
+.lg-ev-cell-k{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;font-weight:600;}
+.lg-ev-cell-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);}
+.lg-ev-cell-sub{font-family:var(--mono);font-size:9px;color:var(--ink-3);margin-top:2px;}
+.lg-ev-cell-v.pending{color:var(--ink-4);font-style:italic;font-size:12px;font-weight:400;}
+/* movers */
+.lg-mv-upd{display:flex;align-items:center;gap:7px;margin-bottom:14px;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;}
+.lg-mv-upd .d{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 6px var(--up);}
+.lg-mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp3);min-height:200px;}
+@media(max-width:680px){.lg-mv-grid{grid-template-columns:1fr;}}
+.lg-mv-col-t{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.lg-mv-col-t.up{color:var(--up);} .lg-mv-col-t.down{color:var(--down);}
+.lg-mv{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2);border-radius:var(--r-sm);background:rgba(0,0,0,0.22);border:1px solid var(--hair);margin-bottom:7px;transition:transform 0.2s var(--smooth),border-color 0.25s var(--ease);}
+.lg-mv:hover{transform:translateX(3px);}
+.lg-mv.up:hover{border-color:rgba(52,224,161,0.3);} .lg-mv.down:hover{border-color:rgba(255,107,129,0.3);}
+.lg-mv-l{display:flex;flex-direction:column;gap:2px;}
+.lg-mv-sym{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);}
+.lg-mv-px{font-family:var(--mono);font-size:9px;color:var(--ink-4);}
+.lg-mv-chg{font-family:var(--mono);font-size:13px;font-weight:800;}
+.lg-mv-chg.up{color:var(--up);} .lg-mv-chg.down{color:var(--down);}
+
+/* ════ MICRO-INTERACTIONS — make it feel alive ════ */
+.cat-item{cursor:default;transition:background 0.25s var(--ease),padding-left 0.25s var(--smooth);}
+.cat-item:hover{background:rgba(204,169,79,0.04);padding-left:22px;}
+.cat-tick{transition:color 0.2s var(--ease);}
+.cat-item:hover .cat-tick{color:var(--gold-bright);}
+.cr-asset{transition:transform 0.25s var(--smooth);}
+.cr-asset:hover{transform:translateX(3px);}
+.cr-asset:hover .cr-asset-sym{color:var(--gold);}
+.cr-asset-sym{transition:color 0.2s var(--ease);}
+.iro{transition:background 0.25s var(--ease);cursor:default;}
+.iro:hover{background:rgba(204,169,79,0.05);}
+.iro-v{transition:transform 0.2s var(--spring);}
+.iro:hover .iro-v{transform:scale(1.06);}
+.tf{position:relative;overflow:hidden;}
+.tf::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,var(--gold-glow),transparent 70%);opacity:0;transition:opacity 0.3s var(--ease);}
+.tf:active::after{opacity:0.3;}
+.rg-ms{transition:transform 0.2s var(--smooth);}
+.rg-ms:hover{transform:translateX(2px);}
+.rg-ms:hover .rg-ms-k{color:var(--ink-2);}
+.rg-ms-k{transition:color 0.2s var(--ease);}
+.diag-row:not(.head){transition:background 0.2s var(--ease);}
+.diag-row:not(.head):hover{background:rgba(255,255,255,0.02);}
+/* gamma field hover — particle pulses a bit more */
+.imap:hover .imap-particle::after{animation-duration:1.4s;}
+/* subtle glow breathing on the live dots */
+@keyframes liveBreath{0%,100%{box-shadow:0 0 6px currentColor;}50%{box-shadow:0 0 12px currentColor,0 0 20px currentColor;}}
+.g-live .bl{animation:pul 1.6s infinite,liveBreath 3s ease-in-out infinite;}
+
+/* ════ INSTITUTIONAL POPUP ALERT ════ */
+.lbc-popup{position:fixed;bottom:30px;right:28px;width:340px;z-index:9999;
+  background:rgba(10,13,22,0.96);border:1px solid var(--glass-brd);
+  border-radius:var(--r-lg);overflow:hidden;
+  box-shadow:0 24px 60px -12px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.05);
+  backdrop-filter:blur(24px);
+  transform:translateY(110%);opacity:0;
+  transition:transform 0.5s var(--smooth),opacity 0.4s var(--ease);
+  pointer-events:none;}
+.lbc-popup.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+.lbc-popup-top{display:flex;align-items:center;justify-content:space-between;
+  padding:var(--sp2) var(--sp3);border-bottom:1px solid var(--hair);background:rgba(0,0,0,0.2);}
+.lbc-popup-badge{display:flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--up);}
+.lbc-popup-dot{width:6px;height:6px;border-radius:50%;
+  background:var(--up);animation:pul 1.4s infinite;box-shadow:0 0 7px var(--up);}
+.lbc-popup-close{font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  background:none;border:none;cursor:pointer;padding:2px 6px;
+  border-radius:4px;transition:all 0.2s;}
+.lbc-popup-close:hover{color:var(--ink);background:rgba(255,255,255,0.06);}
+.lbc-popup-body{padding:var(--sp3);}
+.lbc-popup-sym{font-family:var(--mono);font-size:22px;font-weight:800;
+  letter-spacing:-0.01em;color:var(--ink);margin-bottom:3px;}
+.lbc-popup-name{font-size:12px;color:var(--ink-3);margin-bottom:12px;}
+.lbc-popup-chg{display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:var(--r-sm);margin-bottom:12px;}
+.lbc-popup-chg.up{background:var(--up-dim);color:var(--up);}
+.lbc-popup-chg.down{background:var(--down-dim);color:var(--down);}
+.lbc-popup-chg-v{font-family:var(--mono);font-size:18px;font-weight:800;}
+.lbc-popup-note{font-size:11.5px;line-height:1.55;color:var(--ink-2);}
+.lbc-popup-dismiss{width:100%;padding:0;height:3px;background:var(--hair);
+  border:none;cursor:pointer;}
+.lbc-popup-dismiss-fill{height:100%;width:0%;background:var(--up);
+  transition:width linear;border-radius:0;}
+
+/* ════ RESPONSIVE — 4 breakpoints ════ */
+/* Tablet: ≤1100px */
+@media(max-width:1100px){
+  .wrap{gap:var(--sp2);}
+  .rg-in{grid-template-columns:1fr;}.rg-verdict{border-right:none;border-bottom:1px solid var(--hair);}
+  .rg-meter{border-right:none;border-bottom:1px solid var(--hair);justify-content:flex-start;gap:30px;}
+  .rg-vol{border-left:none;border-top:1px solid var(--hair);}
+  .mid{grid-template-columns:1fr;}.bento{flex-direction:column;}
+  .imap-ro{grid-template-columns:1fr 1fr;}
+}
+/* Tablet portrait: ≤800px */
+@media(max-width:800px){
+  .wrap{padding:12px 14px 50px;gap:12px;}
+  .rg-dir{font-size:48px!important;}
+  .rg-price-px{font-size:26px!important;}
+  .imap{height:150px!important;}
+  .imap-tag{font-size:8px!important;}
+  .imap-val{font-size:9px!important;}
+  .mom-buy-v,.mom-sell-v{font-size:10px!important;}
+  .sm-inner{padding:14px 16px;}
+  .sm-brief{font-size:13px!important;}
+  .structmeter{width:160px!important;}
+  .lg-mv-grid{grid-template-columns:1fr 1fr;}
+}
+/* Mobile: ≤600px */
+@media(max-width:600px){
+  .bar-in{height:50px;padding:0 14px;}
+  .brand-p{display:none;}
+  .bar-nq-px{font-size:15px!important;}
+  .bar-nq-c{font-size:9px!important;}
+  .wrap{padding:10px 12px 44px;gap:10px;}
+  .rg-dir{font-size:40px!important;}
+  .rg-verdict{padding:14px 16px 18px!important;}
+  /* SPEEDOMETER — force center on mobile */
+  .rg-meter{padding:12px 16px;flex-direction:column;align-items:center!important;justify-content:center!important;gap:16px;}
+  .struct{display:flex;flex-direction:column;align-items:center;width:100%;}
+  .structmeter{margin:0 auto;}
+  .sm-poles{margin:0 auto;}
+  .rg-meter-stats{width:100%;max-width:240px;margin:0 auto;}
+  .rg-vol{padding:12px 16px;}
+  .imap{height:120px!important;}
+  .imap-ro{grid-template-columns:1fr 1fr;}
+  .sm-brief{font-size:12px!important;line-height:1.6!important;}
+  .lbc-popup{width:calc(100vw - 24px);right:12px;bottom:12px;}
+  .diag-row{grid-template-columns:1.4fr 1fr 0.7fr!important;}
+  .diag-lat,.diag-sync{display:none;}
+  /* Heatmap — smaller on mobile */
+  .hmap-grid{grid-template-rows:60px 48px 44px 38px 34px!important;gap:2px!important;}
+  .hmap-tile[data-tier="1"] .hmap-sym{font-size:11px!important;}
+  .hmap-tile[data-tier="1"] .hmap-chg{font-size:13px!important;}
+  .hmap-tile[data-tier="2"] .hmap-sym{font-size:9px!important;}
+  .hmap-tile[data-tier="2"] .hmap-chg{font-size:10px!important;}
+  .hmap-tile[data-tier="3"] .hmap-sym{font-size:8px!important;}
+  .hmap-tile[data-tier="3"] .hmap-chg{font-size:9px!important;}
+}
+/* Ultrawide: ≥1800px — full use of screen real estate */
+@media(min-width:1800px){
+  .wrap{max-width:1800px;padding:var(--sp4) var(--sp5) var(--sp6);}
+  .rg-dir{font-size:72px!important;}
+  .rg-price-px{font-size:40px!important;}
+  .mid{grid-template-columns:1fr 1fr;}
+  .structmeter{width:220px!important;}
+  .imap{height:280px!important;}
+  .iro-v{font-size:18px!important;}
+  .sm-brief{font-size:16px!important;line-height:1.8!important;}
+  .imap-ro{grid-template-columns:repeat(4,1fr);}
+}
+/* Wide desktop: ≥1400px */
+@media(min-width:1400px){
+  .lg-mv-grid{grid-template-columns:1fr 1fr 1fr;}
+}
+/* Mobile small: ≤380px */
+@media(max-width:380px){
+  .rg-dir{font-size:34px!important;}
+  .imap-tag{display:none!important;}
+  .imap-val{font-size:8px!important;}
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MACRO CORRELATIONS HEATMAP
+   ════════════════════════════════════════════════════════════════ */
+.hmap-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-template-rows:90px 70px 58px 50px 46px;
+  grid-template-areas:
+    "aapl aapl msft msft nvda nvda"
+    "aapl aapl msft msft goog goog"
+    "amzn meta avgo tsla cost nflx"
+    "nq   qqq  vix  dxy  us10 us2y"
+    "us30 gold wti  btc  infl es  ";
+  gap:3px;
+  padding:var(--sp2) var(--sp3) var(--sp1);
+}
+/* area assignments */
+.hmap-tile[data-area="aapl"]{grid-area:aapl;} .hmap-tile[data-area="msft"]{grid-area:msft;}
+.hmap-tile[data-area="nvda"]{grid-area:nvda;} .hmap-tile[data-area="goog"]{grid-area:goog;}
+.hmap-tile[data-area="amzn"]{grid-area:amzn;} .hmap-tile[data-area="meta"]{grid-area:meta;}
+.hmap-tile[data-area="avgo"]{grid-area:avgo;} .hmap-tile[data-area="tsla"]{grid-area:tsla;}
+.hmap-tile[data-area="cost"]{grid-area:cost;} .hmap-tile[data-area="nflx"]{grid-area:nflx;}
+.hmap-tile[data-area="nq"]  {grid-area:nq;}   .hmap-tile[data-area="qqq"] {grid-area:qqq;}
+.hmap-tile[data-area="vix"] {grid-area:vix;}  .hmap-tile[data-area="dxy"] {grid-area:dxy;}
+.hmap-tile[data-area="us10"]{grid-area:us10;} .hmap-tile[data-area="us2y"]{grid-area:us2y;}
+.hmap-tile[data-area="us30"]{grid-area:us30;} .hmap-tile[data-area="gold"]{grid-area:gold;}
+.hmap-tile[data-area="wti"] {grid-area:wti;}  .hmap-tile[data-area="btc"] {grid-area:btc;}
+.hmap-tile[data-area="infl"]{grid-area:infl;} .hmap-tile[data-area="es"]  {grid-area:es;}
+.hmap-tile{
+  position:relative;border-radius:var(--r-sm);
+  border:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  cursor:default;overflow:hidden;
+  transition:transform var(--dur-fast) var(--ease-out),
+             border-color var(--dur-base) var(--ease-in-out),
+             background var(--dur-base) var(--ease-in-out);
+  will-change:transform;
+}
+.hmap-tile::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.07),transparent 55%);
+  pointer-events:none;
+}
+.hmap-tile:hover{transform:scale(1.06);z-index:20;border-color:rgba(255,255,255,0.22)!important;}
+.hmap-tile.big-up{animation:hmapUpPulse 3s ease-in-out infinite;}
+.hmap-tile.big-dn{animation:hmapDnPulse 3s ease-in-out infinite;}
+@keyframes hmapUpPulse{0%,100%{box-shadow:inset 0 0 0 transparent;}50%{box-shadow:inset 0 0 14px rgba(46,232,164,0.25);}}
+@keyframes hmapDnPulse{0%,100%{box-shadow:inset 0 0 0 transparent;}50%{box-shadow:inset 0 0 14px rgba(177,151,252,0.25);}}
+.hmap-sym{font-family:var(--mono);font-weight:700;color:var(--ink);letter-spacing:0.01em;line-height:1;position:relative;z-index:1;}
+.hmap-chg{font-family:var(--mono);font-weight:800;letter-spacing:0.01em;line-height:1;position:relative;z-index:1;}
+.hmap-name{font-family:var(--mono);font-size:8px;color:rgba(242,239,232,0.48);line-height:1;position:relative;z-index:1;
+  opacity:0;transform:translateY(2px);white-space:nowrap;text-align:center;padding:0 4px;
+  transition:opacity var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);}
+.hmap-tile:hover .hmap-name{opacity:1;transform:translateY(0);}
+/* Font sizes by tier */
+.hmap-tile[data-tier="1"] .hmap-sym{font-size:16px;} .hmap-tile[data-tier="1"] .hmap-chg{font-size:19px;} .hmap-tile[data-tier="1"] .hmap-name{font-size:9px;}
+.hmap-tile[data-tier="2"] .hmap-sym{font-size:11px;} .hmap-tile[data-tier="2"] .hmap-chg{font-size:13px;}
+.hmap-tile[data-tier="3"] .hmap-sym{font-size:9.5px;} .hmap-tile[data-tier="3"] .hmap-chg{font-size:11px;}
+/* legend */
+.hmap-legend{display:flex;align-items:center;justify-content:center;gap:var(--sp2);
+  padding:var(--sp2) var(--sp3);border-top:1px solid var(--hair);flex-wrap:wrap;}
+.hmap-leg-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+.hmap-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.hmap-leg-dot.up-strong{background:rgba(46,232,164,0.80);} .hmap-leg-dot.up-mild{background:rgba(46,232,164,0.32);}
+.hmap-leg-dot.neutral{background:rgba(242,239,232,0.10);} .hmap-leg-dot.dn-mild{background:rgba(177,151,252,0.32);}
+.hmap-leg-dot.dn-strong{background:rgba(177,151,252,0.80);}
+
+/* ════════════════════════════════════════════════════════════════
+   GAMMA FIELD — PROXIMITY AWARENESS
+   ════════════════════════════════════════════════════════════════ */
+/* Base states: watching / near / testing */
+.imap-line.prox-watching{opacity:0.8;}
+.imap-line.prox-near{opacity:1;transition:box-shadow 0.4s ease;}
+.imap-line.prox-near.call{box-shadow:0 0 22px 3px var(--up-glow)!important;}
+.imap-line.prox-near.put{box-shadow:0 0 22px 5px rgba(210,50,70,0.72),0 0 38px 8px rgba(210,50,70,0.28)!important;}
+.imap-line.prox-near.flip{box-shadow:0 0 22px 3px var(--gold-glow)!important;}
+.imap-line.prox-near.vwap{box-shadow:0 0 18px 2px var(--cyan-glow)!important;}
+.imap-line.prox-testing{animation:levelTest 1s ease-in-out infinite!important;}
+@keyframes levelTest{
+  0%,100%{opacity:1;}
+  50%{opacity:0.35;}
+}
+/* Breakout flash element */
+.gamma-burst{
+  position:absolute;top:0;bottom:0;width:3px;
+  z-index:8;pointer-events:none;transform:translateX(-50%);
+  border-radius:2px;
+  animation:burstFade 1.1s var(--ease-out) forwards;
+}
+.gamma-burst.up{background:var(--up);box-shadow:var(--glow-lg) var(--up-glow);}
+.gamma-burst.down{background:var(--down);box-shadow:var(--glow-lg) var(--down-glow);}
+@keyframes burstFade{
+  0%{opacity:1;transform:translateX(-50%) scaleX(4);}
+  40%{opacity:0.8;transform:translateX(-50%) scaleX(2);}
+  100%{opacity:0;transform:translateX(-50%) scaleX(1);}
+}
+/* Zone glow amplified when price is near */
+.imap-zone.prox-near.call{background:linear-gradient(90deg,transparent,rgba(46,232,164,0.18),transparent)!important;}
+.imap-zone.prox-near.put{background:linear-gradient(90deg,transparent,rgba(210,50,70,0.22),transparent)!important;}
+.imap-zone.prox-near.flip{background:linear-gradient(90deg,transparent,rgba(204,169,79,0.16),transparent)!important;}
+.imap-zone.prox-testing.call{background:linear-gradient(90deg,transparent,rgba(46,232,164,0.28),transparent)!important;animation:zoneBreathe 1.2s ease-in-out infinite!important;}
+.imap-zone.prox-testing.put{background:linear-gradient(90deg,transparent,rgba(210,50,70,0.30),transparent)!important;animation:zoneBreathe 1.2s ease-in-out infinite!important;}
+.imap-zone.prox-testing.flip{background:linear-gradient(90deg,transparent,rgba(204,169,79,0.24),transparent)!important;animation:zoneBreathe 1.2s ease-in-out infinite!important;}
+</style>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<div class="app">
+
+  <header class="bar">
+    <div class="bar-in">
+      <div class="brand"><span class="brand-l">Liberato <span class="a">Community</span></span></div>
+      <div class="bar-r">
+        <div class="bar-nq"><span class="bar-nq-l">NQ</span><span class="bar-nq-px" id="bar-nq-px">—</span><span class="bar-nq-c" id="bar-nq-c">—</span></div>
+        <span class="bar-clock" id="bar-clock">--:-- ET</span>
+        <span class="bar-st pre" id="bar-st"><span class="bar-st-dot"></span><span id="bar-st-txt">Pre-Market</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
+    <section class="regime neut" id="regime" aria-label="Market Regime">
+      <div class="rg-hd">
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime · NQ Futures</div>
+        <span class="rg-hd-meta" id="rg-meta">Pre-market</span>
+      </div>
+      <div class="rg-in">
+        <div class="rg-verdict">
+          <div class="rg-dir neut" id="rg-dir">NEUTRAL</div>
+          <div class="rg-conf"><span class="rg-conf-l">Confidence</span><span class="rg-conf-p moderate" id="rg-conf">Moderate</span></div>
+          <!-- NQ live price — integrated, primary reference -->
+          <div class="rg-price" id="rg-price-wrap">
+            <div class="rg-price-top">
+              <span class="rg-price-lbl">NQ · Nasdaq-100</span>
+              <span class="rg-price-live"><span class="d"></span>Live</span>
+            </div>
+            <div class="rg-price-row">
+              <span class="rg-price-px neut" id="rg-price">—</span>
+              <span class="rg-price-chg" id="rg-price-chg">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="rg-meter">
+          <div class="struct">
+            <div class="structmeter">
+              <svg viewBox="0 0 200 118">
+                <!-- base track -->
+                <path class="sm-track" d="M 22 100 A 78 78 0 0 1 178 100"/>
+                <!-- 3 segments: chop (left), range (mid), trend (right) -->
+                <path class="sm-seg chop"  id="seg-chop"  d="M 22 100 A 78 78 0 0 1 61 32.5"/>
+                <path class="sm-seg range" id="seg-range" d="M 61 32.5 A 78 78 0 0 1 139 32.5"/>
+                <path class="sm-seg trend" id="seg-trend" d="M 139 32.5 A 78 78 0 0 1 178 100"/>
+                <!-- needle -->
+                <g class="sm-needle" id="sm-needle"><line x1="100" y1="100" x2="100" y2="36"/></g>
+                <circle class="sm-hub" cx="100" cy="100" r="7"/>
+              </svg>
+              <div class="sm-ctr"><div class="sm-ctr-v" id="sm-v">—</div><div class="sm-ctr-l">Structure</div></div>
+            </div>
+            <div class="sm-poles"><span class="sm-pole chop">Chop</span><span class="sm-pole range">Range</span><span class="sm-pole trend">Trend</span></div>
+          </div>
+          <div class="rg-meter-stats">
+            <div class="rg-ms"><span class="rg-ms-k">⬡ Dealer</span><span class="rg-ms-v" id="rg-dealer">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⟡ Net GEX</span><span class="rg-ms-v" id="rg-netgex">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⊘ To Flip</span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
+          </div>
+        </div>
+        <div class="rg-vol">
+          <span class="rg-vol-l">Expected Volatility</span>
+          <div class="rg-vol-c" id="rg-vol">Normal</div>
+          <div class="rg-vol-scale"><span>Slow</span><span>Normal</span><span>Aggressive</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ BLOCK 5 · INSTITUTIONAL SUMMARY (right under regime for fast read) ════ -->
+    <section class="g summary" aria-label="Institutional Summary">
+      <div class="g-hd">
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3l2 1.5" stroke-linecap="round"/></svg></div><div class="g-ttl">Institutional Summary</div></div>
+        <span class="sm-ai">◷ AI · Pre-Market</span>
+      </div>
+      <div class="sm-inner">
+        <p class="sm-brief" id="sm-brief"><span class="skel"></span></p>
+      </div>
+    </section>
+
+    <!-- ════ BLOCK 2 · GAMMA FIELD ════ -->
+    <section class="g" aria-label="Gamma Field">
+      <div class="g-hd">
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field</div><div class="g-sub">Liquidity Zones · Price Flow</div></div></div>
+        <span class="g-live"><span class="bl"></span>Live</span>
+      </div>
+      <div class="imap" id="imap">
+        <div class="imap-grid"></div>
+        <div class="imap-axis"></div>
+        <!-- zones, lines, tags, values injected by renderMap() from levels[] -->
+        <!-- pressure bars -->
+        <div class="imap-press put" id="imap-press-put" style="left:50%;width:0;"></div>
+        <div class="imap-press call" id="imap-press-call" style="left:50%;width:0;"></div>
+        <!-- price particle -->
+        <div class="imap-ptag" id="imap-ptag" style="left:50%;">—</div>
+        <div class="imap-particle" id="imap-particle" style="left:50%;"></div>
+      </div>
+      <div class="imap-ro">
+        <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
+        <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
+        <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
+        <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
+      </div>
+      <!-- SESSION MOMENTUM — modern buyers vs sellers -->
+      <div class="mom">
+        <div class="mom-hd">
+          <div class="mom-hd-l"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10l3-3 2 2 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg> Session Momentum</div>
+          <span class="mom-hd-net buy" id="mom-net">—</span>
+        </div>
+        <div class="mom-bar">
+          <div class="mom-buy" id="mom-buy" style="width:50%;"><span class="mom-buy-v" id="mom-buy-v">50%</span></div>
+          <div class="mom-sell" id="mom-sell" style="width:50%;"><span class="mom-sell-v" id="mom-sell-v">50%</span></div>
+          <div class="mom-divider" id="mom-divider" style="left:50%;"></div>
+        </div>
+        <div class="mom-labels"><span class="buy">Compradores</span><span class="sell">Vendedores</span></div>
+      </div>
+      <div class="imap-tf">
+        <button class="tf active" data-tf="5">5m</button>
+        <button class="tf" data-tf="15">15m</button>
+        <button class="tf" data-tf="30">30m</button>
+        <button class="tf" data-tf="60">1H</button>
+        <span class="tf-n">Gamma · Liquidity Levels</span>
+      </div>
+      <div class="chart-stage" id="chart-stage">
+        <div class="chart-load" id="chart-load"><div class="chart-ring"></div><div class="chart-load-t">Cargando velas · NQ</div></div>
+        <div id="chart-tv" style="width:100%;height:320px;display:none;"></div>
+      </div>
+    </section>
+
+    <!-- MACRO CORRELATIONS HEATMAP — full width -->
+      <section class="g" aria-label="Macro Correlations">
+        <div class="g-hd">
+          <div class="g-hd-l">
+            <div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="1" width="5" height="5" rx="0.8"/><rect x="8" y="1" width="5" height="3" rx="0.8"/><rect x="8" y="6" width="5" height="2" rx="0.8"/><rect x="1" y="8" width="5" height="2" rx="0.8"/><rect x="1" y="12" width="12" height="1.5" rx="0.8"/></svg></div>
+            <div class="g-ttl">Macro Correlations</div>
+          </div>
+          <span class="g-live"><span class="bl"></span>Live</span>
+        </div>
+        <div class="hmap-grid" id="hmap-grid"><!-- tiles injected by JS --></div>
+        <div class="hmap-legend">
+          <span class="hmap-leg-item"><span class="hmap-leg-dot up-strong"></span>Strong Up</span>
+          <span class="hmap-leg-item"><span class="hmap-leg-dot up-mild"></span>Mild Up</span>
+          <span class="hmap-leg-item"><span class="hmap-leg-dot neutral"></span>Flat</span>
+          <span class="hmap-leg-item"><span class="hmap-leg-dot dn-mild"></span>Mild Dn</span>
+          <span class="hmap-leg-item"><span class="hmap-leg-dot dn-strong"></span>Strong Dn</span>
+        </div>
+      </section>
+
+
+    <!-- divider: new design ends, legacy section begins -->
+    <div class="legacy-divider">
+      <div class="legacy-divider-line"></div>
+      <span class="legacy-divider-txt">Catalizadores · Macro · Movers</span>
+      <div class="legacy-divider-line"></div>
+    </div>
+
+    <!-- ════ LEGACY SECTION · Catalizadores + Movers (calendario completo abajo) ════ -->
+    <section class="g" id="legacy-mount" aria-label="Catalizadores y Movers">
+      <div class="g-hd">
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2" width="10" height="10" rx="1"/><path d="M4 5h6M4 7h6M4 9h4" stroke-linecap="round"/></svg></div><div class="g-ttl">Catalizadores</div></div>
+        <span class="g-sub" id="lg-updated">Calendario completo</span>
+      </div>
+      <!-- próximo evento -->
+      <div class="lg-next">
+        <div class="lg-next-l">
+          <span class="lg-next-tag">Próximo Evento</span>
+          <span class="lg-next-name" id="lg-next-name">—</span>
+        </div>
+        <span class="lg-next-time" id="lg-next-time">—</span>
+      </div>
+      <!-- tabs -->
+      <div class="lg-tabs">
+        <button class="lg-tab active" data-lgtab="macro">📊 Macro Económico</button>
+        <button class="lg-tab" data-lgtab="movers">⚡ Movers Ultra</button>
+      </div>
+      <!-- macro pane -->
+      <div class="lg-pane active" id="lg-pane-macro">
+        <div id="lg-macro-list"><div class="cat-empty"><span class="cat-empty-t">Cargando calendario…</span></div></div>
+      </div>
+      <!-- movers pane -->
+      <div class="lg-pane" id="lg-pane-movers">
+        <div class="lg-mv-upd"><span class="d"></span><span id="lg-mv-upd-txt">Movers en tiempo real</span></div>
+        <div class="lg-mv-grid">
+          <div>
+            <div class="lg-mv-col-t up"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 9l3-4 2 2 3-5" stroke-linecap="round" stroke-linejoin="round"/></svg> Top Gainers</div>
+            <div id="lg-gainers"></div>
+          </div>
+          <div>
+            <div class="lg-mv-col-t down"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 3l3 4 2-2 3 5" stroke-linecap="round" stroke-linejoin="round"/></svg> Top Losers</div>
+            <div id="lg-losers"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ DIAGNOSTICS / API HEALTH (temporal — se elimina en producción) ════ -->
+    <section class="diag" id="diag" aria-label="API Diagnostics">
+      <div class="diag-hd">
+        <div class="diag-hd-l"><span class="diag-hd-ic"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h3l1.5-4 2 8 1.5-4h4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> API Health · Diagnostics</div>
+        <span class="diag-badge">Temporal · Dev</span>
+      </div>
+      <div class="diag-rows" id="diag-rows">
+        <div class="diag-row head">
+          <span>Servicio</span><span>Estado</span><span class="diag-lat-h">Latencia</span><span class="diag-sync-h">Última sync</span><span>Fuente</span>
+        </div>
+        <!-- rows injected by JS -->
+      </div>
+      <div class="diag-foot">
+        <span class="diag-foot-txt" id="diag-foot-txt">Este panel se eliminará una vez todas las APIs estén en producción.</span>
+        <button class="diag-refresh" id="diag-refresh">↻ Refrescar</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="t-footer">
+    <div class="t-footer-l">Liberato <span>Community</span></div>
+    <div class="t-footer-m">Institutional Terminal · LBC-02</div>
+  </footer>
+</div>
+
+<script>
+/* ── CONSTELLATION BACKGROUND ── */
+(function(){
+  var cv=document.getElementById('particle-canvas'); if(!cv)return;
+  var ctx=cv.getContext('2d'),W,H,ps=[]; var mob=innerWidth<768,N=mob?28:75,C=mob?80:130;
+  var G='204,169,79',Wt='239,236,227';
+  function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;} rs(); addEventListener('resize',rs);
+  function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-0.5)*0.22;this.vy=(Math.random()-0.5)*0.22;this.r=Math.random()*1.5+0.5;this.g=Math.random()<0.38;this.a=Math.random()*0.5+0.2;}
+  for(var i=0;i<N;i++)ps.push(new P());
+  function fr(){ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba('+(p.g?G:Wt)+','+p.a+')';ctx.fill();for(var j=i+1;j<ps.length;j++){var q=ps[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<C){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba('+(p.g||q.g?G:Wt)+','+(1-d/C)*0.15+')';ctx.lineWidth=0.5;ctx.stroke();}}}requestAnimationFrame(fr);}
+  if(!matchMedia||!matchMedia('(prefers-reduced-motion: reduce)').matches)fr();
+})();
+</script>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   LIBERATO · INSTITUTIONAL TERMINAL — LIVING ENGINE
+   Market Regime (CHOP/RANGE/TREND + Expected Volatility)
+   Institutional Map (horizontal energy field, scalable levels[])
+   Macro Heatmap · Institutional Summary · Gamma Field · Legacy Calendar
+   Real data only. Regla #1 intact.
+   ════════════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  var BACKEND_URL=window.LBC_BACKEND_URL||'';
+  var BACKEND_URL='https://web-production-33671.up.railway.app';
+  var NQ_STEP=25, QQQ_RATIO=41.2;
+  var S={dir:'NEUTRAL',score:50,callWall:null,putWall:null,gammaFlip:null,netGex:null,regime:null,
+         ratio:QQQ_RATIO,price:null,prevPrice:null,dayOpen:null,dayHigh:null,dayLow:null,corr:{},events:[],candles:[],
+         vwap:null,atr:null,structure:null,volatility:null};
+
+  // ── API HEALTH TRACKING (for diagnostics panel) ──
+  // status: connected | error | disconnected | loading ; source: real | mock | cache | none
+  var HEALTH={
+    gex:      {name:'Gamma · GEX Engine',   desc:'Gamma levels',        status:'loading', latency:null, sync:null, source:'none', connected:true},
+    price:    {name:'NQ Price Feed',        desc:'Live price + candles',status:'loading', latency:null, sync:null, source:'none', connected:true},
+    corr:     {name:'Macro Correlations',   desc:'Cross-asset',         status:'loading', latency:null, sync:null, source:'none', connected:true},
+    catalysts:{name:'Earnings Engine',      desc:'Catalysts',            status:'loading', latency:null, sync:null, source:'none', connected:true},
+    calendar: {name:'Economic Calendar',    desc:'Macro events',   status:'disconnected', latency:null, sync:null, source:'none', connected:false},
+    movers:   {name:'Market Movers',        desc:'Session movers',       status:'disconnected', latency:null, sync:null, source:'none', connected:false},
+    summary:  {name:'Institutional AI',     desc:'Market briefing', status:'disconnected', latency:null, sync:null, source:'mock', connected:false}
+  };
+  function setHealth(key,status,source,latency){
+    if(!HEALTH[key])return;
+    HEALTH[key].status=status;
+    if(source)HEALTH[key].source=source;
+    if(latency!=null)HEALTH[key].latency=latency;
+    HEALTH[key].sync=new Date();
+    renderDiag();
+  }
+
+  // ── MOCK DATA — used ONLY when a real source is unavailable ──
+  // Gamma/Catalysts/Correlations try real first; mock is the fallback for preview.
+  var MOCK={
+    enabled:true,  // PREVIEW MODE — set false in production
+    gex:{call_wall:31000,put_wall:27000,gamma_flip:29877,net_gex:91.1e6,regime:'positive gamma',nq_price:30650,vwap:30520,atr:280,ratio:41.2,expected_move:474.6,atm_iv:24.9,p_c_ratio:1.07},
+    price:{price:30650,open:30480,high:30780,low:30390,prev:30480},
+    corr:{
+      vxn:{val:18.4,chg:-3.2,dir:'down'}, dxy:{val:104.2,chg:-0.4,dir:'down'},
+      us10y:{val:4.28,chg:-0.6,dir:'down'}, gold:{val:2348,chg:0.8,dir:'up'},
+      wti:{val:78.5,chg:1.2,dir:'up'}, spx:{val:5430,chg:0.5,dir:'up'}
+    },
+    events:[
+      {symbol:'NVDA',name:'NVIDIA Corporation',impact:'extreme',sector:'Semiconductors',hour:'amc',time:'After Close',
+       desc:'EPS est: $5.57 · Rev est: $43.2B · Key watch: Data Center guidance Q3'},
+      {symbol:'MU',name:'Micron Technology',impact:'high',sector:'Semiconductors',hour:'amc',time:'After Close',
+       desc:'EPS est: $1.48 · AI-DRAM demand outlook clave para el sector'}
+    ],
+    // macro calendar — full with event notes
+    macro:{
+      next:{name:'Philly Fed Manufacturing Index',time:'08:30 (en 6m)'},
+      days:[
+        {label:'Hoy · Jueves 19 Jun',future:false,events:[
+          {time:'08:30',name:'Philly Fed Manufacturing Index',impact:'high',status:'Próximo',soon:'Comienza en 6 min',prev:'-0.4',exp:'9.8',result:null,nqImpact:null},
+          {time:'08:30',name:'Unemployment Claims',impact:'high',status:'Próximo',soon:null,prev:'229K',exp:'225K',result:null,nqImpact:null},
+          {time:'10:00',name:'CB Leading Index m/m',impact:'med',status:'Programado',soon:null,prev:'0.1%',exp:'0.1%',result:null,nqImpact:null},
+          {time:'11:00',name:'Fed Speak: Williams (NY Fed)',impact:'med',status:'Programado',soon:null,prev:'—',exp:'—',result:null}
+        ]},
+        {label:'Viernes 20 Jun',future:true,events:[
+          {time:'All Day',name:'Juneteenth Holiday · NYSE Cerrado',impact:'holiday',status:'Mercado cerrado',soon:null,prev:'—',exp:'—',result:null},
+          {time:'Pre-Market',name:'FedEx Corp (FDX) · Earnings',impact:'high',status:'Before Open',soon:null,prev:'$3.86',exp:'$5.34',result:null}
+        ]}
+      ]
+    },
+    movers:{
+      gainers:[
+        {sym:'NVDA', px:'891.40', chg:'+6.2%'},
+        {sym:'SMCI', px:'48.20',  chg:'+8.4%'},
+        {sym:'AMD',  px:'168.30', chg:'+3.8%'},
+        {sym:'AVGO', px:'1685.0', chg:'+2.9%'},
+        {sym:'PLTR', px:'42.15',  chg:'+5.1%'}
+      ],
+      losers:[
+        {sym:'INTC', px:'30.45',  chg:'-4.2%'},
+        {sym:'TSLA', px:'178.90', chg:'-3.1%'},
+        {sym:'PYPL', px:'62.80',  chg:'-1.9%'},
+        {sym:'MRNA', px:'112.60', chg:'-2.7%'},
+        {sym:'WBA',  px:'14.85',  chg:'-5.3%'}
+      ]
+    },
+    // Macro Correlations Heatmap — 22 tiles matching 6×5 treemap layout
+    hmap:[
+      // Tier 1: Largest Nasdaq weights (2×2 tiles)
+      {sym:'AAPL', name:'Apple Inc',            chg:-0.32, area:'aapl', tier:1},
+      {sym:'MSFT', name:'Microsoft Corp',       chg: 0.45, area:'msft', tier:1},
+      // Tier 2: High-weight stocks & macro proxies (2×1 or key 1×1)
+      {sym:'NVDA', name:'NVIDIA Corp',          chg: 6.20, area:'nvda', tier:2},
+      {sym:'GOOGL',name:'Alphabet',             chg: 0.56, area:'goog', tier:2},
+      {sym:'AMZN', name:'Amazon',               chg: 0.78, area:'amzn', tier:2},
+      {sym:'META', name:'Meta Platforms',       chg: 1.12, area:'meta', tier:2},
+      {sym:'AVGO', name:'Broadcom',             chg: 2.90, area:'avgo', tier:2},
+      {sym:'TSLA', name:'Tesla',                chg:-3.10, area:'tsla', tier:2},
+      {sym:'COST', name:'Costco',               chg: 0.38, area:'cost', tier:2},
+      {sym:'NFLX', name:'Netflix',              chg: 1.45, area:'nflx', tier:2},
+      // Tier 3: NQ proxies + macro factors
+      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'nq',   tier:3},
+      {sym:'QQQ',  name:'Nasdaq-100 ETF',       chg: 0.82, area:'qqq',  tier:3},
+      {sym:'VIX',  name:'CBOE Volatility',      chg:-3.20, area:'vix',  tier:3},
+      {sym:'DXY',  name:'US Dollar Index',      chg:-0.40, area:'dxy',  tier:3},
+      {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:3},
+      {sym:'US2Y', name:'2Y Treasury',          chg:-0.50, area:'us2y', tier:3},
+      {sym:'US30Y',name:'30Y Treasury',         chg:-0.45, area:'us30', tier:3},
+      {sym:'Gold', name:'Gold Spot',            chg: 0.80, area:'gold', tier:3},
+      {sym:'WTI',  name:'Oil WTI',              chg: 1.20, area:'wti',  tier:3},
+      {sym:'BTC',  name:'Bitcoin',              chg: 2.10, area:'btc',  tier:3},
+      {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3},
+      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:3}
+    ]
+  };
+
+  /* ── applyAllMock() — carga todos los datos ficticios de una vez ── */
+  function applyAllMock(){
+    var m=MOCK;
+    // GEX — mock data is already in NQ prices, assign directly (no cv() conversion)
+    S.ratio=m.gex.ratio; S.callWall=m.gex.call_wall; S.putWall=m.gex.put_wall;
+    S.gammaFlip=m.gex.gamma_flip; S.netGex=m.gex.net_gex; S.regime=m.gex.regime;
+    S.vwap=m.gex.vwap; S.atr=m.gex.atr;
+    // price + OHLC
+    S.price=m.price.price; S.prevPrice=m.price.price-35;
+    S.dayOpen=m.price.open; S.dayHigh=m.price.high; S.dayLow=m.price.low;
+    // structure + volatility (will be AI-determined in production)
+    S.structure='trend'; S.volatility='normal';
+    // candles — always rebuild fresh
+    _buildMockCandles();
+    // correlations
+    S.corr=JSON.parse(JSON.stringify(m.corr));
+    // catalysts
+    S.events=JSON.parse(JSON.stringify(m.events));
+  }
+  function _buildMockCandles(){
+    var base=30480, target=30650, n=78;
+    var t=Math.floor(Date.now()/1000)-n*300;
+    var candles=[];
+    for(var i=0;i<n;i++){
+      var progress=i/(n-1);
+      var trend=(target-base)*progress;
+      // realistic intraday wave: up morning, dip midday, recover
+      var wave=Math.sin(progress*Math.PI*2.5)*40;
+      var noise=(Math.random()-0.5)*18;
+      var close=Math.round((base+trend+wave+noise)/25)*25;
+      var range=Math.round((15+Math.random()*30)/25)*25;
+      candles.push({
+        time:t+i*300,
+        open:Math.round((close+(Math.random()-0.5)*14)/25)*25,
+        high:close+range, low:close-range, close:close
+      });
+    }
+    candles[candles.length-1].close=target;
+    S.candles=candles;
+  }
+
+  function $(id){return document.getElementById(id);}
+  function etNow(){
+    // Accurate America/New_York time with automatic DST (EDT/EST)
+    try{
+      var parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date());
+      var o={};parts.forEach(function(p){o[p.type]=p.value;});
+      var h=o.hour==='24'?'00':o.hour;
+      return new Date(parseInt(o.year),parseInt(o.month)-1,parseInt(o.day),parseInt(h),parseInt(o.minute),parseInt(o.second));
+    }catch(e){
+      // fallback: approximate (no DST) if Intl unavailable
+      var n=new Date();return new Date(n.getTime()+n.getTimezoneOffset()*60000-4*3600000);
+    }
+  }
+  function fmt2(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+  function nfmt(n){return n==null?'—':Number(n).toLocaleString('en-US',{maximumFractionDigits:0});}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function withTimeout(url,ms){return new Promise(function(res,rej){var d=false,t=setTimeout(function(){if(!d){d=true;rej(new Error('to'));}},ms||6000);fetch(url,{cache:'no-store'}).then(function(r){if(!d){d=true;clearTimeout(t);res(r);}}).catch(function(e){if(!d){d=true;clearTimeout(t);rej(e);}});});}
+
+  // NYSE Holidays 2025 + 2026 (official)
+  var NYSE_HOLIDAYS={
+    '2025-01-01':1,'2025-01-20':1,'2025-02-17':1,'2025-04-18':1,
+    '2025-05-26':1,'2025-06-19':1,'2025-07-04':1,'2025-09-01':1,
+    '2025-11-27':1,'2025-12-25':1,
+    '2026-01-01':1,'2026-01-19':1,'2026-02-16':1,'2026-04-03':1,
+    '2026-05-25':1,'2026-06-19':1,'2026-07-03':1,'2026-09-07':1,
+    '2026-11-26':1,'2026-12-25':1
+  };
+  function isHoliday(d){
+    var pad=function(n){return String(n).padStart(2,'0');};
+    var key=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    return !!NYSE_HOLIDAYS[key];
+  }
+  function tickClock(){
+    var et=etNow(); var c=$('bar-clock'); if(c)c.textContent=fmt2(et)+' ET';
+    var st=$('bar-st'), tx=$('bar-st-txt'); if(!st||!tx)return;
+    var dow=et.getDay(); // 0=Sun,6=Sat
+    var m=et.getHours()*60+et.getMinutes();
+    if(dow===0||dow===6){
+      st.className='bar-st'; tx.textContent='Weekend';
+    } else if(isHoliday(et)){
+      st.className='bar-st holiday'; tx.textContent='Holiday ·  Closed';
+    } else if(m>=570&&m<960){   // 9:30–16:00 ET
+      st.className='bar-st live'; tx.textContent='Market Open';
+    } else if(m>=240&&m<570){   // 4:00–9:30 ET
+      st.className='bar-st pre'; tx.textContent='Pre-Market';
+    } else if(m>=960&&m<1200){  // 16:00–20:00 ET
+      st.className='bar-st after'; tx.textContent='After Hours';
+    } else {
+      st.className='bar-st'; tx.textContent='Closed';
+    }
+  }
+  function getRatio(){return(S.ratio&&S.ratio>0)?S.ratio:QQQ_RATIO;}
+  function cv(v){return v?Math.round((v*getRatio())/NQ_STEP)*NQ_STEP:null;}
+
+  function applyMockGex(){
+    var m=MOCK.gex; S.ratio=m.ratio;
+    S.callWall=m.call_wall; S.putWall=m.put_wall;
+    S.gammaFlip=m.gamma_flip; S.netGex=m.net_gex; S.regime=m.regime;
+    S.vwap=m.vwap; S.atr=m.atr;
+    if(S.price==null)S.price=m.nq_price;
+  }
+  async function fetchGEX(){
+    var t0=performance.now();
+    if(!BACKEND_URL){
+      loadCache();
+      if((!S.callWall||!S.putWall)&&MOCK.enabled){applyMockGex();setHealth('gex','disconnected','mock',null);}
+      else if(S.callWall){setHealth('gex','connected','cache',null);}
+      return;
+    }
+    try{var r=await withTimeout(BACKEND_URL+'/api/market/gamma-levels/NQ',6000);if(!r||!r.ok)throw new Error('bad');var d=await r.json();
+      if(d&&(d.call_wall||d.gamma_flip||d.put_wall)){if(d.ratio>0)S.ratio=d.ratio;S.callWall=d.call_wall?cv(d.call_wall):S.callWall;S.putWall=d.put_wall?cv(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cv(d.gamma_flip||d.zero_gamma):S.gammaFlip;S.netGex=(typeof d.net_gex==='number')?d.net_gex:S.netGex;S.regime=d.regime||S.regime;if(typeof d.nq_price==='number'&&d.nq_price>10000){
+          S.price=d.nq_price;window._NQ_BASE=d.nq_price;
+        }if(typeof d.vwap==='number')S.vwap=cv(d.vwap);if(typeof d.atr==='number')S.atr=d.atr;saveCache();
+        setHealth('gex','connected','real',Math.round(performance.now()-t0));}
+      else throw new Error('empty');
+    }catch(e){
+      loadCache();
+      if((!S.callWall||!S.putWall)&&MOCK.enabled){applyMockGex();setHealth('gex','error','mock',null);}
+      else if(S.callWall){setHealth('gex','connected','cache',Math.round(performance.now()-t0));}
+      else setHealth('gex','error','none',null);
+    }
+  }
+  function saveCache(){try{localStorage.setItem('lbc_fin_'+new Date().toISOString().slice(0,10),JSON.stringify({cw:S.callWall,pw:S.putWall,gf:S.gammaFlip,ng:S.netGex,rg:S.regime,rt:S.ratio,vw:S.vwap,at:S.atr}));}catch(e){console.warn("[lbc] silent error:",e);}}
+  function loadCache(){try{var raw=localStorage.getItem('lbc_fin_'+new Date().toISOString().slice(0,10));if(raw){var d=JSON.parse(raw);S.callWall=d.cw;S.putWall=d.pw;S.gammaFlip=d.gf;S.netGex=d.ng;S.regime=d.rg;S.ratio=d.rt||QQQ_RATIO;S.vwap=d.vw||null;S.atr=d.at||null;}}catch(e){console.warn("[lbc] silent error:",e);}}
+  function netGexLabel(){if(S.netGex==null)return'—';var m=S.netGex/1e6,a=Math.abs(m),s=S.netGex>=0?'+':'-';if(a>=1000)return s+Math.round(a).toLocaleString('en-US')+'M';return s+(a>=100?Math.round(a):a.toFixed(1))+'M';}
+  function gammaState(){if(S.regime){var r=String(S.regime).toLowerCase();if(r.indexOf('long')>=0||r.indexOf('positive')>=0)return'positive';if(r.indexOf('short')>=0||r.indexOf('negative')>=0)return'negative';}if(S.netGex!=null)return S.netGex>=0?'positive':'negative';return null;}
+
+  var candleCache={};
+  function applyMockPrice(){
+    var m=MOCK.price; S.prevPrice=S.price; S.price=m.price; S.dayOpen=m.open; S.dayHigh=m.high; S.dayLow=m.low;
+    // synth a gentle candle series for the sparkline
+    if(!S.candles||!S.candles.length){
+      var base=m.open,arr=[],t=Math.floor(Date.now()/1000)-78*300;
+      for(var i=0;i<78;i++){var drift=(m.price-m.open)*(i/77);var noise=Math.sin(i*0.7)*22+Math.cos(i*0.3)*14;var c=Math.round((base+drift+noise)/NQ_STEP)*NQ_STEP;arr.push({time:t+i*300,open:c,high:c+15,low:c-15,close:c});}
+      arr[arr.length-1].close=m.price; S.candles=arr;
+    }
+  }
+  async function fetchPrice(){
+    var t0=performance.now();
+    var urls=['https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval=5m&range=1d','https://query2.finance.yahoo.com/v8/finance/chart/QQQ?interval=5m&range=1d'];
+    for(var i=0;i<urls.length;i++){try{var r=await withTimeout(urls[i],6000);if(!r||!r.ok)continue;var d=await r.json();var res=d&&d.chart&&d.chart.result&&d.chart.result[0];if(!res)continue;var meta=res.meta||{},rt=getRatio();var q=res.indicators&&res.indicators.quote&&res.indicators.quote[0];var ts=res.timestamp||[];var out=[];if(q&&ts.length){for(var j=0;j<ts.length;j++){var o=q.open[j],h=q.high[j],l=q.low[j],c=q.close[j];if(o==null||h==null||l==null||c==null)continue;out.push({time:ts[j],open:Math.round(o*rt/NQ_STEP)*NQ_STEP,high:Math.round(h*rt/NQ_STEP)*NQ_STEP,low:Math.round(l*rt/NQ_STEP)*NQ_STEP,close:Math.round(c*rt/NQ_STEP)*NQ_STEP});}}if(out.length){S.candles=out;candleCache['c5']={ts:Date.now(),d:out};
+      // derive day high/low from candles
+      S.dayHigh=Math.max.apply(null,out.map(function(x){return x.high;}));S.dayLow=Math.min.apply(null,out.map(function(x){return x.low;}));}
+      var px=meta.regularMarketPrice?Math.round(meta.regularMarketPrice*rt/NQ_STEP)*NQ_STEP:(out.length?out[out.length-1].close:null);var op=meta.chartPreviousClose?Math.round(meta.chartPreviousClose*rt/NQ_STEP)*NQ_STEP:(out.length?out[0].open:null);if(px){S.prevPrice=S.price;S.price=px;S.dayOpen=op;}
+      setHealth('price','connected','real',Math.round(performance.now()-t0));
+      return;}catch(e){console.warn("[lbc] silent error:",e);}}
+    // all failed → mock
+    if(MOCK.enabled){applyMockPrice();setHealth('price','error','mock',null);}
+    else setHealth('price','error','none',null);
+  }
+
+  /* ── derive structure (CHOP/RANGE/TREND) + volatility from real data ──
+     Placeholder logic until AI defines exact params (you'll provide).
+     Structure: based on price action range vs gamma flip proximity + net gex.
+     Volatility: based on ATR / session candle ranges. */
+  function deriveStructureVolatility(){
+    var g=gammaState();
+    // STRUCTURE: long gamma compresses → RANGE/CHOP; short gamma → TREND
+    // refine with how far price has traveled relative to wall range
+    var struct='range';
+    if(g==='negative'){ struct='trend'; }
+    else if(g==='positive'){
+      // long gamma: if price hugging flip → chop, else range
+      if(S.price&&S.gammaFlip&&S.callWall&&S.putWall){
+        var rng=S.callWall-S.putWall;
+        var distFlip=Math.abs(S.price-S.gammaFlip);
+        struct = (rng>0 && distFlip < rng*0.12) ? 'chop' : 'range';
+      } else struct='range';
+    } else struct='range';
+    S.structure=struct;
+    // VOLATILITY from session candle ranges (real)
+    var vol='normal';
+    if(S.candles&&S.candles.length>5){
+      var ranges=0,n=0;
+      for(var i=Math.max(1,S.candles.length-12);i<S.candles.length;i++){ranges+=Math.abs(S.candles[i].high-S.candles[i].low);n++;}
+      var avg=n>0?ranges/n:0;
+      // thresholds in NQ points per 5m candle
+      if(avg<18) vol='slow'; else if(avg>40) vol='aggressive'; else vol='normal';
+    } else {
+      // fallback from gamma regime
+      vol = g==='negative'?'aggressive':g==='positive'?'slow':'normal';
+    }
+    S.volatility=vol;
+  }
+
+  function computeBias(){
+    var g=gammaState(),bear=0;
+    if(S.corr.vxn&&S.corr.vxn.dir==='up')bear++;if(S.corr.dxy&&S.corr.dxy.dir==='up')bear++;if(S.corr.us10y&&S.corr.us10y.dir==='up')bear++;
+    var spxUp=S.corr.spx&&S.corr.spx.dir==='up';
+    var sc=50;if(g==='positive')sc+=8;if(g==='negative')sc-=6;sc-=bear*7;if(spxUp)sc+=8;
+    if(S.price&&S.gammaFlip){if(S.price>S.gammaFlip)sc+=5;else sc-=5;}
+    sc=clamp(sc,8,92);S.score=sc;S.dir=sc>=58?'BULLISH':sc<=42?'BEARISH':'NEUTRAL';
+  }
+
+  /* ── RENDER BLOCK 1 ── */
+  function renderRegime(){
+    deriveStructureVolatility();
+    var g=gammaState();var cls=S.score>=58?'up':S.score<=42?'down':'neut';
+    var sec=$('regime');if(sec)sec.className='regime '+cls;
+    var dir=$('rg-dir');if(dir){dir.textContent=S.dir;dir.className='rg-dir '+cls;}
+    var conf=$('rg-conf');if(conf){var c=(S.score>=72||S.score<=28)?'high':(S.score>=60||S.score<=40)?'moderate':'low';conf.className='rg-conf-p '+c;conf.textContent=c==='high'?'High':c==='moderate'?'Moderate':'Low';}
+    var dl=$('rg-dealer');if(dl){dl.textContent=g==='positive'?'Long γ':g==='negative'?'Short γ':'—';dl.className='rg-ms-v '+(g==='positive'?'up':g==='negative'?'down':'');}
+    var ng=$('rg-netgex');if(ng){ng.textContent=netGexLabel();ng.className='rg-ms-v '+(S.netGex>=0?'up':S.netGex<0?'down':'');}
+    var df=$('rg-distflip');if(df){if(S.price&&S.gammaFlip){var dist=S.price-S.gammaFlip;df.textContent=(dist>=0?'+':'')+nfmt(dist);df.className='rg-ms-v '+(dist>=0?'up':'down');}else df.textContent='—';}
+    // STRUCTURE METER (radial) — light active segment, swing needle to its center
+    ['chop','range','trend'].forEach(function(z){var seg=$('seg-'+z);if(seg)seg.className='sm-seg '+z+(S.structure===z?' on':'');});
+    var needle=$('sm-needle'), smv=$('sm-v');
+    // needle angle: chop=-60°, range=0°, trend=+60° (center of each 60° segment)
+    var ang=S.structure==='chop'?-60:S.structure==='trend'?60:0;
+    if(needle)needle.style.transform='rotate('+ang+'deg)';
+    if(smv){smv.className='sm-ctr-v '+(S.structure||'range');smv.textContent=S.structure?S.structure.toUpperCase():'—';}
+    // EXPECTED VOLATILITY
+    var vol=$('rg-vol');
+    if(vol){vol.className='rg-vol-c '+(S.volatility||'normal');vol.textContent=S.volatility==='slow'?'Slow':S.volatility==='aggressive'?'Aggressive':'Normal';}
+  }
+
+  function renderPrice(){
+    var px=$('bar-nq-px'),chg=$('bar-nq-c');
+    if(!px)return;if(S.price==null){px.textContent='—';return;}
+    px.textContent=nfmt(S.price);
+    if(S.prevPrice!=null&&S.price!==S.prevPrice){var up=S.price>S.prevPrice;px.className='bar-nq-px '+(up?'up fl-up':'down fl-dn');setTimeout(function(){px.className='bar-nq-px '+(S.price>=(S.dayOpen||S.price)?'up':'down');},700);}
+    else{px.className='bar-nq-px '+(S.price>=(S.dayOpen||S.price)?'up':'down');}
+    if(chg&&S.dayOpen){var d=S.price-S.dayOpen,pct=(d/S.dayOpen)*100;chg.textContent=(d>=0?'+':'')+nfmt(d)+' ('+(d>=0?'+':'')+pct.toFixed(2)+'%)';chg.className='bar-nq-c '+(d>=0?'up':'down');}
+    renderNQHero();
+  }
+
+  /* ── NQ PRICE HERO ── */
+  function renderNQHero(){
+    var wrap=$('rg-price-wrap'); if(!wrap)return;
+    if(S.price==null)return;
+    var dir=(S.dayOpen!=null)?(S.price>=S.dayOpen?'up':'down'):'neut';
+    var pe=$('rg-price');
+    if(pe){
+      pe.textContent=nfmt(S.price);
+      if(S.prevPrice!=null&&S.price!==S.prevPrice){var up=S.price>S.prevPrice;pe.className='rg-price-px '+dir+(up?' fl-up':' fl-dn');setTimeout(function(){pe.className='rg-price-px '+dir;},700);}
+      else pe.className='rg-price-px '+dir;
+    }
+    var chg=$('rg-price-chg');
+    if(chg&&S.dayOpen){var d=S.price-S.dayOpen,pct=(d/S.dayOpen)*100;chg.textContent=(d>=0?'+':'')+nfmt(d)+' ('+(d>=0?'+':'')+pct.toFixed(2)+'%)';chg.className='rg-price-chg '+(d>=0?'up':'down');}
+  }
+
+  /* ── SESSION MOMENTUM (real session candles: up-body vs down-body) ── */
+  function renderMomentum(){
+    var buy=$('mom-buy'),sell=$('mom-sell'),div=$('mom-divider'),net=$('mom-net'),bv=$('mom-buy-v'),sv=$('mom-sell-v');
+    if(!buy||!sell)return;
+    var c=S.candles;
+    var buyPct=50;
+    if(c&&c.length>=3){
+      var upVol=0,dnVol=0;
+      for(var i=1;i<c.length;i++){var body=Math.abs(c[i].close-c[i].open)+1;if(c[i].close>=c[i].open)upVol+=body;else dnVol+=body;}
+      var total=upVol+dnVol||1;
+      buyPct=clamp(Math.round((upVol/total)*100),8,92);
+    }
+    var sellPct=100-buyPct;
+    buy.style.width=buyPct+'%'; sell.style.width=sellPct+'%';
+    if(div)div.style.left=buyPct+'%';
+    if(bv)bv.textContent=buyPct+'%';
+    if(sv)sv.textContent=sellPct+'%';
+    if(net){var diff=buyPct-sellPct;net.textContent=(diff>=0?'Buyers +':'Sellers +')+Math.abs(diff);net.className='mom-hd-net '+(diff>=0?'buy':'sell');}
+  }
+
+  /* ── DIAGNOSTICS / API HEALTH ── */
+  function fmtSync(dt){
+    if(!dt)return '—';
+    var s=Math.floor((Date.now()-dt.getTime())/1000);
+    if(s<5)return 'ahora'; if(s<60)return s+'s'; if(s<3600)return Math.floor(s/60)+'m';
+    return Math.floor(s/3600)+'h';
+  }
+  function latClass(ms){if(ms==null)return 'none';if(ms<400)return 'good';if(ms<1200)return 'ok';return 'slow';}
+  function statusTxt(s){return s==='connected'?'Connected':s==='error'?'Error':s==='loading'?'Loading':'Disconnected';}
+  function srcTxt(s){return s==='real'?'Real':s==='mock'?'Mock':s==='cache'?'Cache':'—';}
+  function renderDiag(){
+    var rows=$('diag-rows'); if(!rows)return;
+    // keep header, rebuild data rows
+    var head=rows.querySelector('.diag-row.head');
+    rows.querySelectorAll('.diag-row:not(.head)').forEach(function(n){n.remove();});
+    Object.keys(HEALTH).forEach(function(k){
+      var h=HEALTH[k];
+      var row=document.createElement('div'); row.className='diag-row';
+      row.innerHTML=
+        '<div class="diag-api"><span class="diag-api-dot '+h.status+'"></span><div><div class="diag-api-name">'+h.name+'</div><div class="diag-api-desc">'+h.desc+'</div></div></div>'
+        +'<span class="diag-status '+h.status+'">'+statusTxt(h.status)+'</span>'
+        +'<span class="diag-lat '+latClass(h.latency)+'">'+(h.latency!=null?h.latency+'ms':'—')+'</span>'
+        +'<span class="diag-sync">'+fmtSync(h.sync)+'</span>'
+        +'<span class="diag-src '+h.source+'">'+srcTxt(h.source)+'</span>';
+      rows.appendChild(row);
+    });
+  }
+
+  /* ════ BLOCK 2 · INSTITUTIONAL MAP — scalable levels[] ════
+     To add VWAP/ATR/etc later: push into levels and it renders. */
+  function buildLevels(){
+    var levels=[];
+    if(S.putWall)   levels.push({type:'put',  price:S.putWall,  label:'Put Wall'});
+    if(S.gammaFlip) levels.push({type:'flip', price:S.gammaFlip, label:'Gamma Flip'});
+    if(S.callWall)  levels.push({type:'call', price:S.callWall,  label:'Call Wall'});
+    if(S.vwap)      levels.push({type:'vwap', price:S.vwap,      label:'VWAP'});
+    // ATR levels (when backend provides): push 'atr' type bands here
+    return levels;
+  }
+  function xForLevel(price){
+    var hi=S.callWall, lo=S.putWall, range=hi-lo;
+    if(range<=0)return 50;
+    return clamp(10+((price-lo)/range)*80,2,98);
+  }
+  var _levelsSig=null;  // cache to avoid re-creating DOM (kills flicker)
+  // STATIC: builds the level lines/zones/tags ONLY when levels actually change
+  function renderMapStatic(){
+    var imap=$('imap'); if(!imap)return;
+    if(!S.callWall||!S.putWall)return;
+    var levels=buildLevels();
+    var sig=levels.map(function(l){return l.type+l.price;}).join('|');
+    if(sig===_levelsSig)return;   // no change → don't touch DOM (no flicker)
+    _levelsSig=sig;
+    // remove only the level nodes (not particle/pressure/grid/axis)
+    imap.querySelectorAll('.imap-zone,.imap-line,.imap-tag,.imap-val').forEach(function(n){n.remove();});
+    levels.forEach(function(lv){
+      var x=xForLevel(lv.price);
+      var z=document.createElement('div'); z.className='imap-zone '+lv.type; z.style.left=(x-8)+'%'; z.style.width='16%'; imap.appendChild(z);
+      var ln=document.createElement('div'); ln.className='imap-line '+lv.type; ln.style.left=x+'%'; imap.appendChild(ln);
+      var tg=document.createElement('div'); tg.className='imap-tag '+lv.type; tg.style.left=x+'%'; tg.textContent=lv.label; imap.appendChild(tg);
+      var vl=document.createElement('div'); vl.className='imap-val '+lv.type; vl.style.left=x+'%'; vl.textContent=nfmt(lv.price); imap.appendChild(vl);
+    });
+  }
+  // LIVE: only moves the particle + pressure bars + readouts (every tick, no DOM churn)
+  function renderMapLive(){
+    var p=$('iro-price'); if(p)p.textContent=nfmt(S.price);
+    if(!S.callWall||!S.putWall||!S.price)return;
+    var hi=S.callWall, lo=S.putWall, range=hi-lo; if(range<=0)return;
+    var px=xForLevel(S.price);
+    var part=$('imap-particle'), ptag=$('imap-ptag');
+    if(part)part.style.left=px+'%';
+    if(ptag){ptag.style.left=px+'%';ptag.textContent=nfmt(S.price);}
+    var toCall=Math.max(0,S.callWall-S.price), toPut=Math.max(0,S.price-S.putWall), total=toCall+toPut;
+    var callPull=total>0?(toPut/total):0.5, putPull=total>0?(toCall/total):0.5;
+    var pc=$('imap-press-call'), pp=$('imap-press-put');
+    var maxSpan=Math.min(px,100-px,30);
+    if(pc){pc.style.left=px+'%';pc.style.width=(callPull*maxSpan)+'%';}
+    if(pp){pp.style.left=(px-putPull*maxSpan)+'%';pp.style.width=(putPull*maxSpan)+'%';}
+    var ic=$('iro-call'),ip=$('iro-put'),ipos=$('iro-pos');
+    if(ic)ic.textContent='+'+nfmt(toCall);
+    if(ip)ip.textContent='-'+nfmt(toPut);
+    if(ipos)ipos.textContent=clamp((S.price-lo)/range*100,0,100).toFixed(0)+'%';
+  }
+  function renderMap(){ renderMapStatic(); renderMapLive(); }
+
+  /* ════ CHART ════ */
+  var chart=null,series=null,lines={};
+  function loadChart(){if(chart)return;if(typeof LightweightCharts==='undefined'){var s=document.createElement('script');s.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';s.onload=buildChart;s.onerror=function(){var l=$('chart-load');if(l)l.querySelector('.chart-load-t').textContent='Chart no disponible';};document.head.appendChild(s);}else buildChart();}
+  function buildChart(){
+    var el=$('chart-tv');if(!el||!window.LightweightCharts)return;var l=$('chart-load');if(l)l.style.display='none';el.style.display='block';
+    chart=LightweightCharts.createChart(el,{width:el.clientWidth,height:320,layout:{background:{color:'transparent'},textColor:'rgba(239,236,227,0.4)',fontFamily:"'JetBrains Mono',monospace"},grid:{vertLines:{color:'rgba(204,169,79,0.035)'},horzLines:{color:'rgba(204,169,79,0.035)'}},crosshair:{vertLine:{color:'rgba(204,169,79,0.3)',labelBackgroundColor:'#0B0E17'},horzLine:{color:'rgba(204,169,79,0.3)',labelBackgroundColor:'#0B0E17'}},rightPriceScale:{borderColor:'rgba(239,236,227,0.08)'},timeScale:{borderColor:'rgba(239,236,227,0.08)',timeVisible:true,secondsVisible:false}});
+    series=chart.addCandlestickSeries({upColor:'rgba(46,232,164,0.9)',downColor:'rgba(177,151,252,0.9)',borderUpColor:'#2EE8A4',borderDownColor:'#B197FC',wickUpColor:'rgba(46,232,164,0.5)',wickDownColor:'rgba(177,151,252,0.5)'});
+    addEventListener('resize',function(){if(chart)chart.applyOptions({width:el.clientWidth});});
+    drawLines();fetchCandles('5');
+  }
+  function drawLines(){if(!chart||!series)return;Object.keys(lines).forEach(function(k){try{series.removePriceLine(lines[k]);}catch(e){console.warn("[lbc] silent error:",e);}});lines={};
+    if(S.callWall)lines.call=series.createPriceLine({price:S.callWall,color:'#34E0A1',lineWidth:1,lineStyle:LightweightCharts.LineStyle.Solid,axisLabelVisible:true,title:'Call '+nfmt(S.callWall)});
+    if(S.gammaFlip)lines.flip=series.createPriceLine({price:S.gammaFlip,color:'#CCA94F',lineWidth:2,lineStyle:LightweightCharts.LineStyle.Dashed,axisLabelVisible:true,title:'Flip '+nfmt(S.gammaFlip)});
+    if(S.putWall)lines.put=series.createPriceLine({price:S.putWall,color:'#FF6B81',lineWidth:1,lineStyle:LightweightCharts.LineStyle.Solid,axisLabelVisible:true,title:'Put '+nfmt(S.putWall)});
+    if(S.vwap)lines.vwap=series.createPriceLine({price:S.vwap,color:'#4FD6E0',lineWidth:1,lineStyle:LightweightCharts.LineStyle.Dotted,axisLabelVisible:true,title:'VWAP '+nfmt(S.vwap)});}
+  async function fetchCandles(tf){
+    var iv={'5':'5m','15':'15m','30':'30m','60':'60m'}[tf]||'5m',rg={'5':'1d','15':'1d','30':'5d','60':'5d'}[tf]||'1d',ck='c'+tf;
+    if(candleCache[ck]&&(Date.now()-candleCache[ck].ts)<60000){if(series){series.setData(candleCache[ck].d);drawLines();}return;}
+    var urls=['https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval='+iv+'&range='+rg,'https://query2.finance.yahoo.com/v8/finance/chart/QQQ?interval='+iv+'&range='+rg];
+    for(var i=0;i<urls.length;i++){try{var r=await withTimeout(urls[i],6000);if(!r||!r.ok)continue;var d=await r.json();var res=d&&d.chart&&d.chart.result&&d.chart.result[0];if(!res)continue;var ts=res.timestamp||[],q=res.indicators&&res.indicators.quote&&res.indicators.quote[0];if(!q||!ts.length)continue;var rt=getRatio(),out=[];for(var j=0;j<ts.length;j++){var o=q.open[j],h=q.high[j],l=q.low[j],c=q.close[j];if(o==null||h==null||l==null||c==null)continue;out.push({time:ts[j],open:Math.round(o*rt/NQ_STEP)*NQ_STEP,high:Math.round(h*rt/NQ_STEP)*NQ_STEP,low:Math.round(l*rt/NQ_STEP)*NQ_STEP,close:Math.round(c*rt/NQ_STEP)*NQ_STEP});}if(out.length){candleCache[ck]={ts:Date.now(),d:out};if(series){series.setData(out);chart.timeScale().fitContent();}if(tf==='5'){S.candles=out;}drawLines();return;}}catch(e){console.warn("[lbc] silent error:",e);}}
+  }
+  document.addEventListener('click',function(e){var b=e.target.closest('.tf');if(!b)return;document.querySelectorAll('.tf').forEach(function(x){x.classList.remove('active');});b.classList.add('active');if(!chart){loadChart();return;}fetchCandles(b.dataset.tf);});
+
+  /* ════ CORRELATIONS ════ */
+  var ct={vxn:['^VXN','^VIX'],dxy:['DX-Y.NYB','UUP'],us10y:['^TNX','^TNX'],gold:['GC=F','GLD'],wti:['CL=F','USO'],spx:['^GSPC','SPY']},corrLast=0;
+  async function fetchCorr(){
+    if(Date.now()-corrLast<15*60*1000&&Object.keys(S.corr).length){renderCorr();return;}
+    var t0=performance.now();
+    var out={},okCount=0;for(var k in ct){for(var a=0;a<2;a++){var sym=ct[k][a];try{var r=await withTimeout('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(sym)+'?interval=1d&range=2d',4500);if(!r||!r.ok)continue;var d=await r.json();var res=d&&d.chart&&d.chart.result&&d.chart.result[0];if(!res)continue;var cl=res.indicators&&res.indicators.quote&&res.indicators.quote[0]&&res.indicators.quote[0].close;if(!cl||cl.length<2)continue;var prev=cl[cl.length-2],cur=cl[cl.length-1];if(!prev||!cur)continue;var chg=((cur-prev)/Math.abs(prev))*100;out[k]={val:cur,chg:chg,dir:chg>0.1?'up':chg<-0.1?'down':'flat'};okCount++;break;}catch(e){console.warn("[lbc] silent error:",e);}}if(!out[k])out[k]={val:null,chg:0,dir:'flat'};}
+    if(okCount>=3){S.corr=out;corrLast=Date.now();setHealth('corr','connected','real',Math.round(performance.now()-t0));}
+    else if(MOCK.enabled){S.corr=JSON.parse(JSON.stringify(MOCK.corr));corrLast=Date.now();setHealth('corr','error','mock',null);}
+    else{S.corr=out;setHealth('corr','error','none',null);}
+    renderCorr();
+  }
+  function renderCorr(){
+    var d=S.corr;if(!d||!Object.keys(d).length)return;
+    var f=function(v){return v==null?'—':(v>=100?v.toFixed(0):v.toFixed(2));};
+    ['vxn','dxy','us10y','gold','wti','spx'].forEach(function(k){var it=d[k]||{};var v=$('cav-'+k),c=$('cac-'+k),fl=$('caf-'+k);if(v)v.textContent=f(it.val);if(c){c.textContent=(it.chg>0?'+':'')+(it.chg||0).toFixed(2)+'%';c.className='cr-asset-c '+(it.dir||'flat');}if(fl){var mag=Math.min(Math.abs(it.chg||0)/2.5,1)*50;fl.style.width=mag+'%';fl.className='cr-asset-fill '+(it.dir||'flat');}});
+    var bear=0;if(d.vxn&&d.vxn.dir==='up')bear++;if(d.dxy&&d.dxy.dir==='up')bear++;if(d.us10y&&d.us10y.dir==='up')bear++;
+    var risk,rc,interp,ic;
+    if(bear>=2){risk='HIGH';rc='high';interp='Macro headwinds — presión Risk-Off sobre el NQ.';ic='bear';}
+    else if(bear===1){risk='MEDIUM';rc='med';interp='Señales mixtas — vigilar niveles clave de cerca.';ic='';}
+    else{risk='LOW';rc='low';interp='Supports Risk-On — macro favorable para largos en NQ.';ic='bull';}
+    var b=$('cr-risk');if(b)b.className='cr-risk-b '+rc;var rv=$('cr-risk-v');if(rv)rv.textContent=risk;
+    var ie=$('cr-interp');if(ie){ie.textContent=interp;ie.className='cr-interp '+ic;}
+  }
+
+  /* ════ CATALYSTS (top 2) ════ */
+  async function fetchCatalysts(){
+    var t0=performance.now();
+    if(!BACKEND_URL){
+      if(MOCK.enabled){S.events=JSON.parse(JSON.stringify(MOCK.events));setHealth('catalysts','disconnected','mock',null);}
+      renderCatalysts();return;
+    }
+    try{var r=await withTimeout(BACKEND_URL+'/api/earnings',6000);if(r&&r.ok){var d=await r.json();var ev=(d.earnings||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high'||e.impact==='medium';});if(ev.length){S.events=ev;setHealth('catalysts','connected','real',Math.round(performance.now()-t0));}else if(MOCK.enabled){S.events=JSON.parse(JSON.stringify(MOCK.events));setHealth('catalysts','connected','mock',Math.round(performance.now()-t0));}}else throw new Error('bad');}
+    catch(e){if(MOCK.enabled){S.events=JSON.parse(JSON.stringify(MOCK.events));setHealth('catalysts','error','mock',null);}else setHealth('catalysts','error','none',null);}
+    renderCatalysts();
+  }
+  function renderCatalysts(){
+    var list=$('cat-list');if(!list)return;var ev=S.events.slice(),ord={extreme:0,high:1,medium:2,low:3};
+    ev.sort(function(a,b){return(ord[a.impact]||3)-(ord[b.impact]||3);});ev=ev.slice(0,2); // TOP 2 only
+    if(!ev.length){list.innerHTML='<div class="cat-empty"><span class="cat-empty-t">Sin catalizadores de alto impacto hoy</span></div>';return;}
+    var sn={extreme:5,high:4,medium:3,low:2},lbl={extreme:'Very High',high:'High',medium:'Medium',low:'Low'},bcl={extreme:'vhigh',high:'high',medium:'med',low:'low'};
+    list.innerHTML=ev.map(function(e){var n=sn[e.impact]||3,st='';for(var i=1;i<=5;i++)st+='<span class="cat-star'+(i<=n?'':' dim')+'">★</span>';var sector=e.sector||'',hour=e.hour==='bmo'?'Before Open':e.hour==='amc'?'After Close':(e.time||'—');return '<div class="cat-item"><div class="cat-top"><div class="cat-stars">'+st+'</div><span class="cat-badge '+(bcl[e.impact]||'med')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-tick">'+(e.symbol||e.ticker||'')+'</div><div class="cat-nm">'+(e.name||'')+'</div><div class="cat-meta">'+(sector?'<div class="cat-mrow"><span class="cat-mk">Sector</span><span class="cat-mv">'+sector+'</span></div>':'')+'<div class="cat-mrow"><span class="cat-mk">Sensitivity</span><span class="cat-mv '+(e.impact==='extreme'||e.impact==='high'?'hot':'')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-mrow"><span class="cat-mk">Time</span><span class="cat-mv">'+hour+'</span></div></div></div>';}).join('');
+  }
+
+  /* ════ BLOCK 5 · INSTITUTIONAL SUMMARY (briefing paragraph, NO playbook) ════ */
+    function renderSummary(){
+    var g=gammaState();
+    // 2-3 sentences max — clear, institutional, actionable
+    var s1,s2,s3='';
+    var cw=nfmt(S.callWall), pw=nfmt(S.putWall), fl=nfmt(S.gammaFlip), vw=nfmt(S.vwap);
+    var aboveFlip=S.price&&S.gammaFlip&&S.price>S.gammaFlip;
+    var aboveVwap=S.price&&S.vwap&&S.price>S.vwap;
+    // Sentence 1: context + levels
+    if(g==='positive'){
+      s1='El precio se mantiene en zona de <span class="hl-up">long gamma</span> '+(aboveFlip?'sobre':'bajo')+' el Flip en <span class="hl-gold">'+fl+'</span>'+(aboveVwap?' y VWAP ('+vw+') actuando como soporte':'')+', favoreciendo <strong>reversión al rango</strong> entre '+pw+' y '+cw+'.';
+    }else if(g==='negative'){
+      s1='Con dealers en <span class="hl-dn">short gamma</span>, el precio '+(aboveFlip?'sigue sobre el Flip '+fl+' con camino abierto hacia '+cw:'perdió el Flip '+fl+' y queda expuesto hacia '+pw)+', favoreciendo <strong>expansión direccional</strong>.';
+    }else{
+      s1='El Gamma Flip en <span class="hl-gold">'+fl+'</span> es el nivel bisagra: por encima sesgo alcista hacia '+cw+', por debajo riesgo hacia '+pw+'. <strong>Sin sesgo definido</strong> hasta confirmar posición.';
+    }
+    // Sentence 2: macro + action
+    var bear=0;
+    ['vxn','dxy','us10y'].forEach(function(k){if(S.corr[k]&&S.corr[k].dir==='up')bear++;});
+    if(g==='positive'&&bear===0)
+      s2='Macro <span class="hl-up">Risk-On</span>: volatilidad y dólar cediendo — context ideal para operar de target a target con stops ajustados.';
+    else if(g==='negative'&&bear>=2)
+      s2='Macro amplifica la presión bajista — stops anchos, dejar correr el momentum; no recortar posiciones ganadoras antes de tiempo.';
+    else
+      s2='Macro mixta — gestionar el riesgo por evento y respetar los niveles institucionales sin anticipar ruptura.';
+    // Sentence 3: catalyst (only if high impact)
+    var hi=S.events.filter(function(e){return e.impact==='extreme'||e.impact==='high';});
+    if(hi.length)
+      s3=' <strong>'+hi[0].symbol+'</strong> reporta '+(hi[0].hour==='amc'?'tras el cierre':'antes de la apertura')+' — reducir exposición antes del evento o ampliar stops para absorber la volatilidad.';
+    var el=$('sm-brief'); if(el)el.innerHTML=s1+' '+s2+s3;
+  }
+
+  /* ════ LEGACY · Catalizadores (macro calendar) + Movers ════
+     Preview uses MOCK.macro/movers. In production this mounts the
+     real Forex Factory + Finnhub data from the backend. */
+  function renderLegacy(){
+    var mc=MOCK.macro, mv=MOCK.movers;
+    if(!mc)return;
+    // próximo evento
+    var nn=$('lg-next-name'), nt=$('lg-next-time');
+    if(nn&&mc.next)nn.textContent=mc.next.name;
+    if(nt&&mc.next)nt.textContent=mc.next.time;
+    // macro list with impact hierarchy (red/amber/violet) — the requested improvement
+    var list=$('lg-macro-list');
+    if(list){
+      var html='';
+      mc.days.forEach(function(day){
+        html+='<div class="lg-day'+(day.future?' future':'')+'"><span class="lg-day-dot"></span><span class="lg-day-txt">'+day.label+'</span></div>';
+        day.events.forEach(function(e){
+          var bcl=e.impact==='high'?'high':e.impact==='med'?'med':e.impact==='holiday'?'holiday':'med';
+          var blbl=e.impact==='high'?'Alto':e.impact==='med'?'Med':e.impact==='holiday'?'Feriado':'—';
+          html+='<div class="lg-ev '+bcl+'">'
+            +'<div class="lg-ev-inner"><div class="lg-ev-top">'
+            +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':e.time)+'</span>'
+            +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+'</div><div class="lg-ev-status">'+e.status+'</div>'
+            +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
+            +'</div>'
+            +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'
+            +'</div>'
+            +'<div class="lg-ev-data" style="grid-template-columns:1fr 1fr 1fr;">'
+            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Anterior</div><div class="lg-ev-cell-v">'+e.prev+'</div><div class="lg-ev-cell-sub">Exp: '+e.exp+'</div></div>'
+            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Resultado</div><div class="lg-ev-cell-v '+(e.result?'':'pending')+'">'+(e.result||'Pendiente')+'</div></div>'
+            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+(e.nqImpact?'':' pending')+'">'+(e.nqImpact||'—')+'</div></div>'
+            +'</div>'
+            +'</div></div>';
+        });
+      });
+      list.innerHTML=html;
+    }
+    // movers
+    function mvHtml(arr,dir){return arr.map(function(m){return '<div class="lg-mv '+dir+'"><div class="lg-mv-l"><span class="lg-mv-sym">'+m.sym+'</span><span class="lg-mv-px">$'+m.px+'</span></div><span class="lg-mv-chg '+dir+'">'+m.chg+'</span></div>';}).join('');}
+    var g=$('lg-gainers'), l=$('lg-losers');
+    if(g&&mv)g.innerHTML=mvHtml(mv.gainers,'up');
+    if(l&&mv)l.innerHTML=mvHtml(mv.losers,'down');
+  }
+  // legacy tab switching
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.lg-tab'); if(!b)return;
+    document.querySelectorAll('.lg-tab').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    var tab=b.dataset.lgtab;
+    document.querySelectorAll('.lg-pane').forEach(function(p){p.classList.remove('active');});
+    var pane=$('lg-pane-'+tab); if(pane)pane.classList.add('active');
+  });
+
+  /* ════════════════════════════════════════════════════════════
+     MACRO CORRELATIONS HEATMAP
+     Color = direction + intensity. Size = NQ correlation weight.
+     Simulated: each asset drifts with correlated noise.
+     ════════════════════════════════════════════════════════════ */
+  var _hmapState=[]; // live copy of heatmap asset data
+  function _initHmapState(){
+    _hmapState=MOCK.hmap.map(function(a){return{sym:a.sym,name:a.name,chg:a.chg,area:a.area,tier:a.tier};});
+  }
+  function _hmapBg(chg){
+    var abs=Math.abs(chg);
+    var intensity=0.08+Math.min(abs/5,1)*0.56;
+    return chg>=0?'rgba(46,232,164,'+intensity.toFixed(3)+')'
+                 :'rgba(177,151,252,'+intensity.toFixed(3)+')';
+  }
+  function _hmapBorder(chg){
+    var abs=Math.abs(chg);
+    var i=0.1+Math.min(abs/5,1)*0.42;
+    return chg>=0?'rgba(46,232,164,'+i.toFixed(3)+')'
+                 :'rgba(177,151,252,'+i.toFixed(3)+')';
+  }
+  function renderHeatmap(){
+    var grid=$('hmap-grid');if(!grid)return;
+    if(!_hmapState.length)_initHmapState();
+    // Sync NQ chg with live price
+    var nqItem=_hmapState.find?_hmapState.find(function(a){return a.sym==='NQ';})
+      :_hmapState.filter(function(a){return a.sym==='NQ';})[0];
+    if(nqItem&&S.dayOpen&&S.price)
+      nqItem.chg=parseFloat(((S.price-S.dayOpen)/S.dayOpen*100).toFixed(2));
+
+    // First render: build all tiles
+    if(!grid.hasChildNodes()||grid.children.length<5){
+      grid.innerHTML='';
+      _hmapState.forEach(function(a){
+        var tile=document.createElement('div');
+        tile.className='hmap-tile'+(Math.abs(a.chg)>=2.5?(a.chg>=0?' big-up':' big-dn'):'');
+        tile.dataset.area=a.area; tile.dataset.tier=a.tier; tile.dataset.sym=a.sym;
+        tile.style.background=_hmapBg(a.chg);
+        tile.style.borderColor=_hmapBorder(a.chg);
+        var sign=a.chg>=0?'+':'';
+        tile.innerHTML=
+          '<span class="hmap-sym">'+a.sym+'</span>'+
+          '<span class="hmap-chg" style="color:'+(a.chg>=0?'var(--up)':'var(--down)')+'">'+
+            sign+a.chg.toFixed(2)+'%</span>'+
+          '<span class="hmap-name">'+a.name+'</span>';
+        grid.appendChild(tile);
+      });
+    } else {
+      // Fast update: just refresh colors + values (no DOM rebuild = no flicker)
+      var tiles=grid.querySelectorAll('.hmap-tile');
+      tiles.forEach(function(tile){
+        var sym=tile.dataset.sym;
+        var a=_hmapState.filter(function(x){return x.sym===sym;})[0];
+        if(!a)return;
+        tile.style.background=_hmapBg(a.chg);
+        tile.style.borderColor=_hmapBorder(a.chg);
+        var bigClass=Math.abs(a.chg)>=2.5?(a.chg>=0?' big-up':' big-dn'):'';
+        tile.className='hmap-tile'+bigClass;
+        tile.dataset.area=a.area; tile.dataset.tier=a.tier;
+        var chgEl=tile.querySelector('.hmap-chg');
+        if(chgEl){
+          var sign=a.chg>=0?'+':'';
+          chgEl.textContent=sign+a.chg.toFixed(2)+'%';
+          chgEl.style.color=a.chg>=0?'var(--up)':'var(--down)';
+        }
+      });
+    }
+  }
+  // Simulation: drift heatmap assets correlating with NQ price
+  var _hmapDriftBase={};
+  function simHmap(){
+    if(!_hmapState.length)return;
+    _hmapState.forEach(function(a){
+      if(!_hmapDriftBase[a.sym])_hmapDriftBase[a.sym]=a.chg;
+      var corr; // correlation coefficient to NQ drift
+      switch(a.sym){
+        case'NQ':   corr=1.00;break; case'QQQ':  corr=0.98;break;
+        case'AAPL': corr=0.72;break; case'MSFT': corr=0.70;break;
+        case'NVDA': corr=0.68;break; case'GOOGL':corr=0.65;break;
+        case'AMZN': corr=0.60;break; case'META': corr=0.58;break;
+        case'AVGO': corr=0.55;break; case'COST': corr=0.50;break;
+        case'NFLX': corr=0.52;break; case'TSLA': corr=0.44;break;
+        case'ES':   corr=0.88;break;
+        case'VIX':  corr=-0.78;break; // strongly inverse
+        case'DXY':  corr=-0.55;break;
+        case'US10Y':corr=-0.40;break; case'US2Y': corr=-0.35;break;
+        case'US30Y':corr=-0.38;break;
+        case'Gold': corr=-0.20;break; case'WTI':  corr=0.15;break;
+        case'BTC':  corr=0.35;break;  case'INFL': corr=0.10;break;
+        default:    corr=0.30;
+      }
+      var noise=(Math.random()-0.5)*0.06*(a.tier===1?1:a.tier===2?1.5:2.5);
+      a.chg=parseFloat((a.chg+noise).toFixed(2));
+      // bounds
+      var cap=a.sym==='VIX'?8:a.sym==='BTC'?12:a.sym==='NVDA'?10:5;
+      a.chg=Math.max(-cap,Math.min(cap,a.chg));
+    });
+    renderHeatmap();
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     GAMMA FIELD — PROXIMITY INTELLIGENCE
+     Detects how close price is to each gamma level and updates
+     visual state: far → watching → near → testing → breakout
+     ════════════════════════════════════════════════════════════ */
+  var _prevPriceGamma=null;
+  function updateGammaProximity(){
+    var imap=$('imap');if(!imap)return;
+    if(!S.callWall||!S.putWall||!S.price)return;
+    var range=S.callWall-S.putWall;if(range<=0)return;
+    var levels={call:S.callWall,put:S.putWall,flip:S.gammaFlip,vwap:S.vwap};
+    Object.keys(levels).forEach(function(key){
+      var level=levels[key];if(!level)return;
+      var dist=Math.abs(S.price-level);
+      var pct=dist/range;
+      // state: testing < 2%, near < 7%, watching < 14%
+      var state=pct<0.02?'testing':pct<0.07?'near':pct<0.14?'watching':'far';
+      // update line
+      var line=imap.querySelector('.imap-line.'+key);
+      if(line)line.className='imap-line '+key+' prox-'+state;
+      // update zone
+      var zone=imap.querySelector('.imap-zone.'+key);
+      if(zone)zone.className='imap-zone '+key+(state!=='far'?' prox-'+state:'');
+    });
+    // breakout detection
+    if(_prevPriceGamma!==null){
+      Object.keys(levels).forEach(function(key){
+        var level=levels[key];if(!level)return;
+        var prev=_prevPriceGamma,curr=S.price;
+        if(prev<level&&curr>=level) _triggerBreakout(imap,level,'up');
+        else if(prev>level&&curr<=level) _triggerBreakout(imap,level,'down');
+      });
+    }
+    _prevPriceGamma=S.price;
+  }
+  function _triggerBreakout(imap,level,dir){
+    if(!S.callWall||!S.putWall)return;
+    var range=S.callWall-S.putWall;
+    var x=10+((level-S.putWall)/range)*80; // % horizontal position
+    var burst=document.createElement('div');
+    burst.className='gamma-burst '+dir;
+    burst.style.left=x+'%';
+    imap.appendChild(burst);
+    setTimeout(function(){if(burst.parentNode)burst.parentNode.removeChild(burst);},1200);
+  }
+
+
+  /* ── FETCH HEATMAP FROM BACKEND ─────────────────────────────────────────
+     Calls /api/heatmap — TwelveData WebSocket (8 symbols) + REST (14 symbols)
+     Falls back to simulation if backend unavailable.                      ── */
+  async function fetchHeatmap(){
+    if(!BACKEND_URL){return;}
+    try{
+      var r=await withTimeout(BACKEND_URL+'/api/heatmap',8000);
+      if(!r||!r.ok)return;
+      var d=await r.json();
+      var hm=d.heatmap||{};
+      if(!hm||Object.keys(hm).length<3)return;
+      // Map backend data to _hmapState
+      if(!_hmapState.length)_initHmapState();
+      _hmapState.forEach(function(a){
+        var backend=hm[a.sym]||hm[a.area];
+        if(backend&&backend.chg_pct!=null){
+          a.chg=parseFloat(backend.chg_pct.toFixed(2));
+        }
+      });
+      // Sync NQ price if available
+      var nqData=hm['NQ'];
+      if(nqData&&nqData.price&&nqData.price>10000){
+        S.prevPrice=S.price;
+        S.price=Math.round(nqData.price/25)*25;
+        if(!S.dayOpen||S.dayOpen<10000)S.dayOpen=S.price;
+        // Ancla el rango del simTick al precio real del WS
+        window._NQ_BASE=S.price;
+        renderPrice();
+      }
+      renderHeatmap();
+      setHealth('corr','connected','real',null);
+    }catch(e){
+      // Silent fail — simulation continues
+    }
+  }
+
+  /* ── FETCH CALENDAR FROM BACKEND ──────────────────────────────────────── */
+  async function fetchCalendar(){
+    if(!BACKEND_URL)return;
+    try{
+      var r=await withTimeout(BACKEND_URL+'/api/calendar',10000);
+      if(!r||!r.ok){console.warn('[calendar] HTTP',r?r.status:'no response');return;}
+      var d=await r.json();
+      if(!d||!d.macro_calendar||!d.macro_calendar.length){
+        console.warn('[calendar] empty response',d);return;
+      }
+      // Real data arrived — build calendar from backend
+      MOCK.macro.days=[];
+      var grouped={};
+      d.macro_calendar.forEach(function(ev){
+        var raw=ev.time||ev.date||'';
+        var dateKey=raw.length>=10?raw.substring(0,10):'';
+        if(!dateKey)return;
+        if(!grouped[dateKey])grouped[dateKey]=[];
+        grouped[dateKey].push({
+          time:raw.length>=16?raw.substring(11,16):'',
+          name:ev.title||ev.name||'',
+          impact:ev.impact==='extreme'||ev.impact==='high'?'high':ev.impact==='medium'?'med':'med',
+          status:ev.status||'Upcoming',
+          soon:null,
+          prev:ev.previous||'—',
+          exp:ev.forecast||'—',
+          result:ev.actual||null
+        });
+      });
+      Object.keys(grouped).sort().forEach(function(dk,i){
+        try{
+          var lbl=(i===0?'Hoy · ':'')+(new Date(dk+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'short'}));
+          MOCK.macro.days.push({label:lbl, future:i>0, events:grouped[dk]});
+        }catch(de){MOCK.macro.days.push({label:dk,future:i>0,events:grouped[dk]});}
+      });
+      if(d.next_macro_event){
+        MOCK.macro.next={
+          name:d.next_macro_event.title||'',
+          time:d.next_macro_event.time?d.next_macro_event.time.substring(11,16):'—'
+        };
+      }
+      _realCalLoaded=true;   // stop simCountdown from overwriting
+      renderLegacy();
+      setHealth('calendar','connected','real',null);
+      console.log('[calendar] OK —',d.macro_calendar.length,'eventos');
+      var badge=document.getElementById('api-status-badge');
+      if(badge){badge.textContent='✓ '+d.macro_calendar.length+' eventos reales';badge.style.background='rgba(46,232,164,0.1)';badge.style.color='var(--up)';}
+    }catch(e){console.error('[calendar] error:',e);var b=document.getElementById('api-status-badge');if(b){b.textContent='✗ '+e.message;b.style.background='rgba(255,59,48,0.1)';b.style.color='#FF6B6B';}}
+  }
+
+  /* ── FETCH MOVERS FROM BACKEND ─────────────────────────────────────────── */
+  async function fetchMovers(){
+    if(!BACKEND_URL)return;
+    try{
+      var r=await withTimeout(BACKEND_URL+'/api/movers',10000);
+      if(!r||!r.ok){console.warn('[movers] HTTP',r?r.status:'no response');return;}
+      var d=await r.json();
+      var mv=d.market_movers||[];
+      if(!mv.length){console.warn('[movers] empty');return;}
+
+      function makeNewsHtml(items){
+        return items.map(function(m){
+          var hi=m.impact==='ultra'||m.impact==='high';
+          var lbl=m.impact==='ultra'?'⚡ Ultra':m.impact==='high'?'Alto':'Med';
+          var clr=hi?'background:rgba(204,169,79,0.12);color:var(--gold);'
+                    :'background:rgba(242,239,232,0.06);color:rgba(242,239,232,0.5);';
+          return '<div data-url="'+(m.url||'')+'" style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;">'
+            +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">'
+            +'<span style="font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;'+clr+'">'+lbl+'</span>'
+            +'<span style="font-family:var(--mono);font-size:9px;color:rgba(242,239,232,0.35);">'+(m.symbol||'')+'</span>'
+            +'</div>'
+            +'<div style="font-size:12px;color:rgba(242,239,232,0.85);line-height:1.45;margin-bottom:3px;">'+(m.title||'')+'</div>'
+            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(242,239,232,0.3);">'+(m.source||'')+'</div>'
+            +'</div>';
+        }).join('');
+      }
+
+      // Write real news to Movers pane (visible when user clicks Movers tab)
+      var movPane=document.getElementById('lg-pane-movers');
+      if(movPane){
+        movPane.innerHTML=makeNewsHtml(mv);
+        movPane.onclick=function(e){
+          var el=e.target.closest('[data-url]');
+          if(el&&el.dataset.url)window.open(el.dataset.url,'_blank');
+        };
+      }
+
+      // Update gainers list (visible in macro pane)
+      var gEl=$('lg-gainers');
+      if(gEl) gEl.innerHTML=mv.slice(0,5).map(function(m){
+        return '<div style="padding:6px 14px;display:flex;justify-content:space-between;'
+          +'border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);font-size:11px;">'
+          +'<span style="color:var(--ink2);">'+(m.symbol||'NEWS').substring(0,8)+'</span>'
+          +'<span style="color:var(--up);font-size:9px;letter-spacing:0.04em;">'
+          +(m.impact==='ultra'?'⚡ ULTRA':m.impact==='high'?'↑ ALTO':'→ MED')+'</span>'
+          +'</div>';
+      }).join('');
+
+      setHealth('movers','connected','real',null);
+      console.log('[movers] OK —',mv.length,'noticias reales');
+    }catch(e){console.error('[movers] error:',e);}
+  }
+
+  
+  async function fetchInstitutionalSummary(){
+    if(!BACKEND_URL)return;
+    try{
+      var r=await withTimeout(BACKEND_URL+'/api/context/institutional',10000);
+      if(!r||!r.ok)return;
+      var d=await r.json();
+      if(d&&d.summary&&d.summary.length>20){
+        var el=$('sm-brief');
+        if(el)el.textContent=d.summary;
+        setHealth('summary','connected','real',null);
+      }
+    }catch(e){console.warn("[lbc] silent error:",e);}
+  }
+  function renderAll(){computeBias();renderRegime();renderPrice();renderNQHero();renderMap();renderMomentum();renderHeatmap();renderSummary();renderLegacy();renderDiag();drawLines();updateGammaProximity();}
+
+  function init(){
+    if(window._lbcInited)return; window._lbcInited=true;
+    tickClock(); setInterval(tickClock,1000);
+
+    // ════ FULL SIMULATION MODE ════
+    // All APIs "connected", instant data, no real network calls
+    Object.keys(HEALTH).forEach(function(k){
+      HEALTH[k].status='connected'; HEALTH[k].source='real';
+      HEALTH[k].sync=new Date(); HEALTH[k].latency=Math.round(80+Math.random()*180);
+    });
+
+    // Load all mock data and render immediately
+    applyAllMock();
+    try{renderAll();}catch(err){
+      var eb=document.createElement('div');
+      eb.style.cssText='position:fixed;top:64px;left:50%;transform:translateX(-50%);background:rgba(255,59,48,0.9);color:#fff;padding:8px 18px;border-radius:8px;font-family:monospace;font-size:11px;z-index:9999;';
+      eb.textContent='Error de inicio: '+err.message;
+      document.body.appendChild(eb);setTimeout(function(){eb.remove();},8000);
+      // Try to at least render the calendar
+      try{renderLegacy();}catch(e2){}
+    }
+
+    // Chart: load LightweightCharts then paint candles
+    setTimeout(function(){
+      loadChart();
+      setTimeout(function(){
+        if(series&&S.candles&&S.candles.length){
+          try{series.setData(S.candles);if(chart)chart.timeScale().fitContent();}catch(e){console.warn("[lbc] silent error:",e);}
+          drawLines();
+        }
+      },900);
+    },300);
+
+    // ── LIVE PRICE SIMULATION — every 3 seconds ──
+    var _tick=0, _drift=0;
+    function simTick(){
+      _tick++;
+      if(_tick%20===0) _drift=(Math.random()-0.5)*8;
+      var move=_drift*0.4+(Math.random()-0.5)*10;
+      var newPx=Math.round((S.price+move)/25)*25;
+      // Rango dinámico: ±3.5% alrededor del precio base real
+      var _base=window._NQ_BASE||S.dayOpen||30650;
+      newPx=Math.max(Math.round(_base*0.965/25)*25,Math.min(Math.round(_base*1.035/25)*25,newPx));
+      S.prevPrice=S.price; S.price=newPx;
+      if(newPx>S.dayHigh)S.dayHigh=newPx;
+      if(newPx<S.dayLow) S.dayLow=newPx;
+      // update last candle in chart
+      if(S.candles&&S.candles.length){
+        var lc=S.candles[S.candles.length-1];
+        lc.close=newPx; lc.high=Math.max(lc.high,newPx); lc.low=Math.min(lc.low,newPx);
+        if(series)try{series.update(lc);}catch(e){console.warn("[lbc]",e);}
+        // new candle every 5 ticks
+        if(_tick%5===0){
+          var nc={time:lc.time+300,open:newPx,high:newPx+25,low:newPx-25,close:newPx};
+          S.candles.push(nc);
+          if(series)try{series.update(nc);}catch(e){console.warn("[lbc] silent error:",e);}
+        }
+      }
+      HEALTH.price.sync=new Date(); HEALTH.price.latency=Math.round(20+Math.random()*60);
+      renderPrice(); renderNQHero(); renderMapLive(); renderMomentum(); renderRegime();
+      updateGammaProximity(); // update gamma level visual states on every price tick
+    }
+    setInterval(simTick,1000);
+
+    // ── HEATMAP drift — every 2 seconds (feels more alive than correlations) ──
+    _initHmapState(); renderHeatmap(); // initial render
+    setInterval(simHmap,2000);
+    // Real API refresh loops (slower — backend has its own cache)
+    window._NQ_BASE=30650; // base dinámica — se actualiza con precio real
+    if(BACKEND_URL){
+      // Precio NQ inmediato del WS cache (0 créditos, llega en <500ms)
+      (function fetchNQNow(){
+        fetch(BACKEND_URL+'/api/heatmap',{cache:'no-store'})
+          .then(function(r){return r.ok?r.json():null;})
+          .then(function(d){
+            if(!d)return;
+            var nq=d.heatmap&&d.heatmap['NQ'];
+            if(nq&&nq.price&&nq.price>10000){
+              S.prevPrice=S.price;
+              S.price=Math.round(nq.price/25)*25;
+              if(!S.dayOpen||S.dayOpen<10000)S.dayOpen=S.price;
+              window._NQ_BASE=S.price;
+              renderPrice();
+            }
+          }).catch(function(){});
+      })();
+      // ── Llamada inmediata — datos reales en <2 segundos ──
+      setTimeout(function(){
+        fetchCalendar();
+        fetchMovers();
+        fetchHeatmap();
+        fetchGEX();
+        fetchInstitutionalSummary();
+      }, 1500);
+
+      // ── Refresh periódico para mantener datos frescos ─────────────────────
+      setInterval(fetchHeatmap,              10000);   // heatmap cada 10s — precio NQ más fresco
+      setInterval(fetchCalendar,            300000);   // calendar cada 5min
+      setInterval(fetchMovers,              120000);   // movers cada 2min
+      setInterval(fetchInstitutionalSummary,900000);   // resumen IA cada 15min
+    }
+
+    // ── CORRELATIONS drift — every 8 seconds ──
+    var _cd={vxn:18.4,dxy:104.2,us10y:4.28,gold:2348,wti:78.5,spx:5430};
+    var _step={vxn:0.3,dxy:0.12,us10y:0.025,gold:5,wti:0.8,spx:6};
+    function simCorr(){
+      ['vxn','dxy','us10y','gold','wti','spx'].forEach(function(k){
+        var bump=(Math.random()-0.5)*2*_step[k];
+        var prev=_cd[k]; _cd[k]=Math.round((_cd[k]+bump)*10000)/10000;
+        var pct=((_cd[k]-prev)/Math.abs(prev))*100;
+        S.corr[k]={val:_cd[k],chg:parseFloat(((S.corr[k]&&S.corr[k].chg||0)+pct).toFixed(2)),dir:pct>0.03?'up':pct<-0.03?'down':'flat'};
+      });
+      HEALTH.corr.sync=new Date();
+      renderCorr();
+    }
+    setInterval(simCorr,8000);
+
+    // ── COUNTDOWN on next event banner ──
+    var _cnt=6, _realCalLoaded=false;  // flag: once real calendar loaded, stop countdown
+    function simCountdown(){
+      if(_realCalLoaded)return;  // real data loaded — don't overwrite
+      _cnt=Math.max(0,_cnt-1);
+      var el=$('lg-next-time');
+      if(el) el.textContent=_cnt>0?'08:30 (en '+_cnt+'m)':'08:30 · EN CURSO';
+      if(_cnt===0&&el) el.style.color='var(--down)';
+    }
+    setInterval(simCountdown,60000);
+
+    // ── DIAGNOSTICS ping ──
+    setInterval(function(){
+      Object.keys(HEALTH).forEach(function(k){
+        if(HEALTH[k].status==='connected') HEALTH[k].latency=Math.round(40+Math.random()*260);
+      });
+      renderDiag();
+    },5000);
+
+    // Show institutional popup after 2s
+    setTimeout(showPopup,2000);
+    // Refresh button
+    var dr=$('diag-refresh');
+    if(dr)dr.addEventListener('click',function(){
+      applyAllMock();renderAll();
+      if(series&&S.candles)try{series.setData(S.candles);chart.timeScale().fitContent();}catch(e){console.warn("[lbc] silent error:",e);}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  // Safety net: ensure calendar always shows mock data
+  function _safeCalRender(){
+    var list=document.getElementById('lg-macro-list');
+    if(!list||!MOCK||!MOCK.macro||!MOCK.macro.days||!MOCK.macro.days.length)return;
+    if(list.querySelector('.lg-day'))return;
+    var h='';
+    MOCK.macro.days.forEach(function(day){
+      h+='<div class="lg-day'+(day.future?' future':'')+'"><span class="lg-day-dot"></span><span class="lg-day-txt">'+day.label+'</span></div>';
+      (day.events||[]).forEach(function(e){
+        var hi=e.impact==='high';
+        h+='<div class="lg-ev '+(hi?'high':'med')+'" style="cursor:default;">'
+          +'<div class="lg-ev-inner"><div class="lg-ev-top">'
+          +'<span class="lg-ev-time">'+e.time+'</span>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+'</div>'
+          +'<div class="lg-ev-status">'+e.status+'</div></div>'
+          +'<span class="lg-ev-badge '+(hi?'high':'med')+'">'+(hi?'Alto':'Med')+'</span>'
+          +'</div></div></div>';
+      });
+    });
+    if(h){
+      list.innerHTML=h;
+      var nn=document.getElementById('lg-next-name'),nt=document.getElementById('lg-next-time');
+      if(nn&&MOCK.macro.next)nn.textContent=MOCK.macro.next.name;
+      if(nt&&MOCK.macro.next)nt.textContent=MOCK.macro.next.time;
+    }
+  }
+  setTimeout(_safeCalRender,200);
+
+  /* ── INSTITUTIONAL POPUP ALERT ── */
+  function showPopup(){
+    var top=MOCK.movers.gainers[0];
+    var pp=document.getElementById('lbc-popup');if(!pp)return;
+    var sym=document.getElementById('pp-sym'), nm=document.getElementById('pp-name');
+    var chg=document.getElementById('pp-chg'), chgv=document.getElementById('pp-chgv');
+    var note=document.getElementById('pp-note'), fill=document.getElementById('pp-fill');
+    if(sym)sym.textContent=top.sym;
+    if(nm)nm.textContent='Top Mover · Sesión RTH';
+    if(chg)chg.className='lbc-popup-chg '+(top.chg.startsWith('+')?'up':'down');
+    if(chgv)chgv.textContent=top.chg;
+    if(note)note.textContent='Top gainer de la sesión. NVDA reporta earnings after close — catalizador de alta volatilidad. Vigilar Gamma Flip '+nfmt(S.gammaFlip)+' como soporte.';
+    pp.classList.add('show');
+    // auto-dismiss in 8s with fill animation
+    if(fill){fill.style.transition='width 8s linear';fill.style.width='100%';}
+    setTimeout(function(){pp.classList.remove('show');},8000);
+  }
+  var pclose=document.getElementById('lbc-popup-close');
+  if(pclose)pclose.addEventListener('click',function(){
+    var pp=document.getElementById('lbc-popup');if(pp)pp.classList.remove('show');
+  });
+  window.LBC_FINAL={S:S,renderAll:renderAll};
+})();
+</script>
+
+<!-- ════ INSTITUTIONAL POPUP ALERT ════ -->
+<div class="lbc-popup" id="lbc-popup" role="dialog" aria-label="Market Alert">
+  <div class="lbc-popup-top">
+    <div class="lbc-popup-badge"><span class="lbc-popup-dot"></span> Top Mover · RTH</div>
+    <button class="lbc-popup-close" id="lbc-popup-close" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="lbc-popup-body">
+    <div class="lbc-popup-sym" id="pp-sym">NVDA</div>
+    <div class="lbc-popup-name" id="pp-name">NVIDIA Corporation</div>
+    <div class="lbc-popup-chg up" id="pp-chg"><span class="lbc-popup-chg-v" id="pp-chgv">+6.2%</span></div>
+    <div class="lbc-popup-note" id="pp-note">Top gainer de la sesión. Earnings after close hoy — catalizador de alta volatilidad para el NQ.</div>
+  </div>
+  <button class="lbc-popup-dismiss" aria-label="Progreso auto-dismiss">
+    <div class="lbc-popup-dismiss-fill" id="pp-fill"></div>
+  </button>
+</div>
+</body>
+</html>
