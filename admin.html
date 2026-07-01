@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liberato · Command Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050608; --bg-2:#0A0C12; --bg-3:#0E1119; --panel:#0B0E16;
+    --gold:#CCA94F; --gold-2:#E7CC74; --gold-dim:rgba(204,169,79,0.12);
+    --up:#2EE8A4; --down:#B197FC; --cyan:#4FD6E0;
+    --ink:#F3F0E7; --ink-2:#9CA3AF; --ink-3:#6B7280; --ink-4:#3B4252;
+    --brd:rgba(255,255,255,0.05); --brd-gold:rgba(204,169,79,0.22);
+    --grid:rgba(204,169,79,0.03);
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Space Grotesk',-apple-system,sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  .gate{max-width:400px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px;}
+  .gate-brand{font-family:var(--serif);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
+  .gate-ring{width:64px;height:64px;margin:0 auto 26px;position:relative;opacity:0;animation:fade 0.7s 0.2s forwards;}
+  .gate-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .gate-ring-c{fill:none;stroke:var(--brd-gold);stroke-width:1.5;}
+  .gate-ring-p{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:190;stroke-dashoffset:150;animation:ring 2.5s ease-in-out infinite;}
+  .gate-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
+  .gate-title{font-family:var(--serif);font-size:25px;font-weight:600;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
+  .gate-title span{color:var(--gold);}
+  .gate-sub{font-size:12px;color:var(--ink-3);text-align:center;margin-bottom:30px;font-family:var(--mono);letter-spacing:0.04em;opacity:0;animation:fade 0.7s 0.35s forwards;}
+  .gate-form{opacity:0;animation:fade 0.7s 0.45s forwards;}
+  .field-input{width:100%;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px 16px;color:var(--ink);font-family:var(--mono);font-size:14px;outline:none;transition:border 0.25s,box-shadow 0.25s;}
+  .field-input:focus{border-color:var(--brd-gold);box-shadow:0 0 0 3px var(--gold-dim);}
+  .btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#160f02;border:none;border-radius:10px;padding:14px;font-family:var(--sans);font-weight:600;font-size:14px;cursor:pointer;margin-top:14px;transition:transform 0.15s,opacity 0.2s;letter-spacing:0.02em;}
+  .btn:hover{opacity:0.92;transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+  .btn-sm{width:auto;padding:11px 20px;font-size:13px;margin-top:0;}
+
+  .deck{max-width:1180px;margin:0 auto;padding:28px 22px 60px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;margin-bottom:26px;border-bottom:1px solid var(--brd);}
+  .brand-row{display:flex;align-items:center;gap:14px;}
+  .brand-mark{width:34px;height:34px;border:1px solid var(--brd-gold);border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .brand-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,var(--gold-dim) 50%,transparent 60%);animation:sweep 4s ease-in-out infinite;}
+  .brand-mark span{font-family:var(--serif);font-size:16px;color:var(--gold);font-weight:600;}
+  .brand-txt .t{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1;}
+  .brand-txt .t span{color:var(--gold);}
+  .brand-txt .s{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;}
+  .topbar-r{display:flex;align-items:center;gap:14px;}
+  .live{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--up);letter-spacing:0.06em;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up);animation:pulse 2s ease-in-out infinite;}
+  .refresh{background:var(--bg-2);border:1px solid var(--brd);color:var(--ink-2);border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-family:var(--mono);transition:all 0.2s;}
+  .refresh:hover{border-color:var(--brd-gold);color:var(--gold);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+  .kpi{background:var(--panel);border:1px solid var(--brd);border-radius:14px;padding:18px;position:relative;overflow:hidden;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
+  .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.5;}
+  .kpi-v{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1;letter-spacing:-0.01em;}
+  .kpi-k{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:9px;}
+  .kpi.gold .kpi-v{color:var(--gold-2);}
+  .kpi.up .kpi-v{color:var(--up);}
+  .kpi.cyan .kpi-v{color:var(--cyan);}
+  .kpi.purple .kpi-v{color:var(--down);}
+
+  .main-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;margin-bottom:20px;}
+  @media(max-width:820px){.main-grid{grid-template-columns:1fr;}}
+  .panel{background:var(--panel);border:1px solid var(--brd);border-radius:16px;padding:22px;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
+  .panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .panel-t{font-size:13px;font-weight:600;letter-spacing:0.02em;}
+  .panel-tag{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--brd-gold);border-radius:6px;}
+  .chart-wrap{position:relative;height:200px;}
+  .chart-wrap svg{width:100%;height:100%;overflow:visible;}
+  .legend{display:flex;gap:18px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .legend i{display:inline-block;width:10px;height:2px;margin-right:6px;vertical-align:middle;}
+
+  .ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;}
+  .ring{position:relative;width:170px;height:170px;}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .ring-bg{fill:none;stroke:var(--bg-3);stroke-width:10;}
+  .ring-fill{fill:none;stroke:url(#rgrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-v{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--gold-2);line-height:1;}
+  .ring-l{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;}
+  .ring-split{display:flex;gap:24px;margin-top:22px;}
+  .ring-split div{text-align:center;}
+  .ring-split .n{font-family:var(--serif);font-size:20px;font-weight:600;}
+  .ring-split .n.p{color:var(--gold-2);}
+  .ring-split .n.f{color:var(--ink-2);}
+  .ring-split .lbl{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab{background:var(--panel);border:1px solid var(--brd);border-radius:9px;padding:9px 18px;font-size:13px;color:var(--ink-2);cursor:pointer;transition:all 0.2s;font-family:var(--mono);letter-spacing:0.03em;}
+  .tab.active{background:var(--gold-dim);border-color:var(--brd-gold);color:var(--gold-2);}
+  .tbl-panel{background:var(--panel);border:1px solid var(--brd);border-radius:16px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;padding:14px 16px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-4);border-bottom:1px solid var(--brd);font-weight:500;}
+  td{padding:14px 16px;border-bottom:1px solid var(--brd);color:var(--ink-2);}
+  tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background 0.15s;}
+  tbody tr:hover td{background:rgba(204,169,79,0.02);}
+  .badge{display:inline-block;padding:3px 9px;border-radius:6px;font-size:10px;font-family:var(--mono);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+  .badge-premium{background:rgba(204,169,79,0.12);color:var(--gold-2);border:1px solid var(--brd-gold);}
+  .badge-free{background:rgba(255,255,255,0.03);color:var(--ink-3);border:1px solid var(--brd);}
+  .badge-ok{background:rgba(46,232,164,0.1);color:var(--up);}
+  .badge-no{background:rgba(177,151,252,0.1);color:var(--down);}
+  .hidden{display:none;}
+  .empty{text-align:center;padding:44px;color:var(--ink-4);font-size:13px;font-family:var(--mono);}
+  .msg{padding:11px 14px;border-radius:9px;font-size:13px;margin-bottom:14px;font-family:var(--mono);}
+  .msg-err{background:rgba(177,151,252,0.08);color:var(--down);border:1px solid rgba(177,151,252,0.22);}
+  .msg-ok{background:rgba(46,232,164,0.08);color:var(--up);border:1px solid rgba(46,232,164,0.22);}
+  .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:8px;}
+  .form-g{flex:1;min-width:120px;}
+  .form-g label{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
+  select.field-input{cursor:pointer;}
+
+  @keyframes fade{to{opacity:1;}}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  @keyframes ring{0%,100%{stroke-dashoffset:150;}50%{stroke-dashoffset:60;}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  @keyframes sweep{0%,100%{transform:translateX(-60%);}50%{transform:translateX(60%);}}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <div class="gate-brand">Liberato Community</div>
+  <div class="gate-ring">
+    <svg viewBox="0 0 68 68"><circle class="gate-ring-c" cx="34" cy="34" r="30"/><circle class="gate-ring-p" cx="34" cy="34" r="30"/></svg>
+    <div class="gate-dot"></div>
+  </div>
+  <div class="gate-title">Command <span>Deck</span></div>
+  <div class="gate-sub">Autenticación de operador requerida</div>
+  <div class="gate-form">
+    <div id="gate-msg"></div>
+    <input class="field-input" id="admin-key" type="password" placeholder="Clave de acceso" onkeydown="if(event.key==='Enter')enter()">
+    <button class="btn" id="btn-enter" onclick="enter()">Acceder al sistema</button>
+  </div>
+</div>
+
+<div id="deck" class="deck hidden">
+  <div class="topbar">
+    <div class="brand-row">
+      <div class="brand-mark"><span>L</span></div>
+      <div class="brand-txt">
+        <div class="t">Command <span>Deck</span></div>
+        <div class="s">Membership Control · LBC</div>
+      </div>
+    </div>
+    <div class="topbar-r">
+      <div class="live"><span class="live-dot"></span>SISTEMA EN VIVO</div>
+      <button class="refresh" onclick="loadAll()">↻ Sincronizar</button>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="main-grid">
+    <div class="panel" style="animation-delay:0.15s;">
+      <div class="panel-hd">
+        <div class="panel-t">Crecimiento de la comunidad</div>
+        <div class="panel-tag">14 días + proyección</div>
+      </div>
+      <div class="chart-wrap"><svg id="growth" viewBox="0 0 640 200" preserveAspectRatio="none"></svg></div>
+      <div class="legend">
+        <span><i style="background:var(--gold);"></i>Usuarios acumulados</span>
+        <span><i style="background:var(--down);"></i>Proyección (7d)</span>
+      </div>
+    </div>
+    <div class="panel" style="animation-delay:0.22s;">
+      <div class="panel-hd"><div class="panel-t">Conversión a Premium</div></div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg viewBox="0 0 170 170">
+            <defs><linearGradient id="rgrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#CCA94F"/><stop offset="100%" stop-color="#E7CC74"/>
+            </linearGradient></defs>
+            <circle class="ring-bg" cx="85" cy="85" r="72"/>
+            <circle class="ring-fill" id="ring-fill" cx="85" cy="85" r="72" stroke-dasharray="452" stroke-dashoffset="452"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-v" id="ring-v">—</div>
+            <div class="ring-l">conversión</div>
+          </div>
+        </div>
+        <div class="ring-split">
+          <div><div class="n p" id="rs-premium">—</div><div class="lbl">Premium</div></div>
+          <div><div class="n f" id="rs-free">—</div><div class="lbl">Free</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab-users" onclick="showTab('users')">Usuarios</div>
+    <div class="tab" id="tab-coupons" onclick="showTab('coupons')">Cupones</div>
+  </div>
+
+  <div id="view-users">
+    <div class="tbl-panel">
+      <table>
+        <thead><tr><th>Email</th><th>Nombre</th><th>Plan</th><th>Verificado</th><th>Registro</th></tr></thead>
+        <tbody id="users-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="view-coupons" class="hidden">
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Crear cupón / oferta temporal</div>
+      <div id="coupon-msg"></div>
+      <div class="form-row">
+        <div class="form-g"><label>Código</label><input class="field-input" id="c-code" placeholder="LANZAMIENTO20" style="text-transform:uppercase;"></div>
+        <div class="form-g"><label>Tipo</label><select class="field-input" id="c-type" onchange="toggleCType()"><option value="percent">% descuento</option><option value="amount">$ descuento</option></select></div>
+        <div class="form-g"><label id="c-val-label">Porcentaje (%)</label><input class="field-input" id="c-value" type="number" placeholder="20"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-g"><label>Duración</label><select class="field-input" id="c-duration"><option value="once">Una vez</option><option value="repeating">Meses repetidos</option><option value="forever">Para siempre</option></select></div>
+        <div class="form-g"><label>Expira en (días, opcional)</label><input class="field-input" id="c-expires" type="number" placeholder="7 = oferta temporal"></div>
+        <div class="form-g" style="flex:0;"><button class="btn btn-sm" id="btn-coupon" onclick="createCoupon()">Crear cupón</button></div>
+      </div>
+    </div>
+    <div class="tbl-panel">
+      <table>
+        <thead><tr><th>Código</th><th>Descuento</th><th>Duración</th><th>Usos</th><th>Estado</th></tr></thead>
+        <tbody id="coupons-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  var API = window.LBC_AUTH_API || 'https://liberato-usuarios-production.up.railway.app';
+  var KEY = '';
+  function $(id){return document.getElementById(id);}
+  function msg(id,text,type){var el=$(id);el.innerHTML='<div class="msg msg-'+(type==='ok'?'ok':'err')+'">'+text+'</div>';if(type==='ok')setTimeout(function(){el.innerHTML='';},4000);}
+
+  async function api(path){
+    var r=await fetch(API+path+(path.indexOf('?')>=0?'&':'?')+'key='+encodeURIComponent(KEY));
+    if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
+    return r.json();
+  }
+  async function apiPost(path,body){
+    var r=await fetch(API+path+'?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
+    return r.json();
+  }
+
+  async function enter(){
+    KEY=$('admin-key').value.trim();
+    if(!KEY){msg('gate-msg','Ingresa la clave de acceso','err');return;}
+    $('btn-enter').disabled=true;
+    try{
+      await api('/api/admin/metrics');
+      sessionStorage.setItem('lbc_admin_key',KEY);
+      $('gate').classList.add('hidden');
+      $('deck').classList.remove('hidden');
+      loadAll();
+    }catch(e){ msg('gate-msg','Acceso denegado · clave incorrecta','err'); }
+    finally{ $('btn-enter').disabled=false; }
+  }
+
+  function loadAll(){ loadMetrics(); loadUsers(); loadCoupons(); }
+
+  async function loadMetrics(){
+    try{
+      var m=await api('/api/admin/metrics');
+      $('kpis').innerHTML=
+        kpi(m.total_usuarios,'Usuarios totales','gold',0) +
+        kpi(m.premium,'Premium activos','up',0.05) +
+        kpi(m.verificados,'Verificados','cyan',0.1) +
+        kpi(m.registros_ultimos_7d,'Nuevos · 7 días','gold',0.15) +
+        kpi(m.sesiones_activas,'Sesiones vivas','purple',0.2);
+      var pct=m.conversion_pct||0;
+      var circ=452, off=circ-(circ*Math.min(pct,100)/100);
+      setTimeout(function(){ $('ring-fill').style.strokeDashoffset=off; },100);
+      $('ring-v').textContent=pct+'%';
+      $('rs-premium').textContent=m.premium;
+      $('rs-free').textContent=m.free;
+      drawGrowth(m.total_usuarios, m.registros_ultimos_7d);
+    }catch(e){ $('kpis').innerHTML='<div class="empty">No se pudieron cargar las métricas</div>'; }
+  }
+  function kpi(v,k,cls,delay){
+    return '<div class="kpi '+cls+'" style="animation-delay:'+delay+'s;"><div class="kpi-v">'+v+'</div><div class="kpi-k">'+k+'</div></div>';
+  }
+
+  function drawGrowth(total, recent7){
+    var svg=$('growth'); if(!svg)return;
+    var W=640,H=200,pad=8;
+    var dailyRate=Math.max((recent7||0)/7, total>0?0.3:0);
+    var days=14, proj=7;
+    var start=Math.max(0, total - dailyRate*days);
+    var hist=[];
+    for(var i=0;i<=days;i++){ hist.push(start + dailyRate*i); }
+    var last=hist[hist.length-1];
+    var fut=[];
+    for(var j=1;j<=proj;j++){ fut.push(last + dailyRate*j); }
+    var all=hist.concat(fut);
+    var max=Math.max.apply(null,all)*1.15||1;
+    var n=all.length-1;
+    function X(i){return pad + (i/n)*(W-pad*2);}
+    function Y(v){return H-pad - (v/max)*(H-pad*2);}
+    function pathFrom(arr,offset){
+      var d='';
+      for(var i=0;i<arr.length;i++){ var xi=offset+i; d+=(i===0?'M':'L')+X(xi).toFixed(1)+' '+Y(arr[i]).toFixed(1)+' '; }
+      return d;
+    }
+    var histPath=pathFrom(hist,0);
+    var futArr=[hist[hist.length-1]].concat(fut);
+    var futPath=pathFrom(futArr,days);
+    var area=histPath+'L'+X(days).toFixed(1)+' '+(H-pad)+' L'+X(0).toFixed(1)+' '+(H-pad)+' Z';
+    var len=1400;
+    svg.innerHTML=
+      '<defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0%" stop-color="rgba(204,169,79,0.22)"/><stop offset="100%" stop-color="rgba(204,169,79,0)"/>'+
+      '</linearGradient></defs>'+
+      '<path d="'+area+'" fill="url(#ga)"/>'+
+      '<path d="'+histPath+'" fill="none" stroke="#CCA94F" stroke-width="2" stroke-linecap="round" stroke-dasharray="'+len+'" stroke-dashoffset="'+len+'" style="animation:draw 1.6s ease forwards"/>'+
+      '<path d="'+futPath+'" fill="none" stroke="#B197FC" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round" opacity="0.85"/>'+
+      '<circle cx="'+X(days).toFixed(1)+'" cy="'+Y(last).toFixed(1)+'" r="4" fill="#CCA94F"/>'+
+      '<circle cx="'+X(n).toFixed(1)+'" cy="'+Y(all[n]).toFixed(1)+'" r="3.5" fill="#B197FC"/>';
+  }
+
+  async function loadUsers(){
+    try{
+      var d=await api('/api/admin/users?limit=200');
+      if(!d.users||!d.users.length){ $('users-body').innerHTML='<tr><td colspan="5" class="empty">Sin usuarios todavía · la lista aparecerá aquí</td></tr>'; return; }
+      $('users-body').innerHTML=d.users.map(function(u){
+        var plan=u.plan==='premium'?'<span class="badge badge-premium">Premium</span>':'<span class="badge badge-free">Free</span>';
+        var ver=u.verified?'<span class="badge badge-ok">Sí</span>':'<span class="badge badge-no">No</span>';
+        return '<tr><td style="color:var(--ink);">'+esc(u.email)+'</td><td>'+esc(u.name||'—')+'</td><td>'+plan+'</td><td>'+ver+'</td><td style="font-family:var(--mono);font-size:12px;">'+(u.created_at||'').slice(0,10)+'</td></tr>';
+      }).join('');
+    }catch(e){ $('users-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar usuarios</td></tr>'; }
+  }
+
+  async function loadCoupons(){
+    try{
+      var d=await api('/api/admin/coupons');
+      if(!d.coupons||!d.coupons.length){ $('coupons-body').innerHTML='<tr><td colspan="5" class="empty">Sin cupones activos · crea el primero arriba</td></tr>'; return; }
+      $('coupons-body').innerHTML=d.coupons.map(function(c){
+        var estado=c.activo?'<span class="badge badge-ok">Activo</span>':'<span class="badge badge-no">Inactivo</span>';
+        return '<tr><td style="font-family:var(--mono);color:var(--gold-2);">'+esc(c.code)+'</td><td>'+esc(c.descuento)+'</td><td>'+esc(c.duration)+'</td><td>'+c.veces_usado+'</td><td>'+estado+'</td></tr>';
+      }).join('');
+    }catch(e){ $('coupons-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar cupones · ¿Stripe configurado?</td></tr>'; }
+  }
+
+  function toggleCType(){ var t=$('c-type').value; $('c-val-label').textContent=t==='percent'?'Porcentaje (%)':'Monto ($)'; $('c-value').placeholder=t==='percent'?'20':'50'; }
+  async function createCoupon(){
+    var code=$('c-code').value.trim().toUpperCase(),type=$('c-type').value,value=parseFloat($('c-value').value),duration=$('c-duration').value,expires=$('c-expires').value.trim();
+    if(!code||!value){ msg('coupon-msg','Completa código y valor','err'); return; }
+    var body={code:code,duration:duration};
+    if(type==='percent')body.percent_off=value; else body.amount_off=value;
+    if(expires)body.expires_days=parseInt(expires);
+    $('btn-coupon').disabled=true;
+    try{ await apiPost('/api/admin/create-coupon',body); msg('coupon-msg','Cupón '+code+' creado','ok'); $('c-code').value='';$('c-value').value='';$('c-expires').value=''; loadCoupons(); }
+    catch(e){ msg('coupon-msg',e.message,'err'); } finally{ $('btn-coupon').disabled=false; }
+  }
+
+  function showTab(t){
+    $('tab-users').classList.toggle('active',t==='users');
+    $('tab-coupons').classList.toggle('active',t==='coupons');
+    $('view-users').classList.toggle('hidden',t!=='users');
+    $('view-coupons').classList.toggle('hidden',t!=='coupons');
+  }
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+
+  (function(){ var saved=sessionStorage.getItem('lbc_admin_key'); if(saved){ $('admin-key').value=saved; enter(); } })();
+</script>
+</body>
+</html>
