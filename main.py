@@ -3829,31 +3829,38 @@ async def diag_rapidapi(key: str = ""):
     if not RAPIDAPI_KEY:
         return {"error": "No hay RAPIDAPI_KEY"}
     headers = {"X-RapidAPI-Key": RAPIDAPI_KEY, "X-RapidAPI-Host": RAPIDAPI_HOST}
-    today = datetime.now(NY)
-    params = {"from": today.strftime("%Y-%m-%d"),
-              "to": (today + timedelta(days=1)).strftime("%Y-%m-%d"), "countries": "US"}
-    paths = ["/economic-events/tradingview", "/economic-events", "/economic-events/investing"]
-    out = {"host": RAPIDAPI_HOST, "resultados": {}}
-    async with httpx.AsyncClient(timeout=12) as client:
-        for p in paths:
-            try:
-                r = await client.get(f"https://{RAPIDAPI_HOST}{p}",
-                                     headers=headers, params=params)
-                entry = {"status": r.status_code}
+    base = {"impact": "High", "descriptions": "false", "sort": "asc",
+            "limit": "80", "tz": "America/New_York",
+            "fields": "id,date,eventName,country,impactLabel,actual,forecast,previous"}
+    out = {"host": RAPIDAPI_HOST, "endpoint": "/calendar", "pruebas": {}}
+    try:
+        async with httpx.AsyncClient(timeout=12) as client:
+            for label, extra in [
+                ("resueltos_7d", {"daysBehind": "7", "daysAhead": "0", "resolved": "true"}),
+                ("proximos_3d",  {"daysBehind": "0", "daysAhead": "3", "resolved": "false"}),
+            ]:
+                r = await client.get(f"https://{RAPIDAPI_HOST}/calendar",
+                                     headers=headers, params={**base, **extra})
+                info = {"status": r.status_code}
                 if r.status_code == 200:
-                    try:
-                        d = r.json()
-                        if isinstance(d, list):
-                            entry["tipo"] = "lista"; entry["total"] = len(d)
-                            entry["sample_keys"] = list(d[0].keys())[:10] if d else []
-                        elif isinstance(d, dict):
-                            entry["tipo"] = "dict"; entry["keys"] = list(d.keys())[:10]
-                        entry["FUNCIONA"] = "✅ USAR ESTE"
-                    except Exception:
-                        entry["body"] = r.text[:150]
+                    d = r.json()
+                    evs = d.get("events") if isinstance(d, dict) else d
+                    evs = evs if isinstance(evs, list) else []
+                    info["total_eventos"] = len(evs)
+                    # Muestra los primeros 5 con sus campos clave para inspección
+                    info["muestra"] = [{
+                        "eventName": e.get("eventName"), "date": e.get("date"),
+                        "country": e.get("country"), "actual": e.get("actual"),
+                        "forecast": e.get("forecast"), "previous": e.get("previous"),
+                    } for e in evs[:5]]
+                    # ¿Aparece NFP / Payrolls?
+                    info["tiene_nfp"] = any("payroll" in (e.get("eventName","") or "").lower()
+                                            or "non-farm" in (e.get("eventName","") or "").lower()
+                                            for e in evs)
                 else:
-                    entry["body"] = r.text[:120]
-                out["resultados"][p] = entry
-            except Exception as e:
-                out["resultados"][p] = {"error": str(e)[:100]}
+                    info["body"] = r.text[:200]
+                out["pruebas"][label] = info
+    except Exception as e:
+        out["error"] = str(e)
+    out["contador_hoy"] = f"{_rapidapi_day_count}/85"
     return out
