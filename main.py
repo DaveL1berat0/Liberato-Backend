@@ -621,9 +621,13 @@ _indices_last_ts = 0
 # Nota: Finnhub free no da futuros; para DXY/yields/oro usamos los ETF proxy
 # (UUP/IEF/GLD/USO) cuyo movimiento % refleja el subyacente. IEF se invierte
 # (bono → yield). Es data REAL y verificable, sin el bloqueo cookie de Yahoo.
+# VERIFICADO 16-jul-2026 en producción: Finnhub free NO sirve símbolos de índice
+# (^VIX y ^GSPC nunca llegaron al heatmap; los proxies ETF y BTC sí). Se quitan de
+# aquí para no gastar 2 llamadas/ciclo en respuestas vacías:
+#   · SPX → refresh_spx_yahoo() (Yahoo /v8/chart, gratis)
+#   · VIX → llega del summary de FlashAlpha (bloque macro), que ya se pide para el
+#           GEX; y VIXY (ETF de volatilidad) sigue en el heatmap con precio real.
 _FH_INDICES = {
-    "VIX": ("^VIX", 1, False),   # índice VIX real
-    "SPX": ("^GSPC", 1, False),  # S&P 500 índice real
     "DXY": ("UUP", 1, True),     # proxy dólar (ETF)
     "US10Y": ("IEF", -1, True),  # proxy bonos 10Y → yield inverso
     "US2Y": ("SHY", -1, True),
@@ -632,6 +636,54 @@ _FH_INDICES = {
     "WTI": ("USO", 1, True),
     "BTC": ("BINANCE:BTCUSDT", 1, False),
 }
+# ── SPX vía Yahoo: Finnhub free NO sirve símbolos de índice ────────────────
+# Verificado 16-jul-2026 en producción: de los 9 de _FH_INDICES, los proxies ETF
+# (UUP/IEF/SHY/TLT/GLD/USO) y BTC llegan, pero ^VIX y ^GSPC NO — Finnhub free no
+# cubre índices. Sin SPX el ratio ES/SPY se quedaba sin su único respaldo, así que
+# si FlashAlpha no tenía cuota: ratio=None → sin velas → sin precio → dashboard
+# vacío TODO el día. Un solo punto de fallo para todo el chart.
+# Yahoo /v8/finance/chart sí da ^GSPC sin cookie ni crumb y sin coste. Rate-limita
+# agresivo (429), de ahí el throttle largo y el cache del último valor REAL.
+_spx_last_ts = 0
+_YAHOO_UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                           "AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"}
+async def refresh_spx_yahoo():
+    """Publica SPX real en el heatmap. Gratis: no consume créditos de ninguna API."""
+    global _spx_last_ts
+    now = time.time()
+    if now - _spx_last_ts < 120:   # Yahoo rate-limita: 1 llamada / 2 min basta
+        return
+    _spx_last_ts = now
+    try:
+        url = ("https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC"
+               "?range=1d&interval=5m")
+        async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
+            r = await c.get(url)
+        if r.status_code != 200:
+            print(f"[spx-yahoo] {r.status_code} (rate-limit?) — se mantiene el último real")
+            return
+        res = ((r.json() or {}).get("chart", {}).get("result") or [None])[0]
+        if not res:
+            return
+        m = res.get("meta", {}) or {}
+        px = m.get("regularMarketPrice")
+        prev = m.get("chartPreviousClose") or m.get("previousClose")
+        if not px:
+            return
+        chg = round(((px - prev) / prev) * 100, 3) if prev else None
+        cache["heatmap"]["data"]["SPX"] = {
+            "symbol": "SPX", "price": round(float(px), 2),
+            "chg_pct": chg,
+            "direction": ("up" if (chg or 0) > 0.03 else
+                          ("down" if (chg or 0) < -0.03 else "flat")),
+            "source": "yahoo-index",
+        }
+        # Con SPX real + SPY real, el ratio ES/SPY ya es derivable sin FlashAlpha.
+        r2 = get_px_ratio()
+        print(f"[spx-yahoo] SPX={px} chg={chg}% | ratio derivado={r2}")
+    except Exception as e:
+        print(f"[spx-yahoo] error (no crítico): {e}")
+
 _indices_last_ts = 0
 async def refresh_real_indices():
     """Niveles reales vía Finnhub (throttle 4 min). Verificable, sin cookie/crumb."""
@@ -2604,14 +2656,18 @@ async def _fetch_yahoo_5m_base():
     ua = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                         "AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"}
     ratio = get_px_ratio()
-    # Sin ratio REAL no se convierte nada: mejor sin velas que velas en la escala
-    # equivocada. Antes aquí caía a la constante 41.51 y pintaba un chart cuyo
-    # precio no cuadraba con los niveles de GEX (que sí vienen en puntos reales).
-    if not ratio:
-        print("[candles] sin ratio real (spot FlashAlpha ni SPX/SPY) — no se convierte")
-        return None
-    # Futuro directo primero (sin conversión, escala exacta); si falla, ETF×ratio.
-    candidates = [(FA_INDEX_SYMBOL, 1.0), (FA_PROXY_ETF, ratio)]
+    # El futuro directo (ES=F) NO necesita ratio: mult=1.0, ya viene en puntos del
+    # índice. Solo la conversión del ETF lo necesita, así que el candidato del ETF
+    # se añade únicamente si hay ratio REAL (sin él sería la escala equivocada;
+    # antes aquí se caía a la constante 41.51).
+    # OJO: esta función tenía un `if not ratio: return None` al principio que
+    # abortaba ANTES de intentar ES=F — bloqueaba el único camino gratis y sin
+    # créditos que funciona cuando FlashAlpha está sin cuota.
+    candidates = [(FA_INDEX_SYMBOL, 1.0)]
+    if ratio:
+        candidates.append((FA_PROXY_ETF, ratio))
+    else:
+        print(f"[candles] sin ratio real → solo se intenta {FA_INDEX_SYMBOL} directo")
     for ysym, mult in candidates:
         try:
             url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ysym}"
@@ -2975,6 +3031,84 @@ async def gamma_levels():
             "last_call_is_today": last_call_is_today,
             "age_seconds": age_seconds,
             "next_update": _next_gex_window()}
+
+@app.get("/api/admin/api-audit")
+async def api_audit(key: str = ""):
+    """CONTABILIDAD de todas las APIs: límite, uso real, presupuesto teórico del
+    cron y estado. No gasta NI UN crédito: solo lee contadores y cache.
+    Uso: /api/admin/api-audit?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    hm = cache["heatmap"]["data"]
+    # Presupuesto TEÓRICO derivado del cron real (no de comentarios).
+    plan = {
+        "flashalpha": {
+            "consumidores": ["refresh_gex (28x/día)", "diags (bajo budget_ok)"],
+            "por_dia_teorico": 5 + (GEX_REFRESHES_PER_DAY - 1) * 3,
+            "detalle": "5 créd el 1º del día + 3 los demás. 28 refreshes: 08:30, "
+                       "09:15, 09:30-54 c/6min, 10:00-11:54 c/6min, 12:30",
+            "reset": "00:00 UTC (lo dice el proveedor)",
+        },
+        "twelvedata": {
+            "consumidores": ["_warm_candles (SPY 5m)"],
+            "por_dia_teorico": 12 * 7 + 4,
+            "detalle": "1 llamada/5min, 9-16h L-V (84) + premarket 7-8h (4)",
+            "reset": "medianoche UTC",
+        },
+        "finnhub": {
+            "consumidores": [f"heatmap ({len(REST_SYMBOLS)} símbolos/min, 7-16h L-V)",
+                             f"índices ({len(_FH_INDICES)} c/4min)", "movers (1 c/45s)"],
+            "pico_por_minuto": len(REST_SYMBOLS) + len(_FH_INDICES) + 2,
+            "detalle": "el límite de Finnhub es POR MINUTO, no por día",
+        },
+        "groq": {"consumidores": ["refresh_institutional (4x/día)"],
+                 "por_dia_teorico": 4,
+                 "detalle": "09:00, 09:30, 09:45, 16:00 ET L-V"},
+        "rapidapi": {
+            "consumidores": ["calendario (TradingEconomics)"],
+            "por_dia_teorico": _rapidapi_day_count,
+            "detalle": "2 llamadas/ciclo, tope propio 85/día (contador SEPARADO de "
+                       "_api_usage: no pasa por budget_ok)",
+        },
+        "alphavantage": {"consumidores": ["respaldo de velas"],
+                         "por_dia_teorico": 0,
+                         "detalle": "solo si TwelveData falla"},
+    }
+    out = {"generado": datetime.now(NY).isoformat(), "asset": FA_ASSET, "apis": {}}
+    for name, cfg in API_BUDGETS.items():
+        st = _api_usage[name]
+        out["apis"][name] = {
+            "key_configurada": bool({
+                "flashalpha": FLASHALPHA_KEY, "twelvedata": TWELVEDATA_KEY,
+                "finnhub": FINNHUB_KEY, "groq": GROQ_KEY,
+                "alphavantage": ALPHA_VANTAGE_KEY, "fmp": FMP_KEY,
+            }.get(name)),
+            "limite_seguro": cfg["limit"], "ventana": cfg["window"],
+            "usado_ahora": st["used"], "ventana_actual": st["window_key"],
+            "restante": max(0, cfg["limit"] - st["used"]),
+            "pct": round(st["used"] / cfg["limit"] * 100, 1) if cfg["limit"] else None,
+            "plan": plan.get(name, {}),
+        }
+    out["apis"]["rapidapi"] = {
+        "key_configurada": bool(RAPIDAPI_KEY), "limite_seguro": 85, "ventana": "day",
+        "usado_ahora": _rapidapi_day_count, "restante": max(0, 85 - _rapidapi_day_count),
+        "plan": plan["rapidapi"],
+        "aviso": "contador propio, NO integrado en _api_usage → no se persiste",
+    }
+    # Salud observable: ¿el dato llega de verdad?
+    out["salud_datos"] = {
+        "heatmap_simbolos_con_precio": len([k for k, v in hm.items()
+                                            if (v or {}).get("price") is not None]),
+        "SPX_presente": "SPX" in hm,
+        "SPY_presente": "SPY" in hm,
+        f"{FA_ASSET}_presente": FA_ASSET in hm,
+        "ratio_actual": get_px_ratio(),
+        "ratio_fuente": cache["px_ratio"].get("source"),
+        "gex_cache_warm": bool(cache["gex"].get(FA_ASSET)),
+        "calendario_eventos": len(cache["calendar"]["data"] or []),
+        "velas_en_cache": bool(_candles_cache.get("5")),
+    }
+    return out
 
 @app.get("/api/gex/history")
 async def gex_history(days: int = 7, limit: int = 2000, fmt: str = "json"):
@@ -3488,6 +3622,9 @@ async def startup():
     # Cubre VIX/DXY/yields/Gold/WTI/BTC/SPX que Finnhub no tiene. Sin créditos.
     # Throttle interno de 4 min protege aunque el job corra cada 3.
     scheduler.add_job(refresh_real_indices, IntervalTrigger(minutes=3))
+    # SPX vía Yahoo (gratis): Finnhub free no da ^GSPC. Sin SPX el ratio ES/SPY se
+    # queda sin respaldo y el chart depende SOLO de FlashAlpha.
+    scheduler.add_job(refresh_spx_yahoo, IntervalTrigger(minutes=3))
     # ── Velas del chart: warm SOLO cada 5 min en horario de mercado ─────────────
     # Arquitectura eficiente: 1 llamada cada 5 min (cuando cierra una vela nueva),
     # no en loop. El caché de 5 min sirve a todos los clientes. El precio en vivo
