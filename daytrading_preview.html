@@ -896,7 +896,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
     <section class="regime neut" id="regime" aria-label="Market Regime">
       <div class="rg-hd">
-        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Etiqueta tal cual FlashAlpha.">&#9432;</span> · NQ Futures</div>
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Etiqueta tal cual FlashAlpha.">&#9432;</span> · ES Futures</div>
       </div>
       <div class="rg-in">
         <div class="rg-verdict">
@@ -1011,7 +1011,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       </div>
       <div class="cxh" id="cx-head">
         <div class="cxh-l">
-          <span class="cxh-sym">NQ Futures</span>
+          <span class="cxh-sym">ES Futures</span>
           <div class="cxh-tf" role="tablist" aria-label="Timeframe">
             <button class="tf active" data-tf="5">5m</button>
             <button class="tf" data-tf="15">15m</button>
@@ -1256,33 +1256,32 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   /* ── applyAllMock() — carga todos los datos ficticios de una vez ── */
   function applyAllMock(){
-    var m=MOCK;
-    // GEX — mock data is already in NQ prices, assign directly (no cv() conversion)
-    S.ratio=m.gex.ratio; S.callWall=m.gex.call_wall; S.putWall=m.gex.put_wall;
-    S.gammaFlip=m.gex.gamma_flip; S.netGex=m.gex.net_gex; S.regime=m.gex.regime;
-    S.vwap=m.gex.vwap; S.atr=m.gex.atr;
-    // price + OHLC
-    S.price=m.price.price; S.prevPrice=m.price.price-35;
-    S.dayOpen=m.price.open; S.dayHigh=m.price.high; S.dayLow=m.price.low;
-    // structure + volatility (will be AI-determined in production)
-    S.structure='trend'; S.volatility='normal';
-    // candles — Rule #1: sin velas mock; el chart espera las reales
-    _buildMockCandles();
-    // correlations — Rule #1: vacío hasta que llegue el feed real (fetchHeatmap,
-    // ~30s). renderCorr con objeto vacío muestra '—', nunca valores inventados.
-    S.corr={};
-    S.events=JSON.parse(JSON.stringify(m.events));
-    // NO usar mock para Exp Move / ATM IV / P/C Ratio (Regla #1).
-    // Estos se llenan SOLO con datos reales del backend en fetchGEX.
-    // Si no hay dato real, quedan null → la UI muestra "—".
+    // ⚠️ ESTA FUNCIÓN YA NO INYECTA NADA INVENTADO (Regla #1).
+    //
+    // Se llamaba INCONDICIONALMENTE en cada carga ("Load all mock data and
+    // render immediately"), ignorando MOCK.enabled=false — ese flag solo se
+    // consultaba en applyMockGex(). Resultado: el terminal pintaba de entrada
+    // precio 29.850, call wall 31.000, put wall 27.000, gamma flip 29.877 y
+    // net gex -701M. Todo ficticio, y todo en escala NASDAQ. Si la data real no
+    // llegaba (p. ej. FlashAlpha sin cuota), esos números se quedaban en
+    // pantalla TODO EL DÍA con aspecto de reales. Tras migrar al ES era aún
+    // peor: cifras del NQ bajo una etiqueta "ES · S&P 500".
+    //
+    // Ahora solo inicializa a null → la UI muestra "—" hasta que llegue el dato
+    // real del backend. Un panel vacío es la verdad; un número inventado no.
+    S.ratio=null; S.callWall=null; S.putWall=null; S.gammaFlip=null;
+    S.netGex=null; S.regime=null; S.vwap=null; S.atr=null;
+    S.price=null; S.prevPrice=null;
+    S.dayOpen=null; S.dayHigh=null; S.dayLow=null;
+    S.structure=null; S.volatility=null;
+    S.candles=null;   // el chart muestra su loader y solo pinta velas reales
+    S.corr={};        // renderCorr con {} muestra '—'
+    S.events=[];
+    // Exp Move / ATM IV / P/C Ratio: solo se llenan con dato real en fetchGEX.
   }
-  function _buildMockCandles(){
-    // ⚠️ ELIMINADA (Rule #1). Antes generaba 78 velas sintéticas con
-    // Math.random() en CADA carga de página, y el chart las pintaba hasta que
-    // llegaba la data real. Ahora S.candles queda null: el chart muestra su
-    // loader y pinta ÚNICAMENTE velas reales del backend (fetchCandles).
-    S.candles=null;
-  }
+  // _buildMockCandles() ELIMINADA. Generaba 78 velas sintéticas con
+  // Math.random() en cada carga. Quedó como no-op (S.candles=null) y ahora se
+  // borra del todo: applyAllMock() ya pone S.candles=null directamente.
 
   function $(id){return document.getElementById(id);}
   function etNow(){
