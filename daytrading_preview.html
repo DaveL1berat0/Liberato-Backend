@@ -902,10 +902,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <div class="rg-verdict">
           <div class="rg-dir neut" id="rg-dir">NEUTRAL</div>
           <div class="rg-dir-sub neut" id="rg-dir-sub"><span class="rg-dir-arrow neut">■</span> Sesgo EQUILIBRIO</div>
-          <!-- NQ live price — integrated, primary reference -->
+          <!-- ES live price — integrated, primary reference -->
           <div class="rg-price" id="rg-price-wrap">
             <div class="rg-price-top">
-              <span class="rg-price-lbl">NQ · Nasdaq-100</span>
+              <span class="rg-price-lbl">ES · S&amp;P 500</span>
               <span class="rg-price-live"><span class="d"></span>Live</span>
             </div>
             <div class="rg-price-row">
@@ -1140,6 +1140,18 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   console.log('%cSi ves este mensaje verde, el archivo NUEVO está desplegado correctamente.','color:#2EE8A4;font-size:11px;');
   window.LBC_VERSION='v2026.06.30-FIX31';
   var BACKEND_URL=window.LBC_BACKEND_URL||'https://web-production-33671.up.railway.app';  var NQ_STEP=0.25;
+  // ── INSTRUMENTO ────────────────────────────────────────────────────────────
+  // Dave opera el ES (S&P 500 e-mini). Antes era el NQ (Nasdaq).
+  // Punto ÚNICO de cambio del frontend: para volver al NQ, pon 'NQ'/'QQQ'.
+  // Debe coincidir con FA_ASSET / FA_PROXY_ETF del backend (main.py).
+  var ASSET     = 'ES';   // clave del heatmap y etiqueta visible
+  var PROXY_ETF = 'SPY';  // ETF proxy para precio/velas (TwelveData free no da futuros)
+  // Claves de localStorage namespaced por instrumento. Antes eran 'lbc_nqf_*'
+  // fijas: al migrar NQ→ES el navegador seguía teniendo guardados los walls del
+  // NASDAQ (~23.000) y los pintaba sobre un dashboard de ES — niveles de otro
+  // instrumento presentados como propios (Regla #1). Con el prefijo por asset,
+  // los valores viejos del NQ simplemente ya no se leen.
+  function LS(k){return 'lbc_'+ASSET+'_'+k;}
   var _NQ_RATIO=null; // calculated dynamically — never hardcoded
   var _targetNQ=null;   // precio objetivo del último fetch (interpolación)
   var _displayNQ=null;  // precio mostrado, se interpola hacia el objetivo
@@ -1211,8 +1223,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       ]
     },
     // Macro Correlations Heatmap — 22 tiles matching 6×5 treemap layout
+    // Instrumento: ES (S&P 500). AAPL/MSFT/NVDA/AMZN/META/GOOGL son también los
+    // mayores pesos del S&P 500, así que los tiles siguen siendo válidos.
     hmap:[
-      // Tier 1: Largest Nasdaq weights (2×2 tiles)
+      // Tier 1: mayores pesos del S&P 500 (2×2 tiles)
       {sym:'AAPL', name:'Apple Inc',            chg:-0.32, area:'aapl', tier:1},
       {sym:'MSFT', name:'Microsoft Corp',       chg: 0.45, area:'msft', tier:1},
       // Tier 2: High-weight stocks & macro proxies (2×1 or key 1×1)
@@ -1224,9 +1238,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       {sym:'TSLA', name:'Tesla',                chg:-3.10, area:'tsla', tier:2},
       {sym:'COST', name:'Costco',               chg: 0.38, area:'cost', tier:2},
       {sym:'NFLX', name:'Netflix',              chg: 1.45, area:'nflx', tier:2},
-      // Tier 3: NQ proxies + macro factors
-      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'nq',   tier:3},
-      {sym:'QQQ',  name:'Nasdaq-100 ETF',       chg: 0.82, area:'qqq',  tier:3},
+      // Tier 3: proxies del ES + factores macro
+      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'nq',   tier:3},
+      {sym:'SPY',  name:'S&P 500 ETF',          chg: 0.52, area:'qqq',  tier:3},
       {sym:'VIX',  name:'CBOE Volatility',      chg:-3.20, area:'vix',  tier:3},
       {sym:'DXY',  name:'US Dollar Index',      chg:-0.40, area:'dxy',  tier:3},
       {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:3},
@@ -1236,7 +1250,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       {sym:'WTI',  name:'Oil WTI',              chg: 1.20, area:'wti',  tier:3},
       {sym:'BTC',  name:'Bitcoin',              chg: 2.10, area:'btc',  tier:3},
       {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3},
-      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:3}
+      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'es',   tier:3}   // correlación: el ES-trader vigila divergencias con el NQ
     ]
   };
 
@@ -1321,22 +1335,26 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       st.className='bar-st'; tx.textContent='Closed';
     }
   }
-  function getRatio(){return _NQ_RATIO||S.ratio||41.51;}
-  function cv(v){return v?Math.round((v*getRatio())*4)/4:null;}
-  function cvNQ(v){return v?Math.round(v*4)/4:null;} // niveles ya en escala NQ (backend convierte)
+  // Ratio ES/SPY. NUNCA hardcodeado: sale del backend, que lo deriva del spot real
+  // de FlashAlpha o de SPX/SPY. Antes esto era `|| 41.51` — si el ratio real no
+  // llegaba, inventaba una constante del NQ y pintaba un precio falso (Regla #1).
+  // Sin ratio real devuelve null y el llamador muestra "—".
+  function getRatio(){return _NQ_RATIO||S.ratio||null;}
+  function cv(v){var r=getRatio();return (v&&r)?Math.round((v*r)*4)/4:null;}
+  function cvNQ(v){return v?Math.round(v*4)/4:null;} // niveles ya en escala ES (backend convierte)
 
   function applyMockGex(){
     // ⚠️ NO usar valores MOCK para los walls (Regla #1: solo data real).
     // En su lugar, cargar el ÚLTIMO valor REAL persistido de FlashAlpha.
     // Si nunca llegó un real, el wall queda null → la UI muestra "—".
     try{
-      var rc=localStorage.getItem('lbc_nqf_callWall');
-      var rp=localStorage.getItem('lbc_nqf_putWall');
-      var rg=localStorage.getItem('lbc_nqf_gammaFlip');
+      var rc=localStorage.getItem(LS('callWall'));
+      var rp=localStorage.getItem(LS('putWall'));
+      var rg=localStorage.getItem(LS('gammaFlip'));
       if(rc!==null){S.callWall=parseFloat(rc);S.callWallReal=true;}
       if(rp!==null){S.putWall=parseFloat(rp);S.putWallReal=true;}
       if(rg!==null){S.gammaFlip=parseFloat(rg);S.gammaFlipReal=true;}
-      var rmp=localStorage.getItem('lbc_nqf_maxPain');
+      var rmp=localStorage.getItem(LS('maxPain'));
       if(rmp!==null){S.maxPain=parseFloat(rmp);S.maxPainReal=true;}
     }catch(e){console.warn('[gex] no se pudo leer wall real:',e);}
     // REGLA #1: NUNCA mock. Sin dato real → null → la UI muestra "—".
@@ -1351,8 +1369,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       renderGexTimestamp();
       return;
     }
-    try{var r=await withTimeout(BACKEND_URL+'/api/market/gamma-levels/NQ',6000);if(!r||!r.ok)throw new Error('bad');var d=await r.json();
-      if(d&&(d.call_wall||d.gamma_flip||d.put_wall)){if(d.underlying_price&&d.underlying_price>100&&d.nq_price&&d.nq_price>10000){var r=Math.round((d.nq_price/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}else if(d.ratio>0)S.ratio=d.ratio;S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
+    try{var r=await withTimeout(BACKEND_URL+'/api/market/gamma-levels/ES',6000);if(!r||!r.ok)throw new Error('bad');var d=await r.json();
+      if(d&&(d.call_wall||d.gamma_flip||d.put_wall)){
+      // Ratio del backend. Antes exigía `d.nq_price>10000`: un umbral del NQ
+      // (~20.000). El ES cotiza ~6.000, así que NUNCA se cumplía y el ratio no se
+      // derivaba. Ahora solo se exige que ambos sean números positivos reales.
+      var _idx=(d.price||d.nq_price);
+      if(d.underlying_price>0&&_idx>0){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}else if(d.ratio>0){_NQ_RATIO=d.ratio;S.ratio=d.ratio;}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
         S.maxPain=d.max_pain?cvNQ(d.max_pain):S.maxPain;
         // ATM IV y Expected Move REALES del backend (NDX), reemplazan el mock
         if(typeof d.atm_iv==='number')S.atmIv=d.atm_iv;
@@ -1360,10 +1383,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         // ── PERSISTIR cada wall REAL por separado (nunca MOCK) ──
         // Solo se guarda si FlashAlpha entregó el valor real en esta llamada.
         try{
-          if(d.call_wall){localStorage.setItem('lbc_nqf_callWall',String(S.callWall));S.callWallReal=true;}
-          if(d.put_wall){localStorage.setItem('lbc_nqf_putWall',String(S.putWall));S.putWallReal=true;}
-          if(d.gamma_flip||d.zero_gamma){localStorage.setItem('lbc_nqf_gammaFlip',String(S.gammaFlip));S.gammaFlipReal=true;}
-          if(d.max_pain){localStorage.setItem('lbc_nqf_maxPain',String(S.maxPain));S.maxPainReal=true;}
+          if(d.call_wall){localStorage.setItem(LS('callWall'),String(S.callWall));S.callWallReal=true;}
+          if(d.put_wall){localStorage.setItem(LS('putWall'),String(S.putWall));S.putWallReal=true;}
+          if(d.gamma_flip||d.zero_gamma){localStorage.setItem(LS('gammaFlip'),String(S.gammaFlip));S.gammaFlipReal=true;}
+          if(d.max_pain){localStorage.setItem(LS('maxPain'),String(S.maxPain));S.maxPainReal=true;}
         }catch(e){console.warn('[gex] no se pudo persistir wall real:',e);}S.netGex=(typeof d.net_gex==='number')?d.net_gex:S.netGex;S.regime=d.regime||S.regime;S.fearScore=(d.fear_score!=null)?d.fear_score:S.fearScore;S.fearRating=d.fear_rating||S.fearRating;S.vix=(d.vix!=null)?d.vix:S.vix;if(typeof d.nq_price==='number')S.price=d.nq_price;if(typeof d.vwap==='number')S.vwap=cv(d.vwap);if(typeof d.atr==='number')S.atr=d.atr;
         // Timestamp de última llamada a FlashAlpha (para label de frescura)
         if(d.last_call_ts){S.gexLastCall=d.last_call_ts;S.gexIsToday=d.last_call_is_today;S.gexIsMock=false;}
@@ -1393,13 +1416,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     // Cargar el ÚLTIMO valor REAL de cada wall (persistido solo cuando
     // FlashAlpha lo entregó). Esto NUNCA contiene valores MOCK.
     try{
-      var rc=localStorage.getItem('lbc_nqf_callWall');
-      var rp=localStorage.getItem('lbc_nqf_putWall');
-      var rg=localStorage.getItem('lbc_nqf_gammaFlip');
+      var rc=localStorage.getItem(LS('callWall'));
+      var rp=localStorage.getItem(LS('putWall'));
+      var rg=localStorage.getItem(LS('gammaFlip'));
       if(rc!==null){S.callWall=parseFloat(rc);S.callWallReal=true;}
       if(rp!==null){S.putWall=parseFloat(rp);S.putWallReal=true;}
       if(rg!==null){S.gammaFlip=parseFloat(rg);S.gammaFlipReal=true;}
-      var rmp=localStorage.getItem('lbc_nqf_maxPain');
+      var rmp=localStorage.getItem(LS('maxPain'));
       if(rmp!==null){S.maxPain=parseFloat(rmp);S.maxPainReal=true;}
     }catch(e){console.warn('[gex] loadRealWalls:',e);}
   }
@@ -1548,7 +1571,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   function computeBias(){
     // Registrar precio vivo para velocidad/momentum (compartido por ambos motores)
-    if(S.price&&S.price>10000){
+    if(S.price&&S.price>0){   // antes >10000 (umbral del NQ; el ES vale ~6.000)
       _priceHist.push(S.price);
       if(_priceHist.length>40)_priceHist.shift();
     }
@@ -1730,7 +1753,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         renderMomentum();
         return;
       }
-      var r=await withTimeout(BACKEND_URL+'/api/market/candles/NQ?tf=5',8000);
+      var r=await withTimeout(BACKEND_URL+'/api/market/candles/ES?tf=5',8000);
       if(r&&r.ok){var d=await r.json();
         if(d&&d.status==='ok'&&d.candles&&d.candles.length){
           S.momCandles=d.candles;
@@ -2234,7 +2257,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       _cxPaintedTf=tf;drawLines();cxPriceRender();
     }
     if(cached&&(Date.now()-cached.ts)<20000){return;}  // fresco → sin llamada extra
-    var beUrl=BACKEND_URL+'/api/market/candles/NQ?tf='+tf;
+    var beUrl=BACKEND_URL+'/api/market/candles/ES?tf='+tf;
     try{var r=await withTimeout(beUrl,8000);if(r&&r.ok){var d=await r.json();
       if(d&&d.status==='ok'&&d.candles&&d.candles.length){
         var out=beautifyCandles(d.candles);
@@ -2691,13 +2714,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           S.vix=hm['VIX'].price;
         }
       }catch(e){}
-      var qqqHm=hm['QQQ'],nqHm=hm['NQ'];
-      if(qqqHm&&qqqHm.price&&qqqHm.price>100){
-        S._lastQQQ=qqqHm.price;
+      var etfHm=hm[PROXY_ETF],idxHm=hm[ASSET];
+      if(etfHm&&etfHm.price>0){
+        S._lastQQQ=etfHm.price;
         // Actualiza el target de interpolación (no aplica directo — evita saltos)
-        var nqDir=(nqHm&&nqHm.source==='direct')?nqHm.price:null;
-        var tgt=(nqDir&&nqDir>10000)?Math.round(nqDir*4)/4:Math.round(qqqHm.price*getRatio()*4)/4;
-        if(tgt>25000&&tgt<45000){_targetNQ=tgt;if(_displayNQ===null)_displayNQ=tgt;}
+        var idxDir=(idxHm&&idxHm.source==='direct')?idxHm.price:null;
+        var _r=getRatio();
+        var tgt=(idxDir>0)?Math.round(idxDir*4)/4:(_r?Math.round(etfHm.price*_r*4)/4:null);
+        // Sin rango 25000-45000: era del NQ y habría rechazado todo precio del ES.
+        if(tgt>0){_targetNQ=tgt;if(_displayNQ===null)_displayNQ=tgt;}
       }
       renderHeatmap();
       setHealth('corr','connected','real',null);
@@ -3189,26 +3214,32 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     // ── PRECIO NQ REAL — QQQ×ratio dinámico, polling 1s ─────────────────────
     var _tick=0;
 
-    function applyRealPrice(qqqPx, nqDirect){
+    function applyRealPrice(etfPx, nqDirect){
       var ratio=getRatio();
       var nqPx;
-      if(nqDirect&&nqDirect>10000){
+      if(nqDirect>0){
+        // Precio directo del futuro (ES=F): ya está en puntos del índice.
         nqPx=Math.round(nqDirect*4)/4;
-        if(qqqPx&&qqqPx>100){
-          var nr=Math.round((nqDirect/qqqPx)*1000000)/1000000;
+        if(etfPx>0){
+          var nr=Math.round((nqDirect/etfPx)*1000000)/1000000;
           _NQ_RATIO=nr; S.ratio=nr;
-          var err=Math.abs(nqDirect-(qqqPx*nr));
-          if(err>25)console.warn('QQQ/NQ ratio drift detected — error:',err.toFixed(2),'pts');
-          S._ratioError=Math.round(err*100)/100;
+          S._ratioError=Math.round(Math.abs(nqDirect-(etfPx*nr))*100)/100;
         }
-      } else if(qqqPx&&qqqPx>100){
-        nqPx=Math.round(qqqPx*ratio*4)/4;
+      } else if(etfPx>0&&ratio){
+        // Sin directo: ETF × ratio REAL. Si no hay ratio no se pinta nada.
+        nqPx=Math.round(etfPx*ratio*4)/4;
       }
-      if(!nqPx||nqPx<25000||nqPx>45000)return;
+      // Antes aquí había `if(nqPx<25000||nqPx>45000)return;` — el rango del NQ.
+      // El ES cotiza ~6.000: ese filtro habría rechazado TODOS los precios y el
+      // chart se habría quedado congelado. No se sustituye por otro rango
+      // inventado: si el precio sale de dato real (ETF real × ratio real, o el
+      // spot directo del futuro), es real por construcción. Basta con exigir
+      // que sea un número positivo.
+      if(!nqPx||!(nqPx>0))return;
       _tick++;
       S.prevPrice=S.price; S.price=nqPx;
        if(typeof checkGammaCross==='function')checkGammaCross(S.prevPrice,nqPx);
-      if(!S.dayOpen||S.dayOpen<10000)S.dayOpen=nqPx;
+      if(!S.dayOpen)S.dayOpen=nqPx;
       if(nqPx>(S.dayHigh||0))S.dayHigh=nqPx;
       if(nqPx<(S.dayLow||99999))S.dayLow=nqPx;
       if(S.candles&&S.candles.length){
@@ -3233,30 +3264,28 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         .then(function(d){
           if(!d||!d.heatmap)return;
           if(d.nq_ratio&&d.nq_ratio.value){_NQ_RATIO=d.nq_ratio.value;S.ratio=_NQ_RATIO;}
-          var qqq=d.heatmap['QQQ'],nqD=d.heatmap['NQ'];
-          var nqDirect=(nqD&&nqD.source==='direct')?nqD.price:null;
+          var etf=d.heatmap[PROXY_ETF],idxD=d.heatmap[ASSET];
+          var nqDirect=(idxD&&idxD.source==='direct')?idxD.price:null;
           var newTarget=null;
-          if(nqDirect&&nqDirect>10000){
+          if(nqDirect>0){
             newTarget=Math.round(nqDirect*4)/4;
-            if(qqq&&qqq.price&&qqq.price>100){
-              var nr=Math.round((nqDirect/qqq.price)*1000000)/1000000;
+            if(etf&&etf.price>0){
+              var nr=Math.round((nqDirect/etf.price)*1000000)/1000000;
               _NQ_RATIO=nr;S.ratio=nr;
-              var err=Math.abs(nqDirect-(qqq.price*nr));
-              if(err>25)console.warn('QQQ/NQ ratio drift detected — error:',err.toFixed(2),'pts');
-              S._ratioError=Math.round(err*100)/100;
+              S._ratioError=Math.round(Math.abs(nqDirect-(etf.price*nr))*100)/100;
             }
-          } else if(qqq&&qqq.price&&qqq.price>100){
-            S._lastQQQ=qqq.price;
-            newTarget=Math.round(qqq.price*getRatio()*4)/4;
+          } else if(etf&&etf.price>0&&getRatio()){
+            S._lastQQQ=etf.price;
+            newTarget=Math.round(etf.price*getRatio()*4)/4;
           }
-          if(newTarget&&newTarget>25000&&newTarget<45000){
+          if(newTarget>0){   // antes rango 25000-45000: era del NQ
             // Solo resetear stale si el precio REALMENTE cambió (tick nuevo genuino)
             if(_targetNQ===null||Math.abs(newTarget-_targetNQ)>=0.25){_staleFrames=0;}
             _targetNQ=newTarget;
             _lastFetchOk=Date.now();
             if(_displayNQ===null)_displayNQ=newTarget;
             HEALTH.price.sync=new Date();
-            HEALTH.price.latency=Math.round(20+Math.random()*40);
+            HEALTH.price.latency=null; // Regla #1: sin latencia inventada
           }
         }).catch(function(){});
     }
@@ -3277,15 +3306,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         _displayNQ=_targetNQ; // llegó al precio real objetivo
         // Detectar si el feed está estancado (sin nuevos ticks reales)
         _staleFrames++;
-        // En premarket/baja liquidez los ticks son esporádicos. Mostramos
-        // micro-oscilación VISUAL (±0.25-0.75pts) alrededor del precio REAL
-        // para reflejar el bid/ask spread vivo — nunca se aleja del dato real.
-        if(_staleFrames>12){ // ~1s sin tick nuevo
-          var micro=(Math.random()-0.5)*1.5; // ±0.75pts máx
-          var jittered=_targetNQ+Math.round(micro*4)/4;
-          applyRealPrice(null,jittered);
-          return;
-        }
+        // Regla #1: ELIMINADO el jitter de ±0.75 pts con Math.random(). Se
+        // justificaba como "micro-oscilación visual del bid/ask", pero pintaba en
+        // el terminal un precio que NUNCA existió. Un estudiante que lo lee está
+        // viendo un dato inventado. Si el feed no da ticks, el precio se queda
+        // quieto en el último REAL — que es la verdad.
       } else {
         _displayNQ+=diff*0.28; // se acerca 28% por frame → suave pero responsivo
         _displayNQ=Math.round(_displayNQ*4)/4;
@@ -3309,7 +3334,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     // CREACIÓN DE VELAS — time-based, cada 15s (decoupled del precio)
     // Cada vela representa un intervalo; open=close anterior, mechas crecen con ticks.
     setInterval(function(){
-      if(!S.candles||!S.candles.length||!series||S.price<10000)return;
+      if(!S.candles||!S.candles.length||!series||!(S.price>0))return;
       var lc=S.candles[S.candles.length-1];
       var nc={time:lc.time+300,open:lc.close,high:S.price,low:S.price,close:S.price};
       S.candles.push(nc);
@@ -3406,9 +3431,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
     // ── DIAGNOSTICS ping ──
     setInterval(function(){
-      Object.keys(HEALTH).forEach(function(k){
-        if(HEALTH[k].status==='connected') HEALTH[k].latency=Math.round(40+Math.random()*260);
-      });
+      // Regla #1: el panel de salud NO fabrica latencias. Antes ponía
+      // Math.round(40+Math.random()*260) a cada feed conectado: el panel que
+      // debe decirte si el feed está sano se la estaba inventando. Sin medición
+      // real, latency queda null y la UI muestra "—".
       renderDiag();
     },5000);
       // (popup viejo eliminado)

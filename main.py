@@ -146,6 +146,53 @@ _fh_calls.setdefault("used", 0)
 ALPHA_VANTAGE_KEY= os.getenv("ALPHAVANTAGE_KEY", "").strip()
 FINNHUB_WH_SECRET = os.getenv("FINNHUB_WEBHOOK_SECRET", "").strip()  # opcional: verifica autenticidad
 
+# ═══════════════════════════════════════════════════════════════════════════
+#  RATIO ES/SPY — derivado de dato REAL, nunca hardcodeado
+# ═══════════════════════════════════════════════════════════════════════════
+#  Historia: el ratio NQ/QQQ vivía como constante 41.51. Se suponía dinámico,
+#  pero el único sitio que lo derivaba estaba dentro del WebSocket de TwelveData,
+#  que se apagó (TD_WEBSOCKET=off) por quemar créditos. Resultado: nq_ratio_current
+#  = null en producción → el precio mostrado era QQQ × 41.51, una constante
+#  congelada desde hacía meses. Peor: la "verificación" dividía entre QQQ un
+#  número que se había calculado multiplicando por QQQ → circular, siempre 41.51.
+#
+#  Aquí NO se hardcodea ningún ratio. Dos fuentes, ambas dato real:
+#    1) spot del futuro que manda FlashAlpha (exacto) ÷ SPY del heatmap
+#    2) SPX real de Finnhub (^GSPC) ÷ SPY real  → ES ≈ SPX + basis (~0.1%)
+#  Si ninguna hay → None → la UI muestra "—". Regla #1: nunca un número inventado.
+def _set_px_ratio_from_spot(spot):
+    """Deriva el ratio instrumento/ETF con el spot REAL del futuro."""
+    try:
+        etf = (cache["heatmap"]["data"].get(FA_PROXY_ETF, {}) or {}).get("price")
+        if spot and etf and etf > 10:
+            r = round(float(spot) / float(etf), 6)
+            cache["px_ratio"].update({"value": r, "spot": float(spot),
+                                      "etf_price": float(etf), "source": "flashalpha-spot",
+                                      "ts": datetime.now(NY).isoformat()})
+            return r
+    except Exception as e:
+        print(f"[ratio] no se pudo derivar del spot: {e}")
+    return None
+
+def get_px_ratio():
+    """Ratio actual. Deriva de SPX/SPY real si no hay spot de FlashAlpha.
+    Devuelve None si no hay dato real — el llamador debe mostrar '—'."""
+    v = cache["px_ratio"].get("value")
+    if v:
+        return v
+    try:
+        hm  = cache["heatmap"]["data"]
+        etf = (hm.get(FA_PROXY_ETF, {}) or {}).get("price")
+        idx = (hm.get("SPX", {}) or {}).get("price")   # ^GSPC real vía Finnhub
+        if idx and etf and etf > 10:
+            r = round(float(idx) / float(etf), 6)
+            cache["px_ratio"].update({"value": r, "spot": None, "etf_price": float(etf),
+                                      "source": "spx/spy", "ts": datetime.now(NY).isoformat()})
+            return r
+    except Exception:
+        pass
+    return None   # sin dato real → "—", nunca una constante
+
 FA_BASE = "https://lab.flashalpha.com"
 # ── CONFIG FLASHALPHA ──────────────────────────────────────────────
 # Plan actual: "free" usa QQQ summary + conversión a NQ (1 llamada).
@@ -154,7 +201,15 @@ FA_BASE = "https://lab.flashalpha.com"
 # Para activar Basic: pon FLASHALPHA_PLAN=basic en Railway. Nada más.
 FLASHALPHA_PLAN = os.getenv("FLASHALPHA_PLAN", "free").strip().lower()
 # Símbolo índice del Nasdaq-100 para el plan Basic (índice directo).
-FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "NQ=F")  # futuro CME directo (antes NDX).strip().upper()
+# Instrumento operado: ES=F (S&P 500 e-mini). Antes NQ=F (Nasdaq).
+# El plan Basic sirve los futuros CME directos: los niveles llegan YA en puntos
+# del índice (conversion="none-direct"), sin ratio. Verificado 2026-07-16 con
+# /api/admin/diag-symbol?sym=ES%3DF → 200 + call_wall/put_wall/gamma_flip reales.
+FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "ES=F")  # futuro CME directo
+# Proxy para precio/velas: TwelveData free no da futuros, solo el ETF.
+# ES→SPY (antes NQ→QQQ). El ratio NO se hardcodea: ver _px_ratio.
+FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "SPY").strip().upper()
+FA_ASSET        = os.getenv("FA_ASSET", "ES").strip().upper()   # clave de cache y etiqueta
 FH_BASE = "https://finnhub.io/api/v1"
 NY      = ZoneInfo("America/New_York")
 
@@ -166,7 +221,10 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 cache = {
     "gex":           {},
     "heatmap":       {"data": {}, "last_update": None, "status": "offline"},
-    "nq_ratio":      {"value": None, "nq_price": None, "qqq_price": None, "error_pts": None, "ts": None},
+    # px_ratio: ratio instrumento/ETF (ES/SPY) SIEMPRE derivado de dato real.
+    # Sustituye a nq_ratio (NQ/QQQ), que en la práctica quedaba en None y caía a
+    # la constante 41.51. 'source' dice de dónde salió: flashalpha-spot | spx/spy.
+    "px_ratio":      {"value": None, "spot": None, "etf_price": None, "source": None, "ts": None},
     "institutional": {"text": None, "last_update": None, "status": "offline"},
     "calendar":      {"data": [], "last_update": None, "status": "offline"},
     "movers":        {"data": [], "last_update": None, "status": "offline"},
@@ -210,7 +268,17 @@ def load_cache():
         with open(_PERSIST) as f:
             snap = json.load(f)
         if snap.get("gex"):
-            cache["gex"] = snap["gex"]
+            # Solo restaurar el GEX del instrumento que operamos AHORA.
+            # El Volume de Railway retiene datos entre redeploys, así que tras la
+            # migración NQ→ES el snapshot trae niveles del Nasdaq. Cargarlos sería
+            # mostrar walls de otro instrumento (Regla #1). Se descartan.
+            _keep = {k: v for k, v in snap["gex"].items() if k == FA_ASSET}
+            _drop = [k for k in snap["gex"] if k != FA_ASSET]
+            if _drop:
+                print(f"[persist] GEX descartado de otro instrumento: {_drop} "
+                      f"(operamos {FA_ASSET})")
+            if _keep:
+                cache["gex"] = _keep
         if snap.get("earnings", {}).get("data"):
             cache["earnings"]["data"]   = snap["earnings"]["data"]
             cache["earnings"]["status"] = "stale"
@@ -242,9 +310,10 @@ def load_cache():
 # ══ TWELVEDATA WEBSOCKET (una sola conexión, todos los símbolos) ═════════════
 # 8 símbolos real-time vía WebSocket — sin créditos REST
 # WebSocket SOLO para lo que necesita baja latencia: precio NQ en vivo.
-# QQQ se mantiene para el cálculo del ratio NQ/QQQ de respaldo.
+# El ETF proxy se mantiene para el cálculo del ratio de respaldo (ES/SPY).
 # Las acciones del heatmap pasaron a REST /quote (cambio diario real).
-WS_SYMBOLS = ["QQQ"]
+# (El WS está apagado por defecto: TD_WEBSOCKET=off — quemaba créditos por tick.)
+WS_SYMBOLS = [FA_PROXY_ETF]
 _ws_task   = None   # referencia única para evitar múltiples conexiones
 
 async def twelvedata_ws():
@@ -275,33 +344,33 @@ async def twelvedata_ws():
                     if not price:
                         continue
                     if sym == "NQ1!":
-                        cache["nq_ratio"]["nq_price"] = price
+                        cache["px_ratio"]["spot"] = price
                         cache["heatmap"]["data"]["NQ"] = {
                             "symbol":"NQ","price":round(price,2),
                             "chg_pct":round(chg_pct,3),
                             "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
                             "source":"direct",
                         }
-                        qqq_px = cache["nq_ratio"].get("qqq_price")
+                        qqq_px = cache["px_ratio"].get("etf_price")
                         if qqq_px and qqq_px > 100:
                             nr = round(price/qqq_px,6)
-                            cache["nq_ratio"].update({"value":nr,"error_pts":0,"ts":datetime.now(NY).isoformat()})
-                    elif sym == "QQQ":
-                        cache["nq_ratio"]["qqq_price"] = price
-                        if cache["heatmap"]["data"].get("NQ",{}).get("source") != "direct":
-                            dr = cache["nq_ratio"].get("value") or 41.51
+                            cache["px_ratio"].update({"value":nr,"error_pts":0,"ts":datetime.now(NY).isoformat()})
+                    elif sym == FA_PROXY_ETF:
+                        cache["px_ratio"]["etf_price"] = price
+                        if cache["heatmap"]["data"].get(FA_ASSET,{}).get("source") != "direct":
+                            dr = get_px_ratio()
                             cache["heatmap"]["data"]["NQ"] = {
                                 "symbol":"NQ","price":round(price*dr,2),
                                 "chg_pct":round(chg_pct,3),
                                 "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
                                 "source":"estimated","ratio_used":dr,
                             }
-                        nq_px = cache["nq_ratio"].get("nq_price")
+                        nq_px = cache["px_ratio"].get("spot")
                         if nq_px:
                             nr = round(nq_px/price,6)
                             if abs(nq_px-(price*nr)) > 25:
                                 print(f"[ratio] QQQ/NQ ratio drift detected")
-                            cache["nq_ratio"].update({"value":nr,"ts":datetime.now(NY).isoformat()})
+                            cache["px_ratio"].update({"value":nr,"ts":datetime.now(NY).isoformat()})
                     if sym != "NQ1!":
                         cache["heatmap"]["data"][sym] = {
                             "symbol":sym,"price":round(price,4),
@@ -483,12 +552,17 @@ async def _heatmap_yahoo_fallback():
                 "chg_pct":round(chg_pct,3),
                 "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
             }
-            if ysym == "QQQ":
-                cache["heatmap"]["data"]["NQ"] = {
-                    "symbol":"NQ","price":round(price*(cache["nq_ratio"].get("value") or 41.51),2),
-                    "chg_pct":round(chg_pct,3),
-                    "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
-                }
+            if ysym == FA_PROXY_ETF:
+                # Tile sintético del futuro derivado del ETF. Antes hacía
+                # price*(get_px_ratio()) sin comprobar None → TypeError. Ahora,
+                # sin ratio real no se publica el tile (Regla #1: mejor "—").
+                _r = get_px_ratio()
+                if _r:
+                    cache["heatmap"]["data"][FA_ASSET] = {
+                        "symbol":FA_ASSET,"price":round(price*_r,2),
+                        "chg_pct":round(chg_pct,3),
+                        "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
+                    }
             loaded += 1
         cache["heatmap"]["last_update"] = datetime.now(NY).isoformat()
         cache["heatmap"]["status"]      = "stale-yahoo"
@@ -641,7 +715,7 @@ _gex_expdates_day   = None
 _gex_maxpain_failed_day = None
 _event_reactions = {}  # {evento: {t0, p0, p5}} — reacción del NQ a noticias  # si /maxpain falló hoy, no reintentar (ahorra créditos)
 
-async def refresh_gex(asset="NQ"):
+async def refresh_gex(asset=FA_ASSET):
     """GEX desde FlashAlpha. NUNCA se llama en startup.
     Scheduler: 9:00 AM + 7:00 PM ET (2 créditos de 5 disponibles/día)."""
     global _gex_blocked_until
@@ -671,11 +745,11 @@ async def refresh_gex(asset="NQ"):
         print(f"[gex] excepción: {e}")
 
 
-async def _refresh_gex_qqq(asset="NQ"):
-    """PLAN FREE: usa /v1/stock/QQQ/summary y guarda niveles en escala QQQ.
-    El endpoint /api/market/gamma-levels/NQ los convierte a NQ con ratio."""
+async def _refresh_gex_qqq(asset=FA_ASSET):
+    """PLAN FREE: usa /v1/stock/<ETF>/summary y guarda niveles en escala del ETF.
+    El endpoint /api/market/gamma-levels/ES los convierte con el ratio real."""
     global _gex_blocked_until
-    ticker = "QQQ"
+    ticker = FA_PROXY_ETF
     async with httpx.AsyncClient(timeout=12,
                                   headers={"X-Api-Key": FLASHALPHA_KEY}) as client:
         r = await client.get(f"{FA_BASE}/v1/stock/{ticker}/summary")
@@ -743,14 +817,14 @@ def _nearest_index_expiration():
     return (d + timedelta(days=2)).strftime("%Y-%m-%d")
 
 
-async def _refresh_gex_ndx(asset="NQ"):
+async def _refresh_gex_ndx(asset=FA_ASSET):
     """PLAN BASIC: usa NDX DIRECTO. Niveles reales del Nasdaq-100, sin conversión.
        /v1/exposure/levels/NDX → call_wall, put_wall, gamma_flip, max_pain
        /v1/exposure/gex/NDX    → net_gex + per-strike (para validar walls)."""
     global _gex_blocked_until, _gex_expdates_day, _gex_expdates_cache, _gex_maxpain_failed_day
-    sym = FA_INDEX_SYMBOL  # "NQ=F" (futuro CME directo) o "NDX"
+    sym = FA_INDEX_SYMBOL  # "ES=F" (futuro CME directo)
     from urllib.parse import quote
-    sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
+    sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
     # Costo dinámico: 1ª llamada del día ≈5 (incluye /options); siguientes ≈3
     _today_now = _today_et_str()
     _first_of_day = (_gex_expdates_day != _today_now)
@@ -845,7 +919,7 @@ async def _refresh_gex_ndx(asset="NQ"):
         return v
     cw = _num(lv.get("call_wall")); pw = _num(lv.get("put_wall"))
     gf = _num(lv.get("gamma_flip")); mp = _num(lv.get("max_pain"))
-    # ── FALLBACK NQ=F: si /levels no dio walls, derivarlos del per-strike REAL ──
+    # ── FALLBACK ES=F: si /levels no dio walls, derivarlos del per-strike REAL ──
     # call_wall = strike con mayor call_gex · put_wall = strike con put_gex más negativo
     if (cw is None or pw is None) and isinstance(per_strike, list) and per_strike:
         try:
@@ -900,7 +974,9 @@ async def _refresh_gex_ndx(asset="NQ"):
         except Exception as _e:
             print(f"[gex] derivación max_pain falló: {_e}")
     # ATM IV real del summary de NDX (para Expected Move real, no mock).
-    atm_iv = None; exp_move = None
+    # spot se inicializa aquí a propósito: se asigna dentro del try de abajo y se
+    # lee DESPUÉS del except. Sin esto, si el summary falla → NameError.
+    atm_iv = None; exp_move = None; spot = None
     fear_score = None; fear_rating = None; vix_value = None
     try:
         async with httpx.AsyncClient(timeout=12,
@@ -957,9 +1033,15 @@ async def _refresh_gex_ndx(asset="NQ"):
             print(f"[gex] ATM IV (NDX): {atm_iv}  Exp Move: {exp_move}")
     except Exception as e:
         print(f"[gex] summary/atm_iv falló (no crítico): {e}")
-    # NDX ya está en escala Nasdaq-100 (~NQ). NO se convierte.
+    # El futuro directo ya está en escala del índice (~ES). Los niveles NO se convierten.
+    # OJO: 'spot' SÍ se guarda (antes se tiraba con underlying_price=None). Es el
+    # precio REAL del subyacente que manda FlashAlpha, y es la fuente honesta del
+    # ratio ES/SPY que usan el precio del heatmap y las velas del chart. Sin él, el
+    # ratio quedaba congelado en una constante (bug histórico: 41.51 para NQ/QQQ).
+    if spot:
+        _set_px_ratio_from_spot(spot)
     cache["gex"][asset] = {
-        "underlying_price": None,         # no aplica (NDX directo, sin ratio)
+        "underlying_price": spot,         # precio real del subyacente (para el ratio)
         "call_wall": cw, "put_wall": pw, "gamma_flip": gf, "max_pain": mp,
         "net_gex": net_gex,
         "atm_iv": atm_iv,
@@ -1944,13 +2026,15 @@ async def _session_profile_ctx():
         if not vals:
             return out
         # ratio QQQ→NQ (misma lógica que gamma-levels)
-        ratio = cache["nq_ratio"].get("value")
+        # get_px_ratio() ya deriva de spot real o de SPX/SPY real. Aquí NO se
+        # reintenta la "verificación" que había antes (dividir el precio del
+        # heatmap entre el del ETF): ese precio se calculaba multiplicando el ETF
+        # por el ratio, así que dividirlo devolvía el mismo ratio → circular,
+        # siempre confirmaba la constante. Y NO hay fallback hardcodeado: si no
+        # hay dato real, ratio queda None y el llamador muestra "—" (Regla #1).
+        ratio = get_px_ratio()
         if not ratio:
-            nq_p = (cache["heatmap"]["data"].get("NQ", {}) or {}).get("price")
-            qq_p = (cache["heatmap"]["data"].get("QQQ", {}) or {}).get("price")
-            if nq_p and qq_p:
-                ratio = nq_p / qq_p
-        ratio = ratio or 41.51
+            return out   # sin ratio real no se estima perfil: mejor nada que mal
         now_et = datetime.now(NY)
         today = now_et.strftime("%Y-%m-%d")
         # días de sesión presentes (excluyendo hoy) → el último es "ayer hábil"
@@ -2030,7 +2114,7 @@ async def refresh_institutional():
         return
     budget_charge("groq", 1)
 
-    gex = cache["gex"].get("NQ", {}) or {}
+    gex = cache["gex"].get(FA_ASSET, {}) or {}
     hm  = cache["heatmap"]["data"]
     cal = cache["calendar"]["data"]
     ern = cache["earnings"]["data"]
@@ -2050,12 +2134,12 @@ async def refresh_institutional():
         session = "sesión regular"
     ctx.append(f"- Sesión: {session} ({now_et.strftime('%H:%M')} ET)")
 
-    # Precio NQ (siempre disponible vía heatmap)
-    nq_data = hm.get("NQ", {})
+    # Precio del instrumento operado (vía heatmap)
+    nq_data = hm.get(FA_ASSET, {})
     nq_price = nq_data.get("price")
-    qqq = gex.get("underlying_price") or (hm.get("QQQ", {}) or {}).get("price")
+    qqq = gex.get("underlying_price") or (hm.get(FA_PROXY_ETF, {}) or {}).get("price")
     if nq_price:
-        ctx.append(f"- NQ Futures: {nq_price:.0f}")
+        ctx.append(f"- {FA_ASSET} Futures: {nq_price:.0f}")
 
     # Gamma (si está disponible)
     cw = gex.get("call_wall"); pw = gex.get("put_wall")
@@ -2222,7 +2306,7 @@ def health():
     now = datetime.now(NY)
     is_weekend   = now.weekday() >= 5                 # Sábado=5, Domingo=6
     is_rth       = 9 <= now.hour < 16 and not is_weekend
-    gex_data     = cache["gex"].get("NQ", {})
+    gex_data     = cache["gex"].get(FA_ASSET, {})
     gex_age_h    = round((time.time() - gex_data.get("_ts",0)) / 3600, 1) if gex_data.get("_ts") else None
 
     def svc(status, ok_msg, off_msg, extra=None):
@@ -2256,7 +2340,7 @@ def health():
             off_msg = "WebSocket desconectado — reconectando automáticamente",
             extra   = {
                 "type":             "WebSocket persistente (única conexión)",
-                "realtime_symbols": ["QQQ","AAPL","MSFT","NVDA","META","AMZN","TSLA","GOOGL"],
+                "realtime_symbols": WS_SYMBOLS + ["AAPL","MSFT","NVDA","META","AMZN","TSLA","GOOGL"],
                 "rest_symbols":     "13 ETF macro cada 15 min (batch = 13 créditos/llamada)",
                 "credits_rest":     "~350/800 créditos día en horario de mercado",
                 "weekend_behavior": "WebSocket conectado pero sin precios (mercado cerrado)",
@@ -2310,7 +2394,7 @@ def health():
             "finnhub_movers":    cache["movers"]["status"]   == "fresh",
             "finnhub_earnings":  cache["earnings"]["status"] == "fresh",
             "twelvedata_ws":     cache["health"]["twelvedata"] == "online",
-            "disk_persistence":  bool(cache["gex"].get("NQ") or cache["institutional"]["text"] or cache["earnings"]["data"]),
+            "disk_persistence":  bool(cache["gex"].get(FA_ASSET) or cache["institutional"]["text"] or cache["earnings"]["data"]),
         },
     }
 
@@ -2368,7 +2452,7 @@ async def diag_candles_iv(key: str = ""):
     out = {}
     # ── 1. Probar time_series para cada símbolo candidato ──
     out["velas"] = {}
-    for sym in ("NQ", "NDX", "QQQ"):
+    for sym in (FA_ASSET, FA_INDEX_SYMBOL, FA_PROXY_ETF):
         try:
             url = (f"https://api.twelvedata.com/time_series?symbol={sym}"
                    f"&interval=5min&outputsize=3&apikey={TWELVEDATA_KEY}")
@@ -2419,10 +2503,14 @@ async def diag_candles_iv(key: str = ""):
     return out
 
 
+# Ruta principal del instrumento operado (ES). Se mantiene /NQ como alias
+# temporal para no romper el frontend ya desplegado mientras Railway y GitHub
+# Pages terminan de publicar el mismo commit. Se puede quitar despues.
+@app.get("/api/market/candles/ES")
 @app.get("/api/market/candles/NQ")
 async def market_candles(tf: str = "5"):
-    """Velas REALES de NQ vía TwelveData time_series (sin CORS, server-side).
-    tf: '5','15','30' minutos. Devuelve OHLC en escala NQ real.
+    """Velas REALES del ES via TwelveData time_series (sin CORS, server-side).
+    tf: '5','15','30' minutos. Devuelve OHLC en escala ES real.
     Cacheado 90s para no agotar créditos de TwelveData (múltiples
     clientes / auto-refresh comparten la misma llamada).
     Blindado: cualquier error interno devuelve JSON limpio, nunca 500
@@ -2458,14 +2546,21 @@ def _resample_candles(base, tf_min):
     return [buckets[b] for b in order]
 
 async def _fetch_yahoo_5m_base():
-    """Fallback de velas 5m vía Yahoo (gratis, sin límite de créditos). Usa NQ=F
-    (futuro real de NQ) → sin conversión, escala NQ exacta. Si NQ=F fallara, cae
+    """Fallback de velas 5m vía Yahoo (gratis, sin límite de créditos). Usa ES=F
+    (futuro real del ES) → sin conversión, escala exacta. Si ES=F fallara, cae
     a QQQ×ratio. Garantiza que el chart SIEMPRE tenga velas reales aunque
     TwelveData se agote."""
     ua = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                         "AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"}
-    ratio = cache["nq_ratio"].get("value") or 41.51
-    candidates = [("NQ=F", 1.0), ("QQQ", ratio)]
+    ratio = get_px_ratio()
+    # Sin ratio REAL no se convierte nada: mejor sin velas que velas en la escala
+    # equivocada. Antes aquí caía a la constante 41.51 y pintaba un chart cuyo
+    # precio no cuadraba con los niveles de GEX (que sí vienen en puntos reales).
+    if not ratio:
+        print("[candles] sin ratio real (spot FlashAlpha ni SPX/SPY) — no se convierte")
+        return None
+    # Futuro directo primero (sin conversión, escala exacta); si falla, ETF×ratio.
+    candidates = [(FA_INDEX_SYMBOL, 1.0), (FA_PROXY_ETF, ratio)]
     for ysym, mult in candidates:
         try:
             url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ysym}"
@@ -2507,7 +2602,13 @@ async def _fetch_alphavantage_5m_base():
     falla). QQQ×ratio a escala NQ. compact = últimas 100 velas (suficiente)."""
     if not ALPHA_VANTAGE_KEY or not budget_ok("alphavantage", 1):
         return None
-    ratio = cache["nq_ratio"].get("value") or 41.51
+    ratio = get_px_ratio()
+    # Sin ratio REAL no se convierte nada: mejor sin velas que velas en la escala
+    # equivocada. Antes aquí caía a la constante 41.51 y pintaba un chart cuyo
+    # precio no cuadraba con los niveles de GEX (que sí vienen en puntos reales).
+    if not ratio:
+        print("[candles] sin ratio real (spot FlashAlpha ni SPX/SPY) — no se convierte")
+        return None
     try:
         url = ("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY"
                f"&symbol=QQQ&interval=5min&outputsize=compact&apikey={ALPHA_VANTAGE_KEY}")
@@ -2536,9 +2637,9 @@ async def _fetch_alphavantage_5m_base():
                 continue
         out.sort(key=lambda c: c["time"])
         if out:
-            print(f"[candles] base 5m QQQ×{ratio} vía AlphaVantage ({len(out)} velas)")
-            return {"status": "ok", "symbol": "QQQ", "interval": "5min",
-                    "candles": out, "source": f"alphavantage-QQQ-x{ratio}", "converted": True}
+            print(f"[candles] base 5m {FA_PROXY_ETF}×{ratio} vía AlphaVantage ({len(out)} velas)")
+            return {"status": "ok", "symbol": FA_PROXY_ETF, "interval": "5min",
+                    "candles": out, "source": f"alphavantage-{FA_PROXY_ETF}-x{ratio}", "converted": True}
     except Exception as e:
         print(f"[candles] AlphaVantage error: {e}")
     return None
@@ -2571,9 +2672,15 @@ async def _fetch_td_5m_base():
         if not td_budget_ok(1):
             print(f"[candles] presupuesto TwelveData agotado ({_td_credits['used']}/{TD_DAILY_LIMIT})")
         return None
-    ratio = cache["nq_ratio"].get("value") or 41.51
+    ratio = get_px_ratio()
+    # Sin ratio REAL no se convierte nada: mejor sin velas que velas en la escala
+    # equivocada. Antes aquí caía a la constante 41.51 y pintaba un chart cuyo
+    # precio no cuadraba con los niveles de GEX (que sí vienen en puntos reales).
+    if not ratio:
+        print(f"[candles] sin ratio real ({FA_PROXY_ETF}) — no se convierte")
+        return None
     try:
-        url = (f"https://api.twelvedata.com/time_series?symbol=QQQ"
+        url = (f"https://api.twelvedata.com/time_series?symbol={FA_PROXY_ETF}"
                f"&interval=5min&outputsize=390&timezone=America/New_York"
                f"&apikey={TWELVEDATA_KEY}")
         async with httpx.AsyncClient(timeout=15) as client:
@@ -2604,12 +2711,12 @@ async def _fetch_td_5m_base():
             return None
         # Derivar precio NQ actual + refrescar timestamp del ratio (sin WebSocket)
         last_qqq = float(vals[0]["close"])
-        cache["nq_ratio"]["qqq_price"] = last_qqq
-        cache["nq_ratio"]["nq_price"]  = round(last_qqq * ratio, 2)
-        cache["nq_ratio"]["ts"] = datetime.now(NY).isoformat()
-        print(f"[candles] base 5m QQQ×{ratio} ok ({len(out)} velas) — escala NQ")
-        return {"status": "ok", "symbol": "QQQ", "interval": "5min",
-                "candles": out, "source": f"twelvedata-QQQ-x{ratio}", "converted": True}
+        cache["px_ratio"]["etf_price"] = last_qqq
+        cache["px_ratio"]["spot"]  = round(last_qqq * ratio, 2)
+        cache["px_ratio"]["ts"] = datetime.now(NY).isoformat()
+        print(f"[candles] base 5m {FA_PROXY_ETF}×{ratio} ok ({len(out)} velas) — escala {FA_ASSET}")
+        return {"status": "ok", "symbol": FA_PROXY_ETF, "interval": "5min",
+                "candles": out, "source": f"twelvedata-{FA_PROXY_ETF}-x{ratio}", "converted": True}
     except Exception as e:
         print(f"[candles] TwelveData error: {e}")
         return None
@@ -2656,12 +2763,13 @@ async def _market_candles_impl(tf: str = "5"):
     return result
 
 
-@app.get("/api/market/gamma-levels/NQ")
+@app.get("/api/market/gamma-levels/ES")
+@app.get("/api/market/gamma-levels/NQ")   # alias temporal (ver nota arriba)
 async def gamma_levels():
     """GEX desde cache. FlashAlpha se llama en 4 ventanas: 19:00, 9:00, 9:15, 9:45 ET.
     Expone timestamp exacto + próxima actualización programada para que el usuario
     valide si los niveles son de hoy y a qué hora se obtuvieron."""
-    gex = cache["gex"].get("NQ")
+    gex = cache["gex"].get(FA_ASSET)
     if not gex:
         # Cache frío — típico tras un redeploy de Railway (borra el cache en memoria).
         # Disparar UN refresh en background para repoblar fear/vix/expected_move/GEX.
@@ -2675,45 +2783,44 @@ async def gamma_levels():
             print("[gex] cache frío → refresh on-demand disparado (repuebla fear/vix/em)")
         return {"status": "loading", "message": "GEX cargando — refresca en unos segundos",
                 "last_call_ts": None, "next_update": _next_gex_window()}
-    qqq = gex.get("underlying_price")
-    # Ratio: 1) dinámico del WebSocket (más preciso), 2) calculado del heatmap, 3) default
-    ratio = cache["nq_ratio"].get("value")
+    etf_px = gex.get("underlying_price")   # precio del ETF (SPY) que devuelve FlashAlpha
+    # Ratio: 1) spot real de FlashAlpha, 2) SPX/SPY real, 3) precios del heatmap.
+    # NUNCA una constante: si no hay dato real → None → la UI muestra "—".
+    ratio = get_px_ratio()
     if not ratio:
-        # Respaldo 1: precios reales del heatmap (NQ / QQQ)
+        # Respaldo: precios reales del heatmap (índice / ETF)
         try:
             hm = cache["heatmap"]["data"]
-            nq_p  = hm.get("NQ", {}).get("price")
-            qqq_p = hm.get("QQQ", {}).get("price")
-            if nq_p and qqq_p and qqq_p > 100:
-                ratio = round(nq_p / qqq_p, 6)
-                print(f"[ratio] del heatmap: {ratio}")
+            idx_p = (hm.get("SPX", {}) or {}).get("price")        # ^GSPC real (Finnhub)
+            etf_p = (hm.get(FA_PROXY_ETF, {}) or {}).get("price")  # SPY real
+            if idx_p and etf_p and etf_p > 10:
+                ratio = round(idx_p / etf_p, 6)
+                print(f"[ratio] del heatmap SPX/{FA_PROXY_ETF}: {ratio}")
         except Exception:
             pass
-    if not ratio and qqq and qqq > 100:
-        # Respaldo 2: underlying_price de QQQ (FlashAlpha) + precio NQ live
-        try:
-            nq_live = (cache.get("nq_price", {}) or {}).get("value")
-            if nq_live and nq_live > 10000:
-                ratio = round(nq_live / qqq, 6)
-                print(f"[ratio] de NQ_live/QQQ_flashalpha: {ratio}")
-        except Exception:
-            pass
-    ratio = ratio or 41.51
-    nq  = round(qqq*ratio,2) if qqq else None
-    # NQ=F (futuro) y NDX (índice) YA están en escala NQ: NO convertir NUNCA.
-    # Solo QQQ (plan free, escala ETF ~725) se convierte con ratio.
+    # Nota: se eliminó el respaldo que usaba cache["nq_price"] con el umbral
+    # `> 10000` — era específico del NQ (~20.000). El ES cotiza ~6.000, así que
+    # esa condición JAMÁS se cumpliría y el respaldo era código muerto.
+    px  = round(etf_px*ratio,2) if (etf_px and ratio) else None
+    # ES=F (futuro CME) YA llega en puntos del índice: NO convertir NUNCA.
+    # Solo el ETF (plan free, escala ~700) se convierte con ratio.
     is_direct = str(gex.get("source") or "").endswith("-direct")
-    def _to_nq(v):
+    def _to_px(v):
         if is_direct:
-            return v  # ya en escala NQ (futures-direct o ndx-direct), sin conversión
-        return round(v*ratio, 2) if isinstance(v, (int, float)) else v
+            return v  # ya en escala del futuro (futures-direct), sin conversión
+        if not isinstance(v, (int, float)):
+            return v
+        if not ratio:
+            return None   # sin ratio real → "—". Antes: v*None → TypeError → 500.
+        return round(v*ratio, 2)
     gex_nq = dict(gex)
-    gex_nq["call_wall"]  = _to_nq(gex.get("call_wall"))
-    gex_nq["put_wall"]   = _to_nq(gex.get("put_wall"))
-    gex_nq["gamma_flip"] = _to_nq(gex.get("gamma_flip"))
+    gex_nq["call_wall"]  = _to_px(gex.get("call_wall"))
+    gex_nq["put_wall"]   = _to_px(gex.get("put_wall"))
+    gex_nq["gamma_flip"] = _to_px(gex.get("gamma_flip"))
     if gex.get("max_pain") is not None:
-        gex_nq["max_pain"] = _to_nq(gex.get("max_pain"))
-    gex_nq["conversion"] = "none-direct" if is_direct else f"qqq-ratio-{ratio}"
+        gex_nq["max_pain"] = _to_px(gex.get("max_pain"))
+    gex_nq["conversion"] = ("none-direct" if is_direct
+                            else (f"{FA_PROXY_ETF.lower()}-ratio-{ratio}" if ratio else "sin-ratio"))
     # Timestamp: preferir as_of de FlashAlpha (cuándo se CALCULÓ el dato).
     # FlashAlpha da as_of en ISO UTC; si no, usar _ts (cuándo llamamos).
     as_of = gex.get("as_of")
@@ -2740,8 +2847,11 @@ async def gamma_levels():
         last_call_iso = dt_et.isoformat()
         last_call_is_today = (dt_et.date() == datetime.now(NY).date())
         age_seconds = int((datetime.now(NY) - dt_et).total_seconds())
-    return {**gex_nq, "asset":"NQ", "nq_price":nq,
-            "ratio":cache["nq_ratio"].get("value") or 41.51, "credits_used":0,
+    # `price` es la clave nueva (agnóstica del instrumento). Se mantiene `nq_price`
+    # como alias para no romper el frontend desplegado durante la migración a ES;
+    # se puede quitar cuando el front que consume `price` esté en producción.
+    return {**gex_nq, "asset":FA_ASSET, "price":px, "nq_price":px,
+            "ratio":get_px_ratio(), "credits_used":0,
             "last_call_ts": last_call_iso,
             "last_call_is_today": last_call_is_today,
             "age_seconds": age_seconds,
@@ -2763,7 +2873,7 @@ async def get_heatmap():
         "status":       cache["heatmap"]["status"],
         "count":        len(cache["heatmap"]["data"]),
         "realtime":     WS_SYMBOLS,
-        "nq_ratio":     cache["nq_ratio"],
+        "px_ratio":     cache["px_ratio"],
     }
 
 @app.get("/api/version")
@@ -2778,9 +2888,9 @@ async def get_version():
         "ws_symbols": WS_SYMBOLS,
         "has_nq1": "NQ1!" in WS_SYMBOLS,
         "has_dynamic_ratio": True,
-        "nq_ratio_current": cache["nq_ratio"].get("value"),
+        "px_ratio_current": get_px_ratio(),
         "flashalpha_usage": fa_usage,
-        "gex_cache_warm": bool(cache["gex"].get("NQ")),
+        "gex_cache_warm": bool(cache["gex"].get(FA_ASSET)),
         "calendar_status": cache["calendar"].get("status"),
         "movers_status": cache["movers"].get("status"),
         "heatmap_status": cache["heatmap"].get("status"),
@@ -3135,7 +3245,7 @@ async def finnhub_webhook(request: Request):
             save_cache()
 
             # 5. Si es empresa de alto impacto (NQ), regenerar resumen IA
-            if _earn_impact(sym) in ("extreme","high") and cache["gex"].get("NQ"):
+            if _earn_impact(sym) in ("extreme","high") and cache["gex"].get(FA_ASSET):
                 asyncio.create_task(refresh_institutional())
                 print(f"[webhook] regenerando resumen IA por earnings de {sym}")
 
@@ -3174,10 +3284,12 @@ async def get_dashboard():
                 if e.get("status")=="Upcoming" and _ev_is_future(e)]
     movers   = cache["movers"]["data"]
     breaking = next((m for m in movers if m.get("score",0)>=95), None)
-    gex = cache["gex"].get("NQ",{})
-    qqq = gex.get("underlying_price")
+    gex = cache["gex"].get(FA_ASSET,{})
+    etf_px = gex.get("underlying_price")
+    _r = get_px_ratio()   # puede ser None: sin dato real no se inventa (Regla #1)
+    _px = round(etf_px*_r, 2) if (etf_px and _r) else None
     return {
-        "gamma_levels":        {**gex,"nq_price":round(qqq*(cache["nq_ratio"].get("value") or 41.51),2) if qqq else None} if gex else None,
+        "gamma_levels":        {**gex,"price":_px,"nq_price":_px} if gex else None,
         "heatmap":             cache["heatmap"]["data"],
         "macro_calendar":      cache["calendar"]["data"],
         "market_movers":       movers,
@@ -3291,7 +3403,7 @@ async def startup():
     # ventanas programadas (9:00/7:00 PM ET). Así los redeploys ya no queman crédito.
     async def _gex_boot():
         try:
-            g = cache["gex"].get("NQ", {}) or {}
+            g = cache["gex"].get(FA_ASSET, {}) or {}
             if g:
                 print(f"[startup] cache GEX presente — sin llamada")
             else:
@@ -3324,7 +3436,7 @@ async def startup():
     )
 
     # ── GEX: desde disco si existe, sino espera al scheduler de las 9am ───
-    if cache["gex"].get("NQ"):
+    if cache["gex"].get(FA_ASSET):
         print("[startup] GEX cargado desde disco ✓ (sin llamada a FlashAlpha)")
     else:
         print("[startup] Sin GEX en disco — cargará a las 9:00 AM ET (ahorra créditos)")
@@ -3423,11 +3535,11 @@ async def manual_refresh_gex(key: str = ""):
         raise HTTPException(403, "Clave incorrecta")
     try:
         await refresh_gex()
-        gex = cache["gex"].get("NQ")
+        gex = cache["gex"].get(FA_ASSET)
         if gex:
             is_ndx = str(gex.get("source") or "").endswith("-direct")
             if is_ndx:
-                # NQ=F/NDX directo: los niveles YA están en escala NQ. NO convertir.
+                # ES=F directo: los niveles YA están en puntos del índice. NO convertir.
                 return {
                     "success": True,
                     "message": f"FlashAlpha {gex.get('ticker','?')} directo ✓ (sin conversión)",
@@ -3439,17 +3551,23 @@ async def manual_refresh_gex(key: str = ""):
                     "net_gex": gex.get("net_gex"),
                     "timestamp": gex.get("_ts"),
                 }
-            # Modo free (QQQ): convertir a NQ con ratio
-            ratio = cache["nq_ratio"].get("value") or 41.51
-            def _nq(v): return round(v*ratio,2) if isinstance(v,(int,float)) else v
+            # Modo free (ETF): convertir a escala del futuro con ratio
+            ratio = get_px_ratio()
+            if not ratio:
+                return {"success": False,
+                        "message": f"FlashAlpha respondió, pero sin ratio real no se "
+                                   f"convierte {FA_PROXY_ETF}→{FA_ASSET} (Regla #1)",
+                        "source": gex.get("source"), "ratio": None,
+                        "timestamp": gex.get("_ts")}
+            def _cv(v): return round(v*ratio,2) if isinstance(v,(int,float)) else v
             return {
                 "success": True,
-                "message": "FlashAlpha llamado manualmente ✓ (QQQ→NQ)",
-                "source": "qqq-converted",
-                "gamma_flip_QQQ": gex.get("gamma_flip"),
-                "gamma_flip_NQ": _nq(gex.get("gamma_flip")),
-                "call_wall_NQ": _nq(gex.get("call_wall")),
-                "put_wall_NQ": _nq(gex.get("put_wall")),
+                "message": f"FlashAlpha llamado manualmente ✓ ({FA_PROXY_ETF}→{FA_ASSET})",
+                "source": "etf-converted",
+                f"gamma_flip_{FA_PROXY_ETF}": gex.get("gamma_flip"),
+                f"gamma_flip_{FA_ASSET}": _cv(gex.get("gamma_flip")),
+                f"call_wall_{FA_ASSET}": _cv(gex.get("call_wall")),
+                f"put_wall_{FA_ASSET}": _cv(gex.get("put_wall")),
                 "ratio": ratio,
                 "timestamp": gex.get("_ts"),
             }
@@ -3542,7 +3660,7 @@ async def diag_ndx(key: str = ""):
         raise HTTPException(403, "Clave incorrecta")
     sym = FA_INDEX_SYMBOL
     from urllib.parse import quote
-    sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
+    sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
     out = {"symbol": sym, "plan_configurado": FLASHALPHA_PLAN,
            "key_present": bool(FLASHALPHA_KEY)}
     if not FLASHALPHA_KEY:
