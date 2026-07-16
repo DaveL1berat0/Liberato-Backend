@@ -2646,17 +2646,29 @@ async def _fetch_alphavantage_5m_base():
 
 _CANDLES_PERSIST = os.getenv("CANDLES_PATH", "/data/lbc_candles.json")
 def _persist_candles(base):
-    """Guarda la base 5m en el Volume para sobrevivir redeploys sin re-descargar."""
+    """Guarda la base 5m en el Volume para sobrevivir redeploys sin re-descargar.
+    Se sella con el instrumento: sin el sello no hay forma de saber si las velas
+    guardadas son del ES o de otro futuro (ver _load_persisted_candles)."""
     try:
         with open(_CANDLES_PERSIST, "w") as f:
-            json.dump({"ts": time.time(), "data": base}, f)
+            json.dump({"ts": time.time(), "asset": FA_ASSET, "data": base}, f)
     except Exception:
         pass
 def _load_persisted_candles():
-    """Carga la última base 5m real del Volume (si existe)."""
+    """Carga la última base 5m real del Volume (si existe y es del instrumento
+    que operamos AHORA).
+
+    El Volume sobrevive a los redeploys: tras migrar NQ→ES el snapshot traía
+    velas en escala NASDAQ (~29.800) y se servían tal cual en /candles/ES, o
+    sea un chart del Nasdaq etiquetado como ES (Regla #1). Los snapshots
+    anteriores a la migración no llevan 'asset': se descartan por seguridad."""
     try:
         with open(_CANDLES_PERSIST) as f:
             snap = json.load(f)
+        if snap.get("asset") != FA_ASSET:
+            print(f"[candles] base persistida descartada: asset={snap.get('asset')} "
+                  f"(operamos {FA_ASSET})")
+            return None
         if snap.get("data", {}).get("candles"):
             return {**snap["data"], "note": "base-5m-persistida"}
     except Exception:
