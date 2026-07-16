@@ -19,7 +19,7 @@ import os, time, asyncio, json
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -210,6 +210,15 @@ FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "ES=F")  # futuro CME directo
 # ES→SPY (antes NQ→QQQ). El ratio NO se hardcodea: ver _px_ratio.
 FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "SPY").strip().upper()
 FA_ASSET        = os.getenv("FA_ASSET", "ES").strip().upper()   # clave de cache y etiqueta
+# Índice del MISMO mercado que el instrumento, para el fallback de macro
+# (Fear&Greed/VIX). ES→SPX. Antes estaba hardcodeado a NDX, que es Nasdaq.
+FA_MACRO_FALLBACK = os.getenv("FA_MACRO_FALLBACK", "SPX").strip().upper()
+# Símbolo del futuro en el WebSocket de TwelveData (hoy APAGADO por defecto:
+# TD_WEBSOCKET=off — cobraba por tick y quemó 10.000+ créditos/día).
+FA_WS_FUTURE    = os.getenv("FA_WS_FUTURE", "ES1!").strip().upper()
+# Refreshes de GEX/día segun el cron (ver setup del scheduler). Solo para textos:
+# el numero real lo manda el CronTrigger.
+GEX_REFRESHES_PER_DAY = 28
 FH_BASE = "https://finnhub.io/api/v1"
 NY      = ZoneInfo("America/New_York")
 
@@ -244,6 +253,11 @@ _PERSIST = os.getenv("PERSIST_PATH", "/tmp/lbc_v3.json")  # con Railway Volume: 
 def save_cache():
     try:
         snap = {
+            # El contador de APIs DEBE persistir: vive en memoria y se reseteaba a
+            # 0 en CADA redeploy, así que el guardián de presupuesto creía tener
+            # cuota y seguía llamando contra una ya agotada. El proveedor sí lleva
+            # la cuenta real (FlashAlpha: 100/día, reset 00:00 UTC).
+            "api_usage": _api_usage,
             "gex":      cache["gex"],
             "earnings": {"data": cache["earnings"]["data"]},
             "institutional": {"text": cache["institutional"]["text"],
@@ -267,6 +281,15 @@ def load_cache():
     try:
         with open(_PERSIST) as f:
             snap = json.load(f)
+        if snap.get("api_usage"):
+            # Restaurar contadores SOLO si siguen en la misma ventana (día/minuto);
+            # si la ventana cambió, budget_ok() los resetea solo.
+            for _api, _st in snap["api_usage"].items():
+                if _api in _api_usage and isinstance(_st, dict):
+                    _api_usage[_api].update({"window_key": _st.get("window_key"),
+                                             "used": _st.get("used", 0)})
+            print(f"[persist] contadores restaurados: "
+                  f"flashalpha={_api_usage['flashalpha']['used']}")
         if snap.get("gex"):
             # Solo restaurar el GEX del instrumento que operamos AHORA.
             # El Volume de Railway retiene datos entre redeploys, así que tras la
@@ -343,35 +366,38 @@ async def twelvedata_ws():
                     chg_pct = float(msg.get("change_percent", 0) or 0)
                     if not price:
                         continue
-                    if sym == "NQ1!":
+                    if sym == FA_WS_FUTURE:
                         cache["px_ratio"]["spot"] = price
-                        cache["heatmap"]["data"]["NQ"] = {
-                            "symbol":"NQ","price":round(price,2),
+                        cache["heatmap"]["data"][FA_ASSET] = {
+                            "symbol":FA_ASSET,"price":round(price,2),
                             "chg_pct":round(chg_pct,3),
                             "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
                             "source":"direct",
                         }
                         qqq_px = cache["px_ratio"].get("etf_price")
-                        if qqq_px and qqq_px > 100:
+                        if qqq_px and qqq_px > 0:
                             nr = round(price/qqq_px,6)
                             cache["px_ratio"].update({"value":nr,"error_pts":0,"ts":datetime.now(NY).isoformat()})
                     elif sym == FA_PROXY_ETF:
                         cache["px_ratio"]["etf_price"] = price
                         if cache["heatmap"]["data"].get(FA_ASSET,{}).get("source") != "direct":
                             dr = get_px_ratio()
-                            cache["heatmap"]["data"]["NQ"] = {
-                                "symbol":"NQ","price":round(price*dr,2),
-                                "chg_pct":round(chg_pct,3),
-                                "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
-                                "source":"estimated","ratio_used":dr,
-                            }
+                            # Sin ratio real no se publica el tile (Regla #1):
+                            # antes hacía price*dr con dr=None → TypeError.
+                            if dr:
+                                cache["heatmap"]["data"][FA_ASSET] = {
+                                    "symbol":FA_ASSET,"price":round(price*dr,2),
+                                    "chg_pct":round(chg_pct,3),
+                                    "direction":"up" if chg_pct>0.05 else("down" if chg_pct<-0.05 else"flat"),
+                                    "source":"estimated","ratio_used":dr,
+                                }
                         nq_px = cache["px_ratio"].get("spot")
                         if nq_px:
                             nr = round(nq_px/price,6)
                             if abs(nq_px-(price*nr)) > 25:
-                                print(f"[ratio] QQQ/NQ ratio drift detected")
+                                print(f"[ratio] drift {FA_PROXY_ETF}/{FA_ASSET} detectado")
                             cache["px_ratio"].update({"value":nr,"ts":datetime.now(NY).isoformat()})
-                    if sym != "NQ1!":
+                    if sym != FA_WS_FUTURE:
                         cache["heatmap"]["data"][sym] = {
                             "symbol":sym,"price":round(price,4),
                             "chg_pct":round(chg_pct,3),
@@ -768,14 +794,16 @@ async def _refresh_gex_qqq(asset=FA_ASSET):
             "call_wall": cw, "put_wall": pw, "gamma_flip": gf,
             "net_gex": ex.get("net_gex"), "regime": ex.get("regime"),
             "ticker": ticker, "as_of": as_of, "market_open": market_open,
-            "source": "qqq-summary", "_ts": time.time(),
+            "source": "etf-summary", "_ts": time.time(),
         }
         if cw is None and pw is None and gf is None:
             cache["health"]["flashalpha"] = "online-no-levels"
-            print(f"[gex] ⚠️ 200 sin niveles (free no cubre call/put wall de QQQ). Keys: {list(ex.keys())}")
+            print(f"[gex] ⚠️ 200 sin niveles (free no cubre call/put wall de {ticker}). Keys: {list(ex.keys())}")
         else:
             cache["health"]["flashalpha"] = "online"
-            print(f"[gex] ok (QQQ): flip={gf} call={cw} put={pw} as_of={as_of}")
+            print(f"[gex] ok ({ticker}): flip={gf} call={cw} put={pw} as_of={as_of}")
+        # Archivar el snapshot: cada refresh cuesta creditos y es irrepetible.
+        append_gex_history(asset, cache["gex"][asset])
         save_cache()
     elif r.status_code == 429:
         _gex_blocked_until = time.time() + 86400
@@ -982,31 +1010,52 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         async with httpx.AsyncClient(timeout=12,
                                       headers={"X-Api-Key": FLASHALPHA_KEY}) as ivc:
             r_sum = await ivc.get(f"{FA_BASE}/v1/stock/{sym_url}/summary")
-            # FALLBACK: si el summary del futuro no responde en Basic, usar NDX.
-            # El bloque macro (Fear&Greed, VIX) es de MERCADO (idéntico en ambos)
-            # y el ATM IV del NDX ≈ NQ (mismo subyacente Nasdaq-100).
-            if r_sum.status_code != 200 and sym != "NDX":
-                print(f"[gex] summary {sym} {r_sum.status_code} → fallback NDX (macro/IV)")
-                budget_charge("flashalpha", 1)
-                r_sum = await ivc.get(f"{FA_BASE}/v1/stock/NDX/summary")
+            # FALLBACK de MACRO. Antes caía a NDX con el argumento de que "el ATM
+            # IV del NDX ≈ NQ (mismo subyacente Nasdaq-100)" — cierto operando el
+            # NQ, FALSO operando el ES: la IV del Nasdaq no es la del S&P. Se pasa
+            # al índice del instrumento (FA_MACRO_FALLBACK=SPX) y, sobre todo, del
+            # fallback SOLO se acepta el bloque MACRO (Fear&Greed/VIX), que es de
+            # mercado e idéntico para todos. La IV y el expected move del fallback
+            # se DESCARTAN: sin IV del propio instrumento, "—" (Regla #1).
+            _used_fallback = False
+            if r_sum.status_code != 200 and sym != FA_MACRO_FALLBACK:
+                if budget_ok("flashalpha", 1):
+                    print(f"[gex] summary {sym} {r_sum.status_code} → fallback "
+                          f"{FA_MACRO_FALLBACK} (SOLO macro)")
+                    budget_charge("flashalpha", 1)
+                    r_sum = await ivc.get(f"{FA_BASE}/v1/stock/{FA_MACRO_FALLBACK}/summary")
+                    _used_fallback = True
+                else:
+                    print("[gex] sin presupuesto para el fallback de macro — se omite")
         if r_sum.status_code == 200:
             sd = r_sum.json() or {}
             # HUECO CERRADO: futuros pueden dar 200 con summary PARCIAL (sin
             # bloque macro ni IV). Si falta lo esencial, re-pedir el de NDX.
             _has_macro = bool((sd.get("macro") or {}).get("fear_and_greed"))
             _has_iv = bool(sd.get("atm_iv") or (sd.get("volatility") or {}).get("atm_iv"))
-            if (not _has_macro and not _has_iv) and sym != "NDX":
-                print(f"[gex] summary {sym} 200 pero SIN macro/IV → fallback NDX")
+            if (not _has_macro and not _has_iv) and sym != FA_MACRO_FALLBACK \
+               and budget_ok("flashalpha", 1):
+                print(f"[gex] summary {sym} 200 pero SIN macro/IV → fallback "
+                      f"{FA_MACRO_FALLBACK} (SOLO macro)")
                 budget_charge("flashalpha", 1)
-                r2 = await ivc.get(f"{FA_BASE}/v1/stock/NDX/summary")
+                r2 = await ivc.get(f"{FA_BASE}/v1/stock/{FA_MACRO_FALLBACK}/summary")
                 if r2.status_code == 200:
                     sd = r2.json() or {}
+                    _used_fallback = True
             vol = sd.get("volatility", {}) or {}
             # ATM IV puede venir como campo directo o anidado en 'volatility'.
             # Probar varias ubicaciones para robustez (la doc varía por símbolo).
             atm_iv = (sd.get("atm_iv") or vol.get("atm_iv") or
                       sd.get("atm_implied_volatility") or vol.get("iv") or
                       sd.get("iv"))
+            # Regla #1: si 'sd' viene del fallback, su IV es la de OTRO índice.
+            # El bloque macro (Fear&Greed/VIX) sí es de mercado y se conserva;
+            # la IV y el expected move se descartan → la UI muestra "—".
+            if _used_fallback:
+                if atm_iv is not None:
+                    print(f"[gex] IV del fallback {FA_MACRO_FALLBACK} DESCARTADA "
+                          f"(no es la de {sym})")
+                atm_iv = None
             # Precio: directo, en price{}, o como underlying.
             pr = sd.get("price", {})
             if isinstance(pr, (int, float)):
@@ -1061,10 +1110,12 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
     }
     if cw is None and pw is None and gf is None:
         cache["health"]["flashalpha"] = "online-no-levels"
-        print(f"[gex] ⚠️ NDX 200 sin niveles. keys={list(lv.keys())}")
+        print(f"[gex] ⚠️ {sym} 200 sin niveles. keys={list(lv.keys())}")
     else:
         cache["health"]["flashalpha"] = "online"
-        print(f"[gex] ok (NDX directo): flip={gf} call={cw} put={pw} maxpain={mp} netgex={net_gex}")
+        print(f"[gex] ok ({sym} directo): flip={gf} call={cw} put={pw} maxpain={mp} netgex={net_gex}")
+    # Archivar el snapshot: cada refresh cuesta creditos y es irrepetible.
+    append_gex_history(asset, cache["gex"][asset])
     save_cache()
 
 # ══ FINNHUB — Calendar, Movers, Earnings (completamente restaurado) ══════════
@@ -1155,7 +1206,7 @@ def _parse_econ_num(v):
         return None
 
 def _rt_classify(name, actual, consensus):
-    """Sorpresa + clasificación NQ desde el dato en tiempo real."""
+    """Sorpresa + clasificación del instrumento desde el dato en tiempo real."""
     a, c = _parse_econ_num(actual), _parse_econ_num(consensus)
     if a is None or c is None:
         return None, None
@@ -2080,7 +2131,7 @@ async def _session_profile_ctx():
                 poc = (poc_b * step + step / 2) * ratio
                 vah = ((hi_e + 1) * step) * ratio
                 val = (lo_e * step) * ratio
-                out.append(f"- Perfil sesión previa (aprox, escala NQ): VAH {vah:.0f} | POC {poc:.0f} | VAL {val:.0f}")
+                out.append(f"- Perfil sesión previa (aprox, escala {FA_ASSET}): VAH {vah:.0f} | POC {poc:.0f} | VAL {val:.0f}")
 
         # ── IB de HOY (primera hora RTH 9:30-10:30), si ya ocurrió ──
         if now_et.hour > 10 or (now_et.hour == 10 and now_et.minute >= 30):
@@ -2097,7 +2148,7 @@ async def _session_profile_ctx():
                     ib_h = h if ib_h is None else max(ib_h, h)
                     ib_l = l if ib_l is None else min(ib_l, l)
             if ib_h and ib_l:
-                out.append(f"- Initial Balance hoy (aprox, escala NQ): IBH {ib_h*ratio:.0f} | IBL {ib_l*ratio:.0f}")
+                out.append(f"- Initial Balance hoy (aprox, escala {FA_ASSET}): IBH {ib_h*ratio:.0f} | IBL {ib_l*ratio:.0f}")
     except Exception as e:
         print(f"[institutional] perfil de sesión falló (no crítico): {e}")
     return out
@@ -2148,12 +2199,12 @@ async def refresh_institutional():
     has_gamma = bool(cw and pw and gf)
     if has_gamma:
         pdir = "sobre" if (nq_price and nq_price > gf) else "bajo"
-        ctx.append(f"- Gamma: Call Wall {cw:.0f} | Put Wall {pw:.0f} | Flip {gf:.0f} | NQ {pdir} del flip")
+        ctx.append(f"- Gamma: Call Wall {cw:.0f} | Put Wall {pw:.0f} | Flip {gf:.0f} | {FA_ASSET} {pdir} del flip")
         if ng: ctx.append(f"- Régimen dealer: {rg} | Net GEX: {ng:,.0f}")
         em = gex.get("expected_move"); iv = gex.get("atm_iv")
         if em: ctx.append(f"- Movimiento esperado: ±{em:.0f}pts | IV: {iv:.1f}%" if iv else f"- Movimiento esperado: ±{em:.0f}pts")
     else:
-        ctx.append("- Gamma (GEX): pendiente de actualización (FlashAlpha 5x/día)")
+        ctx.append(f"- Gamma (GEX): pendiente de actualización (FlashAlpha {GEX_REFRESHES_PER_DAY}x/día)")
 
     # ── INVENTARIO OVERNIGHT (derivado del cambio vs cierre previo) ──
     # chg_pct del NQ = posición del precio vs settlement anterior. En pre-market
@@ -2220,7 +2271,7 @@ async def refresh_institutional():
     ctx_str = "\n".join(ctx)
 
     # ── Prompt adaptado a si hay gamma o no ───────────────────────────────────
-    sys_msg = ("Eres el analista jefe de mesa de Liberato Community: un trader institucional de NQ Futures "
+    sys_msg = (f"Eres el analista jefe de mesa de Liberato Community: un trader institucional de {FA_ASSET} Futures "
                "que razona con teoría de subasta y posicionamiento dealer. Tu lector opera setups según el "
                "régimen del mercado: analiza inventario nocturno, estructura y niveles antes de decidir. "
                "Respondes SOLO en español, 3-4 oraciones en prosa (nunca listas). "
@@ -2644,6 +2695,62 @@ async def _fetch_alphavantage_5m_base():
         print(f"[candles] AlphaVantage error: {e}")
     return None
 
+# ═══════════════════════════════════════════════════════════════════════════
+#  HISTORIAL DE GEX — cada llamada real a FlashAlpha se archiva
+# ═══════════════════════════════════════════════════════════════════════════
+#  Los créditos de FlashAlpha son el recurso más escaso del sistema (100/día) y
+#  cada refresh es un snapshot IRREPETIBLE del mercado: si no se archiva, se
+#  pierde para siempre. Con 28 refreshes/día son ~140 puntos reales por semana
+#  para estudiar migración del flip, cambios de régimen y patrones horarios.
+#
+#  Formato JSONL (una línea por snapshot): append barato, resistente a
+#  corrupción (una línea rota no invalida el archivo) y leíble en streaming.
+#  Vive en el Volume de Railway (/data), que sobrevive a los redeploys.
+#
+#  Regla #1: SOLO se archivan snapshots con dato real de FlashAlpha. Si los
+#  niveles vienen vacíos no se escribe nada — un historial con huecos es útil;
+#  uno con datos inventados no vale nada.
+_GEX_HISTORY = os.getenv("GEX_HISTORY_PATH", "/data/lbc_gex_history.jsonl")
+_GEX_HIST_MAX_MB = float(os.getenv("GEX_HISTORY_MAX_MB", "50"))
+
+def append_gex_history(asset, snap):
+    """Archiva un snapshot de GEX. Se llama tras CADA refresh real."""
+    try:
+        cw, pw, gf = snap.get("call_wall"), snap.get("put_wall"), snap.get("gamma_flip")
+        if cw is None and pw is None and gf is None:
+            return  # sin niveles reales no se archiva (Regla #1)
+        now = datetime.now(NY)
+        row = {
+            "ts": now.isoformat(), "date": now.strftime("%Y-%m-%d"),
+            "time_et": now.strftime("%H:%M:%S"), "asset": asset,
+            "ticker": snap.get("ticker"),
+            "spot": snap.get("underlying_price"),
+            "call_wall": cw, "put_wall": pw, "gamma_flip": gf,
+            "max_pain": snap.get("max_pain"), "net_gex": snap.get("net_gex"),
+            "regime": snap.get("regime"),
+            "atm_iv": snap.get("atm_iv"), "expected_move": snap.get("expected_move"),
+            "fear_score": snap.get("fear_score"), "vix": snap.get("vix"),
+            "source": snap.get("source"),
+            "per_strike_count": snap.get("per_strike_count"),
+        }
+        os.makedirs(os.path.dirname(_GEX_HISTORY) or ".", exist_ok=True)
+        with open(_GEX_HISTORY, "a") as f:
+            f.write(json.dumps(row) + "\n")
+        # Corte por tamaño: conserva la mitad más reciente. ~200 B/línea → 50 MB
+        # son ~250.000 snapshots (unos 24 años a 28/día); el corte es un seguro,
+        # no algo que vaya a dispararse en la práctica.
+        try:
+            if os.path.getsize(_GEX_HISTORY) > _GEX_HIST_MAX_MB * 1024 * 1024:
+                with open(_GEX_HISTORY) as f:
+                    lines = f.readlines()
+                with open(_GEX_HISTORY, "w") as f:
+                    f.writelines(lines[len(lines)//2:])
+                print(f"[gex-hist] rotado: {len(lines)} → {len(lines)//2} líneas")
+        except Exception:
+            pass
+    except Exception as e:
+        print(f"[gex-hist] no se pudo archivar (no crítico): {e}")
+
 _CANDLES_PERSIST = os.getenv("CANDLES_PATH", "/data/lbc_candles.json")
 def _persist_candles(base):
     """Guarda la base 5m en el Volume para sobrevivir redeploys sin re-descargar.
@@ -2869,6 +2976,44 @@ async def gamma_levels():
             "age_seconds": age_seconds,
             "next_update": _next_gex_window()}
 
+@app.get("/api/gex/history")
+async def gex_history(days: int = 7, limit: int = 2000, fmt: str = "json"):
+    """Historial REAL de GEX archivado en el Volume (uno por refresh de FlashAlpha).
+
+    days: cuántos días atrás (por fecha ET). limit: máximo de filas (más recientes).
+    fmt='csv' devuelve CSV para analizarlo fuera. Público: son niveles, no secretos.
+    """
+    try:
+        if not os.path.exists(_GEX_HISTORY):
+            return {"status": "empty", "rows": [], "count": 0,
+                    "note": "aún no hay snapshots archivados"}
+        cutoff = (datetime.now(NY) - timedelta(days=days)).strftime("%Y-%m-%d")
+        rows = []
+        with open(_GEX_HISTORY) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    r = json.loads(line)
+                except Exception:
+                    continue   # una línea corrupta no invalida el archivo
+                if r.get("date", "") >= cutoff:
+                    rows.append(r)
+        rows = rows[-limit:]
+        if fmt == "csv":
+            cols = ["ts","date","time_et","asset","ticker","spot","call_wall","put_wall",
+                    "gamma_flip","max_pain","net_gex","regime","atm_iv","expected_move",
+                    "fear_score","vix","source","per_strike_count"]
+            out = ",".join(cols) + "\n"
+            for r in rows:
+                out += ",".join("" if r.get(c) is None else str(r.get(c)) for c in cols) + "\n"
+            return Response(content=out, media_type="text/csv")
+        return {"status": "ok", "count": len(rows), "days": days,
+                "asset": FA_ASSET, "rows": rows}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
 @app.get("/api/heatmap")
 async def get_heatmap():
     """22 activos: 8 vía WebSocket real-time + 14 vía REST batch cada 15min."""
@@ -2934,7 +3079,7 @@ async def get_calendar():
     upcoming = [e for e in cache["calendar"]["data"]
                 if e.get("status")=="Upcoming" and _ev_is_future(e)]
     # Precio NQ actual — para cálculo de reacción del mercado post-publicación
-    nq_now = (cache["heatmap"]["data"].get("NQ", {}) or {}).get("price")
+    nq_now = (cache["heatmap"]["data"].get(FA_ASSET, {}) or {}).get("price")
     # ── MOTOR DE REACCIÓN NQ (1 vela de 5 min tras la noticia) ──
     # Al detectar un evento recién Released: registra el precio NQ (p0).
     # Pasados ≥5 min: registra p5 y calcula la digestión = p5 - p0 en puntos.
@@ -3665,11 +3810,23 @@ async def diag_symbol(sym: str = "ES=F", key: str = ""):
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-ndx")
 async def diag_ndx(key: str = ""):
-    """Prueba NDX DIRECTO (plan Basic). Úsalo tras activar Basic para confirmar
-    que los niveles reales del Nasdaq-100 llegan sin conversión.
-    Uso: /api/admin/diag-ndx?key=liberato2026"""
+    """Prueba el futuro DIRECTO del instrumento (plan Basic): confirma que los
+    niveles reales llegan sin conversión.
+    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=liberato2026"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
+    # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
+    # SIN comprobar ni registrar presupuesto → cada ejecución se comía ~3 créditos
+    # invisibles de los 100/día. Los créditos de FlashAlpha son SOLO para el GEX;
+    # un diagnóstico no puede robárselos a la sesión de trading.
+    if not budget_ok("flashalpha", 3):
+        st = _api_usage["flashalpha"]
+        return {"status": "sin-presupuesto",
+                "mensaje": f"Diag bloqueado: {st['used']}/{API_BUDGETS['flashalpha']['limit']} "
+                           f"créditos usados hoy. Los créditos son para el GEX. "
+                           f"Reset a las 00:00 UTC.",
+                "usados": st["used"]}
+    budget_charge("flashalpha", 3)
     sym = FA_INDEX_SYMBOL
     from urllib.parse import quote
     sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
@@ -3744,10 +3901,22 @@ async def diag_ndx(key: str = ""):
 
 @app.get("/api/admin/diag-flashalpha")
 async def diag_flashalpha(key: str = ""):
-    """Diagnóstico completo de FlashAlpha: plan, quota, y qué devuelve para QQQ.
-    Uso: /api/admin/diag-flashalpha?key=liberato2026"""
+    """Diagnóstico completo de FlashAlpha: plan, quota, y qué devuelve.
+    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=liberato2026"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
+    # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
+    # SIN comprobar ni registrar presupuesto → cada ejecución se comía ~3 créditos
+    # invisibles de los 100/día. Los créditos de FlashAlpha son SOLO para el GEX;
+    # un diagnóstico no puede robárselos a la sesión de trading.
+    if not budget_ok("flashalpha", 3):
+        st = _api_usage["flashalpha"]
+        return {"status": "sin-presupuesto",
+                "mensaje": f"Diag bloqueado: {st['used']}/{API_BUDGETS['flashalpha']['limit']} "
+                           f"créditos usados hoy. Los créditos son para el GEX. "
+                           f"Reset a las 00:00 UTC.",
+                "usados": st["used"]}
+    budget_charge("flashalpha", 3)
     out = {"flashalpha_key_present": bool(FLASHALPHA_KEY),
            "plan_configurado": FLASHALPHA_PLAN,
            "simbolo_indice": FA_INDEX_SYMBOL,
