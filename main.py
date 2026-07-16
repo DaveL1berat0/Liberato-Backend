@@ -3032,6 +3032,35 @@ async def gamma_levels():
             "age_seconds": age_seconds,
             "next_update": _next_gex_window()}
 
+@app.get("/api/admin/diag-yahoo")
+async def diag_yahoo(key: str = ""):
+    """¿Alcanza Railway a Yahoo? Yahoo bloquea IPs de datacenter con frecuencia.
+    Gratis: Yahoo no consume créditos de ninguna API nuestra."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    out = {}
+    for label, sym in (("SPX", "%5EGSPC"), ("ES_futuro", "ES%3DF"), ("SPY", "SPY")):
+        try:
+            url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+                   "?range=1d&interval=5m")
+            async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
+                r = await c.get(url)
+            body = r.text[:150]
+            px = None
+            try:
+                res = ((r.json() or {}).get("chart", {}).get("result") or [None])[0]
+                px = (res or {}).get("meta", {}).get("regularMarketPrice")
+            except Exception:
+                pass
+            out[label] = {"http": r.status_code, "precio": px, "cuerpo": body}
+        except Exception as e:
+            out[label] = {"error": f"{type(e).__name__}: {e}"}
+    out["veredicto"] = ("✅ Railway alcanza Yahoo" if any(v.get("precio") for v in out.values()
+                        if isinstance(v, dict))
+                        else "❌ Railway NO alcanza Yahoo (IP de datacenter bloqueada)")
+    out["spx_en_heatmap"] = "SPX" in cache["heatmap"]["data"]
+    return out
+
 @app.get("/api/admin/api-audit")
 async def api_audit(key: str = ""):
     """CONTABILIDAD de todas las APIs: límite, uso real, presupuesto teórico del
