@@ -135,28 +135,14 @@ _fh_calls   = _api_usage["finnhub"]
 _fh_calls.setdefault("day", None)
 _fh_calls.setdefault("used", 0)
 
-def _td_today():
-    try:
-        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    except Exception:
-        return datetime.utcnow().strftime("%Y-%m-%d")
-
-def td_budget_ok(cost=1):
-    """Devuelve True si CABEN 'cost' créditos hoy SIN pasar el límite.
-    Resetea el contador automáticamente cada día (UTC)."""
-    today = _td_today()
-    if _td_credits["day"] != today:
-        _td_credits["day"] = today
-        _td_credits["used"] = 0
-    return (_td_credits["used"] + cost) <= TD_DAILY_LIMIT
-
-def td_charge(cost=1):
-    """Registra 'cost' créditos usados (llamar tras una llamada exitosa)."""
-    today = _td_today()
-    if _td_credits["day"] != today:
-        _td_credits["day"] = today
-        _td_credits["used"] = 0
-    _td_credits["used"] += cost
+# ⚠️ Aquí vivía una SEGUNDA definición de td_budget_ok/td_charge (contador por
+# clave "day") que sobrescribía a los wrappers de arriba. Como _td_credits es un
+# ALIAS de _api_usage["twelvedata"], los dos contadores compartían "used" pero
+# detectaban la ventana con claves distintas ("day" vs "window_key"): la primera
+# llamada del sistema nuevo de cada día veía su window_key viejo y ponía used=0,
+# borrando lo que el sistema viejo ya había cobrado → subconteo → gasto de más.
+# Eliminadas: ahora TODO TwelveData pasa por budget_ok/budget_charge. Mismo
+# límite (TD_DAILY_LIMIT sale de API_BUDGETS) y misma ventana diaria UTC.
 ALPHA_VANTAGE_KEY= os.getenv("ALPHAVANTAGE_KEY", "").strip()
 FINNHUB_WH_SECRET = os.getenv("FINNHUB_WEBHOOK_SECRET", "").strip()  # opcional: verifica autenticidad
 
@@ -523,9 +509,9 @@ _REAL_INDICES = {
     "Gold": "GC=F", "WTI": "CL=F", "ES": "ES=F", "SPX": "^GSPC", "BTC": "BTC-USD",
 }
 _indices_last_ts = 0
-async def refresh_real_indices():
-    """Niveles reales con throttle de 4 min. Escribe en el heatmap con las claves
-    de display para que el frontend los tome directo (val real, no '—')."""
+# ⚠️ Aquí había una firma huérfana de refresh_real_indices() con solo docstring y
+# sin cuerpo (no-op) que quedó de una edición: la versión real está más abajo y la
+# sobrescribía. Eliminada — no cambia el comportamiento, solo quita el señuelo.
 # ══ ÍNDICES REALES (Finnhub, gratis, verificable) ════════════════════════════
 # Elimina los "—" del panel de correlaciones. Vía Finnhub /quote (misma key que
 # ya funciona para el heatmap). Símbolos que Finnhub free SÍ soporta:
@@ -3069,7 +3055,6 @@ async def get_institutional():
 
 # ══ WEBHOOK: Finnhub → actualización instantánea cuando una empresa reporta ═══
 # Registro: finnhub.io/dashboard → Webhooks → URL: {RAILWAY_URL}/api/webhooks/finnhub
-from fastapi import Request
 
 @app.get("/api/webhooks/finnhub")
 def finnhub_webhook_status():
@@ -3487,6 +3472,65 @@ async def manual_refresh_institutional(key: str = ""):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+#  DIAGNÓSTICO DE SÍMBOLO — ¿el plan de FlashAlpha cubre este símbolo?
+#  Prueba un símbolo ARBITRARIO sin tocar la config de producción, para poder
+#  responder "¿nos da ES=F?" antes de migrar nada.
+#  Uso: /api/admin/diag-symbol?sym=ES%3DF&key=liberato2026
+# ═══════════════════════════════════════════════════════════════════════════
+@app.get("/api/admin/diag-symbol")
+async def diag_symbol(sym: str = "ES=F", key: str = ""):
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    from urllib.parse import quote
+    sym = (sym or "").strip().upper()
+    sym_url = quote(sym, safe="")   # ES=F → ES%3DF (requerido por FlashAlpha)
+    out = {"symbol": sym, "symbol_url": sym_url, "plan": FLASHALPHA_PLAN}
+    if not FLASHALPHA_KEY:
+        return {**out, "error": "no hay FLASHALPHA_KEY"}
+    # Guardián de presupuesto: esta prueba gasta ~2 créditos de los 95/día.
+    if not budget_ok("flashalpha", 2):
+        st = _api_usage["flashalpha"]
+        return {**out, "error": f"sin presupuesto FlashAlpha ({st['used']}/{API_BUDGETS['flashalpha']['limit']})"}
+    try:
+        async with httpx.AsyncClient(timeout=15,
+                                     headers={"X-Api-Key": FLASHALPHA_KEY}) as client:
+            r_lvl = await client.get(f"{FA_BASE}/v1/exposure/levels/{sym_url}")
+            budget_charge("flashalpha", 1)
+            out["levels_status"] = r_lvl.status_code
+            if r_lvl.status_code == 200:
+                lv = (r_lvl.json() or {}).get("levels", {}) or {}
+                out["levels"] = {"call_wall": lv.get("call_wall"),
+                                 "put_wall": lv.get("put_wall"),
+                                 "gamma_flip": lv.get("gamma_flip"),
+                                 "max_pain": lv.get("max_pain")}
+                out["veredicto"] = f"✅ El plan CUBRE {sym} — niveles reales recibidos"
+            elif r_lvl.status_code == 403:
+                out["veredicto"] = f"❌ 403: el plan NO cubre {sym}"
+                out["body"] = r_lvl.text[:200]
+            elif r_lvl.status_code == 404:
+                out["veredicto"] = f"❌ 404: FlashAlpha no conoce el símbolo {sym}"
+                out["body"] = r_lvl.text[:200]
+            elif r_lvl.status_code == 429:
+                out["veredicto"] = "⚠️ 429: quota agotada (reset 00:00 UTC)"
+            else:
+                out["veredicto"] = f"⚠️ status inesperado {r_lvl.status_code}"
+                out["body"] = r_lvl.text[:200]
+            # Expiraciones: confirma que además del GEX hay cadena de opciones
+            r_exp = await client.get(f"{FA_BASE}/v1/options/{sym_url}")
+            budget_charge("flashalpha", 1)
+            out["options_status"] = r_exp.status_code
+            if r_exp.status_code == 200:
+                ed = r_exp.json() or {}
+                exps = ed.get("expirations") or []
+                dates = [e if isinstance(e, str) else (e or {}).get("expiration")
+                         for e in exps]
+                out["expiraciones"] = [d for d in dates if d][:6]
+    except Exception as e:
+        out["error"] = repr(e)[:200]
+    return out
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 #  DIAGNÓSTICO FLASHALPHA — verifica plan, acceso a QQQ, y respuesta cruda
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-ndx")
@@ -3497,6 +3541,8 @@ async def diag_ndx(key: str = ""):
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     sym = FA_INDEX_SYMBOL
+    from urllib.parse import quote
+    sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
     out = {"symbol": sym, "plan_configurado": FLASHALPHA_PLAN,
            "key_present": bool(FLASHALPHA_KEY)}
     if not FLASHALPHA_KEY:
@@ -3504,7 +3550,7 @@ async def diag_ndx(key: str = ""):
     try:
         async with httpx.AsyncClient(timeout=12,
                                       headers={"X-Api-Key": FLASHALPHA_KEY}) as client:
-            r_lvl = await client.get(f"{FA_BASE}/v1/exposure/levels/{sym}")
+            r_lvl = await client.get(f"{FA_BASE}/v1/exposure/levels/{sym_url}")
             out["levels_status"] = r_lvl.status_code
             if r_lvl.status_code == 200:
                 lv = (r_lvl.json() or {}).get("levels", {}) or {}
