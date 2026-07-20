@@ -789,6 +789,34 @@ _gex_ondemand_ts = 0   # debounce del refresh on-demand cuando el cache está fr
 _gex_working_exp = None       # expiración que SÍ da datos GEX (cache del día)
 _gex_working_exp_day = None   # día en que se cacheó (para resetear)   # timestamp: si hay 429, esperar 24h
 _gex_expdates_cache = []      # expiraciones del día (1 llamada /options por día)
+_gex_maxpain_val = None       # max pain del día (sale del OI → cambia ~1 vez/día)
+_gex_maxpain_day = None
+
+class _SkipOptions(Exception):
+    """Señal interna: las expiraciones salen del cache del día, no de la API.
+    No es un error — se captura explícitamente para no reportarlo como fallo."""
+
+def _fa_charge(n=1):
+    """Cobra n requests REALES a FlashAlpha.
+
+    Se llama en CADA request, no en bloque. El proveedor cuenta requests HTTP y el
+    contador debe contar lo mismo o miente. Y mentía: cobraba 3 fijos por refresh
+    mientras hacía 5-9 requests (levels + options + gex[hasta 4 intentos] +
+    maxpain + summary). Resultado: el panel decía 86/95 y FlashAlpha respondía
+    "Quota exceeded: 100/100". La cuota estaba condenada por diseño."""
+    budget_charge("flashalpha", n)
+_gex_expdates_day = None      # día del cache de expiraciones
+_gex_maxpain_val = None       # max pain del día (sale del OI: cambia ~1 vez/día)
+_gex_maxpain_day = None
+_gex_summary_cache = None     # bloque macro (Fear&Greed/VIX/IV): cambia lento
+_gex_summary_ts = 0
+GEX_SUMMARY_TTL = int(os.getenv("GEX_SUMMARY_TTL", "3600"))   # 1h → ~4 llamadas/día
+
+def _fa_charge(n=1):
+    """Cobra n llamadas REALES a FlashAlpha. Se llama en CADA request, no en
+    bloque: el proveedor cuenta requests HTTP, y el contador debe contar lo mismo
+    o miente (era el caso: cobraba 3 por refresh y hacía 5-9)."""
+    budget_charge("flashalpha", n)
 _gex_expdates_day   = None
 _gex_maxpain_failed_day = None
 _event_reactions = {}  # {evento: {t0, p0, p5}} — reacción del NQ a noticias  # si /maxpain falló hoy, no reintentar (ahorra créditos)
@@ -905,12 +933,16 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
     sym = FA_INDEX_SYMBOL  # "ES=F" (futuro CME directo)
     from urllib.parse import quote
     sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
-    # Costo dinámico: 1ª llamada del día ≈5 (incluye /options); siguientes ≈3
+    # El coste NO se cobra en bloque. Antes: budget_charge(3) fijo, mientras el
+    # refresh hacía 5-9 requests reales (levels + options + gex[hasta 4 intentos]
+    # + maxpain + summary). Por eso el contador decía 86/95 mientras el proveedor
+    # cortaba con "Quota exceeded 100/100": contaba ~140. Ahora cada request se
+    # cobra donde se hace, con _fa_charge(), y el contador dice la verdad.
     _today_now = _today_et_str()
     _first_of_day = (_gex_expdates_day != _today_now)
-    budget_charge("flashalpha", 5 if _first_of_day else 3)
     async with httpx.AsyncClient(timeout=12,
                                   headers={"X-Api-Key": FLASHALPHA_KEY}) as client:
+        _fa_charge()
         r_lvl = await client.get(f"{FA_BASE}/v1/exposure/levels/{sym_url}")
         if r_lvl.status_code == 429:
             _gex_blocked_until = time.time() + 86400
@@ -931,7 +963,21 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         # primera futura (evita 404 por fecha inexistente y 403 por 0DTE).
         net_gex = None; per_strike = None; exp = None; exp_dates = []
         gex_flip = None; gex_label = None  # del response /gex (flip del futuro)
+        # Las expiraciones cambian UNA vez al día. El cache ya existía
+        # (_gex_expdates_cache, comentado como "1 llamada /options por día") pero
+        # NUNCA se leía para saltarse la llamada: se pedía en los 28 refreshes
+        # → 27 requests tirados cada día. Ahora solo se pide el primero del día.
+        _usar_cache_exp = (not _first_of_day) and bool(_gex_expdates_cache)
+        if _usar_cache_exp:
+            exp_dates = list(_gex_expdates_cache)
+            _fut = sorted([d for d in exp_dates if d > _today_now])
+            if _fut:
+                exp = _fut[0]
+            print(f"[gex] expiraciones del cache del día ({len(exp_dates)}) — 0 créditos")
         try:
+            if _usar_cache_exp:
+                raise _SkipOptions("cache")
+            _fa_charge()
             r_exp = await client.get(f"{FA_BASE}/v1/options/{sym_url}")
             if r_exp.status_code == 200:
                 ed = r_exp.json() or {}
@@ -953,6 +999,8 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
                     print(f"[gex] NDX sin expiraciones futuras en la lista: {exp_dates[:5]}")
             else:
                 print(f"[gex] /options/{sym} status {r_exp.status_code}")
+        except _SkipOptions:
+            pass   # no es un error: se usó el cache del día (0 créditos)
         except Exception as e:
             print(f"[gex] /options/{sym} falló: {e}")
         # Probar VARIAS expiraciones futuras hasta que una dé net_gex.
@@ -971,6 +1019,7 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
             future_list = [_gex_working_exp] + [d for d in future_list if d != _gex_working_exp]
         for cand_exp in future_list[:4]:   # máximo 4 intentos
             try:
+                _fa_charge()   # cada intento de expiración es 1 request real
                 r_gex = await client.get(f"{FA_BASE}/v1/exposure/gex/{sym_url}",
                                          params={"expiration": cand_exp})
                 if r_gex.status_code == 200:
@@ -1017,14 +1066,24 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         gf = gex_flip
         print(f"[gex] gamma_flip tomado de /gex: {gf}")
     # Max Pain viene de endpoint separado /v1/maxpain (Basic+). /levels no lo trae.
-    if mp is None and _gex_maxpain_failed_day != _today_now:
+    # Max pain sale del OPEN INTEREST → cambia ~1 vez al día, pero se pedía en los
+    # 28 refreshes. Cacheado por día: 27 requests menos.
+    global _gex_maxpain_val, _gex_maxpain_day
+    if mp is None and _gex_maxpain_day == _today_now and _gex_maxpain_val is not None:
+        mp = _gex_maxpain_val
+        print(f"[gex] max_pain del cache del día: {mp} — 0 créditos")
+    elif mp is None and _gex_maxpain_failed_day != _today_now:
         try:
             async with httpx.AsyncClient(timeout=12,
                                           headers={"X-Api-Key": FLASHALPHA_KEY}) as mpc:
+                _fa_charge()
                 r_mp = await mpc.get(f"{FA_BASE}/v1/maxpain/{sym_url}")
             if r_mp.status_code == 200:
                 mpd = r_mp.json() or {}
                 mp = _num(mpd.get("max_pain") or mpd.get("maxpain") or mpd.get("max_pain_strike"))
+                if mp is not None:
+                    _gex_maxpain_val = mp      # cache del día → no repetir 27 veces
+                    _gex_maxpain_day = _today_now
                 print(f"[gex] max_pain ({sym}): {mp}")
             else:
                 _gex_maxpain_failed_day = _today_now   # no reintentar hoy (ahorra créditos)
@@ -1058,9 +1117,15 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
     # lee DESPUÉS del except. Sin esto, si el summary falla → NameError.
     atm_iv = None; exp_move = None; spot = None
     fear_score = None; fear_rating = None; vix_value = None
+    # NOTA sobre cachear el /summary: se evaluó y se DESCARTÓ. Da Fear&Greed y VIX
+    # (macro, lentos) pero TAMBIÉN el `spot` del futuro, y del spot sale el ratio
+    # ES/SPY que usan el precio y las velas. Cachearlo 1h ahorraría ~21 créditos
+    # pero dejaría el ratio con hasta 1h de antigüedad. Con 86/100 ya cabemos, así
+    # que no se cambia frescura del dato por créditos que no hacen falta.
     try:
         async with httpx.AsyncClient(timeout=12,
                                       headers={"X-Api-Key": FLASHALPHA_KEY}) as ivc:
+            _fa_charge()
             r_sum = await ivc.get(f"{FA_BASE}/v1/stock/{sym_url}/summary")
             # FALLBACK de MACRO. Antes caía a NDX con el argumento de que "el ATM
             # IV del NDX ≈ NQ (mismo subyacente Nasdaq-100)" — cierto operando el
