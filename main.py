@@ -261,6 +261,8 @@ _PERSIST = os.getenv("PERSIST_PATH", "/tmp/lbc_v3.json")  # con Railway Volume: 
 
 def save_cache():
     try:
+        # _rapidapi_day/_count se leen aquí (solo lectura, pero se declaran para
+        # que el linter no los confunda con locales al referenciarlos).
         snap = {
             # El contador de APIs DEBE persistir: vive en memoria y se reseteaba a
             # 0 en CADA redeploy, así que el guardián de presupuesto creía tener
@@ -277,6 +279,11 @@ def save_cache():
             "calendar": {"data": cache["calendar"]["data"],
                          "lu":   cache["calendar"]["last_update"]},
             "rapidapi_actuals": cache.get("_rapidapi_cache", []),
+            # El contador de RapidAPI usa su propio mecanismo (_rapidapi_day_count),
+            # separado de _api_usage. Tenía EL MISMO bug que FlashAlpha: vivía en
+            # memoria y se reseteaba en cada redeploy → el guardián de 85/día creía
+            # tener cuota tras un deploy. Se persiste su día + contador.
+            "rapidapi_count": {"day": _rapidapi_day, "count": _rapidapi_day_count},
             "movers_seen": cache.get("_movers_seen", {}),
             "movers": {"data": cache["movers"]["data"],
                        "lu":   cache["movers"]["last_update"]},
@@ -287,6 +294,7 @@ def save_cache():
         print(f"[persist] error guardando: {e}")
 
 def load_cache():
+    global _rapidapi_day, _rapidapi_day_count
     try:
         with open(_PERSIST) as f:
             snap = json.load(f)
@@ -299,6 +307,13 @@ def load_cache():
                                              "used": _st.get("used", 0)})
             print(f"[persist] contadores restaurados: "
                   f"flashalpha={_api_usage['flashalpha']['used']}")
+        # Contador de RapidAPI (separado de _api_usage). Solo si sigue siendo HOY;
+        # si no, se queda en 0 y refresh_calendar lo reinicia al cambiar de día.
+        _rc = snap.get("rapidapi_count")
+        if isinstance(_rc, dict) and _rc.get("day") == _today_et_str():
+            _rapidapi_day = _rc["day"]
+            _rapidapi_day_count = int(_rc.get("count", 0))
+            print(f"[persist] rapidapi restaurado: {_rapidapi_day_count}/85")
         if snap.get("gex"):
             # Solo restaurar el GEX del instrumento que operamos AHORA.
             # El Volume de Railway retiene datos entre redeploys, así que tras la
@@ -3228,27 +3243,46 @@ async def api_audit(key: str = ""):
                          "por_dia_teorico": 0,
                          "detalle": "solo si TwelveData falla"},
     }
+    # Semáforo de agotamiento: verde <70%, amarillo 70-90%, rojo >90%.
+    # Es la medida "nunca agotar créditos" hecha visible: la rutina de auditoría
+    # (lq-6-web-auditor) puede alertar solo cuando algo pasa a amarillo/rojo.
+    def _semaforo(used, limit):
+        if not limit:
+            return "verde", None
+        p = round(used / limit * 100, 1)
+        return ("rojo" if p >= 90 else "amarillo" if p >= 70 else "verde"), p
+
     out = {"generado": datetime.now(NY).isoformat(), "asset": FA_ASSET, "apis": {}}
+    _peor = "verde"
+    _orden = {"verde": 0, "amarillo": 1, "rojo": 2}
     for name, cfg in API_BUDGETS.items():
         st = _api_usage[name]
+        estado, pct = _semaforo(st["used"], cfg["limit"])
+        if _orden[estado] > _orden[_peor]:
+            _peor = estado
         out["apis"][name] = {
             "key_configurada": bool({
                 "flashalpha": FLASHALPHA_KEY, "twelvedata": TWELVEDATA_KEY,
                 "finnhub": FINNHUB_KEY, "groq": GROQ_KEY,
                 "alphavantage": ALPHA_VANTAGE_KEY, "fmp": FMP_KEY,
             }.get(name)),
+            "estado": estado,
             "limite_seguro": cfg["limit"], "ventana": cfg["window"],
             "usado_ahora": st["used"], "ventana_actual": st["window_key"],
             "restante": max(0, cfg["limit"] - st["used"]),
-            "pct": round(st["used"] / cfg["limit"] * 100, 1) if cfg["limit"] else None,
+            "pct": pct,
             "plan": plan.get(name, {}),
         }
+    _ra_estado, _ra_pct = _semaforo(_rapidapi_day_count, 85)
+    if _orden[_ra_estado] > _orden[_peor]:
+        _peor = _ra_estado
     out["apis"]["rapidapi"] = {
-        "key_configurada": bool(RAPIDAPI_KEY), "limite_seguro": 85, "ventana": "day",
+        "key_configurada": bool(RAPIDAPI_KEY), "estado": _ra_estado,
+        "limite_seguro": 85, "ventana": "day",
         "usado_ahora": _rapidapi_day_count, "restante": max(0, 85 - _rapidapi_day_count),
-        "plan": plan["rapidapi"],
-        "aviso": "contador propio, NO integrado en _api_usage → no se persiste",
+        "pct": _ra_pct, "plan": plan["rapidapi"],
     }
+    out["estado_global"] = _peor   # verde = ninguna API en riesgo hoy
     # Salud observable: ¿el dato llega de verdad?
     out["salud_datos"] = {
         "heatmap_simbolos_con_precio": len([k for k, v in hm.items()
