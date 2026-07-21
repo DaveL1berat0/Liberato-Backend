@@ -1247,6 +1247,26 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
     else:
         cache["health"]["flashalpha"] = "online"
         print(f"[gex] ok ({sym} directo): flip={gf} call={cw} put={pw} maxpain={mp} netgex={net_gex}")
+    # Publicar el SPOT del futuro en el heatmap como tile directo. Sin esto, el
+    # frontend no tiene el precio del NQ en el heatmap (Finnhub no da futuros) y
+    # cae a QQQ×ratio; si el ratio se calculó mal (1.0), muestra el precio del ETF
+    # (~708) con etiqueta del NQ → viola la Regla #1. Con el tile directo, el
+    # frontend usa el spot real tal cual, sin ratio.
+    if isinstance(spot, (int, float)) and spot > 0:
+        _prev = (cache["heatmap"]["data"].get(FA_ASSET, {}) or {}).get("price")
+        _chg = None
+        try:
+            _etf_hm = (cache["heatmap"]["data"].get(FA_PROXY_ETF, {}) or {})
+            _chg = _etf_hm.get("chg_pct")   # el % del futuro ≈ el del ETF proxy
+        except Exception:
+            pass
+        cache["heatmap"]["data"][FA_ASSET] = {
+            "symbol": FA_ASSET, "price": round(float(spot), 2),
+            "chg_pct": _chg,
+            "direction": ("up" if (_chg or 0) > 0.03 else
+                          ("down" if (_chg or 0) < -0.03 else "flat")),
+            "source": "direct",
+        }
     # Archivar el snapshot: cada refresh cuesta creditos y es irrepetible.
     append_gex_history(asset, cache["gex"][asset])
     save_cache()

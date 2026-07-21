@@ -896,7 +896,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
     <section class="regime neut" id="regime" aria-label="Market Regime">
       <div class="rg-hd">
-        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Etiqueta tal cual FlashAlpha.">&#9432;</span> · ES Futures</div>
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Etiqueta tal cual FlashAlpha.">&#9432;</span> · NQ Futures</div>
       </div>
       <div class="rg-in">
         <div class="rg-verdict">
@@ -1374,8 +1374,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       // Ratio del backend. Antes exigía `d.nq_price>10000`: un umbral del NQ
       // (~20.000). El ES cotiza ~6.000, así que NUNCA se cumplía y el ratio no se
       // derivaba. Ahora solo se exige que ambos sean números positivos reales.
-      var _idx=(d.price||d.nq_price);
-      if(d.underlying_price>0&&_idx>0){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}else if(d.ratio>0){_NQ_RATIO=d.ratio;S.ratio=d.ratio;}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
+      // Ratio: PREFERIR el del backend (d.ratio). Antes derivaba d.price/
+      // d.underlying_price, pero en modo directo (Basic) ambos son el MISMO spot
+      // → ratio 1.0 falso, y el precio del NQ salía = QQQ (708). Solo se deriva
+      // en modo ETF, donde underlying_price (ETF ~708) ≠ price (futuro).
+      if(d.ratio>0){_NQ_RATIO=d.ratio;S.ratio=d.ratio;}
+      else{var _idx=(d.price||d.nq_price);if(d.underlying_price>0&&_idx>0&&Math.abs(d.underlying_price-_idx)>1){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
         S.maxPain=d.max_pain?cvNQ(d.max_pain):S.maxPain;
         // ATM IV y Expected Move REALES del backend (NDX), reemplazan el mock
         if(typeof d.atm_iv==='number')S.atmIv=d.atm_iv;
@@ -1387,7 +1391,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           if(d.put_wall){localStorage.setItem(LS('putWall'),String(S.putWall));S.putWallReal=true;}
           if(d.gamma_flip||d.zero_gamma){localStorage.setItem(LS('gammaFlip'),String(S.gammaFlip));S.gammaFlipReal=true;}
           if(d.max_pain){localStorage.setItem(LS('maxPain'),String(S.maxPain));S.maxPainReal=true;}
-        }catch(e){console.warn('[gex] no se pudo persistir wall real:',e);}S.netGex=(typeof d.net_gex==='number')?d.net_gex:S.netGex;S.regime=d.regime||S.regime;S.fearScore=(d.fear_score!=null)?d.fear_score:S.fearScore;S.fearRating=d.fear_rating||S.fearRating;S.vix=(d.vix!=null)?d.vix:S.vix;if(typeof d.nq_price==='number')S.price=d.nq_price;if(typeof d.vwap==='number')S.vwap=cv(d.vwap);if(typeof d.atr==='number')S.atr=d.atr;
+        }catch(e){console.warn('[gex] no se pudo persistir wall real:',e);}S.netGex=(typeof d.net_gex==='number')?d.net_gex:S.netGex;S.regime=d.regime||S.regime;S.fearScore=(d.fear_score!=null)?d.fear_score:S.fearScore;S.fearRating=d.fear_rating||S.fearRating;S.vix=(d.vix!=null)?d.vix:S.vix;if(typeof d.price==='number')S.price=d.price;else if(typeof d.nq_price==='number')S.price=d.nq_price;if(typeof d.vwap==='number')S.vwap=cv(d.vwap);if(typeof d.atr==='number')S.atr=d.atr;
         // Timestamp de última llamada a FlashAlpha (para label de frescura)
         if(d.last_call_ts){S.gexLastCall=d.last_call_ts;S.gexIsToday=d.last_call_is_today;S.gexIsMock=false;}
         if(d.next_update&&d.next_update.time)S.gexNextUpdate=d.next_update.time;
