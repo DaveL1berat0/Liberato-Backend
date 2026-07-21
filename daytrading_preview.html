@@ -905,7 +905,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           <!-- ES live price — integrated, primary reference -->
           <div class="rg-price" id="rg-price-wrap">
             <div class="rg-price-top">
-              <span class="rg-price-lbl">ES · S&amp;P 500</span>
+              <span class="rg-price-lbl">NQ · Nasdaq-100</span>
               <span class="rg-price-live"><span class="d"></span>Live</span>
             </div>
             <div class="rg-price-row">
@@ -1011,7 +1011,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       </div>
       <div class="cxh" id="cx-head">
         <div class="cxh-l">
-          <span class="cxh-sym">ES Futures</span>
+          <span class="cxh-sym">NQ Futures</span>
           <div class="cxh-tf" role="tablist" aria-label="Timeframe">
             <button class="tf active" data-tf="5">5m</button>
             <button class="tf" data-tf="15">15m</button>
@@ -1141,11 +1141,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   window.LBC_VERSION='v2026.06.30-FIX31';
   var BACKEND_URL=window.LBC_BACKEND_URL||'https://web-production-33671.up.railway.app';  var NQ_STEP=0.25;
   // ── INSTRUMENTO ────────────────────────────────────────────────────────────
-  // Dave opera el ES (S&P 500 e-mini). Antes era el NQ (Nasdaq).
-  // Punto ÚNICO de cambio del frontend: para volver al NQ, pon 'NQ'/'QQQ'.
+  // Dave opera el NQ (Nasdaq-100). Su estrategia es del Nasdaq. (Hubo un rodeo
+  // por el ES en jul-2026; revertido a NQ el 16-jul.)
+  // Punto ÚNICO de cambio del frontend: para el ES, pon 'ES'/'SPY'.
   // Debe coincidir con FA_ASSET / FA_PROXY_ETF del backend (main.py).
-  var ASSET     = 'ES';   // clave del heatmap y etiqueta visible
-  var PROXY_ETF = 'SPY';  // ETF proxy para precio/velas (TwelveData free no da futuros)
+  var ASSET     = 'NQ';   // clave del heatmap y etiqueta visible
+  var PROXY_ETF = 'QQQ';  // ETF proxy para precio/velas (TwelveData free no da futuros)
   // Claves de localStorage namespaced por instrumento. Antes eran 'lbc_nqf_*'
   // fijas: al migrar NQ→ES el navegador seguía teniendo guardados los walls del
   // NASDAQ (~23.000) y los pintaba sobre un dashboard de ES — niveles de otro
@@ -1223,10 +1224,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       ]
     },
     // Macro Correlations Heatmap — 22 tiles matching 6×5 treemap layout
-    // Instrumento: ES (S&P 500). AAPL/MSFT/NVDA/AMZN/META/GOOGL son también los
-    // mayores pesos del S&P 500, así que los tiles siguen siendo válidos.
+    // Instrumento: NQ (Nasdaq-100). AAPL/MSFT/NVDA/AMZN/META/GOOGL son los
+    // mayores pesos del Nasdaq-100 — su casa natural.
     hmap:[
-      // Tier 1: mayores pesos del S&P 500 (2×2 tiles)
+      // Tier 1: mayores pesos del Nasdaq-100 (2×2 tiles)
       {sym:'AAPL', name:'Apple Inc',            chg:-0.32, area:'aapl', tier:1},
       {sym:'MSFT', name:'Microsoft Corp',       chg: 0.45, area:'msft', tier:1},
       // Tier 2: High-weight stocks & macro proxies (2×1 or key 1×1)
@@ -1238,9 +1239,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       {sym:'TSLA', name:'Tesla',                chg:-3.10, area:'tsla', tier:2},
       {sym:'COST', name:'Costco',               chg: 0.38, area:'cost', tier:2},
       {sym:'NFLX', name:'Netflix',              chg: 1.45, area:'nflx', tier:2},
-      // Tier 3: proxies del ES + factores macro
-      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'nq',   tier:3},
-      {sym:'SPY',  name:'S&P 500 ETF',          chg: 0.52, area:'qqq',  tier:3},
+      // Tier 3: proxies del NQ + factores macro
+      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'nq',   tier:3},
+      {sym:'QQQ',  name:'Nasdaq-100 ETF',       chg: 0.82, area:'qqq',  tier:3},
       {sym:'VIX',  name:'CBOE Volatility',      chg:-3.20, area:'vix',  tier:3},
       {sym:'DXY',  name:'US Dollar Index',      chg:-0.40, area:'dxy',  tier:3},
       {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:3},
@@ -1250,7 +1251,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       {sym:'WTI',  name:'Oil WTI',              chg: 1.20, area:'wti',  tier:3},
       {sym:'BTC',  name:'Bitcoin',              chg: 2.10, area:'btc',  tier:3},
       {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3},
-      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'es',   tier:3}   // correlación: el ES-trader vigila divergencias con el NQ
+      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:3}   // correlación: el ES-trader vigila divergencias con el NQ
     ]
   };
 

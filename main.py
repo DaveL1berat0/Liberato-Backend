@@ -16,6 +16,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os, time, asyncio, json
+from urllib.parse import quote   # usado a nivel módulo (config del instrumento) y en varias funciones
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
@@ -183,11 +184,12 @@ def get_px_ratio():
     try:
         hm  = cache["heatmap"]["data"]
         etf = (hm.get(FA_PROXY_ETF, {}) or {}).get("price")
-        idx = (hm.get("SPX", {}) or {}).get("price")   # ^GSPC real vía Finnhub
+        idx = (hm.get(FA_CASH_INDEX, {}) or {}).get("price")   # índice cash (NDX/SPX)
         if idx and etf and etf > 10:
             r = round(float(idx) / float(etf), 6)
             cache["px_ratio"].update({"value": r, "spot": None, "etf_price": float(etf),
-                                      "source": "spx/spy", "ts": datetime.now(NY).isoformat()})
+                                      "source": f"{FA_CASH_INDEX.lower()}/{FA_PROXY_ETF.lower()}",
+                                      "ts": datetime.now(NY).isoformat()})
             return r
     except Exception:
         pass
@@ -200,22 +202,29 @@ FA_BASE = "https://lab.flashalpha.com"
 # Nasdaq-100 vía /v1/exposure/levels/NDX + /v1/exposure/gex/NDX.
 # Para activar Basic: pon FLASHALPHA_PLAN=basic en Railway. Nada más.
 FLASHALPHA_PLAN = os.getenv("FLASHALPHA_PLAN", "free").strip().lower()
-# Símbolo índice del Nasdaq-100 para el plan Basic (índice directo).
-# Instrumento operado: ES=F (S&P 500 e-mini). Antes NQ=F (Nasdaq).
-# El plan Basic sirve los futuros CME directos: los niveles llegan YA en puntos
-# del índice (conversion="none-direct"), sin ratio. Verificado 2026-07-16 con
-# /api/admin/diag-symbol?sym=ES%3DF → 200 + call_wall/put_wall/gamma_flip reales.
-FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "ES=F")  # futuro CME directo
+# ════════════════════════════════════════════════════════════════════════════
+#  INSTRUMENTO — punto ÚNICO de cambio del backend
+# ════════════════════════════════════════════════════════════════════════════
+#  Dave opera el NQ (Nasdaq-100). Su estrategia es del Nasdaq, no del S&P.
+#  (Hubo un rodeo por el ES en jul-2026; se revirtió a NQ el 16-jul.)
+#  El plan Basic sirve los futuros CME directos: los niveles llegan YA en puntos
+#  del índice (conversion="none-direct"), sin ratio. Verificado con
+#  /api/admin/diag-symbol?sym=NQ%3DF → 200 + call_wall/put_wall/gamma_flip reales.
+#  Para volver al ES: NQ=F→ES=F, QQQ→SPY, NQ→ES, NDX→SPX, NQ1!→ES1!, ^NDX→^GSPC.
+FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "NQ=F")  # futuro CME directo
 # Proxy para precio/velas: TwelveData free no da futuros, solo el ETF.
-# ES→SPY (antes NQ→QQQ). El ratio NO se hardcodea: ver _px_ratio.
-FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "SPY").strip().upper()
-FA_ASSET        = os.getenv("FA_ASSET", "ES").strip().upper()   # clave de cache y etiqueta
-# Índice del MISMO mercado que el instrumento, para el fallback de macro
-# (Fear&Greed/VIX). ES→SPX. Antes estaba hardcodeado a NDX, que es Nasdaq.
-FA_MACRO_FALLBACK = os.getenv("FA_MACRO_FALLBACK", "SPX").strip().upper()
+# NQ→QQQ. El ratio NO se hardcodea (antes vivía como 41.51): ver get_px_ratio.
+FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "QQQ").strip().upper()
+FA_ASSET        = os.getenv("FA_ASSET", "NQ").strip().upper()   # clave de cache y etiqueta
+# Índice CASH del mismo mercado (Nasdaq-100 = NDX). Se usa para:
+#  · el fallback de macro (Fear&Greed/VIX) cuando el summary del futuro falla,
+#  · derivar el ratio índice/ETF de respaldo (NDX/QQQ) sin depender de FlashAlpha.
+FA_MACRO_FALLBACK = os.getenv("FA_MACRO_FALLBACK", "NDX").strip().upper()
+FA_CASH_INDEX     = os.getenv("FA_CASH_INDEX", FA_MACRO_FALLBACK).strip().upper()  # clave heatmap
+FA_YAHOO_INDEX    = os.getenv("FA_YAHOO_INDEX", "%5ENDX").strip()  # ^NDX url-encoded
 # Símbolo del futuro en el WebSocket de TwelveData (hoy APAGADO por defecto:
 # TD_WEBSOCKET=off — cobraba por tick y quemó 10.000+ créditos/día).
-FA_WS_FUTURE    = os.getenv("FA_WS_FUTURE", "ES1!").strip().upper()
+FA_WS_FUTURE    = os.getenv("FA_WS_FUTURE", "NQ1!").strip().upper()
 # Refreshes de GEX/día segun el cron (ver setup del scheduler). Solo para textos:
 # el numero real lo manda el CronTrigger.
 GEX_REFRESHES_PER_DAY = 28
@@ -414,6 +423,10 @@ async def twelvedata_ws():
 # ══ TWELVEDATA REST (batch para los 13 símbolos restantes) ═══════════════════
 # No están en el WebSocket → se actualizan via REST cada 15 min
 REST_SYMBOLS = {
+    # QQQ es el ETF proxy del NQ (FA_PROXY_ETF): get_px_ratio() lo lee de aquí
+    # para derivar el ratio NDX/QQQ de respaldo. SPY se mantiene como correlación
+    # (un NQ-trader vigila la divergencia S&P vs Nasdaq).
+    "QQQ":"QQQ",
     "SPY":"SPY","VIXY":"VIXY","UUP":"UUP","SHY":"SHY","IEF":"IEF",
     "TLT":"TLT","GLD":"GLD","USO":"USO","IBIT":"IBIT","TIP":"TIP",
     "COST":"COST","NFLX":"NFLX","AVGO":"AVGO",
@@ -606,7 +619,7 @@ async def _heatmap_yahoo_fallback():
 _REAL_INDICES = {
     "VIX": "^VIX", "VXN": "^VXN", "DXY": "DX-Y.NYB",
     "US10Y": "10Y=F", "US2Y": "2YY=F", "US30Y": "30Y=F",
-    "Gold": "GC=F", "WTI": "CL=F", "ES": "ES=F", "SPX": "^GSPC", "BTC": "BTC-USD",
+    "Gold": "GC=F", "WTI": "CL=F", "NQ": "NQ=F", "NDX": "^NDX", "BTC": "BTC-USD",
 }
 _indices_last_ts = 0
 # ⚠️ Aquí había una firma huérfana de refresh_real_indices() con solo docstring y
@@ -638,29 +651,32 @@ _FH_INDICES = {
 }
 # ── SPX vía Yahoo: Finnhub free NO sirve símbolos de índice ────────────────
 # Verificado 16-jul-2026 en producción: de los 9 de _FH_INDICES, los proxies ETF
-# (UUP/IEF/SHY/TLT/GLD/USO) y BTC llegan, pero ^VIX y ^GSPC NO — Finnhub free no
-# cubre índices. Sin SPX el ratio ES/SPY se quedaba sin su único respaldo, así que
-# si FlashAlpha no tenía cuota: ratio=None → sin velas → sin precio → dashboard
-# vacío TODO el día. Un solo punto de fallo para todo el chart.
-# Yahoo /v8/finance/chart sí da ^GSPC sin cookie ni crumb y sin coste. Rate-limita
-# agresivo (429), de ahí el throttle largo y el cache del último valor REAL.
+# (UUP/IEF/SHY/TLT/GLD/USO) y BTC llegan, pero los índices cash (^VIX, ^NDX/^GSPC)
+# NO — Finnhub free no los cubre. Sin el índice cash, el ratio índice/ETF se queda
+# sin su único respaldo, así que si FlashAlpha no tiene cuota: ratio=None → sin
+# velas → sin precio → dashboard vacío. Un solo punto de fallo para todo el chart.
+# Yahoo /v8/finance/chart sí da ^NDX/^GSPC sin cookie ni crumb y sin coste.
+# ⚠️ OJO: Yahoo BLOQUEA IPs de datacenter (429 desde Railway — verificado con
+# diag-yahoo). Este job solo puebla el índice cuando la IP no está bloqueada; el
+# camino fiable en producción es el spot que da FlashAlpha en el path directo.
 _spx_last_ts = 0
 _YAHOO_UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                            "AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"}
-async def refresh_spx_yahoo():
-    """Publica SPX real en el heatmap. Gratis: no consume créditos de ninguna API."""
+async def refresh_cash_index_yahoo():
+    """Publica el índice cash (FA_CASH_INDEX, ej. NDX) en el heatmap vía Yahoo.
+    Gratis: no consume créditos de ninguna API nuestra."""
     global _spx_last_ts
     now = time.time()
     if now - _spx_last_ts < 120:   # Yahoo rate-limita: 1 llamada / 2 min basta
         return
     _spx_last_ts = now
     try:
-        url = ("https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC"
+        url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{FA_YAHOO_INDEX}"
                "?range=1d&interval=5m")
         async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
             r = await c.get(url)
         if r.status_code != 200:
-            print(f"[spx-yahoo] {r.status_code} (rate-limit?) — se mantiene el último real")
+            print(f"[cash-idx] {FA_CASH_INDEX} {r.status_code} (rate-limit?) — mantiene el último real")
             return
         res = ((r.json() or {}).get("chart", {}).get("result") or [None])[0]
         if not res:
@@ -671,18 +687,18 @@ async def refresh_spx_yahoo():
         if not px:
             return
         chg = round(((px - prev) / prev) * 100, 3) if prev else None
-        cache["heatmap"]["data"]["SPX"] = {
-            "symbol": "SPX", "price": round(float(px), 2),
+        cache["heatmap"]["data"][FA_CASH_INDEX] = {
+            "symbol": FA_CASH_INDEX, "price": round(float(px), 2),
             "chg_pct": chg,
             "direction": ("up" if (chg or 0) > 0.03 else
                           ("down" if (chg or 0) < -0.03 else "flat")),
             "source": "yahoo-index",
         }
-        # Con SPX real + SPY real, el ratio ES/SPY ya es derivable sin FlashAlpha.
+        # Con el índice cash real + ETF real, el ratio ya es derivable sin FlashAlpha.
         r2 = get_px_ratio()
-        print(f"[spx-yahoo] SPX={px} chg={chg}% | ratio derivado={r2}")
+        print(f"[cash-idx] {FA_CASH_INDEX}={px} chg={chg}% | ratio derivado={r2}")
     except Exception as e:
-        print(f"[spx-yahoo] error (no crítico): {e}")
+        print(f"[cash-idx] error (no crítico): {e}")
 
 _indices_last_ts = 0
 async def refresh_real_indices():
@@ -930,9 +946,9 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
        /v1/exposure/levels/NDX → call_wall, put_wall, gamma_flip, max_pain
        /v1/exposure/gex/NDX    → net_gex + per-strike (para validar walls)."""
     global _gex_blocked_until, _gex_expdates_day, _gex_expdates_cache, _gex_maxpain_failed_day
-    sym = FA_INDEX_SYMBOL  # "ES=F" (futuro CME directo)
+    sym = FA_INDEX_SYMBOL  # "NQ=F" (futuro CME directo)
     from urllib.parse import quote
-    sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
+    sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
     # El coste NO se cobra en bloque. Antes: budget_charge(3) fijo, mientras el
     # refresh hacía 5-9 requests reales (levels + options + gex[hasta 4 intentos]
     # + maxpain + summary). Por eso el contador decía 86/95 mientras el proveedor
@@ -2671,13 +2687,14 @@ async def diag_candles_iv(key: str = ""):
     return out
 
 
-# Ruta principal del instrumento operado (ES). Se mantiene /NQ como alias
-# temporal para no romper el frontend ya desplegado mientras Railway y GitHub
-# Pages terminan de publicar el mismo commit. Se puede quitar despues.
-@app.get("/api/market/candles/ES")
+# Instrumento operado: NQ. Ambas rutas (/NQ y /ES) apuntan a la misma función y
+# devuelven el instrumento configurado en FA_ASSET — el path del símbolo es solo
+# etiqueta de URL. Se mantienen las dos durante la transición del deploy para no
+# romper ningún frontend a medio publicar.
 @app.get("/api/market/candles/NQ")
+@app.get("/api/market/candles/ES")
 async def market_candles(tf: str = "5"):
-    """Velas REALES del ES via TwelveData time_series (sin CORS, server-side).
+    """Velas REALES del instrumento (FA_ASSET) via TwelveData (sin CORS, server-side).
     tf: '5','15','30' minutos. Devuelve OHLC en escala ES real.
     Cacheado 90s para no agotar créditos de TwelveData (múltiples
     clientes / auto-refresh comparten la misma llamada).
@@ -3003,8 +3020,8 @@ async def _market_candles_impl(tf: str = "5"):
     return result
 
 
-@app.get("/api/market/gamma-levels/ES")
-@app.get("/api/market/gamma-levels/NQ")   # alias temporal (ver nota arriba)
+@app.get("/api/market/gamma-levels/NQ")
+@app.get("/api/market/gamma-levels/ES")   # ambas → FA_ASSET (ver nota en candles)
 async def gamma_levels():
     """GEX desde cache. FlashAlpha se llama en 4 ventanas: 19:00, 9:00, 9:15, 9:45 ET.
     Expone timestamp exacto + próxima actualización programada para que el usuario
@@ -3031,11 +3048,11 @@ async def gamma_levels():
         # Respaldo: precios reales del heatmap (índice / ETF)
         try:
             hm = cache["heatmap"]["data"]
-            idx_p = (hm.get("SPX", {}) or {}).get("price")        # ^GSPC real (Finnhub)
-            etf_p = (hm.get(FA_PROXY_ETF, {}) or {}).get("price")  # SPY real
+            idx_p = (hm.get(FA_CASH_INDEX, {}) or {}).get("price")   # índice cash real
+            etf_p = (hm.get(FA_PROXY_ETF, {}) or {}).get("price")    # ETF real
             if idx_p and etf_p and etf_p > 10:
                 ratio = round(idx_p / etf_p, 6)
-                print(f"[ratio] del heatmap SPX/{FA_PROXY_ETF}: {ratio}")
+                print(f"[ratio] del heatmap {FA_CASH_INDEX}/{FA_PROXY_ETF}: {ratio}")
         except Exception:
             pass
     # Nota: se eliminó el respaldo que usaba cache["nq_price"] con el umbral
@@ -3104,7 +3121,9 @@ async def diag_yahoo(key: str = ""):
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     out = {}
-    for label, sym in (("SPX", "%5EGSPC"), ("ES_futuro", "ES%3DF"), ("SPY", "SPY")):
+    for label, sym in ((FA_CASH_INDEX, FA_YAHOO_INDEX),
+                       (f"{FA_ASSET}_futuro", quote(FA_INDEX_SYMBOL, safe="")),
+                       (FA_PROXY_ETF, FA_PROXY_ETF)):
         try:
             url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
                    "?range=1d&interval=5m")
@@ -3123,7 +3142,7 @@ async def diag_yahoo(key: str = ""):
     out["veredicto"] = ("✅ Railway alcanza Yahoo" if any(v.get("precio") for v in out.values()
                         if isinstance(v, dict))
                         else "❌ Railway NO alcanza Yahoo (IP de datacenter bloqueada)")
-    out["spx_en_heatmap"] = "SPX" in cache["heatmap"]["data"]
+    out[f"{FA_CASH_INDEX.lower()}_en_heatmap"] = FA_CASH_INDEX in cache["heatmap"]["data"]
     return out
 
 @app.get("/api/admin/api-audit")
@@ -3193,8 +3212,8 @@ async def api_audit(key: str = ""):
     out["salud_datos"] = {
         "heatmap_simbolos_con_precio": len([k for k, v in hm.items()
                                             if (v or {}).get("price") is not None]),
-        "SPX_presente": "SPX" in hm,
-        "SPY_presente": "SPY" in hm,
+        f"{FA_CASH_INDEX}_presente": FA_CASH_INDEX in hm,
+        f"{FA_PROXY_ETF}_presente": FA_PROXY_ETF in hm,
         f"{FA_ASSET}_presente": FA_ASSET in hm,
         "ratio_actual": get_px_ratio(),
         "ratio_fuente": cache["px_ratio"].get("source"),
@@ -3718,7 +3737,7 @@ async def startup():
     scheduler.add_job(refresh_real_indices, IntervalTrigger(minutes=3))
     # SPX vía Yahoo (gratis): Finnhub free no da ^GSPC. Sin SPX el ratio ES/SPY se
     # queda sin respaldo y el chart depende SOLO de FlashAlpha.
-    scheduler.add_job(refresh_spx_yahoo, IntervalTrigger(minutes=3))
+    scheduler.add_job(refresh_cash_index_yahoo, IntervalTrigger(minutes=3))
     # ── Velas del chart: warm SOLO cada 5 min en horario de mercado ─────────────
     # Arquitectura eficiente: 1 llamada cada 5 min (cuando cierra una vela nueva),
     # no en loop. El caché de 5 min sirve a todos los clientes. El precio en vivo
@@ -3984,12 +4003,12 @@ async def manual_refresh_institutional(key: str = ""):
 #  Uso: /api/admin/diag-symbol?sym=ES%3DF&key=liberato2026
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-symbol")
-async def diag_symbol(sym: str = "ES=F", key: str = ""):
+async def diag_symbol(sym: str = "NQ=F", key: str = ""):
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     from urllib.parse import quote
     sym = (sym or "").strip().upper()
-    sym_url = quote(sym, safe="")   # ES=F → ES%3DF (requerido por FlashAlpha)
+    sym_url = quote(sym, safe="")   # NQ=F → NQ%3DF (requerido por FlashAlpha)
     out = {"symbol": sym, "symbol_url": sym_url, "plan": FLASHALPHA_PLAN}
     if not FLASHALPHA_KEY:
         return {**out, "error": "no hay FLASHALPHA_KEY"}
@@ -4060,7 +4079,7 @@ async def diag_ndx(key: str = ""):
     budget_charge("flashalpha", 3)
     sym = FA_INDEX_SYMBOL
     from urllib.parse import quote
-    sym_url = quote(sym, safe="")  # ES=F → ES%3DF (requerido por FlashAlpha)
+    sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
     out = {"symbol": sym, "plan_configurado": FLASHALPHA_PLAN,
            "key_present": bool(FLASHALPHA_KEY)}
     if not FLASHALPHA_KEY:
