@@ -3058,10 +3058,31 @@ async def gamma_levels():
     # Nota: se eliminó el respaldo que usaba cache["nq_price"] con el umbral
     # `> 10000` — era específico del NQ (~20.000). El ES cotiza ~6.000, así que
     # esa condición JAMÁS se cumpliría y el respaldo era código muerto.
-    px  = round(etf_px*ratio,2) if (etf_px and ratio) else None
-    # ES=F (futuro CME) YA llega en puntos del índice: NO convertir NUNCA.
+    # NQ=F (futuro CME) YA llega en puntos del índice: NO convertir NUNCA.
     # Solo el ETF (plan free, escala ~700) se convierte con ratio.
     is_direct = str(gex.get("source") or "").endswith("-direct")
+    # El PRECIO a mostrar depende del modo:
+    #  · directo (Basic): underlying_price ES el spot del futuro (ej. 29.285 en NQ)
+    #    → se muestra tal cual. Multiplicarlo por el ratio daría ~1,2M (bug).
+    #  · ETF (free): underlying_price es el precio del ETF (~708) → ETF×ratio.
+    # Además, si es directo y hay spot + ETF en el heatmap, se deriva el ratio de
+    # respaldo (spot/ETF) para el resto del sistema, sin depender de NDX (que
+    # Finnhub no da y Yahoo bloquea desde Railway).
+    if is_direct:
+        px = round(etf_px, 2) if isinstance(etf_px, (int, float)) else None
+        if px and not ratio:
+            try:
+                _etf = (cache["heatmap"]["data"].get(FA_PROXY_ETF, {}) or {}).get("price")
+                if _etf and _etf > 10:
+                    ratio = round(px / _etf, 6)
+                    cache["px_ratio"].update({"value": ratio, "spot": px,
+                        "etf_price": float(_etf), "source": "spot-directo/etf",
+                        "ts": datetime.now(NY).isoformat()})
+                    print(f"[ratio] derivado del spot directo {FA_ASSET}/{FA_PROXY_ETF}: {ratio}")
+            except Exception:
+                pass
+    else:
+        px = round(etf_px*ratio, 2) if (etf_px and ratio) else None
     def _to_px(v):
         if is_direct:
             return v  # ya en escala del futuro (futures-direct), sin conversión
@@ -3689,9 +3710,14 @@ async def get_dashboard():
     movers   = cache["movers"]["data"]
     breaking = next((m for m in movers if m.get("score",0)>=95), None)
     gex = cache["gex"].get(FA_ASSET,{})
-    etf_px = gex.get("underlying_price")
+    _up = gex.get("underlying_price")
     _r = get_px_ratio()   # puede ser None: sin dato real no se inventa (Regla #1)
-    _px = round(etf_px*_r, 2) if (etf_px and _r) else None
+    # directo: underlying_price ES el spot del futuro → tal cual. ETF: ×ratio.
+    _is_direct = str(gex.get("source") or "").endswith("-direct")
+    if _is_direct:
+        _px = round(_up, 2) if isinstance(_up, (int, float)) else None
+    else:
+        _px = round(_up*_r, 2) if (_up and _r) else None
     return {
         "gamma_levels":        {**gex,"price":_px,"nq_price":_px} if gex else None,
         "heatmap":             cache["heatmap"]["data"],
