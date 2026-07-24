@@ -227,7 +227,7 @@ FA_YAHOO_INDEX    = os.getenv("FA_YAHOO_INDEX", "%5ENDX").strip()  # ^NDX url-en
 FA_WS_FUTURE    = os.getenv("FA_WS_FUTURE", "NQ1!").strip().upper()
 # Refreshes de GEX/día segun el cron (ver setup del scheduler). Solo para textos:
 # el numero real lo manda el CronTrigger.
-GEX_REFRESHES_PER_DAY = 28
+GEX_REFRESHES_PER_DAY = 26
 FH_BASE = "https://finnhub.io/api/v1"
 NY      = ZoneInfo("America/New_York")
 
@@ -996,7 +996,7 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         gex_flip = None; gex_label = None  # del response /gex (flip del futuro)
         # Las expiraciones cambian UNA vez al día. El cache ya existía
         # (_gex_expdates_cache, comentado como "1 llamada /options por día") pero
-        # NUNCA se leía para saltarse la llamada: se pedía en los 28 refreshes
+        # NUNCA se leía para saltarse la llamada: se pedía en los 26 refreshes
         # → 27 requests tirados cada día. Ahora solo se pide el primero del día.
         _usar_cache_exp = (not _first_of_day) and bool(_gex_expdates_cache)
         if _usar_cache_exp:
@@ -1098,7 +1098,7 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         print(f"[gex] gamma_flip tomado de /gex: {gf}")
     # Max Pain viene de endpoint separado /v1/maxpain (Basic+). /levels no lo trae.
     # Max pain sale del OPEN INTEREST → cambia ~1 vez al día, pero se pedía en los
-    # 28 refreshes. Cacheado por día: 27 requests menos.
+    # 26 refreshes. Cacheado por día: 25 requests menos.
     global _gex_maxpain_val, _gex_maxpain_day
     if mp is None and _gex_maxpain_day == _today_now and _gex_maxpain_val is not None:
         mp = _gex_maxpain_val
@@ -2873,7 +2873,7 @@ async def _fetch_alphavantage_5m_base():
 # ═══════════════════════════════════════════════════════════════════════════
 #  Los créditos de FlashAlpha son el recurso más escaso del sistema (100/día) y
 #  cada refresh es un snapshot IRREPETIBLE del mercado: si no se archiva, se
-#  pierde para siempre. Con 28 refreshes/día son ~140 puntos reales por semana
+#  pierde para siempre. Con 26 refreshes/día son ~130 puntos reales por semana
 #  para estudiar migración del flip, cambios de régimen y patrones horarios.
 #
 #  Formato JSONL (una línea por snapshot): append barato, resistente a
@@ -3212,9 +3212,9 @@ async def api_audit(key: str = ""):
     # Presupuesto TEÓRICO derivado del cron real (no de comentarios).
     plan = {
         "flashalpha": {
-            "consumidores": ["refresh_gex (28x/día)", "diags (bajo budget_ok)"],
+            "consumidores": ["refresh_gex (26x/día)", "diags (bajo budget_ok)"],
             "por_dia_teorico": 5 + (GEX_REFRESHES_PER_DAY - 1) * 3,
-            "detalle": "5 créd el 1º del día + 3 los demás. 28 refreshes: 08:30, "
+            "detalle": "5 créd el 1º del día + 3 los demás. 26 refreshes: 08:30, "
                        "09:15, 09:30-54 c/6min, 10:00-11:54 c/6min, 12:30",
             "reset": "00:00 UTC (lo dice el proveedor)",
         },
@@ -3848,18 +3848,19 @@ async def startup():
     # Un cambio de gamma flip (positivo↔negativo) invalida los setups al instante,
     # así que la máxima densidad de refresh va donde más se mueve el precio.
     #   · 08:30 y 09:15   → prep premarket (2 refreshes)
-    #   · 09:30-11:54     → VENTANA CRÍTICA, cada 6 min (25 refreshes)
+    #   · 09:30-11:56     → VENTANA CRÍTICA, cada 7 min (23 refreshes)
     #   · 12:30           → media sesión (1 refresh)
-    # Total: 28 refreshes × ~3 créd = ~86 de 95 (margen 9). Un flip a las 10:15 se
-    # ve máx a las 10:18-10:20, no a los 15 min.
+    # Total: 26 refreshes → ~80 créd de 95 (margen 15). Antes cada 6 min = 28 →
+    # 86 créd (margen 9); se bajó a 7 min el 16-jul para más colchón de créditos.
+    # Un flip a las 10:15 se ve máx a las 10:22, no a los 15 min.
     scheduler.add_job(refresh_gex,
                       CronTrigger(hour=8, minute=30, day_of_week="mon-fri"))   # prep
     scheduler.add_job(refresh_gex,
                       CronTrigger(hour=9, minute=15, day_of_week="mon-fri"))   # prep
     scheduler.add_job(refresh_gex,                                             # ventana crítica
-                      CronTrigger(hour=9,  minute="30,36,42,48,54", day_of_week="mon-fri"))
+                      CronTrigger(hour=9,  minute="30,37,44,51,58", day_of_week="mon-fri"))
     scheduler.add_job(refresh_gex,
-                      CronTrigger(hour="10-11", minute="0,6,12,18,24,30,36,42,48,54", day_of_week="mon-fri"))
+                      CronTrigger(hour="10-11", minute="0,7,14,21,28,35,42,49,56", day_of_week="mon-fri"))
     scheduler.add_job(refresh_gex,
                       CronTrigger(hour=12, minute=30, day_of_week="mon-fri"))  # media sesión
 
