@@ -4155,6 +4155,23 @@ async def diag_symbol(sym: str = "NDX", key: str = ""):
                 dates = [e if isinstance(e, str) else (e or {}).get("expiration")
                          for e in exps]
                 out["expiraciones"] = [d for d in dates if d][:6]
+                # Probar /exposure/gex con la 1ª expiración futura y mostrar las
+                # keys CRUDAS: net_gex sale None si FlashAlpha lo nombra distinto
+                # para NDX (net_gamma, total_gex, netGex...).
+                _fut = sorted([d for d in dates if d and d > _today_et_str()])
+                if _fut and budget_ok("flashalpha", 1):
+                    budget_charge("flashalpha", 1)
+                    r_gex = await client.get(f"{FA_BASE}/v1/exposure/gex/{sym_url}",
+                                             params={"expiration": _fut[0]})
+                    out["gex_status"] = r_gex.status_code
+                    if r_gex.status_code == 200:
+                        gd = r_gex.json() or {}
+                        out["gex_keys"] = list(gd.keys())
+                        out["gex_net_gex"] = gd.get("net_gex")
+                        out["gex_net_gex_label"] = gd.get("net_gex_label")
+                        out["gex_expiration_probada"] = _fut[0]
+                    else:
+                        out["gex_body"] = r_gex.text[:150]
     except Exception as e:
         out["error"] = repr(e)[:200]
     return out
