@@ -207,11 +207,17 @@ FLASHALPHA_PLAN = os.getenv("FLASHALPHA_PLAN", "free").strip().lower()
 # ════════════════════════════════════════════════════════════════════════════
 #  Dave opera el NQ (Nasdaq-100). Su estrategia es del Nasdaq, no del S&P.
 #  (Hubo un rodeo por el ES en jul-2026; se revirtió a NQ el 16-jul.)
-#  El plan Basic sirve los futuros CME directos: los niveles llegan YA en puntos
-#  del índice (conversion="none-direct"), sin ratio. Verificado con
-#  /api/admin/diag-symbol?sym=NQ%3DF → 200 + call_wall/put_wall/gamma_flip reales.
-#  Para volver al ES: NQ=F→ES=F, QQQ→SPY, NQ→ES, NDX→SPX, NQ1!→ES1!, ^NDX→^GSPC.
-FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "NQ=F")  # futuro CME directo
+#
+#  🔴 CAMBIO 30-jul: FlashAlpha subió Basic a 250/día PERO restringió los FUTUROS
+#  (NQ=F, ES=F) al plan Growth (403 tier_restricted). Basic ahora cubre ETFs e
+#  índices: SPY, QQQ, IWM, SPX, VIX, RUT, NDX. Verificado con diag-symbol:
+#  NQ=F→403, NDX→200, QQQ→200. Se pasa la fuente al ÍNDICE NDX (Nasdaq-100), que
+#  es el SUBYACENTE REAL de las opciones — sus gamma levels son los verdaderos
+#  del Nasdaq-100 y el futuro NQ los respeta (basis de cientos de pts, no miles:
+#  NDX flip 28304 / put 27000 vs NQ ~27162, misma escala). Directo, sin ratio.
+#  Para volver al ES: NDX→SPX, QQQ→SPY, NQ→ES, ^NDX→^GSPC (todos índices/ETF, no
+#  futuros — el futuro requiere Growth).
+FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "NDX")  # índice Nasdaq-100 directo (Basic no cubre NQ=F)
 # Proxy para precio/velas: TwelveData free no da futuros, solo el ETF.
 # NQ→QQQ. El ratio NO se hardcodea (antes vivía como 41.51): ver get_px_ratio.
 FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "QQQ").strip().upper()
@@ -961,7 +967,7 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
        /v1/exposure/levels/NDX → call_wall, put_wall, gamma_flip, max_pain
        /v1/exposure/gex/NDX    → net_gex + per-strike (para validar walls)."""
     global _gex_blocked_until, _gex_expdates_day, _gex_expdates_cache, _gex_maxpain_failed_day
-    sym = FA_INDEX_SYMBOL  # "NQ=F" (futuro CME directo)
+    sym = FA_INDEX_SYMBOL  # "NDX" (índice Nasdaq-100 directo; Basic no cubre NQ=F)
     from urllib.parse import quote
     sym_url = quote(sym, safe="")  # NQ=F → NQ%3DF (requerido por FlashAlpha)
     # El coste NO se cobra en bloque. Antes: budget_charge(3) fijo, mientras el
@@ -4102,7 +4108,7 @@ async def manual_refresh_institutional(key: str = ""):
 #  Uso: /api/admin/diag-symbol?sym=ES%3DF&key=liberato2026
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-symbol")
-async def diag_symbol(sym: str = "NQ=F", key: str = ""):
+async def diag_symbol(sym: str = "NDX", key: str = ""):
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     from urllib.parse import quote
