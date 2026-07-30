@@ -3252,12 +3252,24 @@ async def api_audit(key: str = ""):
         p = round(used / limit * 100, 1)
         return ("rojo" if p >= 90 else "amarillo" if p >= 70 else "verde"), p
 
+    # USO EFECTIVO: el reset del contador es perezoso (solo al llamar budget_ok).
+    # Si la ventana guardada ya venció (fin de semana sin GEX, o cambio de día
+    # UTC), el `used` crudo es un residuo obsoleto: el próximo budget_ok lo pondrá
+    # a 0. El reporte debe mostrar 0, no el residuo, o daría una falsa alarma de
+    # "casi agotado" el lunes por la mañana antes del primer refresh.
+    def _uso_efectivo(name, cfg):
+        st = _api_usage[name]
+        if st["window_key"] != _window_key(cfg["window"]):
+            return 0, True   # ventana vencida → arranca en 0
+        return st["used"], False
+
     out = {"generado": datetime.now(NY).isoformat(), "asset": FA_ASSET, "apis": {}}
     _peor = "verde"
     _orden = {"verde": 0, "amarillo": 1, "rojo": 2}
     for name, cfg in API_BUDGETS.items():
         st = _api_usage[name]
-        estado, pct = _semaforo(st["used"], cfg["limit"])
+        used_ef, vencida = _uso_efectivo(name, cfg)
+        estado, pct = _semaforo(used_ef, cfg["limit"])
         if _orden[estado] > _orden[_peor]:
             _peor = estado
         out["apis"][name] = {
@@ -3268,21 +3280,25 @@ async def api_audit(key: str = ""):
             }.get(name)),
             "estado": estado,
             "limite_seguro": cfg["limit"], "ventana": cfg["window"],
-            "usado_ahora": st["used"], "ventana_actual": st["window_key"],
-            "restante": max(0, cfg["limit"] - st["used"]),
+            "usado_ahora": used_ef, "ventana_actual": st["window_key"],
+            "ventana_vencida": vencida,   # True = el used crudo es residuo, se reseteará
+            "restante": max(0, cfg["limit"] - used_ef),
             "pct": pct,
             "plan": plan.get(name, {}),
         }
-    _ra_estado, _ra_pct = _semaforo(_rapidapi_day_count, 85)
+    # RapidAPI tiene su propio contador; su reset también es lazy (por día ET).
+    _ra_ef = _rapidapi_day_count if _rapidapi_day == _today_et_str() else 0
+    _ra_estado, _ra_pct = _semaforo(_ra_ef, 85)
     if _orden[_ra_estado] > _orden[_peor]:
         _peor = _ra_estado
     out["apis"]["rapidapi"] = {
         "key_configurada": bool(RAPIDAPI_KEY), "estado": _ra_estado,
         "limite_seguro": 85, "ventana": "day",
-        "usado_ahora": _rapidapi_day_count, "restante": max(0, 85 - _rapidapi_day_count),
+        "usado_ahora": _ra_ef, "restante": max(0, 85 - _ra_ef),
+        "ventana_vencida": _rapidapi_day != _today_et_str(),
         "pct": _ra_pct, "plan": plan["rapidapi"],
     }
-    out["estado_global"] = _peor   # verde = ninguna API en riesgo hoy
+    out["estado_global"] = _peor   # verde = ninguna API en riesgo en la ventana actual
     # Salud observable: ¿el dato llega de verdad?
     out["salud_datos"] = {
         "heatmap_simbolos_con_precio": len([k for k, v in hm.items()
