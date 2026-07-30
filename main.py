@@ -221,6 +221,11 @@ FA_INDEX_SYMBOL = os.getenv("FA_INDEX_SYMBOL", "NDX")  # índice Nasdaq-100 dire
 # Proxy para precio/velas: TwelveData free no da futuros, solo el ETF.
 # NQ→QQQ. El ratio NO se hardcodea (antes vivía como 41.51): ver get_px_ratio.
 FA_PROXY_ETF    = os.getenv("FA_PROXY_ETF", "QQQ").strip().upper()
+# Símbolo para /exposure/gex (net_gex + régimen). NDX da /levels (walls) pero su
+# /gex responde 404 "no options data" en Basic; QQQ (ETF) SÍ da net_gex. Como el
+# net_gex es EXPOSICIÓN del dealer (lo que define el régimen es su SIGNO, no la
+# escala del precio), se toma de QQQ. Los walls/flip siguen de NDX (escala real).
+FA_GEX_SYMBOL   = os.getenv("FA_GEX_SYMBOL", FA_PROXY_ETF).strip().upper()  # QQQ
 FA_ASSET        = os.getenv("FA_ASSET", "NQ").strip().upper()   # clave de cache y etiqueta
 # Índice CASH del mismo mercado (Nasdaq-100 = NDX). Se usa para:
 #  · el fallback de macro (Fear&Greed/VIX) cuando el summary del futuro falla,
@@ -1054,23 +1059,34 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         # Poner la expiración que funcionó antes al frente de la cola
         if _gex_working_exp and _gex_working_exp in future_list:
             future_list = [_gex_working_exp] + [d for d in future_list if d != _gex_working_exp]
+        # El /gex se pide a FA_GEX_SYMBOL (QQQ), NO al índice (NDX), porque el /gex
+        # de NDX responde 404 "no options data" en Basic mientras el de QQQ da
+        # net_gex completo. Solo tomamos net_gex + label (régimen): son EXPOSICIÓN
+        # del dealer, su signo vale independiente de la escala. Los walls y el flip
+        # siguen de NDX /levels (escala real ~28.000); NO se tocan con datos de QQQ.
+        gex_url = quote(FA_GEX_SYMBOL, safe="")
+        _gex_es_proxy = (FA_GEX_SYMBOL != sym)   # QQQ ≠ NDX → escala distinta
         for cand_exp in future_list[:4]:   # máximo 4 intentos
             try:
                 _fa_charge()   # cada intento de expiración es 1 request real
-                r_gex = await client.get(f"{FA_BASE}/v1/exposure/gex/{sym_url}",
+                r_gex = await client.get(f"{FA_BASE}/v1/exposure/gex/{gex_url}",
                                          params={"expiration": cand_exp})
                 if r_gex.status_code == 200:
                     gd = r_gex.json() or {}
                     net_gex = gd.get("net_gex")
-                    per_strike = gd.get("strikes")
-                    gex_flip = gd.get("gamma_flip")       # flip REAL del futuro
                     gex_label = gd.get("net_gex_label")   # "positive"/"negative" de FA
+                    if not _gex_es_proxy:
+                        # Mismo símbolo que /levels: sus strikes/flip SÍ están en
+                        # escala real y sirven de respaldo. Si es proxy (QQQ), se
+                        # ignoran para no mezclar escalas (~680 vs ~28.000).
+                        per_strike = gd.get("strikes")
+                        gex_flip = gd.get("gamma_flip")
                     exp = cand_exp
                     _gex_working_exp = cand_exp   # cachear la que funciona
-                    print(f"[gex] /gex/{sym}?expiration={cand_exp} OK net_gex={net_gex} label={gex_label}")
+                    print(f"[gex] /gex/{FA_GEX_SYMBOL}?expiration={cand_exp} OK net_gex={net_gex} label={gex_label}")
                     break
                 else:
-                    print(f"[gex] /gex/{sym}?expiration={cand_exp} {r_gex.status_code}: {r_gex.text[:90]}")
+                    print(f"[gex] /gex/{FA_GEX_SYMBOL}?expiration={cand_exp} {r_gex.status_code}: {r_gex.text[:90]}")
             except Exception as e:
                 print(f"[gex] intento {cand_exp} falló: {e}")
         # Respaldo: net_gex desde la respuesta de levels si existe
