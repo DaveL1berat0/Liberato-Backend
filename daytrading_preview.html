@@ -1116,13 +1116,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* ── CONSTELLATION BACKGROUND ── */
 (function(){
   var cv=document.getElementById('particle-canvas'); if(!cv)return;
-  var ctx=cv.getContext('2d'),W,H,ps=[]; var mob=innerWidth<768,N=mob?28:75,C=mob?80:130;
+  // PERFORMANCE: N reducido (el dibujo de líneas es O(N²) por frame — bajar N lo
+  // reduce cuadráticamente) y throttle a 30fps (antes 60 sin límite). Para
+  // partículas lentas 30fps es imperceptible, pero es la MITAD de CPU. Esto era
+  // la causa #1 del lag, sobre todo en móvil.
+  var ctx=cv.getContext('2d'),W,H,ps=[]; var mob=innerWidth<768,N=mob?14:40,C=mob?80:130;
   var G='204,169,79',Wt='239,236,227';
   function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;} rs(); addEventListener('resize',rs);
   function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-0.5)*0.22;this.vy=(Math.random()-0.5)*0.22;this.r=Math.random()*1.5+0.5;this.g=Math.random()<0.38;this.a=Math.random()*0.5+0.2;}
   for(var i=0;i<N;i++)ps.push(new P());
-  function fr(){ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba('+(p.g?G:Wt)+','+p.a+')';ctx.fill();for(var j=i+1;j<ps.length;j++){var q=ps[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<C){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba('+(p.g||q.g?G:Wt)+','+(1-d/C)*0.15+')';ctx.lineWidth=0.5;ctx.stroke();}}}requestAnimationFrame(fr);}
-  if(!matchMedia||!matchMedia('(prefers-reduced-motion: reduce)').matches)fr();
+  var _lastFr=0, _frGap=33; // ~30fps
+  function fr(ts){requestAnimationFrame(fr);if(ts-_lastFr<_frGap)return;_lastFr=ts;ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba('+(p.g?G:Wt)+','+p.a+')';ctx.fill();for(var j=i+1;j<ps.length;j++){var q=ps[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<C){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba('+(p.g||q.g?G:Wt)+','+(1-d/C)*0.15+')';ctx.lineWidth=0.5;ctx.stroke();}}}}
+  // Pausar la animación cuando la pestaña no está visible (ahorra CPU/batería).
+  document.addEventListener('visibilitychange',function(){_lastFr=0;});
+  if(!matchMedia||!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(fr);
 })();
 </script>
 
@@ -2088,10 +2095,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       el._px=v;
     });
   }
-  var _cxRafOn=false;
+  var _cxRafOn=false, _cxLastFr=0;
   function cxTagsLoop(){
     if(_cxRafOn)return;_cxRafOn=true;
-    (function tick(){
+    (function tick(ts){
+      requestAnimationFrame(tick);
+      if(ts-_cxLastFr<33)return;  // throttle ~30fps (antes 60): reposicionar
+      _cxLastFr=ts;               // etiquetas del chart no necesita 60fps
       try{
         var host=$('cx-tags');
         if(host&&series&&chart&&host.children.length){
@@ -2108,7 +2118,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         }
       }catch(e){}
       try{cxDrawRender();}catch(e){}
-      requestAnimationFrame(tick);
     })();
   }
   // Precio vivo del header — se colorea por dirección del último cambio.
@@ -3293,7 +3302,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           }
         }).catch(function(){});
     }
-    setInterval(fetchPrice,1000);
+    setInterval(fetchPrice,2000);  // 2s (antes 1s): una llamada/seg era carga de red innecesaria; el precio se interpola suave entre fetches
     setInterval(renderMarketStatus,30000); // actualizar estado de mercado cada 30s
     renderMarketStatus(); // estado inicial inmediato
     // Re-renderiza el label de GEX cada 30s para actualizar 'hace X min'
