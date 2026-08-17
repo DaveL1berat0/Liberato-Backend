@@ -73,6 +73,10 @@ TRADESTATION_CLIENT_ID     = os.getenv("TRADESTATION_CLIENT_ID", "").strip()
 TRADESTATION_CLIENT_SECRET = os.getenv("TRADESTATION_CLIENT_SECRET", "").strip()
 TRADESTATION_REDIRECT_URI  = os.getenv("TRADESTATION_REDIRECT_URI",
     "https://web-production-33671.up.railway.app/api/broker/tradestation/callback").strip()
+# ── SnapTrade (agregador multi-broker, self-service, SOLO LECTURA) ────────────
+# Credenciales self-service en snaptrade.com (no requiere email a ningún broker).
+SNAPTRADE_CLIENT_ID   = os.getenv("SNAPTRADE_CLIENT_ID", "").strip()
+SNAPTRADE_CONSUMER_KEY = os.getenv("SNAPTRADE_CONSUMER_KEY", "").strip()
 TWELVEDATA_KEY   = os.getenv("TWELVEDATA_KEY",   "").strip()
 
 # ══ GUARDIÁN UNIVERSAL DE PRESUPUESTO DE APIs ════════════════════════
@@ -3342,6 +3346,22 @@ async def api_audit(key: str = ""):
         "velas_en_cache": bool(_candles_cache.get("5")),
     }
     return out
+
+@app.get("/api/broker/snaptrade/status")
+async def snaptrade_status():
+    """Estado de la integración SnapTrade (multi-broker, solo lectura). El flujo
+    real (registrar usuario + generar login portal) se monta cuando Dave ponga
+    sus credenciales self-service de snaptrade.com en Railway. Por ahora informa
+    si ya están, para que el botón exista desde ya sin fingir que conecta."""
+    if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
+        return {"configured": False,
+                "message": "SnapTrade aún no está activado. Falta el clientId y "
+                           "consumerKey (self-service en snaptrade.com, minutos). "
+                           "En cuanto los pongas en Railway, este botón conecta "
+                           "cualquier broker — TradeStation incluido."}
+    return {"configured": True,
+            "message": "SnapTrade activado. Listo para conectar tu broker."}
+
 
 @app.get("/api/broker/tradestation/connect")
 async def tradestation_connect():

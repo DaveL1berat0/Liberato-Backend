@@ -1721,12 +1721,17 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
             <div style="font-size:11px;color:var(--text3);">Tus trades entran solos, sin exportar nada</div>
           </div>
         </div>
-        <div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Autoriza una vez y el journal sincroniza tus ejecuciones automáticamente. <strong style="color:var(--gold);">Permiso de solo lectura</strong> — nadie puede operar en tu cuenta, solo ver los trades.</div>
-        <button onclick="connectBroker('tradestation')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-          <span style="font-family:'DM Mono',monospace;">Conectar TradeStation</span> →
+        <div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Autoriza una vez y el journal sincroniza tus <strong style="color:var(--gold);">fills reales</strong> — precio, hora y P&L exactos, no aproximados. <strong style="color:var(--gold);">Solo lectura</strong>: nadie puede operar en tu cuenta.</div>
+        <button onclick="connectBroker('snaptrade')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span style="font-family:'DM Mono',monospace;">Conectar mi broker</span> →
         </button>
         <div id="broker-status" style="margin-top:10px;"></div>
-        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">Próximamente: Tradovate · IBKR · Rithmic</div>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">TradeStation · Tradovate · IBKR · +20 brokers</div>
+        <!-- alternativa: TradeStation directo (sin intermediario) -->
+        <div style="text-align:center;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border2);">
+          <span style="font-size:10.5px;color:var(--text3);">¿Solo usas TradeStation? </span>
+          <a href="javascript:void(0)" onclick="connectBroker('tradestation')" style="font-size:10.5px;color:var(--gold);text-decoration:none;font-family:'DM Mono',monospace;">Conéctalo directo →</a>
+        </div>
       </div>
     </div>
 
@@ -2442,7 +2447,10 @@ var _csvParsedTrades=null;
 function connectBroker(broker){
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
-  fetch(JOURNAL_BACKEND+'/api/broker/'+broker+'/connect')
+  // SnapTrade usa /status (el portal real se monta al configurar las credenciales);
+  // TradeStation directo usa /connect (devuelve la URL de OAuth).
+  var path=(broker==='snaptrade')?'/status':'/connect';
+  fetch(JOURNAL_BACKEND+'/api/broker/'+broker+path)
     .then(function(r){return r.json();})
     .then(function(d){
       if(d.configured && d.auth_url){
