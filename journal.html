@@ -2408,6 +2408,8 @@ function saveChkEditor(){
 //  IMPORTAR CSV CON IA — detecta columnas de cualquier broker
 //  y convierte los trades al formato interno del journal.
 // ═══════════════════════════════════════════════════════════
+// Backend que hace de proxy a la IA (la key vive en el servidor, no en el navegador).
+var JOURNAL_BACKEND='https://web-production-33671.up.railway.app';
 var _csvParsedTrades=null;
 function openCsvImport(){
   document.getElementById('csv-status').innerHTML='';
@@ -2487,16 +2489,19 @@ function analyzeCsvWithAI(sample, totalRows, fullText){
     +'{"detected":{"broker":"nombre probable o desconocido","columnsFound":["lista de campos que pudiste mapear"]},"trades":[{"date":"2026-06-15","time":"09:42","asset":"NQ","direction":"long","entry":21720,"exit":21790,"stop":21700,"contracts":1,"setup":"Importado","note":""}]}\n\n'
     +'CSV (primeras filas, total '+totalRows+' filas de datos):\n'+sample;
 
-  fetch('https://api.anthropic.com/v1/messages',{
+  // El parseo con IA se hace en el BACKEND (la key vive en el servidor, nunca en
+  // el navegador). Antes esto llamaba a api.anthropic.com sin key -> 401 + CORS.
+  fetch(JOURNAL_BACKEND+'/api/journal/parse-csv',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})
+    body:JSON.stringify({sample:sample,totalRows:totalRows})
   })
   .then(function(r){return r.json();})
-  .then(function(d){
-    var txt=d.content&&d.content[0]?d.content[0].text:'';
-    var clean=txt.replace(/```json|```/g,'').trim();
-    var data=JSON.parse(clean);
+  .then(function(data){
+    if(data.error){
+      document.getElementById('csv-status').innerHTML='<div class="ss-extracted" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);">⚠ '+_esc(data.error)+'</div>';
+      return;
+    }
     if(!data.trades||!data.trades.length){
       document.getElementById('csv-status').innerHTML='<div class="ss-extracted" style="background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2);">⚠ La IA no encontró trades válidos en el archivo. Revisa que el CSV tenga columnas de entrada y salida.</div>';
       return;
@@ -2505,7 +2510,7 @@ function analyzeCsvWithAI(sample, totalRows, fullText){
     renderCsvPreview(data);
   })
   .catch(function(err){
-    document.getElementById('csv-status').innerHTML='<div class="ss-extracted" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);">⚠ No se pudo procesar el CSV. '+(err&&err.message?_esc(err.message):'')+'<br>Intenta de nuevo o revisa el formato.</div>';
+    document.getElementById('csv-status').innerHTML='<div class="ss-extracted" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);">⚠ No se pudo conectar con el servidor. '+(err&&err.message?_esc(err.message):'')+'<br>Intenta de nuevo.</div>';
   });
 }
 

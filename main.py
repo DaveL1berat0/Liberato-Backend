@@ -3336,6 +3336,75 @@ async def api_audit(key: str = ""):
     }
     return out
 
+@app.post("/api/journal/parse-csv")
+async def journal_parse_csv(request: Request):
+    """Parsea un CSV de broker con IA (Groq) → trades del journal.
+
+    El journal (journal.html) llamaba DIRECTAMENTE a api.anthropic.com desde el
+    navegador SIN api-key → 401 + CORS bloqueado → "error al subir CSV". Una key
+    en el frontend seria un agujero de seguridad. Ahora el navegador llama a este
+    endpoint y la IA se ejecuta en el servidor con la key de Groq (ya configurada).
+    """
+    try:
+        body = await request.json()
+    except Exception:
+        return {"error": "cuerpo de la petición inválido"}
+    sample = (body.get("sample") or "").strip()
+    total_rows = body.get("totalRows", 0)
+    if not GROQ_KEY:
+        return {"error": "IA no configurada en el servidor (falta GROQ_KEY en Railway)"}
+    if not sample:
+        return {"error": "El archivo está vacío o no tiene datos."}
+    if not budget_ok("groq", 1):
+        return {"error": "Límite de IA alcanzado por hoy. Intenta más tarde."}
+    sys_msg = (
+        "Eres un parser experto de CSVs de brokers de trading (futuros, acciones, "
+        "forex): NinjaTrader, Tradovate, TradeStation, ThinkOrSwim, Interactive "
+        "Brokers, etc. Cada broker usa nombres de columna distintos. Identifica qué "
+        "columna corresponde a cada campo y devuelve TODOS los trades. Responde "
+        "SOLO con un objeto JSON válido, sin texto extra ni markdown."
+    )
+    usr_msg = (
+        "CAMPOS DEL JOURNAL (destino):\n"
+        "- date: fecha YYYY-MM-DD\n- time: hora HH:MM (24h)\n"
+        "- asset: símbolo (NQ, ES...). 'NQ 03-26'/'NQH6' -> 'NQ'. Acción -> ticker.\n"
+        "- direction: 'long' o 'short' (compra/buy=long, venta/sell=short)\n"
+        "- entry: precio de entrada (número)\n- exit: precio de salida (número)\n"
+        "- stop: precio de stop o 0\n- contracts: cantidad (número, default 1)\n"
+        "- setup: columna de estrategia o 'Importado'\n- note: comentario o ''\n\n"
+        "REGLAS: ignora filas de resumen/total; si no puedes determinar entry/exit "
+        "omite ese trade; convierte cualquier formato de fecha a YYYY-MM-DD; separa "
+        "fecha y hora si vienen juntas.\n\n"
+        "FORMATO JSON de respuesta:\n"
+        '{"detected":{"broker":"nombre o desconocido","columnsFound":[...]},'
+        '"trades":[{"date":"2026-06-15","time":"09:42","asset":"NQ","direction":'
+        '"long","entry":21720,"exit":21790,"stop":21700,"contracts":1,"setup":'
+        '"Importado","note":""}]}\n\n'
+        f"CSV (primeras filas, total {total_rows} filas de datos):\n{sample}"
+    )
+    try:
+        budget_charge("groq", 1)
+        async with httpx.AsyncClient(timeout=30) as client:
+            r = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                json={"model": "llama-3.3-70b-versatile", "max_tokens": 6000,
+                      "temperature": 0.1, "response_format": {"type": "json_object"},
+                      "messages": [{"role": "system", "content": sys_msg},
+                                   {"role": "user", "content": usr_msg}]}
+            )
+        if r.status_code != 200:
+            return {"error": f"La IA respondió {r.status_code}. Intenta de nuevo."}
+        txt = r.json()["choices"][0]["message"]["content"]
+        data = json.loads(txt)
+        if not data.get("trades"):
+            return {"error": "La IA no encontró trades válidos. Revisa que el CSV "
+                             "tenga columnas de entrada y salida.", "detected": data.get("detected")}
+        return data
+    except Exception as e:
+        return {"error": f"No se pudo procesar el CSV: {str(e)[:120]}"}
+
+
 @app.get("/api/gex/history")
 async def gex_history(days: int = 7, limit: int = 2000, fmt: str = "json"):
     """Historial REAL de GEX archivado en el Volume (uno por refresh de FlashAlpha).
