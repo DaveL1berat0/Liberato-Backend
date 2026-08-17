@@ -1710,13 +1710,38 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   <div class="td-handle"></div>
   <div class="td-head"><span class="td-title">Importar Trades (IA)</span><button class="td-close" onclick="closeCsvImport()">✕</button></div>
   <div class="td-body" id="csv-body">
+    <!-- ── OPCIÓN PRINCIPAL: CONECTAR BROKER (automático) ── -->
     <div class="fsec">
-      <div class="gi-text" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Sube el CSV exportado desde <strong>cualquier broker</strong> (NinjaTrader, Tradovate, TradeStation, ThinkOrSwim, IBKR, etc). La IA detecta automáticamente las columnas y convierte tus trades al formato del journal.</div>
+      <div style="font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">◆ Recomendado · Automático</div>
+      <div style="border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-size:20px;">🔗</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);">Conecta tu broker</div>
+            <div style="font-size:11px;color:var(--text3);">Tus trades entran solos, sin exportar nada</div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Autoriza una vez y el journal sincroniza tus ejecuciones automáticamente. <strong style="color:var(--gold);">Permiso de solo lectura</strong> — nadie puede operar en tu cuenta, solo ver los trades.</div>
+        <button onclick="connectBroker('tradestation')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span style="font-family:'DM Mono',monospace;">Conectar TradeStation</span> →
+        </button>
+        <div id="broker-status" style="margin-top:10px;"></div>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">Próximamente: Tradovate · IBKR · Rithmic</div>
+      </div>
+    </div>
+
+    <!-- separador -->
+    <div style="display:flex;align-items:center;gap:12px;margin:6px 0 14px;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;">
+      <div style="flex:1;height:1px;background:var(--border2);"></div>o importa manualmente<div style="flex:1;height:1px;background:var(--border2);"></div>
+    </div>
+
+    <!-- ── OPCIÓN SECUNDARIA: CSV manual ── -->
+    <div class="fsec">
       <input type="file" id="csv-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFile(event)">
-      <div id="csv-drop" onclick="document.getElementById('csv-input').click()" style="border:1px dashed rgba(201,168,76,0.4);border-radius:12px;padding:32px 18px;text-align:center;cursor:pointer;background:rgba(201,168,76,0.03);transition:all .2s;">
-        <div style="font-size:32px;margin-bottom:10px;">📄</div>
-        <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px;">Toca para seleccionar tu CSV</div>
-        <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;">Cualquier broker · detección automática</div>
+      <div id="csv-drop" onclick="document.getElementById('csv-input').click()" style="border:1px dashed rgba(255,255,255,0.14);border-radius:12px;padding:20px 18px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.015);transition:all .2s;">
+        <div style="font-size:22px;margin-bottom:6px;opacity:0.7;">📄</div>
+        <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:3px;">Subir CSV del broker</div>
+        <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;">Cualquier broker · la IA detecta las columnas</div>
       </div>
       <div id="csv-status"></div>
       <div id="csv-preview"></div>
@@ -2411,6 +2436,27 @@ function saveChkEditor(){
 // Backend que hace de proxy a la IA (la key vive en el servidor, no en el navegador).
 var JOURNAL_BACKEND='https://web-production-33671.up.railway.app';
 var _csvParsedTrades=null;
+
+// Conectar broker por API (OAuth solo lectura). El backend responde si ya está
+// configurado (hay client_id) o si falta la API key todavía.
+function connectBroker(broker){
+  var st=document.getElementById('broker-status');
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
+  fetch(JOURNAL_BACKEND+'/api/broker/'+broker+'/connect')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.configured && d.auth_url){
+        // Redirige al login de TradeStation (el usuario da permiso de solo lectura)
+        window.location.href=d.auth_url;
+      }else{
+        // Aún no hay API key: mensaje honesto, sin fingir que conecta
+        if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);background:rgba(201,168,76,0.08);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px;line-height:1.5;">⏳ '+_esc(d.message||'Conexión aún no activada.')+'</div>';
+      }
+    })
+    .catch(function(err){
+      if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo conectar con el servidor.</div>';
+    });
+}
 function openCsvImport(){
   document.getElementById('csv-status').innerHTML='';
   document.getElementById('csv-preview').innerHTML='';

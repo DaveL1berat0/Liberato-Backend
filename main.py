@@ -66,6 +66,13 @@ GMAIL_USER         = os.getenv("GMAIL_USER", "")           # correo emisor
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD", "")   # App Password de Gmail
 SUPPORT_EMAIL      = os.getenv("SUPPORT_EMAIL", "SupportLiberatoCommunity@gmail.com").strip()
 GROQ_KEY         = os.getenv("GROQ_KEY",         "").strip()
+# ── TradeStation (journal automático, SOLO LECTURA) ──────────────────────────
+# Se obtienen por email a ClientExperience@tradestation.com (no hay self-service).
+# El scope pedido NO incluye "Trade": el sistema puede VER trades, nunca operar.
+TRADESTATION_CLIENT_ID     = os.getenv("TRADESTATION_CLIENT_ID", "").strip()
+TRADESTATION_CLIENT_SECRET = os.getenv("TRADESTATION_CLIENT_SECRET", "").strip()
+TRADESTATION_REDIRECT_URI  = os.getenv("TRADESTATION_REDIRECT_URI",
+    "https://web-production-33671.up.railway.app/api/broker/tradestation/callback").strip()
 TWELVEDATA_KEY   = os.getenv("TWELVEDATA_KEY",   "").strip()
 
 # ══ GUARDIÁN UNIVERSAL DE PRESUPUESTO DE APIs ════════════════════════
@@ -3335,6 +3342,32 @@ async def api_audit(key: str = ""):
         "velas_en_cache": bool(_candles_cache.get("5")),
     }
     return out
+
+@app.get("/api/broker/tradestation/connect")
+async def tradestation_connect():
+    """Inicia el OAuth de TradeStation en modo SOLO LECTURA (scope sin 'Trade').
+    Si aún no hay client_id configurado (falta la API key que se pide por email),
+    avisa en vez de romper — así el botón 'Conectar' existe desde ya y se activa
+    solo cuando Dave ponga las credenciales en Railway."""
+    if not TRADESTATION_CLIENT_ID:
+        return {"configured": False,
+                "message": "La conexión con TradeStation aún no está activada. "
+                           "Falta la API key (se solicita por email a "
+                           "ClientExperience@tradestation.com). El diseño ya está "
+                           "listo; en cuanto llegue la key, este botón conecta solo."}
+    from urllib.parse import urlencode
+    params = {
+        "response_type": "code",
+        "client_id": TRADESTATION_CLIENT_ID,
+        "redirect_uri": TRADESTATION_REDIRECT_URI,
+        "audience": "https://api.tradestation.com",
+        # SOLO LECTURA: MarketData + ReadAccount, SIN 'Trade'. offline_access = refresh token.
+        "scope": "openid offline_access MarketData ReadAccount",
+        "state": "liberato-journal",
+    }
+    return {"configured": True,
+            "auth_url": "https://signin.tradestation.com/authorize?" + urlencode(params)}
+
 
 @app.post("/api/journal/parse-csv")
 async def journal_parse_csv(request: Request):
