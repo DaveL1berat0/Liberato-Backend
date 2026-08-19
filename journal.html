@@ -1506,40 +1506,18 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="view-back" onclick="go('dashboard')"><span class="vb-arrow">←</span> Dashboard</button>
     <div class="ph"><div class="ph-eyebrow">◆ Tu espacio de enfoque alfa</div><h1 class="ph-title">Zona de <strong>Genio</strong></h1></div>
 
-    <!-- INTRO -->
-    <div class="genius-intro">
-      <div class="gi-title">Tu <span class="acc">centro de inteligencia</span></div>
-      <div class="gi-text">Tu AI Coach interpreta tus datos, detecta patrones y responde lo que sea sobre tus trades, errores y psicología — en tiempo real.</div>
-    </div>
+    <!-- DIAGNÓSTICO SINTETIZADO: cómo vas / fortalezas / dónde fallas / qué falta -->
+    <div id="genius-diag"></div>
 
-    <!-- PULSING CTA -->
-    <div class="genie-cta" onclick="openAIChat()" style="margin-bottom:18px;">
+    <!-- CTA: hablar con el coach -->
+    <div class="genie-cta" onclick="openAIChat()" style="margin-top:16px;">
       <div class="genie-icon">🧠</div>
       <div class="genie-cta-text">
-        <div class="genie-cta-title">Consultar con el Genio</div>
-        <div class="genie-cta-sub">Pregúntale lo que sea sobre tus trades, setups, errores o psicología</div>
+        <div class="genie-cta-title">Pregúntale al Genio</div>
+        <div class="genie-cta-sub">Profundiza: pregúntale lo que sea sobre tus trades, errores o psicología</div>
       </div>
       <div class="genie-cta-arrow">→</div>
     </div>
-
-    <!-- AI WEEKLY REPORT -->
-    <div id="genius-coach-wrap"></div>
-
-    <!-- PATTERNS DISCOVERED -->
-    <div class="d-section" style="margin-top:18px;">
-      <div class="d-section-label gz-label gz-discover"><span class="gz-ico">✦</span>Patrones Descubiertos<span class="gz-hint">lo que la IA encontró en tus datos</span></div>
-      <div class="pattern-grid" id="genius-patterns"></div>
-    </div>
-
-    <!-- TOP TRADES STATS -->
-    <div class="d-section">
-      <div class="d-section-label gz-label gz-good"><span class="gz-ico">↑</span>Qué Repetir — Tus Mejores Operaciones<span class="gz-hint">replica estos setups</span></div>
-      <div class="grid2" id="genius-stats" style="margin-bottom:14px;"></div>
-      <div class="card"><div class="card-head"><span class="card-title">Top 10 Trades</span></div><div class="tlist" id="genius-list"></div></div>
-    </div>
-
-    <!-- ERROR PROFILE -->
-    <div class="d-section"><div class="d-section-label gz-label gz-bad"><span class="gz-ico">↓</span>Qué Evitar — Perfil de Errores<span class="gz-hint">corrige estos patrones costosos</span></div><div class="card"><div class="ep-list" id="genius-errors"></div></div></div>
   </div>
 
   <!-- PLAYBOOKS -->
@@ -2397,35 +2375,64 @@ function genTradeAI(t){
 
 // ── ZONA DE GENIO (renderGenius + renderPatterns) ──
 
+function geniusBlock(title,color,icon,items){
+  return '<div style="background:rgba(255,255,255,0.015);border:0.5px solid var(--border2);border-left:3px solid '+color+';border-radius:11px;padding:15px 17px;">'
+    +'<div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:'+color+';margin-bottom:11px;">'+icon+' '+title+'</div>'
+    +(items.length?items.map(function(t){return '<div style="font-size:12.5px;color:var(--text2);line-height:1.55;margin-bottom:8px;">'+t+'</div>';}).join(''):'<div style="font-size:12px;color:var(--text3);">—</div>')
+    +'</div>';
+}
 function renderGenius(){
-  // Top trades
-  var top=T.slice().sort(function(a,b){return b.pnl-a.pnl;}).slice(0,10);
-  var s=stats(top);
-  var chkTop=top.filter(function(t){return t.chkAll;});
-  var setupFreq={};top.forEach(function(t){setupFreq[t.setup]=(setupFreq[t.setup]||0)+1;});
-  var topSetup=Object.keys(setupFreq).sort(function(a,b){return setupFreq[b]-setupFreq[a];})[0]||'—';
-  var hourFreq={};top.forEach(function(t){var hh=t.time.split(':')[0];hourFreq[hh]=(hourFreq[hh]||0)+1;});
-  var topHour=Object.keys(hourFreq).sort(function(a,b){return hourFreq[b]-hourFreq[a];})[0];
-  var topHourLabel=topHour?topHour+':00-'+(parseInt(topHour)+1)+':00 ET':'—';
-  document.getElementById('genius-stats').innerHTML=[
-    {t:'P&L Top Trades',v:f$(s.total),c:s.total>=0?'var(--green)':'var(--red)'},
-    {t:'Setup Dominante',v:topSetup,c:'var(--text)'},
-    {t:'Horario Estrella',v:topHourLabel,c:'var(--text)'},
-    {t:'Checklist OK',v:Math.round((chkTop.length/top.length)*100)+'%',c:'var(--green)'},
-  ].map(function(c){return '<div class="card"><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">'+c.t+'</div><div style="font-family:DM Mono,monospace;font-size:17px;font-weight:700;color:'+c.c+'">'+c.v+'</div></div>';}).join('');
-  document.getElementById('genius-list').innerHTML=top.length?renderTItems(top):'<div class="empty"><div class="ei">★</div><p>Registra trades para ver tu Zona de Genio</p></div>';
+  var diag=document.getElementById('genius-diag');if(!diag)return;
+  var vt=baseTrades();
+  if(!vt.length){diag.innerHTML=emptyStateHTML();return;}
+  var s=stats(vt),su=bySetup(vt),maxDD=calcMaxDD(vt),ps=perfScore(s,maxDD);
+  function hourOf(t){return typeof t.hour==='number'?t.hour:parseInt(t.time,10)||0;}
+  var byH=repAgg(vt,function(t){return hourOf(t);}).sort(function(a,b){return b.pnl-a.pnl;});
+  var byD=repAgg(vt,function(t){return typeof t.dow==='number'?t.dow:new Date(t.date+'T12:00:00').getDay();}).sort(function(a,b){return b.pnl-a.pnl;});
+  var bestH=byH[0],worstH=byH[byH.length-1];
+  var bt=vt.slice().sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time);});
+  var revenge=0;for(var i=1;i<bt.length;i++){var pv=bt[i-1],cu=bt[i];if(pv.result==='loss'&&pv.date===cu.date){var g=(new Date(cu.date+'T'+cu.time)-new Date(pv.date+'T'+pv.time))/60000;if(g>=0&&g<=10&&(cu.contracts||1)>(pv.contracts||1))revenge++;}}
+  var perDay={};bt.forEach(function(t){perDay[t.date]=(perDay[t.date]||0)+1;});
+  var overDays=Object.keys(perDay).filter(function(d){return perDay[d]>=10;}).length;
+  var maxLoss=0,cur=0;bt.forEach(function(t){if(t.result==='loss'){cur++;if(cur>maxLoss)maxLoss=cur;}else cur=0;});
 
-  // Patterns discovered (auto-detected edges)
-  renderPatterns();
+  var verdict=ps.total>=75?'vas sólido':ps.total>=50?'vas en desarrollo':'necesitas ajustar';
+  var como=['Tu Liberato Score es <strong>'+ps.total+'/100</strong> — '+verdict+'.',
+    'Neto <strong class="'+fc(s.total)+'">'+f$(s.total)+'</strong> · '+s.n+' trades · WR <strong>'+s.wr+'%</strong> · PF <strong>'+s.pf.toFixed(2)+'</strong> · Expectancy <strong class="'+fc(s.exp)+'">'+f$(s.exp)+'</strong>/trade.'];
 
-  // Error profile
-  var errors=buildErrorProfile();
-  document.getElementById('genius-errors').innerHTML=errors.length?errors.map(function(e,i){
-    return '<div class="ep-item"><div class="ep-rank">#'+(i+1)+'</div><div class="ep-name">'+e.name+'</div><div class="ep-count">'+e.count+'x</div></div>';
-  }).join(''):'<div class="empty"><div class="ei">✓</div><p>Sin errores detectados aún</p></div>';
+  var fort=[];
+  if(s.wr>=55)fort.push('Ganas seguido: <strong>'+s.wr+'%</strong> de acierto.');
+  if(bestH&&bestH.pnl>0)fort.push('Tu mejor hora: <strong>'+(bestH.key<10?'0'+bestH.key:bestH.key)+':00</strong> ('+f$(bestH.pnl)+').');
+  if(byD[0]&&byD[0].pnl>0)fort.push('Tu mejor día: <strong>'+REP_DOW[byD[0].key]+'</strong> ('+f$(byD[0].pnl)+').');
+  if(su[0]&&su[0].pnl>0&&su[0].name!=='Importado (broker)')fort.push('Setup más rentable: <strong>'+su[0].name+'</strong> ('+f$(su[0].pnl)+').');
+  if(!fort.length)fort.push('Aún no hay una fortaleza clara — sigue registrando con contexto.');
 
-  // AI coach report (weekly)
-  loadCoach(false);
+  var falla=[];
+  if(s.avgW>0&&s.avgL>s.avgW*1.5)falla.push('Tu perdedor medio (<strong>$'+s.avgL+'</strong>) es mucho mayor que tu ganador medio (<strong>$'+s.avgW+'</strong>) — la matemática te destruye aunque ganes seguido.');
+  if(worstH&&worstH.pnl<0)falla.push('Tu peor hora: <strong>'+(worstH.key<10?'0'+worstH.key:worstH.key)+':00</strong> ('+f$(worstH.pnl)+') — reduce tamaño o evítala.');
+  if(byD[byD.length-1]&&byD[byD.length-1].pnl<0)falla.push('Pierdes los <strong>'+REP_DOW[byD[byD.length-1].key]+'</strong> ('+f$(byD[byD.length-1].pnl)+').');
+  if(revenge>=2)falla.push('<strong>'+revenge+' revenge trades</strong>: entras tras perder y con más tamaño.');
+  if(overDays)falla.push('<strong>Overtrading</strong> en '+overDays+' día(s) con 10+ operaciones.');
+  if(maxLoss>=3)falla.push('Racha de <strong>'+maxLoss+' pérdidas seguidas</strong> — define un stop diario.');
+  if(!falla.length)falla.push('Sin fugas grandes detectadas. Bien.');
+
+  var falta=[];
+  var withStop=vt.filter(function(t){return t.stop!=null&&+t.stop!==0;}).length;
+  var withCtx=vt.filter(function(t){return t.vwap||t.gamma||t.t4h;}).length;
+  var withPb=vt.filter(function(t){return t.playbookId;}).length;
+  var pend=T.filter(function(t){return t.status==='pending';}).length;
+  if(withStop/vt.length<0.5)falta.push('Solo <strong>'+Math.round(withStop/vt.length*100)+'%</strong> tienen stop registrado — sin eso no hay R real.');
+  if(withCtx/vt.length<0.5)falta.push('Falta contexto (VWAP/gamma/4H) en la mayoría — añádelo para descubrir tus edges.');
+  if(withPb/vt.length<0.5)falta.push('<strong>'+Math.round((1-withPb/vt.length)*100)+'%</strong> sin enlazar a un playbook — enlázalos para medir cuál rinde.');
+  if(pend)falta.push('<strong>'+pend+' trades en revisión</strong> sin aprobar (no cuentan en KPIs).');
+  if(!falta.length)falta.push('Tu data está completa. Excelente disciplina.');
+
+  diag.innerHTML='<div class="genius-diag-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">'
+    +geniusBlock('Cómo vas','#CCA94F','◆',como)
+    +geniusBlock('Fortalezas','#22c55e','▲',fort)
+    +geniusBlock('Dónde fallas','#ef4444','▼',falla)
+    +geniusBlock('Qué te falta','#B197FC','◇',falta)
+    +'</div>';
 }
 
 function renderPatterns(){
