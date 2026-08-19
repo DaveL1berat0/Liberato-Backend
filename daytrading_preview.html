@@ -140,6 +140,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .gf-timestamp.stale{color:var(--warn);border-color:rgba(255,194,71,0.2);}
   .gf-ts-warn{color:var(--warn);font-size:8px;}
 .g-live .bl{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 7px var(--up);}
+/* ── PORTRAIT / VERTICAL: el header no debe desbordar (timestamp largo) ── */
+@media(max-width:760px){
+  .g-hd{flex-wrap:wrap;gap:6px 10px;}
+  .g-hd-r{flex-wrap:wrap;gap:6px 8px;justify-content:flex-start;width:100%;}
+  .gf-timestamp{white-space:normal;font-size:8px;line-height:1.35;padding:3px 8px;}
+}
 
 /* ════ BLOCK 1 · MARKET REGIME ════ */
 .regime{position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--panel);border:1px solid var(--glass-brd);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);}
@@ -2074,18 +2080,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var drew=0;
     if(ps){
       var inRange=ps.filter(function(s){return typeof s.strike==='number'&&typeof s.gex==='number'&&s.strike>=b.lo&&s.strike<=b.hi;});
-      // Max ROBUSTO (percentil ~90) para que UNA strike gigante no aplaste el resto,
-      // y escala RAÍZ para que las barras medianas/pequeñas se vean (perfil desplegado).
-      var absArr=inRange.map(function(s){return Math.abs(s.gex);}).sort(function(x,y){return x-y;});
-      var maxAbs=absArr.length?(absArr[Math.min(absArr.length-1,Math.floor(absArr.length*0.90))]||absArr[absArr.length-1]):0;
+      // SOLO los strikes de MAYOR OI (Dave): perfil limpio, no saturado. Se muestran
+      // los 3-6 más significativos (top ~10%) por |gex| (OI). Los 4 niveles clave se
+      // dibujan aparte con etiqueta.
+      var byOI=inRange.slice().sort(function(a,b){return Math.abs(b.gex)-Math.abs(a.gex);});
+      var keepN=Math.max(3,Math.min(6,Math.ceil(inRange.length*0.10)));
+      var top=byOI.slice(0,keepN);
+      var maxAbs=top.length?Math.abs(top[0].gex):0;
       if(maxAbs>0){
-        inRange.forEach(function(s){
+        top.forEach(function(s){
           var a=Math.abs(s.gex);
-          if(a<maxAbs*0.015)return;               // descartar ruido mínimo
-          var w=clamp(Math.sqrt(Math.min(a/maxAbs,1))*46,2,46);  // escala raíz → despliegue
+          var w=clamp(Math.sqrt(Math.min(a/maxAbs,1))*46,8,46);  // escala raíz, mínimo visible
           var y=yForPrice(s.strike);
-          var bar=document.createElement('div');
           var pos=(s.gex>=0);
+          var bar=document.createElement('div');
           bar.className='imap-pf-bar '+(pos?'pos':'neg');
           if(pos){bar.style.cssText='left:50%;width:'+w+'%;top:'+y+'%;';}
           else   {bar.style.cssText='left:'+(50-w)+'%;width:'+w+'%;top:'+y+'%;';}
