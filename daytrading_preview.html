@@ -238,7 +238,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* ════ BLOCK 2 · INSTITUTIONAL MAP (horizontal energy field) ════ */
 .imap{
-  position:relative;height:220px;margin:0;overflow:hidden;
+  position:relative;height:380px;margin:0;overflow:hidden;
   background:linear-gradient(180deg,rgba(3,4,9,0.98),rgba(5,6,13,0.99));
 }
 /* zones */
@@ -708,7 +708,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .wrap{padding:12px 14px 50px;gap:12px;}
   .rg-dir{font-size:48px!important;}
   .rg-price-px{font-size:26px!important;}
-  .imap{height:150px!important;}
+  .imap{height:250px!important;}
   .imap-tag{font-size:8px!important;}
   .imap-val{font-size:9px!important;}
   .mom-buy-v,.mom-sell-v{font-size:10px!important;}
@@ -733,7 +733,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .sm-poles{margin:0 auto;}
   .rg-meter-stats{width:100%;max-width:240px;margin:0 auto;}
   .rg-vol{padding:12px 16px;}
-  .imap{height:120px!important;}
+  .imap{height:210px!important;}
   .imap-ro{grid-template-columns:1fr 1fr;}
   .sm-brief{font-size:12px!important;line-height:1.6!important;}
   
@@ -755,7 +755,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .rg-price-px{font-size:40px!important;}
   .mid{grid-template-columns:1fr 1fr;}
   .structmeter{width:220px!important;}
-  .imap{height:280px!important;}
+  .imap{height:440px!important;}
   .iro-v{font-size:18px!important;}
   .sm-brief{font-size:16px!important;line-height:1.8!important;}
   .imap-ro{grid-template-columns:repeat(4,1fr);}
@@ -782,8 +782,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     "aapl aapl msft msft nvda nvda"
     "aapl aapl msft msft goog goog"
     "amzn meta avgo tsla cost nflx"
-    "nq   qqq  vix  dxy  us10 us2y"
-    "us30 gold wti  btc  infl es  ";
+    "dxy  us10 us10 us2y us30 wti "
+    "btc  gold gold infl es   es  ";
   gap:3px;
   padding:var(--sp2) var(--sp3) var(--sp1);
 }
@@ -1035,20 +1035,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
         <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
       </div>
-      <!-- SESSION MOMENTUM — modern buyers vs sellers -->
-      <div class="mom">
-        <div class="mom-hd">
-          <div class="mom-hd-l"><svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10l3-3 2 2 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg> Session Momentum <span class="info-i" title="Quién controla la subasta desde la apertura (9:30 ET): compradores vs vendedores, con velas de 5 minutos de la sesión regular.">&#9432;</span></div>
-          <span class="mom-hd-net buy" id="mom-net">—</span>
-        </div>
-        <div class="mom-bar">
-          <div class="mom-buy" id="mom-buy" style="width:50%;"><span class="mom-buy-v" id="mom-buy-v">50%</span></div>
-          <div class="mom-sell" id="mom-sell" style="width:50%;"><span class="mom-sell-v" id="mom-sell-v">50%</span></div>
-          <div class="mom-divider" id="mom-divider" style="left:50%;"></div>
-          <div class="mom-wait" id="mom-wait">Esperando apertura · 9:30 ET</div>
-        </div>
-        <div class="mom-labels"><span class="buy">Compradores</span><span class="sell">Vendedores</span></div>
-      </div>
+      <!-- Session Momentum eliminado (Dave): el GEX profile es el hero de esta sección -->
       <div class="cxh" id="cx-head">
         <div class="cxh-l">
           <span class="cxh-sym">NQ Futures</span>
@@ -1288,19 +1275,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       {sym:'TSLA', name:'Tesla',                chg:-3.10, area:'tsla', tier:2},
       {sym:'COST', name:'Costco',               chg: 0.38, area:'cost', tier:2},
       {sym:'NFLX', name:'Netflix',              chg: 1.45, area:'nflx', tier:2},
-      // Tier 3: proxies del NQ + factores macro
-      {sym:'NQ',   name:'Nasdaq-100 Futures',   chg: 0.89, area:'nq',   tier:3},
-      {sym:'QQQ',  name:'Nasdaq-100 ETF',       chg: 0.82, area:'qqq',  tier:3},
-      {sym:'VIX',  name:'CBOE Volatility',      chg:-3.20, area:'vix',  tier:3},
+      // Tier 3: factores macro (NQ/QQQ/VIX quitados: redundantes con el header)
+      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:2},  // importante: el ES-trader vigila divergencias con el NQ
+      {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:2},
+      {sym:'Gold', name:'Gold Spot',            chg: 0.80, area:'gold', tier:2},
       {sym:'DXY',  name:'US Dollar Index',      chg:-0.40, area:'dxy',  tier:3},
-      {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:3},
       {sym:'US2Y', name:'2Y Treasury',          chg:-0.50, area:'us2y', tier:3},
       {sym:'US30Y',name:'30Y Treasury',         chg:-0.45, area:'us30', tier:3},
-      {sym:'Gold', name:'Gold Spot',            chg: 0.80, area:'gold', tier:3},
       {sym:'WTI',  name:'Oil WTI',              chg: 1.20, area:'wti',  tier:3},
       {sym:'BTC',  name:'Bitcoin',              chg: 2.10, area:'btc',  tier:3},
-      {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3},
-      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:3}   // correlación: el ES-trader vigila divergencias con el NQ
+      {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3}
     ]
   };
 
