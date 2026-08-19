@@ -1864,7 +1864,9 @@ function calcTrade(t){
   var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0);
   var rsk=hasStop?(dir==='long'?(t.entry-t.stop):(t.stop-t.entry)):0;
   var fees=(typeof t.fees==='number')?t.fees:0;
-  var pnl=hasExit?Math.round(pts*mult*c-fees):0;
+  // P&L: si viene realizedPnl (flujo de caja firmado del broker, robusto a scaling
+  // in/out) se usa TAL CUAL; si no, se deriva de precios (manual/CSV con 1 lote).
+  var pnl=(t.realizedPnl!=null&&t.realizedPnl!=='')?Math.round(t.realizedPnl-fees):(hasExit?Math.round(pts*mult*c-fees):0);
   var rr=(hasStop&&rsk>0)?Math.round((Math.abs(pts)/rsk)*10)/10:0;
   var chkItems=t.checklist?t.checklist.filter(Boolean).length:0;
   var chkTotal=t.checklist?t.checklist.length:4;
@@ -2524,6 +2526,115 @@ function connectBroker(broker){
     });
 }
 // Trae los fills reales del broker y los guarda para el journal.
+// ══ MOTOR DE FILLS → TRADES ROUND-TRIP (correcciones de la crítica adversarial) ══
+// Zona horaria (crítica #3): los fills vienen en UTC; derivar fecha/hora en ET.
+function toET(iso){
+  try{
+    var d=new Date(iso);
+    var f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+    var p={};f.formatToParts(d).forEach(function(x){p[x.type]=x.value;});
+    var hh=(p.hour==='24')?'00':p.hour;
+    var date=p.year+'-'+p.month+'-'+p.day;
+    return {date:date,time:hh+':'+p.minute,dow:new Date(date+'T12:00:00').getDay(),hour:parseInt(hh,10)};
+  }catch(e){ return {date:String(iso||'').slice(0,10),time:String(iso||'').slice(11,16),dow:0,hour:parseInt(String(iso||'').slice(11,13),10)||0}; }
+}
+function fill_instrKey(f){
+  return (f.instrument==='option'&&f.option)
+    ? ['opt',f.account,f.option.underlying,f.option.strike,f.option.expiry,f.option.type].join('|')
+    : ['eq',f.account,f.symbol].join('|');
+}
+function fill_wavg(legs){var n=0,d=0;legs.forEach(function(f){n+=(+f.price)*(+f.qty);d+=(+f.qty);});return d>0?n/d:0;}
+// Agrupa por instrumento+cuenta; cierra un round-trip cuando la posición vuelve a 0.
+function groupFills(fills){
+  var seen={},clean=[];
+  (fills||[]).forEach(function(f){var k=f.broker_order_id;if(k==null||!seen[k]){if(k!=null)seen[k]=1;clean.push(f);}});
+  var byKey={};
+  clean.forEach(function(f){var k=fill_instrKey(f);(byKey[k]=byKey[k]||[]).push(f);});
+  var trades=[];
+  Object.keys(byKey).forEach(function(k){
+    var seq=byKey[k].slice().sort(function(a,b){return String(a.time).localeCompare(String(b.time));});
+    var pos=0,cycle=[];
+    seq.forEach(function(f){
+      cycle.push(f);
+      pos+=(String(f.side).toUpperCase()==='BUY'?1:-1)*(+f.qty);
+      if(pos===0){trades.push(fill_buildRT(cycle,false));cycle=[];}
+    });
+    if(cycle.length)trades.push(fill_buildRT(cycle,true)); // abierta/expirada/pierna huérfana
+  });
+  return trades;
+}
+function fill_buildRT(fills,open){
+  var first=fills[0], isOpt=first.instrument==='option', mult=isOpt?100:(CV[first.symbol]||20);
+  var dir=(String(first.side).toUpperCase()==='BUY')?'long':'short';
+  // P&L por FLUJO DE CAJA FIRMADO (crítica #1): BUY paga(−), SELL cobra(+).
+  // contracts = pico de |posición|. Robusto a scaling in/out y cruces de signo.
+  var cash=0,cum=0,peak=0,buyLegs=[],sellLegs=[];
+  fills.forEach(function(f){
+    var q=+f.qty, isBuy=String(f.side).toUpperCase()==='BUY';
+    cash+=(isBuy?-1:1)*(+f.price)*q; cum+=(isBuy?1:-1)*q; peak=Math.max(peak,Math.abs(cum));
+    (isBuy?buyLegs:sellLegs).push(f);
+  });
+  var inLegs=dir==='long'?buyLegs:sellLegs, outLegs=dir==='long'?sellLegs:buyLegs;
+  var et=toET(first.time), lastOut=outLegs.length?outLegs[outLegs.length-1]:null, etOut=lastOut?toET(lastOut.time):null;
+  var ids=fills.map(function(f){return f.broker_order_id;}).filter(function(x){return x!=null;}).sort();
+  return {
+    id:'bt_'+(ids[0]||(et.date+et.time+Math.random().toString(36).slice(2,6))),
+    source:'snaptrade', sourceFills:ids, broker_order_id:ids[0]||null,
+    dedupKey:'bo|'+ids.join(','),
+    date:et.date, time:et.time, dow:et.dow, hour:et.hour,
+    exitTime: etOut?(etOut.date+'T'+etOut.time):null,
+    instrument:first.instrument, option:first.option||null,
+    asset: (isOpt&&first.option)?((first.option.underlying||'')+' '+(first.option.type||'')).trim():first.symbol,
+    direction:dir,
+    entry:Math.round(fill_wavg(inLegs)*100)/100,
+    exit: open?null:Math.round(fill_wavg(outLegs)*100)/100,
+    realizedPnl: open?null:(cash*mult),          // usado por calcTrade tal cual
+    stop:null, target:null, contracts:peak||inLegs.length, mult:mult, fees:0,
+    setup:'Importado (broker)', playbookId:null,
+    checklist:[], vwap:null, gamma:null, t4h:null, exitType:'full', note:'',
+    status:'pending',
+    flags: open?[{code:'open_position',severity:'amber',msg:'Posición abierta o expirada sin cierre en la ventana'}]:[]
+  };
+}
+// ── Deduplicación (crítica #5: clave natural con contratos) ──
+function tradeHash(t){return [t.date,t.time,t.asset,t.direction,t.entry,t.exit,t.contracts].join('|');}
+function dedupKeyOf(t){return t.dedupKey||(t.broker_order_id?'bo|'+t.broker_order_id:'h|'+tradeHash(t));}
+function mergeTrades(existing,incoming){
+  var seen={};existing.forEach(function(t){seen[dedupKeyOf(t)]=1;});
+  var added=[],dup=0;
+  incoming.forEach(function(t){var k=dedupKeyOf(t);if(seen[k]){dup++;}else{seen[k]=1;added.push(t);}});
+  return {trades:existing.concat(added),added:added.length,dup:dup};
+}
+// ── Detección de anomalías (calidad de datos) ──
+function DQF(code,sev,msg){return {code:code,severity:sev,msg:msg};}
+function detectFlags(t){
+  var f=[];
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(t.date))f.push(DQF('fecha_invalida','red','Fecha inválida'));
+  else if(new Date(t.date+'T00:00:00')>new Date())f.push(DQF('fecha_futura','red','Fecha en el futuro'));
+  if(t.instrument!=='option'&&t.instrument!=='equity'&&!CV[t.asset])f.push(DQF('simbolo_desconocido','amber','Símbolo no reconocido'));
+  if(t.exit!=null&&t.entry>0&&Math.abs(t.pnl)>(t.contracts*t.mult*t.entry*3))f.push(DQF('pnl_improbable','amber','P&L fuera de rango plausible'));
+  if(t.stop!=null&&+t.stop!==0){var wrong=t.direction==='long'?(+t.stop>=+t.entry):(+t.stop<=+t.entry);if(wrong)f.push(DQF('stop_lado_incorrecto','red','Stop del lado equivocado'));}
+  if(typeof t.hour==='number'&&(t.hour<4||t.hour>20))f.push(DQF('fuera_de_sesion','amber','Hora fuera de sesión típica'));
+  return f;
+}
+function logImport(source,info){
+  try{var k=userKey('lbc_import_log');var log=JSON.parse(localStorage.getItem(k)||'[]');log.unshift(Object.assign({source:source,ts:Date.now()},info));localStorage.setItem(k,JSON.stringify(log.slice(0,50)));}catch(e){}
+}
+// Convierte fills crudos → round-trips, valida, deduplica y funde con el journal.
+function importFromBroker(fills){
+  var cand=groupFills(fills).map(calcTrade);
+  cand.forEach(function(t){
+    t.flags=(t.flags||[]).concat(detectFlags(t));
+    t.status=t.flags.some(function(x){return x.severity==='red';})?'pending':(t.flags.length?'pending':'verified');
+  });
+  var res=mergeTrades(T,cand);
+  T=res.trades; saveTrades(T);
+  var pend=cand.filter(function(x){return x.status==='pending';}).length;
+  var ver =cand.filter(function(x){return x.status==='verified';}).length;
+  logImport('snaptrade',{read:(fills||[]).length,trades:cand.length,accepted:res.added,dup:res.dup,pending:pend,verified:ver});
+  return {trades:cand.length,added:res.added,dup:res.dup,pending:pend,verified:ver};
+}
+
 function syncFills(){
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando fills reales…</div>';
@@ -2532,12 +2643,14 @@ function syncFills(){
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
       var fills=d.trades||[];
-      try{localStorage.setItem('lbc_broker_fills',JSON.stringify({ts:Date.now(),fills:fills}));}catch(e){}
-      var n=fills.length;
-      var prev=fills.slice(0,4).map(function(t){
-        return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:10.5px;font-family:\'DM Mono\',monospace;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border2);"><span>'+_esc((t.time||'').slice(0,16))+'</span><span style="color:'+(String(t.side).toUpperCase()==='BUY'?'#2EE8A4':'#B197FC')+'">'+_esc(t.side||'')+'</span><span style="flex:1;text-align:right;">'+_esc(String(t.symbol||'').slice(0,20))+' @'+_esc(t.price)+'</span></div>';
-      }).join('');
-      if(st)st.innerHTML='<div style="font-size:12px;color:var(--gold);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.25);border-radius:9px;padding:12px;line-height:1.6;">✓ <strong>'+n+'</strong> fills reales sincronizados.<div style="margin-top:8px;">'+prev+'</div><div style="font-size:10px;color:var(--text3);margin-top:8px;">Se integrarán a tus vistas del journal.</div></div>';
+      try{localStorage.setItem(userKey('lbc_broker_fills'),JSON.stringify({ts:Date.now(),fills:fills}));}catch(e){}
+      var r=importFromBroker(fills);
+      if(curView)go(curView);
+      if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
+        +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones importadas de <strong>'+fills.length+'</strong> fills.'
+        +'<div style="font-size:11px;color:var(--text3);margin-top:6px;">Verificadas: '+r.verified+' · En revisión: '+r.pending+' · Duplicadas ignoradas: '+r.dup+'</div>'
+        +(r.pending?'<div style="font-size:10.5px;color:var(--purple);margin-top:6px;">Las que están en revisión no tocan tus KPIs hasta que las apruebes.</div>':'')
+        +'</div>';
     })
     .catch(function(err){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red al sincronizar.</div>';});
 }
@@ -3534,10 +3647,16 @@ function dfpPickYr(y){_dfpState.pYr=y;_dfpState.pView='months';dfpRenderPanel();
 function dfpPickMo(m){_dfpState.pMo=m;_dfpState.pView='days';dfpRenderPanel();dfpRepositionPortal();}
 
 // ── Filter trades by date range ──
+// Base de TODO render de datos: en modo demo muestra los demo; normal muestra SOLO
+// verified (pending queda fuera de KPIs/curva/calendario/reportes) y nunca demo. (crítica #7)
+function baseTrades(){
+  return DEMO_MODE ? T : T.filter(function(t){return !t.__demo && t.status!=='pending';});
+}
 function getFilteredT(range){
+  var base=baseTrades();
   range=range||{start:null,end:null};
-  if(!range.start&&!range.end)return T;
-  return T.filter(function(t){
+  if(!range.start&&!range.end)return base;
+  return base.filter(function(t){
     if(range.start&&t.date<range.start)return false;
     if(range.end&&t.date>range.end)return false;
     return true;
