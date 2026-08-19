@@ -2084,7 +2084,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       // los 3-6 más significativos (top ~10%) por |gex| (OI). Los 4 niveles clave se
       // dibujan aparte con etiqueta.
       var byOI=inRange.slice().sort(function(a,b){return Math.abs(b.gex)-Math.abs(a.gex);});
-      var keepN=Math.max(3,Math.min(6,Math.ceil(inRange.length*0.10)));
+      var keepN=Math.min(8,inRange.length);   // los 8 strikes de mayor OI (estético tipo profile)
       var top=byOI.slice(0,keepN);
       var maxAbs=top.length?Math.abs(top[0].gex):0;
       if(maxAbs>0){
@@ -2132,11 +2132,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     // readouts (independientes del perfil)
     var ic=$('iro-call'),ip=$('iro-put'),ipos=$('iro-pos');
     if(S.callWall&&S.putWall&&typeof S.price==='number'){
-      var range=S.callWall-S.putWall;
-      var toCall=Math.max(0,S.callWall-S.price), toPut=Math.max(0,S.price-S.putWall);
-      if(ic)ic.textContent='+'+nfmt(toCall);
-      if(ip)ip.textContent='-'+nfmt(toPut);
-      if(ipos&&range>0)ipos.textContent=clamp((S.price-S.putWall)/range*100,0,100).toFixed(0)+'%';
+      // Distancias CON SIGNO (el precio puede estar por encima o por debajo de un muro).
+      var dCall=S.callWall-S.price, dPut=S.price-S.putWall;
+      if(ic)ic.textContent=(dCall>=0?'+':'')+nfmt(dCall);
+      if(ip)ip.textContent=(dPut>=0?'+':'')+nfmt(dPut);
+      // Range position: dónde está el precio entre los dos muros (funciona en cualquier orden).
+      var hi=Math.max(S.callWall,S.putWall), lo=Math.min(S.callWall,S.putWall), span=hi-lo;
+      if(ipos)ipos.textContent=(span>0)?clamp((S.price-lo)/span*100,0,100).toFixed(0)+'%':'—';
     }else{
       if(ic)ic.textContent='—'; if(ip)ip.textContent='—'; if(ipos)ipos.textContent='—';
     }
