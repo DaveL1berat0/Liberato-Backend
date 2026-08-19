@@ -2618,7 +2618,8 @@ async def refresh_institutional():
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                json={"model":"llama-3.3-70b-versatile","max_tokens":240,"temperature":0.55,
+                json={"model":"qwen/qwen3.6-27b","max_tokens":300,"temperature":0.55,
+                      "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
                       "messages":[{"role":"system","content":sys_msg},
                                   {"role":"user","content":usr_msg}]}
             )
@@ -2732,7 +2733,7 @@ def health():
                        if not gex_data else
                        "Resumen pendiente — próxima generación: 9:05 AM o 12:00 PM ET"),
             extra   = {
-                "model":            "llama-3.3-70b-versatile (Groq)",
+                "model":            "qwen/qwen3.6-27b (Groq)",
                 "schedule":         "9:05 AM + 12:00 PM ET lun-vie",
                 "requires":         "Datos reales de GEX (FlashAlpha) para contexto institucional",
                 "credits":          "Gratis — sin límite relevante para 2 llamadas/día",
