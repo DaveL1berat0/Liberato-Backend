@@ -31,8 +31,11 @@ import websockets
 FLASHALPHA_KEY   = os.getenv("FLASHALPHA_KEY",   "").strip()
 # ── GexBot (fuente del gamma profile; permiso escrito 17-ago: atribución + educativo) ──
 GEXBOT_API_KEY   = os.getenv("GEXBOT_API_KEY",   "").strip()
-GEXBOT_SYMBOL    = os.getenv("GEXBOT_SYMBOL",   "NQ_NDX").strip()   # par futuro_índice
-GEXBOT_BASE      = "https://api.gexbot.com"
+GEXBOT_SYMBOL    = os.getenv("GEXBOT_SYMBOL",   "NQ").strip()   # ticker GexBot v2
+GEXBOT_BASE      = "https://api.gex.bot/v2"                      # API v2 (Bearer auth)
+def _gexbot_headers():
+    return {"Authorization": f"Bearer {GEXBOT_API_KEY}",
+            "Accept": "application/json", "User-Agent": "liberato-community/1.0"}
 FINNHUB_KEY      = os.getenv("FINNHUB_KEY",      "")
 RAPIDAPI_KEY  = os.getenv("RAPIDAPI_KEY", "")          # calendario tiempo real
 RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST", "economic-calendar-api-tradingeconomics.p.rapidapi.com")
@@ -3274,17 +3277,19 @@ async def diag_gexbot(key: str = ""):
         return type(v).__name__ + (f"={v}" if isinstance(v, (int, float, bool)) and depth < 2 else "")
 
     combos = [
+        ("tickers", None, None),          # descubre tickers válidos para tu tier
         (GEXBOT_SYMBOL, "classic", "full"),
         (GEXBOT_SYMBOL, "classic", "zero"),
         (GEXBOT_SYMBOL, "state",   "full"),
-        (GEXBOT_SYMBOL, "state",   "gamma"),
     ]
-    async with httpx.AsyncClient(timeout=15) as c:
+    async with httpx.AsyncClient(timeout=15, headers=_gexbot_headers()) as c:
         for sym, state, tipo in combos:
-            label = f"{sym}/{state}/{tipo}"
-            url = f"{GEXBOT_BASE}/{sym}/{state}/{tipo}"
+            if state is None:
+                label = f"/{sym}"; url = f"{GEXBOT_BASE}/{sym}"
+            else:
+                label = f"{sym}/{state}/{tipo}"; url = f"{GEXBOT_BASE}/{sym}/{state}/{tipo}"
             try:
-                r = await c.get(url, params={"key": GEXBOT_API_KEY})
+                r = await c.get(url)
                 entry = {"http": r.status_code}
                 if r.status_code == 200:
                     try:
