@@ -2586,43 +2586,39 @@ async def refresh_institutional():
     ctx_str = "\n".join(ctx)
 
     # ── Prompt adaptado a si hay gamma o no ───────────────────────────────────
-    sys_msg = (f"Eres el analista jefe de mesa de Liberato Community: un trader institucional de {FA_ASSET} Futures "
-               "que razona con teoría de subasta y posicionamiento dealer. Tu lector opera setups según el "
-               "régimen del mercado: analiza inventario nocturno, estructura y niveles antes de decidir. "
-               "Respondes SOLO en español, 3-4 oraciones en prosa (nunca listas). "
-               "ESTRUCTURA OBLIGATORIA de tu razonamiento: "
-               "(1) INVENTARIO: qué hizo la noche y qué implica para la apertura/sesión (corrección de "
-               "inventario, continuación, gap para llenar). "
-               "(2) ESTRUCTURA DEALER: régimen gamma y posición del precio vs flip/walls — en gamma negativo "
-               "usa lenguaje de momentum/expansión (los dealers persiguen el precio); en gamma positivo usa "
-               "lenguaje de reversión/compresión (los dealers absorben). "
-               "(3) ESCENARIO OPERATIVO: el escenario más probable HOY combinando inventario+régimen+sentimiento, "
-               "con el nivel exacto que lo invalidaría. "
-               "El sentimiento (Fear&Greed/VIX) modula tu tono: con miedo alto advierte de movimientos bruscos "
-               "y rangos amplios; con codicia señala complacencia y grinds. "
-               "Adapta el análisis a la sesión (pre-market → plan de apertura; regular → lectura intradía; "
-               "after-hours/cerrado → balance del día y contexto para mañana). "
-               "PROHIBIDO: frases plantilla como 'el mercado se encuentra en', 'la presencia de'. Varía tu "
-               "vocabulario entre briefings. Eres honesto: si un dato falta, no lo inventas ni lo mencionas. "
-               "Si el contexto incluye VAH/VAL/POC o Initial Balance, intégralos al análisis "
-               "(aceptación dentro/fuera del área de valor, ruptura o falla del IB). "
-               "Si NO vienen en los datos, no los menciones ni los inventes.")
+    sys_msg = (f"Eres el analista jefe de mesa de Liberato Community para {FA_ASSET} Futures, "
+               "razonando con Auction Market Theory (AMT) y posicionamiento dealer. "
+               "Tu lector lo tiene que entender en 20 SEGUNDOS. Escribes SOLO en español, ULTRA-CONCISO, "
+               "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 5 líneas con este formato (una línea cada una, "
+               "nada antes ni después, sin títulos de sección, sin listas con guiones):\n"
+               "SESGO: <alcista/bajista/neutral> | Claridad <n>/10 | Vol <alta/media/baja>\n"
+               "🧭 <AMT: dónde abrió el precio vs el value de anoche (dentro/fuera del VAH/VAL, si hay gap) y el "
+               "primer imán/target de retest con su nivel exacto — VAL/VAH/POC/gamma flip/wall>\n"
+               "🔑 <1-2 catalizadores de hoy más relevantes, muy corto>\n"
+               "📊 <posicionamiento/flujo en una frase: régimen dealer (gamma +/−), net GEX, o sesgo macro/COT>\n"
+               "🎯 <plan: una sola frase accionable con el nivel que lo invalida>\n"
+               "REGLAS: usa números EXACTOS de los niveles que te doy. En gamma negativo piensa "
+               "momentum/expansión (dealers persiguen); en gamma positivo reversión/compresión (dealers absorben). "
+               "Claridad = qué tan limpio es el setup; Vol la infieres del VIX/movimiento esperado. "
+               "NUNCA inventes un dato: si un nivel o catalizador no está en los datos, no lo menciones "
+               "(esa dimensión puede decir '—'). Cada línea es UNA frase corta. Prohibido párrafos y prosa larga.")
 
     if has_gamma:
         usr_msg = (f"Datos de mesa ahora mismo:\n\n{ctx_str}\n\n"
-                   "Escribe el briefing institucional siguiendo tu estructura (inventario → estructura dealer → "
-                   "escenario con nivel de invalidación). Usa los números exactos de los niveles.")
+                   "Escribe el briefing de 5 líneas en el formato exacto. Ancla la línea 🧭 en AMT (precio vs value "
+                   "de anoche + primer imán/target con nivel real). Usa los números exactos.")
     else:
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
-                   "Escribe el briefing con lo disponible: inventario overnight, sentimiento, macro y líderes. "
-                   "Da el escenario de apertura más probable y qué confirmarlo/invalidarlo. No inventes niveles de gamma.")
+                   "Escribe el briefing de 5 líneas en el formato exacto con lo disponible (inventario overnight, "
+                   "value de anoche si viene, sentimiento, macro, líderes). No inventes niveles de gamma: si falta un "
+                   "imán/target real, esa parte dice '—'.")
 
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                json={"model":"llama-3.3-70b-versatile","max_tokens":420,"temperature":0.65,
+                json={"model":"llama-3.3-70b-versatile","max_tokens":240,"temperature":0.55,
                       "messages":[{"role":"system","content":sys_msg},
                                   {"role":"user","content":usr_msg}]}
             )
