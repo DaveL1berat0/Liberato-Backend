@@ -2983,19 +2983,30 @@ function openAIChat(){document.getElementById('ai-chat-modal').classList.add('op
 function closeAIChat(){document.getElementById('ai-chat-modal').classList.remove('open');}
 function acmKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAIMsg();}}
 function askSuggestion(btn){document.getElementById('acm-input').value=btn.textContent;document.getElementById('acm-sug-row').style.display='none';sendAIMsg();}
+// Contexto REAL y agregado del trader (solo verified, sin PII) para el coach.
+function coachContext(){
+  var vt=baseTrades();
+  var s=stats(vt),su=bySetup(vt);
+  var chk=vt.filter(function(t){return t.chkAll;});
+  function hourOf(t){return (typeof t.hour==='number')?t.hour:parseInt(t.time,10)||0;}
+  var mor=vt.filter(function(t){return hourOf(t)<12;}),aft=vt.filter(function(t){return hourOf(t)>=12;});
+  return {
+    total:s.n, net_pnl:s.total, win_rate:s.wr, profit_factor:s.pf,
+    avg_win:s.avgW, avg_loss:s.avgL, expectancy:s.exp,
+    por_setup: su.slice(0,6).map(function(x){return {setup:x.name,wr:x.wr,pnl:x.pnl,n:x.tr.length};}),
+    checklist_wr: chk.length?stats(chk).wr:null,
+    manana_wr: mor.length?stats(mor).wr:null, tarde_wr: aft.length?stats(aft).wr:null,
+    en_revision: T.filter(function(t){return t.status==='pending';}).length
+  };
+}
 function sendAIMsg(){
   var inp=document.getElementById('acm-input'),msg=inp.value.trim();if(!msg)return;
-  inp.value='';addChatMsg('user',msg);chatHistory.push({role:'user',content:msg});
+  inp.value='';addChatMsg('user',_esc(msg));chatHistory.push({role:'user',content:msg});
   var sendBtn=document.getElementById('acm-send');sendBtn.disabled=true;sendBtn.textContent='...';
-  var s=stats(T),su=bySetup(T),chkTr=T.filter(function(t){return t.chkAll;}),aftTr=T.filter(function(t){return parseInt(t.time)>=14;}),errors=buildErrorProfile();
-  var ctx='Total:'+s.n+' WR:'+s.wr+'% PnL:$'+s.total+' PF:'+s.pf+' ChecklistWR:'+(chkTr.length?stats(chkTr).wr:0)+'% TardeWR:'+(aftTr.length?stats(aftTr).wr:0)+'% Setups:'+su.slice(0,3).map(function(x){return x.name+' WR'+x.wr+'%';}).join('|')+' Errores:'+errors.slice(0,2).map(function(e){return e.name;}).join(',');
-  var systemMsg='Eres el Genio, AI Coach de Liberato Community para trading de futuros NQ. Directo, especifico, practico. Solo en espanol, maximo 3 parrafos. Datos: '+ctx;
-  var apiMsgs=[];
-  if(chatHistory.length===1){apiMsgs=[{role:'user',content:systemMsg+'. Pregunta: '+msg}];}
-  else{apiMsgs=[{role:'user',content:systemMsg+'. Primera pregunta: '+chatHistory[0].content}];for(var i=1;i<chatHistory.length;i++){apiMsgs.push({role:chatHistory[i].role,content:chatHistory[i].content});}}
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:apiMsgs})})
+  fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({question:msg,context:coachContext()})})
   .then(function(r){return r.json();})
-  .then(function(d){var reply=d.content&&d.content[0]?d.content[0].text:'No pude procesar tu pregunta.';chatHistory.push({role:'assistant',content:reply});addChatMsg('ai',reply);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';})
+  .then(function(d){var ok=(d&&d.ok&&d.answer);var reply=ok?d.answer:genFallbackReply(msg);chatHistory.push({role:'assistant',content:reply});addChatMsg('ai',ok?_esc(reply):reply);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';})
   .catch(function(){var fb=genFallbackReply(msg);chatHistory.push({role:'assistant',content:fb});addChatMsg('ai',fb);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';});
 }
 function genFallbackReply(msg){
