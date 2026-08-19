@@ -2168,8 +2168,11 @@ function demoBannerHTML(){
     +'<span style="font-size:11px;color:var(--purple);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">◆ MODO EJEMPLO — no son trades reales</span>'
     +'<button onclick="exitDemo()" style="padding:6px 12px;border-radius:7px;border:0.5px solid rgba(177,151,252,0.4);background:transparent;color:var(--purple);font-size:11px;cursor:pointer;">Salir del ejemplo</button></div>':'';
 }
-// ── FILTROS: periodo (presets) + cuenta ──
-var trAccount='all';
+// ── FILTROS: periodo (presets) + CUENTA GLOBAL (scopea TODO: KPIs, calendario, coach) ──
+var activeAccount=(function(){try{return localStorage.getItem(userKey('lbc_active_account'))||'all';}catch(e){return 'all';}})();
+function acctMap(){try{return JSON.parse(localStorage.getItem(userKey('lbc_accounts'))||'{}');}catch(e){return {};}}
+function acctLabel(num){var m=acctMap()[String(num)];return m&&m.name?m.name+' · #'+num:'#'+num;}
+function setActiveAccount(v){activeAccount=v;try{localStorage.setItem(userKey('lbc_active_account'),v);}catch(e){}go(curView);}
 function setTrDatePreset(preset){
   function daysAgo(n){var d=new Date();d.setDate(d.getDate()-n);return toET(d.toISOString()).date;}
   var end=todayET(),start=null;
@@ -2184,14 +2187,13 @@ function setTrDatePreset(preset){
   renderTrades();
 }
 function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});return Object.keys(s).sort();}
-function setTrAccount(v){trAccount=v;renderTrades();}
 function renderTrAccounts(){
   var el=document.getElementById('tr-accounts');if(!el)return;
   var accs=trAccountList();
-  if(accs.length<2){el.innerHTML='';return;} // sin sentido con 0-1 cuenta
+  if(accs.length<1){el.innerHTML='';return;}
   el.innerHTML='<span style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;letter-spacing:0.06em;">CUENTA</span>'
-    +'<button class="fchip'+(trAccount==='all'?' active':'')+'" onclick="setTrAccount(\'all\')">Todas</button>'
-    +accs.map(function(a){return '<button class="fchip'+(trAccount===a?' active':'')+'" onclick="setTrAccount(\''+a+'\')">#'+_esc(a)+'</button>';}).join('');
+    +'<button class="fchip'+(activeAccount==='all'?' active':'')+'" onclick="setActiveAccount(\'all\')">Todas</button>'
+    +accs.map(function(a){var m=acctMap()[a];var lbl=m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' #'+_esc(a):'#'+_esc(a);return '<button class="fchip'+(activeAccount===a?' active':'')+'" onclick="setActiveAccount(\''+a+'\')" title="'+_esc(acctLabel(a))+'">'+lbl+'</button>';}).join('');
 }
 // ── TRADES ──
 function renderTrades(){
@@ -2208,7 +2210,7 @@ function renderTrades(){
     if(r.end&&t.date>r.end)return false;
     return true;
   }).sort(function(a,b){return b.date.localeCompare(a.date)||String(b.time).localeCompare(String(a.time));});
-  if(trAccount!=='all')filtered=filtered.filter(function(t){return String(t.account)===trAccount;});
+  if(activeAccount!=='all')filtered=filtered.filter(function(t){return String(t.account)===activeAccount;});
   if(trFilter==='win')filtered=filtered.filter(function(t){return t.result==='win';});else if(trFilter==='loss')filtered=filtered.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')filtered=filtered.filter(function(t){return t.chkAll;});
   // resumen del filtro actual
   var pend=filtered.filter(function(t){return t.status==='pending';}).length;
@@ -2692,9 +2694,18 @@ function importFromBroker(fills){
   return {trades:cand.length,added:res.added,dup:res.dup,pending:pend,verified:ver};
 }
 
+// Guarda el mapa de cuentas conectadas (nombre/institución) para etiquetas legibles.
+function fetchAccountsMap(){
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts')
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d||!d.ok)return;var m={};(d.accounts||[]).forEach(function(a){if(a.number)m[String(a.number)]={name:a.name,institution:a.institution};});
+      try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}
+      if(curView==='trades')renderTrAccounts();}).catch(function(){});
+}
 function syncFills(){
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando fills reales…</div>';
+  fetchAccountsMap();
   fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120')
     .then(function(r){return r.json();})
     .then(function(d){
@@ -3690,7 +3701,10 @@ function dfpPickMo(m){_dfpState.pMo=m;_dfpState.pView='days';dfpRenderPanel();df
 // Base de TODO render de datos: en modo demo muestra los demo; normal muestra SOLO
 // verified (pending queda fuera de KPIs/curva/calendario/reportes) y nunca demo. (crítica #7)
 function baseTrades(){
-  return DEMO_MODE ? T : T.filter(function(t){return !t.__demo && t.status!=='pending';});
+  var b=DEMO_MODE ? T : T.filter(function(t){return !t.__demo && t.status!=='pending';});
+  // Cuenta ACTIVA (global): si el trader eligió una cuenta, TODO se scopea a ella.
+  if(activeAccount && activeAccount!=='all')b=b.filter(function(t){return String(t.account)===activeAccount;});
+  return b;
 }
 function getFilteredT(range){
   var base=baseTrades();
