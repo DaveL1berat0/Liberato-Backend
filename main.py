@@ -767,7 +767,7 @@ async def refresh_real_indices():
     """Niveles reales vía Finnhub (throttle 4 min). Verificable, sin cookie/crumb."""
     global _indices_last_ts
     now = time.time()
-    if now - _indices_last_ts < 240:
+    if now - _indices_last_ts < 90:
         return
     if not FINNHUB_KEY:
         return
@@ -809,7 +809,7 @@ async def refresh_real_indices():
 async def _refresh_real_indices_OLD_yahoo():
     global _indices_last_ts
     now = time.time()
-    if now - _indices_last_ts < 240:
+    if now - _indices_last_ts < 90:
         return
     _indices_last_ts = now
     ua = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -2561,7 +2561,8 @@ async def refresh_institutional():
         em = gex.get("expected_move"); iv = gex.get("atm_iv")
         if em: ctx.append(f"- Movimiento esperado: ±{em:.0f}pts | IV: {iv:.1f}%" if iv else f"- Movimiento esperado: ±{em:.0f}pts")
     else:
-        ctx.append(f"- Gamma (GEX): pendiente de actualización (FlashAlpha {GEX_REFRESHES_PER_DAY}x/día)")
+        # Sin niveles GEX en cache (típico en cold-start). GexBot los publica en RTH.
+        ctx.append("- Gamma (GEX): esperando cálculo de la sesión RTH — aún no publicados por GexBot")
 
     # ── INVENTARIO OVERNIGHT (derivado del cambio vs cierre previo) ──
     # chg_pct del NQ = posición del precio vs settlement anterior. En pre-market
@@ -2607,7 +2608,8 @@ async def refresh_institutional():
     # ── CICLO MACRO: releases recientes clave (del calendario, actual vs esperado) ──
     MACRO_KEYS = ["gdp", "cpi", "inflation", "ppi", "nonfarm", "payroll",
                   "unemployment", "pce", "retail sales", "interest rate",
-                  "fed funds", "jobless", "michigan"]
+                  "fed funds", "jobless", "michigan", "adp", "employment",
+                  "ism", "consumer confidence", "durable goods", "housing"]
     macro_rel = {}
     for e in cal:
         if e.get("status") != "Released":
@@ -2720,7 +2722,8 @@ async def refresh_institutional():
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
                    "Escribe el briefing en el formato exacto (3-5 oraciones, etiquetas en negrita) con lo disponible "
                    "(macro, catalizadores de hoy, earnings, inventario/gap, sentimiento, sector tech). En **Técnico:** "
-                   "omite los niveles de gamma si no hay GEX. Cierra con **Claridad:** score 1-10 hacia alza/baja/sin "
+                   "como aún no hay niveles GEX de RTH, di literalmente 'GEX: esperando niveles de la sesión RTH' y "
+                   "apóyate en inventario/gap/vol/sector tech. Cierra con **Claridad:** score 1-10 hacia alza/baja/sin "
                    "dirección. No inventes datos.")
 
     try:
@@ -4683,7 +4686,7 @@ async def startup():
     # ── Índices reales (Yahoo): SIEMPRE, incluso fuera de RTH y fines de semana ──
     # Cubre VIX/DXY/yields/Gold/WTI/BTC/SPX que Finnhub no tiene. Sin créditos.
     # Throttle interno de 4 min protege aunque el job corra cada 3.
-    scheduler.add_job(refresh_real_indices, IntervalTrigger(minutes=3))
+    scheduler.add_job(refresh_real_indices, IntervalTrigger(seconds=90))  # macro correlations ~2.6x más rápido (throttle interno 90s)
     # SPX vía Yahoo (gratis): Finnhub free no da ^GSPC. Sin SPX el ratio ES/SPY se
     # queda sin respaldo y el chart depende SOLO de FlashAlpha.
     scheduler.add_job(refresh_cash_index_yahoo, IntervalTrigger(minutes=3))
@@ -4753,9 +4756,14 @@ async def startup():
     # ── Groq Institutional: 9:05 AM + 12:00 PM ET lun-vie ─────────────────
     # Resumen IA: cada 30min durante horario extendido (premarket→afterhours)
         # Groq — 4 eventos clave del mercado (4 llamadas/día en horario hábil):
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=9,  minute=0,  day_of_week="mon-fri"))  # contexto premarket
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=9,  minute=30, day_of_week="mon-fri"))  # apertura del mercado
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=9,  minute=45, day_of_week="mon-fri"))  # confirmación de flujo
+    # Institutional: refrescos frecuentes para tener SIEMPRE lo más reciente y captar
+    # los GEX de RTH en cuanto GexBot los publica (Dave: pre-market, apertura, +30min
+    # como mínimo). Groq/qwen es barato → refresco cada 15 min de 8:00 a 12:00 + tarde.
+    scheduler.add_job(refresh_institutional, CronTrigger(hour=8,  minute="0,30", day_of_week="mon-fri"))  # pre-market temprano
+    scheduler.add_job(refresh_institutional, CronTrigger(hour=9,  minute="0,15,30,45", day_of_week="mon-fri"))  # antes/en apertura
+    scheduler.add_job(refresh_institutional, CronTrigger(hour=10, minute="0,30", day_of_week="mon-fri"))  # +30/+60 min tras apertura
+    scheduler.add_job(refresh_institutional, CronTrigger(hour=11, minute=0,  day_of_week="mon-fri"))
+    scheduler.add_job(refresh_institutional, CronTrigger(hour=13, minute=0,  day_of_week="mon-fri"))
     scheduler.add_job(refresh_institutional, CronTrigger(hour=16, minute=0,  day_of_week="mon-fri"))
 
     scheduler.start()
