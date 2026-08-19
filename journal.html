@@ -1559,16 +1559,6 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   <div class="td-handle"></div>
   <div class="td-head"><span class="td-title">Nuevo Trade</span><button class="td-close" onclick="closeForm()">✕</button></div>
   <div class="td-body">
-    <div class="fsec"><div class="fsec-lbl">Screenshot del trade (opcional)</div>
-      <div class="ss-zone" id="ss-zone" onclick="document.getElementById('ss-input').click()">
-        <div id="ss-zone-content">
-          <div class="ss-icon">📸</div>
-          <div class="ss-text">Sube el screenshot de tu trade.<br><strong>La IA extraerá entrada, salida, stop y R:R automáticamente.</strong></div>
-        </div>
-      </div>
-      <input type="file" id="ss-input" accept="image/*" style="display:none;" onchange="handleScreenshot(event)">
-      <div id="ss-result"></div>
-    </div>
     <div class="fsec"><div class="fsec-lbl">Dirección</div>
       <div class="dtoggle"><button class="dbtn long active" id="btn-l" onclick="setDir('long')">▲ Long</button><button class="dbtn short" id="btn-s" onclick="setDir('short')">▼ Short</button><button class="dbtn sideways" id="btn-sw" onclick="setDir('sideways')">⟺ Sideways</button></div>
     </div>
@@ -1863,9 +1853,10 @@ function loadTrades(){
 function saveTrades(arr){try{localStorage.setItem(userKey(KEY),JSON.stringify(arr));}catch(e){}}
 function genId(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function calcTrade(t){
-  // Multiplicador: opción=100, futuro=CV[asset], equity=1. `t.mult` lo puede sobreescribir.
+  // Multiplicador: opción=100, futuro=CV[asset] (NQ/ES…), acción/ETF=1. NUNCA 20 por
+  // defecto (bug: inflaba acciones como SPCX/SQQQ ×20). `t.mult` lo sobreescribe.
   var isOpt=t.instrument==='option';
-  var mult=t.mult||(isOpt?100:(CV[t.asset]||20)),c=t.contracts||1;
+  var mult=t.mult||(isOpt?100:(CV[t.asset]||1)),c=t.contracts||1;
   var dir=t.direction==='short'?'short':'long';
   var hasExit=(t.exit!=null&&t.exit!=='');
   var pts=hasExit?(dir==='long'?(t.exit-t.entry):(t.entry-t.exit)):0;
@@ -2619,7 +2610,7 @@ function groupFills(fills){
   return trades;
 }
 function fill_buildRT(fills,open){
-  var first=fills[0], isOpt=first.instrument==='option', mult=isOpt?100:(CV[first.symbol]||20);
+  var first=fills[0], isOpt=first.instrument==='option', mult=isOpt?100:(CV[first.symbol]||1);
   var dir=(String(first.side).toUpperCase()==='BUY')?'long':'short';
   // P&L por FLUJO DE CAJA FIRMADO (crítica #1): BUY paga(−), SELL cobra(+).
   // contracts = pico de |posición|. Robusto a scaling in/out y cruces de signo.
@@ -2904,33 +2895,6 @@ function saveTrade(){
   if(curView==='dashboard')renderDash();else if(curView==='trades')renderTrades();else if(curView==='calendar')renderCal();else if(curView==='genius')renderGenius();
 }
 
-// ── SCREENSHOT AI EXTRACTION ──
-function handleScreenshot(e){
-  var file=e.target.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    var dataUrl=ev.target.result,base64=dataUrl.split(',')[1],mediaType=file.type||'image/png';
-    document.getElementById('ss-zone').className='ss-zone has-img';
-    document.getElementById('ss-zone-content').innerHTML='<img src="'+dataUrl+'" class="ss-preview">';
-    document.getElementById('ss-result').innerHTML='<div class="ss-analyzing"><span class="ai-spinner"></span>Analizando el screenshot con IA...</div>';
-    var prompt='Analiza este screenshot de un trade de futuros NQ/ES. Extrae observando el grafico, la caja Risk/Reward y los precios del eje derecho: entry, exit, stop, direction (long/short), vwap (above/below). Si ves Value Area menciona VAH/VAL/POC en notes. Responde SOLO con JSON: {"entry":number,"exit":number,"stop":number,"direction":"long","vwap":"above","notes":"contexto breve"}';
-    fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mediaType,data:base64}},{type:'text',text:prompt}]}]})})
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var txt=d.content&&d.content[0]?d.content[0].text:'',clean=txt.replace(/```json|```/g,'').trim(),data=JSON.parse(clean);
-      if(data.entry)document.getElementById('f-en').value=data.entry;
-      if(data.exit)document.getElementById('f-ex').value=data.exit;
-      if(data.stop)document.getElementById('f-st').value=data.stop;
-      if(data.direction)setDir(data.direction);
-      if(data.vwap&&data.vwap!=='null')setCtx('vwap',data.vwap);
-      if(data.notes)document.getElementById('f-nt').value=data.notes;
-      calc();
-      document.getElementById('ss-result').innerHTML='<div class="ss-extracted">✦ <strong>Datos extraídos:</strong> Entrada '+(data.entry||'?')+' · Salida '+(data.exit||'?')+' · Stop '+(data.stop||'?')+' · '+(data.direction||'?')+(data.notes?'<br>'+data.notes:'')+'</div>';
-    })
-    .catch(function(){document.getElementById('ss-result').innerHTML='<div class="ss-extracted" style="background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2);">⚠ No se pudieron extraer datos. Ingresa los valores manualmente.</div>';});
-  };
-  reader.readAsDataURL(file);
-}
 
 // ── AI COACH (reporte semanal + insights) ──
 var coachLoaded=false;
@@ -2943,11 +2907,10 @@ function loadCoach(force){
   var chkWR=chkTr.length?stats(chkTr).wr:0,noChkWR=noChkTr.length?stats(noChkTr).wr:0;
   var aftTr=T.filter(function(t){return parseInt(t.time)>=14;}),morTr=T.filter(function(t){return parseInt(t.time)<12;});
   var fullGammaExp=T.filter(function(t){return(t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='full';});
-  var prompt='Eres un coach profesional de trading NQ. Genera 5 insights en espanol, especificos con numeros. DATOS: Trades:'+s.n+' WR:'+s.wr+'% PF:'+s.pf+' ChecklistWR:'+chkWR+'% SinChecklistWR:'+noChkWR+'% MananaWR:'+(morTr.length?stats(morTr).wr:0)+'% TardeWR:'+(aftTr.length?stats(aftTr).wr:0)+'% SalidaCompletaEnExpansion:'+fullGammaExp.length+' Setups:'+su.map(function(x){return x.name+' WR'+x.wr+'% '+x.pnl;}).join('|')+' Errores:'+errors.map(function(e){return e.name+'('+e.count+'x)';}).join(',')+'. Responde SOLO JSON array: [{"category":"checklist|gamma|horarios|psicologia|setups","icon":"emoji","insight":"texto con numeros","action":"accion concreta"}]';
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})})
-  .then(function(r){return r.json();})
-  .then(function(d){var txt=d.content&&d.content[0]?d.content[0].text:'',clean=txt.replace(/```json|```/g,'').trim();coachLoaded=true;showCoachInsights(JSON.parse(clean));})
-  .catch(function(){coachLoaded=true;showCoachInsights(fallbackCoach(s,chkWR,noChkWR,stats(morTr).wr,stats(aftTr).wr,fullGammaExp.length,su,errors));});
+  // Insights deterministas sobre datos REALES (instantáneo, sin depender de red).
+  // El AI conversacional (chat) cubre el análisis LLM libre vía /api/journal/coach.
+  coachLoaded=true;
+  showCoachInsights(fallbackCoach(s,chkWR,noChkWR,stats(morTr).wr,stats(aftTr).wr,fullGammaExp.length,su,errors));
 }
 function fallbackCoach(s,chkWR,noChkWR,morWR,aftWR,fullGammaExp,su,errors){
   var ins=[];
