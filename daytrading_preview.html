@@ -369,6 +369,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   padding:1px 5px;border-radius:4px;transition:top 0.6s var(--smooth);}
 .imap-pf-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:0.05em;z-index:2;text-align:center;padding:0 12px;}
+/* ── EJE DE PRECIO (derecha) + tick line — el usuario distingue niveles por su precio ── */
+.imap-yaxis{position:absolute;top:0;bottom:0;right:0;width:46px;z-index:4;pointer-events:none;border-left:1px solid rgba(239,236,227,0.06);}
+.imap-ytick{position:absolute;right:4px;font-family:var(--mono);font-size:8.5px;color:rgba(239,236,227,0.42);
+  transform:translateY(-50%);letter-spacing:0.02em;}
+.imap-ygrid{position:absolute;left:0;right:46px;height:0;border-top:1px dashed rgba(239,236,227,0.04);z-index:1;}
+/* ── CROSSHAIR de hover: línea + chip de precio en el eje ── */
+.imap-cross{position:absolute;left:0;right:46px;height:0;border-top:1px solid rgba(204,169,79,0.55);z-index:8;pointer-events:none;opacity:0;transition:opacity 0.12s;}
+.imap-cross.on{opacity:1;}
+.imap-cross-lab{position:absolute;right:2px;font-family:var(--mono);font-size:9px;font-weight:700;color:#0a0a0a;
+  background:var(--gold);padding:1px 5px;border-radius:4px;transform:translateY(-50%);z-index:9;pointer-events:none;opacity:0;transition:opacity 0.12s;white-space:nowrap;}
+.imap-cross-lab.on{opacity:1;}
 /* pressure bars */
 .imap-press{
   position:absolute;top:50%;height:3px;
@@ -1996,6 +2007,44 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var frac=(price-lo)/(hi-lo);                 // 0=lo, 1=hi
     return clamp(_PF_PAD_TOP+(1-frac)*(100-_PF_PAD_TOP-_PF_PAD_BOT),1,99);
   }
+  // Inverso de yForPrice: dado un % vertical, el precio (para el crosshair de hover).
+  function priceForY(yPct){
+    var lo=S._pfLo, hi=S._pfHi;
+    if(lo==null||hi==null||hi<=lo)return null;
+    var pos=(yPct-_PF_PAD_TOP)/(100-_PF_PAD_TOP-_PF_PAD_BOT);
+    return lo+(1-pos)*(hi-lo);
+  }
+  // Eje de precio a la derecha: ticks para leer el precio de cualquier nivel/barra.
+  function renderPriceAxis(){
+    var imap=$('imap'); if(!imap)return;
+    imap.querySelectorAll('.imap-yaxis,.imap-ygrid').forEach(function(n){n.remove();});
+    if(S._pfLo==null||S._pfHi==null)return;
+    var ax=document.createElement('div'); ax.className='imap-yaxis'; imap.appendChild(ax);
+    var N=6;
+    for(var i=0;i<=N;i++){
+      var price=S._pfLo+(i/N)*(S._pfHi-S._pfLo);
+      var y=yForPrice(price);
+      var t=document.createElement('div'); t.className='imap-ytick'; t.style.top=y+'%';
+      t.textContent=Math.round(price).toLocaleString();
+      ax.appendChild(t);
+      if(i>0&&i<N){var g=document.createElement('div');g.className='imap-ygrid';g.style.top=y+'%';imap.insertBefore(g,imap.firstChild);}
+    }
+    setupCrosshair();
+  }
+  function setupCrosshair(){
+    var imap=$('imap'); if(!imap||imap._chWired)return; imap._chWired=true;
+    var line=document.createElement('div'); line.className='imap-cross'; imap.appendChild(line);
+    var lab=document.createElement('div'); lab.className='imap-cross-lab'; imap.appendChild(lab);
+    imap.addEventListener('mousemove',function(e){
+      var r=imap.getBoundingClientRect(); if(!r.height)return;
+      var yPct=(e.clientY-r.top)/r.height*100;
+      var price=priceForY(yPct);
+      if(price==null){line.classList.remove('on');lab.classList.remove('on');return;}
+      line.style.top=yPct+'%'; lab.style.top=yPct+'%'; lab.textContent=Math.round(price).toLocaleString();
+      line.classList.add('on'); lab.classList.add('on');
+    });
+    imap.addEventListener('mouseleave',function(){line.classList.remove('on');lab.classList.remove('on');});
+  }
   // Calcula los límites de precio del perfil a partir de niveles clave (+ precio).
   // NUNCA inventa: si no hay ningún ancla real, no dibuja.
   function _computePfBounds(){
@@ -2022,6 +2071,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var sig=Math.round(b.lo)+'~'+Math.round(b.hi)+'|'+levels.map(function(l){return l.type+l.price;}).join('|')+'|'+psSig;
     if(sig===_levelsSig)return;
     _levelsSig=sig;
+    renderPriceAxis();   // eje de precio a la derecha (item 2) + wire del crosshair
     // limpiar sólo los nodos del perfil (no partícula/grid/axis)
     imap.querySelectorAll('.imap-zone,.imap-line,.imap-tag,.imap-val,.imap-pf-center,.imap-pf-bar,.imap-pf-lvl,.imap-pf-lab,.imap-pf-val,.imap-pf-empty').forEach(function(n){n.remove();});
     // ocultar las barras de presión antiguas (no aplican al perfil vertical)
