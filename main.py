@@ -2568,6 +2568,23 @@ async def refresh_institutional():
         ctx.append(f"- Próximo catalizador: {upcoming[0].get('title','')}")
     # Eventos ya publicados hoy con resultado
     today_str = now_et.strftime("%Y-%m-%d")
+    # Eventos de HOY programados de alto impacto CON HORA (ej. "FOMC 14:00 ET") —
+    # para que el briefing avise: "hoy la Fed habla a las 2pm".
+    def _ev_hora(tm):
+        try:
+            return datetime.fromisoformat(str(tm).replace("Z", "+00:00")).astimezone(NY).strftime("%H:%M")
+        except Exception:
+            s = str(tm or "")
+            return s[11:16] if len(s) >= 16 else ""
+    sched_today = []
+    for e in cal:
+        tm = e.get("time", "") or ""
+        if str(tm).startswith(today_str) and e.get("status") == "Upcoming" \
+           and str(e.get("impact", "")).lower() in ("high", "extreme"):
+            hh = _ev_hora(tm)
+            sched_today.append(f"{e.get('title','')}{(' ' + hh + ' ET') if hh else ''}")
+    if sched_today:
+        ctx.append(f"- Eventos programados hoy (alto impacto, con hora): {' | '.join(sched_today[:4])}")
     released_today = [e for e in cal if e.get("status") == "Released" and (e.get("time","") or "").startswith(today_str)]
     if released_today:
         last = released_today[-1]
@@ -2592,11 +2609,15 @@ async def refresh_institutional():
                "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 5 líneas con este formato (una línea cada una, "
                "nada antes ni después, sin títulos de sección, sin listas con guiones):\n"
                "SESGO: <alcista/bajista/neutral> | Claridad <n>/10 | Vol <alta/media/baja>\n"
-               "🧭 <AMT: dónde abrió el precio vs el value de anoche (dentro/fuera del VAH/VAL, si hay gap) y el "
+               "**AMT:** <dónde abrió el precio vs el value de anoche (dentro/fuera del VAH/VAL, si hay gap) y el "
                "primer imán/target de retest con su nivel exacto — VAL/VAH/POC/gamma flip/wall>\n"
-               "🔑 <1-2 catalizadores de hoy más relevantes, muy corto>\n"
-               "📊 <posicionamiento/flujo en una frase: régimen dealer (gamma +/−), net GEX, o sesgo macro/COT>\n"
-               "🎯 <plan: una sola frase accionable con el nivel que lo invalida>\n"
+               "**Catalizadores:** <1-2 catalizadores de hoy más relevantes, muy corto. Si hay un evento "
+               "programado de alto impacto con hora (ej. FOMC/Fed 14:00 ET, CPI 08:30 ET), MENCIÓNALO con su hora>\n"
+               "**Flujo:** <posicionamiento en una frase: régimen dealer (gamma +/−), net GEX, o sesgo macro/COT>\n"
+               "**Plan:** <una sola frase accionable con el nivel que lo invalida>\n"
+               "FORMATO: SIN EMOJIS. Usa las etiquetas en negrita **AMT:**, **Catalizadores:**, **Flujo:**, **Plan:** "
+               "tal cual (con los dobles asteriscos) al inicio de cada línea, y puedes poner en **negrita** el dato o "
+               "nivel más importante de cada frase. Nada de iconos ni símbolos decorativos.\n"
                "REGLAS: usa números EXACTOS de los niveles que te doy. En gamma negativo piensa "
                "momentum/expansión (dealers persiguen); en gamma positivo reversión/compresión (dealers absorben). "
                "Claridad = qué tan limpio es el setup; Vol la infieres del VIX/movimiento esperado. "
@@ -2605,8 +2626,10 @@ async def refresh_institutional():
 
     if has_gamma:
         usr_msg = (f"Datos de mesa ahora mismo:\n\n{ctx_str}\n\n"
-                   "Escribe el briefing de 5 líneas en el formato exacto. Ancla la línea 🧭 en AMT (precio vs value "
-                   "de anoche + primer imán/target con nivel real). Usa los números exactos.")
+                   "Escribe el briefing de 5 líneas en el formato exacto (SIN emojis, con etiquetas en negrita). "
+                   "Ancla la línea **AMT:** en Auction Market Theory (precio vs value de anoche + primer imán/target "
+                   "con nivel real). Si hay un evento programado hoy con hora, menciónalo en **Catalizadores:**. "
+                   "Usa los números exactos.")
     else:
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
                    "Escribe el briefing de 5 líneas en el formato exacto con lo disponible (inventario overnight, "

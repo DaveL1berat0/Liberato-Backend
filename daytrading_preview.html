@@ -3236,12 +3236,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           var UP=/^(long gamma|gamma positivo|alcista|continuaci\u00f3n|risk-on|bullish|codicia|greed|soporte|aceptaci\u00f3n)$/i;
           var DN=/^(short gamma|gamma negativo|bajista|correcci\u00f3n de inventario|risk-off|bearish|miedo|fear|resistencia|invalidar\u00eda|invalidaci\u00f3n|rechazo)$/i;
           var ONE=/(correcci\u00f3n de inventario|inventario overnight|inventario nocturno|long gamma|short gamma|gamma positivo|gamma negativo|Initial Balance|Call Wall|Put Wall|Gamma Flip|Max Pain|Risk-On|Risk-Off|continuaci\u00f3n|invalidar\u00eda|invalidaci\u00f3n|aceptaci\u00f3n|resistencia|inventario|alcista|bajista|bullish|bearish|codicia|soporte|rechazo|miedo|greed|fear|VWAP|VAH|VAL|POC|IBH|IBL|Flip|\d{2},\d{3}|\b\d{5}(?:\.\d+)?\b)/gi;
-          el.innerHTML=d.summary.replace(ONE,function(m){
-            if(/^[\d,\.]+$/.test(m))return '<span class="hl-num">'+m+'</span>';
-            if(UP.test(m))return '<span class="hl-up">'+m+'</span>';
-            if(DN.test(m))return '<span class="hl-dn">'+m+'</span>';
-            return '<span class="hl-gold">'+m+'</span>';
-          });
+          el.innerHTML=d.summary
+            .replace(ONE,function(m){
+              if(/^[\d,\.]+$/.test(m))return '<span class="hl-num">'+m+'</span>';
+              if(UP.test(m))return '<span class="hl-up">'+m+'</span>';
+              if(DN.test(m))return '<span class="hl-dn">'+m+'</span>';
+              return '<span class="hl-gold">'+m+'</span>';
+            })
+            .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')  // markdown negrita → <strong>
+            .replace(/\n/g,'<br>');                              // 5 líneas separadas
           setHealth('summary','connected','real',null);
           // Badge: indicar que es IA real (no plantilla)
           if(badge){badge.textContent=d.has_gamma?'⬡ IA · GEX':'⬡ IA · Macro';badge.style.color='var(--up)';}
