@@ -3550,7 +3550,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       }, 800);
 
       // ── Refresh periódico para mantener datos frescos ─────────────────────
-      setInterval(fetchHeatmap,              30000);   // heatmap cada 30s
+      setInterval(fetchHeatmap,              15000);   // heatmap cada 30s
       setInterval(function(){
       // Poll adaptativo: si hay un evento macro a ±20 min, refrescar cada ciclo
       // (15s efectivos); si no, respetar cadencia de 30s (ciclo alterno).
