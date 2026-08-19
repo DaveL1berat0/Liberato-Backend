@@ -1598,15 +1598,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     //   net_gex >= 0 → gamma POSITIVO → RANGE (dealers absorben)
     // Es la fuente primaria (dato crudo de FlashAlpha). La etiqueta de texto solo
     // se usa si el net_gex no llegó.
-    if(S.netGex!=null){
-      S.structure=(S.netGex<0)?'trend':'range';
-    }else if(_reg.indexOf('negative')>=0||_reg.indexOf('short')>=0||_reg.indexOf('trend')>=0){
-      S.structure='trend';
-    }else if(_reg.indexOf('positive')>=0||_reg.indexOf('long')>=0||_reg.indexOf('pin')>=0){
-      S.structure='range';
-    }else{
-      S.structure='range';  // sin datos aún → neutral visual por defecto
-    }
+    // El velocímetro DEBE ser consistente con el régimen (precio vs gamma flip):
+    //   POSITIVO (precio SOBRE el flip) → RANGE (dealers absorben)
+    //   NEGATIVO (precio BAJO el flip)  → TREND (dealers amplifican)
+    // Antes usaba el signo del net GEX, que podía contradecir al régimen (bug: cruzas
+    // el flip a positivo pero el velocímetro seguía en TREND).
+    if(g==='positive')      S.structure='range';
+    else if(g==='negative') S.structure='trend';
+    else if(S.netGex!=null) S.structure=(S.netGex<0)?'trend':'range';
+    else                    S.structure='range';
     var rs=S.regimeScore;  // se conserva SOLO para la intensidad de la aguja
 
     // ── 7. VOLATILIDAD desde rangos reales de velas ──
@@ -1671,12 +1671,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       else{
         var pct=netGexIntensity();
         gfill.style.width=pct+'%';
-        gfill.className='rg-gex-fill '+(S.netGex>=0?'pos':'neg');
-        // etiqueta cualitativa de intensidad
+        // Coherente con el RÉGIMEN (precio vs flip), no con el signo del net GEX:
+        // POSITIVO=pinning (verde), NEGATIVO=trend (morado).
+        var _pos=(g==='positive');
+        gfill.className='rg-gex-fill '+(_pos?'pos':'neg');
         var lbl;
-        if(pct>=75)lbl=(S.netGex>=0?'Pinning fuerte':'Trend fuerte');
-        else if(pct>=40)lbl=(S.netGex>=0?'Pinning':'Trend');
-        else lbl=(S.netGex>=0?'Leve +':'Leve −');
+        if(pct>=75)lbl=(_pos?'Pinning fuerte':'Trend fuerte');
+        else if(pct>=40)lbl=(_pos?'Pinning':'Trend');
+        else lbl=(_pos?'Pinning leve':'Trend leve');
         gint.textContent=lbl;
       }
     }
