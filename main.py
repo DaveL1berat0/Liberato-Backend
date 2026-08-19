@@ -3750,31 +3750,50 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+def _sym_of(d):
+    """Extrae un símbolo legible de un universal_symbol/underlying dict."""
+    if isinstance(d, dict):
+        return d.get("symbol") or d.get("raw_symbol") or d.get("description")
+    return d
+
 def _st_map_order(o):
-    """Mapea una orden de SnapTrade a un trade del journal (defensivo: los nombres
-    de campo se calibran con ?raw=1 sobre datos reales)."""
+    """Mapea una orden ejecutada de SnapTrade a un fill del journal. Calibrado con
+    datos reales: `symbol` es un UUID interno; el ticker legible vive en
+    option_symbol.ticker (opciones) o universal_symbol.symbol (acciones/futuros)."""
     if not isinstance(o, dict):
         return None
-    def pick(*keys):
-        for k in keys:
-            v = o.get(k)
-            if v not in (None, ""):
-                return v
-        return None
-    sym = pick("symbol", "universal_symbol", "option_symbol")
-    if isinstance(sym, dict):
-        sym = sym.get("symbol") or sym.get("raw_symbol") or sym.get("description")
-    status = str(pick("status", "state") or "").upper()
-    # solo fills ejecutados
-    if status and status not in ("FILLED", "EXECUTED", "COMPLETE", "COMPLETED", "PARTIAL", "PARTIALLY_FILLED"):
-        return None
+    status = str(o.get("status") or "").upper()
+    if status not in ("EXECUTED", "FILLED", "COMPLETE", "COMPLETED", "PARTIAL", "PARTIALLY_FILLED"):
+        return None  # descarta REJECTED/CANCELED/etc.
+    opt = o.get("option_symbol") if isinstance(o.get("option_symbol"), dict) else None
+    uni = o.get("universal_symbol") if isinstance(o.get("universal_symbol"), dict) else None
+    qu  = o.get("quote_universal_symbol") if isinstance(o.get("quote_universal_symbol"), dict) else None
+    if opt:
+        underlying = _sym_of(opt.get("underlying_symbol"))
+        display = opt.get("ticker") or underlying
+        instrument = "option"
+        option_meta = {"underlying": underlying, "strike": opt.get("strike_price"),
+                       "expiry": opt.get("expiration_date"),
+                       "type": opt.get("option_type") or opt.get("type")}
+    else:
+        display = _sym_of(uni or qu or {})
+        instrument = "equity"
+        option_meta = None
+    def num(v):
+        try:
+            return round(float(v), 6)
+        except (TypeError, ValueError):
+            return v
     return {
-        "broker_order_id": pick("brokerage_order_id", "id", "order_id"),
-        "symbol": sym,
-        "side": pick("action", "side"),
-        "qty": pick("filled_quantity", "total_quantity", "quantity", "units"),
-        "price": pick("execution_price", "average_fill_price", "price", "filled_price"),
-        "time": pick("time_executed", "filled_at", "executed_at", "time_placed", "created_date"),
+        "broker_order_id": o.get("brokerage_order_id"),
+        "symbol": display,
+        "instrument": instrument,
+        "option": option_meta,
+        "side": o.get("action"),
+        "qty": num(o.get("filled_quantity") or o.get("total_quantity")),
+        "price": num(o.get("execution_price")),
+        "order_type": o.get("order_type"),
+        "time": o.get("time_executed") or o.get("time_placed"),
         "status": status,
         "account": (o.get("_account") or {}).get("number") or (o.get("_account") or {}).get("name"),
         "source": "snaptrade",
