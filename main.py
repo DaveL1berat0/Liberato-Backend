@@ -2319,6 +2319,45 @@ async def refresh_movers():
         if stale_backup:
             cache["movers"]["status"] = "stale"
 
+@app.get("/api/admin/diag-news")
+async def diag_news(key: str = ""):
+    """Sondea Finnhub /news crudo: cuántas noticias trae y cuántas pasan el
+    clasificador (y con qué score). Uso: ?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    out = {"finnhub_key": bool(FINNHUB_KEY), "movers_status": cache["movers"].get("status"),
+           "categorias": {}}
+    if not FINNHUB_KEY:
+        out["veredicto"] = "❌ Falta FINNHUB_KEY"; return out
+    cal_titles = [e.get("title", "") for e in cache["calendar"]["data"]]
+    async with httpx.AsyncClient(timeout=10) as client:
+        for cat in ("general", "forex"):
+            try:
+                r = await client.get(f"{FH_BASE}/news", params={"category": cat, "token": FINNHUB_KEY})
+                entry = {"http": r.status_code}
+                if r.status_code == 200:
+                    items = r.json()
+                    entry["crudas"] = len(items)
+                    passed, samples = 0, []
+                    for it in items[:60]:
+                        res = _classify_impact_news(it.get("headline", ""), it.get("source", ""),
+                                                    it.get("datetime", 0), cal_titles)
+                        if res:
+                            passed += 1
+                            if len(samples) < 4:
+                                samples.append({"score": res.get("impact_score"),
+                                                "h": (it.get("headline", "") or "")[:70]})
+                    entry["pasan_clasificador"] = passed
+                    entry["muestras_top"] = samples
+                    entry["muestra_cruda"] = [(it.get("headline", "") or "")[:70] for it in items[:4]]
+                else:
+                    entry["cuerpo"] = r.text[:160]
+                out["categorias"][cat] = entry
+            except Exception as e:
+                out["categorias"][cat] = {"error": f"{type(e).__name__}: {str(e)[:120]}"}
+    return out
+
+
 EARN_EXTREME = {"AAPL","MSFT","NVDA","AMZN","META","GOOGL","GOOG","TSLA","AVGO","NFLX"}
 EARN_HIGH    = {
     "AMD","INTC","QCOM","MU","TSM","ORCL","CRM","ADBE","CSCO","TXN","AMAT",
