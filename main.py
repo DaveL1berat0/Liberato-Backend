@@ -3295,6 +3295,8 @@ async def diag_gexbot(key: str = ""):
                     try:
                         j = r.json()
                         entry["forma"] = _shape(j)
+                        if label == "/tickers" and isinstance(j, dict):
+                            entry["lista"] = {k: j.get(k) for k in ("indexes", "futures", "stocks")}
                         # muestra cruda de la 1ª fila de strikes/mini_contracts
                         for arrk in ("strikes", "mini_contracts", "levels"):
                             arr = j.get(arrk) if isinstance(j, dict) else None
