@@ -2090,12 +2090,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var drew=0;
     if(ps){
       var inRange=ps.filter(function(s){return typeof s.strike==='number'&&typeof s.gex==='number'&&s.strike>=b.lo&&s.strike<=b.hi;});
-      var maxAbs=0; inRange.forEach(function(s){var a=Math.abs(s.gex);if(a>maxAbs)maxAbs=a;});
+      // Max ROBUSTO (percentil ~90) para que UNA strike gigante no aplaste el resto,
+      // y escala RAÍZ para que las barras medianas/pequeñas se vean (perfil desplegado).
+      var absArr=inRange.map(function(s){return Math.abs(s.gex);}).sort(function(x,y){return x-y;});
+      var maxAbs=absArr.length?(absArr[Math.min(absArr.length-1,Math.floor(absArr.length*0.90))]||absArr[absArr.length-1]):0;
       if(maxAbs>0){
         inRange.forEach(function(s){
           var a=Math.abs(s.gex);
-          if(a<maxAbs*0.02)return;               // descartar ruido mínimo
-          var w=clamp(a/maxAbs*44,0.6,44);        // % de ancho por lado
+          if(a<maxAbs*0.015)return;               // descartar ruido mínimo
+          var w=clamp(Math.sqrt(Math.min(a/maxAbs,1))*46,2,46);  // escala raíz → despliegue
           var y=yForPrice(s.strike);
           var bar=document.createElement('div');
           var pos=(s.gex>=0);
