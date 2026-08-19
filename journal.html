@@ -1602,7 +1602,12 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
       <div class="fsec"><div class="fsec-lbl">Nombre</div><input class="finput" id="pbe-name" placeholder="Ej: VAL Reclaim → VAH"></div>
       <div class="fsec"><div class="fsec-lbl">Categoría</div><div class="ctx-group" id="pbe-cats"></div></div>
       <div class="fsec"><div class="fsec-lbl">Emoji</div><div class="pbe-emoji-row" id="pbe-emojis"></div></div>
-      <div class="fsec"><div class="fsec-lbl">Indicadores</div><div class="pbe-tag-grid" id="pbe-indicators"></div></div>
+      <div class="fsec"><div class="fsec-lbl">Descripción / reglas <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(opcional)</span></div><textarea class="finput" id="pbe-desc" rows="2" placeholder="Ej: Entrar en el reclaim del VAL con delta positivo y confirmación de tape. Stop bajo el mínimo del retest." style="resize:vertical;"></textarea></div>
+
+      <!-- CRITERIOS AVANZADOS (colapsados para que crear sea rápido) -->
+      <details style="margin:6px 0 4px;">
+        <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);padding:8px 0;list-style:none;">▸ Criterios avanzados (indicadores, contexto, confirmaciones) · opcional</summary>
+      <div class="fsec" style="margin-top:10px;"><div class="fsec-lbl">Indicadores</div><div class="pbe-tag-grid" id="pbe-indicators"></div></div>
       <div class="fsec"><div class="fsec-lbl">Contexto de mercado</div><div class="pbe-tag-grid" id="pbe-contexts"></div></div>
       <div class="fsec"><div class="fsec-lbl">Confirmaciones</div><div class="pbe-tag-grid" id="pbe-confs"></div></div>
 
@@ -1639,8 +1644,9 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
           <div id="pbe-custom-confs"></div>
         </div>
       </div>
+      </details>
 
-      <button class="btn-save" onclick="savePb()">Guardar Playbook</button>
+      <button class="btn-save" onclick="savePb()" style="margin-top:14px;">Guardar Playbook</button>
     </div>
   </div>
 </div>
@@ -3175,6 +3181,7 @@ function renderPlaybooks(){
           +'<button class="pb-act-btn" onclick="openPbEditor(\''+p.id+'\')">✎</button>'
           +(p.custom?'<button class="pb-act-btn" onclick="deletePb(\''+p.id+'\')">✕</button>':'')
           +'</div></div>'
+          +(p.desc?'<div style="font-size:11px;color:var(--text3);line-height:1.45;margin:2px 0 8px;">'+_esc(p.desc)+'</div>':'')
           +'<div class="pb-confs">'
           +(allInds.length?allInds.map(function(c){return '<span class="pb-conf" style="background:rgba(96,165,250,0.1);color:var(--blue);">'+c+'</span>';}).join(''):'')
           +(allCtxs.length?allCtxs.map(function(c){return '<span class="pb-conf" style="background:rgba(167,139,250,0.1);color:#a78bfa;">'+c+'</span>';}).join(''):'' )
@@ -3183,7 +3190,8 @@ function renderPlaybooks(){
           +'</div>';
       }).join('')+'</div></div>';
   }).join('');
-  document.getElementById('pb-categories').innerHTML=html||'<div class="empty"><div class="ei">📚</div><p>Sin playbooks. Crea el primero.</p></div>';
+  var addTile='<div onclick="openPbEditor()" style="border:1px dashed rgba(201,168,76,0.35);border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:16px;background:rgba(201,168,76,0.03);transition:all .2s;" onmouseover="this.style.background=\'rgba(201,168,76,0.07)\'" onmouseout="this.style.background=\'rgba(201,168,76,0.03)\'"><div style="font-size:26px;color:var(--gold);line-height:1;">+</div><div><div style="font-size:13.5px;font-weight:700;color:var(--gold);">Nuevo Playbook</div><div style="font-size:11px;color:var(--text3);margin-top:1px;">Nómbralo y guárdalo — los criterios son opcionales</div></div></div>';
+  document.getElementById('pb-categories').innerHTML=addTile+(html||'<div class="empty" style="margin-top:8px;"><div class="ei">📚</div><p>Aún no tienes playbooks propios. Crea el primero arriba.</p></div>');
 }
 function togglePb(id){var p=pbById(id);if(p){p.active=!p.active;savePlaybooks(PB);renderPlaybooks();}}
 function deletePb(id){if(!confirm('¿Eliminar este playbook?'))return;PB=PB.filter(function(p){return p.id!==id;});savePlaybooks(PB);renderPlaybooks();}
@@ -3202,6 +3210,7 @@ function openPbEditor(id){
   pbeCustomCtxs=p&&p.customContexts?p.customContexts.slice():[];
   pbeCustomConfs=p&&p.customConfirmations?p.customConfirmations.slice():[];
   document.getElementById('pbe-name').value=p?p.name:'';
+  var de=document.getElementById('pbe-desc');if(de)de.value=(p&&p.desc)?p.desc:'';
   document.getElementById('pbe-title').textContent=p?'Editar Playbook':'Nuevo Playbook';
   renderPbEditor();
   renderPbeCustomSection();
@@ -3225,8 +3234,9 @@ function renderPbEditor(){
 function savePb(){
   var name=document.getElementById('pbe-name').value.trim();
   if(!name){alert('Ponle un nombre al playbook.');return;}
-  if(pbeEdit){var p=pbById(pbeEdit);if(p){p.name=name;p.category=pbeCat;p.emoji=pbeEmoji;p.color=CAT_COLORS[pbeCat];p.confirmations=pbeConfs.slice();p.indicators=pbeInds.slice();p.contexts=pbeCtxs.slice();p.customIndicators=pbeCustomInds.slice();p.customContexts=pbeCustomCtxs.slice();p.customConfirmations=pbeCustomConfs.slice();}}
-  else{PB.push({id:'pb'+Date.now().toString(36),category:pbeCat,name:name,emoji:pbeEmoji,color:CAT_COLORS[pbeCat],confirmations:pbeConfs.slice(),indicators:pbeInds.slice(),contexts:pbeCtxs.slice(),customIndicators:pbeCustomInds.slice(),customContexts:pbeCustomCtxs.slice(),customConfirmations:pbeCustomConfs.slice(),active:true,custom:true});}
+  var descEl=document.getElementById('pbe-desc');var desc=descEl?descEl.value.trim():'';
+  if(pbeEdit){var p=pbById(pbeEdit);if(p){p.name=name;p.desc=desc;p.category=pbeCat;p.emoji=pbeEmoji;p.color=CAT_COLORS[pbeCat];p.confirmations=pbeConfs.slice();p.indicators=pbeInds.slice();p.contexts=pbeCtxs.slice();p.customIndicators=pbeCustomInds.slice();p.customContexts=pbeCustomCtxs.slice();p.customConfirmations=pbeCustomConfs.slice();}}
+  else{PB.push({id:'pb'+Date.now().toString(36),category:pbeCat,name:name,desc:desc,emoji:pbeEmoji,color:CAT_COLORS[pbeCat],confirmations:pbeConfs.slice(),indicators:pbeInds.slice(),contexts:pbeCtxs.slice(),customIndicators:pbeCustomInds.slice(),customContexts:pbeCustomCtxs.slice(),customConfirmations:pbeCustomConfs.slice(),active:true,custom:true});}
   savePlaybooks(PB);closePbEditor();renderPlaybooks();
 }
 
