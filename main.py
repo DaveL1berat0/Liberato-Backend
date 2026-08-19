@@ -3747,6 +3747,50 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+@app.get("/api/admin/diag-snaptrade-connections")
+async def diag_snaptrade_connections(key: str = ""):
+    """Lista las CONEXIONES (brokerage authorizations) de SnapTrade con su estado y
+    las cuentas de cada una. Sirve para ver si una cuenta recién conectada (ej. la de
+    futuros 210EKW34) quedó enganchada o pendiente. Uso: ?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    ukw = await _st_user_kwargs("", register=False)
+    st = _snaptrade()
+    out = {"conexiones": []}
+    try:
+        resp = await st.connections.alist_brokerage_authorizations(**ukw)
+        auths = _st_plain(resp.body) or []
+    except Exception as e:
+        raise HTTPException(502, f"authorizations: {str(getattr(e,'body','') or e)[:200]}")
+    for a in auths:
+        if not isinstance(a, dict):
+            continue
+        entry = {
+            "id": a.get("id"),
+            "broker": ((a.get("brokerage") or {}) if isinstance(a.get("brokerage"), dict) else {}).get("name") or a.get("brokerage"),
+            "disabled": a.get("disabled"),
+            "created": a.get("created_date"),
+            "updated": a.get("updated_date"),
+            "type": a.get("type"),
+            "cuentas": [],
+        }
+        try:
+            r2 = await st.connections.alist_brokerage_authorization_accounts(authorization_id=a.get("id"), **ukw) \
+                 if hasattr(st.connections, "alist_brokerage_authorization_accounts") else None
+        except Exception:
+            r2 = None
+        out["conexiones"].append(entry)
+    # además, las cuentas planas con su número (para cruzar con 210EKW34)
+    try:
+        ra = await st.account_information.alist_user_accounts(**ukw)
+        out["cuentas_planas"] = [{"name": x.get("name"), "number": x.get("number"),
+                                  "institution": x.get("institution_name")}
+                                 for x in (_st_plain(ra.body) or []) if isinstance(x, dict)]
+    except Exception as e:
+        out["cuentas_planas_error"] = str(getattr(e, "body", "") or e)[:160]
+    return out
+
+
 @app.get("/api/admin/diag-snaptrade-activities")
 async def diag_snaptrade_activities(key: str = "", days: int = 150):
     """Sondea las 'activities' de SnapTrade para ver la forma de los eventos de
