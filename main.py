@@ -3747,6 +3747,45 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+@app.get("/api/admin/diag-snaptrade-activities")
+async def diag_snaptrade_activities(key: str = "", days: int = 150):
+    """Sondea las 'activities' de SnapTrade para ver la forma de los eventos de
+    EXPIRACIÓN/ASIGNACIÓN de opciones (que las órdenes no traen). Resumen de tipos
+    + muestras. Uso: /api/admin/diag-snaptrade-activities?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    from datetime import date, timedelta
+    ukw = await _st_user_kwargs("", register=False)
+    st = _snaptrade()
+    end = date.today(); start = end - timedelta(days=int(days))
+    out = {"tipos": {}, "muestras": {}, "cuentas": 0, "total": 0}
+    try:
+        resp = await st.account_information.alist_user_accounts(**ukw)
+        accts = [str(a.get("id")) for a in (_st_plain(resp.body) or []) if isinstance(a, dict)]
+    except Exception as e:
+        raise HTTPException(502, f"accounts: {str(getattr(e,'body','') or e)[:200]}")
+    out["cuentas"] = len(accts)
+    for aid in accts:
+        try:
+            r = await st.account_information.aget_account_activities(
+                account_id=aid, start_date=start, end_date=end, limit=1000, **ukw)
+            body = _st_plain(r.body)
+            rows = body.get("data") if isinstance(body, dict) else body
+            for act in (rows or []):
+                if not isinstance(act, dict):
+                    continue
+                out["total"] += 1
+                ty = str(act.get("type") or act.get("activity_type") or "?")
+                out["tipos"][ty] = out["tipos"].get(ty, 0) + 1
+                # guardar 1 muestra por tipo, priorizando los que huelan a opción/expiración
+                if ty not in out["muestras"]:
+                    out["muestras"][ty] = {k: act.get(k) for k in
+                        ("type","description","amount","units","price","trade_date","settlement_date","symbol","option_symbol","option_type","instrument") if k in act}
+        except Exception as e:
+            out["muestras"]["_error_"+aid[:6]] = str(getattr(e, "body", "") or e)[:200]
+    return out
+
+
 def _sym_of(d):
     """Extrae un símbolo legible de un universal_symbol/underlying dict."""
     if isinstance(d, dict):
