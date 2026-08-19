@@ -3620,7 +3620,8 @@ async def _st_register(app_user_id: str):
         body = _st_plain(resp.body)
         secret = body.get("userSecret")
     except Exception as e:
-        msg = str(e) + " | body=" + str(getattr(e, "body", ""))[:300]
+        ebody = str(getattr(e, "body", "") or getattr(e, "reason", ""))
+        msg = (ebody + " || " + str(e))
         if "already" in msg.lower() or "exist" in msg.lower():
             # perdimos el secret: borrar y re-registrar
             try:
@@ -3628,9 +3629,10 @@ async def _st_register(app_user_id: str):
                 resp = await st.authentication.aregister_snap_trade_user(user_id=snap_user_id)
                 body = _st_plain(resp.body); secret = body.get("userSecret")
             except Exception as e2:
-                raise HTTPException(502, f"SnapTrade re-registro falló: {type(e2).__name__}: {str(e2)[:180]}")
+                eb2 = str(getattr(e2, "body", "") or e2)
+                raise HTTPException(502, f"SnapTrade re-registro falló: {eb2[:280]}")
         else:
-            raise HTTPException(502, f"SnapTrade registro falló: {type(e).__name__}: {msg[:180]}")
+            raise HTTPException(502, f"SnapTrade registro falló [{type(e).__name__}]: {ebody[:280] or str(e)[:280]}")
     if not secret:
         raise HTTPException(502, "SnapTrade no devolvió userSecret")
     rec = {"snap_user_id": snap_user_id, "user_secret": str(secret), "accounts": [], "ts": time.time()}
