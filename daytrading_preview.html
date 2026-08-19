@@ -1026,6 +1026,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <canvas id="cx-ov"></canvas>
         <div class="cx-draw" id="cx-draw" aria-label="Herramientas de dibujo">
           <button class="cxd active" data-tool="cursor" title="Cursor"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 2l8 6-3.5 0.8L10 13l-2 1-1.5-4.2L4 12z" stroke-linejoin="round"/></svg></button>
+          <button class="cxd" data-tool="move" title="Mover dibujo"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2v12M2 8h12M8 2l-2 2M8 2l2 2M8 14l-2-2M8 14l2-2M2 8l2-2M2 8l2 2M14 8l-2-2M14 8l-2 2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button class="cxd" data-tool="trend" title="Línea de tendencia"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 13L14 3" stroke-linecap="round"/><circle cx="2.5" cy="12.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="13.5" cy="3.5" r="1.4" fill="currentColor" stroke="none"/></svg></button>
           <button class="cxd" data-tool="hline" title="Línea horizontal"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/></svg></button>
           <button class="cxd" data-tool="rect" title="Rectángulo"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="4" width="11" height="8" rx="1"/></svg></button>
@@ -2147,6 +2148,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   function _dwL2X(l){try{return chart.timeScale().logicalToCoordinate(l);}catch(e){return null;}}
   function _dwY2P(y){try{return series.coordinateToPrice(y);}catch(e){return null;}}
   function _dwP2Y(p){try{return series.priceToCoordinate(p);}catch(e){return null;}}
+  function _dwSegDist(px,py,ax,ay,bx,by){var dx=bx-ax,dy=by-ay,l2=dx*dx+dy*dy;if(l2===0)return Math.hypot(px-ax,py-ay);var t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/l2));return Math.hypot(px-(ax+t*dx),py-(ay+t*dy));}
+  function _dwHit(sx,sy){
+    for(var i=_dw.items.length-1;i>=0;i--){var d=_dw.items[i];
+      if(d.t==='hline'){var y=_dwP2Y(d.p1);if(y!=null&&Math.abs(sy-y)<9)return{idx:i,handle:'body'};continue;}
+      var x1=_dwL2X(d.l1),y1=_dwP2Y(d.p1),x2=_dwL2X(d.l2),y2=_dwP2Y(d.p2);
+      if(x1==null||y1==null||x2==null||y2==null)continue;
+      if(Math.hypot(sx-x1,sy-y1)<12)return{idx:i,handle:'p1'};
+      if(Math.hypot(sx-x2,sy-y2)<12)return{idx:i,handle:'p2'};
+      if(d.t==='rect'){var mnx=Math.min(x1,x2),mxx=Math.max(x1,x2),mny=Math.min(y1,y2),mxy=Math.max(y1,y2);
+        if(sx>=mnx-6&&sx<=mxx+6&&sy>=mny-6&&sy<=mxy+6)return{idx:i,handle:'body'};}
+      else{if(_dwSegDist(sx,sy,x1,y1,x2,y2)<8)return{idx:i,handle:'body'};}
+    }
+    return null;
+  }
   function _dwCanvas(){
     var cv=$('cx-ov');if(!cv)return null;
     var st=$('chart-stage');if(!st)return null;
@@ -2227,20 +2242,38 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     function pt(e){var r=ov.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
     ov.addEventListener('pointerdown',function(e){
       if(_dw.tool==='cursor'||!chart||!series)return;
-      e.preventDefault();try{ov.setPointerCapture(e.pointerId);}catch(x){}
       var p=pt(e),lg=_dwX2L(p.x),px=_dwY2P(p.y);
+      if(_dw.tool==='move'){
+        var hit=_dwHit(p.x,p.y);
+        if(hit){e.preventDefault();try{ov.setPointerCapture(e.pointerId);}catch(x){}
+          _dw.drag={idx:hit.idx,handle:hit.handle,lastL:lg,lastP:px};}
+        return;
+      }
+      e.preventDefault();try{ov.setPointerCapture(e.pointerId);}catch(x){}
       if(px==null)return;
       if(_dw.tool==='hline'){_dw.items.push({t:'hline',p1:px});_dwSave();reset();return;}
       if(lg==null)return;
       _dw.draft={t:_dw.tool,l1:lg,p1:px,l2:lg,p2:px};
     });
     ov.addEventListener('pointermove',function(e){
+      var p=pt(e);
+      if(_dw.tool==='move'&&!_dw.drag){ov.style.cursor=_dwHit(p.x,p.y)?'move':'default';}
+      if(_dw.drag){var g=_dw.drag,it=_dw.items[g.idx];if(!it)return;
+        var lg2=_dwX2L(p.x),px2=_dwY2P(p.y);
+        if(g.handle==='p1'){if(lg2!=null)it.l1=lg2;if(px2!=null)it.p1=px2;}
+        else if(g.handle==='p2'){if(lg2!=null)it.l2=lg2;if(px2!=null)it.p2=px2;}
+        else{if(it.t==='hline'){if(px2!=null)it.p1=px2;}
+          else{if(lg2!=null&&g.lastL!=null){var dl=lg2-g.lastL;it.l1+=dl;it.l2+=dl;}
+               if(px2!=null&&g.lastP!=null){var dp=px2-g.lastP;it.p1+=dp;if(it.p2!=null)it.p2+=dp;}}
+          g.lastL=lg2;g.lastP=px2;}
+        return;}
       if(!_dw.draft)return;
-      var p=pt(e),lg=_dwX2L(p.x),px=_dwY2P(p.y);
+      var lg=_dwX2L(p.x),px=_dwY2P(p.y);
       if(lg!=null)_dw.draft.l2=lg;
       if(px!=null)_dw.draft.p2=px;
     });
     ov.addEventListener('pointerup',function(){
+      if(_dw.drag){_dw.drag=null;_dwSave();return;}
       if(!_dw.draft)return;
       var d=_dw.draft;_dw.draft=null;
       if(Math.abs(d.l2-d.l1)>0.2||Math.abs(d.p2-d.p1)>0.01){_dw.items.push(d);_dwSave();}
