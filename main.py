@@ -3747,6 +3747,31 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+@app.get("/api/admin/snaptrade-refresh")
+async def snaptrade_refresh(key: str = ""):
+    """Fuerza a SnapTrade a re-sincronizar todas las conexiones (por si una cuenta
+    recién conectada —futuros 210EKW34— no apareció). Uso: ?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    ukw = await _st_user_kwargs("", register=False)
+    st = _snaptrade()
+    out = {"refrescadas": [], "cuentas_antes": 0, "cuentas_despues": 0}
+    try:
+        resp = await st.connections.alist_brokerage_authorizations(**ukw)
+        auths = [a.get("id") for a in (_st_plain(resp.body) or []) if isinstance(a, dict)]
+    except Exception as e:
+        raise HTTPException(502, f"authorizations: {str(getattr(e,'body','') or e)[:200]}")
+    ra = await st.account_information.alist_user_accounts(**ukw)
+    out["cuentas_antes"] = len(_st_plain(ra.body) or [])
+    for aid in auths:
+        try:
+            await st.connections.arefresh_brokerage_authorization(authorization_id=aid, **ukw)
+            out["refrescadas"].append(aid)
+        except Exception as e:
+            out["refrescadas"].append({"id": aid, "error": str(getattr(e, "body", "") or e)[:160]})
+    return out
+
+
 @app.get("/api/admin/diag-snaptrade-connections")
 async def diag_snaptrade_connections(key: str = ""):
     """Lista las CONEXIONES (brokerage authorizations) de SnapTrade con su estado y
