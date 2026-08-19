@@ -1472,6 +1472,15 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
       <button class="fchip" data-f="loss">✕ Perdedores</button>
       <button class="fchip" data-f="chk">☑ Checklist OK</button>
     </div>
+    <div class="frow" id="tfilters2" style="margin-top:-2px;align-items:center;">
+      <span style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:0.06em;">PERIODO</span>
+      <button class="fchip" data-dp="today" onclick="setTrDatePreset('today')">Hoy</button>
+      <button class="fchip" data-dp="7" onclick="setTrDatePreset('7')">7 días</button>
+      <button class="fchip" data-dp="30" onclick="setTrDatePreset('30')">30 días</button>
+      <button class="fchip" data-dp="90" onclick="setTrDatePreset('90')">90 días</button>
+      <button class="fchip active" data-dp="all" onclick="setTrDatePreset('all')">Todo</button>
+      <span id="tr-accounts" style="display:inline-flex;gap:6px;align-items:center;margin-left:auto;"></span>
+    </div>
     <div class="tlist" id="tlist"></div>
   </div>
 
@@ -2168,13 +2177,52 @@ function demoBannerHTML(){
     +'<span style="font-size:11px;color:var(--purple);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">◆ MODO EJEMPLO — no son trades reales</span>'
     +'<button onclick="exitDemo()" style="padding:6px 12px;border-radius:7px;border:0.5px solid rgba(177,151,252,0.4);background:transparent;color:var(--purple);font-size:11px;cursor:pointer;">Salir del ejemplo</button></div>':'';
 }
+// ── FILTROS: periodo (presets) + cuenta ──
+var trAccount='all';
+function setTrDatePreset(preset){
+  function daysAgo(n){var d=new Date();d.setDate(d.getDate()-n);return toET(d.toISOString()).date;}
+  var end=todayET(),start=null;
+  if(preset==='today')start=end;
+  else if(preset==='7')start=daysAgo(7);
+  else if(preset==='30')start=daysAgo(30);
+  else if(preset==='90')start=daysAgo(90);
+  else {start=null;end=null;}
+  _dfTr={start:start,end:end};
+  try{dfpRenderBars();}catch(e){}
+  document.querySelectorAll('[data-dp]').forEach(function(b){b.classList.toggle('active',b.dataset.dp===preset);});
+  renderTrades();
+}
+function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});return Object.keys(s).sort();}
+function setTrAccount(v){trAccount=v;renderTrades();}
+function renderTrAccounts(){
+  var el=document.getElementById('tr-accounts');if(!el)return;
+  var accs=trAccountList();
+  if(accs.length<2){el.innerHTML='';return;} // sin sentido con 0-1 cuenta
+  el.innerHTML='<span style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;letter-spacing:0.06em;">CUENTA</span>'
+    +'<button class="fchip'+(trAccount==='all'?' active':'')+'" onclick="setTrAccount(\'all\')">Todas</button>'
+    +accs.map(function(a){return '<button class="fchip'+(trAccount===a?' active':'')+'" onclick="setTrAccount(\''+a+'\')">#'+_esc(a)+'</button>';}).join('');
+}
 // ── TRADES ──
 function renderTrades(){
   var tl=document.getElementById('tlist');
-  if(!DEMO_MODE && !T.length){tl.innerHTML=emptyStateHTML();return;}
-  var filtered=getFilteredT(_dfTr).slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);});
+  renderTrAccounts();
+  // La LISTA muestra TODOS los trades (incluye 'pending': expiradas/abiertas) con
+  // badge de revisión — transparencia total. Los KPIs (dashboard) siguen contando
+  // solo 'verified' vía getFilteredT.
+  var pool=DEMO_MODE?T:T.filter(function(t){return !t.__demo;});
+  if(!DEMO_MODE && !pool.length){tl.innerHTML=emptyStateHTML();return;}
+  var r=_dfTr||{start:null,end:null};
+  var filtered=pool.filter(function(t){
+    if(r.start&&t.date<r.start)return false;
+    if(r.end&&t.date>r.end)return false;
+    return true;
+  }).sort(function(a,b){return b.date.localeCompare(a.date)||String(b.time).localeCompare(String(a.time));});
+  if(trAccount!=='all')filtered=filtered.filter(function(t){return String(t.account)===trAccount;});
   if(trFilter==='win')filtered=filtered.filter(function(t){return t.result==='win';});else if(trFilter==='loss')filtered=filtered.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')filtered=filtered.filter(function(t){return t.chkAll;});
-  tl.innerHTML=demoBannerHTML()+(filtered.length?'<div class="tlist">'+renderTItems(filtered)+'</div>':'<div class="empty"><div class="ei">📋</div><p>Sin trades con este filtro</p></div>');
+  // resumen del filtro actual
+  var pend=filtered.filter(function(t){return t.status==='pending';}).length;
+  var head=(pend?'<div style="font-size:10.5px;color:var(--purple);font-family:\'DM Mono\',monospace;margin:2px 2px 8px;">◆ '+pend+' en revisión (no cuentan en KPIs hasta aprobarlas)</div>':'');
+  tl.innerHTML=demoBannerHTML()+(filtered.length?head+'<div class="tlist">'+renderTItems(filtered)+'</div>':'<div class="empty"><div class="ei">📋</div><p>Sin trades con este filtro</p></div>');
 }
 function renderTItems(arr){
   return arr.map(function(t){
@@ -2183,7 +2231,13 @@ function renderTItems(arr){
     if(t.gamma)ctx+='<span class="ctx-tag '+(t.gamma==='exp_up'?'gamma-up':t.gamma==='exp_dn'?'gamma-down':'gamma-contract')+'">'+(t.gamma==='exp_up'?'γ↑':t.gamma==='exp_dn'?'γ↓':t.gamma==='contract'?'γ≈':'γ~')+'</span> ';
     if(t.t4h)ctx+='<span class="ctx-tag '+(t.t4h==='bull'?'bull':'bear')+'">'+(t.t4h==='bull'?'4H ↑':'4H ↓')+'</span> ';
     var chkDots=t.checklist?t.checklist.map(function(c){return '<span class="chk-dot'+(c?'':' miss')+'"></span>';}).join(''):'';
-    return '<div class="titem" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span></div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+(t.points>=0?'+':'')+t.points+' pts</div><div class="tpnl '+(t.pnl>=0?'pos':'neg')+'">'+f$(t.pnl)+'</div></div></div>';
+    var badge='';
+    if(t.status==='pending'){
+      var lbl=t.expired?'expiró · revisar':(t.exit==null?'abierta':'revisar');
+      badge='<span style="font-size:8.5px;font-family:\'DM Mono\',monospace;letter-spacing:0.05em;color:var(--purple);background:rgba(177,151,252,0.12);border:0.5px solid rgba(177,151,252,0.3);border-radius:5px;padding:1px 6px;margin-left:6px;">◆ '+lbl+'</span>';
+    }
+    var pnlTxt=(t.status==='pending'&&t.exit==null&&!t.expired)?'—':f$(t.pnl);
+    return '<div class="titem'+(t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+(t.points>=0?'+':'')+t.points+' pts</div><div class="tpnl '+(t.pnl>=0?'pos':'neg')+'">'+pnlTxt+'</div></div></div>';
   }).join('');
 }
 function openTDetail(id){
