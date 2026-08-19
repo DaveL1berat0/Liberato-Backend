@@ -900,39 +900,19 @@ _gex_maxpain_failed_day = None
 _event_reactions = {}  # {evento: {t0, p0, p5}} — reacción del NQ a noticias  # si /maxpain falló hoy, no reintentar (ahorra créditos)
 
 async def refresh_gex(asset=FA_ASSET):
-    """GEX desde FlashAlpha. NUNCA se llama en startup.
-    Scheduler: 9:00 AM + 7:00 PM ET (2 créditos de 5 disponibles/día)."""
-    global _gex_blocked_until
-    # ── 1) FlashAlpha: auxiliares (fear/vix/expected_move/atm_iv) + su gamma ──
-    #    Tiene early-skips (sin key / 429 / presupuesto) que NO abortan la función:
-    #    aunque FlashAlpha se salte, GexBot (paso 2) debe correr igual.
-    if not FLASHALPHA_KEY:
-        cache["health"]["flashalpha"] = "offline-no-key"
-    elif time.time() < _gex_blocked_until:
-        remaining = int((_gex_blocked_until - time.time()) / 3600)
-        print(f"[gex] bloqueado por 429 — {remaining}h restantes")
-    elif not budget_ok("flashalpha", 5):
-        st = _api_usage["flashalpha"]
-        print(f"[gex] presupuesto FlashAlpha agotado ({st['used']}/{API_BUDGETS['flashalpha']['limit']}) — se mantiene cache")
-    else:
-        try:
-            if FLASHALPHA_PLAN == "basic":
-                # ══ PLAN BASIC: NDX DIRECTO (sin conversión QQQ→NQ) ══════════════
-                await _refresh_gex_ndx(asset)
-            else:
-                # ══ PLAN FREE: QQQ summary + conversión a NQ (1 llamada) ═════════
-                await _refresh_gex_qqq(asset)
-        except Exception as e:
-            cache["health"]["flashalpha"] = "error"
-            print(f"[gex] excepción: {e}")
-    # ── 2) GexBot: capa de gamma primaria (walls/flip/net/per-strike). Corre
-    #    AL FINAL para sobre-escribir la gamma de FlashAlpha (mejor fuente) sin
-    #    tocar los auxiliares. Se ejecuta aunque FlashAlpha se haya saltado.
+    """GEX 100% de GexBot + sentiment (VIX/Fear&Greed/Expected Move) de fuentes reales.
+    FlashAlpha ELIMINADO (Dave: ya no trabajamos con ellos)."""
+    # ── 1) GexBot: gamma primaria (walls/flip/net/per-strike) ──
     if GEXBOT_API_KEY:
         try:
             await _refresh_gex_gexbot(asset)
         except Exception as e:
             print(f"[gexbot] overlay falló: {e}")
+    # ── 2) Sentiment (VIX real + Fear&Greed CNN + Expected Move derivado) ──
+    try:
+        await _refresh_market_sentiment(asset)
+    except Exception as e:
+        print(f"[sentiment] falló: {e}")
 
 
 async def _refresh_gex_gexbot(asset=FA_ASSET):
@@ -1007,6 +987,59 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
     cache["health"]["gexbot"] = "online"
     print(f"[gexbot] ok {GEXBOT_SYMBOL}: flip={gf} call={cw} put={pw} net={net} strikes={len(per_strike)}")
     return True
+
+
+import math as _math
+
+async def _refresh_market_sentiment(asset=FA_ASSET):
+    """Reemplazo de FlashAlpha para Fear&Greed, VIX y Expected Move — TODO de fuentes
+    reales gratuitas (Regla #1): Fear&Greed de CNN, VIX de TwelveData, y el Expected
+    Move DERIVADO del VIX real (no de FlashAlpha). Escribe los campos aux en el cache
+    del GEX sin tocar los niveles de gamma (que vienen de GexBot)."""
+    g = cache["gex"].setdefault(asset, {})
+    # ── VIX real (TwelveData /quote) ──────────────────────────────────────────
+    vix = None
+    if TWELVEDATA_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=8) as c:
+                r = await c.get("https://api.twelvedata.com/quote",
+                                params={"symbol": "VIX", "apikey": TWELVEDATA_KEY})
+            if r.status_code == 200:
+                j = r.json() or {}
+                v = j.get("close") or j.get("price")
+                if v not in (None, "", "0"):
+                    vix = round(float(v), 2)
+        except Exception as e:
+            print(f"[sentiment] VIX TwelveData falló: {e}")
+    if vix is not None:
+        g["vix"] = vix
+        cache["health"]["vix"] = "online-twelvedata"
+    # ── Expected Move DERIVADO del VIX real: 1σ diario ≈ precio·(VIX/100)/√252 ──
+    try:
+        px = g.get("underlying_price") or (cache["heatmap"]["data"].get(asset, {}) or {}).get("price")
+        _vix = g.get("vix")
+        if px and _vix:
+            g["expected_move"] = round(float(px) * (float(_vix) / 100.0) / _math.sqrt(252.0), 1)
+            g["atm_iv"] = round(float(_vix), 1)   # proxy honesto: la IV del índice ≈ VIX
+    except Exception:
+        pass
+    # ── Fear & Greed real (CNN, gratis, sin key) ──────────────────────────────
+    try:
+        async with httpx.AsyncClient(timeout=8, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15",
+                "Accept": "application/json"}) as c:
+            r = await c.get("https://production.dataviz.cnn.com/index/fearandgreed/graphdata")
+        if r.status_code == 200:
+            fg = (r.json() or {}).get("fear_and_greed", {})
+            score = fg.get("score")
+            if score is not None:
+                g["fear_score"] = int(round(float(score)))
+                g["fear_rating"] = str(fg.get("rating", "")).lower() or None
+                cache["health"]["feargreed"] = "online-cnn"
+    except Exception as e:
+        print(f"[sentiment] CNN F&G falló: {e}")
+    return {"vix": g.get("vix"), "fear_score": g.get("fear_score"),
+            "expected_move": g.get("expected_move")}
 
 
 async def _refresh_gex_qqq(asset=FA_ASSET):
@@ -3458,6 +3491,24 @@ async def diag_yahoo(key: str = ""):
     out[f"{FA_CASH_INDEX.lower()}_en_heatmap"] = FA_CASH_INDEX in cache["heatmap"]["data"]
     return out
 
+@app.get("/api/admin/diag-sentiment")
+async def diag_sentiment(key: str = ""):
+    """Verifica las fuentes que reemplazan a FlashAlpha: VIX (TwelveData) y
+    Fear&Greed (CNN). Uso: ?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    res = await _refresh_market_sentiment()
+    g = cache["gex"].get(FA_ASSET, {})
+    return {
+        "resultado": res,
+        "en_cache": {"vix": g.get("vix"), "fear_score": g.get("fear_score"),
+                     "fear_rating": g.get("fear_rating"), "expected_move": g.get("expected_move"),
+                     "atm_iv": g.get("atm_iv")},
+        "health": {"vix": cache["health"].get("vix"), "feargreed": cache["health"].get("feargreed")},
+        "twelvedata_key": bool(TWELVEDATA_KEY),
+    }
+
+
 @app.get("/api/admin/diag-gexbot")
 async def diag_gexbot(key: str = ""):
     """Sondea la API de GexBot con la key REAL (de Railway) y muestra la forma
@@ -4743,6 +4794,10 @@ async def startup():
     if GEXBOT_API_KEY:
         scheduler.add_job(_refresh_gex_gexbot,
                           CronTrigger(hour="7-16", minute="*", day_of_week="mon-fri"))  # GexBot LIVE: cada 1 min en RTH
+    # Sentiment (VIX real + Fear&Greed CNN + Expected Move derivado) — reemplaza a
+    # FlashAlpha. Cada 3 min (VIX/F&G cambian lento; CNN sin key, VIX 1 crédito TD).
+    scheduler.add_job(_refresh_market_sentiment,
+                      CronTrigger(hour="7-17", minute="*/3", day_of_week="mon-fri"))
 
     # ── Finnhub Calendar: cada 5 minutos ──────────────────────────────────
     scheduler.add_job(refresh_calendar, IntervalTrigger(seconds=30))  # latencia máx ~45s
