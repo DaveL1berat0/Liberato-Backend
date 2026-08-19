@@ -31,7 +31,7 @@ import websockets
 FLASHALPHA_KEY   = os.getenv("FLASHALPHA_KEY",   "").strip()
 # ── GexBot (fuente del gamma profile; permiso escrito 17-ago: atribución + educativo) ──
 GEXBOT_API_KEY   = os.getenv("GEXBOT_API_KEY",   "").strip()
-GEXBOT_SYMBOL    = os.getenv("GEXBOT_SYMBOL",   "NQ").strip()   # ticker GexBot v2
+GEXBOT_SYMBOL    = os.getenv("GEXBOT_SYMBOL",   "NQ_NDX").strip()   # ticker GexBot v2 (futuro NQ)
 GEXBOT_BASE      = "https://api.gex.bot/v2"                      # API v2 (Bearer auth)
 def _gexbot_headers():
     return {"Authorization": f"Bearer {GEXBOT_API_KEY}",
