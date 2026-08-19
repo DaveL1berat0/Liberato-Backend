@@ -2267,7 +2267,10 @@ async def refresh_movers():
         store = cache.setdefault("_movers_seen", {})
         now_ts = time.time()
         for it in classified:
-            key = (it.get("title") or "")[:80].lower().strip()
+            # BUG HISTÓRICO: se leía "title" pero _classify_impact_news devuelve
+            # "headline" → key vacío → todas las noticias se descartaban (panel
+            # vacío → caía al mock, "mismas noticias por días").
+            key = (it.get("headline") or it.get("title") or "")[:80].lower().strip()
             if not key:
                 continue
             prev = store.get(key)
