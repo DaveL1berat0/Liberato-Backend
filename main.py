@@ -29,6 +29,10 @@ import websockets
 
 # ══ CREDENCIALES (solo Railway Variables, nunca en código) ════════════════════
 FLASHALPHA_KEY   = os.getenv("FLASHALPHA_KEY",   "").strip()
+# ── GexBot (fuente del gamma profile; permiso escrito 17-ago: atribución + educativo) ──
+GEXBOT_API_KEY   = os.getenv("GEXBOT_API_KEY",   "").strip()
+GEXBOT_SYMBOL    = os.getenv("GEXBOT_SYMBOL",   "NQ_NDX").strip()   # par futuro_índice
+GEXBOT_BASE      = "https://api.gexbot.com"
 FINNHUB_KEY      = os.getenv("FINNHUB_KEY",      "")
 RAPIDAPI_KEY  = os.getenv("RAPIDAPI_KEY", "")          # calendario tiempo real
 RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST", "economic-calendar-api-tradingeconomics.p.rapidapi.com")
@@ -3242,6 +3246,69 @@ async def diag_yahoo(key: str = ""):
                         else "❌ Railway NO alcanza Yahoo (IP de datacenter bloqueada)")
     out[f"{FA_CASH_INDEX.lower()}_en_heatmap"] = FA_CASH_INDEX in cache["heatmap"]["data"]
     return out
+
+@app.get("/api/admin/diag-gexbot")
+async def diag_gexbot(key: str = ""):
+    """Sondea la API de GexBot con la key REAL (de Railway) y muestra la forma
+    exacta del JSON, SIN exponer la key. Prueba varias combinaciones state/tipo
+    para saber qué habilita tu tier. Uso: /api/admin/diag-gexbot?key=liberato2026"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    out = {
+        "key_presente": bool(GEXBOT_API_KEY),
+        "key_len": len(GEXBOT_API_KEY),
+        "symbol": GEXBOT_SYMBOL,
+        "base": GEXBOT_BASE,
+        "pruebas": {},
+    }
+    if not GEXBOT_API_KEY:
+        out["veredicto"] = "❌ Falta GEXBOT_API_KEY en Railway (servicio web)"
+        return out
+
+    def _shape(v, depth=0):
+        """Describe la forma de un valor sin volcar todo (arrays: len + 1ª fila)."""
+        if isinstance(v, dict):
+            return {k: _shape(val, depth+1) for k, val in list(v.items())[:40]}
+        if isinstance(v, list):
+            return {"_array_len": len(v), "_ejemplo": (_shape(v[0], depth+1) if v else None)}
+        return type(v).__name__ + (f"={v}" if isinstance(v, (int, float, bool)) and depth < 2 else "")
+
+    combos = [
+        (GEXBOT_SYMBOL, "classic", "full"),
+        (GEXBOT_SYMBOL, "classic", "zero"),
+        (GEXBOT_SYMBOL, "state",   "full"),
+        (GEXBOT_SYMBOL, "state",   "gamma"),
+    ]
+    async with httpx.AsyncClient(timeout=15) as c:
+        for sym, state, tipo in combos:
+            label = f"{sym}/{state}/{tipo}"
+            url = f"{GEXBOT_BASE}/{sym}/{state}/{tipo}"
+            try:
+                r = await c.get(url, params={"key": GEXBOT_API_KEY})
+                entry = {"http": r.status_code}
+                if r.status_code == 200:
+                    try:
+                        j = r.json()
+                        entry["forma"] = _shape(j)
+                        # muestra cruda de la 1ª fila de strikes/mini_contracts
+                        for arrk in ("strikes", "mini_contracts", "levels"):
+                            arr = j.get(arrk) if isinstance(j, dict) else None
+                            if isinstance(arr, list) and arr:
+                                entry[f"{arrk}_muestra"] = arr[:3]
+                                entry[f"{arrk}_total"] = len(arr)
+                    except Exception as e:
+                        entry["parse_error"] = f"{type(e).__name__}: {e}"
+                        entry["cuerpo"] = r.text[:200]
+                else:
+                    entry["cuerpo"] = r.text[:200]
+                out["pruebas"][label] = entry
+            except Exception as e:
+                out["pruebas"][label] = {"error": f"{type(e).__name__}: {e}"}
+    ok = [k for k, v in out["pruebas"].items() if v.get("http") == 200]
+    out["veredicto"] = (f"✅ Responden 200: {ok}" if ok
+                        else "❌ Ninguna combinación devolvió 200 (¿tier/símbolo/key?)")
+    return out
+
 
 @app.get("/api/admin/api-audit")
 async def api_audit(key: str = ""):
