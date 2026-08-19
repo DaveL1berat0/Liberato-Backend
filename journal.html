@@ -2387,6 +2387,16 @@ function renderGenius(){
 function renderPatterns(){
   var patterns=[];
   var s=stats(T);
+  // ── CONDUCTA (local/determinista, sobre trades reales cronológicos) ──
+  var bt=baseTrades().slice().sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time);});
+  var revenge=0;
+  for(var ri=1;ri<bt.length;ri++){var pv=bt[ri-1],cu=bt[ri];if(pv.result==='loss'&&pv.date===cu.date){var gap=(new Date(cu.date+'T'+cu.time)-new Date(pv.date+'T'+pv.time))/60000;if(gap>=0&&gap<=10&&(cu.contracts||1)>(pv.contracts||1))revenge++;}}
+  if(revenge>=2)patterns.push({icon:'🔥',warn:true,text:'Detecté <strong>'+revenge+' posibles revenge trades</strong>: entraste en &lt;10 min tras una pérdida y con más tamaño. Tras perder, respira antes de volver.'});
+  var perDay={};bt.forEach(function(t){perDay[t.date]=(perDay[t.date]||0)+1;});
+  var overDays=Object.keys(perDay).filter(function(d){return perDay[d]>=10;});
+  if(overDays.length){var mx=Math.max.apply(null,Object.keys(perDay).map(function(d){return perDay[d];}));patterns.push({icon:'🌀',warn:true,text:'<strong>Overtrading</strong>: '+overDays.length+' día(s) con 10+ operaciones (máx '+mx+' en un día). Menos y mejores suele batir a más y peores.'});}
+  var maxLoss=0,cur=0;bt.forEach(function(t){if(t.result==='loss'){cur++;if(cur>maxLoss)maxLoss=cur;}else cur=0;});
+  if(maxLoss>=3)patterns.push({icon:'🧠',warn:true,text:'Tu peor racha fue de <strong>'+maxLoss+' pérdidas seguidas</strong>. Define un stop diario: tras 3 seguidas, cierra la sesión.'});
   // VWAP edge
   var vwapAbove=T.filter(function(t){return t.vwap==='above';});
   var vwapBelow=T.filter(function(t){return t.vwap==='below';});
