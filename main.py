@@ -885,30 +885,110 @@ async def refresh_gex(asset=FA_ASSET):
     """GEX desde FlashAlpha. NUNCA se llama en startup.
     Scheduler: 9:00 AM + 7:00 PM ET (2 créditos de 5 disponibles/día)."""
     global _gex_blocked_until
+    # ── 1) FlashAlpha: auxiliares (fear/vix/expected_move/atm_iv) + su gamma ──
+    #    Tiene early-skips (sin key / 429 / presupuesto) que NO abortan la función:
+    #    aunque FlashAlpha se salte, GexBot (paso 2) debe correr igual.
     if not FLASHALPHA_KEY:
         cache["health"]["flashalpha"] = "offline-no-key"
-        return
-    if time.time() < _gex_blocked_until:
+    elif time.time() < _gex_blocked_until:
         remaining = int((_gex_blocked_until - time.time()) / 3600)
         print(f"[gex] bloqueado por 429 — {remaining}h restantes")
-        return
-    # GUARDIÁN: un refresh GEX completo usa ~4 llamadas (levels+options+gex+
-    # maxpain+summary). Si no caben en el presupuesto FlashAlpha, NO llamar.
-    if not budget_ok("flashalpha", 5):
+    elif not budget_ok("flashalpha", 5):
         st = _api_usage["flashalpha"]
         print(f"[gex] presupuesto FlashAlpha agotado ({st['used']}/{API_BUDGETS['flashalpha']['limit']}) — se mantiene cache")
-        return
+    else:
+        try:
+            if FLASHALPHA_PLAN == "basic":
+                # ══ PLAN BASIC: NDX DIRECTO (sin conversión QQQ→NQ) ══════════════
+                await _refresh_gex_ndx(asset)
+            else:
+                # ══ PLAN FREE: QQQ summary + conversión a NQ (1 llamada) ═════════
+                await _refresh_gex_qqq(asset)
+        except Exception as e:
+            cache["health"]["flashalpha"] = "error"
+            print(f"[gex] excepción: {e}")
+    # ── 2) GexBot: capa de gamma primaria (walls/flip/net/per-strike). Corre
+    #    AL FINAL para sobre-escribir la gamma de FlashAlpha (mejor fuente) sin
+    #    tocar los auxiliares. Se ejecuta aunque FlashAlpha se haya saltado.
+    if GEXBOT_API_KEY:
+        try:
+            await _refresh_gex_gexbot(asset)
+        except Exception as e:
+            print(f"[gexbot] overlay falló: {e}")
+
+
+async def _refresh_gex_gexbot(asset=FA_ASSET):
+    """Capa GEX de GexBot — FUENTE PRIMARIA del gamma profile.
+    Permiso escrito de GexBot (17-ago): atribución visible + uso educativo.
+    Tier Classic → GET /{ticker}/classic/full (Bearer). Sobre-escribe SOLO los
+    campos de gamma (walls/flip/net/per-strike/spot), preservando los auxiliares
+    (fear/vix/expected_move/atm_iv/max_pain) que provee FlashAlpha. Escala NQ
+    directa (spot ~29.500): NO se convierte con ratio."""
+    if not GEXBOT_API_KEY:
+        return False
+    url = f"{GEXBOT_BASE}/{GEXBOT_SYMBOL}/classic/full"
     try:
-        if FLASHALPHA_PLAN == "basic":
-            # ══ PLAN BASIC: NDX DIRECTO (sin conversión QQQ→NQ) ══════════════
-            # 2 llamadas: levels (call/put/flip) + gex (net_gex + per-strike).
-            await _refresh_gex_ndx(asset)
-        else:
-            # ══ PLAN FREE: QQQ summary + conversión a NQ (1 llamada) ═════════
-            await _refresh_gex_qqq(asset)
+        async with httpx.AsyncClient(timeout=12, headers=_gexbot_headers()) as c:
+            r = await c.get(url)
+        if r.status_code != 200:
+            cache["health"]["gexbot"] = f"http-{r.status_code}"
+            print(f"[gexbot] {GEXBOT_SYMBOL} classic/full HTTP {r.status_code}: {r.text[:120]}")
+            return False
+        j = r.json()
     except Exception as e:
-        cache["health"]["flashalpha"] = "error"
-        print(f"[gex] excepción: {e}")
+        cache["health"]["gexbot"] = "error"
+        print(f"[gexbot] excepción: {e}")
+        return False
+
+    spot = j.get("spot")
+    gf   = j.get("zero_gamma")           # gamma flip (zero gamma)
+    cw   = j.get("major_pos_oi")         # call wall  (mayor gamma positivo, por OI)
+    pw   = j.get("major_neg_oi")         # put wall   (mayor gamma negativo, por OI)
+    net  = j.get("sum_gex_oi")           # net gex (por OI)
+    ts_src = j.get("timestamp")
+
+    # strikes: filas [precio, gex_vol, gex_oi, [priors]] → {strike, gex} usando gex_oi.
+    # Signo: negativo = put side (morado), positivo = call side (verde). Ya en NQ.
+    per_strike = []
+    for row in (j.get("strikes") or []):
+        try:
+            if not isinstance(row, (list, tuple)) or len(row) < 3:
+                continue
+            strike = float(row[0]); gex_oi = float(row[2])
+            per_strike.append({"strike": strike, "gex": gex_oi})
+        except (TypeError, ValueError):
+            continue
+
+    if cw is None and pw is None and gf is None and not per_strike:
+        cache["health"]["gexbot"] = "online-no-levels"
+        print(f"[gexbot] ⚠️ 200 sin niveles. keys={list(j.keys())}")
+        return False
+
+    g = cache["gex"].get(asset) or {}
+    g.update({
+        "underlying_price": spot,
+        "call_wall": cw, "put_wall": pw, "gamma_flip": gf,
+        "net_gex": net,
+        "per_strike": per_strike,
+        "per_strike_count": len(per_strike),
+        "ticker": GEXBOT_SYMBOL,
+        "source": "gexbot-direct",
+        "gex_source": "GexBot",          # atribución obligatoria (permiso escrito)
+        "regime": ("trending" if (isinstance(net, (int, float)) and net < 0)
+                   else "pinning" if isinstance(net, (int, float)) else g.get("regime")),
+        "_ts": time.time(),
+    })
+    if isinstance(ts_src, (int, float)) and ts_src > 0:
+        try:
+            g["as_of"] = datetime.fromtimestamp(ts_src, timezone.utc).isoformat().replace("+00:00", "Z")
+        except Exception:
+            pass
+    cache["gex"][asset] = g
+    if isinstance(spot, (int, float)) and spot > 0:
+        _set_px_ratio_from_spot(spot)
+    cache["health"]["gexbot"] = "online"
+    print(f"[gexbot] ok {GEXBOT_SYMBOL}: flip={gf} call={cw} put={pw} net={net} strikes={len(per_strike)}")
+    return True
 
 
 async def _refresh_gex_qqq(asset=FA_ASSET):
@@ -4147,6 +4227,12 @@ async def startup():
                       CronTrigger(hour="10-11", minute="*/3", day_of_week="mon-fri"))
     scheduler.add_job(refresh_gex,                                             # tarde: 1/hora
                       CronTrigger(hour="12-15", minute=30, day_of_week="mon-fri"))
+    # ── GexBot: capa de gamma frecuente (Classic tier, sin coste por llamada).
+    #    Cada 2 min de 8:00 a 16:15 ET para que el volume profile se sienta vivo,
+    #    independiente de las ventanas de FlashAlpha.
+    if GEXBOT_API_KEY:
+        scheduler.add_job(_refresh_gex_gexbot,
+                          CronTrigger(hour="8-16", minute="*/2", day_of_week="mon-fri"))
 
     # ── Finnhub Calendar: cada 5 minutos ──────────────────────────────────
     scheduler.add_job(refresh_calendar, IntervalTrigger(seconds=30))  # latencia máx ~45s
