@@ -1569,6 +1569,12 @@ _ff_last_fetch = -9999  # permite la primera descarga de inmediato
 _ff_cache = []
 _fmp_last_fetch = 0   # timestamp última llamada a FMP
 _fmp_cache = []       # último resultado bueno de FMP        # último resultado bueno de ForexFactory (límite 2/5min)
+# ── Finnhub economic calendar: fuente de RESERVA encadenada del calendario ──
+# Rellena el 'actual'/forecast/previous que a FF/FMP les falte. Se auto-limita
+# con throttle propio (5 min) + budget_ok('finnhub'); entre llamadas sirve su
+# último buen resultado cacheado, así nunca dispara créditos de más.
+_fh_cal_last_fetch = 0
+_fh_cal_cache = []
 
 _RT_NON_US_COUNTRIES = {
     "australia","canada","euro area","euro zone","eurozone","european union",
@@ -1794,8 +1800,11 @@ def _merge_rapidapi(ff_events, rt_actuals):
         ff_keys.add(key)
         rt = rt_index.get(key)
         if rt and rt.get("actual"):
-            if not ev.get("actual"):
-                ev["actual"] = rt["actual"]; ev["status"] = "Released"
+            # TradingEconomics = MÁXIMA prioridad del 'actual': su valor PISA al de
+            # FF/Finnhub/FMP (es el más cercano al release oficial). Nunca inventa:
+            # solo entra aquí si TE realmente trae 'actual'.
+            ev["actual"] = rt["actual"]; ev["status"] = "Released"
+            ev["_actual_from"] = "tradingeconomics"
             if not ev.get("forecast") and rt.get("consensus"):
                 ev["forecast"] = rt["consensus"]
             if not ev.get("previous") and rt.get("previous"):
@@ -1868,15 +1877,39 @@ async def refresh_calendar():
             print(f"[calendar] FF {url}: {e}"); return []
 
     async def _fetch_finnhub_fallback(client):
-        """Finnhub economic calendar as fallback source."""
+        """Finnhub economic calendar — eslabón de RESERVA de la cadena de proveedores.
+        Aporta 'actual'/forecast/previous para rellenar lo que a ForexFactory/FMP
+        les falte. Ventana from=-2d..+7d para capturar también los resultados que
+        se acaban de publicar (no solo lo próximo). Nunca inventa datos.
+
+        PRESUPUESTO: se auto-limita para no gastar créditos de más:
+          · throttle propio de 5 min (el feed semanal cambia despacio) → entre
+            llamadas devuelve su último buen resultado cacheado.
+          · budget_ok('finnhub')/fh_charge(1): respeta el límite por minuto (55).
+        Kill-switch: FINNHUB_CALENDAR_ENABLED=false lo apaga (por si el endpoint
+        empieza a devolver 403 premium en tu plan). Sin key → []."""
+        global _fh_cal_last_fetch, _fh_cal_cache
         if not FINNHUB_KEY: return []
+        if os.getenv("FINNHUB_CALENDAR_ENABLED", "true").lower() == "false":
+            return []
+        nowts_fh = time.time()
+        if nowts_fh - _fh_cal_last_fetch < 300:
+            return list(_fh_cal_cache)          # throttle: usa cache reciente
+        if not budget_ok("finnhub", 1):
+            print("[calendar] presupuesto Finnhub agotado — usando cache Finnhub")
+            return list(_fh_cal_cache)
+        _fh_cal_last_fetch = nowts_fh
         try:
             now_et = datetime.now(NY)
-            from_dt = now_et.strftime("%Y-%m-%d")
+            # from=-2d capta los 'actual' recién publicados; to=+7d los próximos.
+            from_dt = (now_et - __import__('datetime').timedelta(days=2)).strftime("%Y-%m-%d")
             to_dt   = (now_et + __import__('datetime').timedelta(days=7)).strftime("%Y-%m-%d")
+            fh_charge(1)  # contabilizar la llamada real (una por ciclo, con throttle)
             r = await client.get(f"{FH_BASE}/calendar/economic",
                 params={"from": from_dt, "to": to_dt, "token": FINNHUB_KEY}, timeout=8)
-            if r.status_code != 200: return []
+            if r.status_code != 200:
+                print(f"[calendar] Finnhub status {r.status_code} — usando cache Finnhub")
+                return list(_fh_cal_cache)
             events = []
             for ev in r.json().get("economicCalendar", []):
                 if ev.get("country","").upper() != "US": continue
@@ -1892,12 +1925,15 @@ async def refresh_calendar():
                     "forecast": str(ev.get("estimate","")) if ev.get("estimate") else None,
                     "previous": str(ev.get("prev","")) if ev.get("prev") else None,
                     "status": "Released" if actual is not None else "Upcoming",
-                    "type": "macro",
+                    "type": "macro", "source": "finnhub", "_from": "finnhub",
                 })
-            print(f"[calendar] Finnhub fallback: {len(events)} events")
+            if events: _fh_cal_cache = events   # cachear último bueno
+            with_a = sum(1 for e in events if e["actual"])
+            print(f"[calendar] Finnhub: {len(events)} eventos US, {with_a} con actual")
             return events
         except Exception as e:
-            print(f"[calendar] Finnhub fallback error: {e}"); return []
+            print(f"[calendar] Finnhub fallback error: {e}")
+            return list(_fh_cal_cache)
 
     async def _fetch_fmp(client):
         """FMP economic calendar. ⚠️ El endpoint /economic-calendar es de PAGO
@@ -1990,15 +2026,22 @@ async def refresh_calendar():
         else:
             fmp_task = []
 
+        # ── Finnhub: eslabón de RESERVA de la cadena (throttle + budget internos).
+        # Aporta actual/forecast/previous que a FF/FMP les falte. Su propio fetch
+        # se auto-limita (5 min + budget_ok('finnhub')), así que lanzarlo cada
+        # ciclo es barato: la mayoría de las veces devuelve su cache sin llamar.
+        fh_task = [_fetch_finnhub_fallback(client)]
+
         # ── RapidAPI: reserva para eventos enormes (guard interno ya lo limita) ──
         rapid_task = [_fetch_rapidapi_actuals(client)]
 
-        all_tasks = ff_tasks + fmp_task + rapid_task
+        all_tasks = ff_tasks + fmp_task + fh_task + rapid_task
         all_results = await asyncio.gather(*all_tasks, return_exceptions=True)
 
         # Separar resultados por posición conocida
         n_ff = len(ff_tasks)
         n_fmp = len(fmp_task)
+        n_fh = len(fh_task)
         ff_fresh = []
         for i in range(n_ff):
             if isinstance(all_results[i], list):
@@ -2012,17 +2055,31 @@ async def refresh_calendar():
         # Si no llamamos FMP este ciclo, usar su cache
         if not fmp_events and _fmp_cache:
             fmp_events = list(_fmp_cache)
-        rt_raw = all_results[n_ff + n_fmp] if len(all_results) > n_ff + n_fmp else []
+        # Finnhub (su función ya cachea y respeta budget/throttle internamente)
+        fh_raw = all_results[n_ff + n_fmp] if len(all_results) > n_ff + n_fmp else []
+        fh_events = [e for e in fh_raw if e] if isinstance(fh_raw, list) else []
+        rt_raw = all_results[n_ff + n_fmp + n_fh] if len(all_results) > n_ff + n_fmp + n_fh else []
         rt_actuals = [e for e in rt_raw if e] if isinstance(rt_raw, list) else []
 
         # Cachear FF
         if ff_fresh:
             _ff_cache = ff_fresh
         ff_events = list(_ff_cache)
-        # fh_events ya no se usa para actual (Finnhub calendar es premium/403)
-        fh_events = []
 
-        # ── MERGE: indexar por (título normalizado, fecha) ────────────────────
+        # ══ MERGE ENCADENADO CON PRIORIDAD DE PROVEEDORES ════════════════════
+        # OBJETIVO: el 'actual' (y forecast/previous) NUNCA falta mientras ALGÚN
+        # proveedor lo tenga. Cada evento se indexa por (título normalizado, fecha)
+        # y se rellena/actualiza siguiendo esta jerarquía del 'actual':
+        #   1º TradingEconomics (RapidAPI) — el más cercano al release oficial: PISA
+        #   2º ForexFactory — base gratuita fiable (aporta el RECORD canónico)
+        #   3º Finnhub — reserva; rellena lo que FF no trae
+        #   4º FMP — premium (normalmente apagado); rellena lo que aún falte
+        # REGLA: nunca se INVENTA un dato. Si NINGÚN proveedor tiene 'actual', el
+        # evento queda 'Upcoming' sin actual (correcto). FF es el record base para
+        # conservar su metadata (type/impact/holiday); los secundarios solo aportan
+        # los campos numéricos que falten (fill-only), y TradingEconomics puede pisar.
+        # NO-VACÍO: si FF cae, los secundarios AÑADEN sus eventos (merged nunca queda
+        # vacío mientras responda al menos un proveedor); si todos caen → stale_backup.
         def norm_key(e):
             title = (e.get("title","") or "").lower().strip()
             # Normalizar título (quitar variaciones comunes)
@@ -2030,38 +2087,52 @@ async def refresh_calendar():
             date = (e.get("time","") or "")[:10]
             return (title, date)
 
+        def _fill(existing, e, source, override_actual=False):
+            """Rellena en 'existing' los campos numéricos que le falten con los de
+            'e' (proveedor 'source'). Con override_actual=True un 'actual' de mayor
+            prioridad PISA al previo. Deja traza en '_actual_from'. No inventa: solo
+            copia lo que 'e' realmente trae."""
+            if e.get("actual") and (not existing.get("actual") or override_actual):
+                existing["actual"] = e["actual"]
+                existing["status"] = "Released"
+                existing["_actual_from"] = source
+            if e.get("forecast") and not existing.get("forecast"):
+                existing["forecast"] = e["forecast"]
+            if e.get("previous") and not existing.get("previous"):
+                existing["previous"] = e["previous"]
+
         merged = {}
-        # Primero ForexFactory (base)
+        # (2) ForexFactory = record base (metadata canónica del evento).
         for e in ff_events:
+            e.setdefault("_from", "forexfactory")
             merged[norm_key(e)] = e
-        # Luego FMP: fuente del "actual" rápida y confiable (250/día).
-        # Si FMP tiene resultado y FF no → usar FMP. También rellena forecast/previous.
-        for e in fmp_events:
-            k = norm_key(e)
-            if k in merged:
-                existing = merged[k]
-                if e.get("actual") and not existing.get("actual"):
-                    existing["actual"] = e["actual"]
-                    existing["status"] = "Released"
-                if e.get("forecast") and not existing.get("forecast"):
-                    existing["forecast"] = e["forecast"]
-                if e.get("previous") and not existing.get("previous"):
-                    existing["previous"] = e["previous"]
-            else:
-                merged[k] = e
+        # (3) Finnhub y (4) FMP: rellenan (fill-only) lo que a FF le falte; si el
+        #     evento no existía en FF, se AÑADE (así nunca queda vacío si FF cae).
+        #     Orden Finnhub→FMP = prioridad Finnhub > FMP entre los secundarios:
+        #     el primero que aporte un campo gana, el segundo ya no lo pisa.
+        for src_name, src_events in (("finnhub", fh_events), ("fmp", fmp_events)):
+            for e in src_events:
+                k = norm_key(e)
+                if k in merged:
+                    _fill(merged[k], e, src_name, override_actual=False)
+                else:
+                    e.setdefault("_from", src_name)
+                    merged[k] = e
 
         out = list(merged.values())
 
-        # ── CAPA TIEMPO REAL: RapidAPI (máxima prioridad para el "actual") ──
-        # Reserva para eventos enormes (NFP/CPI/FOMC). Su "actual" gana sobre
-        # FF y FMP porque es el más cercano al release oficial.
+        # (1) CAPA TIEMPO REAL: TradingEconomics (RapidAPI) = MÁXIMA prioridad del
+        # 'actual'. Su valor PISA a FF/Finnhub/FMP (más cercano al release oficial)
+        # y además INYECTA eventos US que las otras fuentes ya no listan (NFP de la
+        # semana pasada, etc.). Alias-aware (Unemployment Claims ≡ Initial Jobless
+        # Claims). Reserva para eventos enormes (NFP/CPI/FOMC); su guard interno lo limita.
         if rt_actuals:
             out = _merge_rapidapi(out, rt_actuals)
 
-        # Si AMBAS fuentes fallaron → servir caché stale
+        # Si NINGÚN proveedor devolvió eventos → servir caché stale (nunca vacío).
         if not out:
             if stale_backup:
-                print(f"[calendar] ambas fuentes fallaron — sirviendo stale ({len(stale_backup)} eventos)")
+                print(f"[calendar] ningún proveedor respondió — sirviendo stale ({len(stale_backup)} eventos)")
                 cache["calendar"]["status"] = "stale"
             else:
                 cache["calendar"]["status"] = "unavailable"
