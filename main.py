@@ -4742,7 +4742,7 @@ async def startup():
     #    independiente de las ventanas de FlashAlpha.
     if GEXBOT_API_KEY:
         scheduler.add_job(_refresh_gex_gexbot,
-                          CronTrigger(hour="8-16", minute="*/2", day_of_week="mon-fri"))
+                          CronTrigger(hour="7-16", minute="*", day_of_week="mon-fri"))  # GexBot LIVE: cada 1 min en RTH
 
     # ── Finnhub Calendar: cada 5 minutos ──────────────────────────────────
     scheduler.add_job(refresh_calendar, IntervalTrigger(seconds=30))  # latencia máx ~45s

@@ -936,7 +936,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
     <section class="regime neut" id="regime" aria-label="Market Regime">
       <div class="rg-hd">
-        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Basado en el net GEX de GexBot.">&#9432;</span> · NQ Futures</div>
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = precio SOBRE el gamma flip (dealers long γ, absorben, rango). NEGATIVE = precio BAJO el flip (short γ, amplifican, tendencia). Sincronizado con los niveles de GexBot.">&#9432;</span> · NQ Futures</div>
       </div>
       <div class="rg-in">
         <div class="rg-verdict">
@@ -983,9 +983,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           </div>
           <div class="rg-meter-stats">
             <div class="rg-ms"><span class="rg-ms-k">⬡ Dealer <span class="info-i" title="Posición gamma de los market makers. Long γ: compran caídas y venden subidas (estabilizan). Short γ: venden caídas y compran subidas (amplifican).">&#9432;</span></span><span class="rg-ms-v" id="rg-dealer">—</span></div>
-            <div class="rg-ms rg-ms-source"><span class="rg-ms-k">⟡ Gamma neta <em>→ define régimen</em></span><span class="rg-ms-v" id="rg-netgex">—</span></div>
+            <div class="rg-ms rg-ms-source"><span class="rg-ms-k">⟡ Gamma neta <em>→ intensidad</em></span><span class="rg-ms-v" id="rg-netgex">—</span></div>
             <div class="rg-gex-bar-wrap"><div class="rg-gex-bar"><div class="rg-gex-fill" id="rg-gex-fill"></div></div><span class="rg-gex-int" id="rg-gex-int">—</span></div>
-            <div class="rg-ms"><span class="rg-ms-k">⊘ Points to Flip <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⊘ Points to Flip <em>→ define régimen</em> <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">◎ VIX <span class="info-i" title="Índice de volatilidad del S&amp;P 500 (el &quot;medidor de miedo&quot; del mercado). VIX alto = más miedo y movimientos amplios · VIX bajo = calma. Clave para dimensionar riesgo intradía.">&#9432;</span></span><span class="rg-ms-v" id="rg-atm-iv">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">⬡ Exp Move <span class="info-i" title="Movimiento esperado (±puntos) para la sesión, derivado del ATM IV. Rango probable del NQ hoy según las opciones.">&#9432;</span></span><span class="rg-ms-v cyan" id="rg-expmove">—</span></div>
             </div>
@@ -1507,7 +1507,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var ext=Math.max(Math.abs(S._gexMin||0),Math.abs(S._gexMax||0),Math.abs(S.netGex),1);
     return Math.min(100,Math.round(Math.abs(S.netGex)/ext*100));
   }
-  function gammaState(){if(S.regime){var r=String(S.regime).toLowerCase();if(r.indexOf('long')>=0||r.indexOf('positive')>=0)return'positive';if(r.indexOf('short')>=0||r.indexOf('negative')>=0)return'negative';}if(S.netGex!=null)return S.netGex>=0?'positive':'negative';return null;}
+  // Régimen gamma por PRECIO vs GAMMA FLIP (zero-gamma) — la frontera canónica de
+  // GexBot. Encima del flip = POSITIVO (dealers long γ, absorben/rango). Debajo =
+  // NEGATIVO (short γ, amplifican/tendencia). El net GEX es intensidad, NO define el
+  // régimen (un net +246 con precio bajo el flip NO es positivo — bug que veía Dave).
+  function gammaState(){
+    if(S.price!=null && S.gammaFlip!=null) return S.price>=S.gammaFlip?'positive':'negative';
+    if(S.netGex!=null)return S.netGex>=0?'positive':'negative';
+    return null;
+  }
 
   var candleCache={};
   function applyMockPrice(){
@@ -1648,12 +1656,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   function renderRegime(){
     deriveStructureVolatility();
     var g=gammaState();
-    // ── UNIFICACIÓN: el headline muestra el RÉGIMEN ESTRUCTURAL ──
-    // (la MISMA palabra que el velocímetro — imposible que se contradigan).
-    var regimeWord=(S.regime==null&&S.netGex==null)?'—':({'range':'POSITIVE','neutral':'NEUTRAL','trend':'NEGATIVE'}[S.structure]||'—');
-    // Color del régimen: POSITIVE (range)=verde, NEGATIVE (trend)=morado, NEUTRAL=dorado.
-    // El color SIGUE a la palabra (POSITIVE→verde de marca, NEGATIVE→morado de marca).
-    var regCls=S.structure==='range'?'up':S.structure==='trend'?'down':'neut';
+    // ── El headline es el RÉGIMEN GAMMA (precio vs flip), sincronizado con GexBot ──
+    // POSITIVE = precio sobre el flip (dealers long γ, absorben). NEGATIVE = bajo el
+    // flip (short γ, amplifican). El velocímetro de momentum es su propio indicador.
+    var regimeWord=(g==null)?'—':(g==='positive'?'POSITIVE':'NEGATIVE');
+    var regCls=g==='positive'?'up':g==='negative'?'down':'neut';
     var sec=$('regime');if(sec)sec.className='regime '+regCls;
     var dir=$('rg-dir');if(dir){dir.textContent=regimeWord;dir.className='rg-dir '+regCls;}
     // ── DIRECCIÓN (alcista/bajista) como subtítulo SUTIL al lado ──
