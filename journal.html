@@ -1816,26 +1816,65 @@ var DEMO=[
   {id:'d5',date:'2026-06-04',time:'11:15',asset:'NQ',direction:'long',entry:21760,exit:21800,stop:21740,contracts:1,setup:'Opening Range Breakout',vwap:'above',gamma:'exp_up',t4h:'bull',exitType:'full',checklist:[true,true,true,true],note:'Segunda entrada del día. Setup perfecto.'},
 ];
 
-// ── DATA LAYER ──
-function loadTrades(){
-  try{var d=localStorage.getItem(KEY);if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length>0){var valid=p.every(function(t){return t&&typeof t.date==='string'&&typeof t.pnl==='number';});if(valid)return p;}}}catch(e){}
-  var seeded=DEMO.map(calcTrade);saveTrades(seeded);return seeded;
+// ── IDENTIDAD / NAMESPACE (multiusuario: cada estudiante ve solo lo suyo) ──
+function currentUserId(){
+  try{var t=localStorage.getItem('lbc_jwt');
+    if(t){var sub=JSON.parse(atob(t.split('.')[1])).sub;if(sub)return 'u:'+sub;}}catch(e){}
+  // Sin JWT: id anónimo POR NAVEGADOR (no un '::local' compartido entre alumnos).
+  var a;try{a=localStorage.getItem('lbc_anon_id');}catch(e){}
+  if(!a){a='anon-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem('lbc_anon_id',a);}catch(e){}}
+  return a;
 }
-function saveTrades(arr){try{localStorage.setItem(KEY,JSON.stringify(arr));}catch(e){}}
+function userKey(base){return base+'::'+currentUserId();}
+// Migración one-shot: mueve la data global vieja (de Dave) a SU espacio actual.
+var _NS_BASES=['lbc_jrn_v3','lbc_playbooks_v1','lbc_checklists','lbc_broker_fills','lbc_ctx_fields_v1'];
+function migrateGlobalStores(){
+  try{ if(localStorage.getItem('lbc_ns_migrated'))return;
+    _NS_BASES.forEach(function(b){
+      var old=localStorage.getItem(b);
+      if(old!=null && localStorage.getItem(userKey(b))==null){localStorage.setItem(userKey(b),old);}
+    });
+    localStorage.setItem('lbc_ns_migrated','1');
+  }catch(e){}
+}
+migrateGlobalStores();
+
+// ── DATA LAYER ──
+var _DEMO_IDS={d1:1,d2:1,d3:1,d4:1,d5:1};
+function _isDemoTrade(t){return t&&(t.__demo||_DEMO_IDS[t.id]);}
+function loadTrades(){
+  // Arranca en 0 por usuario (Regla #1): NADA de trades demo sembrados como reales.
+  // El código viejo persistía los 5 demo; se limpian aquí para todos.
+  try{var d=localStorage.getItem(userKey(KEY));if(d){var p=JSON.parse(d);if(Array.isArray(p)){
+    p=p.filter(function(t){return !_isDemoTrade(t);});
+    var valid=p.every(function(t){return t&&typeof t.date==='string'&&typeof t.pnl==='number';});
+    if(valid)return p;}}}catch(e){}
+  return [];
+}
+function saveTrades(arr){try{localStorage.setItem(userKey(KEY),JSON.stringify(arr));}catch(e){}}
 function genId(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function calcTrade(t){
-  var cv=CV[t.asset]||20,c=t.contracts||1;
-  // sideways: use exit-entry absolute value (best way: treat as long)
+  // Multiplicador: opción=100, futuro=CV[asset], equity=1. `t.mult` lo puede sobreescribir.
+  var isOpt=t.instrument==='option';
+  var mult=t.mult||(isOpt?100:(CV[t.asset]||20)),c=t.contracts||1;
   var dir=t.direction==='short'?'short':'long';
-  var pts=dir==='long'?(t.exit-t.entry):(t.entry-t.exit);
-  var rsk=dir==='long'?(t.entry-t.stop):(t.stop-t.entry);
-  var pnl=pts*cv*c;
-  var rr=rsk>0?Math.round((Math.abs(pts)/rsk)*10)/10:0;
+  var hasExit=(t.exit!=null&&t.exit!=='');
+  var pts=hasExit?(dir==='long'?(t.exit-t.entry):(t.entry-t.exit)):0;
+  // Riesgo/R SOLO con stop real (no fabricar R con stop=0 en imports de broker).
+  var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0);
+  var rsk=hasStop?(dir==='long'?(t.entry-t.stop):(t.stop-t.entry)):0;
+  var fees=(typeof t.fees==='number')?t.fees:0;
+  var pnl=hasExit?Math.round(pts*mult*c-fees):0;
+  var rr=(hasStop&&rsk>0)?Math.round((Math.abs(pts)/rsk)*10)/10:0;
   var chkItems=t.checklist?t.checklist.filter(Boolean).length:0;
   var chkTotal=t.checklist?t.checklist.length:4;
-  return Object.assign({},t,{points:Math.round(pts*10)/10,pnl:Math.round(pnl),risk:rsk,rr:rr,result:pnl>0?'win':pnl<0?'loss':'be',chkAll:t.checklist&&chkItems===chkTotal&&chkTotal>0});
+  return Object.assign({},t,{mult:mult,points:Math.round(pts*10)/10,pnl:pnl,fees:fees,risk:rsk,rr:rr,result:pnl>0?'win':pnl<0?'loss':'be',chkAll:t.checklist&&chkItems===chkTotal&&chkTotal>0});
 }
 var T=loadTrades();
+// DEMO efímero: se ve solo con el botón "Ver ejemplo", nunca se persiste (Regla #1).
+var DEMO_MODE=false;
+function seedDemoEphemeral(){DEMO_MODE=true;T=DEMO.map(function(d){var x=calcTrade(d);x.__demo=true;return x;});go(curView);}
+function exitDemo(){DEMO_MODE=false;T=loadTrades();go(curView);}
 
 // ── STATS ──
 function stats(arr){
@@ -1946,6 +1985,12 @@ function renderLast30Trades(){
   }
 }
 function renderDash(){
+  // Arranque en 0: usuario sin trades reales ve el empty-state con CTAs, no ceros.
+  if(!DEMO_MODE && !T.length){
+    var kr0=document.getElementById('tz-kpi-row');
+    if(kr0)kr0.innerHTML='<div style="grid-column:1/-1;">'+emptyStateHTML()+'</div>';
+    return;
+  }
   var FT=getFilteredT(_dfDash);
   var s=stats(FT),td=pnlPeriod(FT,'today'),tw=pnlPeriod(FT,'week'),tm=pnlPeriod(FT,'month'),su=bySetup(FT),maxDD=calcMaxDD(FT);
   var byDate={};FT.forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
@@ -2105,11 +2150,29 @@ function openDayDetail(ds){
 }
 function closeTDM(){document.getElementById('tdmodal').classList.remove('open');}
 
+// ── EMPTY-STATE / DEMO ──
+function emptyStateHTML(){
+  return '<div class="empty" style="padding:44px 20px;text-align:center;">'
+    +'<div class="ei" style="font-size:42px;opacity:0.85;">📊</div>'
+    +'<p style="font-size:15px;color:var(--text);font-weight:700;margin:8px 0 2px;">Aún no tienes operaciones</p>'
+    +'<p style="font-size:12px;color:var(--text3);margin-bottom:18px;">Conecta tu broker para traer tus fills reales, o mira un ejemplo del journal.</p>'
+    +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">'
+    +'<button onclick="openCsvImport()" style="padding:12px 20px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">🔗 Conectar broker</button>'
+    +'<button onclick="seedDemoEphemeral()" style="padding:12px 20px;border-radius:9px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12.5px;cursor:pointer;">Ver ejemplo</button>'
+    +'</div></div>';
+}
+function demoBannerHTML(){
+  return DEMO_MODE?'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(177,151,252,0.1);border:0.5px solid rgba(177,151,252,0.3);border-radius:9px;padding:9px 13px;margin-bottom:14px;">'
+    +'<span style="font-size:11px;color:var(--purple);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">◆ MODO EJEMPLO — no son trades reales</span>'
+    +'<button onclick="exitDemo()" style="padding:6px 12px;border-radius:7px;border:0.5px solid rgba(177,151,252,0.4);background:transparent;color:var(--purple);font-size:11px;cursor:pointer;">Salir del ejemplo</button></div>':'';
+}
 // ── TRADES ──
 function renderTrades(){
+  var tl=document.getElementById('tlist');
+  if(!DEMO_MODE && !T.length){tl.innerHTML=emptyStateHTML();return;}
   var filtered=getFilteredT(_dfTr).slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);});
   if(trFilter==='win')filtered=filtered.filter(function(t){return t.result==='win';});else if(trFilter==='loss')filtered=filtered.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')filtered=filtered.filter(function(t){return t.chkAll;});
-  document.getElementById('tlist').innerHTML=filtered.length?'<div class="tlist">'+renderTItems(filtered)+'</div>':'<div class="empty"><div class="ei">📋</div><p>Sin trades con este filtro</p></div>';
+  tl.innerHTML=demoBannerHTML()+(filtered.length?'<div class="tlist">'+renderTItems(filtered)+'</div>':'<div class="empty"><div class="ei">📋</div><p>Sin trades con este filtro</p></div>');
 }
 function renderTItems(arr){
   return arr.map(function(t){
