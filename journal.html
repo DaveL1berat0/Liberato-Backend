@@ -2212,11 +2212,25 @@ function renderTrades(){
   }).sort(function(a,b){return b.date.localeCompare(a.date)||String(b.time).localeCompare(String(a.time));});
   if(activeAccount!=='all')filtered=filtered.filter(function(t){return String(t.account)===activeAccount;});
   if(trFilter==='win')filtered=filtered.filter(function(t){return t.result==='win';});else if(trFilter==='loss')filtered=filtered.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')filtered=filtered.filter(function(t){return t.chkAll;});
-  // resumen del filtro actual
-  var pend=filtered.filter(function(t){return t.status==='pending';}).length;
-  var head=(pend?'<div style="font-size:10.5px;color:var(--purple);font-family:\'DM Mono\',monospace;margin:2px 2px 8px;">◆ '+pend+' en revisión (no cuentan en KPIs hasta aprobarlas)</div>':'');
+  // cola de revisión: banner accionable
+  var pendArr=filtered.filter(function(t){return t.status==='pending';});
+  var pend=pendArr.length, pExp=pendArr.filter(function(t){return t.expired;}).length;
+  var head='';
+  if(pend){
+    head='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:rgba(177,151,252,0.08);border:0.5px solid rgba(177,151,252,0.28);border-radius:9px;padding:9px 13px;margin:2px 2px 10px;">'
+      +'<span style="font-size:11px;color:var(--purple);font-family:\'DM Mono\',monospace;">◆ '+pend+' en revisión · no cuentan en KPIs hasta aprobarlas</span>'
+      +'<span style="display:inline-flex;gap:6px;">'
+      +(pExp?'<button onclick="approveAllExpired()" style="padding:6px 11px;border-radius:7px;border:0.5px solid rgba(46,232,164,0.4);background:rgba(46,232,164,0.08);color:var(--green);font-size:10.5px;cursor:pointer;">✓ Aprobar '+pExp+' expiradas</button>':'')
+      +'<button onclick="approveAllClosed()" style="padding:6px 11px;border-radius:7px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:var(--gold);font-size:10.5px;cursor:pointer;">Aprobar todas las cerradas</button>'
+      +'</span></div>';
+  }
   tl.innerHTML=demoBannerHTML()+(filtered.length?head+'<div class="tlist">'+renderTItems(filtered)+'</div>':'<div class="empty"><div class="ei">📋</div><p>Sin trades con este filtro</p></div>');
 }
+// ── COLA DE REVISIÓN: aprobar / descartar ──
+function approveTrade(id){var t=T.find(function(x){return x.id===id;});if(t){t.status='verified';saveTrades(T);go(curView);}}
+function discardTrade(id){if(!confirm('¿Descartar este trade? No se podrá recuperar sin re-sincronizar.'))return;T=T.filter(function(x){return x.id!==id;});saveTrades(T);go(curView);}
+function approveAllExpired(){var n=0;T.forEach(function(t){if(t.status==='pending'&&t.expired){t.status='verified';n++;}});saveTrades(T);go(curView);}
+function approveAllClosed(){T.forEach(function(t){if(t.status==='pending'&&t.exit!=null){t.status='verified';}});saveTrades(T);go(curView);}
 function renderTItems(arr){
   return arr.map(function(t){
     var ctx='';
