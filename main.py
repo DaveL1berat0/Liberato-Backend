@@ -3862,6 +3862,62 @@ async def tradestation_connect():
             "auth_url": "https://signin.tradestation.com/authorize?" + urlencode(params)}
 
 
+@app.post("/api/journal/coach")
+async def journal_coach(request: Request):
+    """AI Coach del journal: analiza la data REAL del trader (stats, rendimiento por
+    playbook/setup, hora, riesgo) y responde CONCISO como un mentor de daytrading.
+    La key de Groq vive en el servidor (nunca en el frontend). Modelo qwen (vivo)."""
+    if not GROQ_KEY:
+        raise HTTPException(400, "Coach no disponible (falta GROQ_KEY en el servidor)")
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    question = str(data.get("question") or "").strip()[:600]
+    # Contexto compacto que manda el frontend (ya agregado, sin PII).
+    ctx = data.get("context") or {}
+    ctx_str = json.dumps(ctx, ensure_ascii=False)[:6000]
+    sys_msg = (
+        "Eres el AI Coach de Liberato Community: un mentor de daytrading de NQ/Nasdaq "
+        "y opciones 0DTE, experto en Auction Market Theory, order flow, gestión de "
+        "riesgo y disciplina de playbooks. Hablas en español, directo y cercano, como "
+        "un coach que conoce el mercado. REGLAS: (1) responde CONCISO — 2 a 4 frases, "
+        "sin relleno ni listas largas; (2) basa TODO en los datos reales del trader que "
+        "recibes (no inventes cifras: si un dato no está, dilo); (3) da 1-2 acciones "
+        "concretas y accionables. Ejemplos de tono: 'Tu stop se ve muy ajustado, te saca "
+        "mucho — dale más aire.' · 'Tu playbook D es el que más rinde, priorízalo salvo "
+        "que no aparezca ese día.' · 'Operas peor por la tarde: concentra tu tamaño en la "
+        "primera hora.' Nunca des consejo financiero personalizado de inversión; céntrate "
+        "en su ejecución, disciplina y patrones."
+    )
+    usr_msg = (
+        f"Datos del trader (JSON agregado de su journal):\n{ctx_str}\n\n"
+        f"Pregunta del trader: {question or '¿Qué es lo más importante que ves en mi data ahora mismo?'}\n\n"
+        "Responde en 2-4 frases, concreto y basado en sus números."
+    )
+    try:
+        async with httpx.AsyncClient(timeout=25) as client:
+            r = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                json={"model": "qwen/qwen3.6-27b", "max_tokens": 350, "temperature": 0.5,
+                      "reasoning_effort": "none",
+                      "messages": [{"role": "system", "content": sys_msg},
+                                   {"role": "user", "content": usr_msg}]}
+            )
+        if r.status_code != 200:
+            raise HTTPException(502, f"Groq {r.status_code}: {r.text[:180]}")
+        j = r.json()
+        answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+        if not answer:
+            raise HTTPException(502, "Coach sin respuesta")
+        return {"ok": True, "answer": answer}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(502, f"Coach falló: {type(e).__name__}: {str(e)[:160]}")
+
+
 @app.post("/api/journal/parse-csv")
 async def journal_parse_csv(request: Request):
     """Parsea un CSV de broker con IA (Groq) → trades del journal.
