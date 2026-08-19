@@ -2180,9 +2180,18 @@ async def refresh_movers():
             news_ts = v.get("ts") or 0
             if (news_ts and news_ts < cutoff) or (not news_ts and v.get("_first_seen", now_ts) < cutoff):
                 del store[k]
-        ranked = sorted(store.values(),
-                        key=lambda x: (x.get("impact_score", 0), x.get("ts", 0)),
-                        reverse=True)
+        # RANKING con BONUS DE FRESCURA. Antes ordenaba SOLO por impact_score (la
+        # hora era desempate), así que una noticia nueva quedaba enterrada 10-20 min
+        # detrás de otras más viejas pero de mayor impacto. Ahora una noticia
+        # reciente recibe un bonus (+4 recién salida, decae a 0 en 3h) que la sube
+        # al panel de inmediato; las viejas se desvanecen y las de impacto genuino
+        # aún permanecen un rato. Así el daytrading actualiza igual de rápido que el home.
+        def _eff(x):
+            t = x.get("ts") or x.get("_first_seen") or now_ts
+            age_h = max(0.0, (now_ts - t) / 3600.0)
+            recency = max(0.0, 4.0 * (1.0 - age_h / 3.0))
+            return (round(x.get("impact_score", 0) + recency, 3), t)
+        ranked = sorted(store.values(), key=_eff, reverse=True)
         out = [{k: v for k, v in it.items() if k != "_first_seen"} for it in ranked[:6]]
 
         if out:
