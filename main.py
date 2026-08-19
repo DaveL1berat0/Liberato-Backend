@@ -84,6 +84,14 @@ TRADESTATION_REDIRECT_URI  = os.getenv("TRADESTATION_REDIRECT_URI",
 # Credenciales self-service en snaptrade.com (no requiere email a ningún broker).
 SNAPTRADE_CLIENT_ID   = os.getenv("SNAPTRADE_CLIENT_ID", "").strip()
 SNAPTRADE_CONSUMER_KEY = os.getenv("SNAPTRADE_CONSUMER_KEY", "").strip()
+# A dónde vuelve el estudiante tras conectar su broker en el portal de SnapTrade.
+SNAPTRADE_REDIRECT_URI = os.getenv("SNAPTRADE_REDIRECT_URI",
+    "https://davel1berat0.github.io/Liberato-Backend/journal.html?snaptrade=ok").strip()
+# Store por-usuario: {app_user_id: {snap_user_id, user_secret, accounts:[], ts}}.
+# Persiste en el snapshot (_PERSIST) para sobrevivir redeploys — el user_secret
+# es intransferible y re-registrar borra las conexiones del broker.
+_snaptrade_users = {}
+_st_client = None
 TWELVEDATA_KEY   = os.getenv("TWELVEDATA_KEY",   "").strip()
 
 # ══ GUARDIÁN UNIVERSAL DE PRESUPUESTO DE APIs ════════════════════════
@@ -316,6 +324,8 @@ def save_cache():
             "movers_seen": cache.get("_movers_seen", {}),
             "movers": {"data": cache["movers"]["data"],
                        "lu":   cache["movers"]["last_update"]},
+            # Credenciales SnapTrade por usuario (user_secret intransferible).
+            "snaptrade_users": _snaptrade_users,
         }
         with open(_PERSIST, "w") as f:
             json.dump(snap, f)
@@ -343,6 +353,10 @@ def load_cache():
             _rapidapi_day = _rc["day"]
             _rapidapi_day_count = int(_rc.get("count", 0))
             print(f"[persist] rapidapi restaurado: {_rapidapi_day_count}/85")
+        _su = snap.get("snaptrade_users")
+        if isinstance(_su, dict):
+            _snaptrade_users.update(_su)
+            print(f"[persist] snaptrade_users restaurados: {len(_snaptrade_users)}")
         if snap.get("gex"):
             # Solo restaurar el GEX del instrumento que operamos AHORA.
             # El Volume de Railway retiene datos entre redeploys, así que tras la
@@ -3563,6 +3577,190 @@ async def snaptrade_status():
                            "cualquier broker — TradeStation incluido."}
     return {"configured": True,
             "message": "SnapTrade activado. Listo para conectar tu broker."}
+
+
+def _snaptrade():
+    """Cliente SnapTrade (SDK 13.0.3, firma automática). Lazy singleton."""
+    global _st_client
+    if _st_client is None:
+        from snaptrade_client import SnapTrade, SnapTradeAuth
+        _st_client = SnapTrade(auth=SnapTradeAuth.commercial_api_key(
+            consumer_key=SNAPTRADE_CONSUMER_KEY, client_id=SNAPTRADE_CLIENT_ID))
+    return _st_client
+
+
+def _st_plain(x):
+    """Convierte los tipos-schema del SDK (frozendict/tuple/str/int) a JSON puro."""
+    if isinstance(x, bool):
+        return bool(x)
+    if isinstance(x, dict) or hasattr(x, "items"):
+        return {str(k): _st_plain(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_st_plain(v) for v in x]
+    if isinstance(x, (int, float)):
+        return x.real if isinstance(x, complex) else (int(x) if isinstance(x, int) else float(x))
+    if isinstance(x, str):
+        return str(x)
+    if x is None:
+        return None
+    return str(x)
+
+
+async def _st_register(app_user_id: str):
+    """Registra (idempotente) un usuario SnapTrade y guarda su user_secret.
+    Devuelve el record. Si SnapTrade dice que ya existe pero perdimos el secret,
+    borra y re-registra (se perderían conexiones previas — caso raro)."""
+    rec = _snaptrade_users.get(app_user_id)
+    if rec and rec.get("user_secret"):
+        return rec
+    snap_user_id = f"lbc_{app_user_id}"
+    st = _snaptrade()
+    try:
+        resp = await st.authentication.aregister_snap_trade_user(user_id=snap_user_id)
+        body = _st_plain(resp.body)
+        secret = body.get("userSecret")
+    except Exception as e:
+        msg = str(e)
+        if "already" in msg.lower() or "exist" in msg.lower():
+            # perdimos el secret: borrar y re-registrar
+            try:
+                await st.authentication.adelete_snap_trade_user(user_id=snap_user_id)
+                resp = await st.authentication.aregister_snap_trade_user(user_id=snap_user_id)
+                body = _st_plain(resp.body); secret = body.get("userSecret")
+            except Exception as e2:
+                raise HTTPException(502, f"SnapTrade re-registro falló: {type(e2).__name__}: {str(e2)[:180]}")
+        else:
+            raise HTTPException(502, f"SnapTrade registro falló: {type(e).__name__}: {msg[:180]}")
+    if not secret:
+        raise HTTPException(502, "SnapTrade no devolvió userSecret")
+    rec = {"snap_user_id": snap_user_id, "user_secret": str(secret), "accounts": [], "ts": time.time()}
+    _snaptrade_users[app_user_id] = rec
+    save_cache()
+    return rec
+
+
+def _require_snaptrade(app_user_id: str):
+    if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
+        raise HTTPException(400, "SnapTrade no configurado en el servidor")
+    app_user_id = (app_user_id or "").strip()
+    if not app_user_id:
+        raise HTTPException(400, "Falta app_user_id")
+    return app_user_id
+
+
+@app.post("/api/broker/snaptrade/portal")
+async def snaptrade_portal(request: Request):
+    """Devuelve la URL del portal de SnapTrade para conectar un broker (por
+    defecto TradeStation). Registra al usuario si hace falta. La URL expira en
+    5 min. body: {app_user_id, broker?}"""
+    data = await request.json()
+    app_user_id = _require_snaptrade(data.get("app_user_id"))
+    broker = (data.get("broker") or "TRADESTATION").strip().upper() or None
+    rec = await _st_register(app_user_id)
+    try:
+        resp = await _snaptrade().authentication.alogin_snap_trade_user(
+            user_id=rec["snap_user_id"], user_secret=rec["user_secret"],
+            broker=broker, custom_redirect=SNAPTRADE_REDIRECT_URI or None, dark_mode=True)
+        body = _st_plain(resp.body)
+    except Exception as e:
+        raise HTTPException(502, f"SnapTrade portal falló: {type(e).__name__}: {str(e)[:180]}")
+    url = body.get("redirectURI") or body.get("redirect_uri")
+    if not url:
+        raise HTTPException(502, f"SnapTrade no devolvió redirectURI: {body}")
+    return {"ok": True, "url": str(url)}
+
+
+@app.get("/api/broker/snaptrade/accounts")
+async def snaptrade_accounts(app_user_id: str = ""):
+    """Lista las cuentas de broker conectadas por el usuario."""
+    app_user_id = _require_snaptrade(app_user_id)
+    rec = _snaptrade_users.get(app_user_id)
+    if not rec:
+        raise HTTPException(404, "usuario no registrado — conecta un broker primero")
+    try:
+        resp = await _snaptrade().account_information.alist_user_accounts(
+            user_id=rec["snap_user_id"], user_secret=rec["user_secret"])
+        rows = _st_plain(resp.body) or []
+    except Exception as e:
+        raise HTTPException(502, f"SnapTrade accounts falló: {type(e).__name__}: {str(e)[:180]}")
+    accts = [{"id": str(a.get("id")), "name": a.get("name"),
+              "number": a.get("number"),
+              "institution": a.get("institution_name") or a.get("brokerage_authorization")}
+             for a in rows if isinstance(a, dict)]
+    rec["accounts"] = accts
+    save_cache()
+    return {"ok": True, "count": len(accts), "accounts": accts}
+
+
+@app.get("/api/broker/snaptrade/fills")
+async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
+    """Trae las órdenes (fills) de todas las cuentas conectadas y las mapea a
+    trades del journal. ?raw=1 devuelve la forma cruda (para calibrar el mapeo)."""
+    app_user_id = _require_snaptrade(app_user_id)
+    rec = _snaptrade_users.get(app_user_id)
+    if not rec:
+        raise HTTPException(404, "usuario no registrado — conecta un broker primero")
+    st = _snaptrade()
+    accts = rec.get("accounts") or []
+    if not accts:
+        try:
+            resp = await st.account_information.alist_user_accounts(
+                user_id=rec["snap_user_id"], user_secret=rec["user_secret"])
+            for a in (_st_plain(resp.body) or []):
+                if isinstance(a, dict):
+                    accts.append({"id": str(a.get("id")), "name": a.get("name"),
+                                  "number": a.get("number")})
+            rec["accounts"] = accts; save_cache()
+        except Exception as e:
+            raise HTTPException(502, f"SnapTrade accounts falló: {type(e).__name__}: {str(e)[:180]}")
+    raw_orders = []
+    for a in accts:
+        try:
+            resp = await st.account_information.aget_user_account_orders(
+                account_id=a["id"], user_id=rec["snap_user_id"],
+                user_secret=rec["user_secret"], state="all", days=int(days))
+            for o in (_st_plain(resp.body) or []):
+                if isinstance(o, dict):
+                    o["_account"] = {"id": a["id"], "name": a.get("name"), "number": a.get("number")}
+                    raw_orders.append(o)
+        except Exception as e:
+            print(f"[snaptrade] orders {a.get('id')} falló: {e}")
+    if raw:
+        return {"ok": True, "count": len(raw_orders), "orders": raw_orders[:50]}
+    trades = [_st_map_order(o) for o in raw_orders]
+    trades = [t for t in trades if t]
+    return {"ok": True, "count": len(trades), "trades": trades}
+
+
+def _st_map_order(o):
+    """Mapea una orden de SnapTrade a un trade del journal (defensivo: los nombres
+    de campo se calibran con ?raw=1 sobre datos reales)."""
+    if not isinstance(o, dict):
+        return None
+    def pick(*keys):
+        for k in keys:
+            v = o.get(k)
+            if v not in (None, ""):
+                return v
+        return None
+    sym = pick("symbol", "universal_symbol", "option_symbol")
+    if isinstance(sym, dict):
+        sym = sym.get("symbol") or sym.get("raw_symbol") or sym.get("description")
+    status = str(pick("status", "state") or "").upper()
+    # solo fills ejecutados
+    if status and status not in ("FILLED", "EXECUTED", "COMPLETE", "COMPLETED", "PARTIAL", "PARTIALLY_FILLED"):
+        return None
+    return {
+        "broker_order_id": pick("brokerage_order_id", "id", "order_id"),
+        "symbol": sym,
+        "side": pick("action", "side"),
+        "qty": pick("filled_quantity", "total_quantity", "quantity", "units"),
+        "price": pick("execution_price", "average_fill_price", "price", "filled_price"),
+        "time": pick("time_executed", "filled_at", "executed_at", "time_placed", "created_date"),
+        "status": status,
+        "account": (o.get("_account") or {}).get("number") or (o.get("_account") or {}).get("name"),
+        "source": "snaptrade",
+    }
 
 
 @app.get("/api/broker/tradestation/connect")
