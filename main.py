@@ -3620,7 +3620,7 @@ async def _st_register(app_user_id: str):
         body = _st_plain(resp.body)
         secret = body.get("userSecret")
     except Exception as e:
-        msg = str(e)
+        msg = str(e) + " | body=" + str(getattr(e, "body", ""))[:300]
         if "already" in msg.lower() or "exist" in msg.lower():
             # perdimos el secret: borrar y re-registrar
             try:
