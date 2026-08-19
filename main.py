@@ -3360,12 +3360,24 @@ async def diag_snaptrade(key: str = ""):
         return (v[:4] + "..." + v[-3:] + f" ({len(v)} chars)") if len(v) > 8 else f"({len(v)} chars)"
     encontradas = {k: mask(v) for k, v in os.environ.items()
                    if "SNAP" in k.upper() or "TRADESTATION" in k.upper()}
+    # Nombres de TODAS las variables configuradas (SOLO nombres, sin valores) para
+    # ver si el nombre se escribió distinto. Se filtran las internas de Railway.
+    _internas = ("RAILWAY_", "NIXPACKS_", "PATH", "HOME", "PORT", "PYTHON", "LANG",
+                 "PWD", "SHLVL", "_", "HOSTNAME", "SSL_", "GPG_", "LD_")
+    otras = sorted([k for k in os.environ
+                    if not any(k.upper().startswith(i) for i in _internas)])
     return {
         "nombres_que_el_codigo_busca": ["SNAPTRADE_CLIENT_ID", "SNAPTRADE_CONSUMER_KEY"],
         "variables_encontradas_en_este_servicio": encontradas or "(ninguna)",
         "leidas_por_el_codigo": {
             "SNAPTRADE_CLIENT_ID": mask(SNAPTRADE_CLIENT_ID),
             "SNAPTRADE_CONSUMER_KEY": mask(SNAPTRADE_CONSUMER_KEY),
+        },
+        "nombres_de_variables_configuradas": otras,
+        "total_variables": len(otras),
+        "claves_conocidas_presentes": {
+            "FLASHALPHA_KEY": bool(FLASHALPHA_KEY), "GROQ_KEY": bool(GROQ_KEY),
+            "FINNHUB_KEY": bool(FINNHUB_KEY),
         },
         "servicio": "Liberato-Backend (dashboard) — web-production-33671",
         "ayuda": "Si 'variables_encontradas' está vacío, las variables se pusieron "
