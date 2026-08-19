@@ -1334,18 +1334,13 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="sbi" data-v="genius" onclick="go('genius')"><span class="si">★</span>Zona de Genio</button>
     <button class="sbi" data-v="playbooks" onclick="go('playbooks')"><span class="si">📚</span>Playbooks</button>
   </div>
-  <div style="padding:12px 12px 10px;">
-  <button class="sb-cta" onclick="openTradeModal()" aria-label="Subir trade"
-    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
-           background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.08));
-           border:0.5px solid rgba(201,168,76,0.35);color:var(--gold);
-           font-size:13px;font-weight:600;letter-spacing:0.01em;padding:13px;">
-    <span style="font-size:16px;">+</span> Subir Trade
+  <!-- Debajo de Playbooks: AI Coach + Conectar broker -->
+  <div style="padding:8px 12px 12px;display:flex;flex-direction:column;gap:8px;">
+  <button class="sb-ai-chat-btn" onclick="openAIChat()" aria-label="Preguntar al AI Coach" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--gold);cursor:pointer;letter-spacing:0.04em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+    <span style="font-size:12px;">✦</span> AI Coach
   </button>
-</div>
-<div style="padding:0 12px 12px;">
-  <button class="sb-ai-chat-btn" onclick="openAIChat()" aria-label="Preguntar al AI Coach" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:9px 12px;font-size:10px;color:rgba(232,228,217,0.55);cursor:pointer;letter-spacing:0.06em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-    <span style="color:var(--gold);font-size:12px;">✦</span> AI Coach
+  <button class="sb-ai-chat-btn" onclick="openCsvImport()" aria-label="Conectar broker" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:rgba(232,228,217,0.75);cursor:pointer;letter-spacing:0.04em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+    <span style="color:var(--gold);font-size:12px;">🔗</span> Conectar broker
   </button>
 </div>
 </nav>
@@ -1467,7 +1462,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <div id="dfp-tr" class="dfp-instance"></div>
         <button class="sb-cta" style="padding:10px 14px;" onclick="openForm()">+ Trade</button>
-        <button class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()">⬆ Importar CSV</button>
+        <button class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()">🔗 Conectar broker</button>
         <button class="sb-ai-chat-btn" style="padding:10px 14px;font-size:10px;" onclick="openAIChat()">✦ AI Coach</button>
       </div>
     </div>
@@ -1708,7 +1703,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 <div class="doverlay" id="csv-overlay" onclick="closeCsvImport()"></div>
 <div class="tdrawer" id="csv-modal">
   <div class="td-handle"></div>
-  <div class="td-head"><span class="td-title">Importar Trades (IA)</span><button class="td-close" onclick="closeCsvImport()">✕</button></div>
+  <div class="td-head"><span class="td-title">Conectar broker</span><button class="td-close" onclick="closeCsvImport()">✕</button></div>
   <div class="td-body" id="csv-body">
     <!-- ── OPCIÓN PRINCIPAL: CONECTAR BROKER (automático) ── -->
     <div class="fsec">
@@ -2444,26 +2439,44 @@ var _csvParsedTrades=null;
 
 // Conectar broker por API (OAuth solo lectura). El backend responde si ya está
 // configurado (hay client_id) o si falta la API key todavía.
+// Conectar broker vía SnapTrade (solo lectura). Abre el portal real en otra
+// pestaña; 'tradestation' pre-selecciona TradeStation, 'snaptrade' deja elegir.
 function connectBroker(broker){
   var st=document.getElementById('broker-status');
-  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
-  // SnapTrade usa /status (el portal real se monta al configurar las credenciales);
-  // TradeStation directo usa /connect (devuelve la URL de OAuth).
-  var path=(broker==='snaptrade')?'/status':'/connect';
-  fetch(JOURNAL_BACKEND+'/api/broker/'+broker+path)
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Abriendo portal…</div>';
+  var body=(broker==='tradestation')?{broker:'TRADESTATION'}:{};
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/portal',{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
     .then(function(r){return r.json();})
     .then(function(d){
-      if(d.configured && d.auth_url){
-        // Redirige al login de TradeStation (el usuario da permiso de solo lectura)
-        window.location.href=d.auth_url;
+      if(d.ok && d.url){
+        window.open(d.url,'_blank','noopener');
+        if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.25);border-radius:9px;padding:12px;line-height:1.6;">✓ Portal abierto en otra pestaña. Autoriza tu broker (solo lectura) y vuelve aquí.<button onclick="syncFills()" style="width:100%;margin-top:10px;padding:11px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">↻ Sincronizar mis trades</button></div>';
       }else{
-        // Aún no hay API key: mensaje honesto, sin fingir que conecta
-        if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);background:rgba(201,168,76,0.08);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px;line-height:1.5;">⏳ '+_esc(d.message||'Conexión aún no activada.')+'</div>';
+        if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);background:rgba(201,168,76,0.08);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px;line-height:1.5;">⏳ '+_esc(d.detail||d.message||'Conexión aún no disponible.')+'</div>';
       }
     })
     .catch(function(err){
       if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo conectar con el servidor.</div>';
     });
+}
+// Trae los fills reales del broker y los guarda para el journal.
+function syncFills(){
+  var st=document.getElementById('broker-status');
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando fills reales…</div>';
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
+      var fills=d.trades||[];
+      try{localStorage.setItem('lbc_broker_fills',JSON.stringify({ts:Date.now(),fills:fills}));}catch(e){}
+      var n=fills.length;
+      var prev=fills.slice(0,4).map(function(t){
+        return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:10.5px;font-family:\'DM Mono\',monospace;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border2);"><span>'+_esc((t.time||'').slice(0,16))+'</span><span style="color:'+(String(t.side).toUpperCase()==='BUY'?'#2EE8A4':'#B197FC')+'">'+_esc(t.side||'')+'</span><span style="flex:1;text-align:right;">'+_esc(String(t.symbol||'').slice(0,20))+' @'+_esc(t.price)+'</span></div>';
+      }).join('');
+      if(st)st.innerHTML='<div style="font-size:12px;color:var(--gold);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.25);border-radius:9px;padding:12px;line-height:1.6;">✓ <strong>'+n+'</strong> fills reales sincronizados.<div style="margin-top:8px;">'+prev+'</div><div style="font-size:10px;color:var(--text3);margin-top:8px;">Se integrarán a tus vistas del journal.</div></div>';
+    })
+    .catch(function(err){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red al sincronizar.</div>';});
 }
 function openCsvImport(){
   document.getElementById('csv-status').innerHTML='';
