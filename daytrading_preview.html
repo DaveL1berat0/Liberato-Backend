@@ -313,7 +313,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     0 0 12px 5px rgba(204,169,79,0.65),
     0 0 28px 8px rgba(204,169,79,0.20);
   transform:translate(-50%,-50%);
-  transition:left 0.4s var(--smooth);
+  transition:left 0.4s var(--smooth),top 0.4s var(--smooth);
   z-index:7;
 }
 .imap-particle::after{
@@ -327,8 +327,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   position:absolute;top:calc(50% - 32px);
   font-family:var(--mono);font-size:12px;font-weight:800;
   color:var(--gold-bright);
-  transform:translateX(-50%);z-index:8;
-  transition:left 0.4s var(--smooth);
+  transform:translate(-50%,-50%);z-index:8;
+  transition:left 0.4s var(--smooth),top 0.4s var(--smooth);
   text-shadow:0 0 12px rgba(204,169,79,0.90),0 0 24px rgba(204,169,79,0.35);
   background:rgba(5,6,13,0.75);
   padding:2px 7px;border-radius:4px;white-space:nowrap;
@@ -336,10 +336,39 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* grid */
 .imap-grid{
   position:absolute;inset:0;
-  background-image:linear-gradient(90deg,rgba(239,236,227,0.025) 1px,transparent 1px);
-  background-size:8.33% 100%;z-index:1;
+  background-image:linear-gradient(0deg,rgba(239,236,227,0.025) 1px,transparent 1px);
+  background-size:100% 12.5%;z-index:1;
 }
 .imap-axis{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--hair);z-index:1;}
+/* ════ VOLUME / DEX PROFILE — barras horizontales por strike ════ */
+.imap-pf-center{position:absolute;top:2%;bottom:2%;left:50%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(239,236,227,0.18),transparent);z-index:2;}
+.imap-pf-bar{position:absolute;height:3px;border-radius:1.5px;transform:translateY(-50%);
+  z-index:3;transition:width 0.6s var(--smooth),left 0.6s var(--smooth),opacity 0.4s;pointer-events:none;}
+.imap-pf-bar.pos{background:linear-gradient(90deg,rgba(46,232,164,0.30),#2EE8A4);
+  box-shadow:0 0 5px rgba(46,232,164,0.35);}
+.imap-pf-bar.neg{background:linear-gradient(270deg,rgba(177,151,252,0.30),#B197FC);
+  box-shadow:0 0 5px rgba(177,151,252,0.35);}
+/* líneas de nivel clave (call/put wall, flip, max pain) sobre el eje de precio */
+.imap-pf-lvl{position:absolute;left:0;right:0;height:0;border-top-width:1px;border-top-style:dashed;
+  z-index:4;pointer-events:none;transition:top 0.6s var(--smooth);}
+.imap-pf-lvl.call{border-top-color:rgba(46,232,164,0.55);}
+.imap-pf-lvl.put{border-top-color:rgba(177,151,252,0.55);}
+.imap-pf-lvl.flip{border-top-color:rgba(204,169,79,0.60);}
+.imap-pf-lvl.maxpain{border-top-color:rgba(79,214,224,0.55);}
+.imap-pf-lab{position:absolute;font-family:var(--mono);font-size:8px;font-weight:700;
+  letter-spacing:0.05em;text-transform:uppercase;padding:2px 6px;border-radius:10px;
+  background:rgba(5,6,13,0.92);transform:translateY(-50%);z-index:6;white-space:nowrap;
+  transition:top 0.6s var(--smooth);}
+.imap-pf-lab.call{color:#2EE8A4;border:1px solid rgba(46,232,164,0.45);left:6px;}
+.imap-pf-lab.put{color:#B197FC;border:1px solid rgba(177,151,252,0.45);left:6px;}
+.imap-pf-lab.flip{color:var(--gold);border:1px solid rgba(204,169,79,0.45);right:6px;}
+.imap-pf-lab.maxpain{color:#4FD6E0;border:1px dashed rgba(79,214,224,0.55);right:6px;}
+.imap-pf-val{position:absolute;right:6px;font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--ink-4);transform:translateY(-50%);z-index:6;background:rgba(5,6,13,0.80);
+  padding:1px 5px;border-radius:4px;transition:top 0.6s var(--smooth);}
+.imap-pf-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:0.05em;z-index:2;text-align:center;padding:0 12px;}
 /* pressure bars */
 .imap-press{
   position:absolute;top:50%;height:3px;
@@ -896,7 +925,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
     <section class="regime neut" id="regime" aria-label="Market Regime">
       <div class="rg-hd">
-        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Etiqueta tal cual FlashAlpha.">&#9432;</span> · NQ Futures</div>
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = absorben movimiento (rango, reversión) · NEGATIVE = lo amplifican (tendencia). Basado en el net GEX de GexBot.">&#9432;</span> · NQ Futures</div>
       </div>
       <div class="rg-in">
         <div class="rg-verdict">
@@ -972,7 +1001,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <!-- ════ BLOCK 2 · GAMMA FIELD ════ -->
     <section class="g" aria-label="Gamma Field">
       <div class="g-hd">
-        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Mapa de zonas de liquidez del posicionamiento en opciones: Put Wall (soporte), Gamma Flip (frontera de régimen), Max Pain y Call Wall (resistencia).">&#9432;</span></div><div class="g-sub">Liquidity Zones · Price Flow</div></div></div>
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Mapa de zonas de liquidez del posicionamiento en opciones: Put Wall (soporte), Gamma Flip (frontera de régimen), Max Pain y Call Wall (resistencia).">&#9432;</span></div><div class="g-sub">Liquidity Zones · Price Flow · <span style="color:#CCA94F">GexBot</span></div></div></div>
         <div class="g-hd-r">
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
           <span class="g-live"><span class="bl"></span>Live</span>
@@ -1173,7 +1202,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   console.log('%c[LIBERATO] BUILD 2026-07-10-r12 · candles-efficient (TD+AV+persist · warm-5min · never-exhaust)','color:#CCA94F;font-weight:bold');
   var S={dir:'NEUTRAL',score:50,callWall:null,putWall:null,gammaFlip:null,maxPain:null,netGex:null,_gexMin:null,_gexMax:null,regime:null,fearScore:null,fearRating:null,momCandles:null,vix:null,
          ratio:null,price:null,prevPrice:null,dayOpen:null,dayHigh:null,dayLow:null,corr:{},events:[],candles:[],
-         vwap:null,atr:null,structure:null,volatility:null,expectedMove:null,atmIv:null,pcRatio:null,_ratioError:null,_lastQQQ:null};
+         vwap:null,atr:null,structure:null,volatility:null,expectedMove:null,atmIv:null,pcRatio:null,_ratioError:null,_lastQQQ:null,
+         perStrike:null,_pfLo:null,_pfHi:null};
 
   // ── API HEALTH TRACKING (for diagnostics panel) ──
   // status: connected | error | disconnected | loading ; source: real | mock | cache | none
@@ -1389,6 +1419,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       if(d.ratio>0){_NQ_RATIO=d.ratio;S.ratio=d.ratio;}
       else{var _idx=(d.price||d.nq_price);if(d.underlying_price>0&&_idx>0&&Math.abs(d.underlying_price-_idx)>1){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
         S.maxPain=d.max_pain?cvNQ(d.max_pain):S.maxPain;
+        // Volume profile por strike (ya en escala NQ desde el backend; NO re-escalar)
+        S.perStrike=(Array.isArray(d.per_strike)&&d.per_strike.length)?d.per_strike:null;
         // ATM IV y Expected Move REALES del backend (NDX), reemplazan el mock
         if(typeof d.atm_iv==='number')S.atmIv=d.atm_iv;
         if(typeof d.expected_move==='number')S.expectedMove=d.expected_move;
@@ -1955,57 +1987,107 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     }catch(e){el.style.display='none';}
   }
 
+  // ── VOLUME / DEX PROFILE: eje de PRECIO vertical, barras horizontales por strike ──
+  // Mapea un precio a top% dentro del panel: precio alto → arriba, bajo → abajo.
+  var _PF_PAD_TOP=6, _PF_PAD_BOT=6;   // % de margen para etiquetas
+  function yForPrice(price){
+    var lo=S._pfLo, hi=S._pfHi;
+    if(lo==null||hi==null||hi<=lo)return 50;
+    var frac=(price-lo)/(hi-lo);                 // 0=lo, 1=hi
+    return clamp(_PF_PAD_TOP+(1-frac)*(100-_PF_PAD_TOP-_PF_PAD_BOT),1,99);
+  }
+  // Calcula los límites de precio del perfil a partir de niveles clave (+ precio).
+  // NUNCA inventa: si no hay ningún ancla real, no dibuja.
+  function _computePfBounds(){
+    var cand=[S.callWall,S.putWall,S.gammaFlip,S.maxPain,S.price].filter(function(v){return typeof v==='number'&&isFinite(v)&&v>0;});
+    if(!cand.length&&Array.isArray(S.perStrike)&&S.perStrike.length){
+      cand=S.perStrike.map(function(s){return s.strike;}).filter(function(v){return typeof v==='number'&&isFinite(v);});
+    }
+    if(!cand.length)return null;
+    var lo=Math.min.apply(null,cand), hi=Math.max.apply(null,cand);
+    if(hi<=lo){var m=lo||1;lo=m*0.99;hi=m*1.01;}
+    var pad=(hi-lo)*0.10||hi*0.01;
+    return {lo:lo-pad, hi:hi+pad};
+  }
   function renderMapStatic(){
     var imap=$('imap'); if(!imap)return;
-     // Si faltan walls reales, derivar un rango visual del Gamma Flip
-     // para no romper el diseño (Regla #1: nunca inventar walls).
-     if(!S.gammaFlip)return;  // sin flip real no hay nada que anclar
-     var _haveBothWalls=(S.callWall&&S.putWall);
+    var b=_computePfBounds();
+    // Sin ningún ancla real: dejar el panel vacío (Regla #1: no inventar).
+    if(!b){S._pfLo=null;S._pfHi=null;return;}
+    S._pfLo=b.lo; S._pfHi=b.hi;
     var levels=buildLevels();
-    var sig=levels.map(function(l){return l.type+l.price;}).join('|');
-    if(sig===_levelsSig)return;   // no change → don't touch DOM (no flicker)
+    var ps=Array.isArray(S.perStrike)?S.perStrike:null;
+    // firma para evitar recrear el DOM en cada tick (mata el flicker)
+    var psSig=ps?(ps.length+':'+ps[0].strike+':'+ps[ps.length-1].strike):'none';
+    var sig=Math.round(b.lo)+'~'+Math.round(b.hi)+'|'+levels.map(function(l){return l.type+l.price;}).join('|')+'|'+psSig;
+    if(sig===_levelsSig)return;
     _levelsSig=sig;
-    // remove only the level nodes (not particle/pressure/grid/axis)
-    imap.querySelectorAll('.imap-zone,.imap-line,.imap-tag,.imap-val').forEach(function(n){n.remove();});
+    // limpiar sólo los nodos del perfil (no partícula/grid/axis)
+    imap.querySelectorAll('.imap-zone,.imap-line,.imap-tag,.imap-val,.imap-pf-center,.imap-pf-bar,.imap-pf-lvl,.imap-pf-lab,.imap-pf-val,.imap-pf-empty').forEach(function(n){n.remove();});
+    // ocultar las barras de presión antiguas (no aplican al perfil vertical)
+    var pc0=$('imap-press-call'), pp0=$('imap-press-put');
+    if(pc0)pc0.style.display='none'; if(pp0)pp0.style.display='none';
+    // línea central (spot axis)
+    var ctr=document.createElement('div'); ctr.className='imap-pf-center'; imap.appendChild(ctr);
+    // ── barras por strike (perfil real) ──
+    var drew=0;
+    if(ps){
+      var inRange=ps.filter(function(s){return typeof s.strike==='number'&&typeof s.gex==='number'&&s.strike>=b.lo&&s.strike<=b.hi;});
+      var maxAbs=0; inRange.forEach(function(s){var a=Math.abs(s.gex);if(a>maxAbs)maxAbs=a;});
+      if(maxAbs>0){
+        inRange.forEach(function(s){
+          var a=Math.abs(s.gex);
+          if(a<maxAbs*0.02)return;               // descartar ruido mínimo
+          var w=clamp(a/maxAbs*44,0.6,44);        // % de ancho por lado
+          var y=yForPrice(s.strike);
+          var bar=document.createElement('div');
+          var pos=(s.gex>=0);
+          bar.className='imap-pf-bar '+(pos?'pos':'neg');
+          if(pos){bar.style.cssText='left:50%;width:'+w+'%;top:'+y+'%;';}
+          else   {bar.style.cssText='left:'+(50-w)+'%;width:'+w+'%;top:'+y+'%;';}
+          imap.appendChild(bar); drew++;
+        });
+      }
+    }
+    // Fallback honesto: sin perfil por strike, marcar sólo los 4 niveles clave.
+    if(!drew){
+      var note=document.createElement('div'); note.className='imap-pf-empty';
+      note.textContent='Perfil por strike no disponible · niveles clave';
+      imap.appendChild(note);
+    }
+    // ── líneas + etiquetas de niveles clave (siempre por encima de las barras) ──
     levels.forEach(function(lv){
-      var x=xForLevel(lv.price);
-      // zone
-      var z=document.createElement('div'); z.className='imap-zone '+lv.type;
-      z.style.cssText='position:absolute;top:0;bottom:0;left:'+(x-9)+'%;width:18%;';
-      imap.appendChild(z);
-      // neon line
-      var ln=document.createElement('div'); ln.className='imap-line '+lv.type;
-      ln.style.cssText='position:absolute;top:0;bottom:0;left:'+x+'%;width:2px;';
-      imap.appendChild(ln);
-      // tag
-      var tg=document.createElement('div'); tg.className='imap-tag '+lv.type;
-      tg.style.cssText='position:absolute;top:10px;left:'+x+'%;transform:translateX(-50%);';
-      tg.textContent=lv.label; imap.appendChild(tg);
-      // value
-      var vl=document.createElement('div'); vl.className='imap-val '+lv.type;
-      vl.style.cssText='position:absolute;bottom:10px;left:'+x+'%;transform:translateX(-50%);';
-      vl.textContent=nfmt(lv.price); imap.appendChild(vl);
+      var y=yForPrice(lv.price);
+      var ln=document.createElement('div'); ln.className='imap-pf-lvl '+lv.type;
+      ln.style.top=y+'%'; imap.appendChild(ln);
+      var lab=document.createElement('div'); lab.className='imap-pf-lab '+lv.type;
+      lab.style.top=y+'%'; lab.textContent=lv.label+' '+nfmt(lv.price); imap.appendChild(lab);
     });
   }
-  // LIVE: only moves the particle + pressure bars + readouts (every tick, no DOM churn)
+  // LIVE: mueve la bola dorada (spot) + readouts en cada tick, sin recrear DOM.
   function renderMapLive(){
     var p=$('iro-price'); if(p)p.textContent=nfmt(S.price);
-    if(!S.callWall||!S.putWall||!S.price)return;
-    var hi=S.callWall, lo=S.putWall, range=hi-lo; if(range<=0)return;
-    var px=xForLevel(S.price);
     var part=$('imap-particle'), ptag=$('imap-ptag');
-    if(part)part.style.left=px+'%';
-    if(ptag){ptag.style.left=px+'%';ptag.textContent=nfmt(S.price);}
-    var toCall=Math.max(0,S.callWall-S.price), toPut=Math.max(0,S.price-S.putWall), total=toCall+toPut;
-    var callPull=total>0?(toPut/total):0.5, putPull=total>0?(toCall/total):0.5;
-    var pc=$('imap-press-call'), pp=$('imap-press-put');
-    var maxSpan=Math.min(px,100-px,35);
-    if(pc){pc.style.cssText='position:absolute;top:50%;left:'+px+'%;width:'+(callPull*maxSpan)+'%;height:3px;transform:translateY(-50%);border-radius:2px;';}
-    if(pp){pp.style.cssText='position:absolute;top:50%;left:'+(px-putPull*maxSpan)+'%;width:'+(putPull*maxSpan)+'%;height:3px;transform:translateY(-50%);border-radius:2px;';}
+    var haveBounds=(S._pfLo!=null&&S._pfHi!=null&&S._pfHi>S._pfLo);
+    if(typeof S.price==='number'&&haveBounds){
+      var y=yForPrice(S.price);
+      if(part){part.style.left='50%';part.style.top=y+'%';part.style.display='';}
+      if(ptag){ptag.style.left='50%';ptag.style.top='calc('+y+'% - 18px)';ptag.textContent=nfmt(S.price);ptag.style.display='';}
+    }else{
+      if(part)part.style.display='none';
+      if(ptag)ptag.style.display='none';
+    }
+    // readouts (independientes del perfil)
     var ic=$('iro-call'),ip=$('iro-put'),ipos=$('iro-pos');
-    if(ic)ic.textContent='+'+nfmt(toCall);
-    if(ip)ip.textContent='-'+nfmt(toPut);
-    if(ipos)ipos.textContent=clamp((S.price-lo)/range*100,0,100).toFixed(0)+'%';
+    if(S.callWall&&S.putWall&&typeof S.price==='number'){
+      var range=S.callWall-S.putWall;
+      var toCall=Math.max(0,S.callWall-S.price), toPut=Math.max(0,S.price-S.putWall);
+      if(ic)ic.textContent='+'+nfmt(toCall);
+      if(ip)ip.textContent='-'+nfmt(toPut);
+      if(ipos&&range>0)ipos.textContent=clamp((S.price-S.putWall)/range*100,0,100).toFixed(0)+'%';
+    }else{
+      if(ic)ic.textContent='—'; if(ip)ip.textContent='—'; if(ipos)ipos.textContent='—';
+    }
   }
   function renderMap(){ renderMapStatic(); renderMapLive(); }
 
@@ -2690,12 +2772,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     _prevPriceGamma=S.price;
   }
   function _triggerBreakout(imap,level,dir){
-    if(!S.callWall||!S.putWall)return;
-    var range=S.callWall-S.putWall;
-    var x=10+((level-S.putWall)/range)*80; // % horizontal position
+    // Perfil vertical: el destello del cruce es una línea HORIZONTAL en el nivel.
+    if(S._pfLo==null||S._pfHi==null)return;
+    var y=yForPrice(level); // % vertical position
     var burst=document.createElement('div');
     burst.className='gamma-burst '+dir;
-    burst.style.left=x+'%';
+    burst.style.cssText='left:0;right:0;top:'+y+'%;bottom:auto;width:auto;height:3px;transform:none;';
     imap.appendChild(burst);
     setTimeout(function(){if(burst.parentNode)burst.parentNode.removeChild(burst);},1200);
   }
