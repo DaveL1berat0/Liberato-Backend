@@ -1331,6 +1331,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="sbi active" data-v="dashboard" onclick="go('dashboard')"><span class="si">◈</span>Dashboard</button>
     <button class="sbi" data-v="calendar" onclick="go('calendar')"><span class="si">◫</span>Calendario</button>
     <button class="sbi" data-v="trades" onclick="go('trades')"><span class="si">≡</span>Mis Trades</button>
+    <button class="sbi" data-v="reports" onclick="go('reports')"><span class="si">▤</span>Reportes</button>
     <button class="sbi" data-v="genius" onclick="go('genius')"><span class="si">★</span>Zona de Genio</button>
     <button class="sbi" data-v="playbooks" onclick="go('playbooks')"><span class="si">📚</span>Playbooks</button>
   </div>
@@ -1482,6 +1483,22 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
       <span id="tr-accounts" style="display:inline-flex;gap:6px;align-items:center;margin-left:auto;"></span>
     </div>
     <div class="tlist" id="tlist"></div>
+  </div>
+
+  <!-- REPORTES -->
+  <div class="view" id="v-reports">
+    <button class="view-back" onclick="go('dashboard')"><span class="vb-arrow">←</span> Dashboard</button>
+    <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div><div class="ph-eyebrow">◆ Analítica</div><h1 class="ph-title">Reportes</h1></div>
+    </div>
+    <div class="frow" id="rep-tabs" style="margin-bottom:14px;">
+      <button class="fchip active" data-rt="resumen" onclick="setReportTab('resumen')">Resumen</button>
+      <button class="fchip" data-rt="diahora" onclick="setReportTab('diahora')">Día &amp; Hora</button>
+      <button class="fchip" data-rt="simbolo" onclick="setReportTab('simbolo')">Símbolo</button>
+      <button class="fchip" data-rt="playbook" onclick="setReportTab('playbook')">Playbook</button>
+      <button class="fchip" data-rt="calidad" onclick="setReportTab('calidad')">Calidad de datos</button>
+    </div>
+    <div id="rep-body"></div>
   </div>
 
   <!-- ZONA DE GENIO (unificada con AI Coach) -->
@@ -2231,6 +2248,78 @@ function approveTrade(id){var t=T.find(function(x){return x.id===id;});if(t){t.s
 function discardTrade(id){if(!confirm('¿Descartar este trade? No se podrá recuperar sin re-sincronizar.'))return;T=T.filter(function(x){return x.id!==id;});saveTrades(T);go(curView);}
 function approveAllExpired(){var n=0;T.forEach(function(t){if(t.status==='pending'&&t.expired){t.status='verified';n++;}});saveTrades(T);go(curView);}
 function approveAllClosed(){T.forEach(function(t){if(t.status==='pending'&&t.exit!=null){t.status='verified';}});saveTrades(T);go(curView);}
+
+// ══ REPORTES ══
+var repTab='resumen', _dfRep={start:null,end:null};
+var REP_DOW=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+function repTrades(){var b=baseTrades(),r=_dfRep||{};return b.filter(function(t){if(r.start&&t.date<r.start)return false;if(r.end&&t.date>r.end)return false;return true;});}
+function setReportTab(tab){repTab=tab;document.querySelectorAll('[data-rt]').forEach(function(b){b.classList.toggle('active',b.dataset.rt===tab);});renderReports();}
+function pbName(k){try{var pbs=loadPlaybooks();for(var i=0;i<pbs.length;i++)if(pbs[i].id===k)return pbs[i].emoji+' '+pbs[i].name;}catch(e){}return k;}
+function repAgg(arr,keyFn){var m={};arr.forEach(function(t){var k=keyFn(t);if(k==null||k==='')return;k=String(k);if(!m[k])m[k]={key:k,n:0,w:0,pnl:0};m[k].n++;if(t.result==='win')m[k].w++;m[k].pnl+=t.pnl;});return Object.keys(m).map(function(k){var o=m[k];o.wr=Math.round(o.w/o.n*100);return o;});}
+function repBars(rows,labelFn){
+  if(!rows.length)return '<div class="empty" style="padding:22px;"><p>Sin datos en este periodo.</p></div>';
+  var max=Math.max.apply(null,rows.map(function(r){return Math.abs(r.pnl);}))||1;
+  return '<div style="display:flex;flex-direction:column;gap:9px;">'+rows.map(function(r){
+    var pct=Math.max(3,Math.round(Math.abs(r.pnl)/max*100)),pos=r.pnl>=0;
+    return '<div style="display:grid;grid-template-columns:120px 1fr auto;gap:12px;align-items:center;">'
+      +'<span style="font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+_esc(labelFn(r.key))+'">'+_esc(labelFn(r.key))+'</span>'
+      +'<div style="height:20px;background:rgba(255,255,255,0.03);border-radius:5px;position:relative;overflow:hidden;"><div style="position:absolute;top:0;'+(pos?'left':'right')+':0;height:100%;width:'+pct+'%;background:'+(pos?'var(--green)':'var(--red)')+';opacity:0.8;border-radius:5px;"></div></div>'
+      +'<span style="font-size:12px;font-family:\'DM Mono\',monospace;white-space:nowrap;" class="'+(pos?'pos':'neg')+'">'+f$(r.pnl)+'<span style="color:var(--text3);"> · '+r.n+'t · '+r.wr+'%</span></span>'
+      +'</div>';
+  }).join('')+'</div>';
+}
+function repSection(title,inner){return '<div style="background:var(--card,rgba(255,255,255,0.015));border:0.5px solid var(--border2);border-radius:12px;padding:16px 18px;margin-bottom:16px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;">'+title+'</div>'+inner+'</div>';}
+function renderReports(){
+  try{dfpRenderBars();}catch(e){}
+  var body=document.getElementById('rep-body');if(!body)return;
+  var arr=repTrades();
+  if(!arr.length){body.innerHTML=emptyStateHTML();return;}
+  if(repTab==='resumen'){
+    var s=stats(arr),dd=calcMaxDD(arr);
+    var byDate={};arr.forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
+    var days=Object.keys(byDate),bestD=null,worstD=null;
+    days.forEach(function(d){if(bestD===null||byDate[d]>byDate[bestD])bestD=d;if(worstD===null||byDate[d]<byDate[worstD])worstD=d;});
+    function kpi(l,v,c){return '<div style="background:rgba(255,255,255,0.015);border:0.5px solid var(--border2);border-radius:10px;padding:13px 15px;"><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">'+l+'</div><div style="font-size:20px;font-weight:700;font-family:\'DM Mono\',monospace;" class="'+(c||'')+'">'+v+'</div></div>';}
+    body.innerHTML=repSection('Resumen del periodo',
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">'
+      +kpi('Net P&L',f$(s.total),fc(s.total))+kpi('Trades',s.n,'')+kpi('Win Rate',s.wr+'%','')+kpi('Profit Factor',s.pf.toFixed(2),'')
+      +kpi('Expectancy',f$(s.exp),fc(s.exp))+kpi('Avg Win',f$(s.avgW),'pos')+kpi('Avg Loss',f$(-s.avgL),'neg')+kpi('Max Drawdown',f$(-dd),'neg')+'</div>')
+      +(bestD?repSection('Mejor y peor día',
+        '<div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="flex:1;min-width:180px;"><div style="font-size:11px;color:var(--text3);">Mejor día</div><div style="font-size:16px;font-weight:700;" class="pos">'+f$(byDate[bestD])+'</div><div style="font-size:11px;color:var(--text2);">'+bestD+'</div></div>'
+        +'<div style="flex:1;min-width:180px;"><div style="font-size:11px;color:var(--text3);">Peor día</div><div style="font-size:16px;font-weight:700;" class="neg">'+f$(byDate[worstD])+'</div><div style="font-size:11px;color:var(--text2);">'+worstD+'</div></div></div>'):'');
+  } else if(repTab==='diahora'){
+    var byDow=repAgg(arr,function(t){return (typeof t.dow==='number')?t.dow:new Date(t.date+'T12:00:00').getDay();}).sort(function(a,b){return a.key-b.key;});
+    var byHour=repAgg(arr,function(t){return (typeof t.hour==='number')?t.hour:(parseInt(t.time,10)||0);}).sort(function(a,b){return (+a.key)-(+b.key);});
+    var byDur=repAgg(arr,function(t){if(!t.exitTime||!t.date)return 'Sin dato';var ms=new Date(t.exitTime)-new Date(t.date+'T'+t.time);var min=ms/60000;return min<5?'< 5 min':min<30?'5-30 min':min<120?'30 min-2 h':'> 2 h';});
+    body.innerHTML=repSection('Por día de la semana',repBars(byDow,function(k){return REP_DOW[k]||k;}))
+      +repSection('Por hora de entrada (ET)',repBars(byHour,function(k){return (k<10?'0'+k:k)+':00';}))
+      +repSection('Por duración del hold',repBars(byDur,function(k){return k;}));
+  } else if(repTab==='simbolo'){
+    var bySym=repAgg(arr,function(t){return t.asset;}).sort(function(a,b){return b.pnl-a.pnl;});
+    body.innerHTML=repSection('Rendimiento por símbolo',repBars(bySym,function(k){return k;}));
+  } else if(repTab==='playbook'){
+    var byPb=repAgg(arr,function(t){return t.playbookId||t.setup||'—';}).sort(function(a,b){return b.pnl-a.pnl;});
+    body.innerHTML=repSection('Rendimiento por playbook / setup',repBars(byPb,function(k){return pbName(k);}));
+  } else if(repTab==='calidad'){
+    var n=arr.length;
+    var withStop=arr.filter(function(t){return t.stop!=null&&+t.stop!==0;}).length;
+    var withCtx=arr.filter(function(t){return t.vwap||t.gamma||t.t4h;}).length;
+    var withPb=arr.filter(function(t){return t.playbookId;}).length;
+    var pend=T.filter(function(t){return t.status==='pending';}).length;
+    var exp=T.filter(function(t){return t.expired;}).length;
+    var feesUnknown=arr.filter(function(t){return t.source==='snaptrade';}).length;
+    var log=[];try{log=JSON.parse(localStorage.getItem(userKey('lbc_import_log'))||'[]');}catch(e){}
+    var dup=log.reduce(function(s,x){return s+(x.dup||0);},0);
+    function q(l,v,sub){return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border2);"><span style="font-size:12px;color:var(--text2);">'+l+'</span><span style="font-size:13px;font-family:\'DM Mono\',monospace;color:var(--text);">'+v+(sub?'<span style="color:var(--text3);font-size:10px;"> '+sub+'</span>':'')+'</span></div>';}
+    function pctl(a,b){return b?Math.round(a/b*100)+'%':'—';}
+    body.innerHTML=repSection('Calidad de tus datos',
+      q('Trades verificados',n,'')+q('% con stop registrado',pctl(withStop,n),'('+withStop+')')
+      +q('% con contexto (VWAP/gamma/4H)',pctl(withCtx,n),'('+withCtx+')')+q('% enlazados a un playbook',pctl(withPb,n),'('+withPb+')')
+      +q('En revisión (sin aprobar)',pend,'')+q('Opciones expiradas (inferidas)',exp,'')
+      +q('Comisiones no disponibles (broker)',feesUnknown,'P&L bruto')+q('Duplicados ignorados al importar',dup,''))
+      +'<div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding:0 4px;">Mejora la calidad completando stop y contexto en el detalle de cada trade, y enlazándolos a un playbook. Las opciones expiradas se asumen OTM: edita las que fueron ITM/asignadas.</div>';
+  }
+}
 function renderTItems(arr){
   return arr.map(function(t){
     var ctx='';
@@ -3297,7 +3386,7 @@ function go(v){
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
   document.getElementById('v-'+v).classList.add('active');
   document.querySelectorAll('.sbi,.bti').forEach(function(el){el.classList.toggle('active',el.dataset.v===v);});
-  if(v==='dashboard')renderDash();else if(v==='calendar')renderCal();else if(v==='trades')renderTrades();else if(v==='genius')renderGenius();else if(v==='playbooks')renderPlaybooks();
+  if(v==='dashboard')renderDash();else if(v==='calendar')renderCal();else if(v==='trades')renderTrades();else if(v==='reports')renderReports();else if(v==='genius')renderGenius();else if(v==='playbooks')renderPlaybooks();
   try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
 }
 document.querySelectorAll('[data-f]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-f]').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');trFilter=btn.dataset.f;renderTrades();});});
