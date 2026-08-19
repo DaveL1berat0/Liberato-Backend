@@ -1627,7 +1627,7 @@ nav { max-width: 100%; }
 
   <div class="countdown">
     <div class="cd-eyebrow"><div class="cd-dot"></div>Proximo ciclo Q3</div>
-    <h3 class="cd-title">El acceso abre el <em>1 de Julio</em></h3>
+    <h3 class="cd-title">El acceso abre el <em>31 de Agosto</em></h3>
     <p class="cd-sub">Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.</p>
     <div class="cd-timer">
       <div class="cd-unit"><span class="cd-num" id="cdd">00</span><span class="cd-lbl">Dias</span></div>
@@ -1638,7 +1638,7 @@ nav { max-width: 100%; }
       <span class="cd-sep">:</span>
       <div class="cd-unit"><span class="cd-num" id="cds">00</span><span class="cd-lbl">Segundos</span></div>
     </div>
-    <p class="cd-date">Apertura oficial &middot; 01 Julio 2026 &middot; 12:00 AM ET</p>
+    <p class="cd-date">Apertura oficial &middot; 31 Agosto 2026 &middot; 12:00 AM ET</p>
     <p class="cd-spots">&mdash; <span id="spots-count">20</span> spots disponibles &mdash;</p>
     <button class="cd-btn" onclick="openNewsletter()">Notificarme cuando abra &#8594;</button>
   </div>
@@ -1659,7 +1659,7 @@ nav { max-width: 100%; }
   <div class="sticky-cta-inner">
     <div class="sticky-cta-text">
       <span class="sticky-cta-dot"></span>
-      <span><strong id="sticky-spots">20</strong> spots para el ciclo de Julio</span>
+      <span><strong id="sticky-spots">20</strong> spots para el ciclo de Agosto</span>
     </div>
     <button class="sticky-cta-btn" onclick="window.open('https://whop.com/dave-liberato-group/live-day-trading-52/','_blank')">Reservar mi lugar &#8594;</button>
   </div>
@@ -1904,7 +1904,7 @@ document.querySelectorAll('.block').forEach(function(b){
 
 
 // COUNTDOWN
-function updateCD(){var target=new Date('2026-07-01T00:00:00'),now=new Date(),diff=target-now;if(diff<=0){['cdd','cdh','cdm','cds'].forEach(function(id){document.getElementById(id).textContent='00';});return;}document.getElementById('cdd').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');document.getElementById('cdh').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');}
+function updateCD(){var target=new Date('2026-08-31T00:00:00'),now=new Date(),diff=target-now;if(diff<=0){['cdd','cdh','cdm','cds'].forEach(function(id){document.getElementById(id).textContent='00';});return;}document.getElementById('cdd').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');document.getElementById('cdh').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');}
 updateCD();setInterval(updateCD,1000);
 </script>
 
@@ -2382,13 +2382,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Broker regulado por SEC, FINRA y SIPC. Cuenta real. No simulada.': 'Broker regulated by SEC, FINRA and SIPC. Real account. Not simulated.',
     'Proximo ciclo Q3': 'Next cycle Q3',
     'El acceso abre el': 'Access opens on',
-    '1 de Julio': 'July 1st',
+    '31 de Agosto': 'August 31st',
     'Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.': 'Limited spots. Once full, access closes until the next cycle.',
     'Dias': 'Days',
     'Horas': 'Hours',
     'Minutos': 'Minutes',
     'Segundos': 'Seconds',
-    'Apertura oficial · 01 Julio 2026 · 12:00 AM ET': 'Official opening · July 01 2026 · 12:00 AM ET',
+    'Apertura oficial · 31 Agosto 2026 · 12:00 AM ET': 'Official opening · August 31 2026 · 12:00 AM ET',
     'Notificarme cuando abra →': 'Notify me when it opens →',
     'Aviso legal:': 'Legal notice:',
     'Contacto': 'Contact',
