@@ -185,7 +185,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   
 
 /* STRUCTURE METER — radial speedometer · CHOP / RANGE / TREND */
-.rg-meter{padding:var(--sp3) var(--sp4);display:flex;align-items:center;justify-content:center;gap:var(--sp4);}
+.rg-meter{padding:var(--sp3) var(--sp4);display:flex;align-items:stretch;justify-content:space-between;gap:var(--sp5);}
 .struct{position:relative;width:200px;flex-shrink:0;}
 .structmeter{position:relative;width:200px;height:118px;}
 .structmeter svg{width:100%;height:100%;overflow:visible;}
@@ -213,7 +213,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sm-poles{display:flex;justify-content:space-between;width:200px;margin-top:-2px;padding:0 6px;}
 .sm-pole{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.4s var(--ease);}
 .sm-pole.range{color:rgba(177,151,252,0.55);} .sm-pole.range{color:rgba(107,166,255,0.55);} .sm-pole.trend{color:rgba(52,224,161,0.55);}
-.rg-meter-stats{display:flex;flex-direction:column;gap:var(--sp2);min-width:0;}
+.rg-meter-stats{display:flex;flex-direction:column;justify-content:space-evenly;gap:var(--sp2);min-width:0;flex:1;min-height:150px;}
 .rg-ms{display:flex;align-items:center;justify-content:space-between;gap:14px;}
 .rg-ms-k{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);}
 .rg-ms-v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);}
@@ -982,7 +982,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
             <div class="sm-poles"><span class="sm-pole range">Range</span><span class="sm-pole neutral">Neutral</span><span class="sm-pole trend">Trend</span></div>
           </div>
           <div class="rg-meter-stats">
-            <div class="rg-ms"><span class="rg-ms-k">⬡ Dealer <span class="info-i" title="Posición gamma de los market makers. Long γ: compran caídas y venden subidas (estabilizan). Short γ: venden caídas y compran subidas (amplifican).">&#9432;</span></span><span class="rg-ms-v" id="rg-dealer">—</span></div>
+            <!-- Dealer (Long/Short γ) eliminado: redundante con el POSITIVE/NEGATIVE grande -->
             <div class="rg-ms rg-ms-source"><span class="rg-ms-k">⟡ Gamma neta <em>→ intensidad</em></span><span class="rg-ms-v" id="rg-netgex">—</span></div>
             <div class="rg-gex-bar-wrap"><div class="rg-gex-bar"><div class="rg-gex-fill" id="rg-gex-fill"></div></div><span class="rg-gex-int" id="rg-gex-int">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">⊘ Points to Flip <em>→ define régimen</em> <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
