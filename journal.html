@@ -1736,6 +1736,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
         <button onclick="connectBroker('snaptrade')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
           <span style="font-family:'DM Mono',monospace;">Conectar mi broker</span> →
         </button>
+        <button onclick="syncFills()" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;border:0.5px solid rgba(46,232,164,0.35);background:rgba(46,232,164,0.06);color:var(--green);font-weight:600;font-size:12.5px;cursor:pointer;">↻ Ya está conectado · Sincronizar mis trades</button>
         <div id="broker-status" style="margin-top:10px;"></div>
         <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">TradeStation · Tradovate · IBKR · +20 brokers</div>
         <!-- alternativa: TradeStation directo (sin intermediario) -->
@@ -3414,6 +3415,13 @@ document.addEventListener('DOMContentLoaded', function(){
     renderCtxForm();       // render dynamic context buttons
     renderFormChecklist(); // render editable checklist
     go('dashboard');       // then render dashboard (needs pickers in DOM)
+    // Auto-sync al volver del portal de SnapTrade (?snaptrade=ok): trae los fills
+    // sin que el usuario tenga que pulsar "Sincronizar" a mano.
+    if(new URLSearchParams(window.location.search).get('snaptrade')==='ok'){
+      go('trades');
+      var b=document.getElementById('csv-overlay'); if(b){openCsvImport();}
+      setTimeout(function(){try{syncFills();}catch(e){}},400);
+    }
   }catch(e){console.error('init',e);}
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeForm();closeTDM();closeAIChat();}});
