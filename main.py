@@ -3875,8 +3875,9 @@ async def journal_parse_csv(request: Request):
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json={"model": "llama-3.3-70b-versatile", "max_tokens": 6000,
+                json={"model": "qwen/qwen3.6-27b", "max_tokens": 6000,
                       "temperature": 0.1, "response_format": {"type": "json_object"},
+                      "reasoning_effort": "none",   # llama-3.3 decomisionado; qwen es el modelo vivo (ver institutional)
                       "messages": [{"role": "system", "content": sys_msg},
                                    {"role": "user", "content": usr_msg}]}
             )
