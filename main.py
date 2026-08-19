@@ -87,6 +87,10 @@ SNAPTRADE_CONSUMER_KEY = os.getenv("SNAPTRADE_CONSUMER_KEY", "").strip()
 # A dónde vuelve el estudiante tras conectar su broker en el portal de SnapTrade.
 SNAPTRADE_REDIRECT_URI = os.getenv("SNAPTRADE_REDIRECT_URI",
     "https://davel1berat0.github.io/Liberato-Backend/journal.html?snaptrade=ok").strip()
+# "personal" (key gratis = 1 usuario, tú) o "commercial" (multiusuario, de pago).
+# En personal NO se registra usuario ni se envían userId/userSecret: la key ya
+# identifica al usuario. Para pasar a multiusuario: SNAPTRADE_MODE=commercial.
+SNAPTRADE_MODE = os.getenv("SNAPTRADE_MODE", "personal").strip().lower()
 # Store por-usuario: {app_user_id: {snap_user_id, user_secret, accounts:[], ts}}.
 # Persiste en el snapshot (_PERSIST) para sobrevivir redeploys — el user_secret
 # es intransferible y re-registrar borra las conexiones del broker.
@@ -3584,9 +3588,26 @@ def _snaptrade():
     global _st_client
     if _st_client is None:
         from snaptrade_client import SnapTrade, SnapTradeAuth
-        _st_client = SnapTrade(auth=SnapTradeAuth.commercial_api_key(
+        mk = (SnapTradeAuth.personal_api_key if SNAPTRADE_MODE == "personal"
+              else SnapTradeAuth.commercial_api_key)
+        _st_client = SnapTrade(auth=mk(
             consumer_key=SNAPTRADE_CONSUMER_KEY, client_id=SNAPTRADE_CLIENT_ID))
     return _st_client
+
+
+async def _st_user_kwargs(app_user_id, register=True):
+    """Devuelve los kwargs de identidad para las llamadas SnapTrade.
+    Personal → {} (la key identifica al usuario). Commercial → user_id/user_secret
+    (registrando si hace falta)."""
+    if SNAPTRADE_MODE == "personal":
+        return {}
+    app_user_id = _require_snaptrade(app_user_id)
+    rec = _snaptrade_users.get(app_user_id)
+    if not rec and register:
+        rec = await _st_register(app_user_id)
+    if not rec:
+        raise HTTPException(404, "usuario no registrado — conecta un broker primero")
+    return {"user_id": rec["snap_user_id"], "user_secret": rec["user_secret"]}
 
 
 def _st_plain(x):
@@ -3655,17 +3676,19 @@ async def snaptrade_portal(request: Request):
     """Devuelve la URL del portal de SnapTrade para conectar un broker (por
     defecto TradeStation). Registra al usuario si hace falta. La URL expira en
     5 min. body: {app_user_id, broker?}"""
+    if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
+        raise HTTPException(400, "SnapTrade no configurado en el servidor")
     data = await request.json()
-    app_user_id = _require_snaptrade(data.get("app_user_id"))
     broker = (data.get("broker") or "TRADESTATION").strip().upper() or None
-    rec = await _st_register(app_user_id)
+    ukw = await _st_user_kwargs(data.get("app_user_id"))
     try:
         resp = await _snaptrade().authentication.alogin_snap_trade_user(
-            user_id=rec["snap_user_id"], user_secret=rec["user_secret"],
-            broker=broker, custom_redirect=SNAPTRADE_REDIRECT_URI or None, dark_mode=True)
+            broker=broker, custom_redirect=SNAPTRADE_REDIRECT_URI or None,
+            dark_mode=True, **ukw)
         body = _st_plain(resp.body)
     except Exception as e:
-        raise HTTPException(502, f"SnapTrade portal falló: {type(e).__name__}: {str(e)[:180]}")
+        eb = str(getattr(e, "body", "") or e)
+        raise HTTPException(502, f"SnapTrade portal falló: {eb[:280]}")
     url = body.get("redirectURI") or body.get("redirect_uri")
     if not url:
         raise HTTPException(502, f"SnapTrade no devolvió redirectURI: {body}")
@@ -3675,22 +3698,19 @@ async def snaptrade_portal(request: Request):
 @app.get("/api/broker/snaptrade/accounts")
 async def snaptrade_accounts(app_user_id: str = ""):
     """Lista las cuentas de broker conectadas por el usuario."""
-    app_user_id = _require_snaptrade(app_user_id)
-    rec = _snaptrade_users.get(app_user_id)
-    if not rec:
-        raise HTTPException(404, "usuario no registrado — conecta un broker primero")
+    if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
+        raise HTTPException(400, "SnapTrade no configurado en el servidor")
+    ukw = await _st_user_kwargs(app_user_id, register=False)
     try:
-        resp = await _snaptrade().account_information.alist_user_accounts(
-            user_id=rec["snap_user_id"], user_secret=rec["user_secret"])
+        resp = await _snaptrade().account_information.alist_user_accounts(**ukw)
         rows = _st_plain(resp.body) or []
     except Exception as e:
-        raise HTTPException(502, f"SnapTrade accounts falló: {type(e).__name__}: {str(e)[:180]}")
+        eb = str(getattr(e, "body", "") or e)
+        raise HTTPException(502, f"SnapTrade accounts falló: {eb[:280]}")
     accts = [{"id": str(a.get("id")), "name": a.get("name"),
               "number": a.get("number"),
               "institution": a.get("institution_name") or a.get("brokerage_authorization")}
              for a in rows if isinstance(a, dict)]
-    rec["accounts"] = accts
-    save_cache()
     return {"ok": True, "count": len(accts), "accounts": accts}
 
 
@@ -3698,29 +3718,25 @@ async def snaptrade_accounts(app_user_id: str = ""):
 async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
     """Trae las órdenes (fills) de todas las cuentas conectadas y las mapea a
     trades del journal. ?raw=1 devuelve la forma cruda (para calibrar el mapeo)."""
-    app_user_id = _require_snaptrade(app_user_id)
-    rec = _snaptrade_users.get(app_user_id)
-    if not rec:
-        raise HTTPException(404, "usuario no registrado — conecta un broker primero")
+    if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
+        raise HTTPException(400, "SnapTrade no configurado en el servidor")
+    ukw = await _st_user_kwargs(app_user_id, register=False)
     st = _snaptrade()
-    accts = rec.get("accounts") or []
-    if not accts:
-        try:
-            resp = await st.account_information.alist_user_accounts(
-                user_id=rec["snap_user_id"], user_secret=rec["user_secret"])
-            for a in (_st_plain(resp.body) or []):
-                if isinstance(a, dict):
-                    accts.append({"id": str(a.get("id")), "name": a.get("name"),
-                                  "number": a.get("number")})
-            rec["accounts"] = accts; save_cache()
-        except Exception as e:
-            raise HTTPException(502, f"SnapTrade accounts falló: {type(e).__name__}: {str(e)[:180]}")
+    accts = []
+    try:
+        resp = await st.account_information.alist_user_accounts(**ukw)
+        for a in (_st_plain(resp.body) or []):
+            if isinstance(a, dict):
+                accts.append({"id": str(a.get("id")), "name": a.get("name"),
+                              "number": a.get("number")})
+    except Exception as e:
+        eb = str(getattr(e, "body", "") or e)
+        raise HTTPException(502, f"SnapTrade accounts falló: {eb[:280]}")
     raw_orders = []
     for a in accts:
         try:
             resp = await st.account_information.aget_user_account_orders(
-                account_id=a["id"], user_id=rec["snap_user_id"],
-                user_secret=rec["user_secret"], state="all", days=int(days))
+                account_id=a["id"], state="all", days=int(days), **ukw)
             for o in (_st_plain(resp.body) or []):
                 if isinstance(o, dict):
                     o["_account"] = {"id": a["id"], "name": a.get("name"), "number": a.get("number")}
