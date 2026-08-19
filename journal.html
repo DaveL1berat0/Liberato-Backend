@@ -984,7 +984,7 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 .tz-kpi-value.pos{color:var(--green);} .tz-kpi-value.neg{color:var(--red);} .tz-kpi-value.white{color:var(--text);}
 
 /* Improve radar + equity row */
-.tz-main{display:grid;grid-template-columns:0.7fr 1fr;gap:14px;margin-bottom:14px;}
+.tz-main{display:grid;grid-template-columns:0.8fr 1fr;gap:14px;margin-bottom:14px;align-items:start;}
 @media(max-width:768px){.tz-main{grid-template-columns:1fr;}}
 
 /* Last 30 bars */
@@ -1399,14 +1399,14 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     </div>
 
     <!-- DONUTS + SETUPS ROW -->
-    <div class="dash-charts-row">
-      <div class="d-section" style="flex:1;margin-bottom:0;">
-        <div class="d-section-label" style="margin-bottom:10px;">Distribución de Operativa</div>
+    <div class="dash-charts-row" style="align-items:start;">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-head"><span class="card-title">Distribución de Operativa</span></div>
         <div class="donut-grid" id="donut-grid"></div>
       </div>
-      <div class="card" style="flex:1;">
+      <div class="card">
         <div class="card-head"><span class="card-title">Rendimiento por Setup</span></div>
-        <div id="dash-setups"></div>
+        <div id="dash-setups" style="max-height:340px;overflow-y:auto;"></div>
       </div>
     </div>
 
@@ -1974,13 +1974,19 @@ function renderLast30Trades(){
   var maxVal=Math.max.apply(null,last.map(function(t){return Math.abs(t.pnl);}));
   if(maxVal===0)maxVal=1;
   var W=700,H=140,padL=8,padR=8,padT=12,padB=22;
-  var plotW=W-padL-padR,plotH=(H-padT-padB)/2;
-  var zY=padT+plotH;
+  var plotW=W-padL-padR,plotTot=H-padT-padB;
+  // Baseline ADAPTATIVO: la línea 0 se posiciona según cuánto sube vs cuánto baja,
+  // así las barras llenan el cuadro aunque sean casi todas de un signo (no "a la mitad").
+  var maxUp=Math.max.apply(null,last.map(function(t){return t.pnl>0?t.pnl:0;}).concat([0]));
+  var maxDn=Math.max.apply(null,last.map(function(t){return t.pnl<0?-t.pnl:0;}).concat([0]));
+  if(maxUp===0&&maxDn===0){maxUp=1;maxDn=1;}
+  var upH=plotTot*(maxUp/(maxUp+maxDn)),dnH=plotTot-upH;
+  var zY=padT+upH;
   var n=last.length,bw=Math.max(Math.floor(plotW/n)-2,3),gap=Math.floor((plotW-bw*n)/(n+1));
   var bars='',xlabels='';
   last.forEach(function(t,i){
     var pnl=t.pnl;
-    var bh=Math.abs(pnl)/maxVal*plotH;
+    var bh=pnl>=0?(maxUp>0?pnl/maxUp*upH:0):(maxDn>0?(-pnl)/maxDn*dnH:0);
     var x=padL+gap+i*(bw+gap);
     var col=pnl>=0?'#22c55e':'#ef4444';
     var alpha=pnl>=0?'rgba(34,197,94,':'rgba(239,68,68,';
@@ -2047,7 +2053,23 @@ function renderRadar(ps){
   var poly='<polygon points="'+dpts.join(' ')+'" fill="rgba(201,168,76,0.18)" stroke="#C9A84C" stroke-width="2" style="filter:drop-shadow(0 0 6px rgba(201,168,76,0.3))"/>';
   var dots='';for(var i=0;i<n;i++){var a=angle(i),v=Math.min(vals[i],100)/100;dots+='<circle cx="'+(cx+Math.cos(a)*R*v).toFixed(1)+'" cy="'+(cy+Math.sin(a)*R*v).toFixed(1)+'" r="3" fill="#C9A84C"/>';}
   var scColor=ps.total>=75?'#22c55e':ps.total>=50?'#C9A84C':'#ef4444';
-  document.getElementById('radar-wrap').innerHTML='<svg class="radar-svg" viewBox="0 0 230 230">'+grid+axes+poly+dots+lblHtml+'</svg><div class="radar-score"><div class="radar-score-num" style="color:'+scColor+'">'+ps.total+'</div><div class="radar-score-info"><div class="radar-score-lbl">Tu Liberato Score</div><div class="radar-scale"><div class="radar-scale-marker" style="left:'+ps.total+'%"></div></div><div style="display:flex;justify-content:space-between;font-family:DM Mono,monospace;font-size:7px;color:var(--text3);margin-top:3px;"><span>0</span><span>50</span><span>100</span></div></div></div>';
+  var verdict=ps.total>=75?'Sólido':ps.total>=50?'En desarrollo':'Necesita trabajo';
+  // Fortalezas / debilidades a partir de las 6 métricas del radar (0-100)
+  var mets=labels.map(function(l,i){return {name:l,v:Math.round(Math.min(Math.max(vals[i]||0,0),100))};});
+  var srt=mets.slice().sort(function(a,b){return b.v-a.v;});
+  function swRow(m,pos){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 0;"><span style="font-size:11px;color:var(--text2);">'+m.name+'</span><span style="font-family:\'DM Mono\',monospace;font-size:11px;font-weight:700;color:'+(pos?'var(--green)':'var(--red)')+';">'+m.v+'</span></div>';}
+  var strong=srt.slice(0,2).map(function(m){return swRow(m,true);}).join('');
+  var weak=srt.slice(-2).reverse().map(function(m){return swRow(m,false);}).join('');
+  document.getElementById('radar-wrap').innerHTML=
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:44px;font-weight:800;line-height:1;color:'+scColor+';">'+ps.total+'</div>'
+      +'<div><div style="font-size:14px;font-weight:700;color:'+scColor+';">'+verdict+'</div><div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">Liberato Score · /100</div></div></div>'
+    +'<div style="height:6px;border-radius:4px;background:linear-gradient(90deg,#ef4444,#C9A84C,#22c55e);position:relative;margin:4px 0 14px;"><div style="position:absolute;top:-3px;left:'+ps.total+'%;width:3px;height:12px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px rgba(255,255,255,0.6);"></div></div>'
+    +'<div style="display:flex;justify-content:center;"><svg class="radar-svg" viewBox="0 0 230 230" style="max-width:200px;">'+grid+axes+poly+dots+lblHtml+'</svg></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;border-top:0.5px solid var(--border2);padding-top:12px;">'
+      +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px;">▲ Fortalezas</div>'+strong+'</div>'
+      +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:4px;">▼ A mejorar</div>'+weak+'</div>'
+    +'</div>';
 }
 function renderEquity(){
   var sorted=getFilteredT(_dfDash).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
@@ -2066,28 +2088,26 @@ function renderDailyBars(){
   var dates=Object.keys(byDate).sort();
   if(!dates.length){document.getElementById('daily-bars').innerHTML='<div class="empty"><p>Sin datos diarios</p></div>';return;}
   var vals=dates.map(function(d){return byDate[d];});
-  var maxPos=Math.max.apply(null,vals.concat([0])),maxNeg=Math.min.apply(null,vals.concat([0]));
-  var maxAbs=Math.max(Math.abs(maxPos),Math.abs(maxNeg))||1;
-  // Layout: gridlines + axis labels + bars (gains up / drawdown down)
+  // Baseline ADAPTATIVO proporcional (sin desbordar): la línea 0 divide el alto
+  // según cuánto sube vs cuánto baja; cada lado se escala a su propio máximo.
+  var maxPos=Math.max.apply(null,vals.map(function(v){return v>0?v:0;}).concat([0]));
+  var maxNeg=Math.max.apply(null,vals.map(function(v){return v<0?-v:0;}).concat([0]));
+  if(maxPos===0&&maxNeg===0){maxPos=1;maxNeg=1;}
   var W=820,H=180,padL=44,padR=12,padT=14,padB=22;
-  var plotH=H-padT-padB,zY=padT+plotH*(maxPos/maxAbs),plotW=W-padL-padR;
+  var plotH=H-padT-padB,plotW=W-padL-padR;
+  var upH=plotH*(maxPos/(maxPos+maxNeg)),dnH=plotH-upH,zY=padT+upH;
   var n=dates.length,gap=Math.min(6,plotW/n*0.25),bw=(plotW-gap*(n-1))/n;
-  // Gridlines (4 levels: +max, +half, 0, -half, -max scaled)
+  // Gridlines: +max, 0, -max
   var grid='',ylabels='';
-  var levels=[1,0.5,0,-0.5,-1];
-  levels.forEach(function(lv){
-    var val=lv>=0?maxPos*lv:Math.abs(maxNeg)*lv;
-    var y=zY-(val/maxAbs)*plotH;
-    if(lv===0)y=zY;
-    grid+='<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,'+(lv===0?'0.12':'0.05')+')" stroke-width="1"'+(lv!==0?' stroke-dasharray="3 4"':'')+'/>';
-    var lblVal=lv>=0?maxPos*lv:maxNeg*Math.abs(lv);
-    ylabels+='<text x="'+(padL-6)+'" y="'+(y+3).toFixed(1)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+(lblVal>=0?'+':'')+'$'+Math.round(lblVal/100)/10+'k</text>';
+  [{v:maxPos,y:padT},{v:0,y:zY},{v:-maxNeg,y:padT+plotH}].forEach(function(g){
+    grid+='<line x1="'+padL+'" y1="'+g.y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+g.y.toFixed(1)+'" stroke="rgba(255,255,255,'+(g.v===0?'0.12':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';
+    ylabels+='<text x="'+(padL-6)+'" y="'+(g.y+3).toFixed(1)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+(g.v>=0?'+':'')+'$'+Math.round(g.v/100)/10+'k</text>';
   });
   // Bars
   var bars='';
   dates.forEach(function(d,i){
     var v=byDate[d],x=padL+i*(bw+gap);
-    var bh=Math.abs(v)/maxAbs*plotH;
+    var bh=v>=0?(maxPos>0?v/maxPos*upH:0):(maxNeg>0?(-v)/maxNeg*dnH:0);
     var y=v>=0?zY-bh:zY;
     var col=v>=0?'34,197,94':'239,68,68';
     bars+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(bw,2).toFixed(1)+'" height="'+Math.max(bh,1.5).toFixed(1)+'" rx="2" fill="url(#dbg'+(v>=0?'p':'n')+')"><title>'+d+': '+(v>=0?'+$':'-$')+Math.abs(v).toLocaleString()+'</title></rect>';
