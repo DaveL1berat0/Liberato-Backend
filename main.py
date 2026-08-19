@@ -3347,6 +3347,33 @@ async def api_audit(key: str = ""):
     }
     return out
 
+@app.get("/api/admin/diag-snaptrade")
+async def diag_snaptrade(key: str = ""):
+    """Muestra QUÉ variables de entorno relacionadas con SnapTrade existen y con
+    qué nombre exacto (valores enmascarados). Sirve para depurar sin que nadie
+    tenga que pegar credenciales en un chat."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    def mask(v):
+        if not v: return None
+        v = str(v)
+        return (v[:4] + "..." + v[-3:] + f" ({len(v)} chars)") if len(v) > 8 else f"({len(v)} chars)"
+    encontradas = {k: mask(v) for k, v in os.environ.items()
+                   if "SNAP" in k.upper() or "TRADESTATION" in k.upper()}
+    return {
+        "nombres_que_el_codigo_busca": ["SNAPTRADE_CLIENT_ID", "SNAPTRADE_CONSUMER_KEY"],
+        "variables_encontradas_en_este_servicio": encontradas or "(ninguna)",
+        "leidas_por_el_codigo": {
+            "SNAPTRADE_CLIENT_ID": mask(SNAPTRADE_CLIENT_ID),
+            "SNAPTRADE_CONSUMER_KEY": mask(SNAPTRADE_CONSUMER_KEY),
+        },
+        "servicio": "Liberato-Backend (dashboard) — web-production-33671",
+        "ayuda": "Si 'variables_encontradas' está vacío, las variables se pusieron "
+                 "en OTRO servicio de Railway (p.ej. el de usuarios) o con otro nombre. "
+                 "Deben ir en el servicio 'web' del proyecto del dashboard.",
+    }
+
+
 @app.get("/api/broker/snaptrade/status")
 async def snaptrade_status():
     """Estado de la integración SnapTrade (multi-broker, solo lectura). El flujo
