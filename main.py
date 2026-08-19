@@ -2180,10 +2180,10 @@ def _classify_impact_news(title, source, ts, calendar_titles=None):
         if amp in t: surprise_boost = 0.3; break
     best_score = min(10.0, best_score + surprise_boost)
 
-    # Umbral mínimo — SOLO eventos SISTÉMICOS de alto impacto.
-    # 8.5 excluye noticias corporativas aisladas (NVIDIA 7.5, Apple 7.5, Tesla 7.0)
-    # y mantiene: Fed, CPI, NFP, geopolítica, Trump, tariffs, default, recession.
-    if best_score < 8.5: return None
+    # Umbral mínimo. Antes 8.5 filtraba TODO (el panel quedaba vacío → caía al mock,
+    # "mismas noticias por días"). 7.0 mantiene lo sistémico (Fed/CPI/NFP/geopolítica/
+    # tariffs) y AÑADE megacaps que sí mueven el NQ (NVDA/AAPL/MSFT 7.0-7.5).
+    if best_score < 7.0: return None
 
     # Cross-dedup: skip if matches a scheduled calendar event
     if calendar_titles:
@@ -2562,6 +2562,47 @@ async def refresh_institutional():
     if leaders:
         ctx.append(f"- Líderes: {' | '.join(leaders[:4])}")
 
+    # ── CICLO MACRO: releases recientes clave (del calendario, actual vs esperado) ──
+    MACRO_KEYS = ["gdp", "cpi", "inflation", "ppi", "nonfarm", "payroll",
+                  "unemployment", "pce", "retail sales", "interest rate",
+                  "fed funds", "jobless", "michigan"]
+    macro_rel = {}
+    for e in cal:
+        if e.get("status") != "Released":
+            continue
+        t = (e.get("title", "") or "").lower()
+        for mk in MACRO_KEYS:
+            if mk in t and mk not in macro_rel:
+                act = e.get("actual"); fc = e.get("forecast")
+                if act:
+                    macro_rel[mk] = f"{e.get('title','')} {act}" + (f" (esp {fc})" if fc else "")
+                break
+    if macro_rel:
+        ctx.append("- Datos macro recientes (actual vs esperado): " + " | ".join(list(macro_rel.values())[:6]))
+
+    # Rendimientos de bonos (dirección) — clave para múltiplos tech
+    yields = []
+    for k, lbl in [("US2Y", "2Y"), ("US10Y", "10Y"), ("US30Y", "30Y")]:
+        d = hm.get(k, {})
+        if d.get("chg_pct") is not None:
+            yields.append(f"{lbl} {d['chg_pct']:+.2f}%")
+    if yields:
+        ctx.append(f"- Bonos (variación rendimiento hoy): {' | '.join(yields)}")
+
+    # Sector tecnológico: promedio de 7 megacaps
+    tech = [hm.get(s, {}).get("chg_pct") for s in ["NVDA", "AAPL", "MSFT", "META", "AMZN", "GOOGL", "AVGO"]]
+    tech = [x for x in tech if x is not None]
+    if tech:
+        ctx.append(f"- Sector tecnológico (7 megacaps): promedio {sum(tech)/len(tech):+.2f}%")
+
+    # Gap de apertura (del inventario overnight ya calculado)
+    try:
+        if nq_chg is not None:
+            gapdir = "alcista" if nq_chg > 0.15 else "bajista" if nq_chg < -0.15 else "plano (sin gap)"
+            ctx.append(f"- Gap de apertura: {gapdir} ({nq_chg:+.2f}%)")
+    except Exception:
+        pass
+
     # Próximo evento macro
     upcoming = [e for e in cal if e.get("status") == "Upcoming"]
     if upcoming:
@@ -2608,40 +2649,44 @@ async def refresh_institutional():
                "Tu lector lo tiene que entender en 20 SEGUNDOS. Escribes SOLO en español, ULTRA-CONCISO, "
                "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 5 líneas con este formato (una línea cada una, "
                "nada antes ni después, sin títulos de sección, sin listas con guiones):\n"
-               "SESGO: <alcista/bajista/neutral> | Claridad <n>/10 | Vol <alta/media/baja>\n"
-               "**AMT:** <dónde abrió el precio vs el value de anoche (dentro/fuera del VAH/VAL, si hay gap) y el "
-               "primer imán/target de retest con su nivel exacto — VAL/VAH/POC/gamma flip/wall>\n"
-               "**Catalizadores:** <1-2 catalizadores de hoy más relevantes, muy corto. Si hay un evento "
-               "programado de alto impacto con hora (ej. FOMC/Fed 14:00 ET, CPI 08:30 ET), MENCIÓNALO con su hora>\n"
-               "**Flujo:** <posicionamiento en una frase: régimen dealer (gamma +/−), net GEX, o sesgo macro/COT>\n"
-               "**Plan:** <una sola frase accionable con el nivel que lo invalida>\n"
-               "FORMATO: SIN EMOJIS. Usa las etiquetas en negrita **AMT:**, **Catalizadores:**, **Flujo:**, **Plan:** "
-               "tal cual (con los dobles asteriscos) al inicio de cada línea, y puedes poner en **negrita** el dato o "
-               "nivel más importante de cada frase. Nada de iconos ni símbolos decorativos.\n"
-               "REGLAS: usa números EXACTOS de los niveles que te doy. En gamma negativo piensa "
-               "momentum/expansión (dealers persiguen); en gamma positivo reversión/compresión (dealers absorben). "
-               "Claridad = qué tan limpio es el setup; Vol la infieres del VIX/movimiento esperado. "
-               "NUNCA inventes un dato: si un nivel o catalizador no está en los datos, no lo menciones "
-               "(esa dimensión puede decir '—'). Cada línea es UNA frase corta. Prohibido párrafos y prosa larga.")
+               "**Macro:** <1 oración: ciclo macro con los datos reales — GDP, inflación (CPI/PPI), empleo (NFP/desempleo), "
+               "bonos y rendimientos (2Y/10Y/30Y), tasa de interés. Menciona COT SOLO si está en los datos>\n"
+               "**Hoy:** <1 oración: catalizadores de HOY de alto impacto (con su hora si la hay, ej. FOMC 14:00 ET) + "
+               "geopolítica relevante si aparece en los datos>\n"
+               "**Earnings:** <1 oración: earnings que impacten directamente el Nasdaq hoy; si no hay, di 'sin earnings "
+               "relevantes para el NQ hoy'>\n"
+               "**Técnico:** <1 oración: niveles GEX (Call/Put Wall, Flip, Max Pain) + Market Regime (gamma +/−) + "
+               "VAH/VAL + cambio de precio + volatilidad (VIX) + % del sector tecnológico + gap (alcista/bajista)>\n"
+               "**Claridad:** <n>/10 hacia <alza / baja / sin dirección clara> · Vol <alta/media/baja>\n"
+               "FORMATO: 3 a 5 oraciones en total (una por etiqueta que tenga datos), SIN EMOJIS. Usa las etiquetas en "
+               "negrita **Macro:**, **Hoy:**, **Earnings:**, **Técnico:**, **Claridad:** tal cual, y pon en **negrita** "
+               "el dato/nivel más importante de cada oración. Nada de iconos ni símbolos decorativos.\n"
+               "IMPORTANTE: NO marques un sesgo alcista/bajista duro. En su lugar, la línea **Claridad:** da un SCORE "
+               "1-10 de qué tan claro/limpio está el día y hacia qué lado se inclina (alza/baja/sin dirección). "
+               "REGLAS: usa números EXACTOS de los datos. En gamma negativo piensa momentum/expansión (dealers "
+               "persiguen); en gamma positivo reversión/compresión (dealers absorben). NUNCA inventes un dato: si algo "
+               "no está en los datos, omite esa etiqueta (no la escribas). Cada oración es corta. Prohibida la prosa larga.")
 
     if has_gamma:
         usr_msg = (f"Datos de mesa ahora mismo:\n\n{ctx_str}\n\n"
-                   "Escribe el briefing de 5 líneas en el formato exacto (SIN emojis, con etiquetas en negrita). "
-                   "Ancla la línea **AMT:** en Auction Market Theory (precio vs value de anoche + primer imán/target "
-                   "con nivel real). Si hay un evento programado hoy con hora, menciónalo en **Catalizadores:**. "
-                   "Usa los números exactos.")
+                   "Escribe el briefing en el formato exacto (3-5 oraciones, SIN emojis, etiquetas en negrita). "
+                   "Cubre Macro (GDP/inflación/empleo/bonos/tasas), catalizadores de HOY + geopolítica, earnings del "
+                   "Nasdaq, y el técnico (GEX/regime/VAH-VAL/precio/vol/tech%/gap). Cierra con **Claridad:** score "
+                   "1-10 hacia alza/baja/sin dirección — NO un sesgo duro. Usa los números exactos; omite la etiqueta "
+                   "de cualquier tema sin datos.")
     else:
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
-                   "Escribe el briefing de 5 líneas en el formato exacto con lo disponible (inventario overnight, "
-                   "value de anoche si viene, sentimiento, macro, líderes). No inventes niveles de gamma: si falta un "
-                   "imán/target real, esa parte dice '—'.")
+                   "Escribe el briefing en el formato exacto (3-5 oraciones, etiquetas en negrita) con lo disponible "
+                   "(macro, catalizadores de hoy, earnings, inventario/gap, sentimiento, sector tech). En **Técnico:** "
+                   "omite los niveles de gamma si no hay GEX. Cierra con **Claridad:** score 1-10 hacia alza/baja/sin "
+                   "dirección. No inventes datos.")
 
     try:
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                json={"model":"qwen/qwen3.6-27b","max_tokens":300,"temperature":0.55,
+                json={"model":"qwen/qwen3.6-27b","max_tokens":460,"temperature":0.55,
                       "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
                       "messages":[{"role":"system","content":sys_msg},
                                   {"role":"user","content":usr_msg}]}
