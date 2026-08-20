@@ -4417,7 +4417,7 @@ async def auth_health():
     return {"store": "supabase" if _sb_on() else "snapshot",
             "supabase_configured": _sb_on(), "supabase_reachable": reachable,
             "auth_secret_durable": bool(_sb_on()) or bool(os.getenv("AUTH_SECRET", "").strip()),
-            "detail": detail}
+            "url_seen": SUPABASE_URL, "detail": detail}
 
 
 @app.post("/api/auth/register")
