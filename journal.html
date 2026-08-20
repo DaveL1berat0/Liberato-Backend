@@ -1720,13 +1720,13 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
         <button onclick="connectBroker('snaptrade')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
           <span style="font-family:'DM Mono',monospace;">Conectar mi broker</span> →
         </button>
-        <button onclick="syncFills()" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;border:0.5px solid rgba(46,232,164,0.35);background:rgba(46,232,164,0.06);color:var(--green);font-weight:600;font-size:12.5px;cursor:pointer;">↻ Ya está conectado · Sincronizar mis trades</button>
+        <button onclick="syncAllBrokers()" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;border:0.5px solid rgba(46,232,164,0.35);background:rgba(46,232,164,0.06);color:var(--green);font-weight:600;font-size:12.5px;cursor:pointer;">↻ Ya está conectado · Sincronizar mis trades</button>
         <div id="broker-status" style="margin-top:10px;"></div>
-        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">TradeStation · Tradovate · IBKR · +20 brokers</div>
-        <!-- alternativa: TradeStation directo (sin intermediario) -->
-        <div style="text-align:center;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border2);">
-          <span style="font-size:10.5px;color:var(--text3);">¿Solo usas TradeStation? </span>
-          <a href="javascript:void(0)" onclick="connectBroker('tradestation')" style="font-size:10.5px;color:var(--gold);text-decoration:none;font-family:'DM Mono',monospace;">Conéctalo directo →</a>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">Tradovate · IBKR · +20 brokers</div>
+        <!-- TradeStation directo (incluye FUTUROS, que el portal no expone) -->
+        <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border2);">
+          <div style="font-size:10.5px;color:var(--text3);text-align:center;margin-bottom:8px;">¿Operas <strong style="color:var(--text2);">futuros</strong> en TradeStation?</div>
+          <button onclick="connectBroker('tradestation')" style="width:100%;padding:11px;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">Conectar TradeStation directo →</button>
         </div>
       </div>
     </div>
@@ -2725,8 +2725,20 @@ var _csvParsedTrades=null;
 // pestaña; 'tradestation' pre-selecciona TradeStation, 'snaptrade' deja elegir.
 function connectBroker(broker){
   var st=document.getElementById('broker-status');
-  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Abriendo portal…</div>';
-  var body=(broker==='tradestation')?{broker:'TRADESTATION'}:{};
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
+  // TradeStation DIRECTO (OAuth propio) — trae FUTUROS que SnapTrade no expone.
+  if(broker==='tradestation'){
+    fetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?app_user_id='+encodeURIComponent(currentUserId()))
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.configured&&d.auth_url){ window.location.href=d.auth_url; }  // redirige al login de TradeStation
+        else if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);background:rgba(201,168,76,0.08);border:0.5px solid rgba(201,168,76,0.25);border-radius:8px;padding:10px;">⏳ '+_esc(d.message||'TradeStation aún no disponible.')+'</div>';
+      })
+      .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo conectar con el servidor.</div>';});
+    return;
+  }
+  // SnapTrade (portal multi-broker para acciones/opciones)
+  var body={};
   fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/portal',{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
     .then(function(r){return r.json();})
@@ -2891,6 +2903,26 @@ function syncFills(){
         +'</div>';
     })
     .catch(function(err){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red al sincronizar.</div>';});
+}
+// Sincroniza TODAS las fuentes conectadas (portal SnapTrade + TradeStation directo).
+// importFromBroker deduplica por fill, así que solaparlas es seguro.
+function syncAllBrokers(){ try{syncTradestation();}catch(e){} setTimeout(function(){try{syncFills();}catch(e){}},900); }
+// TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
+function syncTradestation(){
+  var st=document.getElementById('broker-status');
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando TradeStation (futuros)…</div>';
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/fills?days=120&app_user_id='+encodeURIComponent(currentUserId()))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar TradeStation.')+'</div>';return;}
+      var fills=d.trades||[];
+      var r=importFromBroker(fills);
+      if(curView)go(curView);
+      if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
+        +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones de TradeStation (incl. futuros) importadas de <strong>'+fills.length+'</strong> fills.'
+        +'<div style="font-size:11px;color:var(--text3);margin-top:6px;">Verificadas: '+r.verified+' · En revisión: '+r.pending+' · Duplicadas: '+r.dup+'</div></div>';
+    })
+    .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red al sincronizar TradeStation.</div>';});
 }
 function openCsvImport(){
   document.getElementById('csv-status').innerHTML='';
@@ -3481,6 +3513,12 @@ document.addEventListener('DOMContentLoaded', function(){
       go('trades');
       var b=document.getElementById('csv-overlay'); if(b){openCsvImport();}
       setTimeout(function(){try{syncFills();}catch(e){}},400);
+    }
+    // Auto-sync al volver del OAuth directo de TradeStation (?tradestation=ok): trae futuros.
+    if(new URLSearchParams(window.location.search).get('tradestation')==='ok'){
+      go('trades');
+      var bt=document.getElementById('csv-overlay'); if(bt){openCsvImport();}
+      setTimeout(function(){try{syncTradestation();}catch(e){}},400);
     }
   }catch(e){console.error('init',e);}
 });

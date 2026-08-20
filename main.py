@@ -21,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
 from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -80,6 +81,14 @@ TRADESTATION_CLIENT_ID     = os.getenv("TRADESTATION_CLIENT_ID", "").strip()
 TRADESTATION_CLIENT_SECRET = os.getenv("TRADESTATION_CLIENT_SECRET", "").strip()
 TRADESTATION_REDIRECT_URI  = os.getenv("TRADESTATION_REDIRECT_URI",
     "https://web-production-33671.up.railway.app/api/broker/tradestation/callback").strip()
+# API directa de TradeStation (trae FUTUROS, que SnapTrade no expone). LIVE por
+# defecto; SIM si TRADESTATION_ENV=sim. Tokens OAuth persistidos en el snapshot.
+TS_ENV        = os.getenv("TRADESTATION_ENV", "live").strip().lower()
+TS_API_BASE   = "https://sim-api.tradestation.com/v3" if TS_ENV == "sim" else "https://api.tradestation.com/v3"
+TS_TOKEN_URL  = "https://signin.tradestation.com/oauth/token"
+TS_REDIRECT_AFTER = os.getenv("TS_REDIRECT_AFTER",
+    "https://davel1berat0.github.io/Liberato-Backend/journal.html?tradestation=ok").strip()
+_ts_tokens = {}   # {access_token, refresh_token, expires_at (epoch)}
 # ── SnapTrade (agregador multi-broker, self-service, SOLO LECTURA) ────────────
 # Credenciales self-service en snaptrade.com (no requiere email a ningún broker).
 SNAPTRADE_CLIENT_ID   = os.getenv("SNAPTRADE_CLIENT_ID", "").strip()
@@ -330,6 +339,7 @@ def save_cache():
                        "lu":   cache["movers"]["last_update"]},
             # Credenciales SnapTrade por usuario (user_secret intransferible).
             "snaptrade_users": _snaptrade_users,
+            "ts_tokens": _ts_tokens,   # tokens OAuth de TradeStation (per-usuario)
         }
         with open(_PERSIST, "w") as f:
             json.dump(snap, f)
@@ -361,6 +371,10 @@ def load_cache():
         if isinstance(_su, dict):
             _snaptrade_users.update(_su)
             print(f"[persist] snaptrade_users restaurados: {len(_snaptrade_users)}")
+        _tst = snap.get("ts_tokens")
+        if isinstance(_tst, dict):
+            _ts_tokens.update(_tst)
+            print(f"[persist] ts_tokens restaurados: {len(_ts_tokens)}")
         if snap.get("gex"):
             # Solo restaurar el GEX del instrumento que operamos AHORA.
             # El Volume de Railway retiene datos entre redeploys, así que tras la
@@ -4141,18 +4155,15 @@ def _st_map_order(o):
 
 
 @app.get("/api/broker/tradestation/connect")
-async def tradestation_connect():
+async def tradestation_connect(app_user_id: str = ""):
     """Inicia el OAuth de TradeStation en modo SOLO LECTURA (scope sin 'Trade').
-    Si aún no hay client_id configurado (falta la API key que se pide por email),
-    avisa en vez de romper — así el botón 'Conectar' existe desde ya y se activa
-    solo cuando Dave ponga las credenciales en Railway."""
-    if not TRADESTATION_CLIENT_ID:
+    Trae FUTUROS (lo que SnapTrade no expone). El `state` lleva el app_user_id para
+    que el callback sepa a qué estudiante pertenece el token (multiusuario)."""
+    if not (TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET):
         return {"configured": False,
-                "message": "La conexión con TradeStation aún no está activada. "
-                           "Falta la API key (se solicita por email a "
-                           "ClientExperience@tradestation.com). El diseño ya está "
-                           "listo; en cuanto llegue la key, este botón conecta solo."}
+                "message": "TradeStation aún no activado: faltan TRADESTATION_CLIENT_ID/SECRET en Railway."}
     from urllib.parse import urlencode
+    uid = (app_user_id or "dave").strip() or "dave"
     params = {
         "response_type": "code",
         "client_id": TRADESTATION_CLIENT_ID,
@@ -4160,10 +4171,145 @@ async def tradestation_connect():
         "audience": "https://api.tradestation.com",
         # SOLO LECTURA: MarketData + ReadAccount, SIN 'Trade'. offline_access = refresh token.
         "scope": "openid offline_access MarketData ReadAccount",
-        "state": "liberato-journal",
+        "state": f"lbc::{uid}",
     }
     return {"configured": True,
             "auth_url": "https://signin.tradestation.com/authorize?" + urlencode(params)}
+
+
+async def _ts_token_request(data):
+    """POST al endpoint de token de TradeStation (code exchange o refresh)."""
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.post(TS_TOKEN_URL, data={**data,
+                         "client_id": TRADESTATION_CLIENT_ID,
+                         "client_secret": TRADESTATION_CLIENT_SECRET})
+    if r.status_code != 200:
+        raise HTTPException(502, f"TradeStation token {r.status_code}: {r.text[:200]}")
+    return r.json() or {}
+
+
+def _ts_store(uid, tok):
+    _ts_tokens[uid] = {
+        "access_token": tok.get("access_token"),
+        "refresh_token": tok.get("refresh_token") or (_ts_tokens.get(uid) or {}).get("refresh_token"),
+        "expires_at": time.time() + int(tok.get("expires_in", 1200)) - 60,
+    }
+    save_cache()
+
+
+async def _ts_access(uid):
+    """Devuelve un access_token válido para el usuario, refrescando si expiró."""
+    rec = _ts_tokens.get(uid)
+    if not rec or not rec.get("refresh_token") and not rec.get("access_token"):
+        raise HTTPException(404, "TradeStation no conectado para este usuario")
+    if rec.get("access_token") and time.time() < rec.get("expires_at", 0):
+        return rec["access_token"]
+    # refrescar
+    if rec.get("refresh_token"):
+        tok = await _ts_token_request({"grant_type": "refresh_token",
+                                       "refresh_token": rec["refresh_token"]})
+        _ts_store(uid, tok)
+        return _ts_tokens[uid]["access_token"]
+    raise HTTPException(401, "TradeStation: token expirado y sin refresh; reconecta")
+
+
+@app.get("/api/broker/tradestation/callback")
+async def tradestation_callback(code: str = "", state: str = "", error: str = ""):
+    """Recibe el code del OAuth, lo canjea por tokens y guarda por usuario. Redirige
+    de vuelta al journal."""
+    if error:
+        return RedirectResponse(TS_REDIRECT_AFTER + "&ts_error=" + quote(error, safe=""))
+    if not code:
+        raise HTTPException(400, "Falta 'code'")
+    uid = state.split("::", 1)[1] if state.startswith("lbc::") else "dave"
+    try:
+        tok = await _ts_token_request({"grant_type": "authorization_code", "code": code,
+                                       "redirect_uri": TRADESTATION_REDIRECT_URI})
+        _ts_store(uid, tok)
+    except HTTPException:
+        raise
+    except Exception as e:
+        return RedirectResponse(TS_REDIRECT_AFTER + "&ts_error=" + quote(str(e)[:80], safe=""))
+    return RedirectResponse(TS_REDIRECT_AFTER)
+
+
+@app.get("/api/broker/tradestation/accounts")
+async def tradestation_accounts(app_user_id: str = "dave"):
+    """Lista las cuentas de TradeStation del usuario (incluye FUTUROS)."""
+    uid = (app_user_id or "dave").strip() or "dave"
+    tokn = await _ts_access(uid)
+    async with httpx.AsyncClient(timeout=12, headers={"Authorization": f"Bearer {tokn}"}) as c:
+        r = await c.get(f"{TS_API_BASE}/brokerage/accounts")
+    if r.status_code != 200:
+        raise HTTPException(502, f"TS accounts {r.status_code}: {r.text[:200]}")
+    accts = (r.json() or {}).get("Accounts", [])
+    return {"ok": True, "count": len(accts),
+            "accounts": [{"id": a.get("AccountID"), "type": a.get("AccountType"),
+                          "detail": a.get("AccountDetail")} for a in accts]}
+
+
+def _ts_map_order(o, acct):
+    """Mapea una orden ejecutada de TradeStation a fills del journal (por leg)."""
+    status = str(o.get("StatusDescription") or o.get("Status") or "").upper()
+    if status not in ("FILLED", "FLL", "PARTIALLY FILLED", "FPR"):
+        return []
+    opened = o.get("OpenedDateTime") or o.get("ClosedDateTime") or ""
+    out = []
+    for leg in (o.get("Legs") or []):
+        exq = leg.get("ExecQuantity") or leg.get("QuantityOrdered")
+        try:
+            q = float(exq)
+        except (TypeError, ValueError):
+            q = None
+        if not q:
+            continue
+        sym = leg.get("Symbol", "")
+        # instrumento: futuros (ej. NQU25 / @NQ), opción o equity
+        asset_type = str(leg.get("AssetType") or "").upper()
+        instrument = ("future" if asset_type in ("FUTURE", "FUTURES") else
+                      "option" if asset_type in ("STOCKOPTION", "OPTION", "INDEXOPTION") else "equity")
+        out.append({
+            "broker_order_id": str(o.get("OrderID") or ""),
+            "symbol": sym, "instrument": instrument, "option": None,
+            "side": str(leg.get("BuyOrSell") or "").upper(),
+            "qty": q,
+            "price": (lambda v: float(v) if v not in (None, "") else None)(leg.get("ExecutionPrice") or o.get("FilledPrice")),
+            "order_type": o.get("OrderType"),
+            "time": opened, "status": "EXECUTED",
+            "account": acct, "source": "tradestation",
+        })
+    return out
+
+
+@app.get("/api/broker/tradestation/fills")
+async def tradestation_fills(app_user_id: str = "dave", days: int = 90, raw: int = 0):
+    """Trae las órdenes históricas (fills) de TradeStation — incluye FUTUROS — y las
+    mapea al formato del journal. ?raw=1 devuelve la forma cruda para calibrar."""
+    uid = (app_user_id or "dave").strip() or "dave"
+    tokn = await _ts_access(uid)
+    from datetime import date, timedelta
+    since = (date.today() - timedelta(days=int(days))).isoformat()
+    async with httpx.AsyncClient(timeout=15, headers={"Authorization": f"Bearer {tokn}"}) as c:
+        ra = await c.get(f"{TS_API_BASE}/brokerage/accounts")
+        if ra.status_code != 200:
+            raise HTTPException(502, f"TS accounts {ra.status_code}: {ra.text[:200]}")
+        acct_ids = [a.get("AccountID") for a in (ra.json() or {}).get("Accounts", []) if a.get("AccountID")]
+        raw_orders = []
+        for aid in acct_ids:
+            r = await c.get(f"{TS_API_BASE}/brokerage/accounts/{aid}/historicalorders",
+                            params={"since": since})
+            if r.status_code == 200:
+                for o in (r.json() or {}).get("Orders", []):
+                    o["_acct"] = aid
+                    raw_orders.append(o)
+            else:
+                print(f"[ts] orders {aid} {r.status_code}: {r.text[:120]}")
+    if raw:
+        return {"ok": True, "count": len(raw_orders), "orders": raw_orders[:40]}
+    trades = []
+    for o in raw_orders:
+        trades.extend(_ts_map_order(o, o.get("_acct")))
+    return {"ok": True, "count": len(trades), "trades": trades}
 
 
 @app.post("/api/journal/coach")
