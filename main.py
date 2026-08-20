@@ -125,6 +125,23 @@ API_BUDGETS = {
 # Estado de uso por API: {"window_key": str, "used": int}
 _api_usage = {name: {"window_key": None, "used": 0} for name in API_BUDGETS}
 
+# ── Tope de AI Coach por ESTUDIANTE/día ──────────────────────────────────────
+# El briefing institucional es COMPARTIDO (1 para toda la plataforma, no escala).
+# El AI Coach es POR ESTUDIANTE: este tope evita que un usuario agote la cuota
+# compartida de Groq (950/día). Configurable en Railway.
+COACH_DAILY_PER_USER = int(os.getenv("COACH_DAILY_PER_USER", "40"))
+_coach_usage = {}  # {app_user_id: {"day": "YYYY-MM-DD", "count": n}}
+def _coach_quota_ok(uid):
+    from datetime import date
+    day = date.today().isoformat()
+    st = _coach_usage.get(uid)
+    if not st or st.get("day") != day:
+        st = {"day": day, "count": 0}; _coach_usage[uid] = st
+    return st["count"] < COACH_DAILY_PER_USER
+def _coach_charge(uid):
+    st = _coach_usage.get(uid)
+    if st: st["count"] += 1
+
 def _window_key(window):
     """Clave de la ventana actual: por día (UTC) o por minuto (UTC)."""
     try:
@@ -4362,6 +4379,13 @@ async def journal_coach(request: Request):
         data = await request.json()
     except Exception:
         raise HTTPException(400, "JSON inválido")
+    # Tope por estudiante/día + presupuesto global de Groq (contabilización real).
+    uid = str(data.get("app_user_id") or "anon").strip() or "anon"
+    if not _coach_quota_ok(uid):
+        return {"ok": True, "answer": f"Llegaste a tu límite diario de {COACH_DAILY_PER_USER} consultas al Coach. "
+                "Vuelve mañana — mientras tanto, tus estadísticas y patrones ya están en el dashboard."}
+    if not budget_ok("groq", 1):
+        return {"ok": True, "answer": "El Coach está muy solicitado ahora mismo. Inténtalo en unos minutos."}
     question = str(data.get("question") or "").strip()[:600]
     # Contexto compacto que manda el frontend (ya agregado, sin PII).
     ctx = data.get("context") or {}
@@ -4400,11 +4424,31 @@ async def journal_coach(request: Request):
         answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
         if not answer:
             raise HTTPException(502, "Coach sin respuesta")
+        budget_charge("groq", 1); _coach_charge(uid)   # contabiliza tras respuesta OK
         return {"ok": True, "answer": answer}
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(502, f"Coach falló: {type(e).__name__}: {str(e)[:160]}")
+
+
+@app.get("/api/admin/diag-ai")
+async def diag_ai(key: str = ""):
+    """Monitoreo de consumo de IA (Groq): cuota global del día + uso del AI Coach por
+    estudiante. Uso: ?key=liberato2026"""
+    if key != "liberato2026":
+        raise HTTPException(403, "clave incorrecta")
+    from datetime import date
+    day = date.today().isoformat()
+    active = {u: v.get("count", 0) for u, v in _coach_usage.items() if v.get("day") == day}
+    g = _api_usage.get("groq", {})
+    return {
+        "groq_dia": {"usadas": g.get("used", 0), "limite": API_BUDGETS["groq"]["limit"]},
+        "coach_tope_por_estudiante_dia": COACH_DAILY_PER_USER,
+        "coach_uso_por_estudiante_hoy": active,
+        "estudiantes_activos_coach_hoy": len(active),
+        "briefing_institucional": "COMPARTIDO — 1 para toda la plataforma, no escala con estudiantes",
+    }
 
 
 @app.post("/api/journal/parse-csv")

@@ -3443,7 +3443,7 @@ function sendAIMsg(){
   inp.value='';addChatMsg('user',_esc(msg));chatHistory.push({role:'user',content:msg});
   var sendBtn=document.getElementById('acm-send');sendBtn.disabled=true;sendBtn.textContent='...';
   fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({question:msg,context:coachContext()})})
+    body:JSON.stringify({question:msg,context:coachContext(),app_user_id:currentUserId()})})
   .then(function(r){return r.json();})
   .then(function(d){var ok=(d&&d.ok&&d.answer);var reply=ok?d.answer:genFallbackReply(msg);chatHistory.push({role:'assistant',content:reply});addChatMsg('ai',ok?_esc(reply):reply);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';})
   .catch(function(){var fb=genFallbackReply(msg);chatHistory.push({role:'assistant',content:fb});addChatMsg('ai',fb);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';});
