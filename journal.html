@@ -451,6 +451,74 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .lbc-cfm-btn.ok:hover{filter:brightness(1.08);}
 .lbc-cfm-btn.ok.danger{background:rgba(239,68,68,0.12);border:0.5px solid rgba(239,68,68,0.4);color:#ef4444;}
 .lbc-cfm-btn.ok.danger:hover{background:rgba(239,68,68,0.2);}
+
+/* ── TRADE DETAIL WORKSPACE (Review 2.0) ── */
+.tws{position:fixed;inset:0;z-index:100001;background:var(--bg,#080a0f);overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .25s ease,transform .3s cubic-bezier(.22,1,.36,1);-webkit-overflow-scrolling:touch;}
+.tws.open{opacity:1;pointer-events:auto;transform:none;}
+.tws-inner{max-width:1000px;margin:0 auto;padding:0 20px calc(60px + var(--safe-bottom));}
+.tws-topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 12px;margin-bottom:4px;background:linear-gradient(180deg,var(--bg,#080a0f) 72%,transparent);backdrop-filter:blur(6px);}
+.tws-back{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);border:0.5px solid var(--border2);border-radius:9px;padding:9px 14px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .2s;}
+.tws-back:hover{border-color:rgba(201,168,76,0.4);color:var(--gold);}
+.tws-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:0.06em;}
+.tws-navbtns{display:inline-flex;gap:6px;}
+.tws-navbtn{background:rgba(255,255,255,0.04);border:0.5px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .2s;}
+.tws-navbtn:hover:not(:disabled){border-color:rgba(201,168,76,0.4);color:var(--gold);}
+.tws-navbtn:disabled{opacity:0.3;cursor:default;}
+/* Header del trade */
+.tws-hero{border:0.5px solid var(--border2);border-radius:18px;padding:24px;margin-bottom:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);}
+.tws-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.tws-asset{font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;font-weight:600;color:var(--text);line-height:1;}
+.tws-dir{display:inline-block;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;padding:3px 10px;border-radius:6px;margin-left:10px;vertical-align:middle;}
+.tws-dir.long{background:rgba(46,232,164,0.12);color:var(--green);}
+.tws-dir.short{background:rgba(239,68,68,0.12);color:#ef4444;}
+.tws-result{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;padding:5px 12px;border-radius:8px;text-transform:uppercase;}
+.tws-result.win{background:rgba(46,232,164,0.14);color:var(--green);}
+.tws-result.loss{background:rgba(239,68,68,0.14);color:#ef4444;}
+.tws-result.be{background:rgba(201,168,76,0.14);color:var(--gold);}
+.tws-pnl{font-family:'DM Mono',monospace;font-size:38px;font-weight:800;line-height:1;margin-top:16px;}
+.tws-rmult{font-family:'DM Mono',monospace;font-size:15px;font-weight:600;margin-left:12px;color:var(--text2);}
+.tws-metaline{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--text3);}
+.tws-metaline b{color:var(--text2);font-weight:600;}
+/* Cards y secciones */
+.tws-sec{border:0.5px solid var(--border2);border-radius:16px;padding:20px;margin-bottom:16px;background:rgba(255,255,255,0.008);}
+.tws-sec-h{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.tws-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
+.tws-stat{background:rgba(0,0,0,0.18);border:0.5px solid var(--border2);border-radius:11px;padding:13px 15px;}
+.tws-stat-l{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);margin-bottom:7px;}
+.tws-stat-v{font-family:'DM Mono',monospace;font-size:19px;font-weight:700;color:var(--text);}
+.tws-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:720px){.tws-two{grid-template-columns:1fr;}}
+/* Risk/Reward viz */
+.tws-rrbar{position:relative;height:64px;margin:26px 6px 12px;}
+.tws-rrline{position:absolute;top:32px;left:0;right:0;height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(239,68,68,0.6),rgba(255,255,255,0.15) 45%,rgba(46,232,164,0.6));}
+.tws-rrmark{position:absolute;top:20px;width:2px;height:27px;transform:translateX(-1px);}
+.tws-rrlabel{position:absolute;top:-6px;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:10px;white-space:nowrap;}
+.tws-rrsub{position:absolute;top:44px;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);white-space:nowrap;}
+/* Screenshots */
+.tws-shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.tws-shot{position:relative;border-radius:11px;overflow:hidden;border:0.5px solid var(--border2);aspect-ratio:16/10;background:rgba(0,0,0,0.25);cursor:pointer;}
+.tws-shot img{width:100%;height:100%;object-fit:cover;display:block;}
+.tws-shot-del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:7px;border:0;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.tws-drop{border:1px dashed rgba(201,168,76,0.35);border-radius:12px;padding:22px;text-align:center;cursor:pointer;background:rgba(201,168,76,0.03);transition:all .2s;}
+.tws-drop.over{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+.tws-lightbox{position:fixed;inset:0;z-index:100010;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+.tws-lightbox.open{display:flex;}
+.tws-lightbox img{max-width:100%;max-height:100%;border-radius:8px;}
+/* inputs */
+.tws-input{width:100%;background:rgba(0,0,0,0.22);border:0.5px solid var(--border2);border-radius:10px;padding:12px 13px;color:var(--text);font-size:13px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s;}
+.tws-input:focus{border-color:rgba(201,168,76,0.45);}
+.tws-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.tws-star{cursor:pointer;font-size:20px;color:rgba(232,228,217,0.2);transition:color .15s;}
+.tws-star.on{color:var(--gold);}
+.tws-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border:0.5px solid var(--border2);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'DM Mono',monospace;}
+.tws-tag.on{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.4);color:var(--gold);}
+.tws-daytrade{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:9px;cursor:pointer;font-size:12px;transition:background .15s;border:0.5px solid transparent;}
+.tws-daytrade:hover{background:rgba(255,255,255,0.03);}
+.tws-daytrade.sel{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.3);}
+.tws-navfoot{display:flex;justify-content:space-between;gap:12px;margin-top:8px;}
+.tws-navfoot button{flex:1;padding:14px;border-radius:12px;border:0.5px solid var(--border2);background:rgba(255,255,255,0.03);color:var(--text2);font-family:'DM Mono',monospace;font-size:12.5px;cursor:pointer;transition:all .2s;}
+.tws-navfoot button:hover:not(:disabled){border-color:rgba(201,168,76,0.4);color:var(--gold);}
+.tws-navfoot button:disabled{opacity:0.3;cursor:default;}
 .pb-confs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
 .pb-conf{font-family:'DM Mono',monospace;font-size:8.5px;padding:3px 8px;border-radius:5px;background:rgba(201,168,76,0.08);color:var(--text2);letter-spacing:0.02em;}
 .pb-toggle{width:36px;height:20px;border-radius:999px;background:rgba(255,255,255,0.1);position:relative;cursor:pointer;transition:background 0.3s;flex-shrink:0;}
@@ -1719,8 +1787,13 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   </div>
 </div>
 
-<!-- TRADE DETAIL MODAL -->
+<!-- TRADE DETAIL MODAL (día) -->
 <div class="tdmodal" id="tdmodal"><div class="tdm-bg" onclick="closeTDM()"></div><div class="tdm-card"><div class="tdm-head"><span class="tdm-title" id="tdm-title">Trade</span><button class="tdm-close" onclick="closeTDM()">✕</button></div><div id="tdm-body"></div></div></div>
+
+<!-- TRADE DETAIL WORKSPACE (full-screen, Review 2.0) -->
+<div class="tws" id="tws"><div class="tws-inner" id="tws-inner"></div></div>
+<!-- Visor de imagen a pantalla completa -->
+<div class="tws-lightbox" id="tws-lb" onclick="twsCloseLb()"><img id="tws-lb-img" src="" alt=""></div>
 
 <!-- CONFIRM MODAL (diseño Liberato, reemplaza al confirm() nativo) -->
 <div class="lbc-cfm" id="lbc-cfm">
@@ -2562,10 +2635,192 @@ function renderTItems(arr){
     return '<div class="titem'+(isOpen||t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+ptsTxt+'</div><div class="tpnl '+pnlCls+'">'+pnlTxt+'</div></div></div>';
   }).join('');
 }
-function openTDetail(id){
-  var t=T.find(function(x){return x.id===id;});if(!t)return;
-  document.getElementById('tdm-title').textContent=t.asset+' '+(t.direction==='long'?'Long':'Short')+' · '+t.date;
-  document.getElementById('tdm-body').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">'+[{l:'P&L',v:f$(t.pnl),c:fc(t.pnl)},{l:'Puntos',v:(t.points>=0?'+':'')+t.points,c:fc(t.points)},{l:'R:R',v:t.rr+'R',c:''}].map(function(x){return '<div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;"><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;">'+x.l+'</div><div style="font-family:DM Mono,monospace;font-size:18px;font-weight:700;" class="'+x.c+'">'+x.v+'</div></div>';}).join('')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">'+(t.vwap?'<span class="ctx-tag '+(t.vwap==='above'?'vwap-above':'vwap-below')+'">VWAP '+(t.vwap==='above'?'Arriba':'Abajo')+'</span>':'')+(t.gamma?'<span class="ctx-tag '+(t.gamma==='exp_up'?'gamma-up':t.gamma==='exp_dn'?'gamma-down':'gamma-contract')+'">Gamma: '+(t.gamma==='exp_up'?'Expansión ↑':t.gamma==='exp_dn'?'Expansión ↓':t.gamma==='contract'?'Contracción':'Neutral')+'</span>':'')+(t.t4h?'<span class="ctx-tag '+(t.t4h==='bull'?'bull':t.t4h==='bear'?'bear':'')+'">4H: '+(t.t4h==='bull'?'Alcista':t.t4h==='bear'?'Bajista':'Neutral')+'</span>':'')+(t.exitType?'<span class="ctx-tag '+(t.exitType==='partial'?'gamma-contract':'')+'">Salida: '+(t.exitType==='partial'?'Parcial':'Completa')+'</span>':'')+'</div>'+(t.checklist?'<div style="margin-bottom:14px;"><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Checklist</div><div style="display:flex;flex-direction:column;gap:6px;">'+['¿Sesgo claro?','¿Ubicación?','¿Confirmación?','¿Riesgo válido?'].map(function(l,i){var ok=t.checklist[i];return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:'+(ok?'var(--text)':'var(--text3)')+'"><span style="font-size:14px;">'+(ok?'✓':'✕')+'</span>'+l+'</div>';}).join('')+'</div></div>':'')+(t.note?'<div style="margin-bottom:14px;"><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Nota</div><div style="font-size:13px;color:var(--text2);line-height:1.6;">'+t.note+'</div></div>':'')+'<div class="tdm-ai"><div class="tdm-ai-label">✦ Análisis del Genio</div><div class="tdm-ai-text">'+genTradeAI(t)+'</div></div>';
+// ════════════════════════════════════════════════════════════════════════
+//  TRADE DETAIL WORKSPACE (Review 2.0) — reemplaza el modal pequeño
+// ════════════════════════════════════════════════════════════════════════
+var _twsId=null,_twsList=[],_twsIdx=-1;
+// ── Fotos en IndexedDB (evita reventar localStorage con base64) ──
+var _idbP=null;
+function idbOpen(){if(_idbP)return _idbP;_idbP=new Promise(function(res,rej){try{var r=indexedDB.open('lbc_shots',1);r.onupgradeneeded=function(e){e.target.result.createObjectStore('shots');};r.onsuccess=function(e){res(e.target.result);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});return _idbP;}
+function idbShots(id){return idbOpen().then(function(db){return new Promise(function(res){try{var rq=db.transaction('shots','readonly').objectStore('shots').get('ss::'+id);rq.onsuccess=function(){res(rq.result||[]);};rq.onerror=function(){res([]);};}catch(e){res([]);}});}).catch(function(){return [];});}
+function idbSaveShots(id,arr){return idbOpen().then(function(db){return new Promise(function(res){try{var rq=db.transaction('shots','readwrite').objectStore('shots').put(arr,'ss::'+id);rq.onsuccess=function(){res(true);};rq.onerror=function(){res(false);};}catch(e){res(false);}});}).catch(function(){return false;});}
+// Comprime la imagen a máx 1500px / JPEG 0.82 antes de guardar.
+function twsCompress(file){return new Promise(function(res){var fr=new FileReader();fr.onload=function(){var img=new Image();img.onload=function(){var mx=1500,w=img.width,h=img.height;if(w>mx||h>mx){if(w>h){h=Math.round(h*mx/w);w=mx;}else{w=Math.round(w*mx/h);h=mx;}}var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);try{res(cv.toDataURL('image/jpeg',0.82));}catch(e){res(fr.result);}};img.onerror=function(){res(fr.result);};img.src=fr.result;};fr.onerror=function(){res(null);};fr.readAsDataURL(file);});}
+
+function twsBuildList(){
+  var pool=T.filter(function(t){return !t.__demo;});
+  var r=_dfTr||{};
+  var f=pool.filter(function(t){if(r.start&&t.date<r.start)return false;if(r.end&&t.date>r.end)return false;return true;});
+  if(activeAccount&&activeAccount!=='all')f=f.filter(function(t){return String(t.account)===activeAccount;});
+  if(trFilter==='win')f=f.filter(function(t){return t.result==='win';});else if(trFilter==='loss')f=f.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')f=f.filter(function(t){return t.chkAll;});
+  f.sort(function(a,b){return b.date.localeCompare(a.date)||String(b.time).localeCompare(String(a.time));});
+  return f;
+}
+function openTDetail(id){ openTrade(id); }
+function openTrade(id){
+  _twsList=twsBuildList();
+  _twsIdx=_twsList.findIndex(function(t){return t.id===id;});
+  if(_twsIdx<0){_twsList=[T.find(function(t){return t.id===id;})].filter(Boolean);_twsIdx=0;}
+  _twsId=id;
+  document.getElementById('tws').classList.add('open');
+  document.body.style.overflow='hidden';
+  renderTws();
+}
+function twsClose(){document.getElementById('tws').classList.remove('open');document.body.style.overflow='';_twsId=null;}
+function twsNav(d){var i=_twsIdx+d;if(i<0||i>=_twsList.length)return;_twsIdx=i;_twsId=_twsList[i].id;renderTws();document.getElementById('tws').scrollTop=0;}
+// Guarda un patch en el trade y refresca KPIs de fondo (sin cerrar el workspace).
+function twsSave(patch){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;Object.assign(t,patch);var i=T.indexOf(t);T[i]=calcTrade(t);saveTrades(T);}
+function twsField(el,field){var v=el.value.trim();var num=parseFloat(v);twsSave(field==='note'||field==='lesson'?_defObj(field,v):_defObj(field,isNaN(num)?null:num));if(field==='stop'||field==='target'||field==='exit')renderTws();}
+function _defObj(k,v){var o={};o[k]=v;return o;}
+function twsRate(cat,val){var t=T.find(function(x){return x.id===_twsId;});var r=Object.assign({},t.rating||{});r[cat]=val;twsSave({rating:r});renderTws();}
+function twsGrade(g){twsSave({grade:g});renderTws();}
+var TWS_TAGS=['A+','Ejecución limpia','Entrada temprana','Target perdido','Error','Buen manejo','FOMO','Plan seguido','Revancha'];
+function twsToggleTag(tag){var t=T.find(function(x){return x.id===_twsId;});var tags=(t.tags||[]).slice();var i=tags.indexOf(tag);if(i>=0)tags.splice(i,1);else tags.push(tag);twsSave({tags:tags});renderTws();}
+function twsPickShots(){document.getElementById('tws-shot-input').click();}
+function twsAddFiles(files){
+  files=Array.prototype.slice.call(files||[]).filter(function(f){return /image\//.test(f.type);});
+  if(!files.length)return;
+  var id=_twsId;
+  Promise.all(files.map(twsCompress)).then(function(imgs){
+    imgs=imgs.filter(Boolean);
+    idbShots(id).then(function(cur){var arr=(cur||[]).concat(imgs).slice(0,12);idbSaveShots(id,arr).then(function(){if(_twsId===id)twsRenderShots();});});
+  });
+}
+function twsDelShot(i){var id=_twsId;idbShots(id).then(function(arr){arr.splice(i,1);idbSaveShots(id,arr).then(function(){if(_twsId===id)twsRenderShots();});});}
+function twsFull(src){var lb=document.getElementById('tws-lb');document.getElementById('tws-lb-img').src=src;lb.classList.add('open');}
+function twsCloseLb(){document.getElementById('tws-lb').classList.remove('open');}
+function twsRenderShots(){
+  var host=document.getElementById('tws-shots-host');if(!host)return;
+  idbShots(_twsId).then(function(arr){
+    var grid=arr.map(function(src,i){return '<div class="tws-shot"><img src="'+src+'" onclick="twsFull(this.src)"><button class="tws-shot-del" onclick="event.stopPropagation();twsDelShot('+i+')">✕</button></div>';}).join('');
+    host.innerHTML=(arr.length?'<div class="tws-shots" style="margin-bottom:14px;">'+grid+'</div>':'')
+      +'<div class="tws-drop" id="tws-drop" onclick="twsPickShots()"><div style="font-size:22px;margin-bottom:6px;opacity:0.7;">📸</div><div style="font-size:12px;color:var(--text2);font-weight:600;">Sube capturas del trade</div><div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:3px;">Arrastra o toca · entrada · gestión · salida · máx 12</div></div>';
+    var dz=document.getElementById('tws-drop');
+    if(dz){['dragover','dragenter'].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.add('over');});});['dragleave','drop'].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove('over');});});dz.addEventListener('drop',function(e){twsAddFiles(e.dataTransfer.files);});}
+  });
+}
+function _fmtDur(t){
+  try{if(!t.exitTime||!t.time)return '—';var a=new Date(t.date+'T'+(t.time.length===5?t.time+':00':t.time)),b=new Date(t.exitTime);var m=Math.round((b-a)/60000);if(isNaN(m)||m<0)return '—';if(m<60)return m+'m';return Math.floor(m/60)+'h '+(m%60)+'m';}catch(e){return '—';}
+}
+function renderTws(){
+  var t=T.find(function(x){return x.id===_twsId;});if(!t){twsClose();return;}
+  var host=document.getElementById('tws-inner');
+  var dir=t.direction==='short'?'short':'long';
+  var resCls=t.result==='win'?'win':t.result==='loss'?'loss':'be';
+  var resTxt=t.result==='win'?'WIN':t.result==='loss'?'LOSS':'BREAKEVEN';
+  var isOpenTr=(t.status==='open'||t.isOpen||(t.exit==null&&!t.expired));
+  var mult=t.mult||1,c=t.contracts||1,fees=t.fees||0;
+  var gross=(t.pnl||0)+fees;
+  var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0),hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0);
+  var riskU=hasStop?Math.abs(t.entry-t.stop):0;
+  var riskUSD=riskU>0?Math.round(riskU*mult*c):0;
+  var tgtU=hasTgt?Math.abs(t.target-t.entry):0;
+  var plannedRR=(hasStop&&hasTgt&&riskU>0)?Math.round((tgtU/riskU)*100)/100:null;
+  var realR=(hasStop&&riskU>0&&!isOpenTr)?Math.round((t.points/riskU)*100)/100:null;
+  var rating=t.rating||{};
+  function starRow(cat,lbl){var v=rating[cat]||0;var s='';for(var i=1;i<=5;i++)s+='<span class="tws-star'+(i<=v?' on':'')+'" onclick="twsRate(\''+cat+'\','+i+')">★</span>';return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;"><span style="font-size:12.5px;color:var(--text2);">'+lbl+'</span><span>'+s+'</span></div>';}
+  function stat(l,v,cls){return '<div class="tws-stat"><div class="tws-stat-l">'+l+'</div><div class="tws-stat-v '+(cls||'')+'">'+v+'</div></div>';}
+  // ── Risk/Reward viz ──
+  var rrViz='';
+  if(hasStop){
+    var lo,hi;
+    var pts=[t.stop,t.entry]; if(hasTgt)pts.push(t.target); if(!isOpenTr&&t.exit!=null)pts.push(t.exit);
+    lo=Math.min.apply(null,pts);hi=Math.max.apply(null,pts);var span=(hi-lo)||1;
+    function px(v){return ((v-lo)/span*100).toFixed(1);}
+    rrViz='<div class="tws-rrbar"><div class="tws-rrline"></div>'
+      +'<div class="tws-rrmark" style="left:'+px(t.stop)+'%;background:#ef4444;"></div><div class="tws-rrlabel" style="left:'+px(t.stop)+'%;color:#ef4444;">STOP '+t.stop+'</div><div class="tws-rrsub" style="left:'+px(t.stop)+'%;">−1R</div>'
+      +'<div class="tws-rrmark" style="left:'+px(t.entry)+'%;background:var(--text);"></div><div class="tws-rrlabel" style="left:'+px(t.entry)+'%;color:var(--text2);">ENTRY '+t.entry+'</div>'
+      +(hasTgt?'<div class="tws-rrmark" style="left:'+px(t.target)+'%;background:var(--green);"></div><div class="tws-rrlabel" style="left:'+px(t.target)+'%;color:var(--green);">TARGET '+t.target+'</div><div class="tws-rrsub" style="left:'+px(t.target)+'%;">+'+(plannedRR||'?')+'R</div>':'')
+      +((!isOpenTr&&t.exit!=null)?'<div class="tws-rrmark" style="left:'+px(t.exit)+'%;background:var(--gold);height:34px;top:16px;"></div><div class="tws-rrsub" style="left:'+px(t.exit)+'%;top:2px;color:var(--gold);">SALIDA '+t.exit+(realR!=null?' ('+(realR>=0?'+':'')+realR+'R)':'')+'</div>':'')
+      +'</div>';
+  } else {
+    rrViz='<div style="font-size:11.5px;color:var(--text3);padding:6px 2px;">Añade un <strong style="color:var(--text2);">stop</strong> y un <strong style="color:var(--text2);">target</strong> abajo para ver la visualización de riesgo/recompensa y el R:R planeado vs realizado.</div>';
+  }
+  // ── Contexto del día (sidebar dentro del flujo) ──
+  var dayTr=twsBuildList().filter(function(x){return x.date===t.date;});
+  var dayPnl=dayTr.filter(function(x){return x.status!=='open'&&x.status!=='pending';}).reduce(function(s,x){return s+(x.pnl||0);},0);
+  var dayWR=stats(dayTr.filter(function(x){return x.status!=='open';})).wr;
+  var dayList=dayTr.map(function(x){return '<div class="tws-daytrade'+(x.id===t.id?' sel':'')+'" onclick="openTrade(\''+x.id+'\')"><span style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text3);">'+x.time+'</span><span style="flex:1;font-size:11.5px;color:var(--text2);">'+_esc(x.asset)+' '+(x.direction==='long'?'▲':'▼')+'</span><span class="'+(x.result==='win'?'pos':x.result==='loss'?'neg':'')+'" style="font-family:\'DM Mono\',monospace;font-size:11.5px;font-weight:700;">'+((x.status==='open'||x.isOpen)?'abierta':f$(x.pnl))+'</span></div>';}).join('');
+
+  host.innerHTML=
+    // topbar
+    '<div class="tws-topbar"><button class="tws-back" onclick="twsClose()">← Mis Trades</button>'
+    +'<span class="tws-count">'+(_twsIdx+1)+' / '+_twsList.length+'</span>'
+    +'<span class="tws-navbtns"><button class="tws-navbtn" onclick="twsNav(-1)"'+(_twsIdx<=0?' disabled':'')+'>←</button><button class="tws-navbtn" onclick="twsNav(1)"'+(_twsIdx>=_twsList.length-1?' disabled':'')+'>→</button></span></div>'
+    // hero
+    +'<div class="tws-hero"><div class="tws-hero-top"><div>'
+    +'<span class="tws-asset">'+_esc(t.asset)+'</span><span class="tws-dir '+dir+'">'+(dir==='long'?'LONG':'SHORT')+'</span>'
+    +'<div class="tws-pnl '+(isOpenTr?'':(t.pnl>=0?'pos':'neg'))+'" style="'+(isOpenTr?'color:var(--text3);':'')+'">'+(isOpenTr?'Abierta':f$(t.pnl))+(realR!=null?'<span class="tws-rmult '+(realR>=0?'pos':'neg')+'">'+(realR>=0?'+':'')+realR+'R</span>':'')+'</div>'
+    +'</div><span class="tws-result '+resCls+'">'+(isOpenTr?'ABIERTA':resTxt)+'</span></div>'
+    +'<div class="tws-metaline"><span><b>'+t.date+'</b></span><span>Entrada <b>'+t.time+'</b></span>'+(t.exitTime?'<span>Salida <b>'+(String(t.exitTime).split('T')[1]||'').slice(0,5)+'</b></span>':'')+'<span>Duración <b>'+_fmtDur(t)+'</b></span><span>Cantidad <b>'+c+'</b></span><span>Entrada <b>'+t.entry+'</b></span>'+(t.exit!=null?'<span>Salida <b>'+t.exit+'</b></span>':'')+(t.account?'<span>Cuenta <b>'+_esc(shortAcct(String(t.account)))+'</b></span>':'')+'</div></div>'
+    // performance
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Rendimiento</div><div class="tws-grid">'
+    +stat('Net P&L',isOpenTr?'—':f$(t.pnl),isOpenTr?'':(t.pnl>=0?'pos':'neg'))
+    +stat('P&L Bruto',isOpenTr?'—':f$(gross),'')
+    +stat('Comisiones',fees?f$(-fees):'—','')
+    +stat('R-Multiple',realR!=null?((realR>=0?'+':'')+realR+'R'):'—',realR!=null?(realR>=0?'pos':'neg'):'')
+    +stat('Puntos',isOpenTr?'—':((t.points>=0?'+':'')+t.points),isOpenTr?'':(t.points>=0?'pos':'neg'))
+    +stat('Duración',_fmtDur(t),'')
+    +'</div></div>'
+    // risk metrics
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Riesgo / Recompensa</div>'
+    +'<div class="tws-grid" style="margin-bottom:8px;">'
+    +stat('Riesgo inicial',riskUSD?f$(-riskUSD):'—','')
+    +stat('Stop',hasStop?String(t.stop):'—','')
+    +stat('Target',hasTgt?String(t.target):'—','')
+    +stat('R:R planeado',plannedRR!=null?plannedRR+'R':'—','')
+    +stat('R:R realizado',realR!=null?((realR>=0?'+':'')+realR+'R'):'—',realR!=null?(realR>=0?'pos':'neg'):'')
+    +'</div>'+rrViz
+    +'<div class="tws-two" style="margin-top:16px;"><div><div class="tws-lbl">Stop (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasStop?t.stop:'')+'" placeholder="ej. 19250" onchange="twsField(this,\'stop\')"></div><div><div class="tws-lbl">Target (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasTgt?t.target:'')+'" placeholder="ej. 19400" onchange="twsField(this,\'target\')"></div></div>'
+    +(plannedRR!=null&&realR!=null?'<div style="margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.25);font-size:12.5px;color:var(--text2);">Plan: <strong style="color:var(--gold);">'+plannedRR+'R</strong> · Realizado: <strong class="'+(realR>=0?'pos':'neg')+'">'+(realR>=0?'+':'')+realR+'R</strong> — '+(realR>=plannedRR?'ejecutaste tu plan completo.':(realR>0?'saliste antes de tu target.':'el trade fue en contra.'))+'</div>':'')
+    +'</div>'
+    // screenshots + chart placeholder
+    +'<div class="tws-two">'
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Capturas del trade</div><div id="tws-shots-host"></div></div>'
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Contexto (chart)</div>'
+    +'<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;">'
+    +(t.vwap?'<span class="ctx-tag '+(t.vwap==='above'?'vwap-above':'vwap-below')+'">VWAP '+(t.vwap==='above'?'↑':'↓')+'</span>':'')
+    +(t.gamma?'<span class="ctx-tag '+(t.gamma==='exp_up'?'gamma-up':t.gamma==='exp_dn'?'gamma-down':'gamma-contract')+'">γ '+(t.gamma==='exp_up'?'↑':t.gamma==='exp_dn'?'↓':'≈')+'</span>':'')
+    +(t.t4h?'<span class="ctx-tag '+(t.t4h==='bull'?'bull':'bear')+'">4H '+(t.t4h==='bull'?'↑':'↓')+'</span>':'')+'</div>'
+    +'<div style="font-size:11.5px;color:var(--text3);line-height:1.6;">La <strong style="color:var(--text2);">captura</strong> es lo que veías al decidir. El <strong style="color:var(--text2);">chart nativo</strong> (reconstrucción con entry/exit/stop/target y niveles) llegará con los datos de precio de tu broker. Por ahora, sube tu captura al lado.</div>'
+    +'</div></div>'
+    // execution
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Ejecución</div><div class="tws-grid">'
+    +stat('Orden entrada',dir==='long'?'BUY':'SELL','')
+    +stat('Precio entrada',String(t.entry),'')
+    +stat('Hora entrada',t.time,'')
+    +stat('Precio salida',t.exit!=null?String(t.exit):'—','')
+    +stat('Hora salida',(String(t.exitTime||'').split('T')[1]||'—').slice(0,5),'')
+    +stat('Cantidad',String(c),'')
+    +stat('Salida',t.exitType==='partial'?'Parcial':'Completa','')
+    +stat('Comisiones',fees?f$(-fees):'—','')
+    +'</div></div>'
+    // playbook / setup
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Playbook / Setup</div>'
+    +'<div class="tws-two"><div><div class="tws-lbl">Playbook</div><div style="font-size:14px;color:var(--text);font-weight:600;">'+_esc(t.playbookId?pbName(t.playbookId):(t.setup||'—'))+'</div></div>'
+    +'<div><div class="tws-lbl">Dirección · Régimen</div><div style="font-size:13px;color:var(--text2);">'+(dir==='long'?'LONG':'SHORT')+' · '+(t.gamma==='exp_up'||t.gamma==='exp_dn'?'TREND':t.gamma==='contract'?'RANGE':'—')+'</div></div></div>'
+    +(t.checklist?'<div style="margin-top:16px;"><div class="tws-lbl">Checklist del proceso</div><div style="display:flex;flex-wrap:wrap;gap:10px;">'+['Régimen','Ubicación','Confluencia','Trigger'].map(function(l,i){var ok=t.checklist[i];return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:'+(ok?'var(--green)':'var(--text3)')+';">'+(ok?'✓':'○')+' '+l+'</span>';}).join('')+'</div></div>':'')
+    +'<div style="margin-top:16px;"><div class="tws-lbl">Tags</div><div style="display:flex;flex-wrap:wrap;gap:8px;">'+TWS_TAGS.map(function(tg){var on=(t.tags||[]).indexOf(tg)>=0;return '<span class="tws-tag'+(on?' on':'')+'" onclick="twsToggleTag(\''+tg+'\')">'+(on?'✓ ':'')+tg+'</span>';}).join('')+'</div></div>'
+    +'</div>'
+    // trade review
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Evaluación del trade</div>'
+    +starRow('setup','Calidad del setup')+starRow('execution','Ejecución')+starRow('management','Gestión')+starRow('discipline','Disciplina')
+    +'<div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><span style="font-size:12.5px;color:var(--text2);">Nota general</span><span style="display:inline-flex;gap:6px;">'+['A','B','C','D'].map(function(g){var on=t.grade===g;return '<button onclick="twsGrade(\''+g+'\')" style="width:34px;height:34px;border-radius:9px;border:0.5px solid '+(on?'var(--gold)':'var(--border2)')+';background:'+(on?'rgba(201,168,76,0.15)':'transparent')+';color:'+(on?'var(--gold)':'var(--text3)')+';font-weight:700;font-family:\'DM Mono\',monospace;cursor:pointer;">'+g+'</button>';}).join('')+'</span></div></div>'
+    // notes + lesson
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Notas</div>'
+    +'<textarea class="tws-input" rows="3" placeholder="Qué viste, por qué entraste, cómo gestionaste..." onchange="twsField(this,\'note\')">'+_esc(t.note||'')+'</textarea>'
+    +'<div class="tws-lbl" style="margin-top:16px;">Lección aprendida</div>'
+    +'<textarea class="tws-input" rows="2" placeholder="¿Qué aprendí de este trade?" onchange="twsField(this,\'lesson\')">'+_esc(t.lesson||'')+'</textarea></div>'
+    // AI
+    +'<div class="tws-sec"><div class="tws-sec-h">✦ Análisis del Genio</div><div style="font-size:13px;color:var(--text2);line-height:1.7;">'+genTradeAI(t)+'</div></div>'
+    // daily context
+    +'<div class="tws-sec"><div class="tws-sec-h">◆ Contexto del día · '+t.date+'</div>'
+    +'<div class="tws-grid" style="margin-bottom:14px;">'+stat('P&L del día',f$(dayPnl),dayPnl>=0?'pos':'neg')+stat('Trades',String(dayTr.length),'')+stat('Win Rate',dayWR+'%','')+'</div>'
+    +dayList+'</div>'
+    // footer nav
+    +'<div class="tws-navfoot"><button onclick="twsNav(-1)"'+(_twsIdx<=0?' disabled':'')+'>← Trade anterior</button><button onclick="twsNav(1)"'+(_twsIdx>=_twsList.length-1?' disabled':'')+'>Trade siguiente →</button></div>'
+    +'<input type="file" id="tws-shot-input" accept="image/*" multiple style="display:none" onchange="twsAddFiles(this.files);this.value=\'\';">';
+  twsRenderShots();
   document.getElementById('tdmodal').classList.add('open');
 }
 function genTradeAI(t){
@@ -3832,7 +4087,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }catch(e){console.error('init',e);}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeForm();closeTDM();closeAIChat();}});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){var lb=document.getElementById('tws-lb');if(lb&&lb.classList.contains('open')){twsCloseLb();return;}if(document.getElementById('tws').classList.contains('open')){twsClose();return;}closeForm();closeTDM();closeAIChat();}
+  else if(document.getElementById('tws')&&document.getElementById('tws').classList.contains('open')){if(e.key==='ArrowLeft')twsNav(-1);else if(e.key==='ArrowRight')twsNav(1);}
+});
 
 // ── PARTICLES ──
 (function(){
