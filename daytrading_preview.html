@@ -2563,10 +2563,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     if(hasFlip) gb.push('Flip <span class="hl-gold">'+fl+'</span>');
     if(hasWalls) gb.push('Call Wall <span class="hl-num">'+cw+'</span> · Put Wall <span class="hl-num">'+pw+'</span>');
     if(S.netGex!=null){var rc=S.netGex>=0?'hl-up':'hl-dn';gb.push('Net GEX <span class="'+rc+'">'+netGexLabel()+'</span> '+(S.netGex>=0?'(long gamma → rango)':'(short gamma → expansión)'));}
-    if(S.vix!=null) gb.push('VIX <span class="hl-num">'+Number(S.vix).toFixed(1)+'</span>');
-    if(S.expectedMove) gb.push('mov. esperado <span class="hl-num">±'+Math.round(S.expectedMove)+'pts</span>');
-    if(S.fearRating) gb.push('sentimiento '+S.fearRating);
     if(gb.length) parts.push('<strong>GEX:</strong> '+gb.join(' · ')+'.');
+
+    // ── VOLATILIDAD ──
+    var vb=[];
+    if(S.vix!=null) vb.push('VIX <span class="hl-num">'+Number(S.vix).toFixed(1)+'</span>');
+    if(S.expectedMove) vb.push('mov. esperado <span class="hl-num">±'+Math.round(S.expectedMove)+'pts</span>');
+    if(S.netGex!=null) vb.push('régimen '+(S.netGex>=0?'<span class="hl-up">compresión</span>':'<span class="hl-dn">expansión</span>'));
+    if(S.fearRating) vb.push('Fear&Greed '+S.fearRating+(S.fearScore!=null?' ('+S.fearScore+'/100)':''));
+    if(vb.length) parts.push('<strong>Volatilidad:</strong> '+vb.join(' · ')+'.');
 
     // ── TÉCNICO / ACCIÓN ──
     var st;
