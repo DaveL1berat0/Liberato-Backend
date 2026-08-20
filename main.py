@@ -4312,6 +4312,30 @@ async def tradestation_fills(app_user_id: str = "dave", days: int = 90, raw: int
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+@app.get("/api/broker/tradestation/status")
+async def tradestation_status(app_user_id: str = "dave"):
+    """Dice si este usuario ya tiene TradeStation conectado (para que el frontend
+    muestre 'Desconectar' en vez de 'Conectar')."""
+    uid = (app_user_id or "dave").strip() or "dave"
+    rec = _ts_tokens.get(uid) or {}
+    return {"connected": bool(rec.get("refresh_token") or rec.get("access_token")),
+            "configured": bool(TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET)}
+
+
+@app.post("/api/broker/tradestation/disconnect")
+async def tradestation_disconnect(app_user_id: str = "dave"):
+    """Borra los tokens OAuth de este usuario — deslogueo del broker. El próximo
+    'Conectar' vuelve a pedir autorización."""
+    uid = (app_user_id or "dave").strip() or "dave"
+    existed = uid in _ts_tokens
+    _ts_tokens.pop(uid, None)
+    try:
+        save_cache()
+    except Exception:
+        pass
+    return {"ok": True, "disconnected": existed}
+
+
 @app.post("/api/journal/coach")
 async def journal_coach(request: Request):
     """AI Coach del journal: analiza la data REAL del trader (stats, rendimiento por

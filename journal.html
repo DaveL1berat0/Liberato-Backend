@@ -539,6 +539,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tpnl{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;min-width:72px;text-align:right;}
 .tpnl.pos{color:var(--green);}
 .tpnl.neg{color:var(--red);}
+.tpnl.neu{color:var(--text3);}
 .tpts{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-align:right;}
 
 /* FILTERS */
@@ -1726,7 +1727,9 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
         <!-- TradeStation directo (incluye FUTUROS, que el portal no expone) -->
         <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border2);">
           <div style="font-size:10.5px;color:var(--text3);text-align:center;margin-bottom:8px;">¿Operas <strong style="color:var(--text2);">futuros</strong> en TradeStation?</div>
-          <button onclick="connectBroker('tradestation')" style="width:100%;padding:11px;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">Conectar TradeStation directo →</button>
+          <div id="ts-connect-slot">
+            <button onclick="connectBroker('tradestation')" style="width:100%;padding:11px;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">Conectar TradeStation directo →</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2360,8 +2363,13 @@ function renderTItems(arr){
       var lbl=t.expired?'expiró · revisar':(t.exit==null?'abierta':'revisar');
       badge='<span style="font-size:8.5px;font-family:\'DM Mono\',monospace;letter-spacing:0.05em;color:var(--purple);background:rgba(177,151,252,0.12);border:0.5px solid rgba(177,151,252,0.3);border-radius:5px;padding:1px 6px;margin-left:6px;">◆ '+lbl+'</span>';
     }
-    var pnlTxt=(t.status==='pending'&&t.exit==null&&!t.expired)?'—':f$(t.pnl);
-    return '<div class="titem'+(t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+(t.points>=0?'+':'')+t.points+' pts</div><div class="tpnl '+(t.pnl>=0?'pos':'neg')+'">'+pnlTxt+'</div></div></div>';
+    // Posición ABIERTA (sin cierre, no expirada): no tiene P&L realizado -> "—" en NEUTRO,
+    // nunca en rojo (una acción no cerrada no es una pérdida). Los pts tampoco se muestran.
+    var isOpen=(t.status==='pending'&&t.exit==null&&!t.expired);
+    var pnlTxt=isOpen?'—':f$(t.pnl);
+    var pnlCls=isOpen?'neu':(t.pnl>=0?'pos':'neg');
+    var ptsTxt=isOpen?'abierta':((t.points>=0?'+':'')+t.points+' pts');
+    return '<div class="titem'+(t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+ptsTxt+'</div><div class="tpnl '+pnlCls+'">'+pnlTxt+'</div></div></div>';
   }).join('');
 }
 function openTDetail(id){
@@ -2907,6 +2915,32 @@ function syncFills(){
 // Sincroniza TODAS las fuentes conectadas (portal SnapTrade + TradeStation directo).
 // importFromBroker deduplica por fill, así que solaparlas es seguro.
 function syncAllBrokers(){ try{syncTradestation();}catch(e){} setTimeout(function(){try{syncFills();}catch(e){}},900); }
+// Refleja en el modal si TradeStation ya está conectado: si lo está, el botón pasa a
+// "✓ Conectado · Desconectar" en vez de ofrecer conectar de nuevo.
+function refreshTsState(){
+  var slot=document.getElementById('ts-connect-slot'); if(!slot)return;
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.connected){
+        slot.innerHTML='<div style="display:flex;gap:8px;align-items:center;">'
+          +'<div style="flex:1;padding:11px;border-radius:10px;border:0.5px solid rgba(46,232,164,0.35);background:rgba(46,232,164,0.06);color:var(--green);font-weight:600;font-size:12px;text-align:center;font-family:\'DM Mono\',monospace;">✓ TradeStation conectado</div>'
+          +'<button onclick="disconnectTradestation()" style="padding:11px 14px;border-radius:10px;border:0.5px solid rgba(239,68,68,0.35);background:rgba(239,68,68,0.06);color:#ef4444;font-weight:600;font-size:12px;cursor:pointer;font-family:\'DM Mono\',monospace;">Desconectar</button>'
+          +'</div>';
+      }else{
+        slot.innerHTML='<button onclick="connectBroker(\'tradestation\')" style="width:100%;padding:11px;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:\'DM Mono\',monospace;">Conectar TradeStation directo →</button>';
+      }
+    }).catch(function(){});
+}
+function disconnectTradestation(){
+  if(!confirm('¿Desconectar TradeStation? Tendrás que volver a autorizar para sincronizar.'))return;
+  var st=document.getElementById('broker-status');
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Desconectando…</div>';
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
+    .then(function(r){return r.json();})
+    .then(function(){ refreshTsState(); if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);">TradeStation desconectado. Tus trades ya importados se conservan.</div>'; })
+    .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo desconectar.</div>';});
+}
 // TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
 function syncTradestation(){
   var st=document.getElementById('broker-status');
@@ -2930,6 +2964,7 @@ function openCsvImport(){
   _csvParsedTrades=null;
   document.getElementById('csv-overlay').classList.add('open');
   document.getElementById('csv-modal').classList.add('open');
+  try{refreshTsState();}catch(e){}  // muestra Conectar vs Desconectar según estado real
 }
 // NUEVA FUNCIÓN: abre el formulario de trade directo al upload de screenshot
 function openScreenshotImport(){
@@ -3528,13 +3563,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeForm()
 (function(){
   try{
   var c=document.getElementById('pcanvas');if(!c)return;var ctx=c.getContext('2d');if(!ctx)return;
-  var W,H,P=[],MOB=window.innerWidth<768,CNT=MOB?25:60,G='201,168,76',W2='232,228,217',mx=-999,my=-999;
+  var W,H,P=[],MOB=window.innerWidth<768,CNT=MOB?38:90,G='201,168,76',W2='240,238,232',mx=-999,my=-999;
   function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}rs();window.addEventListener('resize',rs);
   if(!MOB)document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-  function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.2;this.vy=(Math.random()-.5)*.2;this.r=Math.random()*1+.3;this.g=Math.random()<.3;this.a=Math.random()*.3+.07;this.ba=this.a;}
-  Pt.prototype.tick=function(){if(mx>0){var dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<140&&d>0){var f=.008*(1-d/140);this.vx+=dx/d*f;this.vy+=dy/d*f;this.a=Math.min(this.ba+.15*(1-d/140),.55);}else{this.a+=(this.ba-this.a)*.03;}}this.vx*=.995;this.vy*=.995;this.x+=this.vx;this.y+=this.vy;if(this.x<-5)this.x=W+5;if(this.x>W+5)this.x=-5;if(this.y<-5)this.y=H+5;if(this.y>H+5)this.y=-5;};
+  function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.22;this.vy=(Math.random()-.5)*.22;this.r=Math.random()*1.5+.7;this.g=Math.random()<.25;this.a=Math.random()*.35+.22;this.ba=this.a;}
+  Pt.prototype.tick=function(){if(mx>0){var dx=mx-this.x,dy=my-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<150&&d>0){var f=.008*(1-d/150);this.vx+=dx/d*f;this.vy+=dy/d*f;this.a=Math.min(this.ba+.25*(1-d/150),.8);}else{this.a+=(this.ba-this.a)*.03;}}this.vx*=.995;this.vy*=.995;this.x+=this.vx;this.y+=this.vy;if(this.x<-5)this.x=W+5;if(this.x>W+5)this.x=-5;if(this.y<-5)this.y=H+5;if(this.y>H+5)this.y=-5;};
   for(var i=0;i<CNT;i++)P.push(new Pt());
-  (function draw(){ctx.clearRect(0,0,W,H);for(var i=0;i<CNT;i++){P[i].tick();ctx.beginPath();ctx.arc(P[i].x,P[i].y,P[i].r,0,Math.PI*2);ctx.fillStyle='rgba('+(P[i].g?G:W2)+','+P[i].a+')';ctx.fill();}for(var i=0;i<CNT;i++)for(var j=i+1;j<CNT;j++){var dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.strokeStyle='rgba('+(P[i].g||P[j].g?G:W2)+','+(1-d/90)*.09+')';ctx.lineWidth=.5;ctx.stroke();}}requestAnimationFrame(draw);})();
+  (function draw(){ctx.clearRect(0,0,W,H);for(var i=0;i<CNT;i++){P[i].tick();ctx.beginPath();ctx.arc(P[i].x,P[i].y,P[i].r,0,Math.PI*2);ctx.fillStyle='rgba('+(P[i].g?G:W2)+','+P[i].a+')';ctx.fill();}for(var i=0;i<CNT;i++)for(var j=i+1;j<CNT;j++){var dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.strokeStyle='rgba('+(P[i].g||P[j].g?G:W2)+','+(1-d/110)*.16+')';ctx.lineWidth=.6;ctx.stroke();}}requestAnimationFrame(draw);})();
   }catch(e){}
 })();
 </script>
