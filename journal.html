@@ -2957,19 +2957,29 @@ function twsChartSVG(t){
     s+='<polygon points="'+xEnt+','+Y(+t.entry)+' '+xEx+','+Y(+t.exit)+' '+xEx+','+Y(+t.entry)+'" fill="'+col+'" opacity="0.10"/>';
     s+='<line x1="'+xEnt+'" y1="'+Y(+t.entry)+'" x2="'+xEx+'" y2="'+Y(+t.exit)+'" stroke="'+col+'" stroke-width="2.4"/>';
   }
-  // marcador ENTRADA
-  s+='<circle cx="'+xEnt+'" cy="'+Y(+t.entry)+'" r="6" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" stroke="#0a0a0a" stroke-width="1.5"/>';
-  s+='<text x="'+xEnt+'" y="'+(Y(+t.entry)+(dir==='long'?18:-11))+'" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" font-family="DM Mono,monospace" font-size="9.5" text-anchor="middle" font-weight="700">'+(dir==='long'?'▲':'▼')+' ENTRADA</text>';
+  // marcador ENTRADA (triángulo + contratos)
+  var _c=t.contracts||1;
+  s+=_twsMark(+xEnt,+Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#ef4444'),'ENT ×'+_c);
   s+='<text x="'+xEnt+'" y="'+(H-10)+'" fill="rgba(232,228,217,0.5)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">'+t.time+'</text>';
-  // marcador SALIDA
+  // marcador SALIDA (orden contraria)
   if(hasExit){
-    s+='<circle cx="'+xEx+'" cy="'+Y(+t.exit)+'" r="6" fill="'+col+'" stroke="#0a0a0a" stroke-width="1.5"/>';
     var realR=(hasStop&&Math.abs(+t.entry-+t.stop)>0)?Math.round((t.points/Math.abs(+t.entry-+t.stop))*100)/100:null;
-    s+='<text x="'+xEx+'" y="'+(Y(+t.exit)+(+t.exit>=+t.entry?-11:18))+'" fill="'+col+'" font-family="DM Mono,monospace" font-size="9.5" text-anchor="middle" font-weight="700">SALIDA'+(realR!=null?' '+(realR>=0?'+':'')+realR+'R':'')+'</text>';
+    s+=_twsMark(+xEx,+Y(+t.exit),dir==='short',col,'SAL ×'+_c+(realR!=null?' '+(realR>=0?'+':'')+realR+'R':''));
     s+='<text x="'+xEx+'" y="'+(H-10)+'" fill="rgba(232,228,217,0.5)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">'+(String(t.exitTime).split('T')[1]||'').slice(0,5)+'</text>';
   }
   s+='</svg>';
   return s;
+}
+// Marcador de ejecución tipo TradeZella/MultiCharts: triángulo apuntando al precio +
+// pastilla con la etiqueta y el nº de CONTRATOS. NO una línea (confunde).
+function _twsMark(x,y,up,color,label){
+  // apex EN el precio; el cuerpo del triángulo sale hacia afuera (abajo si buy/up, arriba si sell).
+  var by=up?(y+12):(y-12);
+  var tri='<polygon points="'+x+','+y+' '+(x-6.5)+','+by+' '+(x+6.5)+','+by+'" fill="'+color+'" stroke="#05070c" stroke-width="1.2"/>';
+  var py=up?(by+9):(by-9), w=Math.max(32,String(label).length*6.1+12);
+  var pill='<rect x="'+(x-w/2).toFixed(1)+'" y="'+(py-8.5).toFixed(1)+'" width="'+w.toFixed(1)+'" height="16" rx="4.5" fill="'+color+'"/>'
+    +'<text x="'+x+'" y="'+(py+2.7).toFixed(1)+'" fill="#05070c" font-family="DM Mono,monospace" font-size="9" font-weight="700" text-anchor="middle">'+label+'</text>';
+  return tri+pill;
 }
 // ── Velas REALES (gratis): Yahoo 1m del ETF proxy (QQQ→NQ, SPY→ES) auto-calibrado por
 //    el precio de entrada. Cubre el trade de HOY y ~últimos 30 días. Cae al esquema si no hay.
@@ -3022,14 +3032,16 @@ function twsRealChartSVG(t,bars,ratio){
     s+='<rect x="'+(x-cw/2)+'" y="'+top+'" width="'+cw+'" height="'+hgt+'" fill="'+col+'" opacity="0.92"/>';
   });
   function barIdx(hhmm){for(var i=0;i<win.length;i++)if(win[i].hhmm===hhmm)return i;return -1;}
+  var c=t.contracts||1;
   var ei=barIdx(String(t.time).slice(0,5)); if(ei<0)ei=Math.floor(win.length*0.2);
-  s+='<circle cx="'+X(ei)+'" cy="'+Y(+t.entry)+'" r="5" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" stroke="#0a0a0a" stroke-width="1.5"/>';
-  s+='<text x="'+X(ei)+'" y="'+(Y(+t.entry)+(dir==='long'?16:-9))+'" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="700">'+(dir==='long'?'▲':'▼')+' ENT</text>';
+  // Marcador de ENTRADA: triángulo (buy=abajo/long, sell=arriba/short) + pastilla con contratos.
+  s+=_twsMark(X(ei),Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#ef4444'),'ENT ×'+c);
   if(hasExit){
     var xi=barIdx((String(t.exitTime).split('T')[1]||'').slice(0,5)); if(xi<0)xi=win.length-1;
     var xcol=(t.result==='win')?'#2EE8A4':(t.result==='loss')?'#ef4444':'#C9A84C';
-    s+='<circle cx="'+X(xi)+'" cy="'+Y(+t.exit)+'" r="5" fill="'+xcol+'" stroke="#0a0a0a" stroke-width="1.5"/>';
-    s+='<text x="'+X(xi)+'" y="'+(Y(+t.exit)+(+t.exit>=+t.entry?-9:16))+'" fill="'+xcol+'" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="700">SAL</text>';
+    var rk=(hasStop&&Math.abs(+t.entry-+t.stop)>0)?Math.round((t.points/Math.abs(+t.entry-+t.stop))*100)/100:null;
+    // SALIDA = orden contraria: long cierra vendiendo (arriba), short cierra comprando (abajo).
+    s+=_twsMark(X(xi),Y(+t.exit),dir==='short',xcol,'SAL ×'+c+(rk!=null?' '+(rk>=0?'+':'')+rk+'R':''));
   }
   s+='<text x="'+X(0)+'" y="'+(H-7)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="8.5" text-anchor="middle">'+win[0].hhmm+'</text>';
   s+='<text x="'+X(win.length-1)+'" y="'+(H-7)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="8.5" text-anchor="middle">'+win[win.length-1].hhmm+'</text>';
