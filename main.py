@@ -4397,6 +4397,27 @@ def _pub_user(email):
     u = _users.get(email, {})
     return {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}
 
+@app.get("/api/auth/health")
+async def auth_health():
+    """Estado del store de auth (sin exponer secretos). Confirma si Supabase conectó."""
+    reachable = False
+    detail = ""
+    if _sb_on():
+        try:
+            async with httpx.AsyncClient(timeout=8) as c:
+                r = await c.get(f"{SUPABASE_URL}/rest/v1/app_config",
+                                params={"select": "k", "limit": "1"}, headers=_sb_h())
+            reachable = (r.status_code == 200)
+            if not reachable:
+                detail = f"http {r.status_code}: {r.text[:100]}"
+        except Exception as e:
+            detail = str(e)[:100]
+    return {"store": "supabase" if _sb_on() else "snapshot",
+            "supabase_configured": _sb_on(), "supabase_reachable": reachable,
+            "auth_secret_durable": bool(_sb_on()) or bool(os.getenv("AUTH_SECRET", "").strip()),
+            "detail": detail}
+
+
 @app.post("/api/auth/register")
 async def auth_register(request: Request):
     try:
