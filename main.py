@@ -4439,6 +4439,67 @@ def _pub_user(email):
     u = _users.get(email, {})
     return {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}
 
+@app.get("/api/health/feeds")
+async def health_feeds():
+    """Salud de los feeds macro (calendario + noticias) SIN exponer secretos.
+    Sonda en vivo ForexFactory y Finnhub para ver quién está caído en producción.
+    Solo devuelve booleanos de presencia de clave y estados/conteos — nunca valores."""
+    out = {
+        "keys_present": {
+            "finnhub": bool(FINNHUB_KEY),
+            "fmp": bool(FMP_KEY),
+            "rapidapi": bool(RAPIDAPI_KEY),
+        },
+        "cache": {
+            "calendar_n": len(cache["calendar"]["data"]),
+            "calendar_status": cache["calendar"].get("status"),
+            "calendar_with_actual": sum(1 for e in cache["calendar"]["data"] if e.get("actual")),
+            "movers_n": len(cache["movers"]["data"]),
+            "movers_status": cache["movers"].get("status"),
+        },
+        "probes": {},
+    }
+    # Sonda ForexFactory (fuente gratis del calendario) — ¿bloquea la IP de Railway?
+    try:
+        async with httpx.AsyncClient(timeout=8) as c:
+            r = await c.get("https://nfs.faireconomy.media/ff_calendar_thisweek.json",
+                            headers={"User-Agent": "Mozilla/5.0"}, timeout=8)
+        ct = r.headers.get("content-type", "")
+        is_json = "json" in ct.lower()
+        n = len(r.json()) if is_json else 0
+        out["probes"]["forexfactory"] = {"status": r.status_code, "is_json": is_json,
+                                          "events": n, "blocked": (not is_json)}
+    except Exception as e:
+        out["probes"]["forexfactory"] = {"error": str(e)[:120]}
+    # Sonda Finnhub /news (fuente de movers)
+    if FINNHUB_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=8) as c:
+                r = await c.get(f"{FH_BASE}/news", params={"category": "general", "token": FINNHUB_KEY})
+            n = len(r.json()) if r.status_code == 200 else 0
+            out["probes"]["finnhub_news"] = {"status": r.status_code, "items": n}
+        except Exception as e:
+            out["probes"]["finnhub_news"] = {"error": str(e)[:120]}
+        # Sonda Finnhub calendario económico (el que trae 'actual')
+        try:
+            now_et = datetime.now(NY)
+            frm = (now_et - timedelta(days=2)).strftime("%Y-%m-%d")
+            to = (now_et + timedelta(days=7)).strftime("%Y-%m-%d")
+            async with httpx.AsyncClient(timeout=8) as c:
+                r = await c.get(f"{FH_BASE}/calendar/economic",
+                                params={"from": frm, "to": to, "token": FINNHUB_KEY})
+            body = r.json() if r.status_code == 200 else {}
+            evs = body.get("economicCalendar", []) if isinstance(body, dict) else []
+            with_actual = sum(1 for e in evs if e.get("actual") not in (None, "", 0))
+            out["probes"]["finnhub_calendar"] = {"status": r.status_code, "events": len(evs),
+                                                 "with_actual": with_actual}
+        except Exception as e:
+            out["probes"]["finnhub_calendar"] = {"error": str(e)[:120]}
+    else:
+        out["probes"]["finnhub_news"] = {"note": "sin FINNHUB_KEY"}
+        out["probes"]["finnhub_calendar"] = {"note": "sin FINNHUB_KEY"}
+    return out
+
 @app.get("/api/auth/health")
 async def auth_health():
     """Estado del store de auth (sin exponer secretos). Confirma si Supabase conectó."""
