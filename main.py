@@ -4442,12 +4442,18 @@ async def auth_register(request: Request):
         raise HTTPException(409, "Ya existe una cuenta con ese email")
     salt = secrets.token_bytes(16)
     uid = "u_" + secrets.token_hex(9)
+    # ¿pagó en Whop antes de crear la cuenta? aplicamos la titularidad pendiente
+    plan0 = "free"
+    if _sb_on():
+        pend = await _sb_get_config(f"whop_plan::{email}")
+        if pend in ("premium", "pro"):
+            plan0 = pend
     rec = {"id": uid, "name": name or email.split("@")[0],
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
-           "plan": "free", "created": int(time.time())}
+           "plan": plan0, "created": int(time.time())}
     await user_put(email, rec)
-    token = _make_jwt({"sub": uid, "email": email, "plan": "free", "name": rec["name"]})
-    return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": "free"}}
+    token = _make_jwt({"sub": uid, "email": email, "plan": plan0, "name": rec["name"]})
+    return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": plan0}}
 
 @app.post("/api/auth/login")
 async def auth_login(request: Request):
@@ -4502,6 +4508,70 @@ async def auth_set_plan(request: Request, key: str = ""):
     u["plan"] = plan
     await user_put(email, u)
     return {"ok": True, "user": {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": plan}}
+
+
+# ── Whop: webhook de pagos ──────────────────────────────────────────────────
+WHOP_WEBHOOK_SECRET = os.getenv("WHOP_WEBHOOK_SECRET", "").strip()
+
+def _whop_extract_email(d):
+    """Busca el email del comprador en las variantes de payload de Whop."""
+    if not isinstance(d, dict):
+        return ""
+    data = d.get("data") if isinstance(d.get("data"), dict) else d
+    for path in (("email",), ("user", "email"), ("user_email",),
+                 ("member", "email"), ("membership", "email"),
+                 ("customer", "email"), ("metadata", "email")):
+        cur = data
+        ok = True
+        for k in path:
+            if isinstance(cur, dict) and k in cur:
+                cur = cur[k]
+            else:
+                ok = False; break
+        if ok and isinstance(cur, str) and "@" in cur:
+            return cur.strip().lower()
+    return ""
+
+@app.post("/api/whop/webhook")
+async def whop_webhook(request: Request, key: str = ""):
+    """Recibe eventos de Whop y marca el plan del usuario (premium/free).
+    Seguridad: si WHOP_WEBHOOK_SECRET está configurado, se exige firma HMAC
+    válida (header X-Whop-Signature) o ?key=<secret>. Si no hay secreto, se
+    acepta pero se registra (modo dev)."""
+    raw = await request.body()
+    if WHOP_WEBHOOK_SECRET:
+        sig = (request.headers.get("x-whop-signature") or
+               request.headers.get("whop-signature") or "").strip()
+        expected = hmac.new(WHOP_WEBHOOK_SECRET.encode(), raw, hashlib.sha256).hexdigest()
+        sig_ok = bool(sig) and hmac.compare_digest(sig.split(",")[-1].replace("sha256=", ""), expected)
+        if not (sig_ok or hmac.compare_digest(key, WHOP_WEBHOOK_SECRET)):
+            raise HTTPException(403, "firma inválida")
+    try:
+        d = json.loads(raw.decode() or "{}")
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    evt = (d.get("action") or d.get("type") or d.get("event") or "").lower()
+    email = _whop_extract_email(d)
+    if not email:
+        print(f"[whop] evento sin email: {evt} :: {str(d)[:200]}")
+        return {"ok": True, "note": "sin email; ignorado"}
+    # eventos que CONCEDEN acceso vs los que lo QUITAN
+    grant = any(w in evt for w in ("valid", "created", "completed", "succeeded", "active", "paid"))
+    revoke = any(w in evt for w in ("invalid", "cancel", "expire", "refund", "deleted", "failed"))
+    plan = "free" if (revoke and not grant) else ("premium" if grant else None)
+    if plan is None:
+        print(f"[whop] evento no accionable: {evt} ({email})")
+        return {"ok": True, "note": f"evento {evt} ignorado"}
+    u = await user_get(email)
+    if u:
+        u["plan"] = plan
+        await user_put(email, u)
+        print(f"[whop] {email} -> {plan} ({evt})")
+    else:
+        # aún no tiene cuenta: guardamos la titularidad para aplicarla al registrarse
+        await _sb_set_config(f"whop_plan::{email}", plan)
+        print(f"[whop] {email} sin cuenta; plan {plan} guardado como pendiente")
+    return {"ok": True, "email": email, "plan": plan, "event": evt}
 
 
 async def _ts_token_request(data):

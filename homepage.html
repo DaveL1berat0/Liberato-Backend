@@ -1772,7 +1772,9 @@ function closeMenu(){document.getElementById('menu-drawer').classList.remove('op
 function openModal(){document.getElementById('modal-overlay').classList.add('visible');var s=document.getElementById('sticky-cta');if(s)s.style.display='none';}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('visible');var s=document.getElementById('sticky-cta');if(s)s.style.display='';}
 document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
-function handleSubmit(){
+// Backend real de autenticación (durable en Supabase). Un solo origen de verdad.
+var LBC_AUTH='https://web-production-33671.up.railway.app';
+async function handleSubmit(){
   var name=document.getElementById('m-name').value.trim();
   var email=document.getElementById('m-email').value.trim();
   var pass=document.getElementById('m-pass').value.trim();
@@ -1785,31 +1787,35 @@ function handleSubmit(){
     if(errEl)errEl.textContent='Completa todos los campos.';
     return;
   }
-  if(pass.length<6){
+  if(pass.length<8){
     document.getElementById('m-pass').style.borderColor='rgba(220,80,80,0.5)';
-    if(errEl)errEl.textContent='La contraseña debe tener al menos 6 caracteres.';
+    if(errEl)errEl.textContent='La contraseña debe tener al menos 8 caracteres.';
     return;
   }
-  // Verificar si ya existe cuenta con ese email
+  if(errEl)errEl.textContent='Creando tu cuenta…';
   try{
-    var existing=JSON.parse(localStorage.getItem('lbc_users')||'{}');
-    if(existing[email]){
-      if(errEl)errEl.textContent='Ya tienes una cuenta. Usa el login.';
+    var r=await fetch(LBC_AUTH+'/api/auth/register',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,email:email,password:pass})});
+    var d=await r.json().catch(function(){return {};});
+    if(!r.ok){
+      if(errEl)errEl.textContent=d.detail||'No se pudo crear la cuenta.';
       document.getElementById('m-email').style.borderColor='rgba(220,80,80,0.5)';
       return;
     }
-    // Guardar nueva cuenta (free)
-    existing[email]={name:name,pass:btoa(pass),plan:'free',ts:Date.now()};
-    localStorage.setItem('lbc_users',JSON.stringify(existing));
-    // Sesion activa
-    localStorage.setItem('lbc_session',JSON.stringify({name:name,email:email,plan:'free',ts:Date.now()}));
-    localStorage.setItem('lbc_user_name',name);
-    localStorage.setItem('lbc_user_email',email);
-  }catch(e){}
-  document.getElementById('modal-form').style.display='none';
-  document.getElementById('modal-success').style.display='block';
-  // Mostrar bienvenida personalizada
-  showWelcome(name);
+    // Sesión real con token JWT del backend
+    try{
+      localStorage.setItem('lbc_token',d.token||'');
+      localStorage.setItem('lbc_session',JSON.stringify({name:d.user.name,email:d.user.email,plan:d.user.plan,ts:Date.now()}));
+      localStorage.setItem('lbc_user_name',d.user.name);
+      localStorage.setItem('lbc_user_email',d.user.email);
+    }catch(e){}
+    document.getElementById('modal-form').style.display='none';
+    document.getElementById('modal-success').style.display='block';
+    showWelcome(d.user.name);
+  }catch(e){
+    if(errEl)errEl.textContent='Error de conexión. Intenta de nuevo.';
+  }
 }
 
 // Show personalized welcome in nav + hero
@@ -2185,40 +2191,36 @@ p{text-wrap:pretty;}
 <script>
 function openLoginModal(){var m=document.getElementById('lc-login');if(m)m.style.display='flex';setTimeout(function(){var i=document.getElementById('lc-login-email');if(i)i.focus();},100);}
 function closeLoginModal(){var m=document.getElementById('lc-login');if(m)m.style.display='none';}
-function doLogin(){
+async function doLogin(){
   var email=(document.getElementById('lc-login-email')||{}).value||'';
   var pass=(document.getElementById('lc-login-pass')||{}).value||'';
   var err=document.getElementById('lc-login-err');
   email=email.trim();pass=pass.trim();
-  if(!email||!pass){if(err)err.textContent='Ingresa email y contraseña.';return;}
-  // Admin bypass
-  if(email==='admin@liberatocommunity.com'&&pass==='lbc2026'){
-    if(err){err.style.color='#22c55e';err.textContent='✓ Acceso admin activado';}
-    try{localStorage.setItem('lbc_session',JSON.stringify({name:'Admin',email:email,plan:'admin',ts:Date.now()}));}catch(e){}
-    setTimeout(function(){window.location.href='daytrading.html';},700);
-    return;
-  }
-  // Verificar usuario registrado
+  if(!email||!pass){if(err){err.style.color='#ef4444';err.textContent='Ingresa email y contraseña.';}return;}
+  if(err){err.style.color='';err.textContent='Verificando…';}
   try{
-    var users=JSON.parse(localStorage.getItem('lbc_users')||'{}');
-    var user=users[email];
-    if(!user){if(err){err.style.color='#ef4444';err.textContent='Email no encontrado. ¿Ya tienes cuenta?';}return;}
-    if(atob(user.pass)!==pass){if(err){err.style.color='#ef4444';err.textContent='Contraseña incorrecta.';}document.getElementById('lc-login-pass').value='';document.getElementById('lc-login-pass').focus();return;}
-    // Login exitoso — detectar upgrade Stripe automáticamente
-    var plan=user.plan||'free';
-    try{
-      var stripeData=JSON.parse(localStorage.getItem('lbc_stripe_'+email)||'null');
-      if(stripeData&&stripeData.plan==='pro'){plan='pro';}
-    }catch(e2){}
-    localStorage.setItem('lbc_session',JSON.stringify({name:user.name,email:email,plan:plan,ts:Date.now()}));
-    localStorage.setItem('lbc_user_name',user.name);
-    localStorage.setItem('lbc_user_email',email);
-    if(err){err.style.color='#22c55e';err.textContent='✓ Bienvenido, '+user.name+'!';}
+    var r=await fetch(LBC_AUTH+'/api/auth/login',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,password:pass})});
+    var d=await r.json().catch(function(){return {};});
+    if(!r.ok){
+      if(err){err.style.color='#ef4444';err.textContent=d.detail||'Correo o contraseña incorrectos.';}
+      var pf=document.getElementById('lc-login-pass');if(pf){pf.value='';pf.focus();}
+      return;
+    }
+    var plan=(d.user&&d.user.plan)||'free';
+    localStorage.setItem('lbc_token',d.token||'');
+    localStorage.setItem('lbc_session',JSON.stringify({name:d.user.name,email:d.user.email,plan:plan,ts:Date.now()}));
+    localStorage.setItem('lbc_user_name',d.user.name);
+    localStorage.setItem('lbc_user_email',d.user.email);
+    if(err){err.style.color='#22c55e';err.textContent='✓ Bienvenido, '+d.user.name+'!';}
     setTimeout(function(){
-      if(plan==='pro'||plan==='admin'){window.location.href='daytrading.html';}
-      else{closeLoginModal();showWelcome(user.name);}
+      if(plan==='pro'||plan==='premium'||plan==='admin'){window.location.href='daytrading.html';}
+      else{closeLoginModal();showWelcome(d.user.name);}
     },700);
-  }catch(e){if(err){err.style.color='#ef4444';err.textContent='Error al iniciar sesión. Intenta de nuevo.';}}
+  }catch(e){
+    if(err){err.style.color='#ef4444';err.textContent='Error de conexión. Intenta de nuevo.';}
+  }
 }
 </script>
 
