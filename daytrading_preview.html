@@ -2523,46 +2523,65 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   /* ════ BLOCK 5 · INSTITUTIONAL CONTEXT (briefing paragraph, NO playbook) ════ */
     function renderSummary(){
-    var g=gammaState();
-    // 2-3 sentences max — clear, institutional, actionable
-    var s1,s2,s3='';
+    // Fallback local del Institutional Context. SIEMPRE debe cubrir todo lo que
+    // tenemos (Macro · Catalizador/Movers · GEX · Técnico), degradando con
+    // elegancia clausula a clausula — nunca dejar el bloque casi vacío ni con "—".
     var cw=nfmt(S.callWall), pw=nfmt(S.putWall), fl=nfmt(S.gammaFlip), vw=nfmt(S.vwap);
+    var hasFlip=S.gammaFlip!=null, hasWalls=S.callWall!=null&&S.putWall!=null;
     var aboveFlip=S.price&&S.gammaFlip&&S.price>S.gammaFlip;
     var aboveVwap=S.price&&S.vwap&&S.price>S.vwap;
-    // Sentence 1: context + levels
-    if(g==='positive'){
-      s1='El precio se mantiene en zona de <span class="hl-up">long gamma</span> '+(aboveFlip?'sobre':'bajo')+' el Flip en <span class="hl-gold">'+fl+'</span>'+(aboveVwap?' y VWAP ('+vw+') actuando como soporte':'')+', favoreciendo <strong>reversión al rango</strong> entre '+pw+' y '+cw+'.';
-    }else if(g==='negative'){
-      s1='Con dealers en <span class="hl-dn">short gamma</span>, el precio '+(aboveFlip?'sigue sobre el Flip '+fl+' con camino abierto hacia '+cw:'perdió el Flip '+fl+' y queda expuesto hacia '+pw)+', favoreciendo <strong>expansión direccional</strong>.';
-    }else{
-      s1='El Gamma Flip en <span class="hl-gold">'+fl+'</span> es el nivel bisagra: por encima sesgo alcista hacia '+cw+', por debajo riesgo hacia '+pw+'. <strong>Sin sesgo definido</strong> hasta confirmar posición.';
-    }
-    // Sentence 2: macro + action
-    var bear=0;
-    ['vxn','dxy','us10y'].forEach(function(k){if(S.corr[k]&&S.corr[k].dir==='up')bear++;});
-    if(g==='positive'&&bear===0)
-      s2='Macro <span class="hl-up">Risk-On</span>: volatilidad y dólar cediendo — context ideal para operar de target a target con stops ajustados.';
-    else if(g==='negative'&&bear>=2)
-      s2='Macro amplifica la presión bajista — stops anchos, dejar correr el momentum; no recortar posiciones ganadoras antes de tiempo.';
-    else
-      s2='Macro mixta — gestionar el riesgo por evento y respetar los niveles institucionales sin anticipar ruptura.';
-    // Sentence 3: catalizador de earnings — SOLO con datos REALES verificados.
-    // RULE #1: nunca afirmar earnings sin confirmación del backend (campo .verified).
-    // Los datos mock NO se usan para esta afirmación (evita información falsa).
-    var hi=S.events.filter(function(e){return (e.impact==='extreme'||e.impact==='high')&&e.verified===true;});
-    if(hi.length){
-      s3=' <strong>'+hi[0].symbol+'</strong> reporta '+(hi[0].hour==='amc'?'tras el cierre':'antes de la apertura')+' — reducir exposición antes del evento o ampliar stops para absorber la volatilidad.';
+    var parts=[];
+
+    // ── MACRO (correlaciones cruzadas + bonos) ──
+    function cdir(k){return (S.corr&&S.corr[k])?S.corr[k].dir:null;}
+    var bear=0,bull=0;
+    ['vxn','dxy','us10y'].forEach(function(k){var d=cdir(k);if(d==='up')bear++;else if(d==='down')bull++;});
+    var mb=[];
+    var u10=cdir('us10y');
+    if(u10==='up') mb.push('rendimientos al alza (<span class="hl-dn">10Y↑</span>) presionan múltiplos tech');
+    else if(u10==='down') mb.push('rendimientos cediendo (<span class="hl-up">10Y↓</span>) alivian a la tech');
+    var vx=cdir('vxn'); if(vx==='up') mb.push('volatilidad subiendo'); else if(vx==='down') mb.push('volatilidad cediendo');
+    var dx=cdir('dxy'); if(dx==='up') mb.push('dólar firme'); else if(dx==='down') mb.push('dólar débil');
+    var tone=bear>=2?'<span class="hl-dn">Risk-Off</span>':bull>=2?'<span class="hl-up">Risk-On</span>':'mixta';
+    parts.push('<strong>Macro:</strong> '+tone+(mb.length?' — '+mb.join(', '):' — sin señales macro cruzadas claras')+'.');
+
+    // ── CATALIZADOR / MOVERS (noticias de alto impacto en vivo) ──
+    var mv=(S.movers&&S.movers.length)?S.movers.slice().sort(function(a,b){return (b.impact_score||0)-(a.impact_score||0);}):[];
+    if(mv.length){
+      var m0=mv[0], sent=m0.sentiment||'Neutral';
+      var scls=sent==='Bullish'?'hl-up':sent==='Bearish'?'hl-dn':'hl-gold';
+      var hl=String(m0.headline||m0.title||'').replace(/[<>]/g,'').slice(0,140);
+      parts.push('<strong>Catalizador:</strong> <span class="'+scls+'">'+(m0.impact_score||'?')+'/10 '+sent+'</span> — '+hl+(m0.source?' ('+m0.source+')':'')+'.');
     } else {
-      // Sin earnings verificados: cerrar con guía operativa basada en niveles (siempre fiable)
-      var nearFlip=S.price&&S.gammaFlip&&Math.abs(S.price-S.gammaFlip)<(S.atr||150)*0.5;
-      if(nearFlip)
-        s3=' El precio cotiza cerca del Gamma Flip — zona de decisión; esperar confirmación direccional antes de comprometer riesgo.';
-      else if(aboveFlip)
-        s3=' Mientras se mantenga sobre el Flip '+fl+', el sesgo favorece continuación hacia '+cw+'.';
-      else
-        s3=' Bajo el Flip '+fl+', vigilar '+pw+' como referencia de soporte institucional.';
+      var hev=(S.events||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high';});
+      if(hev.length) parts.push('<strong>Catalizador:</strong> '+(hev[0].symbol||hev[0].name||'evento')+' de alto impacto hoy'+(hev[0].time?' ('+hev[0].time+' ET)':'')+'.');
+      else parts.push('<strong>Catalizador:</strong> sin noticias de alto impacto ahora mismo.');
     }
-    var el=$('sm-brief'); if(el)el.innerHTML=s1+' '+s2+s3;
+
+    // ── GEX (estructura dealer) ──
+    var gb=[];
+    if(hasFlip) gb.push('Flip <span class="hl-gold">'+fl+'</span>');
+    if(hasWalls) gb.push('Call Wall <span class="hl-num">'+cw+'</span> · Put Wall <span class="hl-num">'+pw+'</span>');
+    if(S.netGex!=null){var rc=S.netGex>=0?'hl-up':'hl-dn';gb.push('Net GEX <span class="'+rc+'">'+netGexLabel()+'</span> '+(S.netGex>=0?'(long gamma → rango)':'(short gamma → expansión)'));}
+    if(S.vix!=null) gb.push('VIX <span class="hl-num">'+Number(S.vix).toFixed(1)+'</span>');
+    if(S.expectedMove) gb.push('mov. esperado <span class="hl-num">±'+Math.round(S.expectedMove)+'pts</span>');
+    if(S.fearRating) gb.push('sentimiento '+S.fearRating);
+    if(gb.length) parts.push('<strong>GEX:</strong> '+gb.join(' · ')+'.');
+
+    // ── TÉCNICO / ACCIÓN ──
+    var st;
+    if(hasFlip&&S.price){
+      var dist=Math.round(S.price-S.gammaFlip);
+      var nearFlip=Math.abs(dist)<(S.atr||150)*0.5;
+      if(nearFlip) st='precio en el Flip ('+(dist>=0?'+':'')+dist+'pts) — zona de decisión; esperar confirmación direccional antes de comprometer riesgo.';
+      else if(aboveFlip) st='precio <span class="hl-up">sobre</span> el Flip (+'+dist+'pts) — sesgo a continuación hacia '+cw+(aboveVwap?', VWAP '+vw+' como soporte':'')+'.';
+      else st='precio <span class="hl-dn">bajo</span> el Flip ('+dist+'pts) — vigilar '+pw+' como soporte institucional.';
+    } else {
+      st='esperando niveles GEX de la sesión RTH para fijar el sesgo técnico.';
+    }
+    parts.push('<strong>Técnico:</strong> '+st);
+
+    var el=$('sm-brief'); if(el)el.innerHTML=parts.join('<br>');
   }
 
   /* ════ LEGACY · Catalizadores (macro calendar) + Movers ════
@@ -3058,6 +3077,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       if(!r||!r.ok){console.warn('[movers] HTTP',r?r.status:'no response');return;}
       var d=await r.json();
       var mv=d.market_movers||[];
+      S.movers=mv;                 // disponible para el fallback del briefing institucional
+      try{renderSummary();}catch(e){}
       if(!mv.length){
         // Regla #1: SIN mock. Si no hay noticias reales, mostrar estado vacío honesto.
         var mp0=document.getElementById('lg-pane-movers');
@@ -3292,7 +3313,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       if(!r||!r.ok)return;
       var d=await r.json();
       var badge=$('sm-ai-badge');
-      if(d&&d.summary&&d.summary.length>40&&d.status==='fresh'){
+      // Aceptamos el resumen de IA aunque esté 'stale' (sigue siendo mucho más rico
+      // que el fallback local). Solo lo ignoramos si está 'generating' o vacío.
+      if(d&&d.summary&&d.summary.length>40&&d.status!=='generating'){
         var el=$('sm-brief');
         if(el){
           // Resaltar términos clave en el texto de IA
@@ -3311,7 +3334,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
             .replace(/\n/g,'<br>');                              // 5 líneas separadas
           setHealth('summary','connected','real',null);
           // Badge: indicar que es IA real (no plantilla)
-          if(badge){badge.textContent=d.has_gamma?'⬡ IA · GEX':'⬡ IA · Macro';badge.style.color='var(--up)';}
+          if(badge){var _st=(d.status==='stale')?' · reciente':'';badge.textContent=(d.has_gamma?'⬡ IA · GEX':'⬡ IA · Macro')+_st;badge.style.color='var(--up)';}
         }
       } else if(d&&d.status==='generating'){
         // IA aún generando — el resumen local permanece visible
