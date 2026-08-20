@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -4402,6 +4402,60 @@ async def tradestation_disconnect(app_user_id: str = "dave"):
     except Exception:
         pass
     return {"ok": True, "disconnected": existed}
+
+
+@app.get("/api/admin/costs")
+async def admin_costs(key: str = ""):
+    """Panel de GASTOS mensuales de la web. Montos configurables en Railway (COST_*).
+    Uso: /api/admin/costs?key=TU_ADMIN_KEY  (renderiza un panel; añade &json=1 para JSON)."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    def _f(name, d):
+        try:
+            return float(os.getenv(name, str(d)))
+        except Exception:
+            return float(d)
+    gexbot   = _f("COST_GEXBOT", 40)      # GexBot Classic
+    railway  = _f("COST_RAILWAY", 5)      # Railway hobby (backend)
+    dom_year = _f("COST_DOMAIN_YEAR", 22) # GoDaddy .com ~$22/año
+    twelve   = _f("COST_TWELVEDATA", 0)   # TwelveData (free)
+    groq     = _f("COST_GROQ", 0)         # Groq (free tier)
+    gemini   = _f("COST_GEMINI", 0)       # Gemini fallback (free tier)
+    snap     = _f("COST_SNAPTRADE", 0)    # SnapTrade personal (0) / commercial ~1-2/usuario
+    otros    = _f("COST_OTROS", 0)
+    domain_m = round(dom_year / 12, 2)
+    items = [
+        ("GexBot (niveles GEX)", gexbot, "mensual"),
+        ("Railway (backend)", railway, "mensual"),
+        ("Dominio GoDaddy", domain_m, f"${dom_year:.0f}/año ÷ 12"),
+        ("TwelveData (precio/VIX)", twelve, "gratis"),
+        ("Groq (IA institucional + coach)", groq, "gratis"),
+        ("Gemini (respaldo IA)", gemini, "gratis, dormido"),
+        ("SnapTrade (brokers)", snap, "personal $0 · commercial ~$1-2/usuario"),
+        ("Otros", otros, ""),
+    ]
+    total = round(sum(v for _, v, _ in items), 2)
+    rows = ""
+    for name, val, note in items:
+        col = "#7a7f8a" if val == 0 else "#E8E4D9"
+        rows += (f'<tr><td style="padding:11px 8px;border-bottom:0.5px solid rgba(255,255,255,0.06);color:#c9cdd6;">{name}'
+                 f'{f"<span style=\"color:#7a7f8a;font-size:11px;\"> · {note}</span>" if note else ""}</td>'
+                 f'<td style="padding:11px 8px;border-bottom:0.5px solid rgba(255,255,255,0.06);text-align:right;font-family:monospace;color:{col};">${val:,.2f}</td></tr>')
+    html = f"""<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gastos · Liberato</title></head>
+<body style="margin:0;background:#06080D;color:#E8E4D9;font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding:28px 16px;">
+<div style="max-width:520px;margin:0 auto;">
+  <div style="font-family:Georgia,serif;font-style:italic;font-size:20px;color:#C9A84C;margin-bottom:4px;">Liberato · Gastos de la web</div>
+  <div style="font-size:12px;color:#7a7f8a;margin-bottom:20px;">Coste mensual para sostener la plataforma</div>
+  <div style="border:0.5px solid rgba(201,168,76,0.25);border-radius:16px;padding:8px 14px;background:linear-gradient(180deg,rgba(201,168,76,0.05),transparent);">
+    <table style="width:100%;border-collapse:collapse;font-size:13.5px;">{rows}
+    <tr><td style="padding:14px 8px;font-weight:700;color:#E8E4D9;">TOTAL MENSUAL</td>
+        <td style="padding:14px 8px;text-align:right;font-family:monospace;font-weight:800;font-size:20px;color:#2EE8A4;">${total:,.2f}</td></tr>
+    </table>
+  </div>
+  <div style="font-size:11px;color:#7a7f8a;margin-top:14px;line-height:1.6;">Anual ≈ <b style="color:#c9cdd6;">${total*12:,.2f}</b>. Ajusta los montos en Railway con variables <code style="color:#C9A84C;">COST_GEXBOT, COST_RAILWAY, COST_DOMAIN_YEAR, COST_SNAPTRADE…</code>. Groq/Gemini/TwelveData/Yahoo van en tier gratis (si crecen los alumnos, sube el tope o pasa a pago — céntimos).</div>
+</div></body></html>"""
+    return HTMLResponse(html)
 
 
 @app.get("/api/ohlc/{symbol}")
