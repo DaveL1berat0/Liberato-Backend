@@ -1548,9 +1548,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     // Short gamma = dealers amplifican movimiento = TREND (positivo)
     // Long gamma = dealers absorben = RANGE (negativo)
     // PESO 60: el gamma domina claramente en condiciones normales.
+    // CONTINUO según la DISTANCIA del precio al flip: la aguja se DESLIZA en vivo
+    // según dónde esté el precio (lejos arriba = RANGE marcado; lejos abajo = TREND
+    // marcado; pegado al flip = neutro). Antes era binario (solo cambiaba al cruzar).
     var gammaComponent=0;
-    if(g==='negative')gammaComponent=60;      // short gamma → empuja a TREND
-    else if(g==='positive')gammaComponent=-50; // long gamma → empuja a RANGE
+    if(S.price&&S.gammaFlip){
+      var refRng=(S.callWall&&S.putWall&&(S.callWall-S.putWall)>0)?(S.callWall-S.putWall)*0.5:(S.atr?S.atr*4:80);
+      var normFlip=clamp((S.price-S.gammaFlip)/refRng,-1,1);  // + arriba del flip, − debajo
+      gammaComponent=-normFlip*65;                             // arriba→RANGE(neg), abajo→TREND(pos)
+    } else if(g==='negative')gammaComponent=60;
+    else if(g==='positive')gammaComponent=-50;
     else gammaComponent=0;
 
     // ── 3. Componente VELOCIDAD del precio (confirma, NO manda) ──
@@ -1583,7 +1590,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     regimeScore=clamp(regimeScore,-100,100);
     // EMA suave: el régimen se mueve con autoridad, no con nerviosismo.
     if(S.regimeScore===undefined||S.regimeScore===null)S.regimeScore=regimeScore;
-    S.regimeScore=S.regimeScore*0.85+regimeScore*0.15;
+    S.regimeScore=S.regimeScore*0.80+regimeScore*0.20;  // más responsivo (se siente live) sin jitter
     S.regimeScore=Math.round(S.regimeScore*10)/10;
 
     // ── 6. Derivar ESTRUCTURA del score: RANGE / NEUTRAL / TREND ──
