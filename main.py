@@ -5407,10 +5407,13 @@ async def contact_form(request: Request):
     msg["Reply-To"] = GMAIL_USER  # respuestas van al emisor; el nombre va en el cuerpo
     msg.attach(MIMEText(html_body, "html"))
 
-    try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+    def _send():
+        # SMTP con timeout (antes sin timeout = colgaba el event loop) y en hilo aparte.
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
             server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
             server.sendmail(GMAIL_USER, SUPPORT_EMAIL, msg.as_string())
+    try:
+        await asyncio.to_thread(_send)
         print(f"[contact] ✓ Mensaje de {name} enviado a {SUPPORT_EMAIL}")
         return {"success": True}
     except Exception as e:
