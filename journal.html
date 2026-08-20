@@ -1468,7 +1468,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="sbi" data-v="trades" onclick="go('trades')"><span class="si">≡</span>Mis Trades</button>
     <button class="sbi" data-v="reports" onclick="go('reports')"><span class="si">▤</span>Reportes</button>
     <button class="sbi" data-v="genius" onclick="go('genius')"><span class="si">★</span>Zona de Genio</button>
-    <button class="sbi" data-v="playbooks" onclick="go('playbooks')"><span class="si">📚</span>Playbooks</button>
+    <button class="sbi" data-v="playbooks" onclick="go('playbooks')"><span class="si">❖</span>Playbooks</button>
   </div>
   <!-- Debajo de Playbooks: AI Coach + Conectar broker -->
   <div style="padding:8px 12px 12px;display:flex;flex-direction:column;gap:8px;">
@@ -3041,7 +3041,7 @@ function renderGenius(){
 
 function renderPatterns(){
   var patterns=[];
-  var s=stats(T);
+  var s=stats(baseTrades());
   // ── CONDUCTA (local/determinista, sobre trades reales cronológicos) ──
   var bt=baseTrades().slice().sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time);});
   var revenge=0;
@@ -3075,7 +3075,7 @@ function renderPatterns(){
   var against=T.filter(function(t){return(t.t4h==='bull'&&t.direction==='short')||(t.t4h==='bear'&&t.direction==='long');});
   if(aligned.length>=2&&against.length>=1){var alWR=stats(aligned).wr,agWR=stats(against).wr;if(alWR>agWR)patterns.push({icon:'📈',warn:false,text:'A favor de la <strong>tendencia 4H</strong> ganas el <strong>'+alWR+'%</strong>. Contra tendencia: <span class="r">'+agWR+'%</span>.'});}
   // Best setup
-  var su=bySetup(T);if(su.length&&su[0].pnl>0)patterns.push({icon:'🎯',warn:false,text:'<strong>'+su[0].name+'</strong> es tu mina de oro: '+f$(su[0].pnl)+' con '+su[0].wr+'% Win Rate.'});
+  var su=bySetup(baseTrades());if(su.length&&su[0].pnl>0)patterns.push({icon:'🎯',warn:false,text:'<strong>'+su[0].name+'</strong> es tu mina de oro: '+f$(su[0].pnl)+' con '+su[0].wr+'% Win Rate.'});
 
   if(!patterns.length){document.getElementById('genius-patterns').innerHTML='<div class="empty" style="grid-column:span 2;"><div class="ei">🔍</div><p>Registra más trades con contexto (VWAP, gamma, 4H) para descubrir tus ventajas estadísticas.</p></div>';return;}
   document.getElementById('genius-patterns').innerHTML=patterns.slice(0,6).map(function(p){
@@ -3839,7 +3839,7 @@ function loadCoach(force){
   if(coachLoaded&&!force)return;
   var wrap=document.getElementById('genius-coach-wrap');if(!wrap)return;
   wrap.innerHTML='<div style="padding:24px;text-align:center;color:var(--text3);font-family:DM Mono,monospace;font-size:12px;"><span class="ai-spinner"></span>Analizando tu historial...</div>';
-  var s=stats(T),su=bySetup(T),errors=buildErrorProfile();
+  var s=stats(baseTrades()),su=bySetup(baseTrades()),errors=buildErrorProfile();
   var chkTr=T.filter(function(t){return t.chkAll;}),noChkTr=T.filter(function(t){return !t.chkAll;});
   var chkWR=chkTr.length?stats(chkTr).wr:0,noChkWR=noChkTr.length?stats(noChkTr).wr:0;
   var aftTr=T.filter(function(t){return parseInt(t.time)>=14;}),morTr=T.filter(function(t){return parseInt(t.time)<12;});
@@ -3860,12 +3860,12 @@ function fallbackCoach(s,chkWR,noChkWR,morWR,aftWR,fullGammaExp,su,errors){
   return ins;
 }
 function showCoachInsights(ins){
-  var s=stats(T),errors=buildErrorProfile();
+  var s=stats(baseTrades()),errors=buildErrorProfile();
   var wrap=document.getElementById('genius-coach-wrap');if(!wrap)return;
   wrap.innerHTML='<div class="ai-coach-card"><div class="acc-head"><span class="acc-dot"></span><span class="acc-label">Reporte Semanal del Genio</span></div><div class="acc-text">'+buildWeeklyReport(s,errors)+'</div></div><div class="d-section" style="margin-top:14px;"><div class="d-section-label">Insights del Genio</div><div class="ci-list">'+ins.map(function(c){return '<div class="ci-card '+(c.category||'')+'"><div class="ci-head"><span class="ci-icon">'+(c.icon||'◈')+'</span><span class="ci-cat">'+(c.category||'análisis').replace(/_/g,' ')+'</span></div><div class="ci-text">'+(c.insight||'')+'</div><div class="ci-action">→ '+(c.action||'')+'</div></div>';}).join('')+'</div></div>';
 }
 function buildWeeklyReport(s,errors){
-  var txt='',su=bySetup(T),chkTr=T.filter(function(t){return t.chkAll;}),chkWR=chkTr.length?stats(chkTr).wr:0,good=[],bad=[];
+  var txt='',su=bySetup(baseTrades()),chkTr=T.filter(function(t){return t.chkAll;}),chkWR=chkTr.length?stats(chkTr).wr:0,good=[],bad=[];
   if(chkWR>s.wr+10)good.push('Mejor disciplina con checklist ('+chkWR+'% WR)');
   if(su.length&&su[0].pnl>0)good.push(su[0].name+' es tu setup más rentable ('+f$(su[0].pnl)+')');
   if(errors.length)bad.push(errors[0].name+' ('+errors[0].count+'x)');
@@ -3910,7 +3910,7 @@ function sendAIMsg(){
   .catch(function(){var fb=genFallbackReply(msg);chatHistory.push({role:'assistant',content:fb});addChatMsg('ai',fb);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';});
 }
 function genFallbackReply(msg){
-  var s=stats(T),su=bySetup(T),errors=buildErrorProfile(),q=msg.toLowerCase();
+  var s=stats(baseTrades()),su=bySetup(baseTrades()),errors=buildErrorProfile(),q=msg.toLowerCase();
   if(q.indexOf('error')>=0||q.indexOf('malo')>=0||q.indexOf('peor')>=0)return errors.length?'Tu error más frecuente es <strong>'+errors[0].name+'</strong> ('+errors[0].count+' veces). La próxima vez que lo detectes, para 15 minutos.':'Aún no tengo datos suficientes. Registra más trades con checklist.';
   if(q.indexOf('setup')>=0||q.indexOf('mejor')>=0){var b=su[0];return b?'Tu mejor setup es <strong>'+b.name+'</strong> con '+b.wr+'% WR y '+f$(b.pnl)+'. Es tu bread & butter.':'Registra más trades.';}
   if(q.indexOf('hora')>=0||q.indexOf('cuando')>=0||q.indexOf('tiempo')>=0){var aft=T.filter(function(t){return parseInt(t.time)>=14;}),mor=T.filter(function(t){return parseInt(t.time)<12;});return 'Mañana: <strong>'+stats(mor).wr+'%</strong> WR vs tarde: '+stats(aft).wr+'%. Mejor liquidez 9:30-11:30 ET.';}
