@@ -142,6 +142,37 @@ def _coach_charge(uid):
     st = _coach_usage.get(uid)
     if st: st["count"] += 1
 
+# ── Fallback DORMIDO a Gemini ────────────────────────────────────────────────
+# Solo se usa si Groq falla Y existe GEMINI_API_KEY en Railway. Sin la key es
+# totalmente inerte (devuelve None y el flujo se comporta igual que hoy). Pensado
+# para el día que Groq jubile un modelo: pegas la key y el coach sigue vivo.
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-2.0-flash").strip()
+async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
+    if not GEMINI_API_KEY:
+        return None
+    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+           f"{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}")
+    body = {
+        "systemInstruction": {"parts": [{"text": sys_msg}]},
+        "contents": [{"role": "user", "parts": [{"text": usr_msg}]}],
+        "generationConfig": {"maxOutputTokens": max_tokens, "temperature": temperature},
+    }
+    try:
+        async with httpx.AsyncClient(timeout=25) as c:
+            r = await c.post(url, json=body)
+        if r.status_code != 200:
+            print(f"[gemini] {r.status_code}: {r.text[:160]}")
+            return None
+        j = r.json()
+        cand = (j.get("candidates") or [{}])[0]
+        parts = ((cand.get("content") or {}).get("parts") or [])
+        txt = "".join(p.get("text", "") for p in parts).strip()
+        return txt or None
+    except Exception as e:
+        print(f"[gemini] error: {e}")
+        return None
+
 def _window_key(window):
     """Clave de la ventana actual: por día (UTC) o por minuto (UTC)."""
     try:
@@ -4408,6 +4439,7 @@ async def journal_coach(request: Request):
         f"Pregunta del trader: {question or '¿Qué es lo más importante que ves en mi data ahora mismo?'}\n\n"
         "Responde en 2-4 frases, concreto y basado en sus números."
     )
+    answer = None
     try:
         async with httpx.AsyncClient(timeout=25) as client:
             r = await client.post(
@@ -4418,18 +4450,22 @@ async def journal_coach(request: Request):
                       "messages": [{"role": "system", "content": sys_msg},
                                    {"role": "user", "content": usr_msg}]}
             )
-        if r.status_code != 200:
-            raise HTTPException(502, f"Groq {r.status_code}: {r.text[:180]}")
-        j = r.json()
-        answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
-        if not answer:
-            raise HTTPException(502, "Coach sin respuesta")
+        if r.status_code == 200:
+            j = r.json()
+            answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+        else:
+            print(f"[coach] groq {r.status_code}: {r.text[:160]}")
+    except Exception as e:
+        print(f"[coach] groq error: {type(e).__name__}: {str(e)[:160]}")
+    if answer:
         budget_charge("groq", 1); _coach_charge(uid)   # contabiliza tras respuesta OK
         return {"ok": True, "answer": answer}
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(502, f"Coach falló: {type(e).__name__}: {str(e)[:160]}")
+    # Groq falló → fallback DORMIDO a Gemini (solo si hay GEMINI_API_KEY)
+    g = await _gemini_chat(sys_msg, usr_msg, max_tokens=350, temperature=0.5)
+    if g:
+        _coach_charge(uid)   # respeta el tope por usuario; no toca la cuota de Groq
+        return {"ok": True, "answer": g}
+    raise HTTPException(502, "Coach no disponible ahora mismo, inténtalo en unos minutos")
 
 
 @app.get("/api/admin/diag-ai")
@@ -4448,6 +4484,7 @@ async def diag_ai(key: str = ""):
         "coach_uso_por_estudiante_hoy": active,
         "estudiantes_activos_coach_hoy": len(active),
         "briefing_institucional": "COMPARTIDO — 1 para toda la plataforma, no escala con estudiantes",
+        "gemini_fallback": ("armado (" + GEMINI_MODEL + ")") if GEMINI_API_KEY else "dormido (sin GEMINI_API_KEY)",
     }
 
 
