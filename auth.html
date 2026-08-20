@@ -273,7 +273,7 @@ body{
 'use strict';
 // ═══ CONFIGURACIÓN ═══
 // PARA CONECTAR: cambia esta URL a la de tu backend de autenticación en Railway
-var API_URL = 'https://liberato-usuarios-production.up.railway.app';
+var API_URL = 'https://web-production-33671.up.railway.app';  // backend único (Supabase durable)
 
 var state = {lang:'es', email:'', name:'', token:localStorage.getItem('lbc_token')||''};
 
@@ -343,8 +343,17 @@ async function doRegister(){
   }
   setLoading('btn-register', true);
   try{
-    await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang});
+    var data = await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang});
     state.email = email; state.name = name;
+    // El backend actual auto-verifica y devuelve el token directo → saltamos el
+    // paso de código. (Si algún día se activa verificación por email, no vendrá
+    // token y caemos al flujo de código.)
+    if(data && data.token){
+      state.token = data.token;
+      localStorage.setItem('lbc_token', data.token);
+      loadAccount();
+      return;
+    }
     document.getElementById('verify-sub').textContent =
       (state.lang==='es'?'Ingresa el código de 6 dígitos enviado a ':'Enter the 6-digit code sent to ')+email;
     goScreen('verify');
@@ -467,19 +476,11 @@ async function doForgot(){
     showMsg('forgot-msg', state.lang==='es'?'Ingresa tu correo':'Enter your email', 'error');
     return;
   }
-  setLoading('btn-forgot', true);
-  try{
-    await api('/api/auth/forgot-password', 'POST', {email:email});
-    // Guardar el email para la siguiente pantalla
-    state.resetEmail = email;
-    var resetEmailField = document.getElementById('reset-code');
-    showMsg('forgot-msg', state.lang==='es'?'Código enviado. Revisa tu correo.':'Code sent. Check your email.', 'success');
-    setTimeout(function(){ goScreen('reset'); }, 1200);
-  }catch(e){
-    showMsg('forgot-msg', e.message, 'error');
-  }finally{
-    setLoading('btn-forgot', false);
-  }
+  // La recuperación por email aún no está disponible en este backend.
+  // Dirigimos a soporte en lugar de llamar a un endpoint inexistente.
+  showMsg('forgot-msg', state.lang==='es'
+    ? 'Escríbenos a SupportLiberatoCommunity@gmail.com y te ayudamos a restablecerla.'
+    : 'Email us at SupportLiberatoCommunity@gmail.com and we\'ll help you reset it.', 'info');
 }
 
 async function doReset(){

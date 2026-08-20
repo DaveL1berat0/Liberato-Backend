@@ -4483,13 +4483,18 @@ async def auth_me(authorization: str = Header("")):
     if not p:
         raise HTTPException(401, "Sesión inválida o expirada")
     email = (p.get("email") or "").lower()
-    u = await user_get(email)
-    if u:
-        return {"ok": True, "user": {"id": u.get("id"), "email": email,
-                                     "name": u.get("name"), "plan": u.get("plan", "free")}}
-    # token válido pero usuario no encontrado: responde del payload
-    return {"ok": True, "user": {"id": p.get("sub"), "email": email,
-                                 "name": p.get("name"), "plan": p.get("plan", "free")}}
+    u = await user_get(email) or {}
+    uid = u.get("id") or p.get("sub")
+    name = u.get("name") or p.get("name")
+    plan = u.get("plan") or p.get("plan", "free")
+    is_premium = plan in ("premium", "pro", "admin")
+    # Devolvemos tanto la forma anidada (user{}) como campos planos, para que
+    # tanto la homepage como auth.html (que leen distinto) funcionen igual.
+    return {"ok": True,
+            "user": {"id": uid, "email": email, "name": name, "plan": plan},
+            "id": uid, "email": email, "name": name, "plan": plan,
+            "is_premium": is_premium, "language": u.get("language", "es"),
+            "plan_expires": u.get("plan_expires")}
 
 @app.post("/api/auth/set-plan")
 async def auth_set_plan(request: Request, key: str = ""):
