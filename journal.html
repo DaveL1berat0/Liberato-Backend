@@ -2887,8 +2887,10 @@ function renderTws(){
   // ── Panel DERECHO (chart / notas / genio) ──
   var right='';
   if(_twsChTab==='chart'){
-    right=(hasStop||t.exit!=null)?'<div class="tws-chart-wrap">'+twsChartSVG(t)+'</div>'
-      :'<div class="tws-panel-body"><div style="font-size:11.5px;color:var(--text3);line-height:1.6;">Añade <strong style="color:var(--text2);">stop</strong> y <strong style="color:var(--text2);">target</strong> en STATS para ver el chart de ejecución (entrada/salida/stop/target en el tiempo). El chart con velas reales llegará con los datos de precio de tu broker.</div></div>';
+    // Se pinta el esquemático al instante; si hay velas reales (Yahoo), se sustituye async.
+    right=(hasStop||t.exit!=null||t.entry!=null)
+      ? '<div class="tws-chart-wrap" id="tws-chart-host">'+twsChartSVG(t)+'<div id="tws-chart-note" style="font-size:9.5px;color:var(--text3);font-family:\'DM Mono\',monospace;text-align:center;padding:4px 0 2px;">esquema · buscando velas reales…</div></div>'
+      : '<div class="tws-panel-body"><div style="font-size:11.5px;color:var(--text3);line-height:1.6;">Añade <strong style="color:var(--text2);">stop</strong> y <strong style="color:var(--text2);">target</strong> en STATS para ver el chart de ejecución.</div></div>';
   } else if(_twsChTab==='notes'){
     right='<div class="tws-panel-body"><div class="tws-lbl">Notas del trade</div>'
       +'<textarea class="tws-input" rows="5" placeholder="Qué viste, por qué entraste, cómo gestionaste, qué falló..." onchange="twsField(this,\'note\')">'+_esc(t.note||'')+'</textarea>'
@@ -2926,6 +2928,7 @@ function renderTws(){
     +'<div class="tws-navfoot"><button onclick="twsNav(-1)"'+(_twsIdx<=0?' disabled':'')+'>← Trade anterior</button><button onclick="twsNav(1)"'+(_twsIdx>=_twsList.length-1?' disabled':'')+'>Trade siguiente →</button></div>'
     +'<input type="file" id="tws-shot-input" accept="image/*" multiple style="display:none" onchange="twsAddFiles(this.files);this.value=\'\';">';
   if(_twsTab==='attachments')twsRenderShots();
+  if(_twsChTab==='chart')twsLoadChart(t);
 }
 // Chart de ejecución nativo: niveles STOP/ENTRY/TARGET + marcadores etiquetados de
 // ENTRADA y SALIDA en el tiempo, con el movimiento sombreado. Deja ver DÓNDE ejecutaste.
@@ -2966,6 +2969,71 @@ function twsChartSVG(t){
     s+='<text x="'+xEx+'" y="'+(H-10)+'" fill="rgba(232,228,217,0.5)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">'+(String(t.exitTime).split('T')[1]||'').slice(0,5)+'</text>';
   }
   s+='</svg>';
+  return s;
+}
+// ── Velas REALES (gratis): Yahoo 1m del ETF proxy (QQQ→NQ, SPY→ES) auto-calibrado por
+//    el precio de entrada. Cubre el trade de HOY y ~últimos 30 días. Cae al esquema si no hay.
+var TWS_PROXY={NQ:'QQQ',MNQ:'QQQ',NDX:'QQQ',ES:'SPY',MES:'SPY',SPX:'SPY'};
+function _twsProxyETF(asset){var a=String(asset||'').toUpperCase();if(TWS_PROXY[a])return TWS_PROXY[a];if(a.indexOf('NQ')>=0||a.indexOf('NDX')>=0)return 'QQQ';if(a.indexOf('ES')>=0||a.indexOf('SPX')>=0||a.indexOf('SPY')>=0)return 'SPY';return null;}
+function twsFetchOHLC(t){
+  return new Promise(function(resolve){
+    if(!_twsProxyETF(t.asset)||!t.date){resolve(null);return;}
+    // Vía BACKEND (proxy server-side de Yahoo; el navegador no puede por CORS).
+    fetch(JOURNAL_BACKEND+'/api/ohlc/'+encodeURIComponent(String(t.asset).toUpperCase())+'?date='+encodeURIComponent(t.date))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(d){resolve((d&&d.ok&&d.bars&&d.bars.length)?d.bars:null);})
+      .catch(function(){resolve(null);});
+  });
+}
+function twsLoadChart(t){
+  var host=document.getElementById('tws-chart-host'); if(!host)return; var id=t.id;
+  twsFetchOHLC(t).then(function(bars){
+    if(!bars||_twsId!==id)return;
+    var h2=document.getElementById('tws-chart-host'); if(!h2)return;
+    var eb=bars.filter(function(b){return b.hhmm===String(t.time).slice(0,5);})[0]||bars[Math.floor(bars.length/2)];
+    var ratio=(eb&&eb.c)?(+t.entry/eb.c):1;
+    try{h2.innerHTML=twsRealChartSVG(t,bars,ratio);}catch(e){}
+  }).catch(function(){var nt=document.getElementById('tws-chart-note');if(nt)nt.textContent='esquema · sin velas reales para esta fecha';});
+}
+function twsRealChartSVG(t,bars,ratio){
+  var dir=t.direction==='short'?'short':'long';
+  var hasStop=(t.stop!=null&&+t.stop!==0),hasTgt=(t.target!=null&&+t.target!==0),hasExit=(t.exit!=null&&t.exit!=='');
+  function toMin(h){var p=String(h).split(':');return (+p[0])*60+(+p[1]);}
+  var eM=toMin(String(t.time).slice(0,5));
+  var xM=hasExit&&t.exitTime?toMin((String(t.exitTime).split('T')[1]||'').slice(0,5)):eM+30;
+  var lo=Math.min(eM,xM)-20, hi=Math.max(eM,xM)+20;
+  var win=bars.filter(function(b){var m=toMin(b.hhmm);return m>=lo&&m<=hi;});
+  if(win.length<3)win=bars.slice();
+  win=win.map(function(b){return {hhmm:b.hhmm,o:b.o*ratio,h:b.h*ratio,l:b.l*ratio,c:b.c*ratio};});
+  var prices=[]; win.forEach(function(b){prices.push(b.h,b.l);}); prices.push(+t.entry); if(hasStop)prices.push(+t.stop); if(hasTgt)prices.push(+t.target); if(hasExit)prices.push(+t.exit);
+  var plo=Math.min.apply(null,prices),phi=Math.max.apply(null,prices);var pad=(phi-plo)*0.08||1;plo-=pad;phi+=pad;var span=(phi-plo)||1;
+  var W=560,H=320,pL=12,pR=76,pT=14,pB=28;
+  function Y(p){return +(pT+(1-((p-plo)/span))*(H-pT-pB)).toFixed(1);}
+  var n=win.length,slot=(W-pL-pR)/Math.max(n,1),cw=Math.max(1.5,Math.min(7,slot*0.62));
+  function X(i){return +(pL+slot*i+slot/2).toFixed(1);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">';
+  function hl(p,c,lbl,dash){return '<line x1="'+pL+'" y1="'+Y(p)+'" x2="'+(W-pR)+'" y2="'+Y(p)+'" stroke="'+c+'" stroke-width="1"'+(dash?' stroke-dasharray="4 4"':'')+' opacity="0.72"/><text x="'+(W-pR+6)+'" y="'+(Y(p)+3.5)+'" fill="'+c+'" font-family="DM Mono,monospace" font-size="10">'+lbl+' '+Math.round(p)+'</text>';}
+  if(hasTgt)s+=hl(+t.target,'#2EE8A4','TGT',true);
+  if(hasStop)s+=hl(+t.stop,'#ef4444','STOP',true);
+  win.forEach(function(b,i){
+    var up=b.c>=b.o,col=up?'#2EE8A4':'#ef4444',x=X(i);
+    s+='<line x1="'+x+'" y1="'+Y(b.h)+'" x2="'+x+'" y2="'+Y(b.l)+'" stroke="'+col+'" stroke-width="1" opacity="0.8"/>';
+    var yo=Y(b.o),yc=Y(b.c),top=Math.min(yo,yc),hgt=Math.max(1,Math.abs(yc-yo));
+    s+='<rect x="'+(x-cw/2)+'" y="'+top+'" width="'+cw+'" height="'+hgt+'" fill="'+col+'" opacity="0.92"/>';
+  });
+  function barIdx(hhmm){for(var i=0;i<win.length;i++)if(win[i].hhmm===hhmm)return i;return -1;}
+  var ei=barIdx(String(t.time).slice(0,5)); if(ei<0)ei=Math.floor(win.length*0.2);
+  s+='<circle cx="'+X(ei)+'" cy="'+Y(+t.entry)+'" r="5" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" stroke="#0a0a0a" stroke-width="1.5"/>';
+  s+='<text x="'+X(ei)+'" y="'+(Y(+t.entry)+(dir==='long'?16:-9))+'" fill="'+(dir==='long'?'#2EE8A4':'#ef4444')+'" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="700">'+(dir==='long'?'▲':'▼')+' ENT</text>';
+  if(hasExit){
+    var xi=barIdx((String(t.exitTime).split('T')[1]||'').slice(0,5)); if(xi<0)xi=win.length-1;
+    var xcol=(t.result==='win')?'#2EE8A4':(t.result==='loss')?'#ef4444':'#C9A84C';
+    s+='<circle cx="'+X(xi)+'" cy="'+Y(+t.exit)+'" r="5" fill="'+xcol+'" stroke="#0a0a0a" stroke-width="1.5"/>';
+    s+='<text x="'+X(xi)+'" y="'+(Y(+t.exit)+(+t.exit>=+t.entry?-9:16))+'" fill="'+xcol+'" font-family="DM Mono,monospace" font-size="9" text-anchor="middle" font-weight="700">SAL</text>';
+  }
+  s+='<text x="'+X(0)+'" y="'+(H-7)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="8.5" text-anchor="middle">'+win[0].hhmm+'</text>';
+  s+='<text x="'+X(win.length-1)+'" y="'+(H-7)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="8.5" text-anchor="middle">'+win[win.length-1].hhmm+'</text>';
+  s+='</svg><div style="font-size:9px;color:var(--text3);font-family:\'DM Mono\',monospace;text-align:center;padding:3px 0;">✓ velas reales 1m · '+_twsProxyETF(t.asset)+'×ratio · '+win.length+' barras</div>';
   return s;
 }
 function genTradeAI(t){

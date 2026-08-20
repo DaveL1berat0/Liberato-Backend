@@ -4404,6 +4404,60 @@ async def tradestation_disconnect(app_user_id: str = "dave"):
     return {"ok": True, "disconnected": existed}
 
 
+@app.get("/api/ohlc/{symbol}")
+async def get_ohlc(symbol: str, date: str = ""):
+    """Velas 1-min del ETF proxy (QQQ→NQ, SPY→ES) para una fecha, vía Yahoo del lado
+    SERVIDOR (sin CORS; el navegador no puede pegarle a Yahoo directo). El frontend del
+    journal auto-calibra el ratio con el precio de entrada del trade y dibuja velas +
+    marcadores. GRATIS (Yahoo), sin gasto diario. Cubre HOY y ~últimos 30 días."""
+    sym = (symbol or "").upper()
+    etf = "QQQ" if ("NQ" in sym or "NDX" in sym) else ("SPY" if ("ES" in sym or "SPX" in sym) else None)
+    if not etf:
+        return {"ok": False, "reason": f"sin proxy de velas para {sym} (solo NQ/ES)"}
+    if not date:
+        raise HTTPException(400, "falta ?date=YYYY-MM-DD")
+    from datetime import datetime, timezone, timedelta
+    try:
+        d0 = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except Exception:
+        raise HTTPException(400, "date inválida (YYYY-MM-DD)")
+    p1 = int((d0 - timedelta(hours=3)).timestamp())
+    p2 = int((d0 + timedelta(hours=34)).timestamp())
+    for host in ("query1", "query2"):
+        url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{etf}"
+               f"?interval=1m&period1={p1}&period2={p2}")
+        try:
+            async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
+                r = await c.get(url)
+            if r.status_code != 200:
+                continue
+            j = r.json()
+            res = ((j.get("chart") or {}).get("result") or [None])[0]
+            if not res:
+                continue
+            ts = res.get("timestamp") or []
+            q = ((res.get("indicators") or {}).get("quote") or [{}])[0]
+            op, hi, lo, cl = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
+            bars = []
+            for i, tt in enumerate(ts):
+                try:
+                    o, h, l, c = op[i], hi[i], lo[i], cl[i]
+                except Exception:
+                    continue
+                if None in (o, h, l, c):
+                    continue
+                dt = datetime.fromtimestamp(tt, NY)
+                if dt.strftime("%Y-%m-%d") != date:
+                    continue
+                bars.append({"hhmm": dt.strftime("%H:%M"), "o": o, "h": h, "l": l, "c": c})
+            if bars:
+                return {"ok": True, "etf": etf, "date": date, "bars": bars}
+        except Exception as e:
+            print(f"[ohlc] {host} {etf} {date}: {e}")
+            continue
+    return {"ok": False, "reason": "sin velas 1m para esa fecha (Yahoo solo guarda ~30 días)"}
+
+
 @app.post("/api/journal/coach")
 async def journal_coach(request: Request):
     """AI Coach del journal: analiza la data REAL del trader (stats, rendimiento por
