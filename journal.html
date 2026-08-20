@@ -2247,9 +2247,10 @@ function renderDashAI(){
     if(chkTr.length>0&&noChkTr.length>0)text+='Cuando completas el checklist tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> cuando no. ';
     // "más rentable" SOLO si de verdad es positivo (antes llamaba "más rentable" a una
     // pérdida) y no el genérico "Importado (broker)".
-    if(best&&best.name!=='Importado (broker)'){
-      if(best.pnl>0)text+='Tu setup más rentable es <strong>'+best.name+'</strong> ('+f$(best.pnl)+'). ';
-      else text+='Aún ningún setup en verde; el mejor por ahora es <strong>'+best.name+'</strong> (<span class="r">'+f$(best.pnl)+'</span>). ';
+    var _bn=best&&best.name;
+    if(_bn&&_bn!=='undefined'&&_bn!=='—'&&_bn!=='Importado (broker)'){
+      if(best.pnl>0)text+='Tu setup más rentable es <strong>'+_bn+'</strong> ('+f$(best.pnl)+'). ';
+      else text+='Aún ningún setup en verde; el mejor por ahora es <strong>'+_bn+'</strong> (<span class="r">'+f$(best.pnl)+'</span>). ';
     }
     if(morTr.length>0&&aftTr.length>0){var mWR=stats(morTr).wr,aWR=stats(aftTr).wr;if(mWR>aWR+10)text+='Operas mejor en la mañana (<strong>'+mWR+'%</strong>) que en la tarde (<span class="r">'+aWR+'%</span>). ';}
     if(!text)text='Sigue registrando trades para descubrir patrones.';
