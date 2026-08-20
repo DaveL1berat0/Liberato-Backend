@@ -147,7 +147,9 @@ def _coach_charge(uid):
 # totalmente inerte (devuelve None y el flujo se comporta igual que hoy). Pensado
 # para el día que Groq jubile un modelo: pegas la key y el coach sigue vivo.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-2.0-flash").strip()
+# gemini-3.6-flash: verificado en la cuenta de Dave (gemini-2.5/2.0-flash ya no están
+# para cuentas nuevas). Gemini 3.x RAZONA (~700 tok de thought) → se le da margen extra.
+GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
 async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     if not GEMINI_API_KEY:
         return None
@@ -156,7 +158,8 @@ async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     body = {
         "systemInstruction": {"parts": [{"text": sys_msg}]},
         "contents": [{"role": "user", "parts": [{"text": usr_msg}]}],
-        "generationConfig": {"maxOutputTokens": max_tokens, "temperature": temperature},
+        # +900 de colchón: Gemini 3.x gasta tokens de "thought" antes del texto.
+        "generationConfig": {"maxOutputTokens": max_tokens + 900, "temperature": temperature},
     }
     try:
         async with httpx.AsyncClient(timeout=25) as c:
