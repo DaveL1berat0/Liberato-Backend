@@ -1888,6 +1888,9 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <div id="ts-connect-slot" style="margin-top:12px;">
       <button onclick="connectBroker('tradestation')" style="width:100%;padding:13px;border-radius:12px;border:0.5px solid rgba(201,168,76,0.35);background:rgba(201,168,76,0.05);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">⚡ TradeStation directo (futuros) →</button>
     </div>
+    <div style="text-align:center;margin-top:6px;">
+      <a href="javascript:void(0)" onclick="connectTradestationManual()" style="font-size:10.5px;color:var(--text3);text-decoration:none;font-family:'DM Mono',monospace;">¿TradeStation da "Something Went Wrong"? · Conexión manual →</a>
+    </div>
 
     <!-- Sincronizar: SOLO visible si ya hay un broker conectado -->
     <div id="broker-sync-row" style="text-align:center;margin-top:14px;display:none;">
@@ -3604,6 +3607,33 @@ function syncFills(){
         +'</div>';
     })
     .catch(function(err){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red al sincronizar.</div>';});
+}
+// ── TradeStation MANUAL: para probar sin esperar a que registren la URL de Railway.
+// Usa el redirect localhost pre-aprobado; el usuario copia el code de la URL y lo pega.
+function connectTradestationManual(){
+  var st=document.getElementById('broker-status');
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?manual=1&app_user_id='+encodeURIComponent(currentUserId()))
+    .then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.configured||!d.auth_url){if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);">'+_esc((d&&d.message)||'No disponible')+'</div>';return;}
+      window.open(d.auth_url,'_blank','noopener');
+      if(st)st.innerHTML='<div style="text-align:left;font-size:11.5px;color:var(--text2);background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.25);border-radius:10px;padding:12px;line-height:1.55;">'
+        +'<div style="margin-bottom:6px;"><strong style="color:var(--gold);">1.</strong> Autoriza en la pestaña de TradeStation (solo lectura).</div>'
+        +'<div style="margin-bottom:6px;"><strong style="color:var(--gold);">2.</strong> Volverás a una página en blanco de <b>localhost</b> (es normal). Copia la <b>URL completa</b> de esa página.</div>'
+        +'<div style="margin-bottom:8px;"><strong style="color:var(--gold);">3.</strong> Pégala aquí:</div>'
+        +'<input id="ts-code" placeholder="http://localhost:3000/?code=…" style="width:100%;background:rgba(0,0,0,0.25);border:0.5px solid var(--border2);border-radius:8px;padding:10px;color:var(--text);font-size:12px;font-family:\'DM Mono\',monospace;outline:none;box-sizing:border-box;">'
+        +'<button onclick="submitTradestationCode()" style="width:100%;margin-top:9px;padding:11px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">Conectar con el código →</button></div>';
+    }).catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">Error de red.</div>';});
+}
+function submitTradestationCode(){
+  var v=(document.getElementById('ts-code')||{}).value||''; var st=document.getElementById('broker-status');
+  if(!v.trim()){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">Pega la URL o el código.</div>';return;}
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Canjeando código…</div>';
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_user_id:currentUserId(),code:v.trim()})})
+    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+    .then(function(x){
+      if(x.ok&&x.j&&x.j.ok){if(st)st.innerHTML='<div style="font-size:12px;color:var(--green);">✓ TradeStation conectado. Sincronizando futuros…</div>';try{updateBrokerButtons();refreshTsState();syncTradestation();}catch(e){}}
+      else if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc((x.j&&x.j.detail)||'No se pudo canjear el código. Reintenta la autorización.')+'</div>';
+    }).catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">Error de red.</div>';});
 }
 // Sincroniza TODAS las fuentes conectadas (portal SnapTrade + TradeStation directo).
 // importFromBroker deduplica por fill, así que solaparlas es seguro.

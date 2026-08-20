@@ -4222,27 +4222,59 @@ def _st_map_order(o):
     }
 
 
+# Redirect que TradeStation ya acepta POR DEFECTO (localhost pre-aprobados) — permite
+# probar SIN esperar a que Client Experience registre la URL de Railway. Flujo manual:
+# el usuario copia el ?code= de la URL de localhost y lo pega en el journal.
+TS_MANUAL_REDIRECT = os.getenv("TS_MANUAL_REDIRECT", "http://localhost:3000").strip()
+
 @app.get("/api/broker/tradestation/connect")
-async def tradestation_connect(app_user_id: str = ""):
+async def tradestation_connect(app_user_id: str = "", manual: int = 0):
     """Inicia el OAuth de TradeStation en modo SOLO LECTURA (scope sin 'Trade').
-    Trae FUTUROS (lo que SnapTrade no expone). El `state` lleva el app_user_id para
-    que el callback sepa a qué estudiante pertenece el token (multiusuario)."""
+    manual=1 usa el redirect localhost pre-aprobado (para probar sin registrar la URL
+    de Railway); el usuario pega el código a mano en /exchange."""
     if not (TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET):
         return {"configured": False,
                 "message": "TradeStation aún no activado: faltan TRADESTATION_CLIENT_ID/SECRET en Railway."}
     from urllib.parse import urlencode
     uid = (app_user_id or "dave").strip() or "dave"
+    redirect = TS_MANUAL_REDIRECT if manual else TRADESTATION_REDIRECT_URI
     params = {
         "response_type": "code",
         "client_id": TRADESTATION_CLIENT_ID,
-        "redirect_uri": TRADESTATION_REDIRECT_URI,
+        "redirect_uri": redirect,
         "audience": "https://api.tradestation.com",
-        # SOLO LECTURA: MarketData + ReadAccount, SIN 'Trade'. offline_access = refresh token.
         "scope": "openid offline_access MarketData ReadAccount",
         "state": f"lbc::{uid}",
     }
-    return {"configured": True,
+    return {"configured": True, "manual": bool(manual), "redirect_uri": redirect,
             "auth_url": "https://signin.tradestation.com/authorize?" + urlencode(params)}
+
+
+@app.post("/api/broker/tradestation/exchange")
+async def tradestation_exchange(request: Request):
+    """Flujo MANUAL: recibe el `code` que el usuario copió de la URL de localhost tras
+    autorizar, lo canjea por tokens (redirect = TS_MANUAL_REDIRECT) y los guarda."""
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    uid = (data.get("app_user_id") or "dave").strip() or "dave"
+    code = (data.get("code") or "").strip()
+    # aceptar que pegue la URL completa o solo el code
+    if "code=" in code:
+        from urllib.parse import urlparse, parse_qs
+        code = (parse_qs(urlparse(code).query).get("code") or [code])[0]
+    if not code:
+        raise HTTPException(400, "Falta el código")
+    try:
+        tok = await _ts_token_request({"grant_type": "authorization_code", "code": code,
+                                       "redirect_uri": TS_MANUAL_REDIRECT})
+        _ts_store(uid, tok)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(502, f"No se pudo canjear el código: {str(e)[:160]}")
+    return {"ok": True}
 
 
 async def _ts_token_request(data):
