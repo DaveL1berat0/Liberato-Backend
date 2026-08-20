@@ -1621,6 +1621,9 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
       <div class="fsec"><div class="fsec-lbl">Emoji</div><div class="pbe-emoji-row" id="pbe-emojis"></div></div>
       <div class="fsec"><div class="fsec-lbl">Descripción / reglas <span style="color:var(--text3);text-transform:none;letter-spacing:0;">(opcional)</span></div><textarea class="finput" id="pbe-desc" rows="2" placeholder="Ej: Entrar en el reclaim del VAL con delta positivo y confirmación de tape. Stop bajo el mínimo del retest." style="resize:vertical;"></textarea></div>
 
+      <!-- ORDER FLOW: con qué señal(es) entré exactamente en este playbook -->
+      <div class="fsec"><div class="fsec-lbl">Order Flow <span style="color:var(--text3);text-transform:none;letter-spacing:0;">— ¿con qué entré?</span></div><div class="pbe-tag-grid" id="pbe-orderflow"></div></div>
+
       <!-- CRITERIOS AVANZADOS (colapsados para que crear sea rápido) -->
       <details style="margin:6px 0 4px;">
         <summary style="cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);padding:8px 0;list-style:none;">▸ Criterios avanzados (indicadores, contexto, confirmaciones) · opcional</summary>
@@ -1779,19 +1782,46 @@ var PB_KEY='lbc_playbooks_v1';
 var CONFS=['Big Trades','Delta Outlier','Tape Speed','Open Interest','Volumen creciente','Volumen decreciente','Delta positivo','Delta negativo','Absorción','Imbalance'];
 var INDICATORS=['EMA','SMA','VWAP','Volume Profile','Volume','Delta','Cumulative Delta','ATR','RSI','MACD','Order Flow'];
 var CONTEXTS=['Break of Structure','Market Structure Shift','Liquidity Sweep','Acceptance','Rejection','Reclaim'];
+// Señales de ORDER FLOW (con qué entré exactamente). Se eligen en el editor de playbook.
+var OF_SIGNALS=['Aggression','Absorption','Delta Outlier','Auction lack (footprint)','Big Trades 1.5x','Big Trades 2x','CVD Align','CVD Divergence','Delta % change 1.5x','Delta % change 2x'];
+// ── LOS 8 PLAYBOOKS PBDT de Dave (P/b/D/T) — precargados ──────────────────────
 var DEFAULT_PLAYBOOKS=[
-  {id:'pb1',category:'long',name:'VAL Reclaim → VAH',emoji:'🟢',color:'#22c55e',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb2',category:'long',name:'VAH → Protection',emoji:'🟢',color:'#22c55e',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb3',category:'short',name:'VAH Failed → VAL',emoji:'🔴',color:'#ef4444',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb4',category:'short',name:'VAL → Protection',emoji:'🔴',color:'#ef4444',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb5',category:'sideways',name:'Failed Action VAH → VAL/VWAP',emoji:'🟡',color:'#f59e0b',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb6',category:'sideways',name:'Failed Action VAL → VAH/VWAP',emoji:'🟡',color:'#f59e0b',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false},
-  {id:'pb7',category:'trending',name:'HVN/LVN Play',emoji:'🔵',color:'#60a5fa',confirmations:['Big Trades','Delta Outlier','Tape Speed','Open Interest'],active:true,custom:false}
+  {id:'p1',category:'long',name:'P1 · P Long',emoji:'🟢',color:'#22c55e',
+   desc:'P Long. Espera a que una vela cierre ENTERAMENTE por debajo del VAL y luego a que otra cierre de vuelta DENTRO del value; entra en la apertura siguiente, stop bajo el mínimo de la vela de confirmación y target en el MID. Fade del pinchazo fallido en el borde bajo; la clase P da el sesgo largo.',
+   confirmations:[],active:true,custom:false},
+  {id:'p2',category:'long',name:'P2 · P Long',emoji:'🟢',color:'#22c55e',
+   desc:'P Long. Espera a que una vela cierre por ENCIMA del VAH (aceptación, no mecha) y entra a la apertura siguiente, stop bajo esa vela y target en la primera referencia medible arriba (VAH/VAL/POC del día previo u overnight). Exige que el POC del bloque esté DENTRO del value del día previo — continuación iniciativa, no fade.',
+   confirmations:[],active:true,custom:false},
+  {id:'b1',category:'short',name:'b1 · b Short',emoji:'🔴',color:'#ef4444',
+   desc:'b Short. Espejo exacto de P1: vela que cierra por encima del VAH, luego vuelta dentro; entrada corta a la apertura siguiente, stop sobre el máximo y target en el VAL. La clase b da el sesgo corto.',
+   confirmations:[],active:true,custom:false},
+  {id:'b2',category:'short',name:'b2 · b Short',emoji:'🔴',color:'#ef4444',
+   desc:'b Short. Espejo de P2: vela que cierra bajo el VAL, entrada corta, stop sobre esa vela y target en cierre − 1,5w. Filtro contrario: exige el POC FUERA del value previo; invalida si el precio vuelve a cerrar dentro.',
+   confirmations:[],active:true,custom:false},
+  {id:'d1',category:'long',name:'D1 · D Long',emoji:'🟢',color:'#22c55e',
+   desc:'D Long. Exige que el pinchazo bajo el VAL dure ≤3 velas (rotación, no ruptura) y que luego una vela cierre DENTRO; entra largo con stop en el mínimo de TODO el pinchazo y target en el VAH (borde opuesto). Rotación completa con stop al swing — el más rentable de los ocho.',
+   confirmations:[],active:true,custom:false},
+  {id:'d2',category:'short',name:'D2 · D Short',emoji:'🔴',color:'#ef4444',
+   desc:'D Short. Espejo de D1: pinchazo ≤3 velas SOBRE el VAH, cierre de vuelta dentro, entrada corta con stop en el máximo del pinchazo y target en el VAL. Filtro: POC dentro del value previo.',
+   confirmations:[],active:true,custom:false},
+  {id:'t1',category:'trending',name:'T1 · T Long',emoji:'🔵',color:'#60a5fa',
+   desc:'T Long. Busca un NVN del perfil developing (la sesión hasta ese bloque), espera a que el precio vuelva a tocarlo y cierre por ENCIMA; entra largo con stop bajo el mínimo desde el toque y target en el máximo del día previo. Continuación a través de la ineficiencia, no reversión.',
+   confirmations:[],active:true,custom:false},
+  {id:'t2',category:'trending',name:'T2 · T Short',emoji:'🔵',color:'#60a5fa',
+   desc:'T Short. Espejo de T1: toca el NVN, cierra por DEBAJO; entrada corta, stop sobre el máximo desde el toque y target en el mínimo del día previo.',
+   confirmations:[],active:true,custom:false}
 ];
 var CAT_LABELS={long:'Long',short:'Short',sideways:'Sideways',trending:'Trending'};
 var CAT_COLORS={long:'#22c55e',short:'#ef4444',sideways:'#f59e0b',trending:'#60a5fa'};
 var CAT_EMOJI={long:'🟢',short:'🔴',sideways:'🟡',trending:'🔵'};
-function loadPlaybooks(){try{var d=localStorage.getItem(PB_KEY);if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length)return p;}}catch(e){}savePlaybooks(DEFAULT_PLAYBOOKS);return DEFAULT_PLAYBOOKS.slice();}
+// Inyecta los 8 playbooks canónicos que falten (por id) sin tocar los que ya tengas.
+function ensureCanonPb(list){
+  var have={};list.forEach(function(p){if(p&&p.id)have[p.id]=1;});
+  var changed=false;
+  DEFAULT_PLAYBOOKS.forEach(function(c){if(!have[c.id]){list.push(JSON.parse(JSON.stringify(c)));changed=true;}});
+  return changed;
+}
+function loadPlaybooks(){try{var d=localStorage.getItem(PB_KEY);if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length){if(ensureCanonPb(p))savePlaybooks(p);return p;}}}catch(e){}savePlaybooks(DEFAULT_PLAYBOOKS);return DEFAULT_PLAYBOOKS.slice();}
 function savePlaybooks(arr){try{localStorage.setItem(PB_KEY,JSON.stringify(arr));}catch(e){}}
 var PB=loadPlaybooks();
 function pbById(id){return PB.find(function(p){return p.id===id;});}
@@ -3306,6 +3336,7 @@ function renderPlaybooks(){
           +(allInds.length?allInds.map(function(c){return '<span class="pb-conf" style="background:rgba(96,165,250,0.1);color:var(--blue);">'+c+'</span>';}).join(''):'')
           +(allCtxs.length?allCtxs.map(function(c){return '<span class="pb-conf" style="background:rgba(167,139,250,0.1);color:#a78bfa;">'+c+'</span>';}).join(''):'' )
           +allConfs.map(function(c){return '<span class="pb-conf">'+c+'</span>';}).join('')
+          +((p.orderflow&&p.orderflow.length)?p.orderflow.map(function(c){return '<span class="pb-conf" style="background:rgba(46,232,164,0.1);color:var(--green);">⇄ '+_esc(c)+'</span>';}).join(''):'')
           +'</div>'
           +'</div>';
       }).join('')+'</div></div>';
@@ -3316,7 +3347,7 @@ function renderPlaybooks(){
 function togglePb(id){var p=pbById(id);if(p){p.active=!p.active;savePlaybooks(PB);renderPlaybooks();}}
 function deletePb(id){if(!confirm('¿Eliminar este playbook?'))return;PB=PB.filter(function(p){return p.id!==id;});savePlaybooks(PB);renderPlaybooks();}
 
-var pbeEdit=null,pbeEmoji='🟢',pbeCat='long',pbeConfs=[],pbeInds=[],pbeCtxs=[];
+var pbeEdit=null,pbeEmoji='🟢',pbeCat='long',pbeConfs=[],pbeInds=[],pbeCtxs=[],pbeOF=[];
 function openPbEditor(id){
   var p=id?pbById(id):null;
   pbeEdit=p?p.id:null;
@@ -3325,6 +3356,7 @@ function openPbEditor(id){
   pbeConfs=p&&p.confirmations?p.confirmations.slice():['Big Trades','Delta Outlier','Tape Speed','Open Interest'];
   pbeInds=p&&p.indicators?p.indicators.slice():[];
   pbeCtxs=p&&p.contexts?p.contexts.slice():[];
+  pbeOF=p&&p.orderflow?p.orderflow.slice():[];
   // Load custom elements
   pbeCustomInds=p&&p.customIndicators?p.customIndicators.slice():[];
   pbeCustomCtxs=p&&p.customContexts?p.customContexts.slice():[];
@@ -3342,6 +3374,7 @@ function pbeSetEmoji(e){pbeEmoji=e;renderPbEditor();}
 function pbeToggleConf(c){var i=pbeConfs.indexOf(c);if(i>=0)pbeConfs.splice(i,1);else pbeConfs.push(c);renderPbEditor();}
 function pbeToggleInd(c){var i=pbeInds.indexOf(c);if(i>=0)pbeInds.splice(i,1);else pbeInds.push(c);renderPbEditor();}
 function pbeToggleCtx(c){var i=pbeCtxs.indexOf(c);if(i>=0)pbeCtxs.splice(i,1);else pbeCtxs.push(c);renderPbEditor();}
+function pbeToggleOF(c){var i=pbeOF.indexOf(c);if(i>=0)pbeOF.splice(i,1);else pbeOF.push(c);renderPbEditor();}
 function renderPbEditor(){
   var cats=['long','short','sideways','trending'];
   document.getElementById('pbe-cats').innerHTML=cats.map(function(c){return '<button class="ctxbtn'+(pbeCat===c?' active-gold':'')+'" onclick="pbeSetCat(\''+c+'\')">'+CAT_EMOJI[c]+' '+CAT_LABELS[c]+'</button>';}).join('');
@@ -3350,13 +3383,14 @@ function renderPbEditor(){
   document.getElementById('pbe-confs').innerHTML=CONFS.map(function(c){return '<div class="pbe-tag'+(pbeConfs.indexOf(c)>=0?' on':'')+'" onclick="pbeToggleConf(\''+c+'\')"><span class="tg-check">'+(pbeConfs.indexOf(c)>=0?'✓':'+')+'</span>'+c+'</div>';}).join('');
   document.getElementById('pbe-indicators').innerHTML=INDICATORS.map(function(c){return '<div class="pbe-tag'+(pbeInds.indexOf(c)>=0?' on':'')+'" onclick="pbeToggleInd(\''+c+'\')"><span class="tg-check">'+(pbeInds.indexOf(c)>=0?'✓':'+')+'</span>'+c+'</div>';}).join('');
   document.getElementById('pbe-contexts').innerHTML=CONTEXTS.map(function(c){return '<div class="pbe-tag'+(pbeCtxs.indexOf(c)>=0?' on':'')+'" onclick="pbeToggleCtx(\''+c+'\')"><span class="tg-check">'+(pbeCtxs.indexOf(c)>=0?'✓':'+')+'</span>'+c+'</div>';}).join('');
+  var ofEl=document.getElementById('pbe-orderflow');if(ofEl)ofEl.innerHTML=OF_SIGNALS.map(function(c){return '<div class="pbe-tag'+(pbeOF.indexOf(c)>=0?' on':'')+'" onclick="pbeToggleOF(\''+c+'\')"><span class="tg-check">'+(pbeOF.indexOf(c)>=0?'✓':'+')+'</span>'+c+'</div>';}).join('');
 }
 function savePb(){
   var name=document.getElementById('pbe-name').value.trim();
   if(!name){alert('Ponle un nombre al playbook.');return;}
   var descEl=document.getElementById('pbe-desc');var desc=descEl?descEl.value.trim():'';
-  if(pbeEdit){var p=pbById(pbeEdit);if(p){p.name=name;p.desc=desc;p.category=pbeCat;p.emoji=pbeEmoji;p.color=CAT_COLORS[pbeCat];p.confirmations=pbeConfs.slice();p.indicators=pbeInds.slice();p.contexts=pbeCtxs.slice();p.customIndicators=pbeCustomInds.slice();p.customContexts=pbeCustomCtxs.slice();p.customConfirmations=pbeCustomConfs.slice();}}
-  else{PB.push({id:'pb'+Date.now().toString(36),category:pbeCat,name:name,desc:desc,emoji:pbeEmoji,color:CAT_COLORS[pbeCat],confirmations:pbeConfs.slice(),indicators:pbeInds.slice(),contexts:pbeCtxs.slice(),customIndicators:pbeCustomInds.slice(),customContexts:pbeCustomCtxs.slice(),customConfirmations:pbeCustomConfs.slice(),active:true,custom:true});}
+  if(pbeEdit){var p=pbById(pbeEdit);if(p){p.name=name;p.desc=desc;p.category=pbeCat;p.emoji=pbeEmoji;p.color=CAT_COLORS[pbeCat];p.confirmations=pbeConfs.slice();p.indicators=pbeInds.slice();p.contexts=pbeCtxs.slice();p.orderflow=pbeOF.slice();p.customIndicators=pbeCustomInds.slice();p.customContexts=pbeCustomCtxs.slice();p.customConfirmations=pbeCustomConfs.slice();}}
+  else{PB.push({id:'pb'+Date.now().toString(36),category:pbeCat,name:name,desc:desc,emoji:pbeEmoji,color:CAT_COLORS[pbeCat],confirmations:pbeConfs.slice(),indicators:pbeInds.slice(),contexts:pbeCtxs.slice(),orderflow:pbeOF.slice(),customIndicators:pbeCustomInds.slice(),customContexts:pbeCustomCtxs.slice(),customConfirmations:pbeCustomConfs.slice(),active:true,custom:true});}
   savePlaybooks(PB);closePbEditor();renderPlaybooks();
 }
 
