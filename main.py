@@ -4290,8 +4290,79 @@ async def tradestation_exchange(request: Request):
 #  POR AHORA requiere AUTH_SECRET en Railway para que las sesiones sobrevivan al
 #  reinicio (sin él, se usa una clave dev aleatoria por arranque).
 # ══════════════════════════════════════════════════════════════════════════
-_users = {}  # {email_lower: {id, name, pass_hash, salt, plan, created}}
+_users = {}  # fallback en memoria/snapshot si NO hay Supabase
 AUTH_SECRET = os.getenv("AUTH_SECRET", "").strip() or ("dev-" + secrets.token_hex(32))
+
+# ── STORE DURABLE: Supabase (Postgres via REST). Si SUPABASE_URL+KEY están en Railway,
+#    los usuarios y el AUTH_SECRET viven en Supabase (sobreviven redeploys). Si no,
+#    fallback al snapshot (efímero en Railway). ──
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+SUPABASE_KEY = (os.getenv("SUPABASE_SERVICE_KEY", "") or os.getenv("SUPABASE_KEY", "")).strip()
+def _sb_on(): return bool(SUPABASE_URL and SUPABASE_KEY)
+def _sb_h(extra=None):
+    h = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
+    if extra: h.update(extra)
+    return h
+async def _sb_get_user(email):
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.get(f"{SUPABASE_URL}/rest/v1/app_users",
+                            params={"email": f"eq.{email}", "select": "*"}, headers=_sb_h())
+        if r.status_code == 200:
+            rows = r.json(); return rows[0] if rows else None
+    except Exception as e:
+        print(f"[supabase] get_user: {e}")
+    return None
+async def _sb_put_user(u):
+    async with httpx.AsyncClient(timeout=10) as c:
+        r = await c.post(f"{SUPABASE_URL}/rest/v1/app_users", json=u,
+                         headers=_sb_h({"Prefer": "resolution=merge-duplicates"}))
+    if r.status_code >= 300:
+        raise Exception(f"supabase {r.status_code}: {r.text[:120]}")
+async def _sb_get_config(k):
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.get(f"{SUPABASE_URL}/rest/v1/app_config",
+                            params={"k": f"eq.{k}", "select": "v"}, headers=_sb_h())
+        if r.status_code == 200:
+            rows = r.json(); return rows[0]["v"] if rows else None
+    except Exception as e:
+        print(f"[supabase] get_config: {e}")
+    return None
+async def _sb_set_config(k, v):
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            await c.post(f"{SUPABASE_URL}/rest/v1/app_config", json={"k": k, "v": v},
+                         headers=_sb_h({"Prefer": "resolution=merge-duplicates"}))
+    except Exception as e:
+        print(f"[supabase] set_config: {e}")
+
+async def user_get(email):
+    if _sb_on():
+        return await _sb_get_user(email)
+    return _users.get(email)
+async def user_put(email, u):
+    rec = {**u, "email": email}
+    if _sb_on():
+        await _sb_put_user(rec)
+    else:
+        _users[email] = u
+        try: save_cache()
+        except Exception: pass
+
+async def _load_auth_secret():
+    """Carga/genera el AUTH_SECRET de forma DURABLE en Supabase (así no depende de una
+    env var de Railway). env AUTH_SECRET tiene prioridad si existe."""
+    global AUTH_SECRET
+    if os.getenv("AUTH_SECRET", "").strip():
+        return  # env manda
+    if _sb_on():
+        s = await _sb_get_config("auth_secret")
+        if not s:
+            s = secrets.token_hex(32)
+            await _sb_set_config("auth_secret", s)
+            print("[auth] AUTH_SECRET generado y guardado en Supabase")
+        AUTH_SECRET = s
 
 def _b64u(b): return base64.urlsafe_b64encode(b).rstrip(b"=").decode()
 def _b64u_dec(s): return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
@@ -4339,19 +4410,16 @@ async def auth_register(request: Request):
         raise HTTPException(400, "Email inválido")
     if len(pw) < 8:
         raise HTTPException(400, "La contraseña debe tener al menos 8 caracteres")
-    if email in _users:
+    if await user_get(email):
         raise HTTPException(409, "Ya existe una cuenta con ese email")
     salt = secrets.token_bytes(16)
     uid = "u_" + secrets.token_hex(9)
-    _users[email] = {"id": uid, "name": name or email.split("@")[0],
-                     "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
-                     "plan": "free", "created": int(time.time())}
-    try:
-        save_cache()
-    except Exception:
-        pass
-    token = _make_jwt({"sub": uid, "email": email, "plan": "free", "name": _users[email]["name"]})
-    return {"ok": True, "token": token, "user": _pub_user(email)}
+    rec = {"id": uid, "name": name or email.split("@")[0],
+           "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
+           "plan": "free", "created": int(time.time())}
+    await user_put(email, rec)
+    token = _make_jwt({"sub": uid, "email": email, "plan": "free", "name": rec["name"]})
+    return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": "free"}}
 
 @app.post("/api/auth/login")
 async def auth_login(request: Request):
@@ -4361,7 +4429,7 @@ async def auth_login(request: Request):
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
     pw = data.get("password") or ""
-    u = _users.get(email)
+    u = await user_get(email)
     if not u:
         raise HTTPException(401, "Email o contraseña incorrectos")
     try:
@@ -4371,7 +4439,8 @@ async def auth_login(request: Request):
     if not hmac.compare_digest(_hash_pw(pw, salt), u.get("pass_hash", "")):
         raise HTTPException(401, "Email o contraseña incorrectos")
     token = _make_jwt({"sub": u["id"], "email": email, "plan": u.get("plan", "free"), "name": u.get("name")})
-    return {"ok": True, "token": token, "user": _pub_user(email)}
+    return {"ok": True, "token": token,
+            "user": {"id": u["id"], "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}}
 
 @app.get("/api/auth/me")
 async def auth_me(authorization: str = Header("")):
@@ -4380,9 +4449,11 @@ async def auth_me(authorization: str = Header("")):
     if not p:
         raise HTTPException(401, "Sesión inválida o expirada")
     email = (p.get("email") or "").lower()
-    if email in _users:
-        return {"ok": True, "user": _pub_user(email)}
-    # token válido pero usuario no en memoria (snapshot reseteado): responde del payload
+    u = await user_get(email)
+    if u:
+        return {"ok": True, "user": {"id": u.get("id"), "email": email,
+                                     "name": u.get("name"), "plan": u.get("plan", "free")}}
+    # token válido pero usuario no encontrado: responde del payload
     return {"ok": True, "user": {"id": p.get("sub"), "email": email,
                                  "name": p.get("name"), "plan": p.get("plan", "free")}}
 
@@ -4397,14 +4468,12 @@ async def auth_set_plan(request: Request, key: str = ""):
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
     plan = (data.get("plan") or "free").strip()
-    if email not in _users:
+    u = await user_get(email)
+    if not u:
         raise HTTPException(404, "usuario no encontrado")
-    _users[email]["plan"] = plan
-    try:
-        save_cache()
-    except Exception:
-        pass
-    return {"ok": True, "user": _pub_user(email)}
+    u["plan"] = plan
+    await user_put(email, u)
+    return {"ok": True, "user": {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": plan}}
 
 
 async def _ts_token_request(data):
@@ -5351,6 +5420,11 @@ scheduler = AsyncIOScheduler(timezone=NY)
 @app.on_event("startup")
 async def startup():
     load_cache()
+    try:
+        await _load_auth_secret()   # AUTH_SECRET durable desde Supabase (si está configurado)
+        print(f"[auth] store: {'Supabase' if _sb_on() else 'snapshot (efímero)'}")
+    except Exception as e:
+        print(f"[auth] _load_auth_secret: {e}")
     cache["company"] = {}   # clear company cache on startup — ensures new endpoint logic runs
 
     # ── TwelveData WebSocket: una sola tarea persistente ──────────────────
