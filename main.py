@@ -3991,7 +3991,9 @@ async def snaptrade_portal(request: Request):
     if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
         raise HTTPException(400, "SnapTrade no configurado en el servidor")
     data = await request.json()
-    broker = (data.get("broker") or "TRADESTATION").strip().upper() or None
+    # Sin broker → el portal de SnapTrade muestra TODOS los brokers (Tradovate, IBKR,
+    # tastytrade, etc.) para que el estudiante elija el suyo. Antes forzaba TradeStation.
+    broker = (data.get("broker") or "").strip().upper() or None
     ukw = await _st_user_kwargs(data.get("app_user_id"))
     try:
         resp = await _snaptrade().authentication.alogin_snap_trade_user(
@@ -4489,6 +4491,25 @@ async def diag_ai(key: str = ""):
         "briefing_institucional": "COMPARTIDO — 1 para toda la plataforma, no escala con estudiantes",
         "gemini_fallback": ("armado (" + GEMINI_MODEL + ")") if GEMINI_API_KEY else "dormido (sin GEMINI_API_KEY)",
     }
+
+
+@app.get("/api/admin/test-gemini")
+async def test_gemini(key: str = ""):
+    """Prueba el fallback de Gemini con la MISMA personalidad del AI Coach, sin esperar
+    a que Groq falle. Uso: ?key=liberato2026"""
+    if key != "liberato2026":
+        raise HTTPException(403, "clave incorrecta")
+    if not GEMINI_API_KEY:
+        return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
+    sys_msg = (
+        "Eres el AI Coach de Liberato Community: un mentor de daytrading de NQ/Nasdaq "
+        "y opciones 0DTE, experto en Auction Market Theory, order flow, gestión de "
+        "riesgo y disciplina de playbooks. Hablas en español, directo y cercano. "
+        "Responde CONCISO, 2 a 4 frases."
+    )
+    ans = await _gemini_chat(sys_msg, "Preséntate en una frase como mi coach de trading.", max_tokens=120)
+    return {"ok": bool(ans), "modelo": GEMINI_MODEL,
+            "respuesta": ans or "(sin respuesta — revisa la key o el modelo)"}
 
 
 @app.post("/api/journal/parse-csv")
