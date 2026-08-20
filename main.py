@@ -4477,7 +4477,7 @@ async def journal_coach(request: Request):
 async def diag_ai(key: str = ""):
     """Monitoreo de consumo de IA (Groq): cuota global del día + uso del AI Coach por
     estudiante. Uso: ?key=liberato2026"""
-    if key != "liberato2026":
+    if key != ADMIN_KEY:
         raise HTTPException(403, "clave incorrecta")
     from datetime import date
     day = date.today().isoformat()
@@ -4497,7 +4497,7 @@ async def diag_ai(key: str = ""):
 async def test_gemini(key: str = ""):
     """Prueba el fallback de Gemini con la MISMA personalidad del AI Coach, sin esperar
     a que Groq falle. Uso: ?key=liberato2026"""
-    if key != "liberato2026":
+    if key != ADMIN_KEY:
         raise HTTPException(403, "clave incorrecta")
     if not GEMINI_API_KEY:
         return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
@@ -5315,7 +5315,12 @@ async def contact_form(request: Request):
 #  Útil para probar sin esperar a las ventanas programadas.
 #  Protegido con clave: agrega ?key=TU_CLAVE en la URL.
 # ═══════════════════════════════════════════════════════════════════════════
-ADMIN_KEY = os.getenv("ADMIN_KEY", "liberato2026")  # cámbiala en Railway si quieres
+# SEGURIDAD: sin default en el código. Si no hay ADMIN_KEY en Railway, se usa una clave
+# ALEATORIA por arranque = los endpoints /api/admin/* quedan deshabilitados (nadie la
+# adivina). Antes el default "liberato2026" estaba en el código = agujero. Pon ADMIN_KEY
+# en Railway para reactivar los diagnósticos.
+import secrets as _secrets
+ADMIN_KEY = os.getenv("ADMIN_KEY", "").strip() or ("disabled-" + _secrets.token_hex(12))
 
 @app.get("/api/admin/refresh-gex")
 async def manual_refresh_gex(key: str = ""):

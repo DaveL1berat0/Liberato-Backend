@@ -3326,21 +3326,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     function lbl(d,i){var s=DE[d.getDay()]+' '+d.getDate()+' '+ME[d.getMonth()];return i===0?'Hoy · '+s:s;}
     var days=[],cur=new Date(et.getFullYear(),et.getMonth(),et.getDate());
     while(days.length<3){if(cur.getDay()!==0&&cur.getDay()!==6)days.push(new Date(cur));cur.setDate(cur.getDate()+1);}
-    // Eventos recurrentes semanales como fallback (se reemplazan con datos reales del backend)
-    // Esto garantiza que el calendario NUNCA aparezca vacío.
-    function fallbackEvents(dow,isToday){
-      var common={
-        1:[{time:'10:00',name:'ISM Manufacturing PMI',impact:'high'},{time:'14:00',name:'Fed Speak',impact:'med'}],
-        2:[{time:'08:30',name:'Building Permits',impact:'med'},{time:'10:00',name:'Consumer Confidence',impact:'high'}],
-        3:[{time:'08:15',name:'ADP Employment',impact:'high'},{time:'14:00',name:'FOMC Minutes',impact:'high'}],
-        4:[{time:'08:30',name:'Initial Jobless Claims',impact:'high'},{time:'08:30',name:'GDP (prelim)',impact:'high'}],
-        5:[{time:'08:30',name:'Non-Farm Payrolls',impact:'high'},{time:'10:00',name:'Michigan Sentiment',impact:'med'}]
-      };
-      var evs=common[dow]||[{time:'09:30',name:'Apertura de Mercado',impact:'med'}];
-      return evs.map(function(e){return{time:e.time,name:e.name,impact:e.impact,status:isToday?'Programado':'Próximo',soon:null,prev:'—',exp:'—',result:null,nqImpact:null};});
-    }
+    // REGLA #1: NO inventar eventos. Los días se muestran vacíos hasta que fetchCalendar()
+    // trae los eventos REALES del backend (TradingEconomics/Finnhub). Antes esto fabricaba
+    // NFP/ADP/FOMC fijos por día de la semana = datos falsos presentados como reales.
     return days.map(function(d,i){
-      return{label:lbl(d,i),future:i>0,date:key(d),events:fallbackEvents(d.getDay(),i===0)};
+      return{label:lbl(d,i),future:i>0,date:key(d),events:[]};
     });
   }
   MOCK.macro.days=buildMacroDays();
