@@ -2897,8 +2897,9 @@ function connectBroker(broker){
       .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo conectar con el servidor.</div>';});
     return;
   }
-  // SnapTrade (portal multi-broker para acciones/opciones)
-  var body={};
+  // SnapTrade (portal multi-broker; incluye Tradovate y prop firms). app_user_id
+  // identifica al estudiante en modo commercial (en personal se ignora).
+  var body={app_user_id:currentUserId()};
   fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/portal',{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
     .then(function(r){return r.json();})
@@ -3047,7 +3048,7 @@ function fetchAccountsMap(){
   var m={};try{m=acctMap()||{};}catch(e){m={};}
   function persist(){try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}try{renderTrAccounts();}catch(e){}}
   // SnapTrade (acciones/opciones)
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts')
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){if(d&&d.ok)(d.accounts||[]).forEach(function(a){if(a.number)m[String(a.number)]={name:a.name,institution:a.institution};});persist();}).catch(function(){});
   // TradeStation directo (incluye futuros)
@@ -3059,7 +3060,7 @@ function syncFills(){
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando fills reales…</div>';
   fetchAccountsMap();
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120')
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120&app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
