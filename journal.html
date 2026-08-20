@@ -1821,8 +1821,18 @@ function ensureCanonPb(list){
   DEFAULT_PLAYBOOKS.forEach(function(c){if(!have[c.id]){list.push(JSON.parse(JSON.stringify(c)));changed=true;}});
   return changed;
 }
-function loadPlaybooks(){try{var d=localStorage.getItem(PB_KEY);if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length){if(ensureCanonPb(p))savePlaybooks(p);return p;}}}catch(e){}savePlaybooks(DEFAULT_PLAYBOOKS);return DEFAULT_PLAYBOOKS.slice();}
-function savePlaybooks(arr){try{localStorage.setItem(PB_KEY,JSON.stringify(arr));}catch(e){}}
+// Playbooks POR ESTUDIANTE: se guardan bajo userKey(PB_KEY). Fallback a la clave
+// global vieja (data existente de Dave) la primera vez, luego se persiste al espacio
+// del usuario. Cada alumno tiene y edita los suyos de forma independiente.
+function loadPlaybooks(){
+  try{
+    var d=localStorage.getItem(userKey(PB_KEY));
+    if(d==null)d=localStorage.getItem(PB_KEY); // migración: hereda la global vieja una vez
+    if(d){var p=JSON.parse(d);if(Array.isArray(p)&&p.length){ensureCanonPb(p);savePlaybooks(p);return p;}}
+  }catch(e){}
+  savePlaybooks(DEFAULT_PLAYBOOKS);return DEFAULT_PLAYBOOKS.slice();
+}
+function savePlaybooks(arr){try{localStorage.setItem(userKey(PB_KEY),JSON.stringify(arr));}catch(e){}}
 var PB=loadPlaybooks();
 function pbById(id){return PB.find(function(p){return p.id===id;});}
 function activePlaybooks(){return PB.filter(function(p){return p.active;});}
@@ -2257,7 +2267,7 @@ function setTrDatePreset(preset){
   document.querySelectorAll('[data-dp]').forEach(function(b){b.classList.toggle('active',b.dataset.dp===preset);});
   renderTrades();
 }
-function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});return Object.keys(s).sort();}
+function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});try{Object.keys(acctMap()).forEach(function(k){if(k)s[String(k)]=1;});}catch(e){}return Object.keys(s).sort();}
 function shortAcct(a){var m=acctMap()[a];return (m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' ':'')+'#'+_esc(a);}
 function acctOptHtml(v,lbl){var sel=(activeAccount===v);return '<div class="acct-opt'+(sel?' sel':'')+'" onclick="pickAccount(\''+v+'\')"><span>'+lbl+'</span><span class="acct-chk">✓</span></div>';}
 // Botón "Cuentas" con menú desplegable, junto al selector de fechas. Permite navegar
@@ -3003,25 +3013,43 @@ function disconnectTradestation(){
 // Actualiza los botones "Conectar broker" (sidebar + header): si ya estás conectado,
 // pasan a decir "Desconectar broker".
 var _brokerConnected=false;
+// ¿Hay una conexión de broker local? (cuentas o fills de broker guardados) — cubre
+// SnapTrade (portal) además de TradeStation directo.
+function _hasLocalBroker(){
+  try{
+    var acc=localStorage.getItem(userKey('lbc_accounts'));
+    if(acc && acc!=='{}' && Object.keys(JSON.parse(acc)||{}).length)return true;
+    var bf=localStorage.getItem(userKey('lbc_broker_fills'));
+    if(bf){var o=JSON.parse(bf);if(o&&o.fills&&o.fills.length)return true;}
+  }catch(e){}
+  return false;
+}
+function _applyBrokerBtn(connected){
+  _brokerConnected=!!connected;
+  ['sb-broker-btn','hdr-broker-btn'].forEach(function(id){
+    var b=document.getElementById(id);if(!b)return;
+    var lbl=b.querySelector('.brk-lbl'),ico=b.querySelector('.brk-ico');
+    if(_brokerConnected){ b.setAttribute('onclick','brokerBtnDisconnect()'); if(lbl)lbl.textContent='Desconectar broker'; if(ico)ico.textContent='⏻'; }
+    else { b.setAttribute('onclick','openCsvImport()'); if(lbl)lbl.textContent='Conectar broker'; if(ico)ico.textContent='🔗'; }
+  });
+}
 function updateBrokerButtons(){
+  _applyBrokerBtn(_hasLocalBroker());  // instantáneo desde estado local
+  // luego confirma con TradeStation (por si el token vive solo en el servidor)
   fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
-    .then(function(d){
-      _brokerConnected=!!(d&&d.connected);
-      ['sb-broker-btn','hdr-broker-btn'].forEach(function(id){
-        var b=document.getElementById(id);if(!b)return;
-        var lbl=b.querySelector('.brk-lbl'),ico=b.querySelector('.brk-ico');
-        if(_brokerConnected){ b.setAttribute('onclick','brokerBtnDisconnect()'); if(lbl)lbl.textContent='Desconectar broker'; if(ico)ico.textContent='⏻'; }
-        else { b.setAttribute('onclick','openCsvImport()'); if(lbl)lbl.textContent='Conectar broker'; if(ico)ico.textContent='🔗'; }
-      });
-    }).catch(function(){});
+    .then(function(d){ if(d&&d.connected)_applyBrokerBtn(true); }).catch(function(){});
 }
 function brokerBtnDisconnect(){
   if(!confirm('¿Desconectar el broker? Podrás reconectar cuando quieras; tus trades ya importados se conservan.'))return;
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
-    .then(function(r){return r.json();})
-    .then(function(){ updateBrokerButtons(); try{refreshTsState();}catch(e){} try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){} })
-    .catch(function(){});
+  // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales del broker.
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
+  try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
+  try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
+  try{localStorage.setItem(userKey('lbc_active_account'),'all');activeAccount='all';}catch(e){}
+  _applyBrokerBtn(false); try{refreshTsState();}catch(e){}
+  try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){}
+  if(curView)go(curView);
 }
 // TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
 function syncTradestation(){
