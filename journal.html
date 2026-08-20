@@ -1165,6 +1165,8 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 .acct-opt.sel{background:rgba(201,168,76,0.12);color:#C9A84C;}
 .acct-opt .acct-chk{color:#C9A84C;font-size:11px;opacity:0;}
 .acct-opt.sel .acct-chk{opacity:1;}
+.acct-btn .acct-badge{background:rgba(201,168,76,0.16);color:#C9A84C;border-radius:6px;padding:2px 7px;font-size:10px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.acct-empty{padding:12px 10px;font-size:10.5px;color:rgba(232,228,217,0.4);line-height:1.5;font-family:'DM Mono',monospace;}
 
 /* ── Dropdown calendar panel ── */
 .dfp-panel{
@@ -2311,27 +2313,30 @@ function trAccountList(){
 }
 function shortAcct(a){var m=acctMap()[a];return (m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' ':'')+'#'+_esc(a);}
 function acctOptHtml(v,lbl){var sel=(activeAccount===v);return '<div class="acct-opt'+(sel?' sel':'')+'" onclick="pickAccount(\''+v+'\')"><span>'+lbl+'</span><span class="acct-chk">✓</span></div>';}
-// Botón "Cuentas" con menú desplegable, junto al selector de fechas. Permite navegar
-// entre cuentas (scopea TODO el journal). Aparece solo si hay cuentas.
+// Botón "Cuentas" con menú desplegable, junto al selector de fechas. SIEMPRE visible;
+// al pulsarlo despliega todas las cuentas para elegir la que quieres analizar
+// (scopea TODO el journal). Trae las cuentas del servidor si aún no están en local.
 function renderTrAccounts(){
   var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
   var host=document.getElementById('acct-picker');if(!host)return;
   var accs=trAccountList();
-  if(accs.length<1){host.innerHTML='';return;}
-  var curLbl=activeAccount==='all'?'Todas las cuentas':shortAcct(activeAccount);
-  var opts='<div class="acct-menu-hd">Filtrar por cuenta</div>'
+  var badge=(activeAccount!=='all')?'<span class="acct-badge">'+shortAcct(activeAccount)+'</span>':'';
+  var opts='<div class="acct-menu-hd">Elige la cuenta a analizar</div>'
     +acctOptHtml('all','Todas las cuentas')
-    +accs.map(function(a){return acctOptHtml(a,shortAcct(a));}).join('');
-  host.innerHTML='<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">'+curLbl+'</span><span class="acct-caret">▼</span></button>'
+    +(accs.length?accs.map(function(a){return acctOptHtml(a,shortAcct(a));}).join('')
+                 :'<div class="acct-empty">Conecta o sincroniza tu broker para ver tus cuentas aquí</div>');
+  host.innerHTML='<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">Cuentas</span>'+badge+'<span class="acct-caret">▼</span></button>'
     +'<div class="acct-menu" id="acct-menu" style="display:none;">'+opts+'</div>';
 }
 function toggleAcctMenu(e){e.stopPropagation();var m=document.getElementById('acct-menu');if(!m)return;var show=(m.style.display==='none');m.style.display=show?'block':'none';if(show){setTimeout(function(){document.addEventListener('click',_closeAcctMenu);},0);}}
 function _closeAcctMenu(){var m=document.getElementById('acct-menu');if(m)m.style.display='none';document.removeEventListener('click',_closeAcctMenu);}
 function pickAccount(v){_closeAcctMenu();setActiveAccount(v);}
 // ── TRADES ──
+var _acctFetched=false;
 function renderTrades(){
   var tl=document.getElementById('tlist');
   renderTrAccounts();
+  if(!_acctFetched){_acctFetched=true;try{fetchAccountsMap();}catch(e){}}  // trae cuentas del servidor 1 vez
   // La LISTA muestra TODOS los trades (incluye 'pending': expiradas/abiertas) con
   // badge de revisión — transparencia total. Los KPIs (dashboard) siguen contando
   // solo 'verified' vía getFilteredT.
@@ -2996,11 +3001,16 @@ function importFromBroker(fills){
 
 // Guarda el mapa de cuentas conectadas (nombre/institución) para etiquetas legibles.
 function fetchAccountsMap(){
+  var m={};try{m=acctMap()||{};}catch(e){m={};}
+  function persist(){try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}if(curView==='trades')renderTrAccounts();}
+  // SnapTrade (acciones/opciones)
   fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts')
     .then(function(r){return r.json();})
-    .then(function(d){if(!d||!d.ok)return;var m={};(d.accounts||[]).forEach(function(a){if(a.number)m[String(a.number)]={name:a.name,institution:a.institution};});
-      try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}
-      if(curView==='trades')renderTrAccounts();}).catch(function(){});
+    .then(function(d){if(d&&d.ok)(d.accounts||[]).forEach(function(a){if(a.number)m[String(a.number)]={name:a.name,institution:a.institution};});persist();}).catch(function(){});
+  // TradeStation directo (incluye futuros)
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/accounts?app_user_id='+encodeURIComponent(currentUserId()))
+    .then(function(r){return r.json();})
+    .then(function(d){var arr=(d&&(d.accounts||d.Accounts))||[];arr.forEach(function(a){var num=a.number||a.AccountID||a.account;if(num)m[String(num)]={name:a.name||('TradeStation '+(a.AccountType||a.type||'')).trim(),institution:'TradeStation'};});persist();}).catch(function(){});
 }
 function syncFills(){
   var st=document.getElementById('broker-status');
