@@ -1400,7 +1400,8 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 
   <!-- DASHBOARD -->
   <div class="view active" id="v-dashboard">
-    <div id="dash-dfp-wrap">
+    <div id="dash-dfp-wrap" style="display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap;">
+      <div class="acct-picker" id="acct-picker-dash"></div>
       <div id="dfp-dash" class="dfp-instance"></div>
     </div>
     <div class="ph"><div class="ph-eyebrow">◆ Tu progreso como trader</div><h1 class="ph-title">Dashboard <strong>Personal</strong></h1></div>
@@ -1463,7 +1464,10 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="view-back" onclick="go('dashboard')"><span class="vb-arrow">←</span> Dashboard</button>
     <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div><div class="ph-eyebrow">◆ Historial de sesiones</div><h1 class="ph-title">Calendario <strong>de Trading</strong></h1></div>
-      <div id="dfp-cal" class="dfp-instance"></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="acct-picker" id="acct-picker-cal"></div>
+        <div id="dfp-cal" class="dfp-instance"></div>
+      </div>
     </div>
     <div class="cal-stats-bar" id="cal-stats"></div>
     <div class="cal-outer">
@@ -1970,6 +1974,21 @@ function calcTrade(t){
   return Object.assign({},t,{mult:mult,points:Math.round(pts*10)/10,pnl:pnl,fees:fees,risk:rsk,rr:rr,result:pnl>0?'win':pnl<0?'loss':'be',chkAll:t.checklist&&chkItems===chkTotal&&chkTotal>0});
 }
 var T=loadTrades();
+// Migración one-shot: reclasifica trades ya guardados con el nuevo criterio del motor.
+// Una operación de broker SIN cierre y no expirada = ABIERTA -> status 'open' (no cuenta
+// en KPIs), aunque antes quedara como 'pending' o incluso 'verified' por aprobación manual.
+(function reconcileOpenStatus(){
+  try{
+    var changed=false;
+    T.forEach(function(t){
+      if(t.__demo)return;
+      var isBroker=(t.source==='snaptrade'||t.source==='tradestation'||t.broker_order_id);
+      var openNow=(t.isOpen===true)||(isBroker && (t.exit==null||t.exit==='') && !t.expired);
+      if(openNow && t.status!=='open'){t.status='open';t.isOpen=true;changed=true;}
+    });
+    if(changed)saveTrades(T);
+  }catch(e){}
+})();
 // DEMO efímero: se ve solo con el botón "Ver ejemplo", nunca se persiste (Regla #1).
 var DEMO_MODE=false;
 function seedDemoEphemeral(){DEMO_MODE=true;T=DEMO.map(function(d){var x=calcTrade(d);x.__demo=true;return x;});go(curView);}
@@ -2000,7 +2019,7 @@ function fc(n){return n>0?'pos':n<0?'neg':'';}
 function pad(n){return n<10?'0'+n:String(n);}
 function hlp(txt){return '<span class="help-i">!<span class="tip">'+txt+'</span></span>';}
 var TIPS={
-  netpnl:'Ganancia o pérdida neta total de todos tus trades registrados.',
+  netpnl:'P&L realizado de tus operaciones CERRADAS. Las posiciones abiertas no cuentan aquí (no tienen resultado hasta que las cierras).',
   winrate:'Porcentaje de trades ganadores sobre el total de trades cerrados.',
   pf:'Profit Factor: ganancia bruta dividida entre pérdida bruta. Mayor a 1.5 es sólido, mayor a 2 es excelente.',
   daywin:'Porcentaje de días cerrados en positivo sobre el total de días operados.',
@@ -2090,6 +2109,7 @@ function renderLast30Trades(){
   }
 }
 function renderDash(){
+  try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Dashboard
   // Arranque en 0: usuario sin trades reales ve el empty-state con CTAs, no ceros.
   if(!DEMO_MODE && !T.length){
     var kr0=document.getElementById('tz-kpi-row');
@@ -2103,7 +2123,7 @@ function renderDash(){
   var dayWin=winDays+lossDays>0?Math.round(winDays/(winDays+lossDays)*100):0;
   var avgWL=s.avgL>0?(s.avgW/s.avgL):s.avgW>0?2:0;
   document.getElementById('tz-kpi-row').innerHTML=
-    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Net P&L'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' trades</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(s.total>=0?'pos':'neg')+'">'+f$(s.total)+'</div></div></div>'
+    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(s.total>=0?'pos':'neg')+'">'+f$(s.total)+'</div></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Trade Win %'+hlp(TIPS.winrate)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.wr+'%</div>'+gaugeSemi(s.wr)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+s.wins+'</span><span style="color:var(--text3)">'+(s.n-s.wins-s.losses)+'</span><span style="color:var(--red)">'+s.losses+'</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Profit Factor'+hlp(TIPS.pf)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.pf.toFixed(2)+'</div>'+ringMini(Math.min(s.pf*33,100),s.pf>=2?'#22c55e':s.pf>=1?'#C9A84C':'#ef4444')+'</div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Day Win %'+hlp(TIPS.daywin)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+dayWin+'%</div>'+gaugeSemi(dayWin)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+winDays+'</span><span style="color:var(--red)">'+lossDays+'</span></div></div>'
@@ -2243,6 +2263,7 @@ function calVal(dt){
   return f$(pnl);
 }
 function renderCal(){
+  try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Calendario
   var FT=getFilteredT(_dfCal);
   document.getElementById('cal-label').textContent=MNAMES[calMo]+' '+calYr;
   var dim=new Date(calYr,calMo+1,0).getDate(),fdow=new Date(calYr,calMo,1).getDay(),off=(fdow===0)?6:fdow-1;
@@ -2313,23 +2334,37 @@ function trAccountList(){
 }
 function shortAcct(a){var m=acctMap()[a];return (m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' ':'')+'#'+_esc(a);}
 function acctOptHtml(v,lbl){var sel=(activeAccount===v);return '<div class="acct-opt'+(sel?' sel':'')+'" onclick="pickAccount(\''+v+'\')"><span>'+lbl+'</span><span class="acct-chk">✓</span></div>';}
-// Botón "Cuentas" con menú desplegable, junto al selector de fechas. SIEMPRE visible;
-// al pulsarlo despliega todas las cuentas para elegir la que quieres analizar
-// (scopea TODO el journal). Trae las cuentas del servidor si aún no están en local.
-function renderTrAccounts(){
-  var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
-  var host=document.getElementById('acct-picker');if(!host)return;
+// Botón "Cuentas" con menú desplegable, junto al selector de fechas de CADA vista
+// (Dashboard, Calendario y Mis Trades). SIEMPRE visible; al pulsarlo despliega todas
+// las cuentas para elegir la que quieres analizar (scopea TODO el journal — cada
+// sección lee su propia data ya filtrada por la cuenta activa).
+function _acctPickerHTML(){
   var accs=trAccountList();
   var badge=(activeAccount!=='all')?'<span class="acct-badge">'+shortAcct(activeAccount)+'</span>':'';
   var opts='<div class="acct-menu-hd">Elige la cuenta a analizar</div>'
     +acctOptHtml('all','Todas las cuentas')
     +(accs.length?accs.map(function(a){return acctOptHtml(a,shortAcct(a));}).join('')
                  :'<div class="acct-empty">Conecta o sincroniza tu broker para ver tus cuentas aquí</div>');
-  host.innerHTML='<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">Cuentas</span>'+badge+'<span class="acct-caret">▼</span></button>'
-    +'<div class="acct-menu" id="acct-menu" style="display:none;">'+opts+'</div>';
+  return '<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">Cuentas</span>'+badge+'<span class="acct-caret">▼</span></button>'
+    +'<div class="acct-menu" style="display:none;">'+opts+'</div>';
 }
-function toggleAcctMenu(e){e.stopPropagation();var m=document.getElementById('acct-menu');if(!m)return;var show=(m.style.display==='none');m.style.display=show?'block':'none';if(show){setTimeout(function(){document.addEventListener('click',_closeAcctMenu);},0);}}
-function _closeAcctMenu(){var m=document.getElementById('acct-menu');if(m)m.style.display='none';document.removeEventListener('click',_closeAcctMenu);}
+function renderTrAccounts(){
+  var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
+  var html=_acctPickerHTML();
+  var hosts=document.querySelectorAll('.acct-picker');
+  for(var i=0;i<hosts.length;i++)hosts[i].innerHTML=html;
+}
+function toggleAcctMenu(e){
+  e.stopPropagation();
+  var btn=e.currentTarget||e.target;
+  var host=(btn.closest?btn.closest('.acct-picker'):btn.parentNode);if(!host)return;
+  var m=host.querySelector('.acct-menu');if(!m)return;
+  var willShow=(m.style.display!=='block');
+  var all=document.querySelectorAll('.acct-menu');for(var i=0;i<all.length;i++)all[i].style.display='none';
+  m.style.display=willShow?'block':'none';
+  if(willShow){setTimeout(function(){document.addEventListener('click',_closeAcctMenu);},0);}
+}
+function _closeAcctMenu(){var all=document.querySelectorAll('.acct-menu');for(var i=0;i<all.length;i++)all[i].style.display='none';document.removeEventListener('click',_closeAcctMenu);}
 function pickAccount(v){_closeAcctMenu();setActiveAccount(v);}
 // ── TRADES ──
 var _acctFetched=false;
@@ -2473,18 +2508,20 @@ function renderTItems(arr){
     if(t.gamma)ctx+='<span class="ctx-tag '+(t.gamma==='exp_up'?'gamma-up':t.gamma==='exp_dn'?'gamma-down':'gamma-contract')+'">'+(t.gamma==='exp_up'?'γ↑':t.gamma==='exp_dn'?'γ↓':t.gamma==='contract'?'γ≈':'γ~')+'</span> ';
     if(t.t4h)ctx+='<span class="ctx-tag '+(t.t4h==='bull'?'bull':'bear')+'">'+(t.t4h==='bull'?'4H ↑':'4H ↓')+'</span> ';
     var chkDots=t.checklist?t.checklist.map(function(c){return '<span class="chk-dot'+(c?'':' miss')+'"></span>';}).join(''):'';
+    // Posición ABIERTA (sin cierre): el motor la marca directo -> "—" NEUTRO (nunca rojo),
+    // pts "abierta", y NO cuenta en KPIs. Sin cola de aprobación.
+    var isOpen=(t.status==='open')||t.isOpen||(t.status==='pending'&&t.exit==null&&!t.expired);
     var badge='';
-    if(t.status==='pending'){
-      var lbl=t.expired?'expiró · revisar':(t.exit==null?'abierta':'revisar');
+    if(isOpen){
+      badge='<span style="font-size:8.5px;font-family:\'DM Mono\',monospace;letter-spacing:0.05em;color:var(--text3);background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:5px;padding:1px 6px;margin-left:6px;">○ abierta</span>';
+    }else if(t.status==='pending'){
+      var lbl=t.expired?'expiró · revisar':'revisar';
       badge='<span style="font-size:8.5px;font-family:\'DM Mono\',monospace;letter-spacing:0.05em;color:var(--purple);background:rgba(177,151,252,0.12);border:0.5px solid rgba(177,151,252,0.3);border-radius:5px;padding:1px 6px;margin-left:6px;">◆ '+lbl+'</span>';
     }
-    // Posición ABIERTA (sin cierre, no expirada): no tiene P&L realizado -> "—" en NEUTRO,
-    // nunca en rojo (una acción no cerrada no es una pérdida). Los pts tampoco se muestran.
-    var isOpen=(t.status==='pending'&&t.exit==null&&!t.expired);
     var pnlTxt=isOpen?'—':f$(t.pnl);
     var pnlCls=isOpen?'neu':(t.pnl>=0?'pos':'neg');
     var ptsTxt=isOpen?'abierta':((t.points>=0?'+':'')+t.points+' pts');
-    return '<div class="titem'+(t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+ptsTxt+'</div><div class="tpnl '+pnlCls+'">'+pnlTxt+'</div></div></div>';
+    return '<div class="titem'+(isOpen||t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top"><span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+ptsTxt+'</div><div class="tpnl '+pnlCls+'">'+pnlTxt+'</div></div></div>';
   }).join('');
 }
 function openTDetail(id){
@@ -2952,6 +2989,7 @@ function fill_buildRT(fills,open){
     entry:Math.round(fill_wavg(inLegs)*100)/100,
     exit: (!open)?Math.round(fill_wavg(outLegs)*100)/100:(expired?0:null),
     expired: !!expired,
+    isOpen: !!(open && !expired),                   // ABIERTA de verdad (sin cierre y sin expirar)
     realizedPnl: closed?(cash*mult):null,          // usado por calcTrade tal cual
     stop:null, target:null, contracts:peak||inLegs.length, mult:mult, fees:0,
     setup:'Importado (broker)', playbookId:null,
@@ -2989,20 +3027,25 @@ function importFromBroker(fills){
   var cand=groupFills(fills).map(calcTrade);
   cand.forEach(function(t){
     t.flags=(t.flags||[]).concat(detectFlags(t));
-    t.status=t.flags.some(function(x){return x.severity==='red';})?'pending':(t.flags.length?'pending':'verified');
+    // El motor distingue solo: ABIERTA (sin cierre) -> 'open' (nunca cuenta en KPIs,
+    // no va a revisión). CERRADA (round-trip o expirada) -> 'verified' automáticamente,
+    // salvo que tenga una anomalía roja real (esa sí va a 'pending' para revisar).
+    if(t.isOpen) t.status='open';
+    else t.status=t.flags.some(function(x){return x.severity==='red';})?'pending':'verified';
   });
   var res=mergeTrades(T,cand);
   T=res.trades; saveTrades(T);
+  var open=cand.filter(function(x){return x.status==='open';}).length;
   var pend=cand.filter(function(x){return x.status==='pending';}).length;
   var ver =cand.filter(function(x){return x.status==='verified';}).length;
-  logImport('snaptrade',{read:(fills||[]).length,trades:cand.length,accepted:res.added,dup:res.dup,pending:pend,verified:ver});
-  return {trades:cand.length,added:res.added,dup:res.dup,pending:pend,verified:ver};
+  logImport('snaptrade',{read:(fills||[]).length,trades:cand.length,accepted:res.added,dup:res.dup,pending:pend,verified:ver,open:open});
+  return {trades:cand.length,added:res.added,dup:res.dup,pending:pend,verified:ver,open:open};
 }
 
 // Guarda el mapa de cuentas conectadas (nombre/institución) para etiquetas legibles.
 function fetchAccountsMap(){
   var m={};try{m=acctMap()||{};}catch(e){m={};}
-  function persist(){try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}if(curView==='trades')renderTrAccounts();}
+  function persist(){try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}try{renderTrAccounts();}catch(e){}}
   // SnapTrade (acciones/opciones)
   fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts')
     .then(function(r){return r.json();})
@@ -4145,7 +4188,9 @@ function dfpPickMo(m){_dfpState.pMo=m;_dfpState.pView='days';dfpRenderPanel();df
 // Base de TODO render de datos: en modo demo muestra los demo; normal muestra SOLO
 // verified (pending queda fuera de KPIs/curva/calendario/reportes) y nunca demo. (crítica #7)
 function baseTrades(){
-  var b=DEMO_MODE ? T : T.filter(function(t){return !t.__demo && t.status!=='pending';});
+  // Solo operaciones CERRADAS cuentan en KPIs/curva/calendario: fuera 'pending' (revisión)
+  // y 'open' (posiciones abiertas, sin P&L realizado).
+  var b=DEMO_MODE ? T : T.filter(function(t){return !t.__demo && t.status!=='pending' && t.status!=='open';});
   // Cuenta ACTIVA (global): si el trader eligió una cuenta, TODO se scopea a ella.
   if(activeAccount && activeAccount!=='all')b=b.filter(function(t){return String(t.account)===activeAccount;});
   return b;
