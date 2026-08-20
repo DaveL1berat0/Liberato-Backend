@@ -324,6 +324,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 /* TOP KPI ROW (gauges) */
 .tz-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px;}
 @media(max-width:640px){.tz-kpi-row{grid-template-columns:1fr 1fr;}}
+.dash-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin:22px 2px 12px;display:flex;align-items:center;gap:10px;}
+.dash-eyebrow::after{content:'';flex:1;height:0.5px;background:var(--border2);}
+.dash-eyebrow:first-child{margin-top:4px;}
 .tz-kpi{background:linear-gradient(180deg,rgba(11,14,21,0.6),rgba(6,8,13,0.4));border:0.5px solid var(--border2);border-radius:var(--r);padding:15px 16px;transition:border-color 0.3s,transform 0.2s;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;}
 .tz-kpi:hover{border-color:rgba(201,168,76,0.25);transform:translateY(-2px);}
 .tz-kpi-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -1500,9 +1503,15 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <div class="ai-coach-card" id="dash-ai"></div>
 
     <!-- TOP KPI GAUGES -->
+    <div class="dash-eyebrow">◆ Performance</div>
     <div class="tz-kpi-row" id="tz-kpi-row"></div>
 
+    <!-- ACTIVIDAD & RIESGO (métricas reales) -->
+    <div class="dash-eyebrow">◆ Actividad & Riesgo</div>
+    <div class="tz-kpi-row" id="dash-activity-row" style="margin-bottom:4px;"></div>
+
     <!-- RADAR + CUMULATIVE -->
+    <div class="dash-eyebrow">◆ Progreso & Comportamiento</div>
     <div class="tz-main">
       <div class="tz-panel">
         <div class="tz-panel-title">Liberato Score</div>
@@ -2213,6 +2222,7 @@ function renderDash(){
     try{renderDashAI();}catch(e){}
     var _dr=document.getElementById('dash-recent');if(_dr)_dr.innerHTML='<div class="empty"><div class="ei">📋</div><p>Registra tu primera operación</p></div>';
     var _ds=document.getElementById('dash-setups');if(_ds)_ds.innerHTML='<div class="empty"><p>Sin datos</p></div>';
+    var _ar0=document.getElementById('dash-activity-row');if(_ar0)_ar0.innerHTML='';
     return;
   }
   var FT=getFilteredT(_dfDash);
@@ -2230,6 +2240,15 @@ function renderDash(){
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Profit Factor'+hlp(TIPS.pf)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.pf.toFixed(2)+'</div>'+ringMini(Math.min(s.pf*33,100),s.pf>=2?'#22c55e':s.pf>=1?'#C9A84C':'#ef4444')+'</div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Day Win %'+hlp(TIPS.daywin)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+dayWin+'%</div>'+gaugeSemi(dayWin)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+winDays+'</span><span style="color:var(--red)">'+lossDays+'</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Avg Win/Loss'+hlp(TIPS.avgwl)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+avgWL.toFixed(2)+'</div><div class="tz-winloss-bar"><div class="tz-wl-track"><div class="tz-wl-pos" style="width:'+(s.avgW+s.avgL>0?(s.avgW/(s.avgW+s.avgL))*100:50)+'%"></div><div class="tz-wl-neg" style="width:'+(s.avgW+s.avgL>0?(s.avgL/(s.avgW+s.avgL))*100:50)+'%"></div></div><div class="tz-wl-labels"><span style="color:var(--green)">$'+s.avgW+'</span><span style="color:var(--red)">-$'+s.avgL+'</span></div></div></div></div>';
+  // ── Actividad & Riesgo (todo real, derivado de FT) ──
+  var longs=FT.filter(function(t){return t.direction==='long';}).length, shorts=FT.length-longs;
+  var durs=FT.map(function(t){try{if(!t.exitTime||!t.time)return null;var a=new Date(t.date+'T'+(String(t.time).length===5?t.time+':00':t.time)),b=new Date(t.exitTime);var m=(b-a)/60000;return (m>=0&&m<1440)?m:null;}catch(e){return null;}}).filter(function(x){return x!=null;});
+  var avgDur=durs.length?Math.round(durs.reduce(function(a,b){return a+b;},0)/durs.length):0;
+  var rrs=FT.map(function(t){var rk=(t.stop!=null&&+t.stop!==0)?Math.abs(t.entry-t.stop):0;return rk>0?t.points/rk:null;}).filter(function(x){return x!=null;});
+  var avgR=rrs.length?Math.round(rrs.reduce(function(a,b){return a+b;},0)/rrs.length*100)/100:null;
+  function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
+  var _ar=document.getElementById('dash-activity-row');
+  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy',f$(s.exp),s.exp>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
   renderRadar(perfScore(s,maxDD));renderLast30Trades();
   renderEquity();renderDailyBars();renderDonuts(s,su);renderDashAI();
   var recent=FT.slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);}).slice(0,5);
@@ -2385,10 +2404,14 @@ function renderCal(){
   var ms=stats(monthTrades),monthByDate={};monthTrades.forEach(function(t){monthByDate[t.date]=(monthByDate[t.date]||0)+t.pnl;});
   var winD=0,lossD=0;Object.values(monthByDate).forEach(function(p){if(p>0)winD++;else if(p<0)lossD++;});
   var dayKeys=Object.keys(monthByDate).sort(),streak=0,maxStreak=0;dayKeys.forEach(function(k){if(monthByDate[k]>0){streak++;if(streak>maxStreak)maxStreak=streak;}else streak=0;});
-  document.getElementById('cal-stats').innerHTML=[{l:'P&L del Mes',v:f$(ms.total),c:ms.total>=0?'var(--green)':'var(--red)'},{l:'Win Rate',v:ms.wr+'%',c:ms.wr>=50?'var(--green)':'var(--red)'},{l:'Días Verdes',v:winD+'/'+(winD+lossD),c:'var(--green)'},{l:'Mejor Racha',v:maxStreak+' días',c:'var(--gold)'},{l:'Trades',v:ms.n,c:'var(--text)'}].map(function(c){return '<div class="cal-stat"><div class="cal-stat-lbl">'+c.l+'</div><div class="cal-stat-val" style="color:'+c.c+'">'+c.v+'</div></div>';}).join('');
+  // Patrón por día de la semana: identifica en qué días operas mejor/peor.
+  var dowPnl=[0,0,0,0,0,0,0],dowN=[0,0,0,0,0,0,0],DOW_ES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  monthTrades.forEach(function(t){var wd=new Date(t.date+'T12:00:00').getDay();dowPnl[wd]+=t.pnl;dowN[wd]++;});
+  var bestDow=-1,worstDow=-1;for(var wi=0;wi<7;wi++){if(dowN[wi]){if(bestDow<0||dowPnl[wi]>dowPnl[bestDow])bestDow=wi;if(worstDow<0||dowPnl[wi]<dowPnl[worstDow])worstDow=wi;}}
+  document.getElementById('cal-stats').innerHTML=[{l:'P&L del Mes',v:f$(ms.total),c:ms.total>=0?'var(--green)':'var(--red)'},{l:'Win Rate',v:ms.wr+'%',c:ms.wr>=50?'var(--green)':'var(--red)'},{l:'Días Verdes',v:winD+'/'+(winD+lossD),c:'var(--green)'},{l:'Mejor Racha',v:maxStreak+' días',c:'var(--gold)'},{l:'Mejor día',v:bestDow>=0?DOW_ES[bestDow]:'—',c:'var(--green)'},{l:'Peor día',v:worstDow>=0&&worstDow!==bestDow?DOW_ES[worstDow]:'—',c:'var(--red)'},{l:'Trades',v:ms.n,c:'var(--text)'}].map(function(c){return '<div class="cal-stat"><div class="cal-stat-lbl">'+c.l+'</div><div class="cal-stat-val" style="color:'+c.c+'">'+c.v+'</div></div>';}).join('');
   var html='';for(var i=0;i<off;i++)html+='<div class="cal-day empty"></div>';
   var weekPnls=[],curWeekPnl=0,curWeekDays=0,cellCount=off;
-  for(var d=1;d<=dim;d++){var ds=calYr+'-'+pad(calMo+1)+'-'+pad(d),dt=byDate[ds]||[],dp=dt.reduce(function(s,t){return s+t.pnl;},0),cls='notr';if(dt.length){cls=dp>600?'great':dp>0?'good':dp>-500?'sloss':'bloss';}var onclick=dt.length?' onclick="openDayDetail(this.dataset.date)" data-date="'+ds+'"':'';html+='<div class="cal-day '+cls+'"'+onclick+'><div class="cd-num">'+d+'</div>'+(dt.length?'<div class="cd-pnl">'+calVal(dt)+'</div><div class="cd-n">'+dt.length+' trade'+(dt.length>1?'s':'')+'</div>':'')+'</div>';if(dt.length){curWeekPnl+=dp;curWeekDays+=dt.length;}cellCount++;if(cellCount%7===0){weekPnls.push({pnl:curWeekPnl,days:curWeekDays});curWeekPnl=0;curWeekDays=0;}}
+  for(var d=1;d<=dim;d++){var ds=calYr+'-'+pad(calMo+1)+'-'+pad(d),dt=byDate[ds]||[],dp=dt.reduce(function(s,t){return s+t.pnl;},0),cls='notr',dW=dt.filter(function(x){return x.result==='win';}).length,dL=dt.filter(function(x){return x.result==='loss';}).length;if(dt.length){cls=dp>600?'great':dp>0?'good':dp>-500?'sloss':'bloss';}var onclick=dt.length?' onclick="openDayDetail(this.dataset.date)" data-date="'+ds+'"':'';html+='<div class="cal-day '+cls+'"'+onclick+'><div class="cd-num">'+d+'</div>'+(dt.length?'<div class="cd-pnl">'+calVal(dt)+'</div><div class="cd-n">'+dt.length+'T'+((dW+dL)?' · '+Math.round(dW/(dW+dL)*100)+'%':'')+'</div>':'')+'</div>';if(dt.length){curWeekPnl+=dp;curWeekDays+=dt.length;}cellCount++;if(cellCount%7===0){weekPnls.push({pnl:curWeekPnl,days:curWeekDays});curWeekPnl=0;curWeekDays=0;}}
   if(cellCount%7!==0)weekPnls.push({pnl:curWeekPnl,days:curWeekDays});
   document.getElementById('cal-grid').innerHTML=html;
   document.getElementById('cal-week-col').innerHTML=weekPnls.map(function(w,i){var c=w.pnl>0?'var(--green)':w.pnl<0?'var(--red)':'var(--text3)';return '<div class="cal-week-card"><div class="cwc-label">Semana '+(i+1)+'</div><div class="cwc-pnl" style="color:'+c+'">'+(w.days?f$(w.pnl):'$0')+'</div><div class="cwc-days">'+w.days+' trade'+(w.days!==1?'s':'')+'</div></div>';}).join('');
