@@ -4297,6 +4297,8 @@ AUTH_SECRET = os.getenv("AUTH_SECRET", "").strip() or ("dev-" + secrets.token_he
 #    los usuarios y el AUTH_SECRET viven en Supabase (sobreviven redeploys). Si no,
 #    fallback al snapshot (efímero en Railway). ──
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+if SUPABASE_URL and not SUPABASE_URL.startswith("http"):
+    SUPABASE_URL = "https://" + SUPABASE_URL   # tolera que pongan la URL sin https://
 SUPABASE_KEY = (os.getenv("SUPABASE_SERVICE_KEY", "") or os.getenv("SUPABASE_KEY", "")).strip()
 def _sb_on(): return bool(SUPABASE_URL and SUPABASE_KEY)
 def _sb_h(extra=None):
