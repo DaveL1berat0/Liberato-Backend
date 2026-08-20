@@ -1533,6 +1533,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="view-back" onclick="go('dashboard')"><span class="vb-arrow">←</span> Dashboard</button>
     <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div><div class="ph-eyebrow">◆ Analítica</div><h1 class="ph-title">Reportes</h1></div>
+      <div class="acct-picker" id="acct-picker-rep"></div>
     </div>
     <div class="frow" id="rep-tabs" style="margin-bottom:14px;">
       <button class="fchip active" data-rt="resumen" onclick="setReportTab('resumen')">Resumen</button>
@@ -1765,50 +1766,40 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   <div class="td-handle"></div>
   <div class="td-head"><span class="td-title">Conectar broker</span><button class="td-close" onclick="closeCsvImport()">✕</button></div>
   <div class="td-body" id="csv-body">
-    <!-- ── OPCIÓN PRINCIPAL: CONECTAR BROKER (automático) ── -->
-    <div class="fsec">
-      <div style="font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">◆ Recomendado · Automático</div>
-      <div style="border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-          <div style="width:42px;height:42px;border-radius:10px;background:rgba(201,168,76,0.12);display:flex;align-items:center;justify-content:center;font-size:20px;">🔗</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--text);">Conecta tu broker</div>
-            <div style="font-size:11px;color:var(--text3);">Tus trades entran solos, sin exportar nada</div>
-          </div>
-        </div>
-        <div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-bottom:14px;">Autoriza una vez y el journal sincroniza tus <strong style="color:var(--gold);">fills reales</strong> — precio, hora y P&L exactos, no aproximados. <strong style="color:var(--gold);">Solo lectura</strong>: nadie puede operar en tu cuenta.</div>
-        <button onclick="connectBroker('snaptrade')" style="width:100%;padding:13px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-          <span style="font-family:'DM Mono',monospace;">Conectar mi broker</span> →
-        </button>
-        <button onclick="syncAllBrokers()" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;border:0.5px solid rgba(46,232,164,0.35);background:rgba(46,232,164,0.06);color:var(--green);font-weight:600;font-size:12.5px;cursor:pointer;">↻ Ya está conectado · Sincronizar mis trades</button>
-        <div id="broker-status" style="margin-top:10px;"></div>
-        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;font-family:'DM Mono',monospace;">Tradovate · IBKR · +20 brokers</div>
-        <!-- TradeStation directo (incluye FUTUROS, que el portal no expone) -->
-        <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border2);">
-          <div style="font-size:10.5px;color:var(--text3);text-align:center;margin-bottom:8px;">¿Operas <strong style="color:var(--text2);">futuros</strong> en TradeStation?</div>
-          <div id="ts-connect-slot">
-            <button onclick="connectBroker('tradestation')" style="width:100%;padding:11px;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">Conectar TradeStation directo →</button>
-          </div>
-        </div>
-      </div>
+    <!-- HERO: conectar broker en 1 paso, diseño propio -->
+    <div style="border:1px solid rgba(201,168,76,0.28);border-radius:18px;padding:22px 20px;background:linear-gradient(180deg,rgba(201,168,76,0.07),rgba(201,168,76,0.015));text-align:center;">
+      <div style="width:54px;height:54px;border-radius:15px;background:rgba(201,168,76,0.14);display:inline-flex;align-items:center;justify-content:center;font-size:25px;margin-bottom:12px;">🔗</div>
+      <div style="font-size:17px;font-weight:700;color:var(--text);">Conecta tu broker</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.55;margin-top:6px;">Autoriza una vez y tus trades entran solos, con precio y P&L exactos.<br><strong style="color:var(--gold);">Solo lectura</strong> — nadie puede operar en tu cuenta.</div>
+      <button onclick="connectBroker('snaptrade')" style="width:100%;margin-top:18px;padding:16px;border-radius:13px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:14.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(201,168,76,0.28);font-family:'DM Mono',monospace;">Conectar mi broker →</button>
+      <div style="font-size:9.5px;color:var(--text3);margin-top:11px;font-family:'DM Mono',monospace;letter-spacing:0.05em;">Tradovate · Topstep · Apex · IBKR · tastytrade · +20</div>
+      <div id="broker-status" style="margin-top:12px;"></div>
     </div>
 
-    <!-- separador -->
-    <div style="display:flex;align-items:center;gap:12px;margin:6px 0 14px;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;">
-      <div style="flex:1;height:1px;background:var(--border2);"></div>o importa manualmente<div style="flex:1;height:1px;background:var(--border2);"></div>
+    <!-- TradeStation directo (futuros) — 2ª opción limpia -->
+    <div id="ts-connect-slot" style="margin-top:12px;">
+      <button onclick="connectBroker('tradestation')" style="width:100%;padding:13px;border-radius:12px;border:0.5px solid rgba(201,168,76,0.35);background:rgba(201,168,76,0.05);color:var(--gold);font-weight:600;font-size:12.5px;cursor:pointer;font-family:'DM Mono',monospace;">⚡ TradeStation directo (futuros) →</button>
     </div>
 
-    <!-- ── OPCIÓN SECUNDARIA: CSV manual ── -->
-    <div class="fsec">
-      <input type="file" id="csv-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFile(event)">
-      <div id="csv-drop" onclick="document.getElementById('csv-input').click()" style="border:1px dashed rgba(255,255,255,0.14);border-radius:12px;padding:20px 18px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.015);transition:all .2s;">
-        <div style="font-size:22px;margin-bottom:6px;opacity:0.7;">📄</div>
-        <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:3px;">Subir CSV del broker</div>
-        <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;">Cualquier broker · la IA detecta las columnas</div>
-      </div>
-      <div id="csv-status"></div>
-      <div id="csv-preview"></div>
+    <!-- ¿ya conectaste? sincronizar (discreto) -->
+    <div style="text-align:center;margin-top:14px;">
+      <a href="javascript:void(0)" onclick="syncAllBrokers()" style="font-size:11.5px;color:var(--green);text-decoration:none;font-family:'DM Mono',monospace;">↻ ¿Ya conectaste? Sincronizar mis trades</a>
     </div>
+
+    <!-- CSV colapsado (respaldo, no principal) -->
+    <details style="margin-top:18px;">
+      <summary style="cursor:pointer;font-size:10.5px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;list-style:none;padding:6px;">¿Tu broker no aparece? · Importar CSV</summary>
+      <div class="fsec" style="margin-top:12px;">
+        <input type="file" id="csv-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFile(event)">
+        <div id="csv-drop" onclick="document.getElementById('csv-input').click()" style="border:1px dashed rgba(255,255,255,0.14);border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.015);">
+          <div style="font-size:20px;margin-bottom:6px;opacity:0.7;">📄</div>
+          <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:3px;">Subir CSV del broker</div>
+          <div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;">La IA detecta las columnas</div>
+        </div>
+        <div id="csv-status"></div>
+        <div id="csv-preview"></div>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -2122,8 +2113,11 @@ function renderDash(){
   var winDays=0,lossDays=0;Object.values(byDate).forEach(function(p){if(p>0)winDays++;else if(p<0)lossDays++;});
   var dayWin=winDays+lossDays>0?Math.round(winDays/(winDays+lossDays)*100):0;
   var avgWL=s.avgL>0?(s.avgW/s.avgL):s.avgW>0?2:0;
+  // Abiertas EXCLUIDAS del P&L Cerrado (en la cuenta activa) — transparencia: si el
+  // número sale en rojo, se ve cuántas posiciones abiertas NO están contando.
+  var openN=T.filter(function(t){return !t.__demo && t.status==='open' && (activeAccount==='all'||String(t.account)===activeAccount);}).length;
   document.getElementById('tz-kpi-row').innerHTML=
-    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(s.total>=0?'pos':'neg')+'">'+f$(s.total)+'</div></div></div>'
+    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas'+(openN?' · '+openN+' abiertas fuera':'')+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(s.total>=0?'pos':'neg')+'">'+f$(s.total)+'</div></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Trade Win %'+hlp(TIPS.winrate)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.wr+'%</div>'+gaugeSemi(s.wr)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+s.wins+'</span><span style="color:var(--text3)">'+(s.n-s.wins-s.losses)+'</span><span style="color:var(--red)">'+s.losses+'</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Profit Factor'+hlp(TIPS.pf)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.pf.toFixed(2)+'</div>'+ringMini(Math.min(s.pf*33,100),s.pf>=2?'#22c55e':s.pf>=1?'#C9A84C':'#ef4444')+'</div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Day Win %'+hlp(TIPS.daywin)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+dayWin+'%</div>'+gaugeSemi(dayWin)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+winDays+'</span><span style="color:var(--red)">'+lossDays+'</span></div></div>'
@@ -2248,7 +2242,17 @@ function renderDashAI(){
   var aftTr=FT.filter(function(t){return parseInt(t.time)>=14;}),morTr=FT.filter(function(t){return parseInt(t.time)<12;});
   var text='';
   if(T.length<3){text='Registra al menos 3 trades para que el Genio empiece a detectar patrones.';}
-  else{if(chkTr.length>0&&noChkTr.length>0)text+='Cuando completas el checklist tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> cuando no. ';if(best)text+='Tu setup más rentable es <strong>'+best.name+'</strong> ('+f$(best.pnl)+'). ';if(morTr.length>0&&aftTr.length>0){var mWR=stats(morTr).wr,aWR=stats(aftTr).wr;if(mWR>aWR+10)text+='Operas mejor en la mañana (<strong>'+mWR+'%</strong>) que en la tarde (<span class="r">'+aWR+'%</span>). ';}if(!text)text='Sigue registrando trades para descubrir patrones.';}
+  else{
+    if(chkTr.length>0&&noChkTr.length>0)text+='Cuando completas el checklist tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> cuando no. ';
+    // "más rentable" SOLO si de verdad es positivo (antes llamaba "más rentable" a una
+    // pérdida) y no el genérico "Importado (broker)".
+    if(best&&best.name!=='Importado (broker)'){
+      if(best.pnl>0)text+='Tu setup más rentable es <strong>'+best.name+'</strong> ('+f$(best.pnl)+'). ';
+      else text+='Aún ningún setup en verde; el mejor por ahora es <strong>'+best.name+'</strong> (<span class="r">'+f$(best.pnl)+'</span>). ';
+    }
+    if(morTr.length>0&&aftTr.length>0){var mWR=stats(morTr).wr,aWR=stats(aftTr).wr;if(mWR>aWR+10)text+='Operas mejor en la mañana (<strong>'+mWR+'%</strong>) que en la tarde (<span class="r">'+aWR+'%</span>). ';}
+    if(!text)text='Sigue registrando trades para descubrir patrones.';
+  }
   document.getElementById('dash-ai').innerHTML='<div class="acc-head"><span class="acc-dot"></span><span class="acc-label">Coach IA</span></div><div class="acc-text">'+text+'</div><button class="acc-btn" onclick="go(\'genius\')">Ver Zona de Genio →</button>';
 }
 
@@ -2452,6 +2456,7 @@ function repVBars(rows,labelFn){
 function repSection(title,inner){return '<div style="background:var(--card,rgba(255,255,255,0.015));border:0.5px solid var(--border2);border-radius:12px;padding:16px 18px;margin-bottom:16px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;">'+title+'</div>'+inner+'</div>';}
 function renderReports(){
   try{dfpRenderBars();}catch(e){}
+  try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Reportes
   var body=document.getElementById('rep-body');if(!body)return;
   var arr=repTrades();
   if(!arr.length){body.innerHTML=emptyStateHTML();return;}
