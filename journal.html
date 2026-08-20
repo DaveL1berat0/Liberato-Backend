@@ -3192,17 +3192,20 @@ function lbcConfirm(opts){
 function lbcConfirmNo(){document.getElementById('lbc-cfm').classList.remove('open');_lbcCfmCb=null;}
 function lbcConfirmYes(){var cb=_lbcCfmCb;lbcConfirmNo();if(cb){try{cb();}catch(e){}}}
 function brokerBtnDisconnect(){
+  var nAll=T.filter(function(t){return !t.__demo;}).length;
   lbcConfirm({icon:'⏻',title:'Desconectar broker',
-    msg:'Se cerrará la conexión con tu broker. Podrás reconectar cuando quieras y tus trades ya importados se conservan.',
-    okText:'Desconectar',cancelText:'Cancelar',danger:true,
+    msg:'Se cerrará la conexión y TODO vuelve a cero: se borran las '+nAll+' operaciones del journal. No se puede deshacer.',
+    okText:'Desconectar y resetear',cancelText:'Cancelar',danger:true,
     onYes:function(){
-      // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales del broker.
+      // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales.
       fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
       try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
       try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
       try{localStorage.setItem(userKey('lbc_active_account'),'all');activeAccount='all';}catch(e){}
+      // TODO a cero: borra todas las operaciones del journal.
+      T=[]; saveTrades(T);
       _applyBrokerBtn(false); try{refreshTsState();}catch(e){}
-      try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){}
+      try{notif('Broker desconectado','Journal reseteado a cero','⏻');}catch(e){}
       if(curView)go(curView);
     }});
 }
