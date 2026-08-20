@@ -1973,8 +1973,9 @@ var T=loadTrades();
     var changed=false;
     T.forEach(function(t){
       if(t.__demo)return;
-      var isBroker=(t.source==='snaptrade'||t.source==='tradestation'||t.broker_order_id);
-      var openNow=(t.isOpen===true)||(isBroker && (t.exit==null||t.exit==='') && !t.expired);
+      // SIN cierre real y no expirada = ABIERTA (da igual el broker). Saca del P&L
+      // Cerrado las posiciones abiertas que quedaron como 'verified' o 'pending'.
+      var openNow=(t.isOpen===true)||((t.exit==null||t.exit==='') && !t.expired);
       if(openNow && t.status!=='open'){t.status='open';t.isOpen=true;changed=true;}
     });
     if(changed)saveTrades(T);
@@ -2454,6 +2455,18 @@ function repVBars(rows,labelFn){
   return '<div style="overflow-x:auto;"><svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;min-width:'+Math.min(W,520)+'px;">'+svg+'</svg></div>';
 }
 function repSection(title,inner){return '<div style="background:var(--card,rgba(255,255,255,0.015));border:0.5px solid var(--border2);border-radius:12px;padding:16px 18px;margin-bottom:16px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;">'+title+'</div>'+inner+'</div>';}
+// Reclasifica a 'open' toda operación VERIFICADA sin cierre real (no expirada) —
+// saca del P&L Cerrado las posiciones abiertas que se colaron. Fix del bug del -$X.
+function fixOpenStatus(){
+  var n=0;
+  T.forEach(function(t){
+    if(t.__demo)return;
+    if(t.status==='verified' && (t.exit==null||t.exit==='') && !t.expired){t.status='open';t.isOpen=true;n++;}
+  });
+  if(n)saveTrades(T);
+  try{notif('Corregido','+'+n+' posiciones abiertas salieron del P&L Cerrado','✓');}catch(e){}
+  go(curView);
+}
 function renderReports(){
   try{dfpRenderBars();}catch(e){}
   try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Reportes
@@ -2498,7 +2511,26 @@ function renderReports(){
     var dup=log.reduce(function(s,x){return s+(x.dup||0);},0);
     function q(l,v,sub){return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border2);"><span style="font-size:12px;color:var(--text2);">'+l+'</span><span style="font-size:13px;font-family:\'DM Mono\',monospace;color:var(--text);">'+v+(sub?'<span style="color:var(--text3);font-size:10px;"> '+sub+'</span>':'')+'</span></div>';}
     function pctl(a,b){return b?Math.round(a/b*100)+'%':'—';}
-    body.innerHTML=repSection('Calidad de tus datos',
+    // ── DIAGNÓSTICO P&L por estado (caza abiertas que cuentan como cerradas) ──
+    var scope=T.filter(function(t){return !t.__demo && (activeAccount==='all'||String(t.account)===activeAccount);});
+    function sumP(a){return a.reduce(function(s,t){return s+(+t.pnl||0);},0);}
+    var _ver=scope.filter(function(t){return t.status==='verified';});
+    var _opn=scope.filter(function(t){return t.status==='open';});
+    var _pnd=scope.filter(function(t){return t.status==='pending';});
+    var _verNoExit=_ver.filter(function(t){return (t.exit==null||t.exit==='')&&!t.expired;}); // BUG: verificada sin cierre
+    var _leak=sumP(_verNoExit);
+    function dg(l,v,c,sub){return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border2);"><span style="font-size:12px;color:var(--text2);">'+l+(sub?'<span style="color:var(--text3);font-size:10px;"> '+sub+'</span>':'')+'</span><span style="font-size:13px;font-family:\'DM Mono\',monospace;" class="'+(c||'')+'">'+v+'</span></div>';}
+    var diag=repSection('◆ Diagnóstico del P&L Cerrado'+(activeAccount!=='all'?' · '+shortAcct(activeAccount):' · Todas'),
+      dg('P&L Cerrado (cuenta en KPIs)',f$(sumP(_ver)),fc(sumP(_ver)),'('+_ver.length+' verificadas)')
+      +dg('Posiciones ABIERTAS (excluidas)',f$(sumP(_opn)),'neu','('+_opn.length+')')
+      +dg('En revisión (excluidas)',f$(sumP(_pnd)),'neu','('+_pnd.length+')')
+      +(_verNoExit.length
+        ? '<div style="margin-top:12px;background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.35);border-radius:10px;padding:13px;">'
+          +'<div style="font-size:12px;color:#ef4444;font-weight:700;margin-bottom:6px;">⚠️ Bug detectado: '+_verNoExit.length+' posiciones ABIERTAS cuentan como cerradas</div>'
+          +'<div style="font-size:11.5px;color:var(--text2);line-height:1.6;">Suman <strong class="'+fc(_leak)+'">'+f$(_leak)+'</strong> en tu P&L Cerrado sin tener cierre real (son tu drawdown/posiciones abiertas). Reclasifícalas y saldrán del número.</div>'
+          +'<button onclick="fixOpenStatus()" style="width:100%;margin-top:11px;padding:11px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">Reclasificar '+_verNoExit.length+' abiertas ahora →</button></div>'
+        : '<div style="margin-top:10px;font-size:11px;color:var(--green);">✓ Ninguna posición abierta está contando como cerrada. El P&L Cerrado es realizado puro.</div>'));
+    body.innerHTML=diag+repSection('Calidad de tus datos',
       q('Trades verificados',n,'')+q('% con stop registrado',pctl(withStop,n),'('+withStop+')')
       +q('% con contexto (VWAP/gamma/4H)',pctl(withCtx,n),'('+withCtx+')')+q('% enlazados a un playbook',pctl(withPb,n),'('+withPb+')')
       +q('En revisión (sin aprobar)',pend,'')+q('Opciones expiradas (inferidas)',exp,'')
