@@ -431,6 +431,26 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .pb-card-actions{display:flex;gap:6px;flex-shrink:0;}
 .pb-act-btn{width:26px;height:26px;border-radius:6px;border:0.5px solid var(--border2);background:rgba(0,0,0,0.2);color:var(--text2);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
 .pb-act-btn:hover{border-color:var(--gold);color:var(--gold);}
+.pb-edit-btn{width:auto;padding:0 12px;height:28px;gap:5px;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.08);color:var(--gold);font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:0.04em;font-weight:600;white-space:nowrap;}
+.pb-edit-btn:hover{background:rgba(201,168,76,0.16);}
+
+/* ── Confirm modal (diseño Liberato) ── */
+.lbc-cfm{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:20px;}
+.lbc-cfm.open{display:flex;}
+.lbc-cfm-bg{position:absolute;inset:0;background:rgba(0,0,0,0.62);backdrop-filter:blur(3px);}
+.lbc-cfm-card{position:relative;width:100%;max-width:380px;background:#12110F;border:0.5px solid rgba(201,168,76,0.25);border-radius:18px;padding:26px 24px 20px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.6);animation:lbcCfmIn .22s cubic-bezier(.34,1.4,.64,1);}
+@keyframes lbcCfmIn{from{opacity:0;transform:translateY(14px) scale(0.97);}to{opacity:1;transform:none;}}
+.lbc-cfm-ic{font-size:32px;margin-bottom:12px;line-height:1;}
+.lbc-cfm-title{font-family:var(--serif,'Playfair Display',serif);font-size:19px;color:#E8E4D9;margin-bottom:8px;font-weight:600;}
+.lbc-cfm-msg{font-size:12.5px;color:rgba(232,228,217,0.6);line-height:1.6;margin-bottom:22px;}
+.lbc-cfm-actions{display:flex;gap:10px;}
+.lbc-cfm-btn{flex:1;padding:12px;border-radius:11px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.03em;transition:all .18s;}
+.lbc-cfm-btn.cancel{background:rgba(255,255,255,0.04);border:0.5px solid var(--border2,rgba(255,255,255,0.12));color:rgba(232,228,217,0.7);}
+.lbc-cfm-btn.cancel:hover{background:rgba(255,255,255,0.08);}
+.lbc-cfm-btn.ok{background:var(--gold,#C9A84C);border:0;color:#0a0a0a;}
+.lbc-cfm-btn.ok:hover{filter:brightness(1.08);}
+.lbc-cfm-btn.ok.danger{background:rgba(239,68,68,0.12);border:0.5px solid rgba(239,68,68,0.4);color:#ef4444;}
+.lbc-cfm-btn.ok.danger:hover{background:rgba(239,68,68,0.2);}
 .pb-confs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
 .pb-conf{font-family:'DM Mono',monospace;font-size:8.5px;padding:3px 8px;border-radius:5px;background:rgba(201,168,76,0.08);color:var(--text2);letter-spacing:0.02em;}
 .pb-toggle{width:36px;height:20px;border-radius:999px;background:rgba(255,255,255,0.1);position:relative;cursor:pointer;transition:background 0.3s;flex-shrink:0;}
@@ -1695,6 +1715,20 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 <!-- TRADE DETAIL MODAL -->
 <div class="tdmodal" id="tdmodal"><div class="tdm-bg" onclick="closeTDM()"></div><div class="tdm-card"><div class="tdm-head"><span class="tdm-title" id="tdm-title">Trade</span><button class="tdm-close" onclick="closeTDM()">✕</button></div><div id="tdm-body"></div></div></div>
 
+<!-- CONFIRM MODAL (diseño Liberato, reemplaza al confirm() nativo) -->
+<div class="lbc-cfm" id="lbc-cfm">
+  <div class="lbc-cfm-bg" onclick="lbcConfirmNo()"></div>
+  <div class="lbc-cfm-card">
+    <div class="lbc-cfm-ic" id="lbc-cfm-ic">⏻</div>
+    <div class="lbc-cfm-title" id="lbc-cfm-title">Confirmar</div>
+    <div class="lbc-cfm-msg" id="lbc-cfm-msg"></div>
+    <div class="lbc-cfm-actions">
+      <button class="lbc-cfm-btn cancel" id="lbc-cfm-cancel" onclick="lbcConfirmNo()">Cancelar</button>
+      <button class="lbc-cfm-btn ok" id="lbc-cfm-ok" onclick="lbcConfirmYes()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <!-- CHECKLIST EDITOR MODAL -->
 <div class="doverlay" id="chk-editor-overlay" onclick="closeChkEditor()"></div>
 <div class="tdrawer" id="chk-editor">
@@ -2267,7 +2301,14 @@ function setTrDatePreset(preset){
   document.querySelectorAll('[data-dp]').forEach(function(b){b.classList.toggle('active',b.dataset.dp===preset);});
   renderTrades();
 }
-function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});try{Object.keys(acctMap()).forEach(function(k){if(k)s[String(k)]=1;});}catch(e){}return Object.keys(s).sort();}
+function trAccountList(){
+  var s={};
+  T.forEach(function(t){if(t.account)s[String(t.account)]=1;});
+  try{Object.keys(acctMap()).forEach(function(k){if(k)s[String(k)]=1;});}catch(e){}
+  // fallback: cuentas presentes en los fills crudos del broker (por si aún no hay trades/acctMap)
+  try{var bf=JSON.parse(localStorage.getItem(userKey('lbc_broker_fills'))||'null');if(bf&&bf.fills)bf.fills.forEach(function(f){if(f&&f.account)s[String(f.account)]=1;});}catch(e){}
+  return Object.keys(s).sort();
+}
 function shortAcct(a){var m=acctMap()[a];return (m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' ':'')+'#'+_esc(a);}
 function acctOptHtml(v,lbl){var sel=(activeAccount===v);return '<div class="acct-opt'+(sel?' sel':'')+'" onclick="pickAccount(\''+v+'\')"><span>'+lbl+'</span><span class="acct-chk">✓</span></div>';}
 // Botón "Cuentas" con menú desplegable, junto al selector de fechas. Permite navegar
@@ -3002,13 +3043,17 @@ function refreshTsState(){
     }).catch(function(){});
 }
 function disconnectTradestation(){
-  if(!confirm('¿Desconectar TradeStation? Tendrás que volver a autorizar para sincronizar.'))return;
-  var st=document.getElementById('broker-status');
-  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Desconectando…</div>';
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
-    .then(function(r){return r.json();})
-    .then(function(){ refreshTsState(); if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);">TradeStation desconectado. Tus trades ya importados se conservan.</div>'; })
-    .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo desconectar.</div>';});
+  lbcConfirm({icon:'⏻',title:'Desconectar TradeStation',
+    msg:'Tendrás que volver a autorizar para sincronizar. Tus trades ya importados se conservan.',
+    okText:'Desconectar',cancelText:'Cancelar',danger:true,
+    onYes:function(){
+      var st=document.getElementById('broker-status');
+      if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Desconectando…</div>';
+      fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
+        .then(function(r){return r.json();})
+        .then(function(){ refreshTsState();try{updateBrokerButtons();}catch(e){} if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);">TradeStation desconectado. Tus trades ya importados se conservan.</div>'; })
+        .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo desconectar.</div>';});
+    }});
 }
 // Actualiza los botones "Conectar broker" (sidebar + header): si ya estás conectado,
 // pasan a decir "Desconectar broker".
@@ -3040,16 +3085,34 @@ function updateBrokerButtons(){
     .then(function(r){return r.json();})
     .then(function(d){ if(d&&d.connected)_applyBrokerBtn(true); }).catch(function(){});
 }
+// ── Confirm modal reutilizable (diseño Liberato, en vez del confirm() del navegador) ──
+var _lbcCfmCb=null;
+function lbcConfirm(opts){
+  opts=opts||{};
+  document.getElementById('lbc-cfm-ic').textContent=opts.icon||'⚠️';
+  document.getElementById('lbc-cfm-title').textContent=opts.title||'Confirmar';
+  document.getElementById('lbc-cfm-msg').textContent=opts.msg||'';
+  var okb=document.getElementById('lbc-cfm-ok');okb.textContent=opts.okText||'Confirmar';okb.className='lbc-cfm-btn ok'+(opts.danger?' danger':'');
+  document.getElementById('lbc-cfm-cancel').textContent=opts.cancelText||'Cancelar';
+  _lbcCfmCb=opts.onYes||null;
+  document.getElementById('lbc-cfm').classList.add('open');
+}
+function lbcConfirmNo(){document.getElementById('lbc-cfm').classList.remove('open');_lbcCfmCb=null;}
+function lbcConfirmYes(){var cb=_lbcCfmCb;lbcConfirmNo();if(cb){try{cb();}catch(e){}}}
 function brokerBtnDisconnect(){
-  if(!confirm('¿Desconectar el broker? Podrás reconectar cuando quieras; tus trades ya importados se conservan.'))return;
-  // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales del broker.
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
-  try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
-  try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
-  try{localStorage.setItem(userKey('lbc_active_account'),'all');activeAccount='all';}catch(e){}
-  _applyBrokerBtn(false); try{refreshTsState();}catch(e){}
-  try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){}
-  if(curView)go(curView);
+  lbcConfirm({icon:'⏻',title:'Desconectar broker',
+    msg:'Se cerrará la conexión con tu broker. Podrás reconectar cuando quieras y tus trades ya importados se conservan.',
+    okText:'Desconectar',cancelText:'Cancelar',danger:true,
+    onYes:function(){
+      // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales del broker.
+      fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
+      try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
+      try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
+      try{localStorage.setItem(userKey('lbc_active_account'),'all');activeAccount='all';}catch(e){}
+      _applyBrokerBtn(false); try{refreshTsState();}catch(e){}
+      try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){}
+      if(curView)go(curView);
+    }});
 }
 // TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
 function syncTradestation(){
@@ -3352,12 +3415,13 @@ function renderPlaybooks(){
         var allInds=(p.indicators||[]).concat(p.customIndicators||[]);
         var allCtxs=(p.contexts||[]).concat(p.customContexts||[]);
         var allConfs=(p.confirmations||[]).concat(p.customConfirmations||[]);
-        return '<div class="pb-card'+(p.active?'':' inactive')+'" style="border-left-color:'+p.color+'">'
+        // Toda la tarjeta es clicable para EDITAR; el toggle y el ✕ frenan la propagación.
+        return '<div class="pb-card'+(p.active?'':' inactive')+'" style="border-left-color:'+p.color+';cursor:pointer;" onclick="openPbEditor(\''+p.id+'\')" title="Toca para editar este playbook">'
           +'<div class="pb-card-top"><div class="pb-card-name"><span class="pb-card-emoji">'+p.emoji+'</span>'+p.name+'</div>'
           +'<div class="pb-card-actions">'
-          +'<div class="pb-toggle'+(p.active?' on':'')+'" onclick="togglePb(\''+p.id+'\')"><div class="pb-toggle-knob"></div></div>'
-          +'<button class="pb-act-btn" onclick="openPbEditor(\''+p.id+'\')">✎</button>'
-          +(p.custom?'<button class="pb-act-btn" onclick="deletePb(\''+p.id+'\')">✕</button>':'')
+          +'<div class="pb-toggle'+(p.active?' on':'')+'" onclick="event.stopPropagation();togglePb(\''+p.id+'\')"><div class="pb-toggle-knob"></div></div>'
+          +'<button class="pb-act-btn pb-edit-btn" onclick="event.stopPropagation();openPbEditor(\''+p.id+'\')" title="Editar">✎ Editar</button>'
+          +(p.custom?'<button class="pb-act-btn" onclick="event.stopPropagation();deletePb(\''+p.id+'\')" title="Eliminar">✕</button>':'')
           +'</div></div>'
           +(p.desc?'<div style="font-size:11px;color:var(--text3);line-height:1.45;margin:2px 0 8px;">'+_esc(p.desc)+'</div>':'')
           +'<div class="pb-confs">'
