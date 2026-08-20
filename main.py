@@ -4299,6 +4299,11 @@ AUTH_SECRET = os.getenv("AUTH_SECRET", "").strip() or ("dev-" + secrets.token_he
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
 if SUPABASE_URL and not SUPABASE_URL.startswith("http"):
     SUPABASE_URL = "https://" + SUPABASE_URL   # tolera que pongan la URL sin https://
+if SUPABASE_URL:
+    # tolera que peguen la URL con ruta de más (p.ej. .../rest/v1): dejamos solo el origen
+    _m = re.match(r"^(https?://[^/]+)", SUPABASE_URL)
+    if _m:
+        SUPABASE_URL = _m.group(1)
 SUPABASE_KEY = (os.getenv("SUPABASE_SERVICE_KEY", "") or os.getenv("SUPABASE_KEY", "")).strip()
 def _sb_on(): return bool(SUPABASE_URL and SUPABASE_KEY)
 def _sb_h(extra=None):
