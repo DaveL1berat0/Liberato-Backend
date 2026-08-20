@@ -15,12 +15,12 @@ import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os, time, asyncio, json
+import os, time, asyncio, json, hashlib, hmac, base64, secrets
 from urllib.parse import quote   # usado a nivel módulo (config del instrumento) y en varias funciones
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, HTTPException, Request, Response, Header
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -391,6 +391,7 @@ def save_cache():
             # Credenciales SnapTrade por usuario (user_secret intransferible).
             "snaptrade_users": _snaptrade_users,
             "ts_tokens": _ts_tokens,   # tokens OAuth de TradeStation (per-usuario)
+            "users": _users,           # cuentas de estudiantes (auth: hash+salt+plan)
         }
         with open(_PERSIST, "w") as f:
             json.dump(snap, f)
@@ -426,6 +427,10 @@ def load_cache():
         if isinstance(_tst, dict):
             _ts_tokens.update(_tst)
             print(f"[persist] ts_tokens restaurados: {len(_ts_tokens)}")
+        _usr = snap.get("users")
+        if isinstance(_usr, dict):
+            _users.update(_usr)
+            print(f"[persist] usuarios restaurados: {len(_users)}")
         if snap.get("gex"):
             # Solo restaurar el GEX del instrumento que operamos AHORA.
             # El Volume de Railway retiene datos entre redeploys, así que tras la
@@ -4275,6 +4280,131 @@ async def tradestation_exchange(request: Request):
     except Exception as e:
         raise HTTPException(502, f"No se pudo canjear el código: {str(e)[:160]}")
     return {"ok": True}
+
+
+# ══════════════════════════════════════════════════════════════════════════
+#  AUTH del backend (cuentas de estudiantes) — pbkdf2 + JWT HS256, stdlib.
+#  Reemplaza el login 100% cliente (localStorage + base64 + admin hardcodeado).
+#  Durabilidad: hoy _users va en el snapshot (persist.json). En Railway el disco
+#  es efímero -> para producción mover a un store durable (Upstash/Supabase).
+#  POR AHORA requiere AUTH_SECRET en Railway para que las sesiones sobrevivan al
+#  reinicio (sin él, se usa una clave dev aleatoria por arranque).
+# ══════════════════════════════════════════════════════════════════════════
+_users = {}  # {email_lower: {id, name, pass_hash, salt, plan, created}}
+AUTH_SECRET = os.getenv("AUTH_SECRET", "").strip() or ("dev-" + secrets.token_hex(32))
+
+def _b64u(b): return base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+def _b64u_dec(s): return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
+def _hash_pw(pw, salt): return _b64u(hashlib.pbkdf2_hmac("sha256", (pw or "").encode(), salt, 200_000))
+
+def _make_jwt(payload, days=30):
+    hdr = {"alg": "HS256", "typ": "JWT"}
+    p = dict(payload)
+    now = int(datetime.now(timezone.utc).timestamp())
+    p["iat"] = now; p["exp"] = now + days * 86400
+    seg = _b64u(json.dumps(hdr, separators=(",", ":")).encode()) + "." + _b64u(json.dumps(p, separators=(",", ":")).encode())
+    sig = _b64u(hmac.new(AUTH_SECRET.encode(), seg.encode(), hashlib.sha256).digest())
+    return seg + "." + sig
+
+def _verify_jwt(token):
+    try:
+        parts = (token or "").split(".")
+        if len(parts) != 3:
+            return None
+        seg = parts[0] + "." + parts[1]
+        exp_sig = _b64u(hmac.new(AUTH_SECRET.encode(), seg.encode(), hashlib.sha256).digest())
+        if not hmac.compare_digest(exp_sig, parts[2]):
+            return None
+        payload = json.loads(_b64u_dec(parts[1]))
+        if int(payload.get("exp", 0)) < int(datetime.now(timezone.utc).timestamp()):
+            return None
+        return payload
+    except Exception:
+        return None
+
+def _pub_user(email):
+    u = _users.get(email, {})
+    return {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}
+
+@app.post("/api/auth/register")
+async def auth_register(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    name = (data.get("name") or "").strip()[:80]
+    pw = data.get("password") or ""
+    if not email or "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(400, "Email inválido")
+    if len(pw) < 8:
+        raise HTTPException(400, "La contraseña debe tener al menos 8 caracteres")
+    if email in _users:
+        raise HTTPException(409, "Ya existe una cuenta con ese email")
+    salt = secrets.token_bytes(16)
+    uid = "u_" + secrets.token_hex(9)
+    _users[email] = {"id": uid, "name": name or email.split("@")[0],
+                     "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
+                     "plan": "free", "created": int(time.time())}
+    try:
+        save_cache()
+    except Exception:
+        pass
+    token = _make_jwt({"sub": uid, "email": email, "plan": "free", "name": _users[email]["name"]})
+    return {"ok": True, "token": token, "user": _pub_user(email)}
+
+@app.post("/api/auth/login")
+async def auth_login(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    pw = data.get("password") or ""
+    u = _users.get(email)
+    if not u:
+        raise HTTPException(401, "Email o contraseña incorrectos")
+    try:
+        salt = base64.b64decode(u["salt"])
+    except Exception:
+        raise HTTPException(500, "cuenta corrupta")
+    if not hmac.compare_digest(_hash_pw(pw, salt), u.get("pass_hash", "")):
+        raise HTTPException(401, "Email o contraseña incorrectos")
+    token = _make_jwt({"sub": u["id"], "email": email, "plan": u.get("plan", "free"), "name": u.get("name")})
+    return {"ok": True, "token": token, "user": _pub_user(email)}
+
+@app.get("/api/auth/me")
+async def auth_me(authorization: str = Header("")):
+    token = (authorization or "").replace("Bearer ", "").strip()
+    p = _verify_jwt(token)
+    if not p:
+        raise HTTPException(401, "Sesión inválida o expirada")
+    email = (p.get("email") or "").lower()
+    if email in _users:
+        return {"ok": True, "user": _pub_user(email)}
+    # token válido pero usuario no en memoria (snapshot reseteado): responde del payload
+    return {"ok": True, "user": {"id": p.get("sub"), "email": email,
+                                 "name": p.get("name"), "plan": p.get("plan", "free")}}
+
+@app.post("/api/auth/set-plan")
+async def auth_set_plan(request: Request, key: str = ""):
+    """Marca el plan de un usuario (admin, o desde un webhook de pago Whop/Stripe)."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    plan = (data.get("plan") or "free").strip()
+    if email not in _users:
+        raise HTTPException(404, "usuario no encontrado")
+    _users[email]["plan"] = plan
+    try:
+        save_cache()
+    except Exception:
+        pass
+    return {"ok": True, "user": _pub_user(email)}
 
 
 async def _ts_token_request(data):
