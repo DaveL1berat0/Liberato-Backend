@@ -2998,10 +2998,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           else if(higherIsBearish)classification=beat?'Bearish':'Bullish';
           else classification=beat?'Bullish':'Bearish';
         }
-        // Impacto NQ cualitativo desde la clasificación
+        // Impacto NQ cualitativo desde la clasificación (dirección para el NQ)
         if(classification==='Bullish')nqImpact='Alcista';
         else if(classification==='Bearish')nqImpact='Bajista';
         else if(classification==='Neutral')nqImpact='Neutral';
+        var nqQual=nqImpact;  // preservar el cualitativo por si no hay pts exactos del backend
         // Detectar eventos SIN datos numéricos (discursos del FOMC, etc.):
         // si no hay previo, forecast ni actual, mostrar "No aplica" en vez de
         // dejar al usuario esperando un dato que nunca llegará.
@@ -3017,7 +3018,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           prev:hasNoNumericData?naLabel:(prev||'—'),
           exp:hasNoNumericData?naLabel:(forecast||'—'),
           result:actual||null,
-          nqImpact:(ev.nq_reaction_pts!=null)?((ev.nq_reaction_pts>=0?'+':'')+ev.nq_reaction_pts+' pts'):(actual&&ev.nq_reaction_pts===null?'midiendo\u2026':null),
+          nqImpact:(ev.nq_reaction_pts!=null)?((ev.nq_reaction_pts>=0?'+':'')+ev.nq_reaction_pts+' pts'):(nqQual||(actual?'midiendo\u2026':null)),
           noNumericData:hasNoNumericData,
           diff:diff,
           classification:classification,
