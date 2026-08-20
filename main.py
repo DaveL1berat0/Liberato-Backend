@@ -2723,6 +2723,20 @@ async def refresh_institutional():
     if leaders:
         ctx.append(f"- Líderes: {' | '.join(leaders[:4])}")
 
+    # ── MOVERS DE ULTRA IMPACTO (noticias market-moving en vivo, score >=7/10) ──
+    # Para que el briefing avise de un titular de última hora que mueve el mercado
+    # AHORA (Fed, geopolítica, shock macro) — no solo lo programado.
+    movers = cache["movers"]["data"] or []
+    if movers:
+        top = sorted(movers, key=lambda m: (m.get("impact_score", 0), m.get("ts", 0)), reverse=True)[:3]
+        mv = []
+        for m in top:
+            hl = (m.get("headline") or "").strip()[:120]
+            if hl:
+                mv.append(f"[{m.get('impact_score','?')}/10 {m.get('sentiment','')}] {hl}")
+        if mv:
+            ctx.append("- Movers ultra-impacto (en vivo): " + " || ".join(mv))
+
     # ── CICLO MACRO: releases recientes clave (del calendario, actual vs esperado) ──
     MACRO_KEYS = ["gdp", "cpi", "inflation", "ppi", "nonfarm", "payroll",
                   "unemployment", "pce", "retail sales", "interest rate",
@@ -2814,7 +2828,8 @@ async def refresh_institutional():
                "**Macro:** <1 oración: ciclo macro con los datos reales — GDP, inflación (CPI/PPI), empleo (NFP/desempleo), "
                "bonos y rendimientos (2Y/10Y/30Y), tasa de interés. Menciona COT SOLO si está en los datos>\n"
                "**Hoy:** <1 oración: catalizadores de HOY de alto impacto (con su hora si la hay, ej. FOMC 14:00 ET) + "
-               "geopolítica relevante si aparece en los datos>\n"
+               "geopolítica relevante. Si en los datos hay 'Movers ultra-impacto (en vivo)', menciona el más fuerte "
+               "como titular de última hora que mueve el mercado ahora>\n"
                "**Earnings:** <1 oración: earnings que impacten directamente el Nasdaq hoy; si no hay, di 'sin earnings "
                "relevantes para el NQ hoy'>\n"
                "**Técnico:** <1 oración: niveles GEX (Call/Put Wall, Flip, Max Pain) + Market Regime (gamma +/−) + "
@@ -5055,12 +5070,12 @@ async def startup():
     # Institutional: refrescos frecuentes para tener SIEMPRE lo más reciente y captar
     # los GEX de RTH en cuanto GexBot los publica (Dave: pre-market, apertura, +30min
     # como mínimo). Groq/qwen es barato → refresco cada 15 min de 8:00 a 12:00 + tarde.
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=8,  minute="0,30", day_of_week="mon-fri"))  # pre-market temprano
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=9,  minute="0,15,30,45", day_of_week="mon-fri"))  # antes/en apertura
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=10, minute="0,30", day_of_week="mon-fri"))  # +30/+60 min tras apertura
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=11, minute=0,  day_of_week="mon-fri"))
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=13, minute=0,  day_of_week="mon-fri"))
-    scheduler.add_job(refresh_institutional, CronTrigger(hour=16, minute=0,  day_of_week="mon-fri"))
+    # CADA 5 MIN en pre-market + RTH (7:00-16:00 ET): el briefing habla de gamma/flip,
+    # niveles GEX y movers en vivo — datos que envejecen en minutos, no en horas. A ~120
+    # llamadas/día cabe de sobra en el tope Groq (950/día). Fuera de RTH: 1/hora.
+    scheduler.add_job(refresh_institutional, CronTrigger(hour="7-16", minute="*/5", day_of_week="mon-fri"))
+    scheduler.add_job(refresh_institutional, CronTrigger(hour="17-23,0-6", minute=0, day_of_week="mon-fri"))  # after-hours/overnight: contexto macro 1/hora
+    scheduler.add_job(refresh_institutional, CronTrigger(hour="*/3"))  # fines de semana: se mantiene vivo
 
     scheduler.start()
 
