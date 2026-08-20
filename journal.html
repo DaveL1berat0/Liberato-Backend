@@ -1131,6 +1131,21 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 }
 .dfp-clr:hover{color:rgba(232,228,217,0.6);}
 
+/* ── Selector de CUENTAS (junto al date-picker) ── */
+.acct-picker{position:relative;}
+.acct-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(201,168,76,0.25);border-radius:10px;padding:9px 13px;color:#E8E4D9;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:border-color .2s,background .2s;white-space:nowrap;}
+.acct-btn:hover{border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.06);}
+.acct-btn .acct-ico{color:rgba(201,168,76,0.6);font-size:11px;}
+.acct-btn .acct-cur{color:#C9A84C;max-width:150px;overflow:hidden;text-overflow:ellipsis;}
+.acct-btn .acct-caret{color:rgba(232,228,217,0.35);font-size:9px;margin-left:2px;}
+.acct-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:200px;background:#12110F;border:0.5px solid rgba(201,168,76,0.28);border-radius:12px;padding:6px;z-index:9998;box-shadow:0 16px 40px rgba(0,0,0,0.55);}
+.acct-menu-hd{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,228,217,0.35);padding:6px 10px 4px;}
+.acct-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11.5px;color:#E8E4D9;transition:background .15s;}
+.acct-opt:hover{background:rgba(201,168,76,0.08);}
+.acct-opt.sel{background:rgba(201,168,76,0.12);color:#C9A84C;}
+.acct-opt .acct-chk{color:#C9A84C;font-size:11px;opacity:0;}
+.acct-opt.sel .acct-chk{opacity:1;}
+
 /* ── Dropdown calendar panel ── */
 .dfp-panel{
   position:absolute;top:calc(100% + 8px);left:0;
@@ -1341,8 +1356,8 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   <button class="sb-ai-chat-btn" onclick="openAIChat()" aria-label="Preguntar al AI Coach" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--gold);cursor:pointer;letter-spacing:0.04em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
     <span style="font-size:12px;">✦</span> AI Coach
   </button>
-  <button class="sb-ai-chat-btn" onclick="openCsvImport()" aria-label="Conectar broker" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:rgba(232,228,217,0.75);cursor:pointer;letter-spacing:0.04em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-    <span style="color:var(--gold);font-size:12px;">🔗</span> Conectar broker
+  <button id="sb-broker-btn" class="sb-ai-chat-btn" onclick="openCsvImport()" aria-label="Conectar broker" style="width:100%;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:rgba(232,228,217,0.75);cursor:pointer;letter-spacing:0.04em;font-family:'DM Mono',monospace;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+    <span class="brk-ico" style="color:var(--gold);font-size:12px;">🔗</span> <span class="brk-lbl">Conectar broker</span>
   </button>
 </div>
 </nav>
@@ -1462,9 +1477,10 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div><div class="ph-eyebrow">◆ Registro completo</div><h1 class="ph-title">Mis <strong>Trades</strong></h1></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div id="acct-picker" class="acct-picker"></div>
         <div id="dfp-tr" class="dfp-instance"></div>
         <button class="sb-cta" style="padding:10px 14px;" onclick="openForm()">+ Trade</button>
-        <button class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()">🔗 Conectar broker</button>
+        <button id="hdr-broker-btn" class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()"><span class="brk-ico">🔗</span> <span class="brk-lbl">Conectar broker</span></button>
         <button class="sb-ai-chat-btn" style="padding:10px 14px;font-size:10px;" onclick="openAIChat()">✦ AI Coach</button>
       </div>
     </div>
@@ -2212,14 +2228,25 @@ function setTrDatePreset(preset){
   renderTrades();
 }
 function trAccountList(){var s={};T.forEach(function(t){if(t.account)s[String(t.account)]=1;});return Object.keys(s).sort();}
+function shortAcct(a){var m=acctMap()[a];return (m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' ':'')+'#'+_esc(a);}
+function acctOptHtml(v,lbl){var sel=(activeAccount===v);return '<div class="acct-opt'+(sel?' sel':'')+'" onclick="pickAccount(\''+v+'\')"><span>'+lbl+'</span><span class="acct-chk">✓</span></div>';}
+// Botón "Cuentas" con menú desplegable, junto al selector de fechas. Permite navegar
+// entre cuentas (scopea TODO el journal). Aparece solo si hay cuentas.
 function renderTrAccounts(){
-  var el=document.getElementById('tr-accounts');if(!el)return;
+  var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
+  var host=document.getElementById('acct-picker');if(!host)return;
   var accs=trAccountList();
-  if(accs.length<1){el.innerHTML='';return;}
-  el.innerHTML='<span style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;letter-spacing:0.06em;">CUENTA</span>'
-    +'<button class="fchip'+(activeAccount==='all'?' active':'')+'" onclick="setActiveAccount(\'all\')">Todas</button>'
-    +accs.map(function(a){var m=acctMap()[a];var lbl=m&&m.name?_esc(m.name.replace('Tradestation ','').trim())+' #'+_esc(a):'#'+_esc(a);return '<button class="fchip'+(activeAccount===a?' active':'')+'" onclick="setActiveAccount(\''+a+'\')" title="'+_esc(acctLabel(a))+'">'+lbl+'</button>';}).join('');
+  if(accs.length<1){host.innerHTML='';return;}
+  var curLbl=activeAccount==='all'?'Todas las cuentas':shortAcct(activeAccount);
+  var opts='<div class="acct-menu-hd">Filtrar por cuenta</div>'
+    +acctOptHtml('all','Todas las cuentas')
+    +accs.map(function(a){return acctOptHtml(a,shortAcct(a));}).join('');
+  host.innerHTML='<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">'+curLbl+'</span><span class="acct-caret">▼</span></button>'
+    +'<div class="acct-menu" id="acct-menu" style="display:none;">'+opts+'</div>';
 }
+function toggleAcctMenu(e){e.stopPropagation();var m=document.getElementById('acct-menu');if(!m)return;var show=(m.style.display==='none');m.style.display=show?'block':'none';if(show){setTimeout(function(){document.addEventListener('click',_closeAcctMenu);},0);}}
+function _closeAcctMenu(){var m=document.getElementById('acct-menu');if(m)m.style.display='none';document.removeEventListener('click',_closeAcctMenu);}
+function pickAccount(v){_closeAcctMenu();setActiveAccount(v);}
 // ── TRADES ──
 function renderTrades(){
   var tl=document.getElementById('tlist');
@@ -2282,9 +2309,11 @@ function repVBars(rows,labelFn){
   var maxUp=Math.max.apply(null,rows.map(function(r){return r.pnl>0?r.pnl:0;}).concat([0]));
   var maxDn=Math.max.apply(null,rows.map(function(r){return r.pnl<0?-r.pnl:0;}).concat([0]));
   if(maxUp===0&&maxDn===0){maxUp=1;maxDn=1;}
-  var n=rows.length,W=Math.max(340,n*66),H=230,padT=22,padB=48,padL=8,padR=8;
+  // W base ~840 para que con pocas barras (días/playbooks) el gráfico OCUPE TODO el
+  // ancho en vez de quedarse encajonado a la izquierda; con muchas, crece y hace scroll.
+  var n=rows.length,W=Math.max(840,n*96),H=250,padT=24,padB=52,padL=14,padR=14;
   var plotH=H-padT-padB,upH=plotH*(maxUp/(maxUp+maxDn)),dnH=plotH-upH,zY=padT+upH;
-  var plotW=W-padL-padR,slot=plotW/n,bw=Math.min(40,slot*0.56);
+  var plotW=W-padL-padR,slot=plotW/n,bw=Math.min(64,slot*0.5);
   var svg='';
   svg+='<line x1="'+padL+'" y1="'+zY.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+zY.toFixed(1)+'" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>';
   rows.forEach(function(r){
@@ -2297,7 +2326,7 @@ function repVBars(rows,labelFn){
     svg+='<text x="'+cx.toFixed(1)+'" y="'+(H-22)+'" fill="rgba(232,228,217,0.55)" font-family="DM Mono,monospace" font-size="9.5" text-anchor="middle">'+lbl+'</text>';
     svg+='<text x="'+cx.toFixed(1)+'" y="'+(H-9)+'" fill="rgba(232,228,217,0.3)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">'+r.n+'t·'+r.wr+'%</text>';
   });
-  return '<div style="overflow-x:auto;"><svg viewBox="0 0 '+W+' '+H+'" style="height:'+H+'px;min-width:'+Math.min(W,700)+'px;width:100%;max-width:'+W+'px;">'+svg+'</svg></div>';
+  return '<div style="overflow-x:auto;"><svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;min-width:'+Math.min(W,520)+'px;">'+svg+'</svg></div>';
 }
 function repSection(title,inner){return '<div style="background:var(--card,rgba(255,255,255,0.015));border:0.5px solid var(--border2);border-radius:12px;padding:16px 18px;margin-bottom:16px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;">'+title+'</div>'+inner+'</div>';}
 function renderReports(){
@@ -2941,6 +2970,29 @@ function disconnectTradestation(){
     .then(function(){ refreshTsState(); if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);">TradeStation desconectado. Tus trades ya importados se conservan.</div>'; })
     .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo desconectar.</div>';});
 }
+// Actualiza los botones "Conectar broker" (sidebar + header): si ya estás conectado,
+// pasan a decir "Desconectar broker".
+var _brokerConnected=false;
+function updateBrokerButtons(){
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      _brokerConnected=!!(d&&d.connected);
+      ['sb-broker-btn','hdr-broker-btn'].forEach(function(id){
+        var b=document.getElementById(id);if(!b)return;
+        var lbl=b.querySelector('.brk-lbl'),ico=b.querySelector('.brk-ico');
+        if(_brokerConnected){ b.setAttribute('onclick','brokerBtnDisconnect()'); if(lbl)lbl.textContent='Desconectar broker'; if(ico)ico.textContent='⏻'; }
+        else { b.setAttribute('onclick','openCsvImport()'); if(lbl)lbl.textContent='Conectar broker'; if(ico)ico.textContent='🔗'; }
+      });
+    }).catch(function(){});
+}
+function brokerBtnDisconnect(){
+  if(!confirm('¿Desconectar el broker? Podrás reconectar cuando quieras; tus trades ya importados se conservan.'))return;
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
+    .then(function(r){return r.json();})
+    .then(function(){ updateBrokerButtons(); try{refreshTsState();}catch(e){} try{notif('Broker desconectado','Tus trades importados se conservan','⏻');}catch(e){} })
+    .catch(function(){});
+}
 // TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
 function syncTradestation(){
   var st=document.getElementById('broker-status');
@@ -2952,6 +3004,7 @@ function syncTradestation(){
       var fills=d.trades||[];
       var r=importFromBroker(fills);
       if(curView)go(curView);
+      try{updateBrokerButtons();}catch(e){}
       if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
         +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones de TradeStation (incl. futuros) importadas de <strong>'+fills.length+'</strong> fills.'
         +'<div style="font-size:11px;color:var(--text3);margin-top:6px;">Verificadas: '+r.verified+' · En revisión: '+r.pending+' · Duplicadas: '+r.dup+'</div></div>';
@@ -3542,6 +3595,7 @@ document.addEventListener('DOMContentLoaded', function(){
     renderCtxForm();       // render dynamic context buttons
     renderFormChecklist(); // render editable checklist
     go('dashboard');       // then render dashboard (needs pickers in DOM)
+    try{updateBrokerButtons();}catch(e){}  // "Conectar" vs "Desconectar" según estado real
     // Auto-sync al volver del portal de SnapTrade (?snaptrade=ok): trae los fills
     // sin que el usuario tenga que pulsar "Sincronizar" a mano.
     if(new URLSearchParams(window.location.search).get('snaptrade')==='ok'){
