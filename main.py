@@ -4886,6 +4886,12 @@ async def auth_health():
 EMAIL_ON = bool(GMAIL_USER and GMAIL_APP_PASSWORD)
 DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "https://discord.gg/rBDXT5uDH").strip()   # Discord gratis
 WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
+# Railway BLOQUEA los puertos SMTP salientes (465/587) → "Network is unreachable".
+# Por eso el correo se envía por la API HTTP de Brevo (puerto 443). SMTP queda de
+# fallback (funciona en local u otros hosts que lo permitan).
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
+MAIL_FROM = (os.getenv("MAIL_FROM") or GMAIL_USER or "").strip()
+EMAIL_READY = bool(BREVO_API_KEY and MAIL_FROM) or EMAIL_ON
 
 def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
     cta = ""
@@ -4904,9 +4910,30 @@ def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
             f'</div></div>')
 
 async def _send_email(to, subject, html):
-    """Envía un correo transaccional (no bloqueante). Si Gmail no está configurado,
-    no hace nada (queda listo para cuando se pongan GMAIL_USER/GMAIL_APP_PASSWORD)."""
-    if not EMAIL_ON or not to:
+    """Envía un correo transaccional (no bloqueante).
+    Prioriza la API HTTP de Brevo (Railway bloquea SMTP saliente); si no hay
+    BREVO_API_KEY cae a SMTP (que en Railway suele fallar con 'Network unreachable')."""
+    if not to:
+        return False
+    # 1) Brevo por HTTP (puerto 443 → funciona en Railway)
+    if BREVO_API_KEY and MAIL_FROM:
+        try:
+            async with httpx.AsyncClient(timeout=15) as c:
+                r = await c.post("https://api.brevo.com/v3/smtp/email",
+                    headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json",
+                             "accept": "application/json"},
+                    json={"sender": {"name": "Liberato Community", "email": MAIL_FROM},
+                          "to": [{"email": to}], "subject": subject, "htmlContent": html})
+            if r.status_code in (200, 201):
+                print(f"[email] ✓ (brevo) {subject} → {to}")
+                return True
+            print(f"[email] ✗ brevo {r.status_code}: {r.text[:180]}")
+            return False
+        except Exception as e:
+            print(f"[email] ✗ brevo: {e}")
+            return False
+    # 2) SMTP de fallback
+    if not EMAIL_ON:
         return False
     def _send():
         msg = MIMEMultipart("alternative")
@@ -4948,7 +4975,9 @@ async def send_welcome_premium(email, name):
 async def email_health():
     """Estado de correos e integraciones (solo booleanos, sin exponer secretos)."""
     _g = globals()
-    return {"email_configured": EMAIL_ON, "discord_free_link_set": bool(DISCORD_FREE_INVITE),
+    return {"email_configured": EMAIL_READY, "email_via": ("brevo" if BREVO_API_KEY and MAIL_FROM else ("smtp" if EMAIL_ON else None)),
+            "brevo_set": bool(BREVO_API_KEY), "mail_from_set": bool(MAIL_FROM),
+            "discord_free_link_set": bool(DISCORD_FREE_INVITE),
             "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None,
             "discord_webhook_set": bool(_g.get("DISCORD_WEBHOOK_URL")),
             "discord_premium_webhook_set": bool(_g.get("DISCORD_PREMIUM_WEBHOOK_URL")),
@@ -4986,8 +5015,8 @@ async def admin_email_broadcast(request: Request, key: str = "", authorization: 
     OJO: Gmail limita ~500/día; para listas grandes usar un ESP (MailerLite/Brevo)."""
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
-    if not EMAIL_ON:
-        raise HTTPException(400, "Gmail no configurado (GMAIL_USER/GMAIL_APP_PASSWORD)")
+    if not EMAIL_READY:
+        raise HTTPException(400, "Correo no configurado (pon BREVO_API_KEY + MAIL_FROM)")
     try:
         data = await request.json()
     except Exception:
@@ -6428,25 +6457,12 @@ async def contact_form(request: Request):
     </div>
     """
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"[Contacto Liberato] {subject}"
-    msg["From"] = f"Liberato Community <{GMAIL_USER}>"
-    msg["To"] = SUPPORT_EMAIL
-    msg["Reply-To"] = GMAIL_USER  # respuestas van al emisor; el nombre va en el cuerpo
-    msg.attach(MIMEText(html_body, "html"))
-
-    def _send():
-        # SMTP con timeout (antes sin timeout = colgaba el event loop) y en hilo aparte.
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
-            server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-            server.sendmail(GMAIL_USER, SUPPORT_EMAIL, msg.as_string())
-    try:
-        await asyncio.to_thread(_send)
+    # Enviado vía _send_email (Brevo HTTP en Railway; SMTP de fallback en local).
+    ok = await _send_email(SUPPORT_EMAIL, f"[Contacto Liberato] {subject}", html_body)
+    if ok:
         print(f"[contact] ✓ Mensaje de {name} enviado a {SUPPORT_EMAIL}")
         return {"success": True}
-    except Exception as e:
-        print(f"[contact] ✗ Error enviando: {e}")
-        raise HTTPException(500, "No se pudo enviar el mensaje. Intenta más tarde.")
+    raise HTTPException(500, "No se pudo enviar el mensaje. Intenta más tarde.")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
