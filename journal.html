@@ -388,9 +388,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .cal-week-col{display:flex;flex-direction:column;gap:5px;}
 .cal-week-card{background:linear-gradient(180deg,rgba(11,14,21,0.55),rgba(6,8,13,0.35));border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:12px;flex:1;display:flex;flex-direction:column;justify-content:center;transition:border-color 0.2s;}
 .cal-week-card:hover{border-color:rgba(201,168,76,0.2);}
-.cwc-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
-.cwc-pnl{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;}
-.cwc-days{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+.cwc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.cwc-pnl{font-family:'DM Mono',monospace;font-size:20px;font-weight:800;letter-spacing:-0.01em;}
+.cwc-days{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
 
 /* PLAYBOOKS */
 .pb-cat{margin-bottom:22px;}
@@ -579,7 +579,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;}
 .dow-cell{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);text-align:center;padding:4px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
-.cal-day{border-radius:var(--r-sm);padding:8px 7px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:all 0.25s;border:0.5px solid transparent;min-height:78px;position:relative;}
+.cal-day{border-radius:var(--r-sm);padding:9px 8px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:all 0.25s;border:0.5px solid transparent;min-height:90px;position:relative;}
 .cal-day.empty{cursor:default;background:transparent!important;border:none!important;}
 .cal-day.notr{background:rgba(0,0,0,0.18);border-color:var(--border2);}
 .cal-day.notr:hover{border-color:rgba(201,168,76,0.15);}
@@ -588,14 +588,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .cal-day.sloss{background:rgba(239,68,68,0.09);border-color:rgba(239,68,68,0.2);}
 .cal-day.bloss{background:rgba(239,68,68,0.18);border-color:rgba(239,68,68,0.35);}
 .cal-day:not(.empty):not(.notr):hover{transform:scale(1.04);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
-.cd-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--text3);}
+.cd-num{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--text3);}
 .cal-day.great .cd-num,.cal-day.good .cd-num{color:var(--green);}
 .cal-day.sloss .cd-num,.cal-day.bloss .cd-num{color:var(--red);}
-.cd-pnl{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;}
+.cd-pnl{font-family:'DM Mono',monospace;font-size:17px;font-weight:800;letter-spacing:-0.01em;line-height:1.05;}
 .cal-day.great .cd-pnl,.cal-day.good .cd-pnl{color:var(--green);}
 .cal-day.sloss .cd-pnl,.cal-day.bloss .cd-pnl{color:var(--red);}
-.cd-n{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
-@media(max-width:600px){.cal-day{min-height:48px;}.cd-pnl{font-size:9px;}.cd-n{display:none;}}
+.cd-n{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
+@media(max-width:600px){.cal-day{min-height:56px;}.cd-pnl{font-size:13px;}.cd-n{display:none;}}
 
 /* TRADE ITEMS */
 .tlist{display:flex;flex-direction:column;gap:8px;}
@@ -1246,6 +1246,12 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 .acct-opt.sel .acct-chk{opacity:1;}
 .acct-btn .acct-badge{background:rgba(201,168,76,0.16);color:#C9A84C;border-radius:6px;padding:2px 7px;font-size:10px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .acct-empty{padding:12px 10px;font-size:10.5px;color:rgba(232,228,217,0.4);line-height:1.5;font-family:'DM Mono',monospace;}
+.acct-refresh{display:inline-flex;align-items:center;gap:6px;background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.3);border-radius:10px;padding:9px 12px;color:var(--green);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.acct-refresh:hover{background:rgba(46,232,164,0.12);border-color:rgba(46,232,164,0.5);}
+.acct-refresh:disabled{opacity:0.6;cursor:default;}
+.acct-refresh .arf-ico{display:inline-block;font-size:13px;line-height:1;}
+.acct-refresh.spinning .arf-ico{animation:spin 0.7s linear infinite;}
+.acct-synchint{font-size:9.5px;color:rgba(232,228,217,0.35);font-family:'DM Mono',monospace;letter-spacing:0.02em;line-height:1.4;max-width:230px;}
 
 /* ── Dropdown calendar panel ── */
 .dfp-panel{
@@ -2004,9 +2010,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       </div>
       <div class="cal-mode-row" id="cal-mode-row">
         <button class="cal-mode-btn active" data-m="money" onclick="setCalMode('money')">$ Dinero</button>
-        <button class="cal-mode-btn" data-m="pct" onclick="setCalMode('pct')">% Porcentaje</button>
         <button class="cal-mode-btn" data-m="pts" onclick="setCalMode('pts')">Puntos</button>
+        <button class="cal-mode-btn" data-m="pct" onclick="setCalMode('pct')" title="Retorno del día sobre el riesgo (P&amp;L ÷ riesgo del día). Necesita stop en los trades; si no hay stop, muestra —.">% s/Riesgo</button>
       </div>
+      <div id="cal-mode-legend" style="font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(232,228,217,0.4);letter-spacing:0.02em;margin:-2px 0 8px;display:none;"></div>
       <div class="cal-layout">
         <div>
           <div class="dow-row"><div class="dow-cell">Lun</div><div class="dow-cell">Mar</div><div class="dow-cell">Mié</div><div class="dow-cell">Jue</div><div class="dow-cell">Vie</div><div class="dow-cell">Sáb</div><div class="dow-cell">Dom</div></div>
@@ -2868,13 +2875,23 @@ function renderDashAI(){
 }
 
 // ── CALENDAR ──
-function setCalMode(m){calMode=m;document.querySelectorAll('.cal-mode-btn').forEach(function(b){b.classList.toggle('active',b.dataset.m===m);});renderCal();}
+function setCalMode(m){
+  calMode=m;
+  document.querySelectorAll('.cal-mode-btn').forEach(function(b){b.classList.toggle('active',b.dataset.m===m);});
+  var lg=document.getElementById('cal-mode-legend');
+  if(lg){
+    if(m==='pct'){lg.style.display='block';lg.textContent='% s/Riesgo = P&L del día ÷ riesgo arriesgado ese día (necesita stop; sin stop = —).';}
+    else if(m==='pts'){lg.style.display='block';lg.textContent='Puntos = suma de puntos capturados en el día (movimiento de precio).';}
+    else{lg.style.display='none';}
+  }
+  renderCal();
+}
 function calVal(dt){
   // dt = array of trades for the day
   var pnl=dt.reduce(function(s,t){return s+t.pnl;},0);
   if(calMode==='money')return f$(pnl);
   if(calMode==='pts'){var pts=dt.reduce(function(s,t){return s+(t.points||0);},0);return(pts>=0?'+':'')+pts.toFixed(1)+'p';}
-  if(calMode==='pct'){var risk=dt.reduce(function(s,t){return s+Math.abs((t.risk||0)*(CV[t.asset]||20));},0);var pct=risk>0?(pnl/risk)*100:0;return(pct>=0?'+':'')+pct.toFixed(1)+'%';}
+  if(calMode==='pct'){var risk=dt.reduce(function(s,t){return s+((t.risk!=null&&+t.risk>0)?Math.abs(+t.risk)*(t.mult||CV[t.asset]||1)*(t.contracts||1):0);},0);if(risk<=0)return '—';var pct=(pnl/risk)*100;return(pct>=0?'+':'')+pct.toFixed(1)+'%';}
   return f$(pnl);
 }
 function renderCal(){
@@ -2964,8 +2981,31 @@ function _acctPickerHTML(){
     +acctOptHtml('all','Todas las cuentas')
     +(accs.length?accs.map(function(a){return acctOptHtml(a,shortAcct(a));}).join('')
                  :'<div class="acct-empty">Conecta o sincroniza tu broker para ver tus cuentas aquí</div>');
+  var connected=false; try{connected=_hasLocalBroker();}catch(e){}
+  var refresh=connected
+    ? '<button class="acct-refresh" onclick="refreshBrokerNow(event)" title="Sincroniza tus trades del broker ahora">'
+        +'<span class="arf-ico">⟳</span> Refrescar</button>'
+        +'<span class="acct-synchint">Se sincroniza al conectar y con ⟳ · los trades aparecen tras ejecutarse en el broker.</span>'
+    : '';
   return '<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">Cuentas</span>'+badge+'<span class="acct-caret">▼</span></button>'
-    +'<div class="acct-menu" style="display:none;">'+opts+'</div>';
+    +'<div class="acct-menu" style="display:none;">'+opts+'</div>'
+    +refresh;
+}
+// Refrescar bajo demanda: sincroniza ambas fuentes (SnapTrade + TradeStation directo)
+// y reporta cuántas operaciones nuevas entraron.
+function refreshBrokerNow(ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var before=T.filter(function(t){return !t.__demo;}).length;
+  var btns=document.querySelectorAll('.acct-refresh');
+  Array.prototype.forEach.call(btns,function(b){b.classList.add('spinning');b.disabled=true;});
+  try{notif('Sincronizando…','Trayendo tus fills del broker','⟳');}catch(e){}
+  try{syncAllBrokers();}catch(e){}
+  setTimeout(function(){
+    var added=T.filter(function(t){return !t.__demo;}).length-before;
+    var bs=document.querySelectorAll('.acct-refresh');
+    Array.prototype.forEach.call(bs,function(b){b.classList.remove('spinning');b.disabled=false;});
+    try{notif('Sincronización lista', added>0?('+'+added+' operación'+(added!==1?'es':'')+' nueva'+(added!==1?'s':'')):'Sin operaciones nuevas', added>0?'✓':'○');}catch(e){}
+  },2800);
 }
 function renderTrAccounts(){
   var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
