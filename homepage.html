@@ -150,6 +150,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .nav-desktop-links{display:none;}
 .nav-right{display:flex;align-items:center;gap:0.75rem;flex-shrink:0;}
 .nav-welcome{display:none !important;}
+a.nav-member{text-decoration:none;display:inline-flex;align-items:center;}
 .nav-welcome span{color:var(--gold);font-weight:600;}
 /* Login — ghost style, clearly visible */
 .nav-login{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.65);border:0.5px solid rgba(232,228,217,0.18);padding:8px 14px;border-radius:6px;background:transparent;min-height:36px;white-space:nowrap;transition:all 0.25s ease;cursor:pointer;}
@@ -1477,9 +1478,14 @@ nav { max-width: 100%; }
     <button class="nav-lang" onclick="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
       <span class="lang-flag">🇪🇸</span><span class="lang-code" id="lang-code">ES</span>
     </button>
-    <button class="nav-login" onclick="openLoginModal()">Login</button>
-    <button class="nav-cta" id="nav-enter" onclick="window.location.href='daytrading_preview.html'" style="display:none;">Entrar a la plataforma &#8594;</button>
-    <button class="nav-cta" onclick="openModal()">Unirse &#8594;</button>
+    <button class="nav-login" id="nav-login-btn" onclick="openLoginModal()">Login</button>
+    <button class="nav-cta" id="nav-join-btn" onclick="openModal()">Unirse &#8594;</button>
+    <!-- Accesos de miembro (visibles solo con sesión) -->
+    <a class="nav-login nav-member" id="nav-mem-dash" href="daytrading_preview.html" style="display:none;">Dashboard</a>
+    <a class="nav-login nav-member" id="nav-mem-journal" href="journal.html" style="display:none;">Journal</a>
+    <a class="nav-login nav-member" id="nav-mem-earn" href="earnings.html" style="display:none;">Earnings</a>
+    <a class="nav-login nav-member" id="nav-mem-acct" href="auth.html" style="display:none;">Mi cuenta</a>
+    <button class="nav-cta nav-member" id="nav-mem-logout" onclick="lbcLogout()" style="display:none;">Salir</button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
@@ -1850,12 +1856,31 @@ function showWelcome(name){
       if(!u)return; // token inválido/expirado: se queda sin sesión, no rompe nada
       var name=u.name||u.user&&u.user.name;
       if(name)showWelcome(name);
-      var premium=(u.is_premium===true)||['pro','premium','admin'].indexOf(u.plan)>=0;
-      var enter=document.getElementById('nav-enter');
-      if(enter&&premium)enter.style.display='';
+      lbcShowMemberNav();
     })
     .catch(function(){});
 })();
+
+// Muestra los accesos de miembro en la nav y oculta Login/Unirse.
+function lbcShowMemberNav(){
+  ['nav-mem-dash','nav-mem-journal','nav-mem-earn','nav-mem-acct'].forEach(function(id){
+    var e=document.getElementById(id); if(e)e.style.display='';
+  });
+  var lo=document.getElementById('nav-mem-logout'); if(lo)lo.style.display='';
+  var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
+  var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
+}
+
+// Cierra sesión: limpia el token y las claves de sesión, y recarga la home.
+function lbcLogout(){
+  try{
+    localStorage.removeItem('lbc_token');
+    localStorage.removeItem('lbc_session');
+    localStorage.removeItem('lbc_user_name');
+    localStorage.removeItem('lbc_user_email');
+  }catch(e){}
+  window.location.href='homepage.html';
+}
 // Modal trigger inteligente: exit-intent (desktop) + scroll 55% (mobile)
 // NO molesta con timer agresivo
 (function(){

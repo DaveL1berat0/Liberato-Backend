@@ -466,9 +466,9 @@ async function doLogin(){
 async function loadAccount(goDash){
   try{
     var u = await api('/api/auth/me', 'GET');
-    // Premium recién logueado/verificado → directo al dashboard con todo abierto.
-    if(goDash && u.is_premium){
-      window.location.href = 'daytrading_preview.html';
+    // Recién logueado/verificado → a la home ya con la sesión guardada.
+    if(goDash){
+      window.location.href = 'homepage.html';
       return;
     }
     state.lang = u.language || state.lang;
