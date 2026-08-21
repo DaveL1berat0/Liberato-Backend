@@ -4567,6 +4567,31 @@ async def health_feeds():
     else:
         out["probes"]["finnhub_news"] = {"note": "sin FINNHUB_KEY"}
         out["probes"]["finnhub_calendar"] = {"note": "sin FINNHUB_KEY"}
+    # Sonda TradingEconomics vía RapidAPI (nuestra fuente RÁPIDA de 'actual', free 100/día)
+    if RAPIDAPI_KEY:
+        try:
+            async with httpx.AsyncClient(follow_redirects=True) as c:
+                items = await _fetch_rapidapi_actuals(c)
+            with_actual = sum(1 for e in (items or []) if e.get("actual"))
+            out["probes"]["rapidapi_tradingeconomics"] = {"ok": True, "events": len(items or []),
+                                                          "with_actual": with_actual}
+        except Exception as e:
+            out["probes"]["rapidapi_tradingeconomics"] = {"error": str(e)[:150]}
+    else:
+        out["probes"]["rapidapi_tradingeconomics"] = {"note": "sin RAPIDAPI_KEY"}
+    # Sonda FMP economic calendar (premium: 402/403 en free) — para saber si vale la pena
+    if FMP_KEY:
+        try:
+            now_et = datetime.now(NY)
+            frm = now_et.strftime("%Y-%m-%d")
+            to = (now_et + timedelta(days=2)).strftime("%Y-%m-%d")
+            async with httpx.AsyncClient(timeout=8) as c:
+                r = await c.get(f"{FMP_BASE}/economic-calendar",
+                                params={"from": frm, "to": to, "apikey": FMP_KEY})
+            out["probes"]["fmp_calendar"] = {"status": r.status_code,
+                                             "premium_locked": r.status_code in (401, 402, 403)}
+        except Exception as e:
+            out["probes"]["fmp_calendar"] = {"error": str(e)[:120]}
     return out
 
 @app.get("/api/auth/health")
