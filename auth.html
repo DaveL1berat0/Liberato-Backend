@@ -104,6 +104,13 @@ body{
 .upgrade-box{background:rgba(204,169,79,0.05);border:1px solid rgba(204,169,79,0.2);border-radius:14px;padding:22px;margin-top:24px;}
 .upgrade-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--gold-2);margin-bottom:8px;}
 .upgrade-text{font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:16px;}
+/* Profile config sections */
+.prof-sec{margin-top:24px;padding-top:22px;border-top:1px solid var(--brd);}
+.prof-sec-t{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--gold-2);margin-bottom:14px;}
+.lang-seg{display:flex;gap:10px;}
+.lang-seg-btn{flex:1;padding:13px;border-radius:10px;border:1px solid var(--brd);background:rgba(255,255,255,0.02);color:var(--ink-2);font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.lang-seg-btn:hover{border-color:var(--brd-gold);background:var(--gold-dim);}
+.lang-seg-btn.selected{border-color:var(--brd-gold);background:var(--gold-dim);color:var(--gold-2);font-weight:600;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(6,7,13,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;}
 @keyframes spin{to{transform:rotate(360deg);}}
 @media (max-width:460px){.auth-card{padding:32px 24px;}.code-box{width:42px;height:52px;font-size:21px;}}
@@ -264,6 +271,45 @@ body{
     <div id="platform-access" style="display:none;margin-top:24px;">
       <button class="btn btn-gold" onclick="window.location.href='daytrading_preview.html'" data-es="Entrar a la plataforma →" data-en="Enter the platform →">Entrar a la plataforma →</button>
     </div>
+
+    <!-- ══ CONFIGURACIÓN DE CUENTA ══ -->
+    <div class="prof-sec">
+      <div class="prof-sec-t" data-es="Idioma" data-en="Language">Idioma</div>
+      <div class="lang-seg">
+        <button type="button" class="lang-seg-btn" id="prof-lang-es" onclick="doSetLanguage('es')">🇪🇸 Español</button>
+        <button type="button" class="lang-seg-btn" id="prof-lang-en" onclick="doSetLanguage('en')">🇬🇧 English</button>
+      </div>
+      <div class="msg" id="lang-msg" style="margin-top:14px;margin-bottom:0;"></div>
+    </div>
+
+    <div class="prof-sec">
+      <div class="prof-sec-t" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</div>
+      <div class="msg" id="pw-msg"></div>
+      <div class="field">
+        <label class="field-label" data-es="Contraseña actual" data-en="Current password">Contraseña actual</label>
+        <input class="field-input" id="pw-current" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="field">
+        <label class="field-label" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
+        <input class="field-input" id="pw-new" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+      </div>
+      <button class="btn btn-gold" id="btn-change-pw" onclick="doChangePassword()" data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+    </div>
+
+    <div class="prof-sec">
+      <div class="prof-sec-t" data-es="Cambiar correo" data-en="Change email">Cambiar correo</div>
+      <div class="msg" id="em-msg"></div>
+      <div class="field">
+        <label class="field-label" data-es="Nuevo correo" data-en="New email">Nuevo correo</label>
+        <input class="field-input" id="em-new" type="email" placeholder="nuevo@correo.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label class="field-label" data-es="Contraseña (para confirmar)" data-en="Password (to confirm)">Contraseña (para confirmar)</label>
+        <input class="field-input" id="em-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-gold" id="btn-change-email" onclick="doChangeEmail()" data-es="Actualizar correo" data-en="Update email">Actualizar correo</button>
+    </div>
+
     <button class="btn btn-ghost" onclick="doLogout()" style="margin-top:20px;" data-es="Cerrar sesión" data-en="Sign out">Cerrar sesión</button>
   </div>
 </div>
@@ -472,8 +518,11 @@ async function loadAccount(goDash){
       return;
     }
     state.lang = u.language || state.lang;
+    state.name = u.name || state.name;
+    state.email = u.email || state.email;
     document.getElementById('acct-name').textContent = u.name;
     document.getElementById('acct-email').textContent = u.email;
+    syncProfileLang();
     var planEl = document.getElementById('acct-plan');
     if(u.is_premium){
       planEl.innerHTML = '<span class="badge premium">★ ACCESO COMPLETO</span>';
@@ -552,9 +601,97 @@ function startAccessPolling(){
 
 // ═══ LOGOUT ═══
 function doLogout(){
-  localStorage.removeItem('lbc_token');
+  try{
+    localStorage.removeItem('lbc_token');
+    localStorage.removeItem('lbc_session');
+    localStorage.removeItem('lbc_user_name');
+    localStorage.removeItem('lbc_user_email');
+  }catch(e){}
   state.token = '';
-  goScreen('login');
+  window.location.href = 'homepage.html';
+}
+
+// ═══ PERFIL · CONFIGURACIÓN ═══
+// Marca el idioma activo en el selector del perfil.
+function syncProfileLang(){
+  var es = document.getElementById('prof-lang-es');
+  var en = document.getElementById('prof-lang-en');
+  if(es) es.classList.toggle('selected', state.lang==='es');
+  if(en) en.classList.toggle('selected', state.lang==='en');
+}
+
+// 1) Cambiar idioma → set-language + applyLang() al instante.
+async function doSetLanguage(lang){
+  if(lang===state.lang){ syncProfileLang(); return; }
+  clearMsg('lang-msg');
+  try{
+    var data = await api('/api/auth/set-language', 'POST', {language:lang});
+    state.lang = data.language || lang;
+    try{ localStorage.setItem('lbc_lang', state.lang); }catch(e){}
+    applyLang();
+    syncProfileLang();
+    showMsg('lang-msg', state.lang==='es'?'Idioma actualizado.':'Language updated.', 'success');
+  }catch(e){
+    showMsg('lang-msg', e.message, 'error');
+  }
+}
+
+// 2) Cambiar contraseña → change-password (valida la actual).
+async function doChangePassword(){
+  clearMsg('pw-msg');
+  var cur = document.getElementById('pw-current').value;
+  var nw  = document.getElementById('pw-new').value;
+  if(!cur || !nw){
+    showMsg('pw-msg', state.lang==='es'?'Completa ambos campos':'Fill both fields', 'error'); return;
+  }
+  if(nw.length < 8){
+    showMsg('pw-msg', state.lang==='es'?'La nueva contraseña necesita mínimo 8 caracteres':'New password needs at least 8 characters', 'error'); return;
+  }
+  setLoading('btn-change-pw', true);
+  try{
+    await api('/api/auth/change-password', 'POST', {current_password:cur, new_password:nw});
+    document.getElementById('pw-current').value = '';
+    document.getElementById('pw-new').value = '';
+    showMsg('pw-msg', state.lang==='es'?'Contraseña actualizada.':'Password updated.', 'success');
+  }catch(e){
+    showMsg('pw-msg', e.message, 'error');
+  }finally{
+    setLoading('btn-change-pw', false);
+  }
+}
+
+// 3) Cambiar correo → change-email (valida contraseña). El correo es la
+//    identidad: guardamos el NUEVO token y refrescamos la vista.
+async function doChangeEmail(){
+  clearMsg('em-msg');
+  var newEmail = document.getElementById('em-new').value.trim();
+  var pass     = document.getElementById('em-pass').value;
+  if(!newEmail || !pass){
+    showMsg('em-msg', state.lang==='es'?'Completa ambos campos':'Fill both fields', 'error'); return;
+  }
+  if(newEmail.indexOf('@') < 1){
+    showMsg('em-msg', state.lang==='es'?'Ingresa un correo válido':'Enter a valid email', 'error'); return;
+  }
+  setLoading('btn-change-email', true);
+  try{
+    var data = await api('/api/auth/change-email', 'POST', {password:pass, new_email:newEmail});
+    // El correo es la identidad → guardar el nuevo token y actualizar estado.
+    if(data.token){
+      state.token = data.token;
+      try{ localStorage.setItem('lbc_token', data.token); }catch(e){}
+    }
+    state.email = data.email || newEmail;
+    try{ localStorage.setItem('lbc_user_email', state.email); }catch(e){}
+    var emEl = document.getElementById('acct-email');
+    if(emEl) emEl.textContent = state.email;
+    document.getElementById('em-new').value = '';
+    document.getElementById('em-pass').value = '';
+    showMsg('em-msg', state.lang==='es'?'Correo actualizado.':'Email updated.', 'success');
+  }catch(e){
+    showMsg('em-msg', e.message, 'error');
+  }finally{
+    setLoading('btn-change-email', false);
+  }
 }
 
 // ═══ INIT ═══
