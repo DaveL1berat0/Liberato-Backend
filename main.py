@@ -4676,6 +4676,26 @@ async def user_put(email, u):
         try: save_cache()
         except Exception: pass
 
+async def users_list(plan=None):
+    """Lista usuarios (opcionalmente filtrados por plan). Supabase o memoria."""
+    if _sb_on():
+        try:
+            params = {"select": "email,name,plan,created"}
+            if plan and plan != "all":
+                params["plan"] = f"eq.{plan}"
+            async with httpx.AsyncClient(timeout=12) as c:
+                r = await c.get(f"{SUPABASE_URL}/rest/v1/app_users", params=params, headers=_sb_h())
+            if r.status_code == 200:
+                rows = r.json()
+                return [x for x in rows if not str(x.get("email", "")).endswith("@example.com")]
+        except Exception as e:
+            print(f"[users_list] {e}")
+        return []
+    out = [{"email": k, **v} for k, v in _users.items()]
+    if plan and plan != "all":
+        out = [x for x in out if (x.get("plan") or "free") == plan]
+    return [x for x in out if not str(x.get("email", "")).endswith("@example.com")]
+
 async def _load_auth_secret():
     """Carga/genera el AUTH_SECRET de forma DURABLE en Supabase (así no depende de una
     env var de Railway). env AUTH_SECRET tiene prioridad si existe."""
@@ -4910,6 +4930,116 @@ async def email_health():
     """Estado del sistema de correos (sin exponer secretos)."""
     return {"email_configured": EMAIL_ON, "discord_free_link_set": bool(DISCORD_FREE_INVITE),
             "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None}
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  CRM: usuarios segmentados (free/premium) + correos por grupo + brief diario
+#  a Discord (free = sin GEX) y Discord premium/Whop (premium = con GEX).
+#  Endpoints admin con ?key=ADMIN_KEY.
+# ═══════════════════════════════════════════════════════════════════════════
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()                  # canal FREE
+DISCORD_PREMIUM_WEBHOOK_URL = os.getenv("DISCORD_PREMIUM_WEBHOOK_URL", "").strip()  # canal PREMIUM/Whop
+
+def _is_premium(u):
+    return (u.get("plan") or "free") in ("premium", "pro", "admin")
+
+@app.get("/api/admin/users")
+async def admin_users(key: str = ""):
+    """Lista de usuarios segmentada por plan (free vs premium)."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    users = await users_list("all")
+    free = [u for u in users if not _is_premium(u)]
+    premium = [u for u in users if _is_premium(u)]
+    return {"counts": {"total": len(users), "free": len(free), "premium": len(premium)},
+            "free": free, "premium": premium}
+
+@app.post("/api/admin/email/broadcast")
+async def admin_email_broadcast(request: Request, key: str = ""):
+    """Envía un correo a un grupo (free | premium | all). Throttle anti-spam.
+    OJO: Gmail limita ~500/día; para listas grandes usar un ESP (MailerLite/Brevo)."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    if not EMAIL_ON:
+        raise HTTPException(400, "Gmail no configurado (GMAIL_USER/GMAIL_APP_PASSWORD)")
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    segment = (data.get("segment") or "free").strip().lower()
+    subject = (data.get("subject") or "").strip()
+    html = (data.get("html") or data.get("body") or "").strip()
+    if not subject or not html:
+        raise HTTPException(400, "Faltan 'subject' y 'html'")
+    users = await users_list("all")
+    if segment == "free":
+        users = [u for u in users if not _is_premium(u)]
+    elif segment in ("premium", "pro"):
+        users = [u for u in users if _is_premium(u)]
+    wrapped = _email_shell(subject, html)
+    sent, failed = 0, 0
+    for u in users[:500]:
+        ok = await _send_email(u.get("email"), subject, wrapped)
+        sent += 1 if ok else 0
+        failed += 0 if ok else 1
+        await asyncio.sleep(1.1)   # throttle
+    return {"segment": segment, "recipients": len(users), "sent": sent, "failed": failed}
+
+# ── Brief diario a Discord ──────────────────────────────────────────────────
+async def _discord_post(url, content):
+    if not url or not content:
+        return False
+    try:
+        async with httpx.AsyncClient(timeout=12) as c:
+            r = await c.post(url, json={"content": content[:1950]})
+        return r.status_code in (200, 204)
+    except Exception as e:
+        print(f"[discord] {e}"); return False
+
+def _daily_brief_text(include_gex):
+    """Construye el mensaje diario desde el contexto institucional cacheado.
+    Para el grupo FREE se OMITE la línea Técnico (los niveles GEX). El grupo
+    PREMIUM la incluye."""
+    txt = (cache.get("institutional", {}) or {}).get("text") or ""
+    if not txt:
+        return None
+    lines = [l for l in txt.split("\n") if l.strip()]
+    if not include_gex:
+        lines = [l for l in lines if not l.strip().lower().startswith("**técnico")]
+    fecha = datetime.now(NY).strftime("%d-%b-%Y")
+    header = ("📊 **Contexto del Mercado — NQ**  ·  " + fecha +
+              ("  ·  ⭐ Premium" if include_gex else ""))
+    footer = ("\n\n_— Liberato Community" +
+              (" · Acceso completo (livestreams + niveles GEX)_" if include_gex
+               else " · Comunidad libre — sube a Premium para niveles GEX y livestreams_"))
+    return header + "\n\n" + "\n".join(lines) + footer
+
+async def send_daily_briefs():
+    """Publica el brief diario: canal FREE (sin GEX) y canal PREMIUM (con GEX)."""
+    free_txt = _daily_brief_text(False)
+    prem_txt = _daily_brief_text(True)
+    out = {}
+    if DISCORD_WEBHOOK_URL and free_txt:
+        out["free"] = await _discord_post(DISCORD_WEBHOOK_URL, free_txt)
+    if DISCORD_PREMIUM_WEBHOOK_URL and prem_txt:
+        out["premium"] = await _discord_post(DISCORD_PREMIUM_WEBHOOK_URL, prem_txt)
+    print(f"[daily-brief] {out}")
+    return out
+
+@app.get("/api/admin/daily-brief/preview")
+async def admin_daily_preview(key: str = ""):
+    """Previsualiza los dos mensajes (free sin GEX / premium con GEX) sin enviar."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    return {"free": _daily_brief_text(False), "premium": _daily_brief_text(True),
+            "discord_free_configured": bool(DISCORD_WEBHOOK_URL),
+            "discord_premium_configured": bool(DISCORD_PREMIUM_WEBHOOK_URL)}
+
+@app.post("/api/admin/daily-brief/send")
+async def admin_daily_send(key: str = ""):
+    """Dispara el envío del brief diario AHORA (prueba manual)."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    return await send_daily_briefs()
 
 @app.post("/api/auth/register")
 async def auth_register(request: Request):
@@ -6130,6 +6260,10 @@ async def startup():
     scheduler.add_job(refresh_institutional, CronTrigger(hour="7-16", minute="*/5", day_of_week="mon-fri"))
     scheduler.add_job(refresh_institutional, CronTrigger(hour="17-23,0-6", minute=0, day_of_week="mon-fri"))  # after-hours/overnight: contexto macro 1/hora
     scheduler.add_job(refresh_institutional, CronTrigger(hour="*/3"))  # fines de semana: se mantiene vivo
+
+    # ── Brief diario a Discord (free sin GEX / premium con GEX) ──
+    # 8:45 ET lun-vie (antes de la apertura). No hace nada si no hay webhooks configurados.
+    scheduler.add_job(send_daily_briefs, CronTrigger(hour=8, minute=45, day_of_week="mon-fri"))
 
     scheduler.start()
 
