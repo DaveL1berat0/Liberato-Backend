@@ -206,7 +206,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .hero-sub{font-size:14px;font-weight:300;color:rgba(232,228,217,0.5);line-height:1.7;max-width:340px;margin-bottom:2rem;}
 .hero-sub strong{color:rgba(232,228,217,0.85);font-weight:400;}
 .video-wrap{width:100%;}
-.video-box{border:0.5px solid rgba(201,168,76,0.25);border-radius:12px;background:rgba(13,17,23,0.9);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color 0.4s,box-shadow 0.4s;cursor:pointer;}
+.video-box{border:0.5px solid rgba(201,168,76,0.25);border-radius:12px;background:rgba(13,17,23,0.9);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color 0.4s,box-shadow 0.4s;}
 .video-box::before{content:'';position:absolute;inset:-60px;background:radial-gradient(ellipse at 50% 110%,rgba(201,168,76,0.28) 0%,rgba(201,168,76,0.08) 35%,transparent 70%);opacity:0;transition:opacity 0.5s;pointer-events:none;}
 .video-box.glow::before{opacity:1;}
 .video-box.glow{border-color:rgba(201,168,76,0.6);box-shadow:0 0 36px rgba(201,168,76,0.12);}
@@ -264,7 +264,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .price-block{margin-bottom:0.875rem;padding-bottom:0.75rem;border-bottom:0.5px solid rgba(232,228,217,0.06);}
 .price{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#E8E4D9;line-height:1;}
 .price-gold{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:#C9A84C;line-height:1;}
-.price-period{font-size:8px;color:rgba(232,228,217,0.2);margin-top:2px;font-family:'DM Mono',monospace;line-height:1.3;}
+.price-period{font-size:11px;color:rgba(232,228,217,0.5);margin-top:2px;font-family:'DM Mono',monospace;line-height:1.3;}
 .features{list-style:none;flex:1;margin-bottom:0.875rem;}
 .fi{display:flex;align-items:flex-start;gap:5px;padding:3px 0;font-size:10px;color:rgba(232,228,217,0.6);font-weight:300;line-height:1.35;border-bottom:0.5px solid rgba(232,228,217,0.03);}
 .fi:last-child{border-bottom:none;}
@@ -278,13 +278,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .btn-gold:active{opacity:0.82;animation:none;transform:scale(0.97);}
 .btn-edu{width:100%;padding:10px 6px;background:transparent;border:0.5px solid rgba(201,168,76,0.22);border-radius:7px;color:rgba(201,168,76,0.6);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;min-height:40px;margin-top:auto;transition:all 0.25s ease;cursor:pointer;}
 .btn-edu:active{border-color:rgba(201,168,76,0.5);}
-.btn-hint{text-align:center;font-size:8px;color:rgba(232,228,217,0.15);margin-top:5px;font-family:'DM Mono',monospace;}
+.btn-hint{text-align:center;font-size:11px;color:rgba(232,228,217,0.5);margin-top:5px;font-family:'DM Mono',monospace;}
 
 /* ── STATS row ── */
 .stats{display:flex;align-items:center;justify-content:space-between;margin-top:1.75rem;padding:1.25rem 0.5rem;border-top:0.5px solid rgba(201,168,76,0.07);overflow:visible;}
 .stat{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;}
 .stat-num{font-family:'Cormorant Garamond',serif;font-size:20px;color:#C9A84C;white-space:nowrap;}
-.stat-label{font-size:7px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.22);text-align:center;line-height:1.3;}
+.stat-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.5);text-align:center;line-height:1.3;}
 .stat-div{width:0.5px;height:24px;background:rgba(201,168,76,0.12);flex-shrink:0;}
 .live-badge{display:inline-flex;align-items:center;gap:5px;}
 .live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse-green 1.8s ease-in-out infinite;flex-shrink:0;}
@@ -381,7 +381,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .cd-timer{display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-bottom:1.25rem;}
 .cd-unit{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .cd-num{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:#C9A84C;line-height:1;min-width:52px;text-align:center;}
-.cd-lbl{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,228,217,0.18);font-family:'DM Mono',monospace;}
+.cd-lbl{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,228,217,0.5);font-family:'DM Mono',monospace;}
 .cd-sep{font-family:'Cormorant Garamond',serif;font-size:32px;color:rgba(201,168,76,0.2);padding-bottom:14px;}
 .cd-date{font-size:10px;color:rgba(201,168,76,0.5);margin-bottom:0.5rem;font-family:'DM Mono',monospace;}
 .cd-spots{font-size:12px;color:rgba(201,168,76,0.8);margin-bottom:1.25rem;font-family:'DM Mono',monospace;font-weight:500;}
@@ -401,7 +401,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .cd-btn:active{animation:none;opacity:0.82;transform:scale(0.97);}
 
 .disclaimer{padding:1rem 1.25rem;background:rgba(232,228,217,0.02);border:0.5px solid rgba(232,228,217,0.05);border-radius:8px;margin-top:1rem;}
-.disclaimer p{font-size:10px;color:rgba(232,228,217,0.18);line-height:1.65;font-weight:300;}
+.disclaimer p{font-size:11px;color:rgba(232,228,217,0.5);line-height:1.65;font-weight:300;}
 .disclaimer strong{color:rgba(232,228,217,0.26);font-weight:400;}
 
 footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,168,76,0.08);margin-top:2.5rem;}
@@ -410,7 +410,7 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
 .footer-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;}
 .footer-links a{font-size:11px;color:rgba(232,228,217,0.25);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;padding:4px 0;transition:all 0.25s ease;}
 .footer-links a:hover{color:#C9A84C;transform:translateY(-2px);}
-.footer-copy{font-size:10px;color:rgba(232,228,217,0.15);font-family:'DM Mono',monospace;}
+.footer-copy{font-size:11px;color:rgba(232,228,217,0.5);font-family:'DM Mono',monospace;}
 
 
 /* VIDEO THUMBNAIL */
@@ -725,7 +725,7 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
   .stat{flex:none;padding:0 2.5rem;}
   .stat-num{font-size:32px;}
   .live-text{font-size:32px;}
-  .stat-label{font-size:10px;}
+  .stat-label{font-size:11px;}
   .stat-div{display:block;}
   .no-signals-text{font-size:13px;}
   .no-signals-sub{font-size:10px;}
@@ -810,7 +810,7 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
   .card-tag{font-size:7px;padding:2px 5px;}
   .btn-free,.btn-gold,.btn-edu{font-size:8px;padding:8px 4px;min-height:34px;}
   .stat-num{font-size:16px;}
-  .stat-label{font-size:6px;}
+  .stat-label{font-size:11px;}
   .live-text{font-size:16px;}
 }
 
@@ -1429,7 +1429,7 @@ nav { max-width: 100%; }
   </a>
   <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
-    <span class="menu-item-text">Educacion</span>
+    <span class="menu-item-text">Educación</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
   <div class="menu-cta">
@@ -1445,7 +1445,7 @@ nav { max-width: 100%; }
       <div class="modal-bar"></div>
       <div class="modal-logo">Liberato <span>Community</span></div>
       <h2 class="modal-title">Crea tu cuenta<br><em>gratuita</em></h2>
-      <p class="modal-sub">Acceso por invitacion a una comunidad de traders serios. Spots limitados por ciclo.</p>
+      <p class="modal-sub">Acceso por invitación a una comunidad de traders serios. Spots limitados por ciclo.</p>
       <div class="modal-divider"></div>
       <div class="modal-field"><label class="modal-label" for="m-name">Nombre</label><input class="modal-input" id="m-name" type="text" placeholder="Tu nombre" autocomplete="given-name"/></div>
       <div class="modal-field"><label class="modal-label" for="m-email">Correo</label><input class="modal-input" id="m-email" type="email" placeholder="tu@email.com" autocomplete="email"/></div>
@@ -1479,7 +1479,7 @@ nav { max-width: 100%; }
     </button>
     <button class="nav-login" onclick="openLoginModal()">Login</button>
     <button class="nav-cta" onclick="openModal()">Unirse &#8594;</button>
-    <button class="hamburger" onclick="openMenu()" aria-label="Menu">
+    <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -1505,23 +1505,16 @@ nav { max-width: 100%; }
         
 
       </div>
-      <div class="play-btn" style="position:relative;z-index:2;"><i class="ti ti-player-play"></i></div>
     </div>
   </div>
 </section>
-
-<!-- BRIDGE -->
-<div class="bridge">
-  <div class="bridge-line"></div>
-  <p class="bridge-text">No sabes por donde empezar? Este video explica cada opcion.</p>
-</div>
 
 <!-- PLANS -->
 <section class="plans">
   <div class="plans-header" id="planes">
     <span class="sec-eyebrow">Elige tu nivel de acceso</span>
     <h2 class="sec-title">Planes para <em>traders serios</em></h2>
-    <p class="sec-sub">Empieza gratis. Escala cuando estes listo.</p>
+    <p class="sec-sub">Empieza gratis. Escala cuando estés listo.</p>
   </div>
   <div class="plans-grid-2">
 
@@ -1536,12 +1529,12 @@ nav { max-width: 100%; }
       </div>
       <ul class="features-2">
         <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Discord con traders activos</li>
-        <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Ideas de bias del dia</li>
+        <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Ideas de bias del día</li>
         <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Noticias de alto impacto</li>
         <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Resultados compartidos</li>
         <li class="fi2"><span class="fi-icon icon-yes">&#10003;</span>Canal de YouTube con contenido gratuito</li>
         <li class="fi2 fi2-no"><span class="fi-icon icon-no">&#10007;</span>Sin sesiones en vivo</li>
-        <li class="fi2 fi2-no"><span class="fi-icon icon-no">&#10007;</span>Sin educacion estructurada</li>
+        <li class="fi2 fi2-no"><span class="fi-icon icon-no">&#10007;</span>Sin educación estructurada</li>
       </ul>
       <button class="btn-free-2" onclick="openModal()">Unirse gratis &#8594;</button>
     </div>
@@ -1549,7 +1542,7 @@ nav { max-width: 100%; }
     <!-- PLAN HERO -->
     <div class="card-hero-2" id="pro-plan">
       <div class="hero-badge-2">Acceso Completo</div>
-      <span class="card-tag tag-gold">Membresia mensual</span>
+      <span class="card-tag tag-gold">Membresía mensual</span>
       <h3 class="card-name-hero-2">Trading en Vivo</h3>
       <p class="card-desc-hero-2">Todo lo que necesitas para operar como un profesional. Sin excusas.</p>
       <div class="price-block-hero-2">
@@ -1626,11 +1619,11 @@ nav { max-width: 100%; }
   
 
   <div class="countdown">
-    <div class="cd-eyebrow"><div class="cd-dot"></div>Proximo ciclo Q3</div>
+    <div class="cd-eyebrow"><div class="cd-dot"></div>Próximo ciclo Q3</div>
     <h3 class="cd-title">El acceso abre el <em>31 de Agosto</em></h3>
     <p class="cd-sub">Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.</p>
     <div class="cd-timer">
-      <div class="cd-unit"><span class="cd-num" id="cdd">00</span><span class="cd-lbl">Dias</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cdd">00</span><span class="cd-lbl">Días</span></div>
       <span class="cd-sep">:</span>
       <div class="cd-unit"><span class="cd-num" id="cdh">00</span><span class="cd-lbl">Horas</span></div>
       <span class="cd-sep">:</span>
@@ -1644,7 +1637,7 @@ nav { max-width: 100%; }
   </div>
 
   <div class="disclaimer">
-    <p><strong>Aviso legal:</strong> Los resultados mostrados corresponden al historial personal del instructor y no garantizan resultados similares. El trading de futuros implica riesgo sustancial de perdida. Los retiros son verificables via TradeStation, broker regulado. El rendimiento pasado no es indicativo de resultados futuros.</p>
+    <p><strong>Aviso legal:</strong> Los resultados mostrados corresponden al historial personal del instructor y no garantizan resultados similares. El trading de futuros implica riesgo sustancial de pérdida. Los retiros son verificables vía TradeStation, broker regulado. El rendimiento pasado no es indicativo de resultados futuros.</p>
   </div>
 </section>
 
@@ -1873,31 +1866,8 @@ function showWelcome(name){
 })();
 
 // TRADERS COUNTER
-(function(){var el=document.getElementById('traders-count');var n=350,max=1000;var t=setInterval(function(){n=Math.min(n+1,max);el.textContent=n.toLocaleString()+'+';if(n>=max)clearInterval(t);},1000);})();
-
-// SPOTS — fuente única, ambos elementos sincronizados
-(function(){
-  var SPOTS_KEY='lbc_spots';
-  var stored=parseInt(sessionStorage.getItem(SPOTS_KEY)||'20',10);
-  var spots=Math.max(5,isNaN(stored)?20:stored), min=5;
-  function setSpots(n){
-    ['spots-count','sticky-spots'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(!el)return;
-      el.style.opacity='0';
-      setTimeout(function(){el.textContent=n;el.style.opacity='1';el.style.transition='opacity 0.4s';},200);
-    });
-    try{sessionStorage.setItem(SPOTS_KEY,n);}catch(e){}
-  }
-  setSpots(spots);
-  function tick(){
-    if(spots<=min)return;
-    spots--;
-    setSpots(spots);
-    if(spots>min)setTimeout(tick,12000);
-  }
-  setTimeout(tick,10000);
-})();
+// Traders activos: número estático honesto (el valor vive en el HTML).
+// Spots: valor estático, sin decremento automático.
 
 // BLOCK TOUCH GLOW
 document.querySelectorAll('.block').forEach(function(b){
@@ -2316,7 +2286,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Unirse →': 'Join →',
     'Crea tu cuenta': 'Create your account',
     'gratuita': 'free',
-    'Acceso por invitacion a una comunidad de traders serios. Spots limitados.': 'Invitation access to a community of serious traders. Limited spots.',
+    'Acceso por invitación a una comunidad de traders serios. Spots limitados por ciclo.': 'Invitation access to a community of serious traders. Limited spots per cycle.',
     'Nombre': 'Name',
     'Correo': 'Email',
     'Contraseña': 'Password',
@@ -2331,27 +2301,27 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Deja de leer velas.': 'Stop reading candles.',
     'Empieza a leer': 'Start reading',
     'el mercado.': 'the market.',
-    'Order Flow y Volume Profile para traders que buscan consistencia real en los mercados.': 'Order Flow and Volume Profile for traders seeking real consistency in the markets.',
+    'Order Flow y Volume Profile para traders que buscan consistencia real —': 'Order Flow and Volume Profile for traders seeking real consistency —',
     'Tradea con Data Real del Mercado.': 'Trade with Real Market Data.',
     'No sabes por donde empezar? Este video explica cada opcion.': 'Don\'t know where to start? This video explains each option.',
     'Elige tu nivel de acceso': 'Choose your access level',
     'Planes para': 'Plans for',
     'traders serios': 'serious traders',
-    'Empieza gratis. Escala cuando estes listo.': 'Start free. Scale when you\'re ready.',
+    'Empieza gratis. Escala cuando estés listo.': 'Start free. Scale when you\'re ready.',
     'Gratis · Siempre': 'Free · Forever',
     'Comunidad Libre': 'Free Community',
     'Entra a la comunidad, conecta con otros traders y empieza a orientarte sin costo.': 'Join the community, connect with other traders and start getting oriented at no cost.',
     'sin compromisos': 'no commitments',
     'Discord con traders activos': 'Discord with active traders',
-    'Ideas de bias del dia': 'Daily bias ideas',
+    'Ideas de bias del día': 'Daily bias ideas',
     'Noticias de alto impacto': 'High-impact news',
     'Resultados compartidos': 'Shared results',
     'Canal de YouTube con contenido gratuito': 'YouTube channel with free content',
     'Sin sesiones en vivo': 'No live sessions',
-    'Sin educacion estructurada': 'No structured education',
+    'Sin educación estructurada': 'No structured education',
     'Unirse gratis →': 'Join free →',
     'Acceso Completo': 'Full Access',
-    'Membresia mensual': 'Monthly membership',
+    'Membresía mensual': 'Monthly membership',
     'Trading en Vivo': 'Live Trading',
     'Todo lo que necesitas para operar como un profesional. Sin excusas.': 'Everything you need to trade like a professional. No excuses.',
     'por mes · cancela cuando quieras': 'per month · cancel anytime',
@@ -2379,11 +2349,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Rendimiento anual': 'Annual return',
     'TradeStation — Regulado SEC': 'TradeStation — SEC Regulated',
     'Broker regulado por SEC, FINRA y SIPC. Cuenta real. No simulada.': 'Broker regulated by SEC, FINRA and SIPC. Real account. Not simulated.',
-    'Proximo ciclo Q3': 'Next cycle Q3',
+    'Próximo ciclo Q3': 'Next cycle Q3',
     'El acceso abre el': 'Access opens on',
     '31 de Agosto': 'August 31st',
     'Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.': 'Limited spots. Once full, access closes until the next cycle.',
-    'Dias': 'Days',
+    'Días': 'Days',
     'Horas': 'Hours',
     'Minutos': 'Minutes',
     'Segundos': 'Seconds',
@@ -2402,10 +2372,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Crear cuenta gratis': 'Create free account',
     '¿Pagaste y no tienes acceso?': 'Paid and don\'t have access?',
     'Escríbenos por WhatsApp': 'Message us on WhatsApp',
-    'Déjanos tu correo y serás el primero en recibir acceso cuando abramos, contenido y novedades.': 'Leave us your email and you\'ll be the first to get access when we open, plus content and updates.',
+    'Déjanos tu correo y serás el primero en recibir acceso cuando abramos, contenido exclusivo y nuestra guía gratuita de Order Flow.': 'Leave us your email and you\'ll be the first to get access when we open, plus exclusive content and our free Order Flow guide.',
     'Quiero ser notificado →': 'I want to be notified →',
     'Sin spam. Puedes darte de baja en cualquier momento.': 'No spam. You can unsubscribe anytime.',
     'Reservar mi lugar →': 'Reserve my spot →',
+    '¿Tienes una pregunta? Escríbenos y te responderemos pronto.': 'Have a question? Write to us and we\'ll get back to you soon.',
+    'Asunto': 'Subject',
+    'Descripción': 'Description',
+    'Enviar →': 'Send →',
   };
 
   // Construir el diccionario inverso (inglés → español) para volver
