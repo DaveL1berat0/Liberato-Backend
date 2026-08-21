@@ -1081,8 +1081,11 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 .tz-kpi-value.pos{color:var(--green);} .tz-kpi-value.neg{color:var(--red);} .tz-kpi-value.white{color:var(--text);}
 
 /* Improve radar + equity row */
-.tz-main{display:grid;grid-template-columns:0.8fr 1fr;gap:14px;margin-bottom:14px;align-items:start;}
+.tz-main{display:grid;grid-template-columns:0.8fr 1fr;gap:14px;margin-bottom:14px;align-items:stretch;}
 @media(max-width:768px){.tz-main{grid-template-columns:1fr;}}
+/* Cuadros del dashboard: que llenen su celda y queden a la misma altura por fila */
+.tz-main>.tz-panel,.dash-charts-row>.card,.dash-charts-row>.tz-panel{display:flex;flex-direction:column;height:100%;}
+.tz-main>.tz-panel>#equity-curve,.dash-charts-row>.card>#dash-setups,.dash-charts-row>.card>.donut-grid{flex:1 1 auto;}
 
 /* Last 30 bars */
 #last30-bars svg{display:block;}
@@ -1961,7 +1964,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     </div>
 
     <!-- DONUTS + SETUPS ROW -->
-    <div class="dash-charts-row" style="align-items:start;">
+    <div class="dash-charts-row" style="align-items:stretch;">
       <div class="card" style="margin-bottom:0;">
         <div class="card-head"><span class="card-title">Distribución de Operativa</span></div>
         <div class="donut-grid" id="donut-grid"></div>
@@ -2669,8 +2672,16 @@ function renderDash(){
   var longs=FT.filter(function(t){return t.direction==='long';}).length, shorts=FT.length-longs;
   var durs=FT.map(function(t){try{if(!t.exitTime||!t.time)return null;var a=new Date(t.date+'T'+(String(t.time).length===5?t.time+':00':t.time)),b=new Date(t.exitTime);var m=(b-a)/60000;return (m>=0&&m<1440)?m:null;}catch(e){return null;}}).filter(function(x){return x!=null;});
   var avgDur=durs.length?Math.round(durs.reduce(function(a,b){return a+b;},0)/durs.length):0;
-  var rrs=FT.map(function(t){var rk=(t.stop!=null&&+t.stop!==0)?Math.abs(t.entry-t.stop):0;return rk>0?t.points/rk:null;}).filter(function(x){return x!=null;});
-  var avgR=rrs.length?Math.round(rrs.reduce(function(a,b){return a+b;},0)/rrs.length*100)/100:null;
+  // R medio: R = pnl / riesgo en $. Riesgo por trade = |entry-stop|*mult*contratos si hay
+  // stop real; si el trade NO trae stop (imports de broker/CSV), se usa la PÉRDIDA MEDIA
+  // del periodo como unidad de R, para no dejar el dato en "—" cuando hay decenas de
+  // trades. Así los perdedores promedian ~ -1R y los ganadores su múltiplo real.
+  var _lossUnit=(s.avgL>0)?s.avgL:0;
+  var rMults=FT.map(function(t){
+    var riskD=(t.risk!=null&&+t.risk>0)?Math.abs(+t.risk)*(t.mult||1)*(t.contracts||1):_lossUnit;
+    return (riskD>0)?(t.pnl/riskD):null;
+  }).filter(function(x){return x!=null&&isFinite(x);});
+  var avgR=rMults.length?Math.round(rMults.reduce(function(a,b){return a+b;},0)/rMults.length*100)/100:null;
   function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
   var _ar=document.getElementById('dash-activity-row');
   if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy',f$(s.exp),s.exp>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
@@ -2786,27 +2797,74 @@ function renderDonuts(s,su){
   distHtml+='</div>';
   document.getElementById('donut-grid').innerHTML=lsHtml+daysHtml+distHtml;
 }
+// Coach IA del dashboard: usa el LLM real (/api/journal/coach) SOBRE LOS TRADES
+// ACTUALMENTE FILTRADOS (rango de fecha del dashboard). Se re-analiza al cambiar el
+// filtro. Cachea por firma para no gastar quota en cada render.
+var _dashCoachSig=null, _dashCoachAnswer=null;
+function dashCoachContext(FT, range){
+  var s=stats(FT), su=bySetup(FT);
+  function hourOf(t){return (typeof t.hour==='number')?t.hour:parseInt(t.time,10)||0;}
+  var DOW=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  var byHour={}, byDow={};
+  FT.forEach(function(t){
+    var h=hourOf(t); (byHour[h]=byHour[h]||{n:0,pnl:0,w:0}); byHour[h].n++; byHour[h].pnl+=t.pnl; if(t.result==='win')byHour[h].w++;
+    var wd=DOW[new Date(t.date+'T12:00:00').getDay()]; (byDow[wd]=byDow[wd]||{n:0,pnl:0,w:0}); byDow[wd].n++; byDow[wd].pnl+=t.pnl; if(t.result==='win')byDow[wd].w++;
+  });
+  function arr(o){return Object.keys(o).map(function(k){return {k:k,n:o[k].n,pnl:Math.round(o[k].pnl),wr:Math.round(o[k].w/o[k].n*100)};});}
+  var pbm={}; FT.forEach(function(t){var p=t.playbook||t.setup||'—';(pbm[p]=pbm[p]||{n:0,pnl:0,w:0});pbm[p].n++;pbm[p].pnl+=t.pnl;if(t.result==='win')pbm[p].w++;});
+  var pbArr=Object.keys(pbm).map(function(k){return {playbook:k,n:pbm[k].n,pnl:Math.round(pbm[k].pnl),wr:Math.round(pbm[k].w/pbm[k].n*100)};}).sort(function(a,b){return b.pnl-a.pnl;});
+  var chk=FT.filter(function(t){return t.chkAll;});
+  return {
+    rango:{desde:(range&&range.start)||'inicio', hasta:(range&&range.end)||'hoy'},
+    total:s.n, net_pnl:s.total, win_rate:s.wr, profit_factor:s.pf,
+    avg_win:s.avgW, avg_loss:s.avgL, expectancy:s.exp,
+    por_setup: su.slice(0,6).map(function(x){return {setup:x.name,wr:x.wr,pnl:Math.round(x.pnl),n:x.tr.length};}),
+    por_playbook: pbArr.slice(0,6),
+    por_hora: arr(byHour).sort(function(a,b){return b.pnl-a.pnl;}).slice(0,6),
+    por_dia: arr(byDow).sort(function(a,b){return b.pnl-a.pnl;}),
+    checklist_wr: chk.length?stats(chk).wr:null
+  };
+}
+function _dashLocalCoach(FT){
+  var s=stats(FT),su=bySetup(FT),best=su[0],worst=su[su.length-1],parts=[];
+  parts.push('En este periodo: '+s.n+' trades, WR '+s.wr+'%, PF '+s.pf.toFixed(2)+', expectancy '+f$(s.exp)+'.');
+  if(best&&best.name&&best.name!=='—'&&best.pnl>0)parts.push('Tu setup más rentable es <strong>'+best.name+'</strong> ('+f$(best.pnl)+').');
+  if(worst&&worst.name&&worst.name!=='—'&&worst.pnl<0&&worst!==best)parts.push('El que más te resta es <strong>'+worst.name+'</strong> ('+f$(worst.pnl)+') — revísalo o redúcelo.');
+  return parts.join(' ');
+}
 function renderDashAI(){
+  var el=document.getElementById('dash-ai'); if(!el)return;
+  var head='<div class="acc-head"><span class="acc-dot"></span><span class="acc-label">Coach IA</span></div>';
+  var btn='<button class="acc-btn" onclick="go(\'genius\')">Ver Zona de Genio →</button>';
   var FT=getFilteredT(_dfDash);
-  var s=stats(FT),su=bySetup(FT),best=su[0];
-  var chkTr=FT.filter(function(t){return t.chkAll;}),noChkTr=FT.filter(function(t){return !t.chkAll&&t.result!=='be';});
-  var chkWR=chkTr.length?stats(chkTr).wr:0,noChkWR=noChkTr.length?stats(noChkTr).wr:0;
-  var aftTr=FT.filter(function(t){return parseInt(t.time)>=14;}),morTr=FT.filter(function(t){return parseInt(t.time)<12;});
-  var text='';
-  if(T.length<3){text='Registra al menos 3 trades para que el Genio empiece a detectar patrones.';}
-  else{
-    if(chkTr.length>0&&noChkTr.length>0)text+='Cuando completas el checklist tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> cuando no. ';
-    // "más rentable" SOLO si de verdad es positivo (antes llamaba "más rentable" a una
-    // pérdida) y no el genérico "Importado (broker)".
-    var _bn=best&&best.name;
-    if(_bn&&_bn!=='undefined'&&_bn!=='—'&&_bn!=='Importado (broker)'){
-      if(best.pnl>0)text+='Tu setup más rentable es <strong>'+_bn+'</strong> ('+f$(best.pnl)+'). ';
-      else text+='Aún ningún setup en verde; el mejor por ahora es <strong>'+_bn+'</strong> (<span class="r">'+f$(best.pnl)+'</span>). ';
-    }
-    if(morTr.length>0&&aftTr.length>0){var mWR=stats(morTr).wr,aWR=stats(aftTr).wr;if(mWR>aWR+10)text+='Operas mejor en la mañana (<strong>'+mWR+'%</strong>) que en la tarde (<span class="r">'+aWR+'%</span>). ';}
-    if(!text)text='Sigue registrando trades para descubrir patrones.';
+  if(!FT.length){
+    _dashCoachSig=null; _dashCoachAnswer=null;
+    el.innerHTML=head+'<div class="acc-text">No hay trades en este rango para analizar. Ajusta el filtro de fecha o registra operaciones.</div>'+btn;
+    return;
   }
-  document.getElementById('dash-ai').innerHTML='<div class="acc-head"><span class="acc-dot"></span><span class="acc-label">Coach IA</span></div><div class="acc-text">'+text+'</div><button class="acc-btn" onclick="go(\'genius\')">Ver Zona de Genio →</button>';
+  var s=stats(FT);
+  var sig=(_dfDash.start||'')+'|'+(_dfDash.end||'')+'|'+FT.length+'|'+s.total+'|'+(typeof activeAccount!=='undefined'?activeAccount:'all');
+  if(sig===_dashCoachSig && _dashCoachAnswer){
+    el.innerHTML=head+'<div class="acc-text">'+_dashCoachAnswer+'</div>'+btn;
+    return;
+  }
+  _dashCoachSig=sig;
+  el.innerHTML=head+'<div class="acc-text"><span class="ai-spinner"></span> Analizando '+FT.length+' trade'+(FT.length!==1?'s':'')+' del periodo…</div>'+btn;
+  var q='Analiza EXCLUSIVAMENTE los trades de este periodo (ver context, incluye el rango de fechas) y dame la recomendación más importante y accionable para mejorar mi trading. Máximo 2-4 frases, concreto, en español, sin saludos ni preámbulos.';
+  fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({question:q,context:dashCoachContext(FT,_dfDash),app_user_id:currentUserId()})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(sig!==_dashCoachSig)return;               // el filtro cambió mientras respondía
+      var ok=(d&&d.ok&&d.answer);
+      _dashCoachAnswer=ok?_esc(d.answer):_dashLocalCoach(FT);
+      var e2=document.getElementById('dash-ai'); if(e2)e2.innerHTML=head+'<div class="acc-text">'+_dashCoachAnswer+'</div>'+btn;
+    })
+    .catch(function(){
+      if(sig!==_dashCoachSig)return;
+      _dashCoachAnswer=_dashLocalCoach(FT);
+      var e2=document.getElementById('dash-ai'); if(e2)e2.innerHTML=head+'<div class="acc-text">'+_dashCoachAnswer+'</div>'+btn;
+    });
 }
 
 // ── CALENDAR ──
@@ -4021,7 +4079,9 @@ function syncFills(){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
       var fills=d.trades||[];
       try{localStorage.setItem(userKey('lbc_broker_fills'),JSON.stringify({ts:Date.now(),fills:fills}));}catch(e){}
+      _setBrokerConnFlag(true);              // conexión confirmada → durable
       var r=importFromBroker(fills);
+      try{updateBrokerButtons();refreshBrokerSyncRow();}catch(e){}
       if(curView)go(curView);
       if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
         +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones importadas de <strong>'+fills.length+'</strong> fills.'
@@ -4096,8 +4156,12 @@ function disconnectTradestation(){
 var _brokerConnected=false;
 // ¿Hay una conexión de broker local? (cuentas o fills de broker guardados) — cubre
 // SnapTrade (portal) además de TradeStation directo.
+// Marca DURABLE de "broker conectado" (ligada a la cuenta). Una vez conectado, queda
+// conectado hasta que el usuario pulse "Desconectar" — no se re-pide en cada carga.
+function _setBrokerConnFlag(v){try{if(v)localStorage.setItem(userKey('lbc_broker_conn'),'1');else localStorage.removeItem(userKey('lbc_broker_conn'));}catch(e){}}
 function _hasLocalBroker(){
   try{
+    if(localStorage.getItem(userKey('lbc_broker_conn'))==='1')return true;   // conexión durable
     var acc=localStorage.getItem(userKey('lbc_accounts'));
     if(acc && acc!=='{}' && Object.keys(JSON.parse(acc)||{}).length)return true;
     var bf=localStorage.getItem(userKey('lbc_broker_fills'));
@@ -4115,11 +4179,22 @@ function _applyBrokerBtn(connected){
   });
 }
 function updateBrokerButtons(){
-  _applyBrokerBtn(_hasLocalBroker());  // instantáneo desde estado local
-  // luego confirma con TradeStation (por si el token vive solo en el servidor)
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
+  _applyBrokerBtn(_hasLocalBroker());  // instantáneo desde estado local/durable
+  var uid=encodeURIComponent(currentUserId());
+  // Rehidrata contra el backend, que PERSISTE la conexión: TradeStation (token) y
+  // SnapTrade (usuario/cuentas registradas). Si cualquiera responde conectado, se
+  // marca CONECTADO de forma durable y ya no se vuelve a pedir conexión.
+  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+uid)
     .then(function(r){return r.json();})
-    .then(function(d){ if(d&&d.connected)_applyBrokerBtn(true); }).catch(function(){});
+    .then(function(d){ if(d&&d.connected){_setBrokerConnFlag(true);_applyBrokerBtn(true);try{refreshBrokerSyncRow();}catch(e){}} }).catch(function(){});
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+uid)
+    .then(function(r){return r.json();})
+    .then(function(d){ if(d&&d.ok&&d.accounts&&d.accounts.length){_setBrokerConnFlag(true);_applyBrokerBtn(true);try{refreshBrokerSyncRow();}catch(e){}} }).catch(function(){});
+}
+// Muestra/oculta la fila "Refrescar/Sincronizar" según el estado durable de conexión.
+function refreshBrokerSyncRow(){
+  var sr=document.getElementById('broker-sync-row');
+  if(sr)sr.style.display=_hasLocalBroker()?'block':'none';
 }
 // ── Confirm modal reutilizable (diseño Liberato, en vez del confirm() del navegador) ──
 var _lbcCfmCb=null;
@@ -4145,6 +4220,7 @@ function brokerBtnDisconnect(){
       fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
       try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
       try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
+      _setBrokerConnFlag(false);            // "Desconectar" es la ÚNICA forma de perder la conexión
       try{localStorage.setItem(userKey('lbc_active_account'),'all');activeAccount='all';}catch(e){}
       // TODO a cero: borra todas las operaciones del journal.
       T=[]; saveTrades(T);
@@ -4162,9 +4238,10 @@ function syncTradestation(){
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar TradeStation.')+'</div>';return;}
       var fills=d.trades||[];
+      _setBrokerConnFlag(true);              // TradeStation conectado → durable
       var r=importFromBroker(fills);
       if(curView)go(curView);
-      try{updateBrokerButtons();}catch(e){}
+      try{updateBrokerButtons();refreshBrokerSyncRow();}catch(e){}
       if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
         +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones de TradeStation (incl. futuros) importadas de <strong>'+fills.length+'</strong> fills.'
         +'<div style="font-size:11px;color:var(--text3);margin-top:6px;">Verificadas: '+r.verified+' · En revisión: '+r.pending+' · Duplicadas: '+r.dup+'</div></div>';
@@ -4835,10 +4912,13 @@ window.addEventListener('unhandledrejection',function(e){
 var MNAMES_S=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 var DNAMES_S=['L','M','X','J','V','S','D'];
 
-// Estado de filtros por vista
-var _dfDash = {start:null,end:null};
-var _dfCal  = {start:null,end:null};
-var _dfTr   = {start:null,end:null};
+// Rango "últimos N días" (incluye hoy). Default de todas las vistas = último mes.
+function dfpLastRange(days){var today=new Date();var from=new Date(today);from.setDate(from.getDate()-(days-1));return {start:from.toISOString().slice(0,10),end:today.toISOString().slice(0,10)};}
+var _DFP_DEFAULT_DAYS=30;   // Último mes por defecto en Mis Trades, Calendario y Reportes
+// Estado de filtros por vista (arranca en "Último mes")
+var _dfDash = dfpLastRange(_DFP_DEFAULT_DAYS);
+var _dfCal  = dfpLastRange(_DFP_DEFAULT_DAYS);
+var _dfTr   = dfpLastRange(_DFP_DEFAULT_DAYS);
 
 // ── Picker state (una instancia a la vez) ──
 var _dfpState = {
@@ -5160,11 +5240,10 @@ function dfpRenderPanel(){
     html+='</div>';
     // Presets footer
     html+='<div class="dfp-presets">'
-      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',7)">7D</div>'
-      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',14)">14D</div>'
-      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',30)">30D</div>'
-      +'<div class="dfp-preset" onclick="dfpPresetMTD(\''+inst+'\')">MTD</div>'
-      +'<div class="dfp-preset" onclick="dfpPresetYTD(\''+inst+'\')">YTD</div>'
+      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',7)">Última semana</div>'
+      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',30)">Último mes</div>'
+      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',90)">Último trimestre</div>'
+      +'<div class="dfp-preset" onclick="dfpPreset(\''+inst+'\',365)">Último año</div>'
       +'<div class="dfp-preset" onclick="dfpClear(\''+inst+'\')">Todo</div>'
       +'</div>';
   }
