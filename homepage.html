@@ -1478,6 +1478,7 @@ nav { max-width: 100%; }
       <span class="lang-flag">🇪🇸</span><span class="lang-code" id="lang-code">ES</span>
     </button>
     <button class="nav-login" onclick="openLoginModal()">Login</button>
+    <button class="nav-cta" id="nav-enter" onclick="window.location.href='daytrading_preview.html'" style="display:none;">Entrar a la plataforma &#8594;</button>
     <button class="nav-cta" onclick="openModal()">Unirse &#8594;</button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -1824,12 +1825,28 @@ function showWelcome(name){
   if(hw&&hn){hn.textContent=first;hw.style.display='inline-flex';}
 }
 
-// Init: check for saved user
+// Init: check for saved user + revalida el token contra el backend
 (function(){
   var savedName;
   try{savedName=localStorage.getItem('lbc_user_name');}catch(e){}
   if(savedName){showWelcome(savedName);}
   // Sin usuario guardado: NO saludar con nombre (antes ponía 'Bienvenido, Dave' a todos)
+
+  // Revalida la sesión: si hay token, pregunta al backend quién es y su plan.
+  var token;
+  try{token=localStorage.getItem('lbc_token');}catch(e){}
+  if(!token)return;
+  fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(u){
+      if(!u)return; // token inválido/expirado: se queda sin sesión, no rompe nada
+      var name=u.name||u.user&&u.user.name;
+      if(name)showWelcome(name);
+      var premium=(u.is_premium===true)||['pro','premium','admin'].indexOf(u.plan)>=0;
+      var enter=document.getElementById('nav-enter');
+      if(enter&&premium)enter.style.display='';
+    })
+    .catch(function(){});
 })();
 // Modal trigger inteligente: exit-intent (desktop) + scroll 55% (mobile)
 // NO molesta con timer agresivo
@@ -2183,7 +2200,7 @@ async function doLogin(){
     if(err){err.style.color='#22c55e';err.textContent='✓ Bienvenido, '+d.user.name+'!';}
     setTimeout(function(){
       if(plan==='pro'||plan==='premium'||plan==='admin'){window.location.href='daytrading_preview.html';}
-      else{closeLoginModal();showWelcome(d.user.name);}
+      else{window.location.href='auth.html';}
     },700);
   }catch(e){
     if(err){err.style.color='#ef4444';err.textContent='Error de conexión. Intenta de nuevo.';}
@@ -2231,23 +2248,14 @@ function submitNewsletter(){
   if(!email||!email.includes('@')||!email.includes('.')){
     msg.style.color='#FF6B81';msg.textContent='Por favor ingresa un correo válido.';return;
   }
-  // Save to localStorage (offline storage) + send to FormSubmit
+  // Guarda localmente + envía al backend de soporte (mismo endpoint que Contacto)
   var subs=JSON.parse(localStorage.getItem('lbc_subs')||'[]');
   if(!subs.includes(email)){subs.push(email);localStorage.setItem('lbc_subs',JSON.stringify(subs));}
-  // Send via FormSubmit.co (free, no backend needed)
-  var form=document.createElement('form');
-  form.method='POST';
-  form.action='https://formsubmit.co/ajax/liberatocommunity@gmail.com'; // ← CAMBIAR por tu email real
-  form.style.display='none';
-  var fields={email:email,_subject:'Nueva inscripción Liberato Community',_captcha:'false',_template:'table'};
-  Object.keys(fields).forEach(function(k){
-    var inp=document.createElement('input');inp.name=k;inp.value=fields[k];form.appendChild(inp);
-  });
-  document.body.appendChild(form);
-  fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}})
-    .then(function(){})
-    .catch(function(){});
-  document.body.removeChild(form);
+  fetch('https://web-production-33671.up.railway.app/api/contact',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:'Newsletter',subject:'Nueva inscripción newsletter',description:email,to:'SupportLiberatoCommunity@gmail.com'})
+  }).then(function(){}).catch(function(){});
   // Show success
   document.getElementById('nl-form').innerHTML=
     '<div style="text-align:center;padding:20px 0;">'+
