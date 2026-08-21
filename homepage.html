@@ -2215,7 +2215,7 @@ async function doLogin(){
     localStorage.setItem('lbc_user_email',d.user.email);
     if(err){err.style.color='#22c55e';err.textContent='✓ Bienvenido, '+d.user.name+'!';}
     setTimeout(function(){
-      if(plan==='pro'||plan==='premium'||plan==='admin'){window.location.href='daytrading.html';}
+      if(plan==='pro'||plan==='premium'||plan==='admin'){window.location.href='daytrading_preview.html';}
       else{closeLoginModal();showWelcome(d.user.name);}
     },700);
   }catch(e){

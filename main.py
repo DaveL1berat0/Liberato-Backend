@@ -4843,6 +4843,74 @@ async def auth_health():
             "detail": detail}
 
 
+# ── Correos transaccionales (segmentados por plan free/premium) ──────────────
+EMAIL_ON = bool(GMAIL_USER and GMAIL_APP_PASSWORD)
+DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "").strip()   # invitación al Discord gratis (Dave)
+WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
+
+def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
+    cta = ""
+    if cta_text and cta_url:
+        cta = (f'<a href="{cta_url}" style="display:inline-block;margin-top:22px;background:#CCA94F;'
+               f'color:#05060C;text-decoration:none;font-weight:700;padding:13px 26px;border-radius:10px;'
+               f'font-family:Arial,sans-serif;font-size:15px;">{cta_text}</a>')
+    return (f'<div style="background:#0B0B12;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">'
+            f'<div style="max-width:520px;margin:0 auto;background:#12121C;border:1px solid rgba(204,169,79,0.25);'
+            f'border-radius:16px;padding:32px;">'
+            f'<div style="font-family:Georgia,serif;font-size:24px;color:#CCA94F;margin-bottom:6px;">Liberato Community</div>'
+            f'<h1 style="color:#F2EFE8;font-size:20px;margin:14px 0;">{titulo}</h1>'
+            f'<div style="color:#C9C6BE;font-size:15px;line-height:1.6;">{cuerpo_html}</div>{cta}'
+            f'<div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;'
+            f'color:#7A7870;font-size:12px;">Recibiste este correo porque creaste una cuenta en Liberato Community.</div>'
+            f'</div></div>')
+
+async def _send_email(to, subject, html):
+    """Envía un correo transaccional (no bloqueante). Si Gmail no está configurado,
+    no hace nada (queda listo para cuando se pongan GMAIL_USER/GMAIL_APP_PASSWORD)."""
+    if not EMAIL_ON or not to:
+        return False
+    def _send():
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = f"Liberato Community <{GMAIL_USER}>"
+        msg["To"] = to
+        msg.attach(MIMEText(html, "html"))
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
+            s.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+            s.sendmail(GMAIL_USER, to, msg.as_string())
+    try:
+        await asyncio.to_thread(_send)
+        print(f"[email] ✓ {subject} → {to}")
+        return True
+    except Exception as e:
+        print(f"[email] ✗ {to}: {e}")
+        return False
+
+async def send_welcome_free(email, name):
+    disc = ("<p>Únete a nuestra comunidad <b>gratuita</b> en Discord para análisis, contexto del "
+            "mercado y la comunidad de traders:</p>") if DISCORD_FREE_INVITE else ""
+    body = (f"<p>Hola {name or ''},</p>"
+            f"<p>Tu cuenta en <b>Liberato Community</b> quedó <b>confirmada</b>. Ya puedes iniciar sesión "
+            f"y explorar el dashboard institucional del NQ, el journal de trading y el contexto en vivo.</p>{disc}")
+    cta_t, cta_u = ("Entrar al Discord gratuito →", DISCORD_FREE_INVITE) if DISCORD_FREE_INVITE else (None, None)
+    return await _send_email(email, "Bienvenido a Liberato Community ✅",
+                             _email_shell("Tu cuenta está confirmada", body, cta_t, cta_u))
+
+async def send_welcome_premium(email, name):
+    body = (f"<p>Hola {name or ''},</p>"
+            f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Ya tienes los "
+            f"<b>livestreams en vivo</b>, el dashboard institucional y todo el contenido premium.</p>"
+            f"<p>Conéctate a los livestreams y a la comunidad de pago desde Whop:</p>")
+    return await _send_email(email, "Acceso completo activado — Liberato Community ⭐",
+                             _email_shell("Tu acceso premium está activo", body,
+                                          "Conectar a los livestreams (Whop) →", WHOP_HUB_URL))
+
+@app.get("/api/email/health")
+async def email_health():
+    """Estado del sistema de correos (sin exponer secretos)."""
+    return {"email_configured": EMAIL_ON, "discord_free_link_set": bool(DISCORD_FREE_INVITE),
+            "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None}
+
 @app.post("/api/auth/register")
 async def auth_register(request: Request):
     try:
@@ -4870,6 +4938,14 @@ async def auth_register(request: Request):
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
            "plan": plan0, "created": int(time.time())}
     await user_put(email, rec)
+    # Correo de confirmación/bienvenida (no bloqueante), segmentado por plan.
+    try:
+        if plan0 in ("premium", "pro"):
+            asyncio.create_task(send_welcome_premium(email, rec["name"]))
+        else:
+            asyncio.create_task(send_welcome_free(email, rec["name"]))
+    except Exception:
+        pass
     token = _make_jwt({"sub": uid, "email": email, "plan": plan0, "name": rec["name"]})
     return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": plan0}}
 
@@ -4988,9 +5064,16 @@ async def whop_webhook(request: Request, key: str = ""):
         return {"ok": True, "note": f"evento {evt} ignorado"}
     u = await user_get(email)
     if u:
+        was = u.get("plan")
         u["plan"] = plan
         await user_put(email, u)
         print(f"[whop] {email} -> {plan} ({evt})")
+        # al CONCEDER premium (transición), enviar el correo de bienvenida premium
+        if plan == "premium" and was != "premium":
+            try:
+                asyncio.create_task(send_welcome_premium(email, u.get("name")))
+            except Exception:
+                pass
     else:
         # aún no tiene cuenta: guardamos la titularidad para aplicarla al registrarse
         await _sb_set_config(f"whop_plan::{email}", plan)

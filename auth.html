@@ -263,7 +263,7 @@ body{
     </div>
     <!-- Acceso a plataforma (solo premium) -->
     <div id="platform-access" style="display:none;margin-top:24px;">
-      <button class="btn btn-gold" onclick="window.location.href='/dashboard'" data-es="Entrar a la plataforma →" data-en="Enter the platform →">Entrar a la plataforma →</button>
+      <button class="btn btn-gold" onclick="window.location.href='daytrading_preview.html'" data-es="Entrar a la plataforma →" data-en="Enter the platform →">Entrar a la plataforma →</button>
     </div>
     <button class="btn btn-ghost" onclick="doLogout()" style="margin-top:20px;" data-es="Cerrar sesión" data-en="Sign out">Cerrar sesión</button>
   </div>
@@ -542,37 +542,21 @@ async function loadAccount(){
 // ═══ UPGRADE (Stripe) ═══
 var appliedCoupon = '';  // código validado para pasar al checkout
 
-async function applyCoupon(){
-  var code = document.getElementById('coupon-code').value.trim().toUpperCase();
+function applyCoupon(){
+  // Los códigos de descuento se aplican directamente en el checkout de Whop.
   var fb = document.getElementById('coupon-feedback');
-  if(!code){ fb.innerHTML=''; appliedCoupon=''; return; }
-  setLoading('btn-coupon-apply', true);
-  try{
-    var d = await api('/api/stripe/validate-coupon', 'POST', {code:code});
-    appliedCoupon = code;
-    fb.style.color = 'var(--up)';
-    fb.textContent = '✓ ' + d.description + (state.lang==='es'?' aplicado':' applied');
-  }catch(e){
-    appliedCoupon = '';
-    fb.style.color = 'var(--down)';
-    fb.textContent = '✕ ' + (state.lang==='es'?'Código inválido o expirado':'Invalid or expired code');
-  }finally{
-    setLoading('btn-coupon-apply', false);
+  if(fb){
+    fb.style.color = 'var(--gold)';
+    fb.textContent = state.lang==='es'
+      ? 'Ingresa tu código en la página de pago de Whop.'
+      : 'Enter your code on the Whop checkout page.';
   }
 }
 
-async function doUpgrade(){
-  setLoading('btn-upgrade', true);
-  try{
-    var body = appliedCoupon ? {promo_code: appliedCoupon} : {};
-    var data = await api('/api/stripe/create-checkout', 'POST', body);
-    if(data.checkout_url){
-      window.location.href = data.checkout_url;  // redirige a Stripe Checkout
-    }
-  }catch(e){
-    alert(e.message);
-    setLoading('btn-upgrade', false);
-  }
+// Pagos gestionados por Whop (no Stripe). El upgrade abre el checkout de Whop.
+var WHOP_CHECKOUT = 'https://whop.com/dave-liberato-group/live-day-trading-52/';
+function doUpgrade(){
+  window.open(WHOP_CHECKOUT, '_blank');
 }
 
 // ═══ LOGOUT ═══
