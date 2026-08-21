@@ -607,6 +607,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-pane{display:none;padding:var(--sp3);min-height:220px;}
 .lg-pane.active{display:block;}
 /* day group header */
+.lg-macro-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 var(--sp3);padding:8px 10px;background:rgba(201,168,76,0.05);border:0.5px solid rgba(201,168,76,0.15);border-radius:8px;flex-wrap:wrap;}
+.lg-wk-btn{font-size:11px;letter-spacing:0.03em;color:rgba(232,228,217,0.7);background:transparent;border:0.5px solid rgba(232,228,217,0.16);border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap;transition:all 0.2s ease;font-family:inherit;}
+.lg-wk-btn:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);}
+.lg-wk-range{font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.02em;text-align:center;flex:1;min-width:120px;}
 .lg-day{display:flex;align-items:center;gap:var(--sp1);margin:var(--sp2) 0 var(--sp2);}
 .lg-day-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
 .lg-day-txt{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-2);}
@@ -926,6 +930,45 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </style>
 </head>
 <body>
+<!-- ══ BARRA DE NAVEGACIÓN DE MIEMBRO ══ -->
+<style>
+.lbc-mnav{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 16px;background:rgba(8,10,15,0.94);border-bottom:0.5px solid rgba(201,168,76,0.18);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;position:relative;z-index:8000;}
+.lbc-mnav .lbc-mnav-brand{font-family:Georgia,serif;font-style:italic;font-size:14px;color:rgba(232,228,217,0.5);margin-right:auto;letter-spacing:0.02em;}
+.lbc-mnav .lbc-mnav-brand b{color:#C9A84C;font-weight:600;font-style:normal;}
+.lbc-mnav a,.lbc-mnav button{font-size:12px;letter-spacing:0.03em;color:rgba(232,228,217,0.7);border:0.5px solid rgba(232,228,217,0.14);padding:7px 12px;border-radius:7px;background:transparent;text-decoration:none;cursor:pointer;white-space:nowrap;transition:all 0.2s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:4px;}
+.lbc-mnav a:hover,.lbc-mnav button:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);}
+.lbc-mnav a.lbc-mnav-active{color:#C9A84C;border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.1);font-weight:600;}
+.lbc-mnav button.lbc-mnav-out{color:rgba(232,228,217,0.55);}
+.lbc-mnav button.lbc-mnav-out:hover{color:#ef8a8a;border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.06);}
+@media(max-width:640px){.lbc-mnav{padding:6px 10px;gap:4px;}.lbc-mnav .lbc-mnav-brand{width:100%;margin-bottom:4px;margin-right:0;}.lbc-mnav a,.lbc-mnav button{font-size:11px;padding:6px 9px;}}
+</style>
+<nav class="lbc-mnav" aria-label="Navegación de miembro">
+  <span class="lbc-mnav-brand">Liberato <b>Community</b></span>
+  <a href="homepage.html" data-p="home">🏠 Home</a>
+  <a href="daytrading_preview.html" data-p="dash">📊 Dashboard</a>
+  <a href="journal.html" data-p="journal">📓 Journal</a>
+  <a href="earnings.html" data-p="earn">📈 Earnings</a>
+  <a href="auth.html" data-p="acct">👤 Mi cuenta</a>
+  <button type="button" class="lbc-mnav-out" onclick="lbcMemberLogout()">Salir</button>
+</nav>
+<script data-active="dash">
+function lbcMemberLogout(){
+  try{
+    localStorage.removeItem('lbc_token');
+    localStorage.removeItem('lbc_session');
+    localStorage.removeItem('lbc_user_name');
+    localStorage.removeItem('lbc_user_email');
+  }catch(e){}
+  window.location.href='homepage.html';
+}
+(function(){
+  var active=document.currentScript&&document.currentScript.getAttribute('data-active');
+  if(!active)return;
+  var el=document.querySelector('.lbc-mnav a[data-p="'+active+'"]');
+  if(el)el.classList.add('lbc-mnav-active');
+})();
+</script>
+
 <canvas id="particle-canvas"></canvas>
 <div class="app">
 
@@ -2660,6 +2703,29 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     }catch(e){return -4;}
   }
 
+  // ── Navegación por semana del calendario macro (0 = semana actual) ──
+  var MACRO_WEEK_OFFSET=0;
+  function macroWeekPrev(){MACRO_WEEK_OFFSET--;renderLegacy();}
+  function macroWeekNext(){MACRO_WEEK_OFFSET++;renderLegacy();}
+  window.macroWeekPrev=macroWeekPrev; window.macroWeekNext=macroWeekNext;
+  // Lunes (00:00) de la semana actual desplazada 'offset' semanas, en fecha ET.
+  function macroWeekStart(offset){
+    var et=etNow();
+    var base=new Date(et.getFullYear(),et.getMonth(),et.getDate());
+    var dow=base.getDay();            // 0=domingo … 6=sábado
+    var diff=(dow===0?-6:1-dow);      // retroceder hasta el lunes
+    base.setDate(base.getDate()+diff+offset*7);
+    return base;
+  }
+  function macroDateKey(d){var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+  function macroWeekLabel(offset){
+    var ME=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var mon=macroWeekStart(offset);
+    var fri=new Date(mon); fri.setDate(fri.getDate()+4);
+    if(mon.getMonth()===fri.getMonth())return mon.getDate()+'–'+fri.getDate()+' '+ME[fri.getMonth()];
+    return mon.getDate()+' '+ME[mon.getMonth()]+' – '+fri.getDate()+' '+ME[fri.getMonth()];
+  }
+
   function renderLegacy(){
     var mc=MOCK.macro, mv=MOCK.movers;
     if(!mc)return;
@@ -2702,8 +2768,34 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var list=$('lg-macro-list');
     if(list){
       if(!mc.days||!mc.days.length)mc.days=typeof buildMacroDays==='function'?buildMacroDays():[];
-      var html='';
-      mc.days.forEach(function(day){
+      // ── Filtrar a la semana seleccionada (lunes–viernes) por fecha del día ──
+      var wkStartK=macroDateKey(macroWeekStart(MACRO_WEEK_OFFSET));
+      var _wkEnd=macroWeekStart(MACRO_WEEK_OFFSET); _wkEnd.setDate(_wkEnd.getDate()+6); // incluir fin de semana por seguridad
+      var wkEndK=macroDateKey(_wkEnd);
+      var weekDays=mc.days.filter(function(day){
+        var dk=day.date||'';
+        if(!dk)return MACRO_WEEK_OFFSET===0; // días sin fecha: solo en la semana actual
+        return dk>=wkStartK&&dk<=wkEndK;
+      });
+      // Controles de navegación de semana + rango
+      var nav='<div class="lg-macro-nav">'
+        +'<button type="button" class="lg-wk-btn" onclick="macroWeekPrev()" aria-label="Semana anterior">◀ Semana anterior</button>'
+        +'<span class="lg-wk-range">'+macroWeekLabel(MACRO_WEEK_OFFSET)+(MACRO_WEEK_OFFSET===0?' · esta semana':'')+'</span>'
+        +'<button type="button" class="lg-wk-btn" onclick="macroWeekNext()" aria-label="Semana siguiente">Semana siguiente ▶</button>'
+        +'</div>';
+      var html=nav;
+      if(!weekDays.length){
+        list.innerHTML=nav+'<div class="cat-empty"><span class="cat-empty-t">Sin eventos macro esta semana</span></div>';
+        // continuar con movers abajo
+        (function(){
+          function mvHtml0(arr,dir){return arr.map(function(m){return '<div class="lg-mv '+dir+'"><div class="lg-mv-l"><span class="lg-mv-sym">'+m.sym+'</span><span class="lg-mv-px">$'+m.px+'</span></div><span class="lg-mv-chg '+dir+'">'+m.chg+'</span></div>';}).join('');}
+          var g0=$('lg-gainers'), l0=$('lg-losers');
+          if(g0&&mv)g0.innerHTML=mvHtml0(mv.gainers,'up');
+          if(l0&&mv)l0.innerHTML=mvHtml0(mv.losers,'down');
+        })();
+        return;
+      }
+      weekDays.forEach(function(day){
         html+='<div class="lg-day'+(day.future?' future':'')+'"><span class="lg-day-dot"></span><span class="lg-day-txt">'+day.label+'</span></div>';
         day.events.forEach(function(e){
           var bcl=e.impact==='high'?'high':e.impact==='med'?'med':e.impact==='holiday'?'holiday':'med';
@@ -3054,7 +3146,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
           }
         }
       });
-      (function(){var et3f=etNow(),p3f=function(n){return String(n).padStart(2,'0');};var todayKf=et3f.getFullYear()+'-'+p3f(et3f.getMonth()+1)+'-'+p3f(et3f.getDate());Object.keys(grouped).sort().forEach(function(dk,i){var DE3=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],ME3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],et3=etNow(),p3=function(n){return String(n).padStart(2,'0');};var todayK=et3.getFullYear()+'-'+p3(et3.getMonth()+1)+'-'+p3(et3.getDate());if(dk<todayK)return;/* FIX: descartar días pasados */var pts=dk.split('-'),d3=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));var l3=DE3[d3.getDay()]+' '+d3.getDate()+' '+ME3[d3.getMonth()];if(dk===todayK)l3='Hoy · '+l3;MOCK.macro.days.push({label:l3,future:dk>todayK,events:grouped[dk]});});})();
+      (function(){var et3f=etNow(),p3f=function(n){return String(n).padStart(2,'0');};var todayKf=et3f.getFullYear()+'-'+p3f(et3f.getMonth()+1)+'-'+p3f(et3f.getDate());Object.keys(grouped).sort().forEach(function(dk,i){var DE3=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],ME3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],et3=etNow(),p3=function(n){return String(n).padStart(2,'0');};var todayK=et3.getFullYear()+'-'+p3(et3.getMonth()+1)+'-'+p3(et3.getDate());if(dk<todayK)return;/* FIX: descartar días pasados */var pts=dk.split('-'),d3=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));var l3=DE3[d3.getDay()]+' '+d3.getDate()+' '+ME3[d3.getMonth()];if(dk===todayK)l3='Hoy · '+l3;MOCK.macro.days.push({label:l3,future:dk>todayK,date:dk,events:grouped[dk]});});})();
       // ── RECUPERAR eventos de HOY que el backend dejó de enviar ──
       // Si un evento del día ya salió y el backend lo quitó de su respuesta,
       // lo volvemos a insertar desde el store para que NO desaparezca.
@@ -3718,6 +3810,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     var list=document.getElementById('lg-macro-list');
     if(!list||!MOCK||!MOCK.macro||!MOCK.macro.days||!MOCK.macro.days.length)return;
     if(list.querySelector('.lg-day'))return;
+    // renderLegacy ya pintó (nav de semana presente, quizás semana vacía): no sobrescribir.
+    if(list.querySelector('.lg-macro-nav'))return;
     var h='';
     MOCK.macro.days.forEach(function(day){
       h+='<div class="lg-day'+(day.future?' future':'')+'"><span class="lg-day-dot"></span><span class="lg-day-txt">'+day.label+'</span></div>';
