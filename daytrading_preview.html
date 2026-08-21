@@ -1401,6 +1401,16 @@ function lbcMemberLogout(){
     var key=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
     return !!NYSE_HOLIDAYS[key];
   }
+  // ¿Estamos en sesión regular RTH? Lunes-viernes 9:30–16:00 hora ET,
+  // excluyendo feriados NYSE. Las alertas y el sonido SOLO ocurren aquí.
+  function isRTH(){
+    var et=etNow();
+    var dow=et.getDay();               // 0=domingo … 6=sábado
+    if(dow===0||dow===6)return false;  // fin de semana
+    if(isHoliday(et))return false;      // feriado NYSE
+    var m=et.getHours()*60+et.getMinutes();
+    return m>=570&&m<960;              // 9:30 (570) ≤ t < 16:00 (960)
+  }
   function tickClock(){
     var et=etNow(); var c=$('bar-clock'); if(c)c.textContent=fmt2(et)+' ET';
     var st=$('bar-st'), tx=$('bar-st-txt'); if(!st||!tx)return;
@@ -3263,7 +3273,8 @@ function lbcMemberLogout(){
         console.log('[movers] top:',moverKey,'score:',score,'lvl:',alertLvl);
         // ── ALERTAS DE MOVERS — lógica robusta ───────────────────────
         // Umbral: score ≥8.5 O nivel CRITICAL/ULTRA = evento de alto impacto.
-        var isHighImpact=(score>=8.5||alertLvl==='CRITICAL'||alertLvl==='ULTRA');
+        // Solo en sesión regular RTH (fuera de horario no hay popup ni sonido).
+        var isHighImpact=isRTH()&&(score>=8.5||alertLvl==='CRITICAL'||alertLvl==='ULTRA');
         // Cooldown de 10 min por mover para no spamear el mismo
         var nowMs=Date.now();
         if(!window._moverAlertHistory)window._moverAlertHistory={};
@@ -3354,7 +3365,8 @@ function lbcMemberLogout(){
   })();
 
   function showGammaAlert(info){
-    playChime('level');   // 🔔 cruce de flip / call wall / put wall
+    // GATE RTH: fuera de sesión regular no hay popup ni sonido.
+    if(!isRTH())return;
     // Quitar alerta anterior si existe
     if(_gammaAlertEl&&_gammaAlertEl.parentNode)_gammaAlertEl.parentNode.removeChild(_gammaAlertEl);
     var dirUp=info.direction==='up';
@@ -3379,6 +3391,7 @@ function lbcMemberLogout(){
     document.body.appendChild(el);
     _gammaAlertEl=el;
     setTimeout(function(){el.classList.add('show');},50);
+    playChime('level');   // 🔔 suena SOLO cuando el popup ya está en el DOM y visible
     // Click para cerrar
     el.onclick=function(e){
       el.classList.remove('show');
@@ -3400,6 +3413,16 @@ function lbcMemberLogout(){
       {key:'call', name:'Call Wall',  type:'Resistencia',        price:S.callWall},
       {key:'put',  name:'Put Wall',   type:'Soporte',            price:S.putWall}
     ];
+    // GATE RTH: fuera de sesión regular NO se dispara alerta ni sonido.
+    // Aun así actualizamos el lado de cada nivel para no soltar un cruce
+    // "acumulado" en la próxima apertura del mercado.
+    if(!isRTH()){
+      for(var j=0;j<levels.length;j++){
+        if(!levels[j].price)continue;
+        _gammaSide[levels[j].key]=newPrice>=levels[j].price?'above':'below';
+      }
+      return;
+    }
     var nowTs=Date.now();
     for(var i=0;i<levels.length;i++){
       var lv=levels[i];
@@ -3431,7 +3454,8 @@ function lbcMemberLogout(){
     }
   }
   function showMoverAlert(mover){
-    playChime('news');   // 🔔 noticia de último minuto
+    // GATE RTH: fuera de sesión regular no hay popup ni sonido.
+    if(!isRTH())return;
     // Quitar alerta anterior si existe
     if(_moverAlertEl&&_moverAlertEl.parentNode)_moverAlertEl.parentNode.removeChild(_moverAlertEl);
     var sent=mover.sentiment||'Neutral';
@@ -3457,6 +3481,7 @@ function lbcMemberLogout(){
     _moverAlertEl=el;
     // Animar entrada
     setTimeout(function(){el.classList.add('show');},50);
+    playChime('news');   // 🔔 suena SOLO cuando el popup ya está en el DOM y visible
     // Click para abrir noticia
     el.onclick=function(e){
       if(e.target.className==='mover-alert-x'){el.classList.remove('show');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},500);return;}
