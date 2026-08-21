@@ -522,6 +522,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .rg-price-px.fl-up{animation:flUp 0.4s var(--ease-out);} .rg-price-px.fl-dn{animation:flDn 0.4s var(--ease-out);}
 .rg-price-chg{font-family:var(--mono);font-size:12px;font-weight:700;}
 .rg-price-chg.up{color:var(--up);} .rg-price-chg.down{color:var(--down);}
+.rg-price-px.empty,.rg-price-chg.empty{color:var(--ink-4)!important;}
 
 /* ════ DIAGNOSTICS / API HEALTH PANEL ════ */
 .diag{border-radius:var(--r-lg);overflow:hidden;background:rgba(10,13,20,0.7);border:1px solid var(--glass-brd);backdrop-filter:blur(14px);}
@@ -648,6 +649,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-ev-badge.med{color:var(--warn);background:var(--warn-dim);border:1px solid rgba(255,194,71,0.25);}
 .lg-ev-badge.holiday{color:var(--violet);background:rgba(177,151,252,0.1);border:1px solid rgba(177,151,252,0.25);}
 .lg-ev-data{display:grid;gap:1px;background:var(--hair);margin-top:var(--sp2);}
+@media(max-width:560px){.lg-ev-data{grid-template-columns:1fr 1fr!important;}}
 .lg-ev-cell{background:var(--bg-1);padding:var(--sp2) var(--sp2);}
 .lg-ev-cell-k{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;font-weight:600;}
 .lg-ev-cell-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);}
@@ -891,7 +893,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   backdrop-filter:blur(20px);cursor:pointer;}
 .mover-alert.show{transform:translateX(0);opacity:1;}
 /* ═══ ALERTAS DE CRUCE DE NIVELES GAMMA ═══ */
-.gamma-alert{position:fixed;top:72px;right:24px;z-index:9100;max-width:380px;
+.gamma-alert{position:fixed;top:calc(72px + 130px);right:24px;z-index:9100;max-width:380px;
   background:linear-gradient(145deg,rgba(11,14,23,0.98),rgba(8,10,18,0.98));
   border:1px solid rgba(204,169,79,0.5);border-radius:12px;
   box-shadow:0 12px 40px rgba(0,0,0,0.6),0 0 0 1px rgba(204,169,79,0.12),0 0 28px rgba(204,169,79,0.2);
@@ -933,6 +935,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div class="bar-r">
         <span class="bar-clock" id="bar-clock">--:-- ET</span>
         <span class="bar-st pre" id="bar-st"><span class="bar-st-dot"></span><span id="bar-st-txt">Pre-Market</span></span>
+        <button id="lbc-sound-btn" title="Sonido de alertas (noticias y cruces de nivel)" style="background:rgba(20,20,28,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:50%;width:30px;height:30px;font-size:14px;line-height:1;cursor:pointer;padding:0;color:inherit;">🔔</button>
       </div>
     </div>
   </header>
@@ -955,8 +958,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
               <span class="rg-price-live"><span class="d"></span>Live</span>
             </div>
             <div class="rg-price-row">
-              <span class="rg-price-px neut" id="rg-price">—</span>
-              <span class="rg-price-chg" id="rg-price-chg">—</span>
+              <span class="rg-price-px neut empty" id="rg-price">—.—</span>
+              <span class="rg-price-chg empty" id="rg-price-chg">—</span>
             </div>
           </div>
         </div>
@@ -3248,16 +3251,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     if(_lbcSoundOn)playChime('news');   // feedback al reactivar
   }
   (function _mountSoundBtn(){
-    function add(){
-      if(document.getElementById('lbc-sound-btn'))return;
-      var b=document.createElement('button');
-      b.id='lbc-sound-btn';b.textContent=_lbcSoundOn?'🔔':'🔕';
-      b.title='Sonido de alertas (noticias y cruces de nivel)';
-      b.style.cssText='position:fixed;bottom:16px;left:16px;z-index:9998;background:rgba(20,20,28,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:50%;width:38px;height:38px;font-size:16px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,0.35);';
+    // El botón vive DENTRO de la barra superior (junto al pill de estado), no flotante.
+    function wire(){
+      var b=document.getElementById('lbc-sound-btn');
+      if(!b)return;
+      b.textContent=_lbcSoundOn?'🔔':'🔕';
       b.onclick=toggleSound;
-      document.body.appendChild(b);
     }
-    if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
+    if(document.body)wire();else document.addEventListener('DOMContentLoaded',wire);
   })();
 
   function showGammaAlert(info){
