@@ -1540,6 +1540,7 @@ HIGH_KW = [
     "cpi","core cpi","ppi","core ppi","pce","core pce","fomc","fed interest",
     "federal funds","fed minutes","powell","non farm","nonfarm","gdp",
     "retail sales","ism manufacturing","ism services","jolts","adp",
+    "services pmi","manufacturing pmi","composite pmi","s&p global","flash pmi",
     "initial jobless","jobless claims","unemployment claims","unemployment rate",
     "average hourly","philly fed","philadelphia fed","empire state",
     "consumer confidence","consumer sentiment","michigan","durable goods",
@@ -2241,6 +2242,12 @@ async def refresh_calendar():
                 imp_raw = (ev.get("impact","") or "").lower()
                 imp_map = {"high":"high","medium":"med","low":"low"}
                 impact = imp_map.get(imp_raw, "med")
+                # PROMOCIÓN: FMP etiqueta algunos movers reales del NQ como "medium"
+                # (p.ej. los Flash PMI de S&P Global a las 9:45 ET). Si el evento está
+                # en HIGH_KW, lo subimos a "high" para que aparezca en High Impact News
+                # y en el Institutional Context, no solo enterrado en el calendario.
+                if any(k in name.lower() for k in HIGH_KW):
+                    impact = "high"
                 if impact == "low": continue
                 actual = ev.get("actual")
                 events.append({
