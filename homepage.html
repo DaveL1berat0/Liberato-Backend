@@ -606,6 +606,50 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
   .btn-hint-hero{font-size:10px;margin-top:8px;}
 }
 
+/* ── Ícono de perfil (abre el drawer) ── */
+.nav-mem-profile{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
+.nav-mem-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
+.nav-mem-profile .nav-mem-ic{font-size:16px;line-height:1;}
+
+/* ── "soon" apilado debajo de la palabra (Options) · desktop + drawer ── */
+.nav-soon .nav-soon-label{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.05;}
+.nav-soon .nav-soon-tag{font-size:8px;letter-spacing:0.08em;text-transform:lowercase;color:#080A0F;background:rgba(201,168,76,0.8);padding:1px 6px;border-radius:4px;font-weight:700;align-self:flex-start;margin-top:2px;}
+.menu-item.nav-soon{align-items:center;}
+.menu-item.nav-soon .nav-soon-tag{margin-top:3px;}
+.nav-unlocked .lock-svg-open{vertical-align:middle;display:inline-block;}
+
+/* ── DRAWER LATERAL · MI PERFIL ── */
+.profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
+.profile-overlay.open{opacity:1;visibility:visible;}
+.profile-drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:linear-gradient(180deg,#0C0F17,#080A0F);border-left:1px solid rgba(201,168,76,0.22);box-shadow:-24px 0 60px -20px rgba(0,0,0,0.8);transform:translateX(100%);transition:transform 0.34s cubic-bezier(0.22,1,0.36,1);z-index:1210;display:flex;flex-direction:column;}
+.profile-drawer.open{transform:translateX(0);}
+.pd-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid rgba(201,168,76,0.14);flex-shrink:0;}
+.pd-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;color:#E8E4D9;letter-spacing:0.02em;}
+.pd-close{width:34px;height:34px;border-radius:8px;border:1px solid rgba(201,168,76,0.22);background:transparent;color:rgba(201,168,76,0.7);font-size:16px;cursor:pointer;transition:all 0.2s;line-height:1;}
+.pd-close:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.08);}
+.pd-scroll{overflow-y:auto;padding:20px 22px 28px;flex:1;}
+.pd-rows{margin-bottom:6px;}
+.pd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.pd-k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.45);}
+.pd-v{font-size:13.5px;color:#E8E4D9;font-weight:500;text-align:right;word-break:break-word;}
+.pd-sec{margin-top:22px;padding-top:20px;border-top:1px solid rgba(201,168,76,0.1);}
+.pd-sec-t{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;color:#E7CC74;margin-bottom:12px;}
+.pd-lang{display:flex;gap:10px;}
+.pd-lang-btn{flex:1;padding:11px;border-radius:9px;border:1px solid rgba(232,228,217,0.14);background:rgba(255,255,255,0.02);color:rgba(232,228,217,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.pd-lang-btn:hover{border-color:rgba(201,168,76,0.45);color:#E8E4D9;}
+.pd-lang-btn.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);color:#E7CC74;font-weight:600;}
+.pd-input{width:100%;box-sizing:border-box;background:rgba(8,9,15,0.6);border:1px solid rgba(232,228,217,0.12);border-radius:10px;padding:12px 14px;color:#E8E4D9;font-size:14px;margin-bottom:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.pd-input:focus{border-color:rgba(201,168,76,0.5);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+.pd-input::placeholder{color:rgba(232,228,217,0.3);}
+.pd-btn{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#C9A84C,#a07828);color:#080A0F;font-size:13.5px;font-weight:700;letter-spacing:0.02em;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s,opacity 0.2s;}
+.pd-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(201,168,76,0.22);}
+.pd-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.pd-logout{width:100%;margin-top:26px;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;font-size:13.5px;font-weight:600;letter-spacing:0.03em;cursor:pointer;transition:all 0.2s;}
+.pd-logout:hover{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.12);color:#f5a3a3;}
+.pd-msg{font-size:12px;line-height:1.5;margin-bottom:10px;min-height:0;}
+.pd-msg.ok{color:#2EE8A4;}
+.pd-msg.err{color:#ef8a8a;}
+
 /* ── DESKTOP ── */
 @media(min-width:768px){
   nav{
@@ -1471,6 +1515,49 @@ nav { max-width: 100%; }
   </div>
 </div>
 
+<!-- ═══ DRAWER LATERAL · MI PERFIL ═══ -->
+<div class="profile-overlay" id="profile-overlay" onclick="closeProfileDrawer()"></div>
+<aside class="profile-drawer" id="profile-drawer" role="dialog" aria-label="Mi perfil" aria-hidden="true">
+  <div class="pd-head">
+    <div class="pd-title" data-es="Mi perfil" data-en="My profile">Mi perfil</div>
+    <button class="pd-close" onclick="closeProfileDrawer()" aria-label="Cerrar">&#10005;</button>
+  </div>
+  <div class="pd-scroll">
+    <div class="pd-rows">
+      <div class="pd-row"><span class="pd-k" data-es="Nombre" data-en="Name">Nombre</span><span class="pd-v" id="pd-name">—</span></div>
+      <div class="pd-row"><span class="pd-k" data-es="Correo" data-en="Email">Correo</span><span class="pd-v" id="pd-email">—</span></div>
+      <div class="pd-row"><span class="pd-k" data-es="Plan" data-en="Plan">Plan</span><span class="pd-v" id="pd-plan">—</span></div>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Idioma" data-en="Language">Idioma</div>
+      <div class="pd-lang">
+        <button type="button" class="pd-lang-btn" id="pd-lang-es" onclick="profileSetLang('es')">🇪🇸 Español</button>
+        <button type="button" class="pd-lang-btn" id="pd-lang-en" onclick="profileSetLang('en')">🇬🇧 English</button>
+      </div>
+      <div class="pd-msg" id="pd-lang-msg"></div>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</div>
+      <div class="pd-msg" id="pd-pw-msg"></div>
+      <input class="pd-input" id="pd-pw-cur" type="password" placeholder="Contraseña actual" autocomplete="current-password">
+      <input class="pd-input" id="pd-pw-new" type="password" placeholder="Nueva contraseña (mín. 8)" autocomplete="new-password">
+      <button class="pd-btn" id="pd-pw-btn" onclick="profileChangePassword()" data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Cambiar correo" data-en="Change email">Cambiar correo</div>
+      <div class="pd-msg" id="pd-em-msg"></div>
+      <input class="pd-input" id="pd-em-new" type="email" placeholder="Nuevo correo" autocomplete="email">
+      <input class="pd-input" id="pd-em-pass" type="password" placeholder="Contraseña (para confirmar)" autocomplete="current-password">
+      <button class="pd-btn" id="pd-em-btn" onclick="profileChangeEmail()" data-es="Actualizar correo" data-en="Update email">Actualizar correo</button>
+    </div>
+
+    <button class="pd-logout" onclick="lbcLogout()" data-es="Desconectar" data-en="Disconnect">Desconectar</button>
+  </div>
+</aside>
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" role="dialog" aria-modal="true">
@@ -1513,11 +1600,10 @@ nav { max-width: 100%; }
     </button>
     <button class="nav-login" id="nav-login-btn" onclick="openLoginModal()">Login</button>
     <button class="nav-cta" id="nav-join-btn" onclick="openModal()">Unirse &#8594;</button>
-    <!-- Accesos de miembro (visibles solo con sesión). Los items de app viven
-         en la nav original (se desbloquean al iniciar sesión); aquí solo el
-         perfil y el logout, para NO duplicar la navegación. -->
-    <a class="nav-login nav-member" id="nav-mem-acct" href="auth.html" style="display:none;"><span class="nav-mem-ic">&#128100;</span><span data-es="Mi perfil" data-en="My profile">Mi perfil</span></a>
-    <button class="nav-cta nav-member" id="nav-mem-logout" onclick="lbcLogout()" style="display:none;" data-es="Salir" data-en="Log out">Salir</button>
+    <!-- Acceso de miembro: SOLO el ícono de perfil, que abre el drawer lateral.
+         La navegación entre secciones es la fila de candados (abiertos al
+         estar logueado). Idioma y Desconectar viven DENTRO del perfil. -->
+    <button class="nav-mem-profile nav-member" id="nav-mem-acct" onclick="openProfileDrawer()" style="display:none;" aria-label="Mi perfil" title="Mi perfil"><span class="nav-mem-ic">&#128100;</span></button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
@@ -1899,26 +1985,44 @@ function showWelcome(name){
     .catch(function(){});
 })();
 
+// SVG de candado claramente ABIERTO (arco levantado y separado del cuerpo),
+// en dorado y con buen contraste para que se lea "abierto" a simple vista.
+var LBC_OPEN_LOCK='<svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg>';
+
 // Desbloquea un item de la nav (desktop o drawer) para el usuario logueado.
 // - data-app real  → candado ABIERTO 🔓 + clickeable a su página.
-// - data-app="soon" → se queda con candado CERRADO 🔒 + etiqueta "soon" (Options).
+// - data-app="soon" → candado CERRADO 🔒 + "soon" DEBAJO de la palabra (apilado).
 function lbcUnlockItem(a){
+  if(a.getAttribute('data-orig-html')===null) a.setAttribute('data-orig-html',a.innerHTML);
   var app=a.getAttribute('data-app');
   var glyph=a.querySelector('.lock-icon,.menu-item-lock');
   var badge=a.querySelector('.menu-item-badge');
   if(app==='soon'){
-    // Options: en construcción — candado cerrado, no clickeable, etiqueta "soon".
+    // Options: en construcción — candado cerrado, no clickeable, "soon" apilado.
     a.classList.add('nav-soon');
     a.removeAttribute('href');
     a.onclick=function(e){e.preventDefault();};
-    if(badge)badge.textContent='soon';
-    else if(!a.querySelector('.nav-soon-tag')){
-      var s=document.createElement('span');s.className='nav-soon-tag';s.textContent='soon';a.appendChild(s);
+    if(!a.querySelector('.nav-soon-label')){
+      var isDrawer=!!a.querySelector('.menu-item-text');
+      var word;
+      if(isDrawer){
+        var ts=a.querySelector('.menu-item-text'); word=ts?ts.textContent:'Options';
+        if(badge&&badge.parentNode)badge.parentNode.removeChild(badge);
+      } else {
+        word=(a.lastChild&&a.lastChild.nodeType===3)?a.lastChild.textContent.trim():'Options';
+      }
+      var keepGlyph=glyph; a.innerHTML='';
+      if(keepGlyph){ a.appendChild(keepGlyph); }
+      else { var g=document.createElement('span'); g.className=isDrawer?'menu-item-lock':'lock-icon'; g.innerHTML='&#128274;'; a.appendChild(g); }
+      var lbl=document.createElement('span'); lbl.className='nav-soon-label';
+      var w=document.createElement('span'); w.className='nav-soon-word'; w.textContent=word;
+      var tg=document.createElement('span'); tg.className='nav-soon-tag'; tg.textContent='soon';
+      lbl.appendChild(w); lbl.appendChild(tg); a.appendChild(lbl);
     }
     return;
   }
-  // Desbloqueado: candado ABIERTO + navegación real.
-  if(glyph)glyph.innerHTML='&#128275;'; // 🔓
+  // Desbloqueado: candado ABIERTO (SVG dorado) + navegación real.
+  if(glyph)glyph.innerHTML=LBC_OPEN_LOCK;
   a.classList.remove('nav-locked');
   a.classList.add('nav-unlocked');
   a.onclick=null;
@@ -1926,41 +2030,132 @@ function lbcUnlockItem(a){
   if(badge)badge.style.display='none';
 }
 
-// Estado LOGUEADO: una sola nav. Desbloquea los items originales, oculta
-// Login/Unirse y muestra Mi perfil + Salir (sin duplicar navegación).
+// Estado LOGUEADO: una sola nav (la fila de candados). Desbloquea los items,
+// oculta Login/Unirse y el toggle de idioma del top (idioma vive en el perfil),
+// y muestra SOLO el ícono de perfil (que abre el drawer).
 function lbcShowMemberNav(){
-  var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='';
-  var lo=document.getElementById('nav-mem-logout'); if(lo)lo.style.display='';
+  var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='inline-flex';
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
-  // Desbloquear los items de la nav original (desktop) y del drawer (móvil).
+  var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='none';
   var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
   Array.prototype.forEach.call(items,lbcUnlockItem);
 }
 
 // Revierte un item a su estado BLOQUEADO (candado cerrado, solo miembros).
 function lbcRelockItem(a){
-  var isDrawer=!!a.querySelector('.menu-item-text'); // drawer usa .menu-item
-  var glyph=a.querySelector('.lock-icon,.menu-item-lock');
-  var badge=a.querySelector('.menu-item-badge');
-  if(glyph)glyph.innerHTML='&#128274;'; // 🔒
+  var isDrawer=/menu-item/.test(a.className);
+  var orig=a.getAttribute('data-orig-html');
+  if(orig!==null)a.innerHTML=orig;   // restaura 🔒 + texto + badge exactos
   a.classList.remove('nav-unlocked','nav-soon');
   if(!isDrawer)a.classList.add('nav-locked');
   a.setAttribute('href','#pro-plan');
   a.onclick=function(e){return irAPlanes(e);};
-  if(badge){badge.style.display='';badge.textContent='Miembros';}
-  var tag=a.querySelector('.nav-soon-tag'); if(tag&&tag.parentNode)tag.parentNode.removeChild(tag);
 }
 
-// Estado DESLOGUEADO: re-bloquea los items y restaura Login/Unirse.
+// Estado DESLOGUEADO: re-bloquea los items, restaura Login/Unirse + idioma
+// y oculta el ícono de perfil.
 function lbcHideMemberNav(){
   var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='none';
-  var lo=document.getElementById('nav-mem-logout'); if(lo)lo.style.display='none';
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='';
+  var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='';
   var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
   Array.prototype.forEach.call(items,lbcRelockItem);
 }
+
+// ═══ DRAWER · MI PERFIL ═══
+// POST autenticado a los endpoints existentes (Authorization: Bearer lbc_token).
+function lbcApi(path, body){
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  return fetch(LBC_AUTH+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)})
+    .then(function(r){return r.json().catch(function(){return {};}).then(function(d){ if(!r.ok) throw new Error(d.detail||'Error'); return d; }); });
+}
+function pdMsg(id,text,ok){var e=document.getElementById(id);if(!e)return;e.textContent=text;e.className='pd-msg '+(ok?'ok':'err');}
+function pdSyncLang(){var cur='es';try{cur=localStorage.getItem('lbc_lang')||'es';}catch(e){}var es=document.getElementById('pd-lang-es'),en=document.getElementById('pd-lang-en');if(es)es.classList.toggle('active',cur==='es');if(en)en.classList.toggle('active',cur==='en');}
+function openProfileDrawer(){
+  // Datos desde la sesión guardada (rápido), luego se refrescan del backend.
+  var s={};try{s=JSON.parse(localStorage.getItem('lbc_session')||'{}');}catch(e){}
+  var nm=(s&&s.name)||localStorage.getItem('lbc_user_name')||'—';
+  var em=(s&&s.email)||localStorage.getItem('lbc_user_email')||'—';
+  var plan=(s&&s.plan)||'';
+  var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
+  if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
+  ['pd-lang-msg','pd-pw-msg','pd-em-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
+  pdSyncLang();
+  var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
+  if(ov)ov.classList.add('open');
+  if(dr){dr.classList.add('open');dr.setAttribute('aria-hidden','false');}
+  document.body.style.overflow='hidden';
+  // Refrescar del backend (nombre/correo/plan/idioma reales).
+  var token='';try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(token){
+    fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(u){
+        if(!u)return;
+        if(pn&&u.name)pn.textContent=u.name;
+        if(pe&&u.email)pe.textContent=u.email;
+        if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
+        if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
+      }).catch(function(){});
+  }
+}
+function closeProfileDrawer(){
+  var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
+  if(ov)ov.classList.remove('open');
+  if(dr){dr.classList.remove('open');dr.setAttribute('aria-hidden','true');}
+  document.body.style.overflow='';
+}
+// 1) Idioma → set-language + traducción de la página al instante.
+function profileSetLang(lang){
+  var cur='es';try{cur=localStorage.getItem('lbc_lang')||'es';}catch(e){}
+  if(lang!==cur && typeof window.toggleLang==='function'){ window.toggleLang(); } // traduce + actualiza lbc_lang
+  pdSyncLang();
+  lbcApi('/api/auth/set-language',{language:lang})
+    .then(function(){ pdMsg('pd-lang-msg', lang==='es'?'Idioma actualizado.':'Language updated.', true); })
+    .catch(function(e){ pdMsg('pd-lang-msg', e.message, false); });
+}
+// 2) Cambiar contraseña.
+function profileChangePassword(){
+  var cur=(document.getElementById('pd-pw-cur')||{}).value||'';
+  var nw=(document.getElementById('pd-pw-new')||{}).value||'';
+  if(!cur||!nw){ pdMsg('pd-pw-msg','Completa ambos campos.',false); return; }
+  if(nw.length<8){ pdMsg('pd-pw-msg','La nueva contraseña necesita mínimo 8 caracteres.',false); return; }
+  var b=document.getElementById('pd-pw-btn'); if(b)b.disabled=true;
+  lbcApi('/api/auth/change-password',{current_password:cur,new_password:nw})
+    .then(function(){
+      var c=document.getElementById('pd-pw-cur'); if(c)c.value='';
+      var n=document.getElementById('pd-pw-new'); if(n)n.value='';
+      pdMsg('pd-pw-msg','Contraseña actualizada.',true);
+    })
+    .catch(function(e){ pdMsg('pd-pw-msg',e.message,false); })
+    .then(function(){ if(b)b.disabled=false; });
+}
+// 3) Cambiar correo (el correo es la identidad → guardar el nuevo token).
+function profileChangeEmail(){
+  var ne=((document.getElementById('pd-em-new')||{}).value||'').trim();
+  var pw=(document.getElementById('pd-em-pass')||{}).value||'';
+  if(!ne||!pw){ pdMsg('pd-em-msg','Completa ambos campos.',false); return; }
+  if(ne.indexOf('@')<1){ pdMsg('pd-em-msg','Ingresa un correo válido.',false); return; }
+  var b=document.getElementById('pd-em-btn'); if(b)b.disabled=true;
+  lbcApi('/api/auth/change-email',{password:pw,new_email:ne})
+    .then(function(d){
+      if(d.token){ try{ localStorage.setItem('lbc_token',d.token); }catch(e){} }
+      var em=d.email||ne;
+      try{ localStorage.setItem('lbc_user_email',em); }catch(e){}
+      try{ var s=JSON.parse(localStorage.getItem('lbc_session')||'{}'); s.email=em; localStorage.setItem('lbc_session',JSON.stringify(s)); }catch(e){}
+      var pe=document.getElementById('pd-email'); if(pe)pe.textContent=em;
+      var n=document.getElementById('pd-em-new'); if(n)n.value='';
+      var p=document.getElementById('pd-em-pass'); if(p)p.value='';
+      pdMsg('pd-em-msg','Correo actualizado.',true);
+    })
+    .catch(function(e){ pdMsg('pd-em-msg',e.message,false); })
+    .then(function(){ if(b)b.disabled=false; });
+}
+window.openProfileDrawer=openProfileDrawer; window.closeProfileDrawer=closeProfileDrawer;
+window.profileSetLang=profileSetLang; window.profileChangePassword=profileChangePassword; window.profileChangeEmail=profileChangeEmail;
 
 // Cierra sesión: limpia el token y las claves de sesión, y recarga la home.
 function lbcLogout(){
