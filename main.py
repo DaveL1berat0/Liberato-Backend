@@ -1901,6 +1901,206 @@ def _merge_rapidapi(ff_events, rt_actuals):
     return ff_events
 
 
+# ── BLS / FRED: relleno de 'actual' de ÚLTIMO RECURSO (los grandes US, gratis) ──
+# Se ejecutan al final del calendario SOLO sobre eventos ya vencidos que aún no
+# tienen 'actual'. BLS no necesita key (fuente del gobierno, la más rápida). FRED
+# se activa con FRED_API_KEY (gratis). Guardia de mes: el dato debe ser del mes
+# ESPERADO (mes del release − 1) para no publicar el mes anterior como actual.
+_bls_last_fetch = 0.0
+_fred_last_fetch = 0.0
+BLS_API_KEY = os.getenv("BLS_API_KEY", "").strip()
+FRED_API_KEY = os.getenv("FRED_API_KEY", "").strip()
+
+# (frases_en_titulo [más específicas primero], series_id, transform)
+BLS_SERIES = [
+    (["core cpi m/m", "core cpi mom"],                         "CUSR0000SA0L1E", "mom"),
+    (["core cpi y/y", "core cpi yoy"],                         "CUUR0000SA0L1E", "yoy"),
+    (["cpi y/y", "cpi yoy"],                                   "CUUR0000SA0",    "yoy"),
+    (["cpi m/m", "cpi mom"],                                   "CUSR0000SA0",    "mom"),
+    (["ppi m/m", "ppi mom", "ppi final demand m/m"],          "WPSFD4",         "mom"),
+    (["average hourly earnings m/m", "hourly earnings m/m"],  "CES0500000003",  "mom"),
+    (["nonfarm payrolls", "non-farm payrolls", "nonfarm employment change"], "CES0000000001", "chg_k"),
+    (["unemployment rate"],                                    "LNS14000000",    "value"),
+]
+
+def _bls_match(title):
+    tl = (title or "").lower()
+    for phrases, sid, tf in BLS_SERIES:
+        if any(p in tl for p in phrases):
+            return sid, tf
+    return None
+
+def _bls_fmt(arr, tf):
+    """Computa el resultado desde la serie BLS (newest-first). El campo
+    'calculations' de BLS viene vacío, así que calculamos el cambio nosotros.
+    No inventa nada: si faltan puntos, devuelve None."""
+    try:
+        if not arr:
+            return None
+        a = float(arr[0]["value"])
+        if tf == "value":
+            return f"{a:.1f}%"
+        if tf == "mom":
+            if len(arr) < 2:
+                return None
+            b = float(arr[1]["value"])
+            return f"{((a - b) / b * 100):.1f}%" if b else None
+        if tf == "yoy":
+            # buscar el punto de hace 12 meses (mismo period, año-1)
+            y0, p0 = arr[0].get("year"), arr[0].get("period")
+            prev = next((float(x["value"]) for x in arr
+                         if x.get("period") == p0 and str(x.get("year")) == str(int(y0) - 1)), None)
+            return f"{((a - prev) / prev * 100):.1f}%" if prev else None
+        if tf == "chg_k":
+            if len(arr) < 2:
+                return None
+            b = float(arr[1]["value"])
+            return f"{int(round(a - b))}K"
+    except Exception:
+        return None
+    return None
+
+async def _bls_fetch(series_ids):
+    if not series_ids:
+        return {}
+    yr = datetime.now(NY).year
+    body = {"seriesid": list(series_ids), "startyear": str(yr - 1), "endyear": str(yr)}
+    if BLS_API_KEY:
+        body["registrationkey"] = BLS_API_KEY
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.post("https://api.bls.gov/publicAPI/v2/timeseries/data/", json=body)
+        if r.status_code != 200:
+            print(f"[bls] status {r.status_code}"); return {}
+        j = r.json()
+        out = {}
+        for s in j.get("Results", {}).get("series", []):
+            data = s.get("data", [])
+            if data:
+                out[s.get("seriesID")] = data   # serie completa (newest-first)
+        return out
+    except Exception as e:
+        print(f"[bls] {e}"); return {}
+
+async def _fill_actuals_bls(events):
+    """Rellena 'actual' de eventos US ya vencidos y sin dato, vía BLS (gratis)."""
+    global _bls_last_fetch
+    now_dt = datetime.now(NY)
+    now_ts = now_dt.timestamp()
+    need = {}   # sid -> [(event, tf, expected_month)]
+    for e in events:
+        if e.get("actual"):
+            continue
+        try:
+            ev_dt = datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00"))
+            ev_ts = ev_dt.timestamp()
+        except Exception:
+            continue
+        if ev_ts > now_ts:           # nunca eventos futuros
+            continue
+        m = _bls_match(e.get("title", "") or "")
+        if not m:
+            continue
+        sid, tf = m
+        exp_month = ev_dt.month - 1 or 12   # dato del mes del release − 1
+        need.setdefault(sid, []).append((e, tf, exp_month))
+    if not need:
+        return
+    if now_ts - _bls_last_fetch < 120:   # throttle (respeta límite free sin key)
+        return
+    _bls_last_fetch = now_ts
+    data = await _bls_fetch(need.keys())
+    filled = 0
+    for sid, lst in need.items():
+        arr = data.get(sid)
+        if not arr:
+            continue
+        try:
+            bls_month = int(str(arr[0].get("period", "M00"))[1:])
+        except Exception:
+            bls_month = 0
+        for e, tf, exp_month in lst:
+            if bls_month and bls_month != exp_month:   # guardia: BLS aún no publicó el mes esperado
+                continue
+            val = _bls_fmt(arr, tf)
+            if val:
+                e["actual"] = val
+                e["status"] = "Released"
+                e["_from"] = ((e.get("_from", "") or "") + "+bls").lstrip("+")
+                filled += 1
+    if filled:
+        print(f"[bls] rellenó {filled} actual(es) de último recurso")
+
+# ── FRED: respaldo (requiere FRED_API_KEY gratis). Cubre lo que BLS no trae fácil
+#    (GDP, retail sales) además de reforzar los de empleo/inflación. ──
+FRED_SERIES = [
+    (["gdp q/q", "gdp annualized", "gdp growth"],     "A191RL1Q225SBEA", "value"),   # GDP real % anualizado
+    (["retail sales m/m", "retail sales mom"],        "RSAFS",           "mom"),
+    (["cpi m/m", "cpi mom"],                          "CPIAUCSL",        "mom"),
+    (["unemployment rate"],                           "UNRATE",          "value"),
+    (["nonfarm payrolls", "non-farm payrolls"],       "PAYEMS",          "chg_k"),
+]
+
+def _fred_match(title):
+    tl = (title or "").lower()
+    for phrases, sid, tf in FRED_SERIES:
+        if any(p in tl for p in phrases):
+            return sid, tf
+    return None
+
+async def _fill_actuals_fred(events):
+    """Relleno de respaldo vía FRED (solo si FRED_API_KEY está configurada)."""
+    global _fred_last_fetch
+    if not FRED_API_KEY:
+        return
+    now_ts = datetime.now(NY).timestamp()
+    pend = [e for e in events if not e.get("actual") and _fred_match(e.get("title", "") or "")]
+    # solo vencidos
+    def _past(e):
+        try:
+            return datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp() <= now_ts
+        except Exception:
+            return False
+    pend = [e for e in pend if _past(e)]
+    if not pend:
+        return
+    if now_ts - _fred_last_fetch < 180:
+        return
+    _fred_last_fetch = now_ts
+    filled = 0
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            for e in pend:
+                sid, tf = _fred_match(e.get("title", ""))
+                r = await c.get("https://api.stlouisfed.org/fred/series/observations",
+                                params={"series_id": sid, "api_key": FRED_API_KEY,
+                                        "file_type": "json", "sort_order": "desc", "limit": 13})
+                if r.status_code != 200:
+                    continue
+                obs = [o for o in r.json().get("observations", []) if o.get("value") not in (".", None, "")]
+                if not obs:
+                    continue
+                val = None
+                try:
+                    if tf == "value":
+                        val = f"{float(obs[0]['value']):.1f}" + ("%" if sid in ("UNRATE", "A191RL1Q225SBEA") else "")
+                    elif tf == "mom" and len(obs) >= 2:
+                        a, b = float(obs[0]['value']), float(obs[1]['value'])
+                        val = f"{((a - b) / b * 100):.1f}%"
+                    elif tf == "chg_k" and len(obs) >= 2:
+                        val = f"{int(round(float(obs[0]['value']) - float(obs[1]['value'])))}K"
+                except Exception:
+                    val = None
+                if val:
+                    e["actual"] = val
+                    e["status"] = "Released"
+                    e["_from"] = ((e.get("_from", "") or "") + "+fred").lstrip("+")
+                    filled += 1
+    except Exception as ex:
+        print(f"[fred] {ex}")
+    if filled:
+        print(f"[fred] rellenó {filled} actual(es) de respaldo")
+
 async def refresh_calendar():
     """Calendar with parallel fetch, Finnhub fallback, stale cache preservation."""
     FF_HEADERS = {
@@ -2241,6 +2441,15 @@ async def refresh_calendar():
         if k in seen: continue
         seen.add(k); deduped.append(e)
     deduped.sort(key=lambda e: e.get("time",""))
+
+    # ── RELLENO DE ÚLTIMO RECURSO: BLS (gratis) → FRED (con key) ──
+    # Para eventos US ya vencidos que ninguna fuente marcó con 'actual' todavía.
+    # Así garantizamos el resultado lo más rápido posible desde el gobierno.
+    try:
+        await _fill_actuals_bls(deduped)
+        await _fill_actuals_fred(deduped)
+    except Exception as _e:
+        print(f"[calendar] relleno BLS/FRED: {_e}")
 
     # Diagnóstico: registrar eventos de hoy con su estado de datos (debug ADP, etc.)
     today_iso = datetime.now(NY).strftime("%Y-%m-%d")
@@ -4595,6 +4804,19 @@ async def health_feeds():
                                              "premium_locked": r.status_code in (401, 402, 403)}
         except Exception as e:
             out["probes"]["fmp_calendar"] = {"error": str(e)[:120]}
+    # Sonda BLS (gratis, sin key) — última capa del relleno de 'actual'
+    try:
+        arrs = await _bls_fetch(["CUSR0000SA0", "LNS14000000", "CES0000000001"])
+        out["probes"]["bls"] = {
+            "ok": bool(arrs),
+            "cpi_mom": _bls_fmt(arrs.get("CUSR0000SA0"), "mom"),
+            "unemployment": _bls_fmt(arrs.get("LNS14000000"), "value"),
+            "nfp_chg": _bls_fmt(arrs.get("CES0000000001"), "chg_k"),
+            "key": bool(BLS_API_KEY),
+        }
+    except Exception as e:
+        out["probes"]["bls"] = {"error": str(e)[:120]}
+    out["probes"]["fred"] = {"enabled": bool(FRED_API_KEY)}
     return out
 
 @app.get("/api/auth/health")
