@@ -1957,6 +1957,12 @@ function showWelcome(name){
   if(hw&&hn){hn.textContent=first;hw.style.display='inline-flex';}
 }
 
+// SVG de candado claramente ABIERTO (arco levantado y separado del cuerpo),
+// en dorado y con buen contraste. DEBE definirse ANTES del IIFE de init, porque
+// ese IIFE llama a lbcShowMemberNav()→lbcUnlockItem() al parsear; si se definía
+// después, LBC_OPEN_LOCK era undefined y el candado imprimía "undefined".
+var LBC_OPEN_LOCK='<svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg>';
+
 // Init: check for saved user + revalida el token contra el backend
 (function(){
   var savedName;
@@ -1984,10 +1990,6 @@ function showWelcome(name){
     })
     .catch(function(){});
 })();
-
-// SVG de candado claramente ABIERTO (arco levantado y separado del cuerpo),
-// en dorado y con buen contraste para que se lea "abierto" a simple vista.
-var LBC_OPEN_LOCK='<svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg>';
 
 // Desbloquea un item de la nav (desktop o drawer) para el usuario logueado.
 // - data-app real  → candado ABIERTO 🔓 + clickeable a su página.
