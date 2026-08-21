@@ -150,7 +150,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1
 .nav-desktop-links{display:none;}
 .nav-right{display:flex;align-items:center;gap:0.75rem;flex-shrink:0;}
 .nav-welcome{display:none !important;}
-a.nav-member{text-decoration:none;display:inline-flex;align-items:center;}
+a.nav-member{text-decoration:none;display:inline-flex;align-items:center;gap:6px;color:#C9A84C;border-color:rgba(201,168,76,0.28);}
+a.nav-member:hover{color:#E7CC74;border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.08);}
+.nav-member .nav-mem-ic{font-size:13px;line-height:1;opacity:0.9;}
+button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 .nav-welcome span{color:var(--gold);font-weight:600;}
 /* Login — ghost style, clearly visible */
 .nav-login{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.65);border:0.5px solid rgba(232,228,217,0.18);padding:8px 14px;border-radius:6px;background:transparent;min-height:36px;white-space:nowrap;transition:all 0.25s ease;cursor:pointer;}
@@ -1481,11 +1484,11 @@ nav { max-width: 100%; }
     <button class="nav-login" id="nav-login-btn" onclick="openLoginModal()">Login</button>
     <button class="nav-cta" id="nav-join-btn" onclick="openModal()">Unirse &#8594;</button>
     <!-- Accesos de miembro (visibles solo con sesión) -->
-    <a class="nav-login nav-member" id="nav-mem-dash" href="daytrading_preview.html" style="display:none;">Dashboard</a>
-    <a class="nav-login nav-member" id="nav-mem-journal" href="journal.html" style="display:none;">Journal</a>
-    <a class="nav-login nav-member" id="nav-mem-earn" href="earnings.html" style="display:none;">Earnings</a>
-    <a class="nav-login nav-member" id="nav-mem-acct" href="auth.html" style="display:none;">Mi cuenta</a>
-    <button class="nav-cta nav-member" id="nav-mem-logout" onclick="lbcLogout()" style="display:none;">Salir</button>
+    <a class="nav-login nav-member" id="nav-mem-dash" href="daytrading_preview.html" style="display:none;"><span class="nav-mem-ic">&#128202;</span><span data-es="Dashboard" data-en="Dashboard">Dashboard</span></a>
+    <a class="nav-login nav-member" id="nav-mem-journal" href="journal.html" style="display:none;"><span class="nav-mem-ic">&#128211;</span><span data-es="Journal" data-en="Journal">Journal</span></a>
+    <a class="nav-login nav-member" id="nav-mem-earn" href="earnings.html" style="display:none;"><span class="nav-mem-ic">&#128200;</span><span data-es="Earnings" data-en="Earnings">Earnings</span></a>
+    <a class="nav-login nav-member" id="nav-mem-acct" href="auth.html" style="display:none;"><span class="nav-mem-ic">&#128100;</span><span data-es="Mi perfil" data-en="My profile">Mi perfil</span></a>
+    <button class="nav-cta nav-member" id="nav-mem-logout" onclick="lbcLogout()" style="display:none;" data-es="Salir" data-en="Log out">Salir</button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
