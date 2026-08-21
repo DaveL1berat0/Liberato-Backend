@@ -3210,7 +3210,58 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   // Guarda de qué lado estaba el precio respecto a cada nivel (para detectar el cruce)
   var _gammaSide={flip:null,call:null,put:null};
 
+  // ════ SONIDO DE ALERTAS (chime suave y amistoso, Web Audio, sin archivos) ════
+  var _lbcAudioCtx=null;
+  var _lbcSoundOn=(function(){try{return localStorage.getItem('lbc_sound')!=='off';}catch(e){return true;}})();
+  function _lbcEnsureAudio(){
+    try{
+      if(!_lbcAudioCtx)_lbcAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(_lbcAudioCtx.state==='suspended')_lbcAudioCtx.resume();
+      return _lbcAudioCtx;
+    }catch(e){return null;}
+  }
+  // Los navegadores bloquean el audio hasta el primer gesto del usuario → lo desbloqueamos.
+  ['pointerdown','keydown','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,function unlock(){_lbcEnsureAudio();window.removeEventListener(ev,unlock);},{once:true});
+  });
+  function playChime(kind){
+    if(!_lbcSoundOn)return;
+    var ctx=_lbcEnsureAudio();if(!ctx)return;
+    // Dos notas suaves ascendentes (agradables): nivel = C5→G5, noticia = E5→B5.
+    var notes=(kind==='level')?[523.25,783.99]:[659.25,987.77];
+    var t0=ctx.currentTime;
+    notes.forEach(function(f,i){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine';o.frequency.value=f;
+      var s=t0+i*0.12;
+      g.gain.setValueAtTime(0.0001,s);
+      g.gain.exponentialRampToValueAtTime(0.13,s+0.03);   // volumen bajo, no invasivo
+      g.gain.exponentialRampToValueAtTime(0.0001,s+0.42);
+      o.connect(g);g.connect(ctx.destination);
+      o.start(s);o.stop(s+0.45);
+    });
+  }
+  function toggleSound(){
+    _lbcSoundOn=!_lbcSoundOn;
+    try{localStorage.setItem('lbc_sound',_lbcSoundOn?'on':'off');}catch(e){}
+    var b=document.getElementById('lbc-sound-btn');if(b)b.textContent=_lbcSoundOn?'🔔':'🔕';
+    if(_lbcSoundOn)playChime('news');   // feedback al reactivar
+  }
+  (function _mountSoundBtn(){
+    function add(){
+      if(document.getElementById('lbc-sound-btn'))return;
+      var b=document.createElement('button');
+      b.id='lbc-sound-btn';b.textContent=_lbcSoundOn?'🔔':'🔕';
+      b.title='Sonido de alertas (noticias y cruces de nivel)';
+      b.style.cssText='position:fixed;bottom:16px;left:16px;z-index:9998;background:rgba(20,20,28,0.72);border:1px solid rgba(255,255,255,0.12);border-radius:50%;width:38px;height:38px;font-size:16px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,0.35);';
+      b.onclick=toggleSound;
+      document.body.appendChild(b);
+    }
+    if(document.body)add();else document.addEventListener('DOMContentLoaded',add);
+  })();
+
   function showGammaAlert(info){
+    playChime('level');   // 🔔 cruce de flip / call wall / put wall
     // Quitar alerta anterior si existe
     if(_gammaAlertEl&&_gammaAlertEl.parentNode)_gammaAlertEl.parentNode.removeChild(_gammaAlertEl);
     var dirUp=info.direction==='up';
@@ -3287,6 +3338,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     }
   }
   function showMoverAlert(mover){
+    playChime('news');   // 🔔 noticia de último minuto
     // Quitar alerta anterior si existe
     if(_moverAlertEl&&_moverAlertEl.parentNode)_moverAlertEl.parentNode.removeChild(_moverAlertEl);
     var sent=mover.sentiment||'Neutral';

@@ -2671,12 +2671,15 @@ def _macro_news_from_calendar():
                     "pboc", "boe", "gbp", "eur ", "jpy", "aud", "cad", "cny")
         if any(m in tl0 for m in _FOREIGN):
             continue
-        # timestamp del evento: solo lo "breaking" (< 6h)
+        # Mantener si es de HOY (ET) — para que el release de la mañana se vea toda
+        # la sesión — o de las últimas 6h.
         try:
             ev_ts = datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp()
         except Exception:
             ev_ts = now_ts
-        if ev_ts and (now_ts - ev_ts) > 6 * 3600:
+        ev_date = str(e.get("time", ""))[:10]
+        today_et = datetime.now(NY).strftime("%Y-%m-%d")
+        if ev_date != today_et and ev_ts and (now_ts - ev_ts) > 6 * 3600:
             continue
         forecast = e.get("forecast")
         a, f = _num(actual), _num(forecast)
@@ -2780,7 +2783,7 @@ async def refresh_movers():
             recency = max(0.0, 4.0 * (1.0 - age_h / 3.0))
             return (round(x.get("impact_score", 0) + recency, 3), t)
         ranked = sorted(store.values(), key=_eff, reverse=True)
-        out = [{k: v for k, v in it.items() if k != "_first_seen"} for it in ranked[:6]]
+        out = [{k: v for k, v in it.items() if k != "_first_seen"} for it in ranked[:8]]
 
         if out:
             cache["movers"]["data"]        = out
