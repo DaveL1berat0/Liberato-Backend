@@ -5487,6 +5487,94 @@ async def auth_me(authorization: str = Header("")):
             "is_premium": is_premium, "language": u.get("language", "es"),
             "plan_expires": u.get("plan_expires")}
 
+# ── Perfil: cambiar contraseña / idioma / email ─────────────────────────────
+async def _require_user(authorization):
+    token = (authorization or "").replace("Bearer ", "").strip()
+    p = _verify_jwt(token)
+    if not p:
+        raise HTTPException(401, "Sesión inválida o expirada")
+    email = (p.get("email") or "").lower()
+    u = await user_get(email)
+    if not u:
+        raise HTTPException(404, "Cuenta no encontrada")
+    return email, u
+
+async def _del_user(email):
+    if _sb_on():
+        try:
+            async with httpx.AsyncClient(timeout=10) as c:
+                await c.delete(f"{SUPABASE_URL}/rest/v1/app_users",
+                               params={"email": f"eq.{email}"}, headers=_sb_h())
+        except Exception as e:
+            print(f"[del_user] {e}")
+    else:
+        _users.pop(email, None)
+
+@app.post("/api/auth/change-password")
+async def auth_change_password(request: Request, authorization: str = Header("")):
+    email, u = await _require_user(authorization)
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    cur = data.get("current_password") or ""
+    npw = data.get("new_password") or ""
+    if len(npw) < 8:
+        raise HTTPException(400, "La nueva contraseña debe tener al menos 8 caracteres")
+    try:
+        salt = base64.b64decode(u["salt"])
+    except Exception:
+        raise HTTPException(500, "cuenta corrupta")
+    if not hmac.compare_digest(_hash_pw(cur, salt), u.get("pass_hash", "")):
+        raise HTTPException(401, "La contraseña actual es incorrecta")
+    nsalt = secrets.token_bytes(16)
+    u["salt"] = base64.b64encode(nsalt).decode()
+    u["pass_hash"] = _hash_pw(npw, nsalt)
+    await user_put(email, u)
+    return {"ok": True}
+
+@app.post("/api/auth/set-language")
+async def auth_set_language(request: Request, authorization: str = Header("")):
+    email, u = await _require_user(authorization)
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    lang = (data.get("language") or "").strip().lower()
+    if lang not in ("es", "en"):
+        raise HTTPException(400, "Idioma inválido")
+    u["language"] = lang
+    await user_put(email, u)
+    return {"ok": True, "language": lang}
+
+@app.post("/api/auth/change-email")
+async def auth_change_email(request: Request, authorization: str = Header("")):
+    email, u = await _require_user(authorization)
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    pw = data.get("password") or ""
+    new_email = (data.get("new_email") or "").strip().lower()
+    if "@" not in new_email or "." not in new_email.split("@")[-1]:
+        raise HTTPException(400, "Correo inválido")
+    if new_email == email:
+        raise HTTPException(400, "Es el mismo correo")
+    try:
+        salt = base64.b64decode(u["salt"])
+    except Exception:
+        raise HTTPException(500, "cuenta corrupta")
+    if not hmac.compare_digest(_hash_pw(pw, salt), u.get("pass_hash", "")):
+        raise HTTPException(401, "Contraseña incorrecta")
+    if await user_get(new_email):
+        raise HTTPException(409, "Ese correo ya está en uso")
+    # Migrar la cuenta al nuevo correo (crear con nuevo email, borrar el viejo)
+    await user_put(new_email, dict(u))
+    await _del_user(email)
+    token = _make_jwt({"sub": u.get("id"), "email": new_email,
+                       "plan": u.get("plan", "free"), "name": u.get("name")})
+    return {"ok": True, "token": token, "email": new_email}
+
 @app.get("/api/community/access")
 async def community_access(authorization: str = Header("")):
     """Acceso a la comunidad: 401 sin sesión, 403 si no es premium, 200 si premium."""
