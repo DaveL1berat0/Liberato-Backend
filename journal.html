@@ -499,7 +499,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-navfoot button:disabled{opacity:0.3;cursor:default;}
 /* Layout de dos columnas + pestañas */
 .tws-cols{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:16px;margin-bottom:16px;align-items:start;}
-@media(max-width:860px){.tws-cols{grid-template-columns:1fr;}}
+.tws-panel-right{position:sticky;top:60px;align-self:start;}
+@media(max-width:860px){.tws-cols{grid-template-columns:1fr;}.tws-panel-right{position:static;}}
 .tws-panel{border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,0.008);overflow:hidden;}
 .tws-tabbar{display:flex;gap:2px;padding:6px;border-bottom:0.5px solid var(--border2);background:var(--tile);overflow-x:auto;}
 .tws-tab{flex:1;min-width:max-content;padding:10px 14px;border-radius:9px;border:0;background:transparent;color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.06em;cursor:pointer;transition:all .18s;white-space:nowrap;}
@@ -2789,9 +2790,12 @@ function renderTws(){
     var pts=[t.stop,t.entry]; if(hasTgt)pts.push(t.target); if(!isOpenTr&&t.exit!=null)pts.push(t.exit);
     lo=Math.min.apply(null,pts);hi=Math.max.apply(null,pts);var span=(hi-lo)||1;
     function px(v){return ((v-lo)/span*100).toFixed(1);}
+    // Anti-colisión: si STOP y ENTRY quedan muy cerca (<13% del ancho), sube la
+    // etiqueta ENTRY para que no se solape con la de STOP.
+    var _entryClose=Math.abs((+px(t.entry))-(+px(t.stop)))<13;
     rrViz='<div class="tws-rrbar"><div class="tws-rrline"></div>'
       +'<div class="tws-rrmark" style="left:'+px(t.stop)+'%;background:#ef4444;"></div><div class="tws-rrlabel" style="left:'+px(t.stop)+'%;color:#ef4444;">STOP '+t.stop+'</div><div class="tws-rrsub" style="left:'+px(t.stop)+'%;">−1R</div>'
-      +'<div class="tws-rrmark" style="left:'+px(t.entry)+'%;background:var(--text);"></div><div class="tws-rrlabel" style="left:'+px(t.entry)+'%;color:var(--text2);">ENTRY '+t.entry+'</div>'
+      +'<div class="tws-rrmark" style="left:'+px(t.entry)+'%;background:var(--text);"></div><div class="tws-rrlabel" style="left:'+px(t.entry)+'%;color:var(--text2);'+(_entryClose?'top:-22px;':'')+'">ENTRY '+t.entry+'</div>'
       +(hasTgt?'<div class="tws-rrmark" style="left:'+px(t.target)+'%;background:var(--green);"></div><div class="tws-rrlabel" style="left:'+px(t.target)+'%;color:var(--green);">TARGET '+t.target+'</div><div class="tws-rrsub" style="left:'+px(t.target)+'%;">+'+(plannedRR||'?')+'R</div>':'')
       +((!isOpenTr&&t.exit!=null)?'<div class="tws-rrmark" style="left:'+px(t.exit)+'%;background:var(--gold);height:34px;top:16px;"></div><div class="tws-rrsub" style="left:'+px(t.exit)+'%;top:2px;color:var(--gold);">SALIDA '+t.exit+(realR!=null?' ('+(realR>=0?'+':'')+realR+'R)':'')+'</div>':'')
       +'</div>';
@@ -2892,7 +2896,7 @@ function renderTws(){
     // dos columnas
     +'<div class="tws-cols">'
     +'<div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'
-    +'<div class="tws-panel"><div class="tws-tabbar">'+chTab('chart','CHART')+chTab('notes','NOTAS')+chTab('genio','✦ GENIO')+'</div>'+right+'</div>'
+    +'<div class="tws-panel tws-panel-right"><div class="tws-tabbar">'+chTab('chart','CHART')+chTab('notes','NOTAS')+chTab('genio','✦ GENIO')+'</div>'+right+'</div>'
     +'</div>'
     // trade review (full width)
     +'<div class="tws-sec"><div class="tws-sec-h">◆ Evaluación del trade — califica la DECISIÓN, no el resultado</div>'
