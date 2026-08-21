@@ -950,11 +950,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lbc-mnav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;padding:9px 20px;background:linear-gradient(180deg,rgba(13,16,24,0.97),rgba(8,10,15,0.97));border-bottom:1px solid rgba(201,168,76,0.16);box-shadow:0 1px 0 rgba(201,168,76,0.04),0 8px 24px -16px rgba(0,0,0,0.7);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;position:relative;z-index:8000;}
 .lbc-mnav .lbc-mnav-brand{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:rgba(232,228,217,0.5);margin-right:12px;padding-right:16px;letter-spacing:0.01em;border-right:1px solid rgba(201,168,76,0.14);}
 .lbc-mnav .lbc-mnav-brand b{color:#C9A84C;font-weight:600;font-style:normal;}
-.lbc-mnav a{position:relative;font-size:12.5px;letter-spacing:0.02em;color:rgba(232,228,217,0.64);padding:8px 13px;border-radius:8px;background:transparent;text-decoration:none;cursor:pointer;white-space:nowrap;transition:color .2s ease,background .2s ease,box-shadow .2s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:6px;}
-.lbc-mnav a .mnav-ic{font-size:13px;line-height:1;opacity:0.92;}
-.lbc-mnav a:hover{color:#E8E4D9;background:rgba(201,168,76,0.07);}
-.lbc-mnav a.lbc-mnav-active{color:#E7CC74;background:rgba(201,168,76,0.11);font-weight:600;box-shadow:inset 0 0 0 1px rgba(201,168,76,0.28);}
-.lbc-mnav a.lbc-mnav-active::after{content:'';position:absolute;left:13px;right:13px;bottom:-10px;height:2px;background:linear-gradient(90deg,#C9A84C,#E7CC74);border-radius:2px 2px 0 0;box-shadow:0 0 8px rgba(201,168,76,0.5);}
+.lbc-mnav a{position:relative;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,228,217,0.6);padding:6px 12px;border:0.5px solid rgba(201,168,76,0.28);border-radius:6px;background:rgba(201,168,76,0.04);text-decoration:none;cursor:pointer;white-space:nowrap;transition:all .25s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:6px;}
+.lbc-mnav a .mnav-ic{font-size:12px;line-height:1;opacity:0.9;}
+.lbc-mnav a:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.6);background:rgba(201,168,76,0.1);transform:translateY(-1px);}
+.lbc-mnav a.lbc-mnav-active{color:#080A0F;background:#C9A84C;border-color:#C9A84C;font-weight:600;}
+.lbc-mnav a.lbc-mnav-active .mnav-ic{opacity:1;}
 .lbc-mnav .lbc-mnav-tail{margin-left:auto;display:inline-flex;align-items:center;gap:8px;}
 .lbc-mnav button.lbc-mnav-out{font-size:12px;letter-spacing:0.04em;color:rgba(232,228,217,0.55);border:1px solid rgba(232,228,217,0.15);background:transparent;padding:8px 15px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all .2s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:6px;}
 .lbc-mnav button.lbc-mnav-out:hover{color:#ef8a8a;border-color:rgba(239,68,68,0.42);background:rgba(239,68,68,0.07);}

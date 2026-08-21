@@ -656,6 +656,36 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
     font-family:'DM Mono',monospace;
   }
   .nav-locked:hover::after{opacity:1;}
+  /* Logueado: mismo pill que .nav-locked pero accesible (candado abierto),
+     sin el tooltip "Solo miembros". */
+  .nav-unlocked{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+    color:rgba(232,228,217,0.62);
+    cursor:pointer;
+    padding:5px 12px;
+    border:0.5px solid rgba(201,168,76,0.32);
+    border-radius:6px;
+    background:rgba(201,168,76,0.05);
+    transition:all 0.25s ease;
+    position:relative;
+    text-decoration:none;
+  }
+  .nav-unlocked:hover{
+    border-color:rgba(201,168,76,0.6);
+    background:rgba(201,168,76,0.1);
+    color:#E8E4D9;
+    transform:translateY(-1px);
+  }
+  .nav-unlocked .lock-icon{font-size:11px;color:rgba(201,168,76,0.85);}
+  /* Options en construcción: candado cerrado + etiqueta "soon". */
+  .nav-soon{opacity:0.85;cursor:default;}
+  .nav-soon::after{display:none!important;}
+  .nav-soon-tag{
+    font-size:8px;letter-spacing:0.08em;text-transform:lowercase;
+    color:#080A0F;background:rgba(201,168,76,0.75);
+    padding:1px 5px;border-radius:4px;margin-left:2px;font-weight:600;
+  }
   .hamburger{display:none;}
   .logo{font-size:25px;}
   /* Desktop hover effects */
@@ -1411,27 +1441,27 @@ nav { max-width: 100%; }
   <button class="menu-drawer-close" onclick="closeMenu()" style="font-size:18px;color:rgba(201,168,76,0.6);">&#10005;</button>
   <div class="menu-drawer-logo">Liberato <span>Community</span></div>
   <a href="#" class="menu-item"><span class="menu-item-text">Inicio</span></a>
-  <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="daytrading_preview.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Day Trading</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="journal.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Journal</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="earnings.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Earnings</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="soon" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Options</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="community.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Educación</span>
     <span class="menu-item-badge">Miembros</span>
@@ -1471,11 +1501,11 @@ nav { max-width: 100%; }
   <div class="logo">Liberato <span>Community</span></div>
   <ul class="nav-desktop-links">
     <li><a href="#">Inicio</a></li>
-    <li><a href="#pro-plan" class="nav-locked" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Day Trading</a></li>
-    <li><a href="#pro-plan" class="nav-locked" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Journal</a></li>
-    <li><a href="#pro-plan" class="nav-locked" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Earnings</a></li>
-    <li><a href="#pro-plan" class="nav-locked" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Options</a></li>
-    <li><a href="#pro-plan" class="nav-locked" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Educación</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="daytrading_preview.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Day Trading</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="journal.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Journal</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="earnings.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Earnings</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="soon" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Options</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="community.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Educación</a></li>
   </ul>
   <div class="nav-right">
     <button class="nav-lang" onclick="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
@@ -1483,10 +1513,9 @@ nav { max-width: 100%; }
     </button>
     <button class="nav-login" id="nav-login-btn" onclick="openLoginModal()">Login</button>
     <button class="nav-cta" id="nav-join-btn" onclick="openModal()">Unirse &#8594;</button>
-    <!-- Accesos de miembro (visibles solo con sesión) -->
-    <a class="nav-login nav-member" id="nav-mem-dash" href="daytrading_preview.html" style="display:none;"><span class="nav-mem-ic">&#128202;</span><span data-es="Dashboard" data-en="Dashboard">Dashboard</span></a>
-    <a class="nav-login nav-member" id="nav-mem-journal" href="journal.html" style="display:none;"><span class="nav-mem-ic">&#128211;</span><span data-es="Journal" data-en="Journal">Journal</span></a>
-    <a class="nav-login nav-member" id="nav-mem-earn" href="earnings.html" style="display:none;"><span class="nav-mem-ic">&#128200;</span><span data-es="Earnings" data-en="Earnings">Earnings</span></a>
+    <!-- Accesos de miembro (visibles solo con sesión). Los items de app viven
+         en la nav original (se desbloquean al iniciar sesión); aquí solo el
+         perfil y el logout, para NO duplicar la navegación. -->
     <a class="nav-login nav-member" id="nav-mem-acct" href="auth.html" style="display:none;"><span class="nav-mem-ic">&#128100;</span><span data-es="Mi perfil" data-en="My profile">Mi perfil</span></a>
     <button class="nav-cta nav-member" id="nav-mem-logout" onclick="lbcLogout()" style="display:none;" data-es="Salir" data-en="Log out">Salir</button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
@@ -1864,14 +1893,43 @@ function showWelcome(name){
     .catch(function(){});
 })();
 
-// Muestra los accesos de miembro en la nav y oculta Login/Unirse.
+// Desbloquea un item de la nav (desktop o drawer) para el usuario logueado.
+// - data-app real  → candado ABIERTO 🔓 + clickeable a su página.
+// - data-app="soon" → se queda con candado CERRADO 🔒 + etiqueta "soon" (Options).
+function lbcUnlockItem(a){
+  var app=a.getAttribute('data-app');
+  var glyph=a.querySelector('.lock-icon,.menu-item-lock');
+  var badge=a.querySelector('.menu-item-badge');
+  if(app==='soon'){
+    // Options: en construcción — candado cerrado, no clickeable, etiqueta "soon".
+    a.classList.add('nav-soon');
+    a.removeAttribute('href');
+    a.onclick=function(e){e.preventDefault();};
+    if(badge)badge.textContent='soon';
+    else if(!a.querySelector('.nav-soon-tag')){
+      var s=document.createElement('span');s.className='nav-soon-tag';s.textContent='soon';a.appendChild(s);
+    }
+    return;
+  }
+  // Desbloqueado: candado ABIERTO + navegación real.
+  if(glyph)glyph.innerHTML='&#128275;'; // 🔓
+  a.classList.remove('nav-locked');
+  a.classList.add('nav-unlocked');
+  a.onclick=null;
+  if(app)a.setAttribute('href',app);
+  if(badge)badge.style.display='none';
+}
+
+// Estado LOGUEADO: una sola nav. Desbloquea los items originales, oculta
+// Login/Unirse y muestra Mi perfil + Salir (sin duplicar navegación).
 function lbcShowMemberNav(){
-  ['nav-mem-dash','nav-mem-journal','nav-mem-earn','nav-mem-acct'].forEach(function(id){
-    var e=document.getElementById(id); if(e)e.style.display='';
-  });
+  var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='';
   var lo=document.getElementById('nav-mem-logout'); if(lo)lo.style.display='';
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
+  // Desbloquear los items de la nav original (desktop) y del drawer (móvil).
+  var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
+  Array.prototype.forEach.call(items,lbcUnlockItem);
 }
 
 // Cierra sesión: limpia el token y las claves de sesión, y recarga la home.
