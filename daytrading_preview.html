@@ -2,6 +2,30 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<script>
+// GATE REAL: el dashboard institucional es contenido PREMIUM. Exige sesión con
+// is_premium verificado contra el backend. Sin token o sin premium → se redirige
+// a planes (fail-closed). Los admin/premium (is_premium=true) entran. Ante un
+// error de red transitorio se respeta el is_premium cacheado en lbc_session para
+// no expulsar a un premium conocido por un fallo momentáneo.
+(function(){
+  var BACKEND='https://web-production-33671.up.railway.app';
+  function deny(){ try{location.replace('homepage.html#pro-plan');}catch(e){location.href='homepage.html#pro-plan';} }
+  function cachedPrem(){ try{return JSON.parse(localStorage.getItem('lbc_session')||'{}').is_premium===true;}catch(e){return false;} }
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(!token){ deny(); return; }
+  fetch(BACKEND+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){
+      if(r.status===401||r.status===403){ deny(); return null; }   // sesión inválida
+      return r.ok?r.json():'neterr';
+    })
+    .then(function(d){
+      if(d==='neterr'){ if(!cachedPrem()) deny(); return; }         // 5xx: tolerar si cache premium
+      if(d && !d.is_premium){ deny(); }
+    })
+    .catch(function(){ if(!cachedPrem()) deny(); });                // red caída: tolerar si cache premium
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#06070D">
 <title>Liberato Community — Institutional Terminal</title>
@@ -1499,7 +1523,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
   <footer class="t-footer">
     <div class="t-footer-l">Liberato <span>Community</span></div>
-    <div class="t-footer-m">Institutional Terminal · LBC-02 <span style="opacity:0.55;margin-left:6px;">· Niveles GEX cortesía de <a href="https://www.gex.bot" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">GexBot</a> · uso educativo</span> <span style="opacity:0.4;font-size:9px;margin-left:6px;" id="build-ver">v2026.06.30-FIX31</span></div>
+    <div class="t-footer-m">Institutional Terminal · LBC-02 <span style="opacity:0.55;margin-left:6px;">· Niveles GEX cortesía de <a href="https://www.gex.bot" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">GexBot</a> · uso educativo</span></div>
   </footer>
 </div>
 
@@ -1534,9 +1558,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
    ════════════════════════════════════════════════════════════════ */
 (function(){
   'use strict';
-  console.log('%c🟢 LIBERATO DASHBOARD v2026.06.30-FIX30 — BUILD CORRECTO','background:#2EE8A4;color:#000;padding:6px 14px;font-weight:bold;font-size:13px;border-radius:4px;');
-  console.log('%cSi ves este mensaje verde, el archivo NUEVO está desplegado correctamente.','color:#2EE8A4;font-size:11px;');
-  window.LBC_VERSION='v2026.06.30-FIX31';
   var BACKEND_URL=window.LBC_BACKEND_URL||'https://web-production-33671.up.railway.app';  var NQ_STEP=0.25;
   // ── INSTRUMENTO ────────────────────────────────────────────────────────────
   // Dave opera el NQ (Nasdaq-100). Su estrategia es del Nasdaq. (Hubo un rodeo
@@ -1560,7 +1581,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   var _realCalLoaded=false;  // global: calendario real cargado
   var _lastMoverKey=null;    // global: última noticia top vista
   var _lastMoverScore=0;     // global: score de la última noticia top
-  console.log('%c[LIBERATO] BUILD 2026-07-10-r12 · candles-efficient (TD+AV+persist · warm-5min · never-exhaust)','color:#CCA94F;font-weight:bold');
   var S={dir:'NEUTRAL',score:50,callWall:null,putWall:null,gammaFlip:null,maxPain:null,netGex:null,_gexMin:null,_gexMax:null,regime:null,fearScore:null,fearRating:null,momCandles:null,vix:null,
          ratio:null,price:null,prevPrice:null,dayOpen:null,dayHigh:null,dayLow:null,corr:{},events:[],candles:[],
          vwap:null,atr:null,structure:null,volatility:null,expectedMove:null,atmIv:null,pcRatio:null,_ratioError:null,_lastQQQ:null,
