@@ -4946,9 +4946,14 @@ async def send_welcome_premium(email, name):
 
 @app.get("/api/email/health")
 async def email_health():
-    """Estado del sistema de correos (sin exponer secretos)."""
+    """Estado de correos e integraciones (solo booleanos, sin exponer secretos)."""
+    _g = globals()
     return {"email_configured": EMAIL_ON, "discord_free_link_set": bool(DISCORD_FREE_INVITE),
-            "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None}
+            "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None,
+            "discord_webhook_set": bool(_g.get("DISCORD_WEBHOOK_URL")),
+            "discord_premium_webhook_set": bool(_g.get("DISCORD_PREMIUM_WEBHOOK_URL")),
+            "whop_secret_set": bool(_g.get("WHOP_WEBHOOK_SECRET")),
+            "admin_key_set": not str(_g.get("ADMIN_KEY", "")).startswith("disabled-")}
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  CRM: usuarios segmentados (free/premium) + correos por grupo + brief diario
