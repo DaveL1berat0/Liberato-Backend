@@ -4747,11 +4747,21 @@ def _pub_user(email):
     u = _users.get(email, {})
     return {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}
 
+_HEALTH_FEEDS_CACHE = {"ts": 0.0, "data": None}
+_HEALTH_FEEDS_TTL = 60  # segundos: evita que múltiples requests públicos disparen sondas repetidas
+
 @app.get("/api/health/feeds")
 async def health_feeds():
     """Salud de los feeds macro (calendario + noticias) SIN exponer secretos.
     Sonda en vivo ForexFactory y Finnhub para ver quién está caído en producción.
-    Solo devuelve booleanos de presencia de clave y estados/conteos — nunca valores."""
+    Solo devuelve booleanos de presencia de clave y estados/conteos — nunca valores.
+    Público a propósito (diagnóstico), pero cacheado 60s para no quemar cuota."""
+    _now = time.time()
+    if _HEALTH_FEEDS_CACHE["data"] is not None and (_now - _HEALTH_FEEDS_CACHE["ts"]) < _HEALTH_FEEDS_TTL:
+        cached = dict(_HEALTH_FEEDS_CACHE["data"])
+        cached["cached"] = True
+        cached["cache_age_s"] = round(_now - _HEALTH_FEEDS_CACHE["ts"], 1)
+        return cached
     out = {
         "keys_present": {
             "finnhub": bool(FINNHUB_KEY),
@@ -4859,6 +4869,9 @@ async def health_feeds():
             out["probes"]["fred"] = {"enabled": True, "error": str(e)[:120]}
     else:
         out["probes"]["fred"] = {"enabled": False}
+    out["cached"] = False
+    _HEALTH_FEEDS_CACHE["ts"] = time.time()
+    _HEALTH_FEEDS_CACHE["data"] = out
     return out
 
 @app.get("/api/auth/health")
@@ -5150,6 +5163,10 @@ async def auth_register(request: Request):
     rec = {"id": uid, "name": name or email.split("@")[0],
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
            "plan": plan0, "created": int(time.time())}
+    # Persistir idioma preferido enviado desde auth.html (para que /api/auth/me lo devuelva)
+    lang = (data.get("language") or "").strip().lower()
+    if lang in ("es", "en"):
+        rec["language"] = lang
     await user_put(email, rec)
     # Correo de confirmación/bienvenida (no bloqueante), segmentado por plan.
     try:
