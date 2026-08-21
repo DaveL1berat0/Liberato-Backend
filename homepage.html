@@ -2461,6 +2461,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
       <input class="contact-input" id="contact-name" type="text" placeholder="Tu nombre" autocomplete="name">
     </div>
     <div class="contact-field">
+      <label class="contact-label" data-es="Tu correo" data-en="Your email">Tu correo</label>
+      <input class="contact-input" id="contact-email" type="email" placeholder="tu@correo.com" autocomplete="email">
+    </div>
+    <div class="contact-field">
       <label class="contact-label" data-es="Asunto" data-en="Subject">Asunto</label>
       <input class="contact-input" id="contact-subject" type="text" placeholder="¿Sobre qué nos escribes?">
     </div>
@@ -2545,6 +2549,7 @@ function showContactMsg(text, type){
 }
 async function submitContact(){
   var name = document.getElementById('contact-name').value.trim();
+  var cemail = document.getElementById('contact-email').value.trim();
   var subject = document.getElementById('contact-subject').value.trim();
   var description = document.getElementById('contact-description').value.trim();
   var honeypot = document.getElementById('contact-website').value;
@@ -2554,8 +2559,12 @@ async function submitContact(){
   if(honeypot){ closeContactModal(); return; }
 
   // Validación de campos obligatorios
-  if(!name || !subject || !description){
+  if(!name || !cemail || !subject || !description){
     showContactMsg(isEn ? 'Please fill in all fields.' : 'Por favor completa todos los campos.', 'error');
+    return;
+  }
+  if(cemail.indexOf('@')<1){
+    showContactMsg(isEn ? 'Enter a valid email.' : 'Ingresa un correo válido.', 'error');
     return;
   }
   if(description.length < 10){
@@ -2572,7 +2581,7 @@ async function submitContact(){
     var r = await fetch(CONTACT_API, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({name:name, subject:subject, description:description, to:CONTACT_EMAIL})
+      body: JSON.stringify({name:name, email:cemail, subject:subject, description:description})
     });
     if(!r.ok) throw new Error('send failed');
     showContactMsg(isEn

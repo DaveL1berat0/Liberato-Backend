@@ -192,9 +192,33 @@ body{
   <!-- ══ PANTALLA: OLVIDÉ CONTRASEÑA (pedir email) ══ -->
   <div class="screen" id="screen-forgot">
     <div class="screen-title" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</div>
-    <div class="screen-sub" data-es="Escríbenos a SupportLiberatoCommunity@gmail.com desde el correo de tu cuenta y te ayudamos a restablecerla." data-en="Email us at SupportLiberatoCommunity@gmail.com from your account address and we'll help you reset it.">Escríbenos a SupportLiberatoCommunity@gmail.com desde el correo de tu cuenta y te ayudamos a restablecerla.</div>
+    <div class="screen-sub" data-es="Ingresa tu correo y te enviaremos un código para restablecerla." data-en="Enter your email and we'll send you a code to reset it.">Ingresa tu correo y te enviaremos un código para restablecerla.</div>
     <div class="msg" id="forgot-msg"></div>
-    <a class="btn btn-gold" id="btn-forgot" href="mailto:SupportLiberatoCommunity@gmail.com?subject=Restablecer%20contrase%C3%B1a" data-es="Escribir a soporte" data-en="Email support" style="display:block;text-align:center;text-decoration:none;">Escribir a soporte</a>
+    <div class="field">
+      <label class="field-label" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+      <input class="field-input" id="forgot-email" type="email" placeholder="tu@correo.com" autocomplete="email" onkeydown="if(event.key==='Enter')doForgot()">
+    </div>
+    <button class="btn btn-gold" id="btn-forgot" onclick="doForgot()" data-es="Enviar código" data-en="Send code">Enviar código</button>
+    <div class="foot-link">
+      <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
+    </div>
+  </div>
+
+  <!-- ══ PANTALLA: NUEVA CONTRASEÑA (código + password) ══ -->
+  <div class="screen" id="screen-reset">
+    <div class="screen-title" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</div>
+    <div class="screen-sub" id="reset-sub">Ingresa el código que te enviamos y tu nueva contraseña.</div>
+    <div class="msg" id="reset-msg"></div>
+    <div class="field">
+      <label class="field-label" data-es="Código" data-en="Code">Código</label>
+      <input class="field-input" id="reset-code" type="text" inputmode="numeric" maxlength="6" placeholder="______"
+             style="text-align:center;letter-spacing:12px;font-family:var(--mono);font-size:24px;">
+    </div>
+    <div class="field">
+      <label class="field-label" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
+      <input class="field-input" id="reset-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
+    </div>
+    <button class="btn btn-gold" id="btn-reset" onclick="doReset()" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</button>
     <div class="foot-link">
       <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
     </div>
@@ -376,6 +400,42 @@ async function doResend(){
   }catch(e){
     showMsg('verify-msg', e.message, 'error');
   }
+}
+
+// ═══ OLVIDÉ MI CONTRASEÑA ═══
+async function doForgot(){
+  clearMsg('forgot-msg');
+  var email = document.getElementById('forgot-email').value.trim();
+  if(!email || email.indexOf('@') < 1){
+    showMsg('forgot-msg', state.lang==='es'?'Ingresa un correo válido':'Enter a valid email', 'error'); return;
+  }
+  setLoading('btn-forgot', true);
+  try{
+    await api('/api/auth/forgot-password', 'POST', {email:email});
+    state.resetEmail = email;
+    var sub = document.getElementById('reset-sub');
+    if(sub) sub.textContent = (state.lang==='es'?'Ingresa el código que enviamos a ':'Enter the code we sent to ') + email;
+    showMsg('forgot-msg', state.lang==='es'?'Si existe una cuenta, te enviamos un código.':'If an account exists, we sent a code.', 'info');
+    setTimeout(function(){ goScreen('reset'); var c=document.getElementById('reset-code'); if(c)c.focus(); }, 900);
+  }catch(e){
+    showMsg('forgot-msg', e.message, 'error');
+  }finally{ setLoading('btn-forgot', false); }
+}
+async function doReset(){
+  clearMsg('reset-msg');
+  var code = (document.getElementById('reset-code').value||'').trim();
+  var npw = document.getElementById('reset-password').value;
+  var email = state.resetEmail || document.getElementById('forgot-email').value.trim();
+  if(code.length !== 6){ showMsg('reset-msg', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits', 'error'); return; }
+  if(npw.length < 8){ showMsg('reset-msg', state.lang==='es'?'Mínimo 8 caracteres':'At least 8 characters', 'error'); return; }
+  setLoading('btn-reset', true);
+  try{
+    await api('/api/auth/reset-password', 'POST', {email:email, code:code, new_password:npw});
+    showMsg('reset-msg', state.lang==='es'?'Contraseña actualizada. Inicia sesión.':'Password updated. Sign in.', 'success');
+    setTimeout(function(){ goScreen('login'); }, 1400);
+  }catch(e){
+    showMsg('reset-msg', e.message, 'error');
+  }finally{ setLoading('btn-reset', false); }
 }
 
 // ═══ LOGIN ═══

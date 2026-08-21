@@ -4987,20 +4987,22 @@ def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
             f'color:#7A7870;font-size:12px;">Recibiste este correo porque creaste una cuenta en Liberato Community.</div>'
             f'</div></div>')
 
-async def _send_email(to, subject, html):
-    """Envía un correo transaccional (no bloqueante).
-    Prioriza la API HTTP de Brevo (Railway bloquea SMTP saliente); si no hay
-    BREVO_API_KEY cae a SMTP (que en Railway suele fallar con 'Network unreachable')."""
+async def _send_email(to, subject, html, reply_to=None):
+    """Envía un correo transaccional (no bloqueante). reply_to = correo al que
+    responderá el destinatario (ej. quien escribió el contacto)."""
     if not to:
         return False
     # 1) Resend por HTTP (puerto 443 → funciona en Railway)
     if RESEND_API_KEY:
         try:
+            _payload = {"from": f"Liberato Community <{_resend_from()}>",
+                        "to": [to], "subject": subject, "html": html}
+            if reply_to:
+                _payload["reply_to"] = reply_to
             async with httpx.AsyncClient(timeout=15) as c:
                 r = await c.post("https://api.resend.com/emails",
                     headers={"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"},
-                    json={"from": f"Liberato Community <{_resend_from()}>",
-                          "to": [to], "subject": subject, "html": html})
+                    json=_payload)
             if r.status_code in (200, 201):
                 print(f"[email] ✓ (resend) {subject} → {to}")
                 return True
@@ -5012,12 +5014,15 @@ async def _send_email(to, subject, html):
     # 2) Brevo por HTTP (puerto 443 → funciona en Railway)
     if BREVO_API_KEY and MAIL_FROM:
         try:
+            _bp = {"sender": {"name": "Liberato Community", "email": MAIL_FROM},
+                   "to": [{"email": to}], "subject": subject, "htmlContent": html}
+            if reply_to:
+                _bp["replyTo"] = {"email": reply_to}
             async with httpx.AsyncClient(timeout=15) as c:
                 r = await c.post("https://api.brevo.com/v3/smtp/email",
                     headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json",
                              "accept": "application/json"},
-                    json={"sender": {"name": "Liberato Community", "email": MAIL_FROM},
-                          "to": [{"email": to}], "subject": subject, "htmlContent": html})
+                    json=_bp)
             if r.status_code in (200, 201):
                 print(f"[email] ✓ (brevo) {subject} → {to}")
                 return True
@@ -5034,6 +5039,8 @@ async def _send_email(to, subject, html):
         msg["Subject"] = subject
         msg["From"] = f"Liberato Community <{GMAIL_USER}>"
         msg["To"] = to
+        if reply_to:
+            msg["Reply-To"] = reply_to
         msg.attach(MIMEText(html, "html"))
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
             s.login(GMAIL_USER, GMAIL_APP_PASSWORD)
@@ -5081,6 +5088,19 @@ async def send_verify_code(email, name, code):
             f"cuenta, ignora este correo.</p>")
     return await _send_email(email, "Tu código de verificación · Liberato Community",
                              _email_shell("Verifica tu correo", body))
+
+async def send_reset_code(email, name, code):
+    body = (f"<p>Hola, {name or ''}.</p>"
+            f"<p>Recibimos una solicitud para <b>restablecer tu contraseña</b> en Liberato Community. "
+            f"Usa este código:</p>"
+            f"<div style='margin:18px 0;text-align:center;'>"
+            f"<span style='display:inline-block;font-family:monospace;font-size:34px;font-weight:800;"
+            f"letter-spacing:10px;color:#E7CC74;background:#0B0B12;border:1px solid rgba(204,169,79,0.3);"
+            f"border-radius:12px;padding:14px 22px;'>{code}</span></div>"
+            f"<p style='color:#9a9aa2;font-size:13px;'>Vence en 15 minutos. Si no lo pediste, ignora este "
+            f"correo — tu contraseña no cambia.</p>")
+    return await _send_email(email, "Restablecer contraseña · Liberato Community",
+                             _email_shell("Restablecer contraseña", body))
 
 @app.get("/api/email/health")
 async def email_health():
@@ -5342,6 +5362,64 @@ async def auth_resend_code(request: Request):
     except Exception:
         pass
     return {"ok": True, "resent": True, "email": email}
+
+# ── Olvidé mi contraseña (código por correo) ─────────────────────────────────
+_reset_codes = {}
+async def _reset_get(email):
+    if _sb_on():
+        return await _sb_get_config(f"reset::{email}")
+    return _reset_codes.get(email)
+async def _reset_set(email, val):
+    if _sb_on():
+        await _sb_set_config(f"reset::{email}", val)
+    else:
+        _reset_codes[email] = val
+
+@app.post("/api/auth/forgot-password")
+async def auth_forgot(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    u = await user_get(email)
+    if u and EMAIL_READY:
+        code = _gen_code()
+        await _reset_set(email, {"code": code, "expires": int(time.time()) + 15 * 60})
+        try:
+            asyncio.create_task(send_reset_code(email, u.get("name"), code))
+        except Exception:
+            pass
+    # Siempre ok (no revelamos si el correo existe o no).
+    return {"ok": True}
+
+@app.post("/api/auth/reset-password")
+async def auth_reset(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    code = str(data.get("code") or "").strip()
+    npw = data.get("new_password") or data.get("password") or ""
+    if len(npw) < 8:
+        raise HTTPException(400, "La contraseña debe tener al menos 8 caracteres")
+    r = await _reset_get(email)
+    if not r or not isinstance(r, dict) or not r.get("code"):
+        raise HTTPException(400, "No hay una solicitud de restablecimiento para ese correo.")
+    if int(r.get("expires", 0)) < int(time.time()):
+        raise HTTPException(400, "El código venció. Pide uno nuevo.")
+    if not hmac.compare_digest(str(r.get("code")), code):
+        raise HTTPException(400, "Código incorrecto")
+    u = await user_get(email)
+    if not u:
+        raise HTTPException(404, "Cuenta no encontrada")
+    salt = secrets.token_bytes(16)
+    u["salt"] = base64.b64encode(salt).decode()
+    u["pass_hash"] = _hash_pw(npw, salt)
+    await user_put(email, u)
+    await _reset_set(email, {"used": True})
+    return {"ok": True}
 
 @app.post("/api/admin/preview-email")
 async def admin_preview_email(request: Request):
@@ -6660,38 +6738,39 @@ async def contact_form(request: Request):
         raise HTTPException(400, "Datos inválidos")
 
     name = (body.get("name") or "").strip()
+    sender_email = (body.get("email") or "").strip().lower()
     subject = (body.get("subject") or "").strip()
     description = (body.get("description") or "").strip()
 
     # Validación de campos obligatorios
-    if not name or not subject or not description:
+    if not name or not sender_email or not subject or not description:
         raise HTTPException(400, "Todos los campos son obligatorios")
+    if "@" not in sender_email or "." not in sender_email.split("@")[-1]:
+        raise HTTPException(400, "Correo inválido")
     if len(name) > 120 or len(subject) > 200 or len(description) > 5000:
         raise HTTPException(400, "Contenido demasiado largo")
     if len(description) < 10:
         raise HTTPException(400, "La descripción es demasiado corta")
 
-    # Construir y enviar el correo
-    if not GMAIL_USER or not GMAIL_APP_PASSWORD:
-        print(f"[contact] ⚠️ Gmail no configurado — mensaje de {name} no enviado")
-        print(f"[contact] Asunto: {subject} | {description[:80]}")
-        # Devolver éxito igual para no romper la UX (el mensaje queda en logs)
+    if not EMAIL_READY:
+        print(f"[contact] ⚠️ correo no configurado — mensaje de {name} <{sender_email}> solo en logs")
         return {"success": True, "note": "logged"}
 
     html_body = f"""
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
       <h2 style="color:#C9A84C;">Nuevo mensaje de contacto · Liberato Community</h2>
       <p><strong>Nombre:</strong> {name}</p>
+      <p><strong>Correo:</strong> <a href="mailto:{sender_email}">{sender_email}</a></p>
       <p><strong>Asunto:</strong> {subject}</p>
       <p><strong>Descripción:</strong></p>
       <p style="background:#f5f5f5;padding:14px;border-radius:8px;white-space:pre-wrap;">{description}</p>
       <hr>
-      <p style="color:#888;font-size:12px;">Enviado desde el formulario de contacto de Liberato Community · IP: {ip}</p>
+      <p style="color:#888;font-size:12px;">Responde este correo para contestarle directamente a {sender_email} · IP: {ip}</p>
     </div>
     """
 
-    # Enviado vía _send_email (Brevo HTTP en Railway; SMTP de fallback en local).
-    ok = await _send_email(SUPPORT_EMAIL, f"[Contacto Liberato] {subject}", html_body)
+    # Enviado vía _send_email; reply_to = el correo de quien escribió (para responderle directo).
+    ok = await _send_email(SUPPORT_EMAIL, f"[Contacto Liberato] {subject}", html_body, reply_to=sender_email)
     if ok:
         print(f"[contact] ✓ Mensaje de {name} enviado a {SUPPORT_EMAIL}")
         return {"success": True}
