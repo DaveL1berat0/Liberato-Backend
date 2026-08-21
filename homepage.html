@@ -1997,25 +1997,32 @@ var LBC_OPEN_LOCK='<svg class="lbc-lock lbc-lock-open" width="15" height="15" vi
   if(savedName){showWelcome(savedName);}
   // Sin usuario guardado: NO saludar con nombre (antes ponía 'Bienvenido, Dave' a todos)
 
-  // Detección de sesión: si hay token (o sesión guardada), mostramos el estado
-  // LOGUEADO de inmediato — candados abiertos + perfil — sin esperar a la red.
-  var token, hasSession=false;
+  // Detección de sesión. Si hay token/sesión mostramos el CHROME de miembro
+  // (perfil + nombre) de inmediato, PERO los candados de las herramientas SOLO
+  // se abren con acceso real (is_premium). Un usuario gratuito logueado ve el
+  // perfil pero los candados CERRADOS → el click va a planes (coherente con el
+  // gate premium de las páginas de herramienta).
+  var token, hasSession=false, cachedPrem=false;
   try{token=localStorage.getItem('lbc_token');}catch(e){}
-  try{hasSession=!!(token||localStorage.getItem('lbc_session'));}catch(e){}
+  try{var s0=JSON.parse(localStorage.getItem('lbc_session')||'{}');hasSession=!!(token||localStorage.getItem('lbc_session'));cachedPrem=(s0&&s0.is_premium===true);}catch(e){}
   if(!hasSession)return;
-  lbcShowMemberNav();              // optimista: no depende de que el backend responda
+  lbcShowMemberChrome();
+  if(cachedPrem)lbcOpenNav(); else lbcCloseNav();  // pinta rápido con el último acceso conocido
   if(!token)return;
-  // Revalida en segundo plano: si el token resulta inválido, revertimos a
-  // deslogueado (re-bloquea). Si la red falla, mantenemos el estado logueado.
   fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
     .then(function(r){return r.ok?r.json():(r.status===401||r.status===403?false:null);})
     .then(function(u){
-      if(u===false){ lbcHideMemberNav(); return; } // token rechazado → re-bloquear
-      if(!u)return;                                 // otro error: dejar optimista
+      if(u===false){ lbcHideMemberNav(); return; }   // token rechazado → deslogueado
+      if(!u)return;                                   // error de red: conservar lo cacheado
+      var prem=(u.is_premium===true);
+      try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');s.is_premium=prem;if(u.name)s.name=u.name;localStorage.setItem('lbc_session',JSON.stringify(s));}catch(e){}
+      if(prem)lbcOpenNav(); else lbcCloseNav();        // candados = acceso real
       var name=u.name||u.user&&u.user.name;
-      if(name)showWelcome(name);
+      if(name){showWelcome(name);lbcPaintNavName(name);}
+      var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar))||null;
+      lbcPaintNavAvatar(av); lbcSetSessionAvatar(av);
     })
-    .catch(function(){});
+    .catch(function(){});                              // red caída: conservar estado cacheado
 })();
 
 // Desbloquea un item de la nav (desktop o drawer) para el usuario logueado.
@@ -2059,17 +2066,28 @@ function lbcUnlockItem(a){
   if(badge)badge.style.display='none';
 }
 
-// Estado LOGUEADO: una sola nav (la fila de candados). Desbloquea los items,
-// oculta Login/Unirse y el toggle de idioma del top (idioma vive en el perfil),
-// y muestra SOLO el ícono de perfil (que abre el drawer).
-function lbcShowMemberNav(){
+// CHROME de miembro: muestra el ícono de perfil + nombre y oculta Login/Unirse
+// y el toggle de idioma. NO abre candados (eso depende de is_premium). Options y
+// Educación quedan siempre en modo "soon".
+function lbcShowMemberChrome(){
   var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='inline-flex';
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
   var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='none';
   try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
-  var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
+  // Options/Educación → "soon" (siempre cerrados, para cualquier miembro).
+  var soon=document.querySelectorAll('.nav-desktop-links a[data-app="soon"], .menu-drawer a.menu-item[data-app="soon"]');
+  Array.prototype.forEach.call(soon,lbcUnlockItem);
+}
+// PREMIUM: abre los items navegables (Day Trading/Journal/Earnings) → clickeables.
+function lbcOpenNav(){
+  var items=document.querySelectorAll('.nav-desktop-links a[data-app]:not([data-app="soon"]), .menu-drawer a.menu-item[data-app]:not([data-app="soon"])');
   Array.prototype.forEach.call(items,lbcUnlockItem);
+}
+// FREE (logueado sin acceso): mantiene esos items CERRADOS → el click va a planes.
+function lbcCloseNav(){
+  var items=document.querySelectorAll('.nav-desktop-links a[data-app]:not([data-app="soon"]), .menu-drawer a.menu-item[data-app]:not([data-app="soon"])');
+  Array.prototype.forEach.call(items,lbcRelockItem);
 }
 
 // Revierte un item a su estado BLOQUEADO (candado cerrado, solo miembros).
@@ -2263,16 +2281,12 @@ function pdRemoveAvatar(){
     .catch(function(e){ pdMsg('pd-avatar-msg', e.message, false); })
     .then(function(){ if(rm)rm.disabled=false; });
 }
-// Al cargar (logueado): pinta el ícono de nav + nombre con lo cacheado y refresca.
+// Al cargar (logueado): pinta el ícono de nav + nombre con lo CACHEADO al instante.
+// El refresco contra /api/auth/me (avatar, nombre, is_premium) lo hace el IIFE de
+// init de arriba, en una sola llamada — aquí solo pintamos rápido lo cacheado.
 (function(){
   var cached=lbcAvatarFromSession(); if(cached)lbcPaintNavAvatar(cached);
   try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
-  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
-  if(!token)return;
-  fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
-    .then(function(r){return r.ok?r.json():null;})
-    .then(function(u){ if(!u)return; var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar))||null; lbcPaintNavAvatar(av); lbcSetSessionAvatar(av); if(u.name)lbcPaintNavName(u.name); })
-    .catch(function(){});
 })();
 window.pdPickAvatar=pdPickAvatar; window.pdAvatarFile=pdAvatarFile; window.pdRemoveAvatar=pdRemoveAvatar;
 window.openProfileDrawer=openProfileDrawer; window.closeProfileDrawer=closeProfileDrawer;
