@@ -1878,17 +1878,23 @@ function showWelcome(name){
   if(savedName){showWelcome(savedName);}
   // Sin usuario guardado: NO saludar con nombre (antes ponía 'Bienvenido, Dave' a todos)
 
-  // Revalida la sesión: si hay token, pregunta al backend quién es y su plan.
-  var token;
+  // Detección de sesión: si hay token (o sesión guardada), mostramos el estado
+  // LOGUEADO de inmediato — candados abiertos + perfil — sin esperar a la red.
+  var token, hasSession=false;
   try{token=localStorage.getItem('lbc_token');}catch(e){}
+  try{hasSession=!!(token||localStorage.getItem('lbc_session'));}catch(e){}
+  if(!hasSession)return;
+  lbcShowMemberNav();              // optimista: no depende de que el backend responda
   if(!token)return;
+  // Revalida en segundo plano: si el token resulta inválido, revertimos a
+  // deslogueado (re-bloquea). Si la red falla, mantenemos el estado logueado.
   fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
-    .then(function(r){return r.ok?r.json():null;})
+    .then(function(r){return r.ok?r.json():(r.status===401||r.status===403?false:null);})
     .then(function(u){
-      if(!u)return; // token inválido/expirado: se queda sin sesión, no rompe nada
+      if(u===false){ lbcHideMemberNav(); return; } // token rechazado → re-bloquear
+      if(!u)return;                                 // otro error: dejar optimista
       var name=u.name||u.user&&u.user.name;
       if(name)showWelcome(name);
-      lbcShowMemberNav();
     })
     .catch(function(){});
 })();
@@ -1930,6 +1936,30 @@ function lbcShowMemberNav(){
   // Desbloquear los items de la nav original (desktop) y del drawer (móvil).
   var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
   Array.prototype.forEach.call(items,lbcUnlockItem);
+}
+
+// Revierte un item a su estado BLOQUEADO (candado cerrado, solo miembros).
+function lbcRelockItem(a){
+  var isDrawer=!!a.querySelector('.menu-item-text'); // drawer usa .menu-item
+  var glyph=a.querySelector('.lock-icon,.menu-item-lock');
+  var badge=a.querySelector('.menu-item-badge');
+  if(glyph)glyph.innerHTML='&#128274;'; // 🔒
+  a.classList.remove('nav-unlocked','nav-soon');
+  if(!isDrawer)a.classList.add('nav-locked');
+  a.setAttribute('href','#pro-plan');
+  a.onclick=function(e){return irAPlanes(e);};
+  if(badge){badge.style.display='';badge.textContent='Miembros';}
+  var tag=a.querySelector('.nav-soon-tag'); if(tag&&tag.parentNode)tag.parentNode.removeChild(tag);
+}
+
+// Estado DESLOGUEADO: re-bloquea los items y restaura Login/Unirse.
+function lbcHideMemberNav(){
+  var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='none';
+  var lo=document.getElementById('nav-mem-logout'); if(lo)lo.style.display='none';
+  var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='';
+  var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='';
+  var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
+  Array.prototype.forEach.call(items,lbcRelockItem);
 }
 
 // Cierra sesión: limpia el token y las claves de sesión, y recarga la home.
@@ -2294,8 +2324,9 @@ async function doLogin(){
     localStorage.setItem('lbc_user_email',d.user.email);
     if(err){err.style.color='#22c55e';err.textContent='✓ Bienvenido, '+d.user.name+'!';}
     setTimeout(function(){
-      if(plan==='pro'||plan==='premium'||plan==='admin'){window.location.href='daytrading_preview.html';}
-      else{window.location.href='auth.html';}
+      // Login desde el home → volver al HOME ya logueado (perfil a la derecha,
+      // candados abiertos). NO aterrizar en la pantalla de cuenta de auth.html.
+      window.location.href='homepage.html';
     },700);
   }catch(e){
     if(err){err.style.color='#ef4444';err.textContent='Error de conexión. Intenta de nuevo.';}
