@@ -191,7 +191,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   
 
 /* STRUCTURE METER — radial speedometer · CHOP / RANGE / TREND */
-.rg-meter{padding:var(--sp3) var(--sp4);display:flex;align-items:stretch;justify-content:space-between;gap:var(--sp5);}
+.rg-meter{padding:var(--sp3) var(--sp4);display:flex;align-items:stretch;justify-content:center;gap:var(--sp5);}
 .struct{position:relative;width:200px;flex-shrink:0;}
 .structmeter{position:relative;width:200px;height:118px;}
 .structmeter svg{width:100%;height:100%;overflow:visible;}
@@ -219,7 +219,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sm-poles{display:flex;justify-content:space-between;width:200px;margin-top:-2px;padding:0 6px;}
 .sm-pole{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.4s var(--ease);}
 .sm-pole.range{color:rgba(177,151,252,0.55);} .sm-pole.range{color:rgba(107,166,255,0.55);} .sm-pole.trend{color:rgba(52,224,161,0.55);}
-.rg-meter-stats{display:flex;flex-direction:column;justify-content:space-evenly;gap:var(--sp2);min-width:0;flex:1;min-height:150px;}
+.rg-meter-stats{display:flex;flex-direction:column;justify-content:space-evenly;gap:var(--sp2);min-width:0;flex:1;max-width:360px;min-height:150px;}
 .rg-ms{display:flex;align-items:center;justify-content:space-between;gap:14px;}
 .rg-ms-k{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);}
 .rg-ms-v{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);}
@@ -495,6 +495,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sm-brief .hl-dn{color:var(--down);font-weight:600;}
 .sm-brief .hl-gold{color:var(--gold);font-weight:600;}
 @media(min-width:900px){.sm-brief{font-size:14.5px;}}
+/* Desktop ancho: las 6 líneas cortas del briefing fluyen en 2 columnas
+   para aprovechar TODO el ancho del panel y quedar simétrico (sin hueco
+   negro a la derecha). No cambia el texto ni la lógica, solo el layout. */
+@media(min-width:1040px){.sm-brief{column-count:2;column-gap:40px;column-rule:1px solid var(--hair);}}
 .sm-ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);padding:4px 10px;border:1px solid rgba(204,169,79,0.25);border-radius:var(--r-pill);background:var(--gold-faint);}
 .skel{display:inline-block;height:1em;width:60%;border-radius:4px;background:linear-gradient(90deg,rgba(239,236,227,0.04),rgba(239,236,227,0.1),rgba(239,236,227,0.04));background-size:200% 100%;animation:shim 1.6s infinite;}
 @keyframes shim{to{background-position:-200% 0;}}
