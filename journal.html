@@ -153,6 +153,15 @@ html{font-size:15px;}
 
 /* CALENDAR MODE FILTER */
 .cal-mode-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+/* Selector de unidad global (Puntos/$/% cuenta) */
+.unit-seg{display:inline-flex;align-items:center;gap:2px;background:rgba(0,0,0,0.28);border:0.5px solid rgba(201,168,76,0.25);border-radius:12px;padding:4px 5px;}
+.unit-seg-lbl{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:0 8px 0 6px;}
+.unit-opt{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.02em;padding:8px 13px;border-radius:9px;border:0;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap;}
+.unit-opt:hover{background:rgba(201,168,76,0.08);color:#E8E4D9;}
+.unit-opt.active{background:var(--gold);color:#0a0a0a;font-weight:700;}
+.unit-opt.disabled{opacity:0.4;}
+.unit-cfg{background:transparent;border:0;color:var(--text3);font-size:14px;cursor:pointer;padding:6px 8px;border-radius:8px;transition:all .18s;}
+.unit-cfg:hover{color:var(--gold);background:rgba(201,168,76,0.08);}
 .cal-mode-btn{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.04em;padding:7px 13px;border-radius:999px;border:0.5px solid var(--border2);background:rgba(0,0,0,0.3);color:var(--text2);cursor:pointer;transition:all .2s;}
 .cal-mode-btn:hover{border-color:rgba(201,168,76,0.35);}
 .cal-mode-btn.active{background:rgba(201,168,76,0.12);border-color:var(--gold);color:var(--text);font-weight:600;}
@@ -2054,6 +2063,13 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div><div class="ph-eyebrow">◆ Registro completo</div><h1 class="ph-title">Mis <strong>Trades</strong></h1></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="unit-seg" role="group" aria-label="Unidad de las métricas">
+          <span class="unit-seg-lbl">Unidad</span>
+          <button class="unit-opt" data-u="money" onclick="setJUnit('money')">$ Dinero</button>
+          <button class="unit-opt" data-u="points" onclick="setJUnit('points')">Puntos</button>
+          <button class="unit-opt" data-u="pct" onclick="setJUnit('pct')">% Cuenta</button>
+          <button class="unit-cfg" onclick="openAcctSizeCfg()" title="Definir tamaño de cuenta">⚙</button>
+        </div>
         <div id="acct-picker" class="acct-picker"></div>
         <div id="dfp-tr" class="dfp-instance"></div>
         <button class="sb-cta" style="padding:10px 14px;" onclick="openForm()">+ Trade</button>
@@ -2288,6 +2304,21 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <div class="lbc-cfm-actions">
       <button class="lbc-cfm-btn cancel" id="lbc-cfm-cancel" onclick="lbcConfirmNo()">Cancelar</button>
       <button class="lbc-cfm-btn ok" id="lbc-cfm-ok" onclick="lbcConfirmYes()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tamaño de cuenta (para el modo % sobre la cuenta) -->
+<div class="lbc-cfm" id="acctsize-modal">
+  <div class="lbc-cfm-bg" onclick="closeAcctSizeCfg()"></div>
+  <div class="lbc-cfm-card">
+    <div class="lbc-cfm-ic">◈</div>
+    <div class="lbc-cfm-title">Tamaño de cuenta</div>
+    <div class="lbc-cfm-msg">Necesario para mostrar tus métricas como <strong>% sobre la cuenta</strong>. Se guarda solo en este navegador.</div>
+    <input id="acctsize-input" type="text" inputmode="decimal" placeholder="Ej. 50000" style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.35);border:0.5px solid rgba(201,168,76,0.3);border-radius:10px;padding:12px 14px;color:#E8E4D9;font-family:'DM Mono',monospace;font-size:15px;text-align:center;outline:none;margin:4px 0 14px;" onkeydown="if(event.key==='Enter')saveAcctSize();">
+    <div class="lbc-cfm-actions">
+      <button class="lbc-cfm-btn cancel" onclick="closeAcctSizeCfg()">Cancelar</button>
+      <button class="lbc-cfm-btn ok" onclick="saveAcctSize()">Guardar</button>
     </div>
   </div>
 </div>
@@ -2659,6 +2690,62 @@ function renderLast30Trades(){
     stats_el.innerHTML='<span class="l30-w">'+wins+'G</span> <span style="color:var(--text3);">/</span> <span class="l30-l">'+(last.length-wins)+'P</span> <span class="l30-wr">WR '+wr30+'%</span>';
   }
 }
+// ── SELECTOR DE UNIDAD GLOBAL: Puntos · $ · % sobre la cuenta ──
+var JUNIT='money'; try{var _ju=localStorage.getItem('lbc_junit');if(['money','points','pct'].indexOf(_ju)>=0)JUNIT=_ju;}catch(e){}
+function acctSize(){try{var v=parseFloat(localStorage.getItem(userKey('lbc_acct_size'))||'');return (isFinite(v)&&v>0)?v:0;}catch(e){return 0;}}
+function setAcctSize(v){try{if(v>0)localStorage.setItem(userKey('lbc_acct_size'),String(v));else localStorage.removeItem(userKey('lbc_acct_size'));}catch(e){}}
+// Valor de UN trade en la unidad activa (null si % sin tamaño de cuenta).
+function tUnitVal(t){
+  if(JUNIT==='points')return (t.points!=null?t.points:0);
+  if(JUNIT==='pct'){var a=acctSize();return a>0?(t.pnl/a*100):null;}
+  return t.pnl;
+}
+// Formatea un valor YA en la unidad activa.
+function fUnit(v){
+  if(v==null||!isFinite(v))return '—';
+  if(JUNIT==='points'){var p=Math.round(v*10)/10;return (p>=0?'+':'')+p+'p';}
+  if(JUNIT==='pct'){var q=Math.round(v*100)/100;return (q>=0?'+':'')+q+'%';}
+  return f$(v);
+}
+// stats() en la unidad activa (n, wr, pf, avgW/L, exp, total). Si % sin cuenta → nulos.
+function statsU(arr){
+  if(!arr||!arr.length)return{n:0,wins:0,losses:0,wr:0,pf:0,avgW:0,avgL:0,exp:0,total:0,unitNull:false};
+  if(JUNIT==='pct'&&acctSize()<=0)return{n:arr.length,wins:0,losses:0,wr:0,pf:0,avgW:null,avgL:null,exp:null,total:null,unitNull:true};
+  var w=[],l=[];arr.forEach(function(t){var v=tUnitVal(t);if(t.result==='win')w.push(v);else if(t.result==='loss')l.push(v);});
+  var gw=w.reduce(function(a,b){return a+b;},0),gl=Math.abs(l.reduce(function(a,b){return a+b;},0));
+  var pf=gl>0?Math.round((gw/gl)*100)/100:gw>0?9.9:0;
+  var aw=w.length?(gw/w.length):0,al=l.length?(gl/l.length):0,wr=Math.round((w.length/arr.length)*100);
+  var total=arr.reduce(function(a,t){return a+(tUnitVal(t)||0);},0);
+  var rnd=function(x){return JUNIT==='money'?Math.round(x):Math.round(x*100)/100;};
+  return{n:arr.length,wins:w.length,losses:l.length,wr:wr,pf:pf,avgW:rnd(aw),avgL:rnd(al),exp:rnd((wr/100)*aw-((100-wr)/100)*al),total:rnd(total),unitNull:false};
+}
+function unitLabel(){return JUNIT==='points'?'Puntos':JUNIT==='pct'?'% cuenta':'$';}
+function setJUnit(u){
+  if(['money','points','pct'].indexOf(u)<0)u='money';
+  if(u==='pct'&&acctSize()<=0){ openAcctSizeCfg(); return; }   // pide tamaño de cuenta primero
+  JUNIT=u; try{localStorage.setItem('lbc_junit',u);}catch(e){}
+  syncUnitSeg();
+  if(typeof curView!=='undefined'&&curView)go(curView);        // recalcula TODA la vista
+}
+function syncUnitSeg(){
+  document.querySelectorAll('.unit-opt').forEach(function(b){b.classList.toggle('active',b.dataset.u===JUNIT);});
+  var has=acctSize()>0;
+  document.querySelectorAll('.unit-opt[data-u="pct"]').forEach(function(b){b.classList.toggle('disabled',!has);b.title=has?'% sobre el tamaño de cuenta':'Define tu tamaño de cuenta (⚙) para usar %';});
+}
+// Modal simple para el tamaño de cuenta (Regla #1: sin tamaño → % deshabilitado, sin números falsos).
+function openAcctSizeCfg(){
+  var m=document.getElementById('acctsize-modal'); if(!m)return;
+  var inp=document.getElementById('acctsize-input'); if(inp){var cur=acctSize();inp.value=cur>0?cur:'';}
+  m.classList.add('open'); setTimeout(function(){if(inp&&inp.focus)try{inp.focus();}catch(e){}},60);
+}
+function closeAcctSizeCfg(){var m=document.getElementById('acctsize-modal');if(m)m.classList.remove('open');}
+function saveAcctSize(){
+  var inp=document.getElementById('acctsize-input'); var v=inp?parseFloat(String(inp.value).replace(/[^0-9.]/g,'')):0;
+  setAcctSize(isFinite(v)&&v>0?v:0);
+  closeAcctSizeCfg(); syncUnitSeg();
+  if(isFinite(v)&&v>0){ JUNIT='pct'; try{localStorage.setItem('lbc_junit','pct');}catch(e){} syncUnitSeg(); }
+  if(typeof curView!=='undefined'&&curView)go(curView);
+}
 function renderDash(){
   try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Dashboard
   // Arranque en 0: usuario sin trades reales ve el empty-state con CTAs, no ceros.
@@ -2681,6 +2768,8 @@ function renderDash(){
   }
   var FT=getFilteredT(_dfDash);
   var s=stats(FT),td=pnlPeriod(FT,'today'),tw=pnlPeriod(FT,'week'),tm=pnlPeriod(FT,'month'),su=bySetup(FT),maxDD=calcMaxDD(FT);
+  var sU=statsU(FT);   // mismos KPIs en la UNIDAD activa ($/Puntos/% cuenta)
+  try{syncUnitSeg();}catch(e){}
   var byDate={};FT.forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
   var winDays=0,lossDays=0;Object.values(byDate).forEach(function(p){if(p>0)winDays++;else if(p<0)lossDays++;});
   var dayWin=winDays+lossDays>0?Math.round(winDays/(winDays+lossDays)*100):0;
@@ -2689,11 +2778,11 @@ function renderDash(){
   // número sale en rojo, se ve cuántas posiciones abiertas NO están contando.
   var openN=T.filter(function(t){return !t.__demo && t.status==='open' && (activeAccount==='all'||String(t.account)===activeAccount);}).length;
   document.getElementById('tz-kpi-row').innerHTML=
-    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas'+(openN?' · '+openN+' abiertas fuera':'')+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(s.total>=0?'pos':'neg')+'">'+f$(s.total)+'</div></div></div>'
+    '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado ('+unitLabel()+')'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas'+(openN?' · '+openN+' abiertas fuera':'')+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+((sU.total==null?s.total:sU.total)>=0?'pos':'neg')+'">'+fUnit(sU.total)+'</div></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Trade Win %'+hlp(TIPS.winrate)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.wr+'%</div>'+gaugeSemi(s.wr)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+s.wins+'</span><span style="color:var(--text3)">'+(s.n-s.wins-s.losses)+'</span><span style="color:var(--red)">'+s.losses+'</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Profit Factor'+hlp(TIPS.pf)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.pf.toFixed(2)+'</div>'+ringMini(Math.min(s.pf*33,100),s.pf>=2?'#22c55e':s.pf>=1?'#C9A84C':'#ef4444')+'</div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Day Win %'+hlp(TIPS.daywin)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+dayWin+'%</div>'+gaugeSemi(dayWin)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+winDays+'</span><span style="color:var(--red)">'+lossDays+'</span></div></div>'
-    +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Avg Win/Loss'+hlp(TIPS.avgwl)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+avgWL.toFixed(2)+'</div><div class="tz-winloss-bar"><div class="tz-wl-track"><div class="tz-wl-pos" style="width:'+(s.avgW+s.avgL>0?(s.avgW/(s.avgW+s.avgL))*100:50)+'%"></div><div class="tz-wl-neg" style="width:'+(s.avgW+s.avgL>0?(s.avgL/(s.avgW+s.avgL))*100:50)+'%"></div></div><div class="tz-wl-labels"><span style="color:var(--green)">$'+s.avgW+'</span><span style="color:var(--red)">-$'+s.avgL+'</span></div></div></div></div>';
+    +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Avg Win/Loss'+hlp(TIPS.avgwl)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+avgWL.toFixed(2)+'</div><div class="tz-winloss-bar"><div class="tz-wl-track"><div class="tz-wl-pos" style="width:'+(s.avgW+s.avgL>0?(s.avgW/(s.avgW+s.avgL))*100:50)+'%"></div><div class="tz-wl-neg" style="width:'+(s.avgW+s.avgL>0?(s.avgL/(s.avgW+s.avgL))*100:50)+'%"></div></div><div class="tz-wl-labels"><span style="color:var(--green)">'+fUnit(sU.avgW)+'</span><span style="color:var(--red)">'+(sU.avgL==null?'—':fUnit(-sU.avgL))+'</span></div></div></div></div>';
   // ── Actividad & Riesgo (todo real, derivado de FT) ──
   var longs=FT.filter(function(t){return t.direction==='long';}).length, shorts=FT.length-longs;
   var durs=FT.map(function(t){try{if(!t.exitTime||!t.time)return null;var a=new Date(t.date+'T'+(String(t.time).length===5?t.time+':00':t.time)),b=new Date(t.exitTime);var m=(b-a)/60000;return (m>=0&&m<1440)?m:null;}catch(e){return null;}}).filter(function(x){return x!=null;});
@@ -2710,13 +2799,13 @@ function renderDash(){
   var avgR=rMults.length?Math.round(rMults.reduce(function(a,b){return a+b;},0)/rMults.length*100)/100:null;
   function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
   var _ar=document.getElementById('dash-activity-row');
-  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy',f$(s.exp),s.exp>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
+  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy ('+unitLabel()+')',fUnit(sU.exp),(sU.exp==null?0:sU.exp)>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
   var _ps=perfScore(s,maxDD);renderScoreHero(s.n?_ps:null);renderRadar(_ps);renderLast30Trades();
   renderEquity();renderDailyBars();renderDonuts(s,su);renderDashAI();
   var recent=FT.slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);}).slice(0,5);
   document.getElementById('dash-recent').innerHTML=recent.length?renderTItems(recent):'<div class="empty"><div class="ei">📋</div><p>Registra tu primera operación</p></div>';
   var suData=su.slice(0,5),mxPnl=Math.max.apply(null,suData.map(function(x){return Math.abs(x.pnl);})||[1]);
-  document.getElementById('dash-setups').innerHTML=suData.length?suData.map(function(x){var w=Math.round((Math.abs(x.pnl)/mxPnl)*100);return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border2);"><div style="flex:1;font-size:13px;color:var(--text);font-weight:500;">'+x.name+'<br><span style="font-family:DM Mono,monospace;font-size:9px;color:var(--text3);">'+x.tr.length+' trades · WR '+x.wr+'%</span></div><div style="width:70px;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:'+w+'%;height:100%;border-radius:3px;background:'+(x.pnl>=0?'var(--green)':'var(--red)')+'"></div></div><div style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;width:68px;text-align:right;color:'+(x.pnl>=0?'var(--green)':'var(--red)')+'">'+f$(x.pnl)+'</div></div>';}).join(''):'<div class="empty"><p>Sin datos</p></div>';
+  document.getElementById('dash-setups').innerHTML=suData.length?suData.map(function(x){var w=Math.round((Math.abs(x.pnl)/mxPnl)*100);return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border2);"><div style="flex:1;font-size:13px;color:var(--text);font-weight:500;">'+x.name+'<br><span style="font-family:DM Mono,monospace;font-size:9px;color:var(--text3);">'+x.tr.length+' trades · WR '+x.wr+'%</span></div><div style="width:70px;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:'+w+'%;height:100%;border-radius:3px;background:'+(x.pnl>=0?'var(--green)':'var(--red)')+'"></div></div><div style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;width:78px;text-align:right;color:'+(x.pnl>=0?'var(--green)':'var(--red)')+'">'+fUnit(x.tr.reduce(function(a,t){return a+(tUnitVal(t)||0);},0)===0&&JUNIT==='pct'&&acctSize()<=0?null:x.tr.reduce(function(a,t){return a+(tUnitVal(t)||0);},0))+'</div></div>';}).join(''):'<div class="empty"><p>Sin datos</p></div>';
 }
 function gaugeSemi(pct){var r=26,circ=Math.PI*r,off=circ*(1-Math.min(pct,100)/100),color=pct>=60?'#22c55e':pct>=45?'#C9A84C':'#ef4444';return '<svg class="tz-gauge" viewBox="0 0 64 38"><path d="M 6 32 A 26 26 0 0 1 58 32" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" stroke-linecap="round"/><path d="M 6 32 A 26 26 0 0 1 58 32" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" style="transition:stroke-dashoffset 0.9s ease;filter:drop-shadow(0 0 4px '+color+'55)"/></svg>';}
 function ringMini(pct,color){var circ=2*Math.PI*20;return '<svg class="tz-ring" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/><circle cx="25" cy="25" r="20" fill="none" stroke="'+color+'" stroke-width="4" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+(circ*(1-Math.min(pct,100)/100)).toFixed(1)+'" stroke-linecap="round" transform="rotate(-90 25 25)" style="transition:stroke-dashoffset 0.9s ease;"/></svg>';}
@@ -3256,7 +3345,7 @@ function renderTItems(arr){
       var lbl=t.expired?'expiró · revisar':'revisar';
       badge='<span style="font-size:8.5px;font-family:\'DM Mono\',monospace;letter-spacing:0.05em;color:var(--purple);background:rgba(177,151,252,0.12);border:0.5px solid rgba(177,151,252,0.3);border-radius:5px;padding:1px 6px;margin-left:6px;">◆ '+lbl+'</span>';
     }
-    var pnlTxt=isOpen?'—':f$(t.pnl);
+    var pnlTxt=isOpen?'—':fUnit(tUnitVal(t));
     var pnlCls=isOpen?'neu':(t.pnl>=0?'pos':'neg');
     var ptsTxt=isOpen?'abierta':((t.points>=0?'+':'')+t.points+' pts');
     // Etiqueta WIN/LOSS/BE clara para identificar de un vistazo.
@@ -4918,6 +5007,7 @@ function applyTheme(theme){if(theme==='light')document.documentElement.setAttrib
 document.addEventListener('DOMContentLoaded', function(){
   try{
     dfpRenderBars();       // render pickers first
+    try{syncUnitSeg();}catch(e){}   // refleja la unidad guardada ($/Puntos/% cuenta)
     renderCtxForm();       // render dynamic context buttons
     renderFormChecklist(); // render editable checklist
     go('dashboard');       // then render dashboard (needs pickers in DOM)
