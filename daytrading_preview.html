@@ -3259,6 +3259,15 @@ function lbcMemberLogout(){
         var SENT_COLOR={'Bullish':'rgba(46,232,164,0.85)','Bearish':'rgba(177,151,252,0.85)','Neutral':'rgba(239,236,227,0.45)'};
         var SENT_BG={'Bullish':'rgba(46,232,164,0.10)','Bearish':'rgba(177,151,252,0.10)','Neutral':'rgba(239,236,227,0.06)'};
         var ALERT_BG={'CRITICAL':'rgba(255,59,48,0.12)','HIGH':'rgba(204,169,79,0.09)','ELEVATED':'rgba(239,236,227,0.05)'};
+        // Time relativo ("hace 3 horas") desde el ts (unix seg) real de la noticia.
+        function relTime(m){
+          var ts=+(m.ts||0); if(!ts)return m.time_et||'—';
+          var diff=Math.floor(Date.now()/1000)-ts; if(diff<0)diff=0;
+          if(diff<60)return 'hace un momento';
+          var mins=Math.floor(diff/60); if(mins<60)return 'hace '+mins+(mins===1?' minuto':' minutos');
+          var hrs=Math.floor(mins/60); if(hrs<24)return 'hace '+hrs+(hrs===1?' hora':' horas');
+          var days=Math.floor(hrs/24); return 'hace '+days+(days===1?' día':' días');
+        }
         return items.map(function(m){
           var sent=m.sentiment||'Neutral';
           var alert=m.alert_level||'HIGH';
@@ -3275,7 +3284,7 @@ function lbcMemberLogout(){
             +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impact <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
             +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Scope <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
             +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Source <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
-            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Time <span style="color:rgba(239,236,227,0.7);">'+(m.time_et||'—')+'</span></div>'
+            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Time <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
             +'</div>'
             +'</div>';
         }).join('');

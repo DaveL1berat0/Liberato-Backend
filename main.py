@@ -2818,8 +2818,9 @@ async def refresh_movers():
             else:
                 it["_first_seen"] = now_ts
                 store[key] = it
-        # Poda por TTL: fuera noticias con timestamp (o primera vista) > 12h
-        cutoff = now_ts - 12 * 3600
+        # Poda por TTL: fuera noticias con timestamp (o primera vista) > 24h.
+        # Dave: High Impact solo muestra noticias de MÁXIMO 24 horas de antigüedad.
+        cutoff = now_ts - 24 * 3600
         for k in list(store):
             v = store[k]
             news_ts = v.get("ts") or 0
