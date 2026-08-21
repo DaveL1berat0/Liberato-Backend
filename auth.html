@@ -149,6 +149,23 @@ body{
     </div>
   </div>
 
+  <!-- ══ PANTALLA: VERIFICAR CÓDIGO ══ -->
+  <div class="screen" id="screen-verify">
+    <div class="screen-title" data-es="Verifica tu correo" data-en="Verify your email">Verifica tu correo</div>
+    <div class="screen-sub" id="verify-sub">Ingresa el código de 6 dígitos que enviamos a tu correo.</div>
+    <div class="msg" id="verify-msg"></div>
+    <div class="field">
+      <input class="field-input" id="verify-code" type="text" inputmode="numeric" maxlength="6" placeholder="______"
+             style="text-align:center;letter-spacing:12px;font-family:var(--mono);font-size:26px;"
+             onkeydown="if(event.key==='Enter')doVerify()">
+    </div>
+    <button class="btn btn-gold" id="btn-verify" onclick="doVerify()" data-es="Verificar" data-en="Verify">Verificar</button>
+    <div class="foot-link">
+      <span data-es="¿No te llegó?" data-en="Didn't get it?">¿No te llegó?</span>
+      <a class="link" id="resend-link" onclick="doResend()" data-es="Reenviar código" data-en="Resend code">Reenviar código</a>
+    </div>
+  </div>
+
   <!-- ══ PANTALLA 3: LOGIN ══ -->
   <div class="screen" id="screen-login">
     <div class="screen-title" data-es="Bienvenido de vuelta" data-en="Welcome back">Bienvenido de vuelta</div>
@@ -303,24 +320,61 @@ async function doRegister(){
   try{
     var data = await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang});
     state.email = email; state.name = name;
-    // El backend actual auto-verifica y devuelve el token directo → saltamos el
-    // paso de código. (Si algún día se activa verificación por email, no vendrá
-    // token y caemos al flujo de código.)
+    // Verificación por correo: no viene token; hay que ingresar el código.
+    if(data && data.needs_verification){
+      var sub = document.getElementById('verify-sub');
+      if(sub) sub.textContent = (state.lang==='es'
+        ? 'Ingresa el código de 6 dígitos que enviamos a ' : 'Enter the 6-digit code we sent to ') + email;
+      goScreen('verify');
+      setTimeout(function(){ var c=document.getElementById('verify-code'); if(c)c.focus(); }, 200);
+      return;
+    }
+    // (Fallback) backend con auto-verificación: token directo.
     if(data && data.token){
       state.token = data.token;
       localStorage.setItem('lbc_token', data.token);
       loadAccount();
       return;
     }
-    // Backend sin token en la respuesta: cuenta creada, iniciar sesión.
-    showMsg('reg-msg', state.lang==='es'
-      ? 'Cuenta creada. Inicia sesión para continuar.'
-      : 'Account created. Sign in to continue.', 'success');
+    showMsg('reg-msg', state.lang==='es'?'Cuenta creada. Inicia sesión.':'Account created. Sign in.', 'success');
     setTimeout(function(){ goScreen('login'); }, 1200);
   }catch(e){
     showMsg('reg-msg', e.message, 'error');
   }finally{
     setLoading('btn-register', false);
+  }
+}
+
+// ═══ VERIFICACIÓN POR CÓDIGO ═══
+async function doVerify(){
+  clearMsg('verify-msg');
+  var code = (document.getElementById('verify-code').value||'').trim();
+  if(code.length !== 6){
+    showMsg('verify-msg', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits', 'error');
+    return;
+  }
+  setLoading('btn-verify', true);
+  try{
+    var data = await api('/api/auth/verify', 'POST', {email:state.email, code:code});
+    if(data && data.token){
+      state.token = data.token;
+      localStorage.setItem('lbc_token', data.token);
+      showMsg('verify-msg', state.lang==='es'?'¡Cuenta verificada!':'Account verified!', 'success');
+      setTimeout(loadAccount, 700);
+    }
+  }catch(e){
+    showMsg('verify-msg', e.message, 'error');
+  }finally{
+    setLoading('btn-verify', false);
+  }
+}
+async function doResend(){
+  clearMsg('verify-msg');
+  try{
+    await api('/api/auth/resend-code', 'POST', {email:state.email});
+    showMsg('verify-msg', state.lang==='es'?'Código reenviado. Revisa tu correo.':'Code resent. Check your email.', 'info');
+  }catch(e){
+    showMsg('verify-msg', e.message, 'error');
   }
 }
 
@@ -439,14 +493,21 @@ function doLogout(){
 // ═══ INIT ═══
 (function init(){
   applyLang();
+  var params = new URLSearchParams(window.location.search);
+  // Si viene desde la homepage a verificar el código (?verify=email)
+  var vemail = params.get('verify');
+  if(vemail){
+    state.email = vemail;
+    var sub = document.getElementById('verify-sub');
+    if(sub) sub.textContent = (state.lang==='es'
+      ? 'Ingresa el código de 6 dígitos que enviamos a ' : 'Enter the 6-digit code we sent to ') + vemail;
+    goScreen('verify');
+    setTimeout(function(){ var c=document.getElementById('verify-code'); if(c)c.focus(); }, 200);
+    return;
+  }
   // Si hay token guardado, ir directo a la cuenta
   if(state.token){
     loadAccount();
-  }
-  // Manejar retorno de Stripe (?stripe=success)
-  var params = new URLSearchParams(window.location.search);
-  if(params.get('stripe') === 'success' && state.token){
-    setTimeout(loadAccount, 1500);  // dar tiempo al webhook
   }
 })();
 </script>

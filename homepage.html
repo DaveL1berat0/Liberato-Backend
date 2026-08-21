@@ -1797,16 +1797,24 @@ async function handleSubmit(){
       document.getElementById('m-email').style.borderColor='rgba(220,80,80,0.5)';
       return;
     }
-    // Sesión real con token JWT del backend
+    // Verificación por correo: te enviamos un código. Completa en la página de acceso.
+    if(d.needs_verification){
+      try{ localStorage.setItem('lbc_pending_verify',email); }catch(e){}
+      window.location.href='auth.html?verify='+encodeURIComponent(email);
+      return;
+    }
+    // (Fallback) sesión con token directo
     try{
       localStorage.setItem('lbc_token',d.token||'');
-      localStorage.setItem('lbc_session',JSON.stringify({name:d.user.name,email:d.user.email,plan:d.user.plan,ts:Date.now()}));
-      localStorage.setItem('lbc_user_name',d.user.name);
-      localStorage.setItem('lbc_user_email',d.user.email);
+      if(d.user){
+        localStorage.setItem('lbc_session',JSON.stringify({name:d.user.name,email:d.user.email,plan:d.user.plan,ts:Date.now()}));
+        localStorage.setItem('lbc_user_name',d.user.name);
+        localStorage.setItem('lbc_user_email',d.user.email);
+      }
     }catch(e){}
     document.getElementById('modal-form').style.display='none';
     document.getElementById('modal-success').style.display='block';
-    showWelcome(d.user.name);
+    if(d.user)showWelcome(d.user.name);
   }catch(e){
     if(errEl)errEl.textContent='Error de conexión. Intenta de nuevo.';
   }
