@@ -2924,6 +2924,58 @@ EARN_HIGH    = {
     "WDAY","FTNT","DDOG","ZS","NXPI",
 }
 
+_sym_names = {}            # sym -> nombre real de la empresa (persistente en app_config)
+_sym_names_loaded = False
+
+async def _sym_names_load():
+    global _sym_names_loaded
+    if _sym_names_loaded:
+        return
+    _sym_names_loaded = True
+    try:
+        v = await _sb_get_config("sym_names")
+        if isinstance(v, dict):
+            _sym_names.update(v)
+    except Exception:
+        pass
+
+async def _fill_earn_names(events, cap=20):
+    """Rellena e['name'] con el NOMBRE REAL de la empresa (para el tooltip del
+    calendario). El feed de Finnhub /calendar/earnings solo trae el ticker; aquí lo
+    resolvemos: cache-first (nombres ya vistos + compañías ya abiertas en el drawer),
+    y si falta, Finnhub /stock/profile2 UNA sola vez por símbolo (con presupuesto y
+    tope por refresh), persistido en app_config. Cada nombre se paga una vez en la vida."""
+    await _sym_names_load()
+    new, dirty = 0, False
+    for e in events:
+        sym = e.get("symbol")
+        if not sym:
+            continue
+        nm = _sym_names.get(sym)
+        if not nm:
+            c = (cache.get("company") or {}).get(sym)
+            if c and (c.get("data") or {}).get("name"):
+                nm = c["data"]["name"]; _sym_names[sym] = nm; dirty = True
+        if not nm and new < cap and FINNHUB_KEY and fh_budget_ok(1):
+            try:
+                async with httpx.AsyncClient(timeout=6) as client:
+                    r = await client.get(f"{FH_BASE}/stock/profile2",
+                                         params={"symbol": sym, "token": FINNHUB_KEY})
+                fh_charge(1); new += 1
+                if r.status_code == 200:
+                    nm = (r.json() or {}).get("name")
+                    if nm:
+                        _sym_names[sym] = nm; dirty = True
+            except Exception as ex:
+                print(f"[earn-names] {sym}: {ex}")
+        if nm:
+            e["name"] = nm
+    if dirty:
+        try:
+            await _sb_set_config("sym_names", _sym_names)
+        except Exception:
+            pass
+
 def _earn_impact(sym):
     s = (sym or "").upper()
     if s in EARN_EXTREME: return "extreme"
@@ -2964,6 +3016,11 @@ async def refresh_earnings(days=45):
         out.sort(key=lambda e:(e.get("date",""),
                                {"extreme":0,"high":1,"medium":2}.get(e["impact"],9),
                                e["symbol"]))
+        # Nombre real de cada empresa (para el tooltip del calendario al pasar el cursor).
+        try:
+            await _fill_earn_names(out)
+        except Exception as _e:
+            print(f"[earnings] fill names: {_e}")
         cache["earnings"]["data"]        = out
         cache["earnings"]["last_update"] = datetime.now(NY).isoformat()
         cache["earnings"]["status"]      = "fresh"
