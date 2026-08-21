@@ -5044,23 +5044,38 @@ async def _send_email(to, subject, html):
         return False
 
 async def send_welcome_free(email, name):
-    disc = ("<p>Únete a nuestra comunidad <b>gratuita</b> en Discord para análisis, contexto del "
-            "mercado y la comunidad de traders:</p>") if DISCORD_FREE_INVITE else ""
-    body = (f"<p>Hola {name or ''},</p>"
-            f"<p>Tu cuenta en <b>Liberato Community</b> quedó <b>confirmada</b>. Ya puedes iniciar sesión "
-            f"y explorar el dashboard institucional del NQ, el journal de trading y el contexto en vivo.</p>{disc}")
+    body = (f"<p>Hola, {name or ''}.</p>"
+            f"<p>Tu cuenta en <b>Liberato Community</b> ha sido <b>confirmada</b>. Ya puedes entrar a "
+            f"nuestro Discord y disfrutar de <b>Daily Bias</b>, noticias de alto impacto en vivo, "
+            f"resultados de nuestros estudiantes, contenido educativo gratuito y mucho más.</p>"
+            f"<p>¡Bienvenido a Liberato Community! 🚀</p>")
     cta_t, cta_u = ("Entrar al Discord gratuito →", DISCORD_FREE_INVITE) if DISCORD_FREE_INVITE else (None, None)
     return await _send_email(email, "Bienvenido a Liberato Community ✅",
                              _email_shell("Tu cuenta está confirmada", body, cta_t, cta_u))
 
 async def send_welcome_premium(email, name):
-    body = (f"<p>Hola {name or ''},</p>"
-            f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Ya tienes los "
-            f"<b>livestreams en vivo</b>, el dashboard institucional y todo el contenido premium.</p>"
-            f"<p>Conéctate a los livestreams y a la comunidad de pago desde Whop:</p>")
+    body = (f"<p>Hola, {name or ''}.</p>"
+            f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Ya tienes acceso a los "
+            f"<b>livestreams en vivo</b> haciendo clic en el botón de abajo.</p>"
+            f"<p>Además, al iniciar sesión en <b>liberatocommunity.com</b> tendrás acceso al Dashboard "
+            f"Institucional, niveles de GEX, Earnings, noticias de alto impacto en vivo y todo el "
+            f"contenido premium de la comunidad.</p>"
+            f"<p>¡Ve uniéndote al Livestream! 🚀</p>")
     return await _send_email(email, "Acceso completo activado — Liberato Community ⭐",
                              _email_shell("Tu acceso premium está activo", body,
-                                          "Conectar a los livestreams (Whop) →", WHOP_HUB_URL))
+                                          "Ve uniéndote al Livestream →", WHOP_HUB_URL))
+
+async def send_verify_code(email, name, code):
+    body = (f"<p>Hola, {name or ''}.</p>"
+            f"<p>Para activar tu cuenta en <b>Liberato Community</b>, ingresa este código de verificación:</p>"
+            f"<div style='margin:18px 0;text-align:center;'>"
+            f"<span style='display:inline-block;font-family:monospace;font-size:34px;font-weight:800;"
+            f"letter-spacing:10px;color:#E7CC74;background:#0B0B12;border:1px solid rgba(204,169,79,0.3);"
+            f"border-radius:12px;padding:14px 22px;'>{code}</span></div>"
+            f"<p style='color:#9a9aa2;font-size:13px;'>El código vence en 15 minutos. Si no creaste esta "
+            f"cuenta, ignora este correo.</p>")
+    return await _send_email(email, "Tu código de verificación · Liberato Community",
+                             _email_shell("Verifica tu correo", body))
 
 @app.get("/api/email/health")
 async def email_health():
@@ -5190,6 +5205,34 @@ async def admin_daily_send(key: str = "", authorization: str = Header("")):
         raise HTTPException(403, "acceso denegado")
     return await send_daily_briefs()
 
+# ── Verificación de correo por código (evita cuentas falsas/bots) ────────────
+# Activa cuando podemos enviar correo (EMAIL_READY). El registro NO crea la
+# cuenta hasta que el usuario ingresa el código; el "pendiente" vive en config.
+AUTH_VERIFY = os.getenv("AUTH_VERIFY", "true").lower() != "false"
+_pending_reg = {}   # fallback en memoria si no hay Supabase
+
+def _gen_code():
+    return f"{secrets.randbelow(900000) + 100000:06d}"   # 6 dígitos
+
+async def _pending_get(email):
+    if _sb_on():
+        return await _sb_get_config(f"pending_reg::{email}")
+    return _pending_reg.get(email)
+
+async def _pending_set(email, val):
+    if _sb_on():
+        await _sb_set_config(f"pending_reg::{email}", val)
+    else:
+        _pending_reg[email] = val
+
+async def _plan_from_whop_pending(email):
+    plan0 = "free"
+    if _sb_on():
+        pend = await _sb_get_config(f"whop_plan::{email}")
+        if pend in ("premium", "pro"):
+            plan0 = pend
+    return plan0
+
 @app.post("/api/auth/register")
 async def auth_register(request: Request):
     try:
@@ -5207,21 +5250,28 @@ async def auth_register(request: Request):
         raise HTTPException(409, "Ya existe una cuenta con ese email")
     salt = secrets.token_bytes(16)
     uid = "u_" + secrets.token_hex(9)
-    # ¿pagó en Whop antes de crear la cuenta? aplicamos la titularidad pendiente
-    plan0 = "free"
-    if _sb_on():
-        pend = await _sb_get_config(f"whop_plan::{email}")
-        if pend in ("premium", "pro"):
-            plan0 = pend
+    plan0 = await _plan_from_whop_pending(email)
+    lang = (data.get("language") or "").strip().lower()
     rec = {"id": uid, "name": name or email.split("@")[0],
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
            "plan": plan0, "created": int(time.time())}
-    # Persistir idioma preferido enviado desde auth.html (para que /api/auth/me lo devuelva)
-    lang = (data.get("language") or "").strip().lower()
     if lang in ("es", "en"):
         rec["language"] = lang
+
+    # ── Con verificación por correo activa: NO se crea la cuenta todavía ──
+    if AUTH_VERIFY and EMAIL_READY:
+        code = _gen_code()
+        pend = dict(rec)
+        pend.update({"code": code, "expires": int(time.time()) + 15 * 60, "email": email})
+        await _pending_set(email, pend)
+        try:
+            asyncio.create_task(send_verify_code(email, rec["name"], code))
+        except Exception:
+            pass
+        return {"ok": True, "needs_verification": True, "email": email}
+
+    # ── Sin correo configurado: auto-verifica (comportamiento anterior) ──
     await user_put(email, rec)
-    # Correo de confirmación/bienvenida (no bloqueante), segmentado por plan.
     try:
         if plan0 in ("premium", "pro"):
             asyncio.create_task(send_welcome_premium(email, rec["name"]))
@@ -5231,6 +5281,82 @@ async def auth_register(request: Request):
         pass
     token = _make_jwt({"sub": uid, "email": email, "plan": plan0, "name": rec["name"]})
     return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": plan0}}
+
+@app.post("/api/auth/verify")
+async def auth_verify(request: Request):
+    """Valida el código de 6 dígitos y crea la cuenta (devuelve token)."""
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    code = (str(data.get("code") or "")).strip()
+    if await user_get(email):
+        raise HTTPException(409, "Esta cuenta ya está verificada. Inicia sesión.")
+    pend = await _pending_get(email)
+    if not pend or not isinstance(pend, dict) or not pend.get("code"):
+        raise HTTPException(400, "No hay un registro pendiente para ese correo. Regístrate de nuevo.")
+    if int(pend.get("expires", 0)) < int(time.time()):
+        raise HTTPException(400, "El código venció. Pide uno nuevo.")
+    if not hmac.compare_digest(str(pend.get("code")), code):
+        raise HTTPException(400, "Código incorrecto")
+    # crear la cuenta real (verificada por construcción)
+    plan0 = pend.get("plan", "free")
+    rec = {k: pend[k] for k in ("id", "name", "salt", "pass_hash", "plan", "created") if k in pend}
+    if pend.get("language"):
+        rec["language"] = pend["language"]
+    await user_put(email, rec)
+    await _pending_set(email, {"used": True})   # invalida el pendiente
+    try:
+        if plan0 in ("premium", "pro"):
+            asyncio.create_task(send_welcome_premium(email, rec.get("name")))
+        else:
+            asyncio.create_task(send_welcome_free(email, rec.get("name")))
+    except Exception:
+        pass
+    token = _make_jwt({"sub": rec["id"], "email": email, "plan": plan0, "name": rec.get("name")})
+    return {"ok": True, "token": token,
+            "user": {"id": rec["id"], "email": email, "name": rec.get("name"), "plan": plan0}}
+
+@app.post("/api/auth/resend-code")
+async def auth_resend_code(request: Request):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    email = (data.get("email") or "").strip().lower()
+    pend = await _pending_get(email)
+    if not pend or not isinstance(pend, dict) or pend.get("used"):
+        raise HTTPException(400, "No hay un registro pendiente para ese correo.")
+    code = _gen_code()
+    pend["code"] = code
+    pend["expires"] = int(time.time()) + 15 * 60
+    await _pending_set(email, pend)
+    try:
+        asyncio.create_task(send_verify_code(email, pend.get("name"), code))
+    except Exception:
+        pass
+    return {"ok": True, "resent": True, "email": email}
+
+@app.post("/api/admin/preview-email")
+async def admin_preview_email(request: Request):
+    """Envía un template de EJEMPLO — SOLO a un correo de ADMIN_EMAILS (no se puede
+    usar para spam a terceros). tpl: free | premium | verify."""
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    to = (data.get("to") or "").strip().lower()
+    tpl = (data.get("tpl") or "free").strip().lower()
+    if to not in ADMIN_EMAILS:
+        raise HTTPException(403, "Solo se puede enviar a un correo de administrador")
+    if tpl == "premium":
+        ok = await send_welcome_premium(to, "Dave")
+    elif tpl == "verify":
+        ok = await send_verify_code(to, "Dave", _gen_code())
+    else:
+        ok = await send_welcome_free(to, "Dave")
+    return {"ok": ok, "tpl": tpl, "to": to}
 
 @app.post("/api/auth/login")
 async def auth_login(request: Request):
@@ -5242,6 +5368,10 @@ async def auth_login(request: Request):
     pw = data.get("password") or ""
     u = await user_get(email)
     if not u:
+        # ¿registro pendiente sin verificar? damos una pista clara
+        pend = await _pending_get(email)
+        if pend and isinstance(pend, dict) and pend.get("code") and not pend.get("used"):
+            raise HTTPException(403, "Verifica tu correo: te enviamos un código para activar la cuenta.")
         raise HTTPException(401, "Email o contraseña incorrectos")
     try:
         salt = base64.b64decode(u["salt"])
