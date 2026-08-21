@@ -2838,6 +2838,16 @@ async def refresh_movers():
             return (round(x.get("impact_score", 0) + recency, 3), t)
         ranked = sorted(store.values(), key=_eff, reverse=True)
         out = [{k: v for k, v in it.items() if k != "_first_seen"} for it in ranked[:8]]
+        # HORA DE PUBLICACIÓN (campo "Time" del panel High Impact News). El front
+        # muestra it.time_et; lo derivamos del timestamp real de la noticia (ts, unix
+        # UTC de Finnhub / hora del release del calendario) formateado a ET "HH:MM ET".
+        for it in out:
+            _ts = it.get("ts") or 0
+            if _ts and not it.get("time_et"):
+                try:
+                    it["time_et"] = datetime.fromtimestamp(float(_ts), NY).strftime("%H:%M ET")
+                except Exception:
+                    pass
 
         if out:
             cache["movers"]["data"]        = out
