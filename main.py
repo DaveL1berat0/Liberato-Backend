@@ -2446,6 +2446,19 @@ def _macro_news_from_calendar():
         if str(e.get("impact", "")).lower() not in ("high", "extreme"):
             continue
         title = e.get("title", "") or ""
+        tl0 = title.lower()
+        # Solo macro US (el NQ es US). Si el país es explícito, exigir US; si no,
+        # excluir por marcadores extranjeros en el título.
+        ctry = str(e.get("country", "") or "").upper()
+        if ctry and ctry not in ("US", "USD", "UNITED STATES"):
+            continue
+        _FOREIGN = ("japan", "china", "chinese", "euro", "ecb", "germany", "german",
+                    "france", "french", "u.k", "uk ", "britain", "british", "australia",
+                    "australian", "canada", "canadian", "spain", "italy", "mexico",
+                    "brazil", "india", "new zealand", "swiss", "switzerland", "boj",
+                    "pboc", "boe", "gbp", "eur ", "jpy", "aud", "cad", "cny")
+        if any(m in tl0 for m in _FOREIGN):
+            continue
         # timestamp del evento: solo lo "breaking" (< 6h)
         try:
             ev_ts = datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp()
