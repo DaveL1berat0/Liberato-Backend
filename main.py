@@ -5233,9 +5233,14 @@ async def whop_webhook(request: Request):
         print(f"[whop] evento sin email: {evt} :: {str(d)[:200]}")
         return {"ok": True, "note": "sin email; ignorado"}
     # eventos que QUITAN acceso vs los que lo CONCEDEN.
-    # OJO: "invalid" contiene "valid" → hay que evaluar revoke PRIMERO.
-    revoke = any(w in evt for w in ("invalid", "cancel", "expire", "refund", "deleted", "failed"))
-    grant = (not revoke) and any(w in evt for w in ("valid", "created", "completed", "succeeded", "active", "paid"))
+    # OJO: "invalid" contiene "valid" y "deactivated" contiene "activated" →
+    # hay que evaluar revoke PRIMERO (con "deactiv") para no confundirlos.
+    # Nombres reales de Whop: membership.activated / membership.deactivated /
+    # payment.succeeded (NO existen went_valid/went_invalid en este panel).
+    revoke = any(w in evt for w in ("invalid", "deactiv", "cancel", "expire",
+                                    "refund", "deleted", "failed"))
+    grant = (not revoke) and any(w in evt for w in ("valid", "activ", "created",
+                                                    "completed", "succeeded", "paid"))
     plan = "premium" if grant else ("free" if revoke else None)
     if plan is None:
         print(f"[whop] evento no accionable: {evt} ({email})")
