@@ -559,6 +559,8 @@ function doLogout(){
 (function init(){
   applyLang();
   var params = new URLSearchParams(window.location.search);
+  // Si viene a restablecer contraseña (?forgot=1)
+  if(params.get('forgot')){ goScreen('forgot'); setTimeout(function(){ var e=document.getElementById('forgot-email'); if(e)e.focus(); },200); return; }
   // Si viene desde la homepage a verificar el código (?verify=email)
   var vemail = params.get('verify');
   if(vemail){
