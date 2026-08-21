@@ -523,7 +523,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-navfoot button:hover:not(:disabled){border-color:rgba(201,168,76,0.4);color:var(--gold);}
 .tws-navfoot button:disabled{opacity:0.3;cursor:default;}
 /* Layout de dos columnas + pestañas */
-.tws-cols{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:16px;margin-bottom:16px;align-items:start;}
+.tws-cols{display:grid;grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr);gap:16px;margin-bottom:16px;align-items:start;}
 .tws-panel-right{position:sticky;top:60px;align-self:start;}
 @media(max-width:860px){.tws-cols{grid-template-columns:1fr;}.tws-panel-right{position:static;}}
 .tws-panel{border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,0.008);overflow:hidden;}
@@ -540,7 +540,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-chart-wrap svg{width:100%;height:auto;display:block;}
 /* ── JCH · mini-TradingView del detalle de trade (Lightweight Charts 4.x + velas reales NQ) ── */
 .jch-frame{display:flex;flex-direction:column;}
-.jch-stage{position:relative;width:100%;height:min(56vh,460px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
+.jch-stage{position:relative;width:100%;height:min(68vh,640px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
+@media(max-width:860px){.jch-stage{height:min(58vh,440px);}}
 .jch-tv{position:absolute;inset:0;width:100%;height:100%;}
 .jch-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
 .jch-ov.armed{pointer-events:auto;cursor:crosshair;}
@@ -562,6 +563,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .jch-chip:hover:not(.dis){color:var(--text);border-color:var(--gold);}
 .jch-chip.on{background:var(--gold-soft);border-color:var(--gold);color:var(--gold);}
 .jch-chip.dis{opacity:0.42;cursor:not-allowed;}
+.jch-chip.accent{background:var(--gold);border-color:var(--gold);color:#0a0a0a;font-weight:700;}
+.jch-chip.accent:hover{filter:brightness(1.08);color:#0a0a0a;}
 .jch-sep{width:0.5px;height:16px;background:var(--border2);margin:0 2px;}
 .jch-spacer{flex:1;}
 .jch-read{font-family:'DM Mono',monospace;font-size:10px;line-height:1.6;color:var(--text2);padding:7px 4px 2px;}
@@ -3737,7 +3740,7 @@ function twsRealChartSVG(t,bars,ratio){
 var JCH_GOLD='#C9A84C',JCH_LONG='#2EE8A4',JCH_LOSS='#ef4444',JCH_CYAN='#4FD6E0',JCH_PURP='#B197FC';
 var jchart=null,jseries=null,_jchT=null,_jchRaw=null,_jchInterval='1m',_jchNativeMin=1,_jchTf=1;
 var _jchRO=null,_jchRAF=null,_jchScriptLoading=false,_jchPriceLines=[],_jchMarkers=[];
-var _jchBarsCache={},_jchMfeLines=[],_jchProjLine=null;
+var _jchBarsCache={},_jchMfeLines=[],_jchProjLine=null,_jchTradeMarks=[];
 var _jchMfe=false,_jchProj=false;
 try{_jchMfe=localStorage.getItem('lbc_jch_mfe')==='1';_jchProj=localStorage.getItem('lbc_jch_proj')==='1';}catch(e){}
 // Motor de dibujo (portado). Coordenadas en (índice lógico, precio) → siguen zoom/pan.
@@ -3794,7 +3797,7 @@ function jchStageHTML(t){
     +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()">¿Y si aguanto?</button>'
     +'<span class="jch-spacer"></span>'
     +'<button class="jch-chip" onclick="jchFit()"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
-    +'<button class="jch-chip" onclick="jchFull()"><span class="jtip">Pantalla completa</span>⤢</button>'
+    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
     +'<button class="jch-chip" onclick="jchOpenTV()"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
     +'</div>';
   return '<div class="jch-frame" id="jch-frame">'+stage+bottom+'</div>'
@@ -3881,16 +3884,18 @@ function jchDrawAll(reframe){
   var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0),hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0),hasExit=(t.exit!=null&&t.exit!=='');
   var riskU=hasStop?Math.abs(+t.entry-+t.stop):0;
   function pl(price,color,style,title){try{_jchPriceLines.push(jseries.createPriceLine({price:+price,color:color,lineWidth:1,lineStyle:style,axisLabelVisible:true,title:title}));}catch(e){}}
-  pl(t.entry,JCH_GOLD,LS.Solid,'ENTRY '+t.entry);
+  // Solo líneas de PLAN (no cruzan lo realizado): STOP y TARGET PLANEADO (manual del trader).
+  // ENTRY y SALIDA ya NO se dibujan como líneas — su precio exacto va en BLANCO junto al marker.
   if(hasStop)pl(t.stop,JCH_LOSS,LS.Dashed,'STOP '+t.stop);
-  if(hasTgt){var tgR=riskU>0?('+'+(Math.round(Math.abs(+t.target-+t.entry)/riskU*10)/10)+'R'):'';pl(t.target,JCH_LONG,LS.Dashed,'TGT '+t.target+(tgR?' '+tgR:''));}
-  if(hasExit&&!(t.status==='open'||t.isOpen)){var exCol=(t.result==='win')?JCH_LONG:(t.result==='loss')?JCH_LOSS:JCH_GOLD;pl(t.exit,exCol,LS.Solid,'SALIDA '+t.exit);}
+  if(hasTgt){var tgR=riskU>0?('+'+(Math.round(Math.abs(+t.target-+t.entry)/riskU*10)/10)+'R'):'';pl(t.target,JCH_GOLD,LS.Dashed,'TGT PLAN '+t.target+(tgR?' '+tgR:''));}
   // markers ENT / SAL (snapping a la barra real más cercana)
   var eHM=jchHM(t.time),xHM=hasExit?jchHM(t.exitTime):'';
   var eIdx=jchNearestIdx(bars,eHM); if(eIdx<0)eIdx=0;
   var realR=(hasStop&&riskU>0&&!(t.status==='open'||t.isOpen))?Math.round((t.points/riskU)*100)/100:null;
   var mk=[{time:jchEpoch(t.date,bars[eIdx].hhmm),position:dir==='long'?'belowBar':'aboveBar',shape:dir==='long'?'arrowUp':'arrowDown',color:dir==='long'?JCH_LONG:JCH_LOSS,text:'ENT ×'+(t.contracts||1)}];
-  if(hasExit){var xIdx=jchNearestIdx(bars,xHM);if(xIdx<0)xIdx=bars.length-1;var xcol=(t.result==='win')?JCH_LONG:(t.result==='loss')?JCH_LOSS:JCH_GOLD;mk.push({time:jchEpoch(t.date,bars[xIdx].hhmm),position:dir==='long'?'aboveBar':'belowBar',shape:dir==='long'?'arrowDown':'arrowUp',color:xcol,text:'SAL'+(realR!=null?' '+(realR>=0?'+':'')+realR+'R':'')});}
+  // Etiquetas de PRECIO exacto (blanco) junto a cada marker — siguen zoom/pan (capa overlay).
+  _jchTradeMarks=[{l:eIdx,p:+t.entry,txt:String(t.entry),below:(dir==='long')}];
+  if(hasExit){var xIdx=jchNearestIdx(bars,xHM);if(xIdx<0)xIdx=bars.length-1;var xcol=(t.result==='win')?JCH_LONG:(t.result==='loss')?JCH_LOSS:JCH_GOLD;mk.push({time:jchEpoch(t.date,bars[xIdx].hhmm),position:dir==='long'?'aboveBar':'belowBar',shape:dir==='long'?'arrowDown':'arrowUp',color:xcol,text:'SAL'+(realR!=null?' '+(realR>=0?'+':'')+realR+'R':'')});_jchTradeMarks.push({l:xIdx,p:+t.exit,txt:String(t.exit),below:(dir!=='long')});}
   mk.sort(function(a,b){return a.time-b.time;});
   try{jseries.setMarkers(mk);}catch(e){}
   _jchMarkers=mk;
@@ -4005,8 +4010,9 @@ function jchToggleMfe(){_jchMfe=!_jchMfe;try{localStorage.setItem('lbc_jch_mfe',
 function jchToggleProj(){_jchProj=!_jchProj;try{localStorage.setItem('lbc_jch_proj',_jchProj?'1':'0');}catch(e){}var b=document.getElementById('jch-proj');if(b)b.classList.toggle('on',_jchProj);var bars=jchResample(_jchRaw||[],_jchTf);var eIdx=jchNearestIdx(bars,jchHM(_jchT.time));if(eIdx<0)eIdx=0;jchDrawProj(bars,eIdx);}
 
 // ── Fullscreen (enfoque A: redimensionar el frame, mismo chart/markers/dibujos) ──
-function jchFull(){var f=document.getElementById('jch-frame');if(!f)return;f.classList.toggle('full');document.body.style.overflow=f.classList.contains('full')?'hidden':'';setTimeout(jchResize,30);}
-function jchExitFull(){var f=document.getElementById('jch-frame');if(f&&f.classList.contains('full')){f.classList.remove('full');document.getElementById('tws')&&document.getElementById('tws').classList.contains('open')?document.body.style.overflow='hidden':document.body.style.overflow='';setTimeout(jchResize,30);return true;}return false;}
+function jchFullBtnLabel(full){var b=document.getElementById('jch-fullbtn');if(b)b.innerHTML='<span class="jtip">'+(full?'Salir de pantalla completa (Esc)':'Pantalla completa (Esc para salir)')+'</span>'+(full?'⤡ Contraer':'⤢ Expandir');}
+function jchFull(){var f=document.getElementById('jch-frame');if(!f)return;var full=!f.classList.contains('full');f.classList.toggle('full',full);document.body.style.overflow=full?'hidden':'';jchFullBtnLabel(full);setTimeout(jchResize,30);}
+function jchExitFull(){var f=document.getElementById('jch-frame');if(f&&f.classList.contains('full')){f.classList.remove('full');document.getElementById('tws')&&document.getElementById('tws').classList.contains('open')?document.body.style.overflow='hidden':document.body.style.overflow='';jchFullBtnLabel(false);setTimeout(jchResize,30);return true;}return false;}
 function jchResize(){var el=document.getElementById('jch-tv');if(jchart&&el){try{jchart.applyOptions({width:el.clientWidth,height:el.clientHeight});}catch(e){}}}
 function jchOpenTV(){window.open('https://www.tradingview.com/chart/?symbol=CME_MINI%3ANQ1!','_blank','noopener');}
 
@@ -4047,7 +4053,7 @@ function jchDestroy(){
   if(_jchRAF){cancelAnimationFrame(_jchRAF);_jchRAF=null;}
   if(_jchRO){try{_jchRO.disconnect();}catch(e){}_jchRO=null;}
   if(jchart){try{jchart.remove();}catch(e){}}
-  jchart=null;jseries=null;_jchPriceLines=[];_jchMfeLines=[];_jchProjLine=null;_jchMarkers=[];
+  jchart=null;jseries=null;_jchPriceLines=[];_jchMfeLines=[];_jchProjLine=null;_jchMarkers=[];_jchTradeMarks=[];
   _jdw.draft=null;_jdw.sel=null;_jdw.drag=null;
 }
 function jchFallback(reason){
@@ -4137,6 +4143,27 @@ function jchDrawRender(){
   if(_jdw.sel!=null&&_jdw.sel>=_jdw.items.length)_jdw.sel=null;
   for(var i=0;i<_jdw.items.length;i++){if(_jdw.sel===i)_jdwHalo(ctx,_jdw.items[i]);_jdwPaint(ctx,_jdw.items[i]);}
   if(_jdw.draft)_jdwPaint(ctx,_jdw.draft);
+  jchPaintTradeMarks(ctx);
+}
+// Precio exacto del fill en BLANCO junto a cada marker de entrada/salida (sin línea que cruce).
+function jchPaintTradeMarks(ctx){
+  if(!_jchTradeMarks||!_jchTradeMarks.length)return;
+  for(var i=0;i<_jchTradeMarks.length;i++){
+    var m=_jchTradeMarks[i];var x=_jdwL2X(m.l),y=_jdwP2Y(m.p);
+    if(x==null||y==null)continue;
+    // el arrow+etiqueta de LWC ocupan ~26px; el precio se coloca un poco más afuera
+    var oy=m.below?38:-38;
+    _jchWhiteTag(ctx,x,y+oy,m.txt);
+  }
+}
+function _jchWhiteTag(ctx,x,y,txt){
+  ctx.font='700 10px "DM Mono",monospace';
+  var w=ctx.measureText(txt).width+10,h=15,lx=x-w/2;
+  ctx.fillStyle='rgba(6,7,13,0.9)';ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=1;
+  if(ctx.roundRect){ctx.beginPath();ctx.roundRect(lx,y-h/2,w,h,3.5);ctx.fill();ctx.stroke();}
+  else{ctx.fillRect(lx,y-h/2,w,h);ctx.strokeRect(lx+0.5,y-h/2+0.5,w-1,h-1);}
+  ctx.fillStyle='#ffffff';ctx.textBaseline='middle';ctx.textAlign='center';
+  ctx.fillText(txt,x,y+0.5);
 }
 function jchTool(tool,btn){
   var bar=document.getElementById('jch-toolbar');var ov=document.getElementById('jch-ov');
