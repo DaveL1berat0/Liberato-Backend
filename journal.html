@@ -3909,10 +3909,13 @@ function jchDrawAll(reframe){
   // recarga los dibujos del usuario de ESTE trade
   jchLoadDrawings(t);
 }
-// MFE/MAE reales sobre las barras posteriores a la entrada
+// MFE/MAE reales sobre las barras posteriores a la entrada, ACOTADO al cierre RTH
+// (16:00 ET, incluido): la excursión máxima a favor/contra se mide solo DENTRO de
+// la sesión regular, no en el overnight/Globex posterior (decisión de Dave).
 function jchComputeExcursion(bars,eIdx){
   var t=_jchT;var dir=t.direction==='short'?'short':'long';
-  var post=bars.slice(eIdx);if(post.length<1)return null;
+  var post=bars.slice(eIdx).filter(function(b){var p=String(b.hhmm).split(':');return ((+p[0])*60+(+p[1]))<=960;}); // 960 = 16:00 ET
+  if(post.length<1)return null;
   var mfeP,maeP,mfeB=post[0],maeB=post[0];
   if(dir==='long'){mfeP=post[0].h;maeP=post[0].l;post.forEach(function(b){if(b.h>mfeP){mfeP=b.h;mfeB=b;}if(b.l<maeP){maeP=b.l;maeB=b;}});}
   else{mfeP=post[0].l;maeP=post[0].h;post.forEach(function(b){if(b.l<mfeP){mfeP=b.l;mfeB=b;}if(b.h>maeP){maeP=b.h;maeB=b;}});}
