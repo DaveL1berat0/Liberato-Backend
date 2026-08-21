@@ -149,26 +149,6 @@ body{
     </div>
   </div>
 
-  <!-- ══ PANTALLA 2: VERIFICACIÓN ══ -->
-  <div class="screen" id="screen-verify">
-    <div class="screen-title" data-es="Verifica tu correo" data-en="Verify your email">Verifica tu correo</div>
-    <div class="screen-sub" id="verify-sub" data-es="Ingresa el código de 6 dígitos que enviamos a tu correo" data-en="Enter the 6-digit code we sent to your email">Ingresa el código de 6 dígitos que enviamos a tu correo</div>
-    <div class="msg" id="verify-msg"></div>
-    <div class="code-boxes" id="code-boxes">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="0">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="1">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="2">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="3">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="4">
-      <input class="code-box" type="text" inputmode="numeric" maxlength="1" data-i="5">
-    </div>
-    <button class="btn btn-gold" id="btn-verify" onclick="doVerify()" data-es="Verificar" data-en="Verify">Verificar</button>
-    <div class="resend-timer" id="resend-area">
-      <span class="link" id="resend-link" onclick="doResend()" style="display:none;" data-es="Reenviar código" data-en="Resend code">Reenviar código</span>
-      <span id="resend-timer-text"></span>
-    </div>
-  </div>
-
   <!-- ══ PANTALLA 3: LOGIN ══ -->
   <div class="screen" id="screen-login">
     <div class="screen-title" data-es="Bienvenido de vuelta" data-en="Welcome back">Bienvenido de vuelta</div>
@@ -194,33 +174,10 @@ body{
 
   <!-- ══ PANTALLA: OLVIDÉ CONTRASEÑA (pedir email) ══ -->
   <div class="screen" id="screen-forgot">
-    <div class="screen-title" data-es="Restablecer contraseña" data-en="Reset password">Restablecer contraseña</div>
-    <div class="screen-sub" data-es="Te enviaremos un código a tu correo" data-en="We'll send a code to your email">Te enviaremos un código a tu correo</div>
+    <div class="screen-title" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</div>
+    <div class="screen-sub" data-es="Escríbenos a SupportLiberatoCommunity@gmail.com desde el correo de tu cuenta y te ayudamos a restablecerla." data-en="Email us at SupportLiberatoCommunity@gmail.com from your account address and we'll help you reset it.">Escríbenos a SupportLiberatoCommunity@gmail.com desde el correo de tu cuenta y te ayudamos a restablecerla.</div>
     <div class="msg" id="forgot-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
-      <input class="field-input" id="forgot-email" type="email" placeholder="tu@correo.com" autocomplete="email">
-    </div>
-    <button class="btn btn-gold" id="btn-forgot" onclick="doForgot()" data-es="Enviar código" data-en="Send code">Enviar código</button>
-    <div class="foot-link">
-      <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
-    </div>
-  </div>
-
-  <!-- ══ PANTALLA: NUEVA CONTRASEÑA (código + password) ══ -->
-  <div class="screen" id="screen-reset">
-    <div class="screen-title" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</div>
-    <div class="screen-sub" data-es="Ingresa el código que recibiste y tu nueva contraseña" data-en="Enter the code you received and your new password">Ingresa el código que recibiste y tu nueva contraseña</div>
-    <div class="msg" id="reset-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Código de 6 dígitos" data-en="6-digit code">Código de 6 dígitos</label>
-      <input class="field-input" id="reset-code" type="text" inputmode="numeric" maxlength="6" placeholder="••••••">
-    </div>
-    <div class="field">
-      <label class="field-label" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
-      <input class="field-input" id="reset-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
-    </div>
-    <button class="btn btn-gold" id="btn-reset" onclick="doReset()" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</button>
+    <a class="btn btn-gold" id="btn-forgot" href="mailto:SupportLiberatoCommunity@gmail.com?subject=Restablecer%20contrase%C3%B1a" data-es="Escribir a soporte" data-en="Email support" style="display:block;text-align:center;text-decoration:none;">Escribir a soporte</a>
     <div class="foot-link">
       <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
     </div>
@@ -260,6 +217,7 @@ body{
         <div id="coupon-feedback" style="font-size:12px;margin-top:8px;font-family:var(--mono);"></div>
       </div>
       <button class="btn btn-gold" id="btn-upgrade" onclick="doUpgrade()" data-es="Mejorar a Acceso Completo · $199/mes" data-en="Upgrade to Full Access · $199/mo">Mejorar a Acceso Completo · $199/mes</button>
+      <button class="btn btn-ghost" id="btn-refresh-access" onclick="refreshAccess()" style="margin-top:10px;" data-es="Ya pagué — actualizar mi acceso" data-en="I already paid — refresh my access">Ya pagué — actualizar mi acceso</button>
     </div>
     <!-- Acceso a plataforma (solo premium) -->
     <div id="platform-access" style="display:none;margin-top:24px;">
@@ -354,97 +312,17 @@ async function doRegister(){
       loadAccount();
       return;
     }
-    document.getElementById('verify-sub').textContent =
-      (state.lang==='es'?'Ingresa el código de 6 dígitos enviado a ':'Enter the 6-digit code sent to ')+email;
-    goScreen('verify');
-    startResendTimer();
-    setTimeout(function(){ document.querySelector('.code-box').focus(); }, 300);
+    // Backend sin token en la respuesta: cuenta creada, iniciar sesión.
+    showMsg('reg-msg', state.lang==='es'
+      ? 'Cuenta creada. Inicia sesión para continuar.'
+      : 'Account created. Sign in to continue.', 'success');
+    setTimeout(function(){ goScreen('login'); }, 1200);
   }catch(e){
     showMsg('reg-msg', e.message, 'error');
   }finally{
     setLoading('btn-register', false);
   }
 }
-
-// ═══ VERIFICACIÓN ═══
-function getCode(){
-  var code = '';
-  document.querySelectorAll('.code-box').forEach(function(b){code += b.value;});
-  return code;
-}
-async function doVerify(){
-  clearMsg('verify-msg');
-  var code = getCode();
-  if(code.length !== 6){
-    showMsg('verify-msg', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits', 'error');
-    return;
-  }
-  setLoading('btn-verify', true);
-  try{
-    var data = await api('/api/auth/verify', 'POST', {email:state.email, code:code});
-    if(data.token){
-      state.token = data.token;
-      localStorage.setItem('lbc_token', data.token);
-    }
-    showMsg('verify-msg', state.lang==='es'?'¡Cuenta verificada!':'Account verified!', 'success');
-    setTimeout(loadAccount, 800);
-  }catch(e){
-    showMsg('verify-msg', e.message, 'error');
-  }finally{
-    setLoading('btn-verify', false);
-  }
-}
-async function doResend(){
-  document.getElementById('resend-link').style.display = 'none';
-  try{
-    await api('/api/auth/resend-code', 'POST', {email:state.email});
-    showMsg('verify-msg', state.lang==='es'?'Nuevo código enviado':'New code sent', 'info');
-    startResendTimer();
-  }catch(e){
-    showMsg('verify-msg', e.message, 'error');
-  }
-}
-var resendInterval;
-function startResendTimer(){
-  var seconds = 60;
-  var link = document.getElementById('resend-link');
-  var text = document.getElementById('resend-timer-text');
-  link.style.display = 'none';
-  clearInterval(resendInterval);
-  resendInterval = setInterval(function(){
-    seconds--;
-    text.textContent = state.lang==='es'
-      ? 'Reenviar código en '+seconds+'s'
-      : 'Resend code in '+seconds+'s';
-    if(seconds <= 0){
-      clearInterval(resendInterval);
-      text.textContent = '';
-      link.style.display = 'inline';
-    }
-  }, 1000);
-}
-// Auto-advance code boxes
-document.querySelectorAll('.code-box').forEach(function(box, idx){
-  box.addEventListener('input', function(e){
-    if(e.target.value.length === 1){
-      var boxes = document.querySelectorAll('.code-box');
-      if(idx < 5) boxes[idx+1].focus();
-    }
-  });
-  box.addEventListener('keydown', function(e){
-    if(e.key === 'Backspace' && !e.target.value){
-      var boxes = document.querySelectorAll('.code-box');
-      if(idx > 0) boxes[idx-1].focus();
-    }
-  });
-  box.addEventListener('paste', function(e){
-    e.preventDefault();
-    var paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-    var boxes = document.querySelectorAll('.code-box');
-    for(var i=0; i<paste.length; i++){ if(boxes[i]) boxes[i].value = paste[i]; }
-    if(paste.length === 6) boxes[5].focus();
-  });
-});
 
 // ═══ LOGIN ═══
 async function doLogin(){
@@ -465,46 +343,6 @@ async function doLogin(){
     showMsg('login-msg', e.message, 'error');
   }finally{
     setLoading('btn-login', false);
-  }
-}
-
-// ═══ RESET DE CONTRASEÑA ═══
-async function doForgot(){
-  clearMsg('forgot-msg');
-  var email = document.getElementById('forgot-email').value.trim();
-  if(!email){
-    showMsg('forgot-msg', state.lang==='es'?'Ingresa tu correo':'Enter your email', 'error');
-    return;
-  }
-  // La recuperación por email aún no está disponible en este backend.
-  // Dirigimos a soporte en lugar de llamar a un endpoint inexistente.
-  showMsg('forgot-msg', state.lang==='es'
-    ? 'Escríbenos a SupportLiberatoCommunity@gmail.com y te ayudamos a restablecerla.'
-    : 'Email us at SupportLiberatoCommunity@gmail.com and we\'ll help you reset it.', 'info');
-}
-
-async function doReset(){
-  clearMsg('reset-msg');
-  var code = document.getElementById('reset-code').value.trim();
-  var newPassword = document.getElementById('reset-password').value;
-  var email = state.resetEmail || document.getElementById('forgot-email').value.trim();
-  if(!code || !newPassword){
-    showMsg('reset-msg', state.lang==='es'?'Completa todos los campos':'Fill all fields', 'error');
-    return;
-  }
-  if(newPassword.length < 8){
-    showMsg('reset-msg', state.lang==='es'?'La contraseña debe tener al menos 8 caracteres':'Password must be at least 8 characters', 'error');
-    return;
-  }
-  setLoading('btn-reset', true);
-  try{
-    await api('/api/auth/reset-password', 'POST', {email:email, code:code, new_password:newPassword});
-    showMsg('reset-msg', state.lang==='es'?'Contraseña actualizada. Inicia sesión.':'Password updated. Sign in.', 'success');
-    setTimeout(function(){ goScreen('login'); }, 1500);
-  }catch(e){
-    showMsg('reset-msg', e.message, 'error');
-  }finally{
-    setLoading('btn-reset', false);
   }
 }
 
@@ -557,6 +395,38 @@ function applyCoupon(){
 var WHOP_CHECKOUT = 'https://whop.com/dave-liberato-group/live-day-trading-52/';
 function doUpgrade(){
   window.open(WHOP_CHECKOUT, '_blank');
+  // Tras abrir Whop, sondea /api/auth/me para detectar el upgrade cuando el
+  // webhook de Whop lo confirme (el correo del pago = el correo de la cuenta).
+  startAccessPolling();
+}
+
+// Reconsulta /api/auth/me y refresca la vista de cuenta.
+async function refreshAccess(){
+  var btn = document.getElementById('btn-refresh-access');
+  if(btn){ btn.disabled = true; var t = btn.textContent; btn.textContent = state.lang==='es'?'Comprobando…':'Checking…'; }
+  try{
+    await loadAccount();
+  }catch(e){ /* token inválido → loadAccount ya redirige */ }
+  finally{ if(btn){ btn.disabled = false; btn.textContent = t; } }
+}
+
+// Polling suave: cada 5s durante ~90s. Se detiene en cuanto detecta premium.
+var accessPollTimer;
+function startAccessPolling(){
+  clearInterval(accessPollTimer);
+  var tries = 0, max = 18; // 18 × 5s = 90s
+  accessPollTimer = setInterval(async function(){
+    tries++;
+    try{
+      var u = await api('/api/auth/me', 'GET');
+      if(u && u.is_premium){
+        clearInterval(accessPollTimer);
+        loadAccount();
+        return;
+      }
+    }catch(e){}
+    if(tries >= max) clearInterval(accessPollTimer);
+  }, 5000);
 }
 
 // ═══ LOGOUT ═══
