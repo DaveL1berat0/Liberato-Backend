@@ -4889,9 +4889,18 @@ WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/l
 # Railway BLOQUEA los puertos SMTP salientes (465/587) → "Network is unreachable".
 # Por eso el correo se envía por la API HTTP de Brevo (puerto 443). SMTP queda de
 # fallback (funciona en local u otros hosts que lo permitan).
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
 BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
 MAIL_FROM = (os.getenv("MAIL_FROM") or GMAIL_USER or "").strip()
-EMAIL_READY = bool(BREVO_API_KEY and MAIL_FROM) or EMAIL_ON
+# Resend exige un dominio VERIFICADO como remitente (no acepta @gmail.com). Si
+# MAIL_FROM es un gmail o no está, usa el dominio de pruebas onboarding@resend.dev
+# (que SOLO puede enviar al correo dueño de la cuenta Resend hasta verificar dominio).
+def _resend_from():
+    f = MAIL_FROM
+    if not f or f.lower().endswith("@gmail.com"):
+        return "onboarding@resend.dev"
+    return f
+EMAIL_READY = bool(RESEND_API_KEY) or bool(BREVO_API_KEY and MAIL_FROM) or EMAIL_ON
 
 def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
     cta = ""
@@ -4915,7 +4924,23 @@ async def _send_email(to, subject, html):
     BREVO_API_KEY cae a SMTP (que en Railway suele fallar con 'Network unreachable')."""
     if not to:
         return False
-    # 1) Brevo por HTTP (puerto 443 → funciona en Railway)
+    # 1) Resend por HTTP (puerto 443 → funciona en Railway)
+    if RESEND_API_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=15) as c:
+                r = await c.post("https://api.resend.com/emails",
+                    headers={"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"},
+                    json={"from": f"Liberato Community <{_resend_from()}>",
+                          "to": [to], "subject": subject, "html": html})
+            if r.status_code in (200, 201):
+                print(f"[email] ✓ (resend) {subject} → {to}")
+                return True
+            print(f"[email] ✗ resend {r.status_code}: {r.text[:200]}")
+            return False
+        except Exception as e:
+            print(f"[email] ✗ resend: {e}")
+            return False
+    # 2) Brevo por HTTP (puerto 443 → funciona en Railway)
     if BREVO_API_KEY and MAIL_FROM:
         try:
             async with httpx.AsyncClient(timeout=15) as c:
@@ -4975,7 +5000,9 @@ async def send_welcome_premium(email, name):
 async def email_health():
     """Estado de correos e integraciones (solo booleanos, sin exponer secretos)."""
     _g = globals()
-    return {"email_configured": EMAIL_READY, "email_via": ("brevo" if BREVO_API_KEY and MAIL_FROM else ("smtp" if EMAIL_ON else None)),
+    return {"email_configured": EMAIL_READY,
+            "email_via": ("resend" if RESEND_API_KEY else ("brevo" if BREVO_API_KEY and MAIL_FROM else ("smtp" if EMAIL_ON else None))),
+            "resend_set": bool(RESEND_API_KEY), "resend_from": _resend_from() if RESEND_API_KEY else None,
             "brevo_set": bool(BREVO_API_KEY), "mail_from_set": bool(MAIL_FROM),
             "discord_free_link_set": bool(DISCORD_FREE_INVITE),
             "whop_hub": WHOP_HUB_URL, "sender": GMAIL_USER[:3] + "…" if GMAIL_USER else None,
