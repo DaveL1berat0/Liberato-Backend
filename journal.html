@@ -354,7 +354,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 
 /* RADAR */
 .radar-wrap{display:flex;flex-direction:column;align-items:center;}
-.radar-svg{width:230px;height:230px;}
+.radar-svg{width:340px;height:340px;max-width:100%;}
 .radar-score{display:flex;align-items:center;gap:12px;margin-top:8px;width:100%;}
 .radar-score-num{font-family:'DM Mono',monospace;font-size:30px;font-weight:700;line-height:1;}
 .radar-score-info{flex:1;}
@@ -987,7 +987,7 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 /* Responsive: tighter mobile */
 @media (max-width:768px){
   .tz-kpi{ min-height:96px; }
-  .radar-svg{ max-width:200px; margin:0 auto; display:block; }
+  .radar-svg{ max-width:300px; margin:0 auto; display:block; }
 }
 
 
@@ -1995,8 +1995,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div id="dfp-dash" class="dfp-instance"></div>
     </div>
     <div class="ph"><div class="ph-eyebrow">◆ Tu progreso como trader</div><h1 class="ph-title">Dashboard <strong>Personal</strong></h1></div>
-    <!-- HÉROE: Liberato Score (la métrica que el trader debe trabajar) -->
-    <div id="score-hero"></div>
     <div class="ai-coach-card" id="dash-ai"></div>
 
     <!-- TOP KPI GAUGES -->
@@ -2894,7 +2892,7 @@ function renderRadar(ps){
   var strong=srt.slice(0,2).map(function(m){return swRow(m,true);}).join('');
   var weak=srt.slice(-2).reverse().map(function(m){return swRow(m,false);}).join('');
   document.getElementById('radar-wrap').innerHTML=
-    '<div style="display:flex;justify-content:center;"><svg class="radar-svg" viewBox="0 0 230 230" style="max-width:210px;">'+grid+axes+poly+dots+lblHtml+'</svg></div>'
+    '<div style="display:flex;justify-content:center;"><svg class="radar-svg" viewBox="0 0 230 230" style="max-width:340px;width:100%;">'+grid+axes+poly+dots+lblHtml+'</svg></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;border-top:0.5px solid var(--border2);padding-top:12px;">'
       +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px;">▲ Fortalezas</div>'+strong+'</div>'
       +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:4px;">▼ A mejorar</div>'+weak+'</div>'
