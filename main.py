@@ -2436,11 +2436,64 @@ async def refresh_calendar():
             e["surprise"] = None
             e["classification"] = None
 
-    seen, deduped = set(), []
+    # ── Dedup + FUSIÓN de casillas entre fuentes ──────────────────────────────
+    # Agrupa por (título, fecha/hora). Para cada grupo produce UN evento con el
+    # máximo de casillas llenas: rellena forecast/previous/actual desde cualquier
+    # fuente del grupo que SÍ las tenga, SOLO si faltan (nunca pisa un valor ya
+    # presente) y NUNCA inventa. Preferencia de fuente para el relleno:
+    # tradingeconomics > fmp > forexfactory > finnhub > bls > fred.
+    _SRC_PRIO = {"tradingeconomics": 0, "fmp": 1, "forexfactory": 2,
+                 "finnhub": 3, "bls": 4, "fred": 5}
+    def _src_rank(ev):
+        # '_from' puede venir compuesto (p.ej. 'forexfactory+bls'): usa la primera.
+        base_src = ((ev.get("_from") or "").split("+")[0]).strip().lower()
+        return _SRC_PRIO.get(base_src, 9)
+    def _is_empty(v):
+        return v is None or (isinstance(v, str) and v.strip() == "")
+
+    groups, order = {}, []
     for e in out:
-        k = (e["title"].lower().strip(), (e["time"] or "")[:16])
-        if k in seen: continue
-        seen.add(k); deduped.append(e)
+        k = ((e.get("title","") or "").lower().strip(), (e.get("time","") or "")[:16])
+        if k not in groups:
+            groups[k] = []; order.append(k)
+        groups[k].append(e)
+
+    _FILL_FIELDS = ("forecast", "previous", "actual", "impact")
+    deduped = []
+    for k in order:
+        grp = groups[k]
+        base = grp[0]                      # preserva metadata/orden del primer evento
+        cands = sorted(grp, key=_src_rank)  # mejor fuente primero
+        for f in _FILL_FIELDS:
+            if _is_empty(base.get(f)):
+                for c in cands:
+                    if not _is_empty(c.get(f)):
+                        base[f] = c[f]
+                        if f == "actual":
+                            base["_actual_from"] = (c.get("_from") or "").split("+")[0]
+                        break
+        # Coherencia de estado: si hay actual, el evento está 'Released'.
+        if not _is_empty(base.get("actual")):
+            base["status"] = "Released"
+        elif _is_empty(base.get("status")):
+            base["status"] = "Upcoming"
+        # Recalcular sorpresa/clasificación si ganó casillas y aún no las tenía.
+        if base.get("surprise") is None:
+            _actual = _parse_econ_num(base.get("actual"))
+            _forecast = _parse_econ_num(base.get("forecast"))
+            if _actual is not None and _forecast is not None:
+                _sp = _actual - _forecast
+                base["surprise"] = round(_sp, 2)
+                base["surprise_pct"] = round((_sp/abs(_forecast)*100), 1) if _forecast != 0 else None
+                _name = (base.get("title","") or "").lower()
+                _hb = any(x in _name for x in ["cpi","ppi","inflation","claims","unemployment","jobless"])
+                if abs(_sp) < 0.001:
+                    base["classification"] = "Neutral"
+                elif _hb:
+                    base["classification"] = "Bearish" if _sp > 0 else "Bullish"
+                else:
+                    base["classification"] = "Bullish" if _sp > 0 else "Bearish"
+        deduped.append(base)
     deduped.sort(key=lambda e: e.get("time",""))
 
     # ── RELLENO DE ÚLTIMO RECURSO: BLS (gratis) → FRED (con key) ──
