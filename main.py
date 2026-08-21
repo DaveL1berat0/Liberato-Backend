@@ -2010,8 +2010,11 @@ async def refresh_calendar():
         (devuelve 402 en plan free — no es límite de cuota, es muro de suscripción).
         Apagado por defecto. Si algún día pagas FMP, pon FMP_ENABLED=true en Railway."""
         if not FMP_KEY: return []
-        if os.getenv("FMP_ENABLED", "false").lower() != "true":
-            return []  # endpoint premium; evita llamadas 402 inútiles cada ciclo
+        # /api/health/feeds confirmó que este endpoint devuelve 200 con esta key
+        # (no premium-locked) → habilitado por defecto. Si algún día empieza a dar
+        # 402, poner FMP_ENABLED=false en Railway y el merge sigue con FF+RapidAPI.
+        if os.getenv("FMP_ENABLED", "true").lower() != "true":
+            return []
         if not budget_ok("fmp", 1):
             print("[calendar] presupuesto FMP agotado — se omite FMP")
             return []
