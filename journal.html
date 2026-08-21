@@ -303,6 +303,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .dash-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin:22px 2px 12px;display:flex;align-items:center;gap:10px;}
 .dash-eyebrow::after{content:'';flex:1;height:0.5px;background:var(--border2);}
 .dash-eyebrow:first-child{margin-top:4px;}
+/* HÉROE · Liberato Score */
+.score-hero-card{display:grid;grid-template-columns:minmax(210px,0.9fr) 1.2fr;gap:24px;align-items:center;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(11,14,21,0.5));border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:22px 26px;margin:14px 0 6px;box-shadow:0 0 34px -14px rgba(201,168,76,0.45);}
+@media(max-width:760px){.score-hero-card{grid-template-columns:1fr;gap:16px;padding:20px;}}
+.sh-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.sh-num{font-family:'DM Mono',monospace;font-weight:800;font-size:clamp(58px,9vw,80px);line-height:0.9;letter-spacing:-0.02em;}
+.sh-den{font-size:26px;color:var(--text3);font-weight:700;margin-left:4px;}
+.sh-verdict{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0.04em;margin-top:4px;}
+.sh-bar{height:8px;border-radius:5px;background:linear-gradient(90deg,#ef4444,#C9A84C,#22c55e);position:relative;margin:14px 0 10px;}
+.sh-bar-mark{position:absolute;top:-3px;width:4px;height:14px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px rgba(255,255,255,0.7);}
+.sh-hint{font-size:11px;color:var(--text3);line-height:1.5;max-width:360px;}
+.sh-right{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+.sh-sub-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.sh-sub-l{font-size:11px;color:var(--text2);}
+.sh-sub-v{font-family:'DM Mono',monospace;font-size:16px;font-weight:800;}
+.sh-sub-bar{height:5px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;}
+.sh-sub-bar>div{height:100%;border-radius:3px;transition:width .6s ease;}
 .tz-kpi{background:linear-gradient(180deg,rgba(11,14,21,0.6),rgba(6,8,13,0.4));border:0.5px solid var(--border2);border-radius:var(--r);padding:15px 16px;transition:border-color 0.3s,transform 0.2s;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;}
 .tz-kpi:hover{border-color:rgba(201,168,76,0.25);transform:translateY(-2px);}
 .tz-kpi-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -1931,6 +1947,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div id="dfp-dash" class="dfp-instance"></div>
     </div>
     <div class="ph"><div class="ph-eyebrow">◆ Tu progreso como trader</div><h1 class="ph-title">Dashboard <strong>Personal</strong></h1></div>
+    <!-- HÉROE: Liberato Score (la métrica que el trader debe trabajar) -->
+    <div id="score-hero"></div>
     <div class="ai-coach-card" id="dash-ai"></div>
 
     <!-- TOP KPI GAUGES -->
@@ -1945,7 +1963,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <div class="dash-eyebrow">◆ Progreso & Comportamiento</div>
     <div class="tz-main">
       <div class="tz-panel">
-        <div class="tz-panel-title">Liberato Score</div>
+        <div class="tz-panel-title">Radar de Rendimiento</div>
         <div class="radar-wrap" id="radar-wrap"></div>
       </div>
       <div class="tz-panel">
@@ -2649,6 +2667,7 @@ function renderDash(){
     if(kr0)kr0.innerHTML='<div style="grid-column:1/-1;">'+emptyStateHTML()+'</div>';
     // FIX: limpiar TODOS los widgets — antes el return dejaba números viejos tras
     // desconectar/resetear (radar, equity, barras, donuts, coach, recientes, setups).
+    try{renderScoreHero(null);}catch(e){}
     try{renderRadar(perfScore(stats([]),0));}catch(e){}
     try{renderLast30Trades();}catch(e){}
     try{renderEquity();}catch(e){}
@@ -2692,7 +2711,7 @@ function renderDash(){
   function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
   var _ar=document.getElementById('dash-activity-row');
   if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy',f$(s.exp),s.exp>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
-  renderRadar(perfScore(s,maxDD));renderLast30Trades();
+  var _ps=perfScore(s,maxDD);renderScoreHero(s.n?_ps:null);renderRadar(_ps);renderLast30Trades();
   renderEquity();renderDailyBars();renderDonuts(s,su);renderDashAI();
   var recent=FT.slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);}).slice(0,5);
   document.getElementById('dash-recent').innerHTML=recent.length?renderTItems(recent):'<div class="empty"><div class="ei">📋</div><p>Registra tu primera operación</p></div>';
@@ -2701,6 +2720,26 @@ function renderDash(){
 }
 function gaugeSemi(pct){var r=26,circ=Math.PI*r,off=circ*(1-Math.min(pct,100)/100),color=pct>=60?'#22c55e':pct>=45?'#C9A84C':'#ef4444';return '<svg class="tz-gauge" viewBox="0 0 64 38"><path d="M 6 32 A 26 26 0 0 1 58 32" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" stroke-linecap="round"/><path d="M 6 32 A 26 26 0 0 1 58 32" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" style="transition:stroke-dashoffset 0.9s ease;filter:drop-shadow(0 0 4px '+color+'55)"/></svg>';}
 function ringMini(pct,color){var circ=2*Math.PI*20;return '<svg class="tz-ring" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4"/><circle cx="25" cy="25" r="20" fill="none" stroke="'+color+'" stroke-width="4" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+(circ*(1-Math.min(pct,100)/100)).toFixed(1)+'" stroke-linecap="round" transform="rotate(-90 25 25)" style="transition:stroke-dashoffset 0.9s ease;"/></svg>';}
+// HÉROE: el Liberato Score en grande, protagonista del dashboard.
+function shSub(l,v){var c=v>=70?'var(--green)':v>=45?'var(--gold)':'var(--red)';return '<div class="sh-sub"><div class="sh-sub-top"><span class="sh-sub-l">'+l+'</span><span class="sh-sub-v" style="color:'+c+'">'+Math.round(v)+'</span></div><div class="sh-sub-bar"><div style="width:'+Math.min(Math.max(v,0),100)+'%;background:'+c+'"></div></div></div>';}
+function renderScoreHero(ps){
+  var el=document.getElementById('score-hero'); if(!el)return;
+  if(!ps){el.innerHTML='';return;}
+  var scColor=ps.total>=75?'#22c55e':ps.total>=50?'#C9A84C':'#ef4444';
+  var verdict=ps.total>=75?'Sólido':ps.total>=50?'En desarrollo':'Necesita trabajo';
+  el.innerHTML='<div class="score-hero-card">'
+    +'<div class="sh-left">'
+      +'<div class="sh-eyebrow">◆ Liberato Score</div>'
+      +'<div class="sh-num" style="color:'+scColor+'">'+ps.total+'<span class="sh-den">/100</span></div>'
+      +'<div class="sh-verdict" style="color:'+scColor+'">'+verdict+'</div>'
+      +'<div class="sh-bar"><div class="sh-bar-mark" style="left:'+Math.min(Math.max(ps.total,0),100)+'%"></div></div>'
+      +'<div class="sh-hint">Es el número que debes subir: combina rentabilidad, disciplina, consistencia y control de drawdown.</div>'
+    +'</div>'
+    +'<div class="sh-right">'
+      +shSub('Rentabilidad',ps.profit)+shSub('Disciplina',ps.discipline)+shSub('Consistencia',ps.consistency)+shSub('Control DD',ps.ddScore)
+    +'</div>'
+  +'</div>';
+}
 function renderRadar(ps){
   var labels=['Win %','Profit Factor','Avg Win/Loss','Recovery','Drawdown','Consistencia'];
   var FT=getFilteredT(_dfDash),s=stats(FT),maxDD=calcMaxDD(FT);
@@ -2724,11 +2763,7 @@ function renderRadar(ps){
   var strong=srt.slice(0,2).map(function(m){return swRow(m,true);}).join('');
   var weak=srt.slice(-2).reverse().map(function(m){return swRow(m,false);}).join('');
   document.getElementById('radar-wrap').innerHTML=
-    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">'
-      +'<div style="font-family:\'DM Mono\',monospace;font-size:44px;font-weight:800;line-height:1;color:'+scColor+';">'+ps.total+'</div>'
-      +'<div><div style="font-size:14px;font-weight:700;color:'+scColor+';">'+verdict+'</div><div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">Liberato Score · /100</div></div></div>'
-    +'<div style="height:6px;border-radius:4px;background:linear-gradient(90deg,#ef4444,#C9A84C,#22c55e);position:relative;margin:4px 0 14px;"><div style="position:absolute;top:-3px;left:'+ps.total+'%;width:3px;height:12px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px rgba(255,255,255,0.6);"></div></div>'
-    +'<div style="display:flex;justify-content:center;"><svg class="radar-svg" viewBox="0 0 230 230" style="max-width:200px;">'+grid+axes+poly+dots+lblHtml+'</svg></div>'
+    '<div style="display:flex;justify-content:center;"><svg class="radar-svg" viewBox="0 0 230 230" style="max-width:210px;">'+grid+axes+poly+dots+lblHtml+'</svg></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;border-top:0.5px solid var(--border2);padding-top:12px;">'
       +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px;">▲ Fortalezas</div>'+strong+'</div>'
       +'<div><div style="font-size:9px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:4px;">▼ A mejorar</div>'+weak+'</div>'
