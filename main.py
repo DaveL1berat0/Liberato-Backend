@@ -2425,6 +2425,52 @@ def _classify_impact_news(title, source, ts, calendar_titles=None):
         "type": "ultra_impact",
     }
 
+def _macro_news_from_calendar():
+    """PUENTE calendario → High Impact News. Convierte cada release macro de alto
+    impacto que YA publicó su 'actual' en un titular de último minuto con su
+    dirección para el NQ. Así el resultado (ej. 'Philly Fed 47.4 vs 25 esp') aparece
+    en High Impact News al instante, sin depender de un proveedor de noticias."""
+    out = []
+    now_ts = time.time()
+    def _num(v):
+        try:
+            return float(str(v).replace("%", "").replace(",", "").replace("K", "").replace("k", "").strip())
+        except Exception:
+            return None
+    for e in (cache["calendar"]["data"] or []):
+        if e.get("status") != "Released" or e.get("type") == "holiday":
+            continue
+        actual = e.get("actual")
+        if not actual or not str(actual).strip():
+            continue
+        if str(e.get("impact", "")).lower() not in ("high", "extreme"):
+            continue
+        title = e.get("title", "") or ""
+        # timestamp del evento: solo lo "breaking" (< 6h)
+        try:
+            ev_ts = datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp()
+        except Exception:
+            ev_ts = now_ts
+        if ev_ts and (now_ts - ev_ts) > 6 * 3600:
+            continue
+        forecast = e.get("forecast")
+        a, f = _num(actual), _num(forecast)
+        tl = title.lower()
+        higher_bearish = any(k in tl for k in ("cpi", "ppi", "pce", "inflation", "claims", "unemployment"))
+        sentiment = "Neutral"
+        if a is not None and f is not None and abs(a - f) > 1e-9:
+            beat = a > f
+            sentiment = ("Bearish" if beat else "Bullish") if higher_bearish else ("Bullish" if beat else "Bearish")
+        score = 9.2 if str(e.get("impact", "")).lower() == "extreme" else 8.5
+        hl = f"{title}: {actual}" + (f" (esp {forecast})" if forecast else "")
+        out.append({
+            "headline": hl, "impact_score": score, "scope": "Entire Market",
+            "category": "Macro Data", "sentiment": sentiment, "source": "Calendario macro",
+            "source_confidence": "High", "alert_level": "CRITICAL" if score >= 9.0 else "HIGH",
+            "ts": ev_ts or now_ts, "type": "ultra_impact", "url": "",
+        })
+    return out
+
 async def refresh_movers():
     """Ultra High Impact News — market-moving events only. No stock gainers/losers."""
     if not FINNHUB_KEY:
@@ -2469,6 +2515,10 @@ async def refresh_movers():
         # TTL de 12h; el top-6 se rankea sobre TODO lo visto, no solo el último
         # fetch. Una noticia solo sale del panel por antigüedad o por ser
         # superada en score — nunca porque el feed dejó de incluirla.
+        # PUENTE: añadir los resultados macro del calendario (último minuto) a la
+        # misma lista de noticias de alto impacto.
+        classified.extend(_macro_news_from_calendar())
+
         store = cache.setdefault("_movers_seen", {})
         now_ts = time.time()
         for it in classified:
