@@ -1449,7 +1449,7 @@ nav { max-width: 100%; }
       <div class="modal-divider"></div>
       <div class="modal-field"><label class="modal-label" for="m-name">Nombre</label><input class="modal-input" id="m-name" type="text" placeholder="Tu nombre" autocomplete="given-name"/></div>
       <div class="modal-field"><label class="modal-label" for="m-email">Correo</label><input class="modal-input" id="m-email" type="email" placeholder="tu@email.com" autocomplete="email"/></div>
-      <div class="modal-field"><label class="modal-label" for="m-pass">Contraseña</label><input class="modal-input" id="m-pass" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/></div>
+      <div class="modal-field"><label class="modal-label" for="m-pass">Contraseña</label><input class="modal-input" id="m-pass" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/></div>
       <div id="modal-reg-err" style="font-size:11px;color:#ef4444;min-height:16px;margin-bottom:6px;font-family:monospace;"></div>
       <button class="modal-btn" onclick="handleSubmit()">Crear mi cuenta gratis &#8594;</button>
       <p class="modal-privacy">Sin spam. Cancela cuando quieras. <span style="color:rgba(201,168,76,0.4);">|</span> <span style="cursor:pointer;color:rgba(201,168,76,0.55);" onclick="closeModal();openLoginModal();">Ya tengo cuenta →</span></p>
@@ -1457,7 +1457,7 @@ nav { max-width: 100%; }
     <div class="modal-success" id="modal-success">
       <div class="modal-success-icon" style="font-size:24px;color:#C9A84C;">&#10003;</div>
       <p class="modal-success-title">Bienvenido.</p>
-      <p class="modal-success-text">Ya eres parte de Liberato Community.<br>Revisa tu correo para el acceso.</p>
+      <p class="modal-success-text">Tu cuenta está lista. Ya puedes iniciar sesión.<br><a href="auth.html" style="color:#CCA94F;text-decoration:underline;">Ir a mi cuenta →</a></p>
     </div>
   </div>
 </div>
@@ -1592,7 +1592,7 @@ nav { max-width: 100%; }
     <div class="stat-div"></div>
     <div class="stat"><span class="stat-num">NQ&middot;ES</span><span class="stat-label">Futuros</span></div>
     <div class="stat-div"></div>
-    <div class="stat"><div class="no-signals-wrap"><div class="no-signals-badge"><span class="no-signals-x" style="font-size:14px;color:rgba(239,68,68,0.75);">&#8856;</span><span class="no-signals-text">Sin senales</span></div><span class="no-signals-sub">Solo educacion</span></div></div>
+    <div class="stat"><div class="no-signals-wrap"><div class="no-signals-badge"><span class="no-signals-x" style="font-size:14px;color:rgba(239,68,68,0.75);">&#8856;</span><span class="no-signals-text">Sin señales</span></div><span class="no-signals-sub">Solo educación</span></div></div>
   </div>
 </section>
 
@@ -1602,7 +1602,7 @@ nav { max-width: 100%; }
 <section class="tr">
   <div class="tr-header">
     <div class="eyebrow" style="margin-bottom:1rem;"><div class="eyebrow-dot"></div>Resultados verificados &middot; Broker regulado SEC</div>
-    <h2 class="sec-title">No hables de trading.<br><em>Demuestralo.</em></h2>
+    <h2 class="sec-title">No hables de trading.<br><em>Demuéstralo.</em></h2>
     <p class="sec-sub" style="font-size:12px;color:rgba(232,228,217,0.35);">Retiros reales, certificaciones y track record completo. Sin filtros.</p>
   </div>
 
@@ -1836,10 +1836,7 @@ function showWelcome(name){
   var savedName;
   try{savedName=localStorage.getItem('lbc_user_name');}catch(e){}
   if(savedName){showWelcome(savedName);}
-  else{
-    // Default for demo — Dave
-    showWelcome('Dave');
-  }
+  // Sin usuario guardado: NO saludar con nombre (antes ponía 'Bienvenido, Dave' a todos)
 })();
 // Modal trigger inteligente: exit-intent (desktop) + scroll 55% (mobile)
 // NO molesta con timer agresivo
@@ -2370,11 +2367,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Traders activos': 'Active traders',
     'Sesiones diarias': 'Daily sessions',
     'Futuros': 'Futures',
-    'Sin senales': 'No signals',
-    'Solo educacion': 'Education only',
+    'Sin señales': 'No signals',
+    'Solo educación': 'Education only',
     'Resultados verificados · Broker regulado SEC': 'Verified results · SEC-regulated broker',
     'No hables de trading.': 'Don\'t talk about trading.',
-    'Demuestralo.': 'Prove it.',
+    'Demuéstralo.': 'Prove it.',
     'Retiros reales, certificaciones y track record completo. Sin filtros.': 'Real withdrawals, certifications and complete track record. No filters.',
     'Broker regulado · SEC · FINRA · SIPC': 'Regulated broker · SEC · FINRA · SIPC',
     'Track record anual · TradeStation Securities': 'Annual track record · TradeStation Securities',
