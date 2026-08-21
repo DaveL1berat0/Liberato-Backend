@@ -4865,7 +4865,7 @@ async def auth_health():
 
 # ── Correos transaccionales (segmentados por plan free/premium) ──────────────
 EMAIL_ON = bool(GMAIL_USER and GMAIL_APP_PASSWORD)
-DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "").strip()   # invitación al Discord gratis (Dave)
+DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "https://discord.gg/rBDXT5uDH").strip()   # Discord gratis
 WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
 
 def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
@@ -4936,8 +4936,11 @@ async def email_health():
 #  a Discord (free = sin GEX) y Discord premium/Whop (premium = con GEX).
 #  Endpoints admin con ?key=ADMIN_KEY.
 # ═══════════════════════════════════════════════════════════════════════════
-DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()                  # canal FREE
-DISCORD_PREMIUM_WEBHOOK_URL = os.getenv("DISCORD_PREMIUM_WEBHOOK_URL", "").strip()  # canal PREMIUM/Whop
+# Discord = UN solo canal, el GRATUITO. El brief free (SIN niveles GEX) va aquí.
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
+# Canal PREMIUM (Whop) = se automatiza MÁS ADELANTE (con niveles GEX). Queda listo:
+# si algún día se pone un webhook premium/Whop-bridge, el brief con GEX se publica ahí.
+DISCORD_PREMIUM_WEBHOOK_URL = os.getenv("DISCORD_PREMIUM_WEBHOOK_URL", "").strip()
 
 def _is_premium(u):
     return (u.get("plan") or "free") in ("premium", "pro", "admin")
