@@ -5963,16 +5963,31 @@ async def admin_costs(key: str = ""):
     return HTMLResponse(html)
 
 
+_ohlc_cache = {}  # (ysym, date, interval) → {"ts": epoch, "bars": [...]}
+
+def _ohlc_interval_for_age(age_days):
+    """Yahoo retiene intradía por límite de intervalo: 1m ~7d, 2-30m ~60d, 60m ~730d.
+    Elegimos el intervalo MÁS FINO que Yahoo servirá para esa antigüedad."""
+    if age_days <= 6:   return "1m"
+    if age_days <= 58:  return "5m"
+    if age_days <= 720: return "60m"
+    return "1d"
+
 @app.get("/api/ohlc/{symbol}")
 async def get_ohlc(symbol: str, date: str = ""):
-    """Velas 1-min del ETF proxy (QQQ→NQ, SPY→ES) para una fecha, vía Yahoo del lado
-    SERVIDOR (sin CORS; el navegador no puede pegarle a Yahoo directo). El frontend del
-    journal auto-calibra el ratio con el precio de entrada del trade y dibuja velas +
-    marcadores. GRATIS (Yahoo), sin gasto diario. Cubre HOY y ~últimos 30 días."""
+    """Velas REALES del futuro (NQ=F, ES=F) para una fecha, vía Yahoo del lado SERVIDOR
+    (sin CORS; el navegador no puede pegarle a Yahoo directo). Antes servía el ETF proxy
+    (QQQ×ratio); ahora sirve el NQ/ES REAL — precio exacto del futuro, cubre también la
+    sesión Globex/overnight. GRATIS (Yahoo). Selecciona el intervalo más fino disponible
+    según la antigüedad (1m ~7d, 5m ~60d, 60m ~730d) y cachea los días pasados (inmutables).
+    Respuesta: {ok, symbol, instrument, date, interval, real:true, source, bars:[{hhmm,o,h,l,c}]}."""
     sym = (symbol or "").upper()
-    etf = "QQQ" if ("NQ" in sym or "NDX" in sym) else ("SPY" if ("ES" in sym or "SPX" in sym) else None)
-    if not etf:
-        return {"ok": False, "reason": f"sin proxy de velas para {sym} (solo NQ/ES)"}
+    if ("NQ" in sym or "NDX" in sym):
+        ysym, instrument = "NQ=F", "NQ"
+    elif ("ES" in sym or "SPX" in sym):
+        ysym, instrument = "ES=F", "ES"
+    else:
+        return {"ok": False, "reason": f"sin velas para {sym} (solo NQ/ES)"}
     if not date:
         raise HTTPException(400, "falta ?date=YYYY-MM-DD")
     from datetime import datetime, timezone, timedelta
@@ -5980,41 +5995,66 @@ async def get_ohlc(symbol: str, date: str = ""):
         d0 = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     except Exception:
         raise HTTPException(400, "date inválida (YYYY-MM-DD)")
-    p1 = int((d0 - timedelta(hours=3)).timestamp())
+    today_ny = datetime.now(NY).strftime("%Y-%m-%d")
+    age_days = (datetime.now(NY).date() - d0.date()).days
+    if age_days < 0:
+        return {"ok": False, "reason": "fecha futura"}
+    # Intervalos a intentar, del más fino disponible hacia atrás (fallback si Yahoo no da).
+    order = ["1m", "5m", "60m", "1d"]
+    start = _ohlc_interval_for_age(age_days)
+    intervals = order[order.index(start):]
+    p1 = int((d0 - timedelta(hours=6)).timestamp())   # incluye Globex de la tarde previa
     p2 = int((d0 + timedelta(hours=34)).timestamp())
-    for host in ("query1", "query2"):
-        url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{etf}"
-               f"?interval=1m&period1={p1}&period2={p2}")
-        try:
-            async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
-                r = await c.get(url)
-            if r.status_code != 200:
+    for interval in intervals:
+        # Caché: días pasados son inmutables (TTL largo); HOY caduca a 60s.
+        ck = (ysym, date, interval)
+        cached = _ohlc_cache.get(ck)
+        if cached:
+            fresh = (date != today_ny) or (time.time() - cached["ts"] < 60)
+            if fresh and cached["bars"]:
+                return {"ok": True, "symbol": ysym, "instrument": instrument, "date": date,
+                        "interval": interval, "real": True, "source": f"yahoo:{ysym}",
+                        "bars": cached["bars"], "cached": True}
+        for host in ("query1", "query2"):
+            url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{ysym.replace('=', '%3D')}"
+                   f"?interval={interval}&period1={p1}&period2={p2}")
+            try:
+                async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
+                    r = await c.get(url)
+                if r.status_code != 200:
+                    continue
+                j = r.json()
+                res = ((j.get("chart") or {}).get("result") or [None])[0]
+                if not res:
+                    continue
+                ts = res.get("timestamp") or []
+                q = ((res.get("indicators") or {}).get("quote") or [{}])[0]
+                op, hi, lo, cl = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
+                bars = []
+                for i, tt in enumerate(ts):
+                    try:
+                        o, h, l, c = op[i], hi[i], lo[i], cl[i]
+                    except Exception:
+                        continue
+                    if None in (o, h, l, c):
+                        continue
+                    dt = datetime.fromtimestamp(tt, NY)
+                    if dt.strftime("%Y-%m-%d") != date:
+                        continue
+                    bars.append({"hhmm": dt.strftime("%H:%M"), "o": o, "h": h, "l": l, "c": c})
+                if bars:
+                    _ohlc_cache[ck] = {"ts": time.time(), "bars": bars}
+                    if len(_ohlc_cache) > 4000:   # poda simple anti-crecimiento
+                        for k in list(_ohlc_cache)[:1000]:
+                            _ohlc_cache.pop(k, None)
+                    return {"ok": True, "symbol": ysym, "instrument": instrument, "date": date,
+                            "interval": interval, "real": True, "source": f"yahoo:{ysym}",
+                            "bars": bars}
+            except Exception as e:
+                print(f"[ohlc] {host} {ysym} {date} {interval}: {e}")
                 continue
-            j = r.json()
-            res = ((j.get("chart") or {}).get("result") or [None])[0]
-            if not res:
-                continue
-            ts = res.get("timestamp") or []
-            q = ((res.get("indicators") or {}).get("quote") or [{}])[0]
-            op, hi, lo, cl = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
-            bars = []
-            for i, tt in enumerate(ts):
-                try:
-                    o, h, l, c = op[i], hi[i], lo[i], cl[i]
-                except Exception:
-                    continue
-                if None in (o, h, l, c):
-                    continue
-                dt = datetime.fromtimestamp(tt, NY)
-                if dt.strftime("%Y-%m-%d") != date:
-                    continue
-                bars.append({"hhmm": dt.strftime("%H:%M"), "o": o, "h": h, "l": l, "c": c})
-            if bars:
-                return {"ok": True, "etf": etf, "date": date, "bars": bars}
-        except Exception as e:
-            print(f"[ohlc] {host} {etf} {date}: {e}")
-            continue
-    return {"ok": False, "reason": "sin velas 1m para esa fecha (Yahoo solo guarda ~30 días)"}
+    return {"ok": False, "reason": f"sin velas reales de {instrument} para {date} "
+            "(Yahoo limita el histórico intradía; prueba una fecha más reciente)"}
 
 
 @app.post("/api/journal/coach")
