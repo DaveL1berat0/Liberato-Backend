@@ -5180,19 +5180,20 @@ def _whop_extract_email(d):
     return ""
 
 @app.post("/api/whop/webhook")
-async def whop_webhook(request: Request, key: str = ""):
+async def whop_webhook(request: Request):
     """Recibe eventos de Whop y marca el plan del usuario (premium/free).
-    Seguridad: si WHOP_WEBHOOK_SECRET está configurado, se exige firma HMAC
-    válida (header X-Whop-Signature) o ?key=<secret>. Si no hay secreto, se
-    acepta pero se registra (modo dev)."""
+    SEGURIDAD (fail-closed): exige SIEMPRE firma HMAC válida (X-Whop-Signature).
+    Sin WHOP_WEBHOOK_SECRET configurado NO se acepta ningún webhook — antes se
+    aceptaba sin firma y cualquiera podía auto-concederse premium."""
     raw = await request.body()
-    if WHOP_WEBHOOK_SECRET:
-        sig = (request.headers.get("x-whop-signature") or
-               request.headers.get("whop-signature") or "").strip()
-        expected = hmac.new(WHOP_WEBHOOK_SECRET.encode(), raw, hashlib.sha256).hexdigest()
-        sig_ok = bool(sig) and hmac.compare_digest(sig.split(",")[-1].replace("sha256=", ""), expected)
-        if not (sig_ok or hmac.compare_digest(key, WHOP_WEBHOOK_SECRET)):
-            raise HTTPException(403, "firma inválida")
+    if not WHOP_WEBHOOK_SECRET:
+        raise HTTPException(503, "webhook no configurado (falta WHOP_WEBHOOK_SECRET)")
+    sig = (request.headers.get("x-whop-signature") or
+           request.headers.get("whop-signature") or "").strip()
+    expected = hmac.new(WHOP_WEBHOOK_SECRET.encode(), raw, hashlib.sha256).hexdigest()
+    sig_ok = bool(sig) and hmac.compare_digest(sig.split(",")[-1].replace("sha256=", ""), expected)
+    if not sig_ok:
+        raise HTTPException(403, "firma inválida")
     try:
         d = json.loads(raw.decode() or "{}")
     except Exception:

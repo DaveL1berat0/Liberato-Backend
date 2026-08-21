@@ -2,52 +2,27 @@
 <html lang="es">
 <head>
 <script>
+// GATE REAL: exige sesión premium verificada contra el backend. Sin atajos de
+// localStorage ni códigos hardcodeados (antes ?access=stripe y lbc2026 abrían todo).
 (function(){
-  var p=new URLSearchParams(window.location.search);
-  if(p.get('admin')==='lbc2026'){
-    localStorage.setItem('lbc_access',JSON.stringify({granted:true,plan:'pro',ts:Date.now(),source:'admin'}));
-    window.history.replaceState({},document.title,window.location.pathname);
-    return;
+  var BACKEND='https://web-production-33671.up.railway.app';
+  function showPaywall(){
+    document.addEventListener('DOMContentLoaded',function(){
+      var el=document.getElementById('lbc-paywall'); if(el)el.style.display='flex';
+    });
   }
-  if(p.get('reset')==='1'){localStorage.removeItem('lbc_access');window.location.href='homepage.html';return;}
-  if(p.get('access')==='stripe'){
-    localStorage.setItem('lbc_access',JSON.stringify({granted:true,plan:'pro',ts:Date.now(),source:'stripe'}));
-    window.history.replaceState({},document.title,window.location.pathname);
-    return;
-  }
-  var acc=null;
-  try{acc=JSON.parse(localStorage.getItem('lbc_access'));}catch(e){}
-  if(acc&&acc.granted===true)return;
-  // No access — show paywall after DOM ready
-  document.addEventListener('DOMContentLoaded',function(){
-    var el=document.getElementById('lbc-paywall');
-    if(el)el.style.display='flex';
-  });
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(!token){ showPaywall(); return; }
+  fetch(BACKEND+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(d){ if(!(d&&d.is_premium)) showPaywall(); })
+    .catch(function(){ showPaywall(); });
 })();
 
-function lbcToggleAdmin(){
-  var box=document.getElementById('lbc-admin-box');
-  if(box)box.style.display=box.style.display==='none'?'block':'none';
-  var inp=document.getElementById('lbc-code-inp');
-  if(inp){inp.focus();inp.value='';}
-  var err=document.getElementById('lbc-err');
-  if(err)err.textContent='';
-}
-
-function lbcSubmit(){
-  var val=document.getElementById('lbc-code-inp');
-  if(!val)return;
-  if(val.value.trim()==='lbc2026'){
-    localStorage.setItem('lbc_access',JSON.stringify({granted:true,plan:'pro',ts:Date.now(),source:'admin'}));
-    location.reload();
-  } else {
-    var err=document.getElementById('lbc-err');
-    if(err)err.textContent='Código incorrecto';
-    val.value='';val.focus();
-  }
-}
-
-function lbcKeydown(e){if(e.key==='Enter')lbcSubmit();}
+// El botón del paywall lleva al login/upgrade real (no hay código de acceso).
+function lbcToggleAdmin(){ window.location.href='auth.html'; }
+function lbcSubmit(){ window.location.href='auth.html'; }
+function lbcKeydown(e){ if(e.key==='Enter') lbcSubmit(); }
 function adminUnlock(){lbcToggleAdmin();}
 </script>
 
