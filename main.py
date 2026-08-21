@@ -1069,11 +1069,12 @@ async def _refresh_market_sentiment(asset=FA_ASSET):
     g = cache["gex"].setdefault(asset, {})
     # ── VIX real (TwelveData /quote) ──────────────────────────────────────────
     vix = None
-    if TWELVEDATA_KEY:
+    if TWELVEDATA_KEY and td_budget_ok(1):
         try:
             async with httpx.AsyncClient(timeout=8) as c:
                 r = await c.get("https://api.twelvedata.com/quote",
                                 params={"symbol": "VIX", "apikey": TWELVEDATA_KEY})
+            td_charge(1)  # contabilizar el crédito (antes ~220/día del VIX sin contar)
             if r.status_code == 200:
                 j = r.json() or {}
                 v = j.get("close") or j.get("price")
@@ -2860,6 +2861,8 @@ def _earn_impact(sym):
 
 async def refresh_earnings(days=45):
     if not FINNHUB_KEY: return
+    if not fh_budget_ok(1):
+        print("[earnings] presupuesto Finnhub agotado — se omite"); return
     today = datetime.now(NY).date()
     frm   = today.isoformat()
     to    = (today + timedelta(days=days)).isoformat()
@@ -2867,6 +2870,7 @@ async def refresh_earnings(days=45):
         async with httpx.AsyncClient(timeout=10) as client:
             r = await client.get(f"{FH_BASE}/calendar/earnings",
                                   params={"from":frm,"to":to,"token":FINNHUB_KEY})
+        fh_charge(1)  # contabilizar la llamada (antes sin contar)
         if r.status_code != 200: return
         data = r.json()
         rows = data.get("earningsCalendar",[]) if isinstance(data,dict) else []
@@ -5137,6 +5141,26 @@ async def auth_me(authorization: str = Header("")):
             "id": uid, "email": email, "name": name, "plan": plan,
             "is_premium": is_premium, "language": u.get("language", "es"),
             "plan_expires": u.get("plan_expires")}
+
+@app.get("/api/community/access")
+async def community_access(authorization: str = Header("")):
+    """Acceso a la comunidad: 401 sin sesión, 403 si no es premium, 200 si premium."""
+    token = (authorization or "").replace("Bearer ", "").strip()
+    p = _verify_jwt(token)
+    if not p:
+        raise HTTPException(401, "Inicia sesión")
+    email = (p.get("email") or "").lower()
+    u = await user_get(email) or {}
+    plan = u.get("plan") or p.get("plan", "free")
+    if plan not in ("premium", "pro", "admin"):
+        raise HTTPException(403, "Requiere acceso premium")
+    return {"access": True, "plan": plan, "email": email,
+            "name": u.get("name") or p.get("name")}
+
+@app.post("/api/auth/logout")
+async def auth_logout():
+    """Logout: el JWT es sin estado; el cliente simplemente descarta el token."""
+    return {"ok": True}
 
 @app.post("/api/auth/set-plan")
 async def auth_set_plan(request: Request, key: str = ""):
