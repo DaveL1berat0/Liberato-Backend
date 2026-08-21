@@ -1389,34 +1389,119 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 </style>
 </head>
 <body>
-<!-- ══ BARRA DE NAVEGACIÓN DE MIEMBRO ══ -->
+<!-- ══ NAVEGACIÓN LIBERATO (idéntica al home logueado) ══ -->
 <style>
-.lbc-mnav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;padding:9px 20px;background:linear-gradient(180deg,rgba(13,16,24,0.97),rgba(8,10,15,0.97));border-bottom:1px solid rgba(201,168,76,0.16);box-shadow:0 1px 0 rgba(201,168,76,0.04),0 8px 24px -16px rgba(0,0,0,0.7);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;position:relative;z-index:8000;}
-.lbc-mnav .lbc-mnav-brand{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:rgba(232,228,217,0.5);margin-right:12px;padding-right:16px;letter-spacing:0.01em;border-right:1px solid rgba(201,168,76,0.14);}
-.lbc-mnav .lbc-mnav-brand b{color:#C9A84C;font-weight:600;font-style:normal;}
-.lbc-mnav a{position:relative;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,228,217,0.6);padding:6px 12px;border:0.5px solid rgba(201,168,76,0.28);border-radius:6px;background:rgba(201,168,76,0.04);text-decoration:none;cursor:pointer;white-space:nowrap;transition:all .25s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:6px;}
-.lbc-mnav a .mnav-ic{font-size:12px;line-height:1;opacity:0.9;}
-.lbc-mnav a:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.6);background:rgba(201,168,76,0.1);transform:translateY(-1px);}
-.lbc-mnav a.lbc-mnav-active{color:#080A0F;background:#C9A84C;border-color:#C9A84C;font-weight:600;}
-.lbc-mnav a.lbc-mnav-active .mnav-ic{opacity:1;}
-.lbc-mnav .lbc-mnav-tail{margin-left:auto;display:inline-flex;align-items:center;gap:8px;}
-.lbc-mnav button.lbc-mnav-out{font-size:12px;letter-spacing:0.04em;color:rgba(232,228,217,0.55);border:1px solid rgba(232,228,217,0.15);background:transparent;padding:8px 15px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all .2s ease;font-family:inherit;line-height:1;display:inline-flex;align-items:center;gap:6px;}
-.lbc-mnav button.lbc-mnav-out:hover{color:#ef8a8a;border-color:rgba(239,68,68,0.42);background:rgba(239,68,68,0.07);}
-@media(max-width:720px){.lbc-mnav{padding:7px 12px;gap:2px;}.lbc-mnav .lbc-mnav-brand{width:100%;margin:0 0 6px;padding:0 0 7px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);}.lbc-mnav a,.lbc-mnav button.lbc-mnav-out{font-size:11.5px;padding:7px 10px;}.lbc-mnav a.lbc-mnav-active::after{bottom:-8px;}.lbc-mnav .lbc-mnav-tail{margin-left:auto;}}
+.lbcn{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 20px;background:linear-gradient(180deg,rgba(13,16,24,0.97),rgba(8,10,15,0.97));border-bottom:1px solid rgba(201,168,76,0.16);box-shadow:0 8px 24px -16px rgba(0,0,0,0.7);position:relative;z-index:8000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+.lbcn-brand{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:rgba(232,228,217,0.55);letter-spacing:0.01em;text-decoration:none;margin-right:4px;padding-right:14px;border-right:1px solid rgba(201,168,76,0.14);white-space:nowrap;}
+.lbcn-brand span{color:#C9A84C;font-weight:600;font-style:normal;}
+.lbcn-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.lbcn-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,228,217,0.55);text-decoration:none;cursor:pointer;white-space:nowrap;transition:all .2s ease;font-family:inherit;line-height:1;}
+.lbcn-item:hover{color:#C9A84C;}
+.lbcn-item.lbcn-pill{padding:6px 12px;border:0.5px solid rgba(201,168,76,0.3);border-radius:6px;background:rgba(201,168,76,0.05);color:rgba(232,228,217,0.62);}
+.lbcn-item.lbcn-pill:hover{border-color:rgba(201,168,76,0.6);background:rgba(201,168,76,0.12);color:#E8E4D9;transform:translateY(-1px);}
+.lbcn-item.lbcn-active{color:#080A0F;background:#C9A84C;border-color:#C9A84C;font-weight:700;}
+.lbcn-item.lbcn-active .lbcn-lock svg{stroke:#080A0F;}
+.lbcn-lock{display:inline-flex;align-items:center;font-size:11px;color:rgba(201,168,76,0.85);line-height:1;}
+.lbcn-lock svg{vertical-align:middle;display:block;}
+.lbcn-soon{cursor:default;}
+.lbcn-soon:hover{transform:none;color:rgba(232,228,217,0.62);background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.3);}
+.lbcn-soon-label{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.05;}
+.lbcn-soon-tag{font-size:8px;letter-spacing:0.08em;text-transform:lowercase;color:#080A0F;background:rgba(201,168,76,0.8);padding:1px 6px;border-radius:4px;font-weight:700;margin-top:2px;}
+.lbcn-right{margin-left:auto;display:inline-flex;align-items:center;gap:8px;}
+.lbcn-profile{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
+.lbcn-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
+@media(max-width:720px){.lbcn{padding:7px 12px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 4px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);}.lbcn-item{font-size:10.5px;}.lbcn-item.lbcn-pill{padding:5px 9px;}}
+/* ── DRAWER LATERAL · MI PERFIL ── */
+.profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
+.profile-overlay.open{opacity:1;visibility:visible;}
+.profile-drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:linear-gradient(180deg,#0C0F17,#080A0F);border-left:1px solid rgba(201,168,76,0.22);box-shadow:-24px 0 60px -20px rgba(0,0,0,0.8);transform:translateX(100%);transition:transform 0.34s cubic-bezier(0.22,1,0.36,1);z-index:1210;display:flex;flex-direction:column;}
+.profile-drawer.open{transform:translateX(0);}
+.pd-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid rgba(201,168,76,0.14);flex-shrink:0;}
+.pd-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;color:#E8E4D9;letter-spacing:0.02em;}
+.pd-close{width:34px;height:34px;border-radius:8px;border:1px solid rgba(201,168,76,0.22);background:transparent;color:rgba(201,168,76,0.7);font-size:16px;cursor:pointer;transition:all 0.2s;line-height:1;}
+.pd-close:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.08);}
+.pd-scroll{overflow-y:auto;padding:20px 22px 28px;flex:1;}
+.pd-rows{margin-bottom:6px;}
+.pd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.pd-k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(232,228,217,0.45);}
+.pd-v{font-size:13.5px;color:#E8E4D9;font-weight:500;text-align:right;word-break:break-word;}
+.pd-sec{margin-top:22px;padding-top:20px;border-top:1px solid rgba(201,168,76,0.1);}
+.pd-sec-t{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;color:#E7CC74;margin-bottom:12px;}
+.pd-lang{display:flex;gap:10px;}
+.pd-lang-btn{flex:1;padding:11px;border-radius:9px;border:1px solid rgba(232,228,217,0.14);background:rgba(255,255,255,0.02);color:rgba(232,228,217,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.pd-lang-btn:hover{border-color:rgba(201,168,76,0.45);color:#E8E4D9;}
+.pd-lang-btn.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);color:#E7CC74;font-weight:600;}
+.pd-input{width:100%;box-sizing:border-box;background:rgba(8,9,15,0.6);border:1px solid rgba(232,228,217,0.12);border-radius:10px;padding:12px 14px;color:#E8E4D9;font-size:14px;margin-bottom:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.pd-input:focus{border-color:rgba(201,168,76,0.5);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+.pd-input::placeholder{color:rgba(232,228,217,0.3);}
+.pd-btn{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#C9A84C,#a07828);color:#080A0F;font-size:13.5px;font-weight:700;letter-spacing:0.02em;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s,opacity 0.2s;}
+.pd-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(201,168,76,0.22);}
+.pd-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.pd-logout{width:100%;margin-top:26px;padding:12px;border-radius:10px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;font-size:13.5px;font-weight:600;letter-spacing:0.03em;cursor:pointer;transition:all 0.2s;}
+.pd-logout:hover{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.12);color:#f5a3a3;}
+.pd-msg{font-size:12px;line-height:1.5;margin-bottom:10px;min-height:0;}
+.pd-msg.ok{color:#2EE8A4;}
+.pd-msg.err{color:#ef8a8a;}
 </style>
-<nav class="lbc-mnav" aria-label="Navegación de miembro">
-  <span class="lbc-mnav-brand">Liberato <b>Community</b></span>
-  <a href="homepage.html" data-p="home"><span class="mnav-ic">🏠</span><span data-es="Home" data-en="Home">Home</span></a>
-  <a href="daytrading_preview.html" data-p="dash"><span class="mnav-ic">📊</span><span data-es="Dashboard" data-en="Dashboard">Dashboard</span></a>
-  <a href="journal.html" data-p="journal"><span class="mnav-ic">📓</span><span data-es="Journal" data-en="Journal">Journal</span></a>
-  <a href="earnings.html" data-p="earn"><span class="mnav-ic">📈</span><span data-es="Earnings" data-en="Earnings">Earnings</span></a>
-  <a href="auth.html" data-p="acct"><span class="mnav-ic">👤</span><span data-es="Mi perfil" data-en="My profile">Mi perfil</span></a>
-  <span class="lbc-mnav-tail" id="lbc-mnav-tail">
-    <button type="button" class="lbc-mnav-out" onclick="lbcMemberLogout()" data-es="Salir" data-en="Log out">Salir</button>
-  </span>
+<nav class="lbcn" aria-label="Navegación">
+  <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
+  <div class="lbcn-links">
+    <a class="lbcn-item" href="homepage.html" data-p="home">Inicio</a>
+    <a class="lbcn-item lbcn-pill " href="daytrading_preview.html" data-p="dash"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Day Trading</a>
+    <a class="lbcn-item lbcn-pill lbcn-active" href="journal.html" data-p="journal"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Journal</a>
+    <a class="lbcn-item lbcn-pill " href="earnings.html" data-p="earn"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Earnings</a>
+    <a class="lbcn-item lbcn-pill lbcn-soon" data-p="options"><span class="lbcn-lock">&#128274;</span><span class="lbcn-soon-label"><span>Options</span><span class="lbcn-soon-tag">soon</span></span></a>
+    <a class="lbcn-item lbcn-pill" href="community.html" data-p="edu"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Educación</a>
+  </div>
+  <div class="lbcn-right" id="lbcn-right">
+    <button class="lbcn-profile" onclick="openProfileDrawer()" aria-label="Mi perfil" title="Mi perfil"><span>&#128100;</span></button>
+  </div>
 </nav>
-<script data-active="journal">
-function lbcMemberLogout(){
+<!-- ═══ DRAWER LATERAL · MI PERFIL ═══ -->
+<div class="profile-overlay" id="profile-overlay" onclick="closeProfileDrawer()"></div>
+<aside class="profile-drawer" id="profile-drawer" role="dialog" aria-label="Mi perfil" aria-hidden="true">
+  <div class="pd-head">
+    <div class="pd-title" data-es="Mi perfil" data-en="My profile">Mi perfil</div>
+    <button class="pd-close" onclick="closeProfileDrawer()" aria-label="Cerrar">&#10005;</button>
+  </div>
+  <div class="pd-scroll">
+    <div class="pd-rows">
+      <div class="pd-row"><span class="pd-k" data-es="Nombre" data-en="Name">Nombre</span><span class="pd-v" id="pd-name">—</span></div>
+      <div class="pd-row"><span class="pd-k" data-es="Correo" data-en="Email">Correo</span><span class="pd-v" id="pd-email">—</span></div>
+      <div class="pd-row"><span class="pd-k" data-es="Plan" data-en="Plan">Plan</span><span class="pd-v" id="pd-plan">—</span></div>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Idioma" data-en="Language">Idioma</div>
+      <div class="pd-lang">
+        <button type="button" class="pd-lang-btn" id="pd-lang-es" onclick="profileSetLang('es')">🇪🇸 Español</button>
+        <button type="button" class="pd-lang-btn" id="pd-lang-en" onclick="profileSetLang('en')">🇬🇧 English</button>
+      </div>
+      <div class="pd-msg" id="pd-lang-msg"></div>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</div>
+      <div class="pd-msg" id="pd-pw-msg"></div>
+      <input class="pd-input" id="pd-pw-cur" type="password" placeholder="Contraseña actual" autocomplete="current-password">
+      <input class="pd-input" id="pd-pw-new" type="password" placeholder="Nueva contraseña (mín. 8)" autocomplete="new-password">
+      <button class="pd-btn" id="pd-pw-btn" onclick="profileChangePassword()" data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+    </div>
+
+    <div class="pd-sec">
+      <div class="pd-sec-t" data-es="Cambiar correo" data-en="Change email">Cambiar correo</div>
+      <div class="pd-msg" id="pd-em-msg"></div>
+      <input class="pd-input" id="pd-em-new" type="email" placeholder="Nuevo correo" autocomplete="email">
+      <input class="pd-input" id="pd-em-pass" type="password" placeholder="Contraseña (para confirmar)" autocomplete="current-password">
+      <button class="pd-btn" id="pd-em-btn" onclick="profileChangeEmail()" data-es="Actualizar correo" data-en="Update email">Actualizar correo</button>
+    </div>
+
+    <button class="pd-logout" onclick="lbcLogout()" data-es="Desconectar" data-en="Disconnect">Desconectar</button>
+  </div>
+</aside>
+<script>
+var LBC_AUTH='https://web-production-33671.up.railway.app';
+function lbcLogout(){
   try{
     localStorage.removeItem('lbc_token');
     localStorage.removeItem('lbc_session');
@@ -1425,12 +1510,93 @@ function lbcMemberLogout(){
   }catch(e){}
   window.location.href='homepage.html';
 }
-(function(){
-  var active=document.currentScript&&document.currentScript.getAttribute('data-active');
-  if(!active)return;
-  var el=document.querySelector('.lbc-mnav a[data-p="'+active+'"]');
-  if(el)el.classList.add('lbc-mnav-active');
-})();
+function lbcApi(path, body){
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  return fetch(LBC_AUTH+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)})
+    .then(function(r){return r.json().catch(function(){return {};}).then(function(d){ if(!r.ok) throw new Error(d.detail||'Error'); return d; }); });
+}
+function pdMsg(id,text,ok){var e=document.getElementById(id);if(!e)return;e.textContent=text;e.className='pd-msg '+(ok?'ok':'err');}
+function pdSyncLang(){var cur='es';try{cur=localStorage.getItem('lbc_lang')||'es';}catch(e){}var es=document.getElementById('pd-lang-es'),en=document.getElementById('pd-lang-en');if(es)es.classList.toggle('active',cur==='es');if(en)en.classList.toggle('active',cur==='en');}
+function openProfileDrawer(){
+  // Datos desde la sesión guardada (rápido), luego se refrescan del backend.
+  var s={};try{s=JSON.parse(localStorage.getItem('lbc_session')||'{}');}catch(e){}
+  var nm=(s&&s.name)||localStorage.getItem('lbc_user_name')||'—';
+  var em=(s&&s.email)||localStorage.getItem('lbc_user_email')||'—';
+  var plan=(s&&s.plan)||'';
+  var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
+  if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
+  ['pd-lang-msg','pd-pw-msg','pd-em-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
+  pdSyncLang();
+  var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
+  if(ov)ov.classList.add('open');
+  if(dr){dr.classList.add('open');dr.setAttribute('aria-hidden','false');}
+  document.body.style.overflow='hidden';
+  // Refrescar del backend (nombre/correo/plan/idioma reales).
+  var token='';try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(token){
+    fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(u){
+        if(!u)return;
+        if(pn&&u.name)pn.textContent=u.name;
+        if(pe&&u.email)pe.textContent=u.email;
+        if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
+        if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
+      }).catch(function(){});
+  }
+}
+function closeProfileDrawer(){
+  var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
+  if(ov)ov.classList.remove('open');
+  if(dr){dr.classList.remove('open');dr.setAttribute('aria-hidden','true');}
+  document.body.style.overflow='';
+}
+function profileSetLang(lang){
+  var cur='es';try{cur=localStorage.getItem('lbc_lang')||'es';}catch(e){}
+  if(lang!==cur && typeof window.toggleLang==='function'){ window.toggleLang(); } // traduce + actualiza lbc_lang
+  pdSyncLang();
+  lbcApi('/api/auth/set-language',{language:lang})
+    .then(function(){ pdMsg('pd-lang-msg', lang==='es'?'Idioma actualizado.':'Language updated.', true); })
+    .catch(function(e){ pdMsg('pd-lang-msg', e.message, false); });
+}
+function profileChangePassword(){
+  var cur=(document.getElementById('pd-pw-cur')||{}).value||'';
+  var nw=(document.getElementById('pd-pw-new')||{}).value||'';
+  if(!cur||!nw){ pdMsg('pd-pw-msg','Completa ambos campos.',false); return; }
+  if(nw.length<8){ pdMsg('pd-pw-msg','La nueva contraseña necesita mínimo 8 caracteres.',false); return; }
+  var b=document.getElementById('pd-pw-btn'); if(b)b.disabled=true;
+  lbcApi('/api/auth/change-password',{current_password:cur,new_password:nw})
+    .then(function(){
+      var c=document.getElementById('pd-pw-cur'); if(c)c.value='';
+      var n=document.getElementById('pd-pw-new'); if(n)n.value='';
+      pdMsg('pd-pw-msg','Contraseña actualizada.',true);
+    })
+    .catch(function(e){ pdMsg('pd-pw-msg',e.message,false); })
+    .then(function(){ if(b)b.disabled=false; });
+}
+function profileChangeEmail(){
+  var ne=((document.getElementById('pd-em-new')||{}).value||'').trim();
+  var pw=(document.getElementById('pd-em-pass')||{}).value||'';
+  if(!ne||!pw){ pdMsg('pd-em-msg','Completa ambos campos.',false); return; }
+  if(ne.indexOf('@')<1){ pdMsg('pd-em-msg','Ingresa un correo válido.',false); return; }
+  var b=document.getElementById('pd-em-btn'); if(b)b.disabled=true;
+  lbcApi('/api/auth/change-email',{password:pw,new_email:ne})
+    .then(function(d){
+      if(d.token){ try{ localStorage.setItem('lbc_token',d.token); }catch(e){} }
+      var em=d.email||ne;
+      try{ localStorage.setItem('lbc_user_email',em); }catch(e){}
+      try{ var s=JSON.parse(localStorage.getItem('lbc_session')||'{}'); s.email=em; localStorage.setItem('lbc_session',JSON.stringify(s)); }catch(e){}
+      var pe=document.getElementById('pd-email'); if(pe)pe.textContent=em;
+      var n=document.getElementById('pd-em-new'); if(n)n.value='';
+      var p=document.getElementById('pd-em-pass'); if(p)p.value='';
+      pdMsg('pd-em-msg','Correo actualizado.',true);
+    })
+    .catch(function(e){ pdMsg('pd-em-msg',e.message,false); })
+    .then(function(){ if(b)b.disabled=false; });
+}
+window.openProfileDrawer=openProfileDrawer;window.closeProfileDrawer=closeProfileDrawer;
+window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangePassword;window.profileChangeEmail=profileChangeEmail;
 </script>
 
 
@@ -1479,7 +1645,7 @@ function lbcMemberLogout(){
 (function(){
   function mount(){
     var fab=document.querySelector('.theme-fab');
-    var tail=document.getElementById('lbc-mnav-tail');
+    var tail=document.getElementById('lbcn-right');
     if(fab&&tail){fab.classList.add('theme-fab-innav');tail.insertBefore(fab,tail.firstChild);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
