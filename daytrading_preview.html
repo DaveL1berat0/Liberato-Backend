@@ -2586,6 +2586,22 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     }
     parts.push('<strong>Técnico:</strong> '+st);
 
+    // ── GESTIÓN (acción de riesgo, justificada con datos reales) ──
+    var risks=[];
+    var mvTop=mv.length?mv[0]:null;
+    if(mvTop&&mvTop.sentiment==='Bearish'&&(mvTop.impact_score||0)>=8.5) risks.push('titular de alto impacto/geopolítica');
+    if(S.netGex!=null&&S.netGex<0) risks.push('régimen de expansión (short gamma)');
+    if(S.vix!=null&&Number(S.vix)>=20) risks.push('VIX elevado');
+    var evHi2=(S.events||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high';});
+    if(evHi2.length) risks.push('evento de alto impacto hoy'+(evHi2[0].time?' ('+evHi2[0].time+' ET)':''));
+    var gestion;
+    if(risks.length){
+      gestion='<span class="hl-dn">Reduce tamaño</span>, evita apalancamiento agresivo y usa <strong>stops ajustados</strong> — '+risks.slice(0,2).join(' + ')+'.';
+    }else{
+      gestion='Tamaño normal; respeta los niveles institucionales y no anticipes la ruptura.';
+    }
+    parts.push('<strong>Gestión:</strong> '+gestion);
+
     var el=$('sm-brief'); if(el)el.innerHTML=parts.join('<br>');
   }
 
