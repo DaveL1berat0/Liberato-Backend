@@ -396,7 +396,9 @@ async function doResend(){
   clearMsg('verify-msg');
   try{
     await api('/api/auth/resend-code', 'POST', {email:state.email});
-    showMsg('verify-msg', state.lang==='es'?'Código reenviado. Revisa tu correo.':'Code resent. Check your email.', 'info');
+    // Limpiar el código anterior (ya quedó invalidado en el backend).
+    var c=document.getElementById('verify-code'); if(c){ c.value=''; c.focus(); }
+    showMsg('verify-msg', state.lang==='es'?'Nuevo código enviado. El anterior ya no sirve.':'New code sent. The previous one no longer works.', 'info');
   }catch(e){
     showMsg('verify-msg', e.message, 'error');
   }
