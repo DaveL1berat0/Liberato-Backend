@@ -5246,6 +5246,18 @@ async def admin_daily_send(key: str = "", authorization: str = Header("")):
 # cuenta hasta que el usuario ingresa el código; el "pendiente" vive en config.
 AUTH_VERIFY = os.getenv("AUTH_VERIFY", "true").lower() != "false"
 _pending_reg = {}   # fallback en memoria si no hay Supabase
+_avatars = {}       # fallback en memoria para fotos de perfil (si no hay Supabase)
+
+async def _avatar_get(email):
+    if _sb_on():
+        return await _sb_get_config(f"avatar::{email}")
+    return _avatars.get(email)
+
+async def _avatar_set(email, val):
+    if _sb_on():
+        await _sb_set_config(f"avatar::{email}", val)
+    else:
+        _avatars[email] = val
 
 def _gen_code():
     return f"{secrets.randbelow(900000) + 100000:06d}"   # 6 dígitos
@@ -5490,11 +5502,12 @@ async def auth_me(authorization: str = Header("")):
     plan = u.get("plan") or p.get("plan", "free")
     # Los correos admin (ADMIN_EMAILS) pasan como premium para no toparse con el paywall.
     is_premium = plan in ("premium", "pro", "admin") or email in ADMIN_EMAILS
+    avatar = await _avatar_get(email)
     # Devolvemos tanto la forma anidada (user{}) como campos planos, para que
     # tanto la homepage como auth.html (que leen distinto) funcionen igual.
     return {"ok": True,
-            "user": {"id": uid, "email": email, "name": name, "plan": plan},
-            "id": uid, "email": email, "name": name, "plan": plan,
+            "user": {"id": uid, "email": email, "name": name, "plan": plan, "avatar": avatar},
+            "id": uid, "email": email, "name": name, "plan": plan, "avatar": avatar,
             "is_premium": is_premium, "language": u.get("language", "es"),
             "plan_expires": u.get("plan_expires")}
 
@@ -5558,6 +5571,32 @@ async def auth_set_language(request: Request, authorization: str = Header("")):
     await user_put(email, u)
     return {"ok": True, "language": lang}
 
+@app.post("/api/auth/set-avatar")
+async def auth_set_avatar(request: Request, authorization: str = Header("")):
+    """Foto de perfil. Recibe una data URL (imagen ya redimensionada en el cliente
+    a un cuadrado pequeño). Se guarda en app_config (avatar::<email>), NO en una
+    columna nueva de app_users, para no depender de un cambio de esquema."""
+    email, u = await _require_user(authorization)
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    av = (data.get("avatar") or "").strip()
+    if not av.startswith("data:image/"):
+        raise HTTPException(400, "Imagen inválida (se espera una data URL de imagen)")
+    # Límite de tamaño: el cliente debe redimensionar antes de enviar. ~350KB de
+    # data URL ≈ 256KB de imagen — suficiente para un avatar cuadrado.
+    if len(av) > 350_000:
+        raise HTTPException(413, "La imagen es muy grande; redúcela antes de subir")
+    await _avatar_set(email, av)
+    return {"ok": True, "avatar": av}
+
+@app.post("/api/auth/remove-avatar")
+async def auth_remove_avatar(authorization: str = Header("")):
+    email, u = await _require_user(authorization)
+    await _avatar_set(email, None)
+    return {"ok": True}
+
 @app.post("/api/auth/change-email")
 async def auth_change_email(request: Request, authorization: str = Header("")):
     email, u = await _require_user(authorization)
@@ -5581,6 +5620,14 @@ async def auth_change_email(request: Request, authorization: str = Header("")):
         raise HTTPException(409, "Ese correo ya está en uso")
     # Migrar la cuenta al nuevo correo (crear con nuevo email, borrar el viejo)
     await user_put(new_email, dict(u))
+    # Migrar la foto de perfil (avatar) al nuevo correo, si existe.
+    try:
+        _av = await _avatar_get(email)
+        if _av:
+            await _avatar_set(new_email, _av)
+            await _avatar_set(email, None)
+    except Exception as _e:
+        print(f"[change-email] avatar migrate: {_e}")
     await _del_user(email)
     token = _make_jwt({"sub": u.get("id"), "email": new_email,
                        "plan": u.get("plan", "free"), "name": u.get("name")})
