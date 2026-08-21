@@ -4952,6 +4952,9 @@ async def auth_health():
 EMAIL_ON = bool(GMAIL_USER and GMAIL_APP_PASSWORD)
 DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "https://discord.gg/rBDXT5uDH").strip()   # Discord gratis
 WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
+# Base de la web (para links en correos). Cambiar a https://liberatocommunity.com
+# cuando el dominio quede apuntando a GitHub Pages.
+SITE_URL = os.getenv("SITE_URL", "https://davel1berat0.github.io/Liberato-Backend").strip().rstrip("/")
 # Railway BLOQUEA los puertos SMTP salientes (465/587) → "Network is unreachable".
 # Por eso el correo se envía por la API HTTP de Brevo (puerto 443). SMTP queda de
 # fallback (funciona en local u otros hosts que lo permitan).
@@ -5055,15 +5058,17 @@ async def send_welcome_free(email, name):
 
 async def send_welcome_premium(email, name):
     body = (f"<p>Hola, {name or ''}.</p>"
-            f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Ya tienes acceso a los "
-            f"<b>livestreams en vivo</b> haciendo clic en el botón de abajo.</p>"
-            f"<p>Además, al iniciar sesión en <b>liberatocommunity.com</b> tendrás acceso al Dashboard "
-            f"Institucional, niveles de GEX, Earnings, noticias de alto impacto en vivo y todo el "
-            f"contenido premium de la comunidad.</p>"
-            f"<p>¡Ve uniéndote al Livestream! 🚀</p>")
+            f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Con tu membresía ya tienes el "
+            f"<b>Dashboard Institucional</b>, niveles de <b>GEX</b>, Earnings, noticias de alto impacto en vivo "
+            f"y todo el contenido premium.</p>"
+            f"<p>Entra a la plataforma con el botón de abajo (inicia sesión con este mismo correo) y accederás "
+            f"directo al dashboard con todo abierto.</p>"
+            f"<p>Y no te pierdas los <b>livestreams en vivo</b> desde Whop: "
+            f"<a href='{WHOP_HUB_URL}' style='color:#CCA94F;'>ir al Livestream →</a></p>"
+            f"<p>¡Nos vemos adentro! 🚀</p>")
     return await _send_email(email, "Acceso completo activado — Liberato Community ⭐",
                              _email_shell("Tu acceso premium está activo", body,
-                                          "Ve uniéndote al Livestream →", WHOP_HUB_URL))
+                                          "Entrar al Dashboard →", f"{SITE_URL}/auth.html"))
 
 async def send_verify_code(email, name, code):
     body = (f"<p>Hola, {name or ''}.</p>"

@@ -360,7 +360,7 @@ async function doVerify(){
       state.token = data.token;
       localStorage.setItem('lbc_token', data.token);
       showMsg('verify-msg', state.lang==='es'?'¡Cuenta verificada!':'Account verified!', 'success');
-      setTimeout(loadAccount, 700);
+      setTimeout(function(){ loadAccount(true); }, 700);
     }
   }catch(e){
     showMsg('verify-msg', e.message, 'error');
@@ -392,7 +392,7 @@ async function doLogin(){
     var data = await api('/api/auth/login', 'POST', {email:email, password:password});
     state.token = data.token;
     localStorage.setItem('lbc_token', data.token);
-    loadAccount();
+    loadAccount(true);
   }catch(e){
     showMsg('login-msg', e.message, 'error');
   }finally{
@@ -401,9 +401,14 @@ async function doLogin(){
 }
 
 // ═══ CUENTA ═══
-async function loadAccount(){
+async function loadAccount(goDash){
   try{
     var u = await api('/api/auth/me', 'GET');
+    // Premium recién logueado/verificado → directo al dashboard con todo abierto.
+    if(goDash && u.is_premium){
+      window.location.href = 'daytrading_preview.html';
+      return;
+    }
     state.lang = u.language || state.lang;
     document.getElementById('acct-name').textContent = u.name;
     document.getElementById('acct-email').textContent = u.email;
