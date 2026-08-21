@@ -145,7 +145,8 @@ nav,section,.bridge,footer,.modal-overlay,.menu-drawer{position:relative;z-index
 
 /* ── NAV ── */
 nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:0.5px solid rgba(201,168,76,0.1);position:sticky;top:0;background:rgba(8,10,15,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:100;overflow:visible;}
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#E8E4D9;letter-spacing:0.1em;flex-shrink:0;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#E8E4D9;letter-spacing:0.1em;flex-shrink:0;text-decoration:none;cursor:pointer;transition:opacity 0.2s ease;}
+.logo:hover{opacity:0.82;}
 .logo span{color:#C9A84C;}
 .nav-desktop-links{display:none;}
 .nav-right{display:flex;align-items:center;gap:0.75rem;flex-shrink:0;}
@@ -610,6 +611,12 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
 .nav-mem-profile{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
 .nav-mem-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
 .nav-mem-profile .nav-mem-ic{font-size:16px;line-height:1;}
+.nav-mem-profile{overflow:hidden;}
+.nav-mem-profile img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;}
+.lbc-lock{vertical-align:middle;display:inline-block;flex:0 0 auto;}
+.nav-mem-name{display:none;align-items:center;background:transparent;border:none;cursor:pointer;color:#C9A84C;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;letter-spacing:0.02em;padding:0 2px;line-height:1;transition:color 0.2s ease;white-space:nowrap;}
+.nav-mem-name:hover{color:#E7CC74;}
+@media(max-width:600px){.nav-mem-name{display:none!important;}}
 
 /* ── "soon" apilado debajo de la palabra (Options) · desktop + drawer ── */
 .nav-soon .nav-soon-label{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.05;}
@@ -649,6 +656,15 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
 .pd-msg{font-size:12px;line-height:1.5;margin-bottom:10px;min-height:0;}
 .pd-msg.ok{color:#2EE8A4;}
 .pd-msg.err{color:#ef8a8a;}
+.pd-avatar-sec{display:flex;flex-direction:column;align-items:center;gap:12px;padding:4px 0 18px;border-bottom:1px solid rgba(201,168,76,0.1);margin-bottom:6px;}
+.pd-avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;background:rgba(201,168,76,0.1);border:2px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;color:#E7CC74;font-size:34px;font-weight:600;font-family:'Cormorant Garamond',Georgia,serif;}
+.pd-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.pd-avatar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.pd-avatar-btn{font-size:12px;padding:7px 14px;border-radius:8px;border:1px solid rgba(201,168,76,0.35);background:rgba(201,168,76,0.06);color:#E7CC74;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.pd-avatar-btn:hover{background:rgba(201,168,76,0.14);border-color:#C9A84C;}
+.pd-avatar-btn.pd-avatar-remove{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;}
+.pd-avatar-btn.pd-avatar-remove:hover{background:rgba(239,68,68,0.12);}
+.pd-avatar-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
 /* ── DESKTOP ── */
 @media(min-width:768px){
@@ -1484,7 +1500,6 @@ nav { max-width: 100%; }
 <div class="menu-drawer" id="menu-drawer">
   <button class="menu-drawer-close" onclick="closeMenu()" style="font-size:18px;color:rgba(201,168,76,0.6);">&#10005;</button>
   <div class="menu-drawer-logo">Liberato <span>Community</span></div>
-  <a href="#" class="menu-item"><span class="menu-item-text">Inicio</span></a>
   <a href="#pro-plan" class="menu-item" data-app="daytrading_preview.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Day Trading</span>
@@ -1505,7 +1520,7 @@ nav { max-width: 100%; }
     <span class="menu-item-text">Options</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" data-app="community.html" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="soon" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Educación</span>
     <span class="menu-item-badge">Miembros</span>
@@ -1523,6 +1538,15 @@ nav { max-width: 100%; }
     <button class="pd-close" onclick="closeProfileDrawer()" aria-label="Cerrar">&#10005;</button>
   </div>
   <div class="pd-scroll">
+    <div class="pd-avatar-sec">
+      <div class="pd-avatar" id="pd-avatar"><span class="pd-avatar-ph">&#128100;</span></div>
+      <div class="pd-avatar-actions">
+        <button class="pd-avatar-btn" id="pd-avatar-change" onclick="pdPickAvatar()" data-es="Cambiar foto" data-en="Change photo">Cambiar foto</button>
+        <button class="pd-avatar-btn pd-avatar-remove" id="pd-avatar-remove" onclick="pdRemoveAvatar()" style="display:none;" data-es="Quitar foto" data-en="Remove photo">Quitar foto</button>
+      </div>
+      <input type="file" accept="image/*" id="pd-avatar-file" style="display:none;" onchange="pdAvatarFile(event)">
+      <div class="pd-msg" id="pd-avatar-msg"></div>
+    </div>
     <div class="pd-rows">
       <div class="pd-row"><span class="pd-k" data-es="Nombre" data-en="Name">Nombre</span><span class="pd-v" id="pd-name">—</span></div>
       <div class="pd-row"><span class="pd-k" data-es="Correo" data-en="Email">Correo</span><span class="pd-v" id="pd-email">—</span></div>
@@ -1585,14 +1609,13 @@ nav { max-width: 100%; }
 
 <!-- NAV -->
 <nav>
-  <div class="logo">Liberato <span>Community</span></div>
+  <a href="#" class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});" aria-label="Inicio">Liberato <span>Community</span></a>
   <ul class="nav-desktop-links">
-    <li><a href="#">Inicio</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="daytrading_preview.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Day Trading</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="journal.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Journal</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="earnings.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Earnings</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="soon" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Options</a></li>
-    <li><a href="#pro-plan" class="nav-locked" data-app="community.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Educación</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="soon" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Educación</a></li>
   </ul>
   <div class="nav-right">
     <button class="nav-lang" onclick="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
@@ -1603,6 +1626,7 @@ nav { max-width: 100%; }
     <!-- Acceso de miembro: SOLO el ícono de perfil, que abre el drawer lateral.
          La navegación entre secciones es la fila de candados (abiertos al
          estar logueado). Idioma y Desconectar viven DENTRO del perfil. -->
+    <button class="nav-mem-name nav-member" id="nav-mem-name" onclick="openProfileDrawer()" style="display:none;"></button>
     <button class="nav-mem-profile nav-member" id="nav-mem-acct" onclick="openProfileDrawer()" style="display:none;" aria-label="Mi perfil" title="Mi perfil"><span class="nav-mem-ic">&#128100;</span></button>
     <button class="hamburger" onclick="openMenu()" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -1957,11 +1981,14 @@ function showWelcome(name){
   if(hw&&hn){hn.textContent=first;hw.style.display='inline-flex';}
 }
 
-// SVG de candado claramente ABIERTO (arco levantado y separado del cuerpo),
-// en dorado y con buen contraste. DEBE definirse ANTES del IIFE de init, porque
-// ese IIFE llama a lbcShowMemberNav()→lbcUnlockItem() al parsear; si se definía
-// después, LBC_OPEN_LOCK era undefined y el candado imprimía "undefined".
-var LBC_OPEN_LOCK='<svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg>';
+// Par de candados A JUEGO (misma familia/cuerpo/trazo): cerrado y abierto.
+// DEBEN definirse ANTES del IIFE de init, porque ese IIFE llama a
+// lbcShowMemberNav()→lbcUnlockItem() al parsear; si se definían después,
+// serían undefined y el candado imprimía "undefined".
+var LBC_LOCK_CLOSED='<svg class="lbc-lock" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+var LBC_OPEN_LOCK='<svg class="lbc-lock lbc-lock-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V6.5a4 4 0 0 1 7.7-1.4"/></svg>';
+// Estado por defecto (deslogueado): todos los items con el candado CERRADO (SVG).
+(function(){try{document.querySelectorAll('.nav-desktop-links .lock-icon, .menu-drawer .menu-item-lock').forEach(function(g){g.innerHTML=LBC_LOCK_CLOSED;});}catch(e){}})();
 
 // Init: check for saved user + revalida el token contra el backend
 (function(){
@@ -2014,8 +2041,8 @@ function lbcUnlockItem(a){
         word=(a.lastChild&&a.lastChild.nodeType===3)?a.lastChild.textContent.trim():'Options';
       }
       var keepGlyph=glyph; a.innerHTML='';
-      if(keepGlyph){ a.appendChild(keepGlyph); }
-      else { var g=document.createElement('span'); g.className=isDrawer?'menu-item-lock':'lock-icon'; g.innerHTML='&#128274;'; a.appendChild(g); }
+      if(keepGlyph){ keepGlyph.innerHTML=LBC_LOCK_CLOSED; a.appendChild(keepGlyph); }
+      else { var g=document.createElement('span'); g.className=isDrawer?'menu-item-lock':'lock-icon'; g.innerHTML=LBC_LOCK_CLOSED; a.appendChild(g); }
       var lbl=document.createElement('span'); lbl.className='nav-soon-label';
       var w=document.createElement('span'); w.className='nav-soon-word'; w.textContent=word;
       var tg=document.createElement('span'); tg.className='nav-soon-tag'; tg.textContent='soon';
@@ -2040,6 +2067,7 @@ function lbcShowMemberNav(){
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
   var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='none';
+  try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
   var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
   Array.prototype.forEach.call(items,lbcUnlockItem);
 }
@@ -2084,8 +2112,9 @@ function openProfileDrawer(){
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
   if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
-  ['pd-lang-msg','pd-pw-msg','pd-em-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
+  ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
+  lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
   var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
   if(ov)ov.classList.add('open');
   if(dr){dr.classList.add('open');dr.setAttribute('aria-hidden','false');}
@@ -2101,6 +2130,9 @@ function openProfileDrawer(){
         if(pe&&u.email)pe.textContent=u.email;
         if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
+        var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
+        lbcApplyAvatar(av||null,(u.name||nm));
+        lbcSetSessionAvatar(av||null);
       }).catch(function(){});
   }
 }
@@ -2156,6 +2188,93 @@ function profileChangeEmail(){
     .catch(function(e){ pdMsg('pd-em-msg',e.message,false); })
     .then(function(){ if(b)b.disabled=false; });
 }
+// ── AVATAR (foto de perfil) ──
+function lbcAvatarFromSession(){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');return s.avatar||null;}catch(e){return null;} }
+function lbcSetSessionAvatar(url){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');if(url)s.avatar=url;else{delete s.avatar;}localStorage.setItem('lbc_session',JSON.stringify(s));}catch(e){} }
+// Pinta la foto (o el placeholder) en el/los íconos de perfil de la nav.
+function lbcPaintNavAvatar(url){
+  var nodes=[document.getElementById('nav-mem-acct'), document.querySelector('.lbcn-profile')];
+  nodes.forEach(function(btn){ if(!btn)return;
+    if(url){ btn.classList.add('lbc-has-avatar'); btn.innerHTML='<img src="'+url+'" alt="Perfil">'; }
+    else { btn.classList.remove('lbc-has-avatar'); btn.innerHTML='<span class="nav-mem-ic">&#128100;</span>'; }
+  });
+}
+// Pinta la foto (o inicial/persona) en el círculo del drawer.
+function lbcPaintDrawerAvatar(url,name){
+  var av=document.getElementById('pd-avatar'); if(!av)return;
+  var rm=document.getElementById('pd-avatar-remove');
+  if(url){ av.innerHTML='<img src="'+url+'" alt="Perfil">'; if(rm)rm.style.display=''; }
+  else {
+    var ini=(name&&name.trim()&&name.trim()!=='—')?name.trim().charAt(0).toUpperCase():'';
+    av.innerHTML=ini?('<span class="pd-avatar-ph">'+ini+'</span>'):'<span class="pd-avatar-ph">&#128100;</span>';
+    if(rm)rm.style.display='none';
+  }
+}
+function lbcApplyAvatar(url,name){ lbcPaintNavAvatar(url); lbcPaintDrawerAvatar(url,name); }
+// Muestra SOLO el primer nombre junto al ícono de perfil (home + herramientas).
+function lbcPaintNavName(name){
+  var first=(name&&name.trim()&&name.trim()!=='—')?name.trim().split(' ')[0]:'';
+  var nodes=[document.getElementById('nav-mem-name'), document.querySelector('.lbcn-name')];
+  nodes.forEach(function(el){ if(!el)return; if(first){ el.textContent=first; el.style.display='inline-flex'; } else { el.style.display='none'; } });
+}
+function pdPickAvatar(){ var f=document.getElementById('pd-avatar-file'); if(f)f.click(); }
+// Al elegir imagen: recorte cuadrado centrado + resize + reintentos bajo el límite.
+function pdAvatarFile(ev){
+  var file=ev.target.files&&ev.target.files[0]; if(!file)return;
+  if(!/^image\//.test(file.type)){ pdMsg('pd-avatar-msg','Elige un archivo de imagen.',false); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      function render(size,q){
+        var cv=document.createElement('canvas'); cv.width=size; cv.height=size;
+        var ctx=cv.getContext('2d');
+        var side=Math.min(img.width,img.height);
+        var sx=(img.width-side)/2, sy=(img.height-side)/2;
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+        return cv.toDataURL('image/jpeg', q);
+      }
+      var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.6],[160,0.55]];
+      var url=null;
+      for(var i=0;i<attempts.length;i++){ url=render(attempts[i][0],attempts[i][1]); if(url.length<=340000)break; }
+      if(!url||url.length>340000){ pdMsg('pd-avatar-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
+      var btn=document.getElementById('pd-avatar-change'); if(btn)btn.disabled=true;
+      pdMsg('pd-avatar-msg','Subiendo…',true);
+      lbcApi('/api/auth/set-avatar',{avatar:url})
+        .then(function(d){
+          var saved=(d&&d.avatar)||url;
+          lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
+          lbcSetSessionAvatar(saved);
+          pdMsg('pd-avatar-msg','Foto actualizada.',true);
+        })
+        .catch(function(e){ pdMsg('pd-avatar-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
+        .then(function(){ if(btn)btn.disabled=false; var f=document.getElementById('pd-avatar-file'); if(f)f.value=''; });
+    };
+    img.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer la imagen.',false); };
+    img.src=e.target.result;
+  };
+  reader.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer el archivo.',false); };
+  reader.readAsDataURL(file);
+}
+function pdRemoveAvatar(){
+  var rm=document.getElementById('pd-avatar-remove'); if(rm)rm.disabled=true;
+  lbcApi('/api/auth/remove-avatar',{})
+    .then(function(){ lbcApplyAvatar(null,(document.getElementById('pd-name')||{}).textContent); lbcSetSessionAvatar(null); pdMsg('pd-avatar-msg','Foto eliminada.',true); })
+    .catch(function(e){ pdMsg('pd-avatar-msg', e.message, false); })
+    .then(function(){ if(rm)rm.disabled=false; });
+}
+// Al cargar (logueado): pinta el ícono de nav + nombre con lo cacheado y refresca.
+(function(){
+  var cached=lbcAvatarFromSession(); if(cached)lbcPaintNavAvatar(cached);
+  try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(!token)return;
+  fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(u){ if(!u)return; var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar))||null; lbcPaintNavAvatar(av); lbcSetSessionAvatar(av); if(u.name)lbcPaintNavName(u.name); })
+    .catch(function(){});
+})();
+window.pdPickAvatar=pdPickAvatar; window.pdAvatarFile=pdAvatarFile; window.pdRemoveAvatar=pdRemoveAvatar;
 window.openProfileDrawer=openProfileDrawer; window.closeProfileDrawer=closeProfileDrawer;
 window.profileSetLang=profileSetLang; window.profileChangePassword=profileChangePassword; window.profileChangeEmail=profileChangeEmail;
 

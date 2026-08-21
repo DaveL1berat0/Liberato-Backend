@@ -948,7 +948,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 <!-- ══ NAVEGACIÓN LIBERATO (idéntica al home logueado) ══ -->
 <style>
 .lbcn{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 20px;background:linear-gradient(180deg,rgba(13,16,24,0.97),rgba(8,10,15,0.97));border-bottom:1px solid rgba(201,168,76,0.16);box-shadow:0 8px 24px -16px rgba(0,0,0,0.7);position:relative;z-index:8000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
-.lbcn-brand{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:rgba(232,228,217,0.55);letter-spacing:0.01em;text-decoration:none;margin-right:4px;padding-right:14px;border-right:1px solid rgba(201,168,76,0.14);white-space:nowrap;}
+.lbcn-brand{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:rgba(232,228,217,0.55);letter-spacing:0.01em;text-decoration:none;margin-right:4px;padding-right:14px;border-right:1px solid rgba(201,168,76,0.14);white-space:nowrap;cursor:pointer;transition:color .2s ease;}
+.lbcn-brand:hover{color:rgba(232,228,217,0.85);}
 .lbcn-brand span{color:#C9A84C;font-weight:600;font-style:normal;}
 .lbcn-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .lbcn-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(232,228,217,0.55);text-decoration:none;cursor:pointer;white-space:nowrap;transition:all .2s ease;font-family:inherit;line-height:1;}
@@ -956,17 +957,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lbcn-item.lbcn-pill{padding:6px 12px;border:0.5px solid rgba(201,168,76,0.3);border-radius:6px;background:rgba(201,168,76,0.05);color:rgba(232,228,217,0.62);}
 .lbcn-item.lbcn-pill:hover{border-color:rgba(201,168,76,0.6);background:rgba(201,168,76,0.12);color:#E8E4D9;transform:translateY(-1px);}
 .lbcn-item.lbcn-active{color:#080A0F;background:#C9A84C;border-color:#C9A84C;font-weight:700;}
-.lbcn-item.lbcn-active .lbcn-lock svg{stroke:#080A0F;}
-.lbcn-lock{display:inline-flex;align-items:center;font-size:11px;color:rgba(201,168,76,0.85);line-height:1;}
-.lbcn-lock svg{vertical-align:middle;display:block;}
+.lbcn-item.lbcn-active .lbc-lock{stroke:#080A0F;}
+.lbc-lock{vertical-align:middle;display:inline-block;flex:0 0 auto;}
+.lbcn-lock{display:inline-flex;align-items:center;line-height:1;}
 .lbcn-soon{cursor:default;}
 .lbcn-soon:hover{transform:none;color:rgba(232,228,217,0.62);background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.3);}
 .lbcn-soon-label{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.05;}
 .lbcn-soon-tag{font-size:8px;letter-spacing:0.08em;text-transform:lowercase;color:#080A0F;background:rgba(201,168,76,0.8);padding:1px 6px;border-radius:4px;font-weight:700;margin-top:2px;}
 .lbcn-right{margin-left:auto;display:inline-flex;align-items:center;gap:8px;}
-.lbcn-profile{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
+.lbcn-name{display:none;align-items:center;background:transparent;border:none;cursor:pointer;color:#C9A84C;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;letter-spacing:0.01em;padding:0 2px;line-height:1;white-space:nowrap;transition:color .2s ease;}
+.lbcn-name:hover{color:#E7CC74;}
+.lbcn-profile{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
 .lbcn-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
+.lbcn-profile img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;}
 @media(max-width:720px){.lbcn{padding:7px 12px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 4px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);}.lbcn-item{font-size:10.5px;}.lbcn-item.lbcn-pill{padding:5px 9px;}}
+@media(max-width:600px){.lbcn-name{display:none!important;}}
 /* ── DRAWER LATERAL · MI PERFIL ── */
 .profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
 .profile-overlay.open{opacity:1;visibility:visible;}
@@ -998,19 +1003,28 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .pd-msg{font-size:12px;line-height:1.5;margin-bottom:10px;min-height:0;}
 .pd-msg.ok{color:#2EE8A4;}
 .pd-msg.err{color:#ef8a8a;}
+.pd-avatar-sec{display:flex;flex-direction:column;align-items:center;gap:12px;padding:4px 0 18px;border-bottom:1px solid rgba(201,168,76,0.1);margin-bottom:6px;}
+.pd-avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;background:rgba(201,168,76,0.1);border:2px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;color:#E7CC74;font-size:34px;font-weight:600;font-family:'Cormorant Garamond',Georgia,serif;}
+.pd-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.pd-avatar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.pd-avatar-btn{font-size:12px;padding:7px 14px;border-radius:8px;border:1px solid rgba(201,168,76,0.35);background:rgba(201,168,76,0.06);color:#E7CC74;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.pd-avatar-btn:hover{background:rgba(201,168,76,0.14);border-color:#C9A84C;}
+.pd-avatar-btn.pd-avatar-remove{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;}
+.pd-avatar-btn.pd-avatar-remove:hover{background:rgba(239,68,68,0.12);}
+.pd-avatar-btn:disabled{opacity:0.5;cursor:not-allowed;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
   <div class="lbcn-links">
-    <a class="lbcn-item" href="homepage.html" data-p="home">Inicio</a>
-    <a class="lbcn-item lbcn-pill lbcn-active" href="daytrading_preview.html" data-p="dash"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Day Trading</a>
-    <a class="lbcn-item lbcn-pill " href="journal.html" data-p="journal"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Journal</a>
-    <a class="lbcn-item lbcn-pill " href="earnings.html" data-p="earn"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Earnings</a>
-    <a class="lbcn-item lbcn-pill lbcn-soon" data-p="options"><span class="lbcn-lock">&#128274;</span><span class="lbcn-soon-label"><span>Options</span><span class="lbcn-soon-tag">soon</span></span></a>
-    <a class="lbcn-item lbcn-pill" href="community.html" data-p="edu"><span class="lbcn-lock"><svg class="lock-svg-open" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="15" height="10" rx="2" fill="rgba(201,168,76,0.18)"/><path d="M8 11V7.2a4 4 0 0 1 7.6-1.7"/></svg></span>Educación</a>
+    <a class="lbcn-item lbcn-pill lbcn-active" href="daytrading_preview.html" data-p="dash"><span class="lbcn-lock"><svg class="lbc-lock lbc-lock-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V6.5a4 4 0 0 1 7.7-1.4"/></svg></span>Day Trading</a>
+    <a class="lbcn-item lbcn-pill " href="journal.html" data-p="journal"><span class="lbcn-lock"><svg class="lbc-lock lbc-lock-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V6.5a4 4 0 0 1 7.7-1.4"/></svg></span>Journal</a>
+    <a class="lbcn-item lbcn-pill " href="earnings.html" data-p="earn"><span class="lbcn-lock"><svg class="lbc-lock lbc-lock-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E7CC74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V6.5a4 4 0 0 1 7.7-1.4"/></svg></span>Earnings</a>
+    <a class="lbcn-item lbcn-pill lbcn-soon" data-p="options"><span class="lbcn-lock"><svg class="lbc-lock" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="lbcn-soon-label"><span>Options</span><span class="lbcn-soon-tag">soon</span></span></a>
+    <a class="lbcn-item lbcn-pill lbcn-soon" data-p="edu"><span class="lbcn-lock"><svg class="lbc-lock" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span class="lbcn-soon-label"><span>Educación</span><span class="lbcn-soon-tag">soon</span></span></a>
   </div>
   <div class="lbcn-right" id="lbcn-right">
-    <button class="lbcn-profile" onclick="openProfileDrawer()" aria-label="Mi perfil" title="Mi perfil"><span>&#128100;</span></button>
+    <button class="lbcn-name" id="nav-mem-name" onclick="openProfileDrawer()" style="display:none;"></button>
+    <button class="lbcn-profile" id="nav-mem-acct" onclick="openProfileDrawer()" aria-label="Mi perfil" title="Mi perfil"><span class="nav-mem-ic">&#128100;</span></button>
   </div>
 </nav>
 <!-- ═══ DRAWER LATERAL · MI PERFIL ═══ -->
@@ -1021,6 +1035,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <button class="pd-close" onclick="closeProfileDrawer()" aria-label="Cerrar">&#10005;</button>
   </div>
   <div class="pd-scroll">
+    <div class="pd-avatar-sec">
+      <div class="pd-avatar" id="pd-avatar"><span class="pd-avatar-ph">&#128100;</span></div>
+      <div class="pd-avatar-actions">
+        <button class="pd-avatar-btn" id="pd-avatar-change" onclick="pdPickAvatar()" data-es="Cambiar foto" data-en="Change photo">Cambiar foto</button>
+        <button class="pd-avatar-btn pd-avatar-remove" id="pd-avatar-remove" onclick="pdRemoveAvatar()" style="display:none;" data-es="Quitar foto" data-en="Remove photo">Quitar foto</button>
+      </div>
+      <input type="file" accept="image/*" id="pd-avatar-file" style="display:none;" onchange="pdAvatarFile(event)">
+      <div class="pd-msg" id="pd-avatar-msg"></div>
+    </div>
     <div class="pd-rows">
       <div class="pd-row"><span class="pd-k" data-es="Nombre" data-en="Name">Nombre</span><span class="pd-v" id="pd-name">—</span></div>
       <div class="pd-row"><span class="pd-k" data-es="Correo" data-en="Email">Correo</span><span class="pd-v" id="pd-email">—</span></div>
@@ -1082,8 +1105,9 @@ function openProfileDrawer(){
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
   if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
-  ['pd-lang-msg','pd-pw-msg','pd-em-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
+  ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
+  lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
   var ov=document.getElementById('profile-overlay'),dr=document.getElementById('profile-drawer');
   if(ov)ov.classList.add('open');
   if(dr){dr.classList.add('open');dr.setAttribute('aria-hidden','false');}
@@ -1099,6 +1123,9 @@ function openProfileDrawer(){
         if(pe&&u.email)pe.textContent=u.email;
         if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
+        var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
+        lbcApplyAvatar(av||null,(u.name||nm));
+        lbcSetSessionAvatar(av||null);
       }).catch(function(){});
   }
 }
@@ -1151,6 +1178,87 @@ function profileChangeEmail(){
     .catch(function(e){ pdMsg('pd-em-msg',e.message,false); })
     .then(function(){ if(b)b.disabled=false; });
 }
+function lbcAvatarFromSession(){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');return s.avatar||null;}catch(e){return null;} }
+function lbcSetSessionAvatar(url){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');if(url)s.avatar=url;else{delete s.avatar;}localStorage.setItem('lbc_session',JSON.stringify(s));}catch(e){} }
+function lbcPaintNavAvatar(url){
+  var nodes=[document.getElementById('nav-mem-acct'), document.querySelector('.lbcn-profile')];
+  nodes.forEach(function(btn){ if(!btn)return;
+    if(url){ btn.classList.add('lbc-has-avatar'); btn.innerHTML='<img src="'+url+'" alt="Perfil">'; }
+    else { btn.classList.remove('lbc-has-avatar'); btn.innerHTML='<span class="nav-mem-ic">&#128100;</span>'; }
+  });
+}
+function lbcPaintDrawerAvatar(url,name){
+  var av=document.getElementById('pd-avatar'); if(!av)return;
+  var rm=document.getElementById('pd-avatar-remove');
+  if(url){ av.innerHTML='<img src="'+url+'" alt="Perfil">'; if(rm)rm.style.display=''; }
+  else {
+    var ini=(name&&name.trim()&&name.trim()!=='—')?name.trim().charAt(0).toUpperCase():'';
+    av.innerHTML=ini?('<span class="pd-avatar-ph">'+ini+'</span>'):'<span class="pd-avatar-ph">&#128100;</span>';
+    if(rm)rm.style.display='none';
+  }
+}
+function lbcApplyAvatar(url,name){ lbcPaintNavAvatar(url); lbcPaintDrawerAvatar(url,name); }
+function lbcPaintNavName(name){
+  var first=(name&&name.trim()&&name.trim()!=='—')?name.trim().split(' ')[0]:'';
+  var nodes=[document.getElementById('nav-mem-name'), document.querySelector('.lbcn-name')];
+  nodes.forEach(function(el){ if(!el)return; if(first){ el.textContent=first; el.style.display='inline-flex'; } else { el.style.display='none'; } });
+}
+function pdPickAvatar(){ var f=document.getElementById('pd-avatar-file'); if(f)f.click(); }
+function pdAvatarFile(ev){
+  var file=ev.target.files&&ev.target.files[0]; if(!file)return;
+  if(!/^image\//.test(file.type)){ pdMsg('pd-avatar-msg','Elige un archivo de imagen.',false); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      function render(size,q){
+        var cv=document.createElement('canvas'); cv.width=size; cv.height=size;
+        var ctx=cv.getContext('2d');
+        var side=Math.min(img.width,img.height);
+        var sx=(img.width-side)/2, sy=(img.height-side)/2;
+        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+        return cv.toDataURL('image/jpeg', q);
+      }
+      var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.6],[160,0.55]];
+      var url=null;
+      for(var i=0;i<attempts.length;i++){ url=render(attempts[i][0],attempts[i][1]); if(url.length<=340000)break; }
+      if(!url||url.length>340000){ pdMsg('pd-avatar-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
+      var btn=document.getElementById('pd-avatar-change'); if(btn)btn.disabled=true;
+      pdMsg('pd-avatar-msg','Subiendo…',true);
+      lbcApi('/api/auth/set-avatar',{avatar:url})
+        .then(function(d){
+          var saved=(d&&d.avatar)||url;
+          lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
+          lbcSetSessionAvatar(saved);
+          pdMsg('pd-avatar-msg','Foto actualizada.',true);
+        })
+        .catch(function(e){ pdMsg('pd-avatar-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
+        .then(function(){ if(btn)btn.disabled=false; var f=document.getElementById('pd-avatar-file'); if(f)f.value=''; });
+    };
+    img.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer la imagen.',false); };
+    img.src=e.target.result;
+  };
+  reader.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer el archivo.',false); };
+  reader.readAsDataURL(file);
+}
+function pdRemoveAvatar(){
+  var rm=document.getElementById('pd-avatar-remove'); if(rm)rm.disabled=true;
+  lbcApi('/api/auth/remove-avatar',{})
+    .then(function(){ lbcApplyAvatar(null,(document.getElementById('pd-name')||{}).textContent); lbcSetSessionAvatar(null); pdMsg('pd-avatar-msg','Foto eliminada.',true); })
+    .catch(function(e){ pdMsg('pd-avatar-msg', e.message, false); })
+    .then(function(){ if(rm)rm.disabled=false; });
+}
+(function(){
+  try{var c=lbcAvatarFromSession();if(c)lbcPaintNavAvatar(c);}catch(e){}
+  try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
+  var token='';try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(!token)return;
+  fetch(LBC_AUTH+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(u){if(!u)return;var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar))||null;lbcPaintNavAvatar(av);lbcSetSessionAvatar(av);if(u.name)lbcPaintNavName(u.name);})
+    .catch(function(){});
+})();
+window.pdPickAvatar=pdPickAvatar;window.pdAvatarFile=pdAvatarFile;window.pdRemoveAvatar=pdRemoveAvatar;
 window.openProfileDrawer=openProfileDrawer;window.closeProfileDrawer=closeProfileDrawer;
 window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangePassword;window.profileChangeEmail=profileChangeEmail;
 </script>
