@@ -163,11 +163,14 @@ body::before{
 .ctrl-zone.zone-filters{gap:8px;flex-wrap:wrap;flex:1;}
 .week-nav{display:flex;align-items:center;gap:10px;}
 .week-btn{
-  width:32px;height:32px;border-radius:50%;border:0.5px solid var(--border2);
-  background:rgba(0,0,0,0.35);color:var(--text2);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.2s;flex-shrink:0;
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(201,168,76,0.55);
+  background:rgba(201,168,76,0.12);color:var(--gold);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:600;line-height:1;
+  transition:all 0.2s;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.28);
 }
-.week-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+.week-btn:hover{border-color:var(--gold);color:#fff;background:rgba(201,168,76,0.28);transform:scale(1.08);}
+.week-btn:active{transform:scale(0.96);}
+.week-btn:disabled{opacity:0.28;cursor:default;box-shadow:none;transform:none;}
 .week-label{text-align:center;line-height:1.2;}
 .week-label-main{display:block;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--text);letter-spacing:-0.01em;font-style:italic;}
 .week-label-sub{display:block;font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px;}
@@ -1108,7 +1111,12 @@ var COMPANIES={
 };
 
 // ============ MULTI-WEEK DATA ============
-var ALLWEEKS=[
+// El calendario se construye DINÁMICAMENTE desde /api/earnings (ver _lbcInitEarnings).
+// ALLWEEKS arranca VACÍO: NUNCA mostramos datos hardcodeados como datos por defecto
+// (Regla #1: dato real o vacío honesto, nunca dato falso).
+var ALLWEEKS=[];
+// Array legado CONSERVADO solo como referencia histórica — NO se usa como fuente de datos.
+var ALLWEEKS_LEGACY=[
   {label:'1 — 5 Jun',sub:'Hace 2 semanas',days:[
     {day:'Lun',date:'1 Jun',today:false,open:[],close:['CRDO','HPE']},
     {day:'Mar',date:'2 Jun',today:false,open:['DG','HIVE','VSCO','ODD'],close:['PANW','GTLB','ULTA']},
@@ -1278,7 +1286,7 @@ var GENERICS=(function(){
 Object.keys(FW).forEach(function(k){C[k]=FW[k];});
 Object.keys(GENERICS).forEach(function(k){if(!C[k])C[k]=GENERICS[k];});
 
-var weekIdx=2; // Semana actual: 15-19 Jun 2026 (índice 2 en ALLWEEKS)
+var weekIdx=0; // Se fija dinámicamente a la semana actual tras cargar /api/earnings
 var EARNINGS_MAP=null;
 var curMonthView=5;
 var IMPACT_LABEL={extreme:'Extremo',high:'Alto',med:'Medio',low:'Bajo'};
@@ -1317,16 +1325,158 @@ var activeView='week';
   // else weekIdx remains 2 (safe fallback)
   if(hoy.getFullYear()===2026) curMonthView=hoy.getMonth();
 })();
-// Force refresh after dynamic weekIdx is set
+// ═══════════════════════════════════════════════════════════
+//  CALENDARIO DINÁMICO — se construye desde /api/earnings
+//  (feed real Finnhub: HOY .. +45 días). Regla #1: dato real o vacío.
+// ═══════════════════════════════════════════════════════════
+var EARN_BACKEND='https://web-production-33671.up.railway.app';
+
+// Hoy en horario de Nueva York → {y, m(0-11), d}
+function _nyToday(){
+  try{
+    var s=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+    var p=s.split('-');
+    return {y:parseInt(p[0],10),m:parseInt(p[1],10)-1,d:parseInt(p[2],10)};
+  }catch(e){
+    var n=new Date();return {y:n.getFullYear(),m:n.getMonth(),d:n.getDate()};
+  }
+}
+function _pad2(n){return (n<10?'0':'')+n;}
+function _isoLocal(dt){return dt.getFullYear()+'-'+_pad2(dt.getMonth()+1)+'-'+_pad2(dt.getDate());}
+function _mondayOf(dt){
+  var day=dt.getDay(); // 0=Dom..6=Sab
+  var diff=(day===0)?-6:(1-day);
+  var m=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()+diff);
+  m.setHours(0,0,0,0);
+  return m;
+}
+function _weekLabelDyn(mon){
+  var fri=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+4);
+  var m1=_MON_ES[mon.getMonth()], m2=_MON_ES[fri.getMonth()];
+  if(mon.getMonth()===fri.getMonth()) return mon.getDate()+' — '+fri.getDate()+' '+m2;
+  return mon.getDate()+' '+m1+' — '+fri.getDate()+' '+m2;
+}
+function _weekSubDyn(diff){
+  if(diff<=0) return 'Semana actual';
+  if(diff===1) return 'Próxima semana';
+  return 'En '+diff+' semanas';
+}
+// Empresa mínima al vuelo para símbolos del feed que NO están en el catálogo curado
+function _makeGenericCompany(sym,imp){
+  var palette=['#1a3a6b','#0a8f4c','#c8102e','#6c3c97','#0b4f6c','#b8860b','#005b30','#7a1f5c','#1f7a3d','#003b72','#00508f','#8a4b1f'];
+  var h=0;for(var i=0;i<sym.length;i++)h=(h*31+sym.charCodeAt(i))>>>0;
+  return {name:sym,logo:sym.slice(0,2),color:palette[h%palette.length],tcolor:'#fff',
+    impact:imp,sector:'—',weight:'—',cap:'--',eps:'--',rev:'--',yoy:'--',
+    nq:'Reporte programado. Datos detallados en vivo al abrir la ficha.',news:[],hist:[]};
+}
+// Estado vacío honesto (NUNCA mostramos los datos hardcodeados legados)
+function _earnEmptyState(msg){
+  ALLWEEKS.length=0; EARNINGS_MAP={};
+  var cw=document.getElementById('cal-week');
+  if(cw)cw.innerHTML='<div class="week-empty-banner" style="grid-column:1/-1;"><span class="web-icon">⚠️</span><div class="web-txt"><div class="web-title">No se pudieron cargar los earnings ahora mismo</div><div class="web-sub">'+(msg||'Vuelve a intentarlo en unos minutos.')+'</div></div></div>';
+  var pl=document.getElementById('period-label');if(pl)pl.textContent='—';
+  var ps=document.getElementById('period-sub');if(ps)ps.textContent='Datos no disponibles';
+  var tape=document.getElementById('tape');if(tape)tape.innerHTML='';
+  var intel=document.getElementById('intel');if(intel)intel.innerHTML='';
+  var pv=document.getElementById('prev-btn'), nx=document.getElementById('next-btn');
+  if(pv)pv.disabled=true; if(nx)nx.disabled=true;
+}
+// Construye ALLWEEKS + EARNINGS_MAP + SYM_WEEK_MAP desde el feed real
+function _buildFromEarnings(earnings){
+  var ny=_nyToday();
+  var todayDate=new Date(ny.y,ny.m,ny.d); todayDate.setHours(0,0,0,0);
+  var curMonday=_mondayOf(todayDate);
+  var byDate={}, maxDate=new Date(curMonday);
+
+  (earnings||[]).forEach(function(e){
+    if(!e||!e.symbol||!e.date)return;
+    var dp=String(e.date).split('-'); if(dp.length<3)return;
+    var edt=new Date(parseInt(dp[0],10),parseInt(dp[1],10)-1,parseInt(dp[2],10)); edt.setHours(0,0,0,0);
+    if(edt<curMonday)return; // ignorar cualquier resto de semanas pasadas
+    var wd=edt.getDay(); if(wd===0||wd===6)return; // ignorar fin de semana
+    var sym=String(e.symbol).toUpperCase().trim(); if(!sym)return;
+    var imp=_mapImpact(e.impact);
+    if(!C[sym]) C[sym]=_makeGenericCompany(sym,imp);
+    C[sym].impact=imp; // fusionar SIEMPRE el impacto real del backend
+    var isBmo=(String(e.hour||'').toLowerCase()==='bmo'); // bmo=Before Open; resto=After Close
+    var iso=_isoLocal(edt);
+    if(!byDate[iso])byDate[iso]={dt:edt,open:[],close:[]};
+    var arr=isBmo?byDate[iso].open:byDate[iso].close;
+    if(arr.indexOf(sym)<0)arr.push(sym);
+    if(edt>maxDate)maxDate=edt;
+  });
+
+  // Construir semanas Lun-Vie desde la semana actual hacia adelante
+  var weeks=[], maxMonday=_mondayOf(maxDate);
+  var wkMon=new Date(curMonday);
+  var guard=0;
+  while(wkMon.getTime()<=maxMonday.getTime() && guard<60){
+    guard++;
+    var days=[], hasData=false;
+    for(var i=0;i<5;i++){
+      var dd=new Date(wkMon.getFullYear(),wkMon.getMonth(),wkMon.getDate()+i);
+      var bucket=byDate[_isoLocal(dd)]||{open:[],close:[]};
+      if(bucket.open.length+bucket.close.length>0)hasData=true;
+      var isToday=(dd.getFullYear()===ny.y&&dd.getMonth()===ny.m&&dd.getDate()===ny.d);
+      days.push({day:_DOW_ES[dd.getDay()],date:dd.getDate()+' '+_MON_ES[dd.getMonth()],today:isToday,open:bucket.open,close:bucket.close});
+    }
+    var diff=Math.round((wkMon.getTime()-curMonday.getTime())/(7*86400000));
+    if(diff===0||hasData){
+      weeks.push({label:_weekLabelDyn(wkMon),sub:_weekSubDyn(diff),days:days});
+    }
+    wkMon=new Date(wkMon.getFullYear(),wkMon.getMonth(),wkMon.getDate()+7);
+  }
+  if(!weeks.length)return false;
+
+  ALLWEEKS.length=0; weeks.forEach(function(w){ALLWEEKS.push(w);});
+
+  // weekIdx → semana que contiene HOY (siempre la 0 por construcción), si no la primera
+  weekIdx=0;
+  for(var k=0;k<ALLWEEKS.length;k++){
+    if(ALLWEEKS[k].days.some(function(d){return d.today;})){weekIdx=k;break;}
+  }
+
+  // EARNINGS_MAP (vista mensual): key = 'M-D' con M mes 0-indexado (igual que renderMonth)
+  var map={};
+  Object.keys(byDate).forEach(function(iso){
+    var b=byDate[iso], key=b.dt.getMonth()+'-'+b.dt.getDate();
+    b.open.concat(b.close).forEach(function(s){
+      (map[key]=map[key]||[]).push({sym:s,impact:C[s]?C[s].impact:'low'});
+    });
+  });
+  EARNINGS_MAP=map;
+
+  // SYM_WEEK_MAP (buscador): reconstruir desde los datos vivos
+  if(typeof SYM_WEEK_MAP!=='undefined'){
+    for(var kk in SYM_WEEK_MAP){if(SYM_WEEK_MAP.hasOwnProperty(kk))delete SYM_WEEK_MAP[kk];}
+    ALLWEEKS.forEach(function(w){w.days.forEach(function(d){
+      d.open.concat(d.close).forEach(function(s){if(!SYM_WEEK_MAP[s])SYM_WEEK_MAP[s]={when:d.day+' '+d.date,week:w.label};});
+    });});
+  }
+
+  // Mes visible = mes de hoy
+  curMonthView=ny.m;
+  return true;
+}
+// Carga el feed real y re-renderiza. Fallback honesto si falla o viene vacío.
 function _lbcInitEarnings(){
-  // Render con datos curados (instantáneo, sin dependencia de backend)
-  // Railway (web-production-33671.up.railway.app) ha sido deprecado como fuente de datos.
-  // El calendario es 100% local: datos curados + auto-detección de semana por fecha.
-  if(typeof updatePeriodLabel==='function') updatePeriodLabel();
-  if(typeof renderWeek==='function') renderWeek();
-  if(typeof renderMonth==='function') renderMonth();
-  if(typeof generateIntel==='function') generateIntel();
-  if(typeof renderTape==='function') renderTape();
+  var pv=document.getElementById('prev-btn'), nx=document.getElementById('next-btn');
+  if(pv)pv.disabled=false; if(nx)nx.disabled=false;
+  fetch(EARN_BACKEND+'/api/earnings')
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(data){
+      var list=data&&data.earnings;
+      if(!list||!list.length){ _earnEmptyState('El calendario de earnings no está disponible en este momento.'); return; }
+      if(!_buildFromEarnings(list)){ _earnEmptyState('El calendario de earnings no está disponible en este momento.'); return; }
+      if(pv)pv.disabled=false; if(nx)nx.disabled=false;
+      if(typeof updatePeriodLabel==='function') updatePeriodLabel();
+      if(typeof renderWeek==='function') renderWeek();
+      if(typeof renderMonth==='function') renderMonth();
+      if(typeof generateIntel==='function') generateIntel();
+      if(typeof renderTape==='function') renderTape();
+      if(activeView==='day'&&typeof renderDay==='function') renderDay();
+    })
+    .catch(function(){ _earnEmptyState('No hay conexión con el servidor de earnings.'); });
 }
 
 
@@ -1393,6 +1543,11 @@ function _findNextEarningsDate(){
 
 function renderWeek(){
   var w=getCurWeek();
+  if(!w){
+    var cwEl=document.getElementById('cal-week');
+    if(cwEl)cwEl.innerHTML='<div class="week-empty-banner" style="grid-column:1/-1;"><span class="web-icon">⏳</span><div class="web-txt"><div class="web-title">Cargando earnings…</div><div class="web-sub">Obteniendo el calendario en vivo.</div></div></div>';
+    return;
+  }
   // Detectar si toda la semana está vacía → mostrar aviso con el próximo earnings
   var weekTotal=w.days.reduce(function(a,d){return a+d.open.length+d.close.length;},0);
   var banner='';
@@ -1427,6 +1582,7 @@ function renderWeek(){
 
 function renderDay(){
   var w=getCurWeek();
+  if(!w){var dd=document.getElementById('day-detail');if(dd)dd.innerHTML='';return;}
   var today=w.days.find(function(d){return d.today;})||w.days[0];
   var inner='';
   var total=today.open.length+today.close.length;
@@ -1618,6 +1774,7 @@ function renderTape(){
 function generateIntel(){
   var el=document.getElementById('intel');if(!el)return;
   var w=getCurWeek();
+  if(!w){el.innerHTML='';return;}
   var todayData=w.days.find(function(d){return d.today;})||w.days[0];
   var allSyms=[];var heaviestDay='';var hCount=0;
   w.days.forEach(function(d){
