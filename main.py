@@ -6936,7 +6936,12 @@ import secrets as _secrets
 ADMIN_KEY = os.getenv("ADMIN_KEY", "").strip() or ("disabled-" + _secrets.token_hex(12))
 # Admins por EMAIL: quien inicie sesión con uno de estos correos tiene acceso admin
 # SIN necesidad de ADMIN_KEY (usa su propio JWT). Dave por defecto.
-ADMIN_EMAILS = {e.strip().lower() for e in os.getenv("ADMIN_EMAILS", "liberatoceo@gmail.com").split(",") if e.strip()}
+# El correo del dueño (liberatoceo@gmail.com) SIEMPRE es admin, aunque en Railway
+# se sobrescriba ADMIN_EMAILS (una sobrescritura reemplaza el valor por defecto y
+# podría dejar fuera al dueño → is_premium=false y candados cerrados para él).
+# Por eso hacemos la UNIÓN del env con el correo del dueño garantizado.
+_OWNER_EMAIL = "liberatoceo@gmail.com"
+ADMIN_EMAILS = {e.strip().lower() for e in os.getenv("ADMIN_EMAILS", _OWNER_EMAIL).split(",") if e.strip()} | {_OWNER_EMAIL}
 def _is_admin(key="", authorization=""):
     """True si trae la ADMIN_KEY correcta O un JWT válido de un email admin."""
     if key and ADMIN_KEY and not ADMIN_KEY.startswith("disabled-") and key == ADMIN_KEY:
