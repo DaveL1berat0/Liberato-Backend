@@ -1371,7 +1371,7 @@ function companyCard(sym){
   if(activeFilter!=='all'&&c.impact!==activeFilter)return '';
   var tcolor=c.tcolor||'#fff';
   var impactHtml=(c.impact!=='low')?'<div class="ec-impact '+c.impact+'">'+IMPACT_LABEL[c.impact]+'</div>':'';
-  return '<div class="ec '+c.impact+'" data-sym="'+sym+'" title="'+c.name+'" onclick="openDrawer(\''+sym+'\')">'
+  return '<div class="ec '+c.impact+'" data-sym="'+sym+'" data-name="'+(c.name||'').replace(/"/g,'&quot;')+'" onclick="openDrawer(\''+sym+'\')">'
     +'<div class="ec-logo" style="background:'+c.color+';color:'+tcolor+';">'+c.logo+'</div>'
     +'<div class="ec-sym">'+sym+'</div>'
     +impactHtml
@@ -1463,7 +1463,7 @@ function renderMonth(){
     // Show actual tickers (up to 3) + count
     var hi=earns.filter(function(e){return e.impact==='high';});
     var shown=(hi.length?hi:earns).slice(0,3);
-    var tickers=shown.map(function(e){return '<span class="month-tk '+e.impact+'">'+e.sym+'</span>';}).join('');
+    var tickers=shown.map(function(e){var _n=(C[e.sym]&&C[e.sym].name)||e.sym;return '<span class="month-tk '+e.impact+'" data-name="'+String(_n).replace(/"/g,'&quot;')+'">'+e.sym+'</span>';}).join('');
     var more=earns.length>shown.length?'<span class="month-more">+'+(earns.length-shown.length)+'</span>':'';
     var countBadge=earns.length>0?'<span class="month-count">'+earns.length+'</span>':'';
     html+='<div class="month-cell'+(isToday?' today':'')+(hasData?' has-data':'')+'" '+(hasData?'onclick="monthDayClick('+curMonthView+','+day+')"':'')+'>'+
@@ -1961,6 +1961,35 @@ window.addEventListener('resize',function(){
 <script>
 window.onerror=function(m,s,l){if(/Script error|ResizeObserver/.test(m))return;console.warn('[Liberato Earnings]',m,'@',s+':'+l);};
 window.addEventListener('unhandledrejection',function(e){e.preventDefault&&e.preventDefault();});
+</script>
+<div id="ec-tip" style="position:fixed;z-index:9999;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s ease,transform .12s ease;background:#14110b;border:0.5px solid rgba(201,168,76,0.45);color:#E8E4D9;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis;"></div>
+<script>
+(function(){
+  var tip=document.getElementById('ec-tip');
+  function show(name,x,y){
+    if(!name)return;
+    tip.textContent=name;
+    tip.style.opacity='1';tip.style.transform='translateY(0)';
+    var pad=12,tw=tip.offsetWidth,th=tip.offsetHeight;
+    var left=x+14,top=y+16;
+    if(left+tw+pad>window.innerWidth)left=x-tw-14;
+    if(top+th+pad>window.innerHeight)top=y-th-16;
+    tip.style.left=Math.max(pad,left)+'px';tip.style.top=Math.max(pad,top)+'px';
+  }
+  function hide(){tip.style.opacity='0';tip.style.transform='translateY(4px)';}
+  document.addEventListener('mouseover',function(e){
+    var el=e.target.closest&&e.target.closest('[data-name]');
+    if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);
+  });
+  document.addEventListener('mousemove',function(e){
+    var el=e.target.closest&&e.target.closest('[data-name]');
+    if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);else hide();
+  });
+  document.addEventListener('mouseout',function(e){
+    var el=e.target.closest&&e.target.closest('[data-name]');
+    if(!el)hide();
+  });
+})();
 </script>
 </body>
 </html>
