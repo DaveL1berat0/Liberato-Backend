@@ -141,7 +141,8 @@
   <div class="gate-sub">Autenticación de operador requerida</div>
   <div class="gate-form">
     <div id="gate-msg"></div>
-    <input class="field-input" id="admin-key" type="password" placeholder="Clave de acceso" onkeydown="if(event.key==='Enter')enter()">
+    <input class="field-input" id="admin-email" type="email" placeholder="Tu correo de administrador" style="margin-bottom:12px;" autocomplete="email">
+    <input class="field-input" id="admin-pass" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')enter()" autocomplete="current-password">
     <button class="btn" id="btn-enter" onclick="enter()">Acceder al sistema</button>
   </div>
 </div>
@@ -254,35 +255,44 @@
 
 <script>
   var API = window.LBC_AUTH_API || 'https://web-production-33671.up.railway.app';
-  var KEY = '';
+  var TOKEN = '';
   var _usersCache = {free:[], premium:[]};
   var _seg = 'all';
   function $(id){return document.getElementById(id);}
   function msg(id,text,type){var el=$(id);if(!el)return;el.innerHTML='<div class="msg msg-'+(type==='ok'?'ok':'err')+'">'+text+'</div>';if(type==='ok')setTimeout(function(){el.innerHTML='';},5000);}
   function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+  function _hdrs(){var h={'Content-Type':'application/json'};if(TOKEN)h['Authorization']='Bearer '+TOKEN;return h;}
 
   async function api(path){
-    var r=await fetch(API+path+(path.indexOf('?')>=0?'&':'?')+'key='+encodeURIComponent(KEY));
+    var r=await fetch(API+path,{headers:_hdrs()});
     if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
     return r.json();
   }
   async function apiPost(path,body){
-    var r=await fetch(API+path+'?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});
+    var r=await fetch(API+path,{method:'POST',headers:_hdrs(),body:JSON.stringify(body||{})});
     if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
     return r.json();
   }
 
+  async function _tryOpen(){
+    // valida el token actual contra un endpoint admin
+    await api('/api/admin/users');
+    $('gate').classList.add('hidden');
+    $('deck').classList.remove('hidden');
+    loadAll();
+  }
   async function enter(){
-    KEY=$('admin-key').value.trim();
-    if(!KEY){msg('gate-msg','Ingresa la clave de acceso','err');return;}
+    var email=$('admin-email').value.trim(), pass=$('admin-pass').value;
+    if(!email||!pass){msg('gate-msg','Ingresa correo y contraseña','err');return;}
     $('btn-enter').disabled=true;
     try{
-      await api('/api/admin/users');
-      sessionStorage.setItem('lbc_admin_key',KEY);
-      $('gate').classList.add('hidden');
-      $('deck').classList.remove('hidden');
-      loadAll();
-    }catch(e){ msg('gate-msg','Acceso denegado · clave incorrecta','err'); }
+      var r=await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})});
+      var d=await r.json().catch(function(){return{};});
+      if(!r.ok||!d.token) throw new Error(d.detail||'Correo o contraseña incorrectos');
+      TOKEN=d.token;
+      localStorage.setItem('lbc_token',TOKEN);
+      await _tryOpen();
+    }catch(e){ msg('gate-msg', /denegado|403|admin/i.test(e.message)?'Tu cuenta no es administrador':e.message,'err'); }
     finally{ $('btn-enter').disabled=false; }
   }
 
@@ -397,7 +407,8 @@
     });
   }
 
-  (function(){ var saved=sessionStorage.getItem('lbc_admin_key'); if(saved){ $('admin-key').value=saved; enter(); } })();
+  // Si ya iniciaste sesión en la web (homepage/auth), reutiliza ese token.
+  (function(){ try{ var t=localStorage.getItem('lbc_token'); if(t){ TOKEN=t; _tryOpen().catch(function(){ /* no admin o expiró: mostrar gate */ }); } }catch(e){} })();
 </script>
 </body>
 </html>

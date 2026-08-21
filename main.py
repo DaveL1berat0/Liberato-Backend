@@ -4839,7 +4839,22 @@ async def health_feeds():
         }
     except Exception as e:
         out["probes"]["bls"] = {"error": str(e)[:120]}
-    out["probes"]["fred"] = {"enabled": bool(FRED_API_KEY)}
+    # Sonda FRED en vivo (verifica que la key autentica de verdad)
+    if FRED_API_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=10) as c:
+                r = await c.get("https://api.stlouisfed.org/fred/series/observations",
+                                params={"series_id": "UNRATE", "api_key": FRED_API_KEY,
+                                        "file_type": "json", "sort_order": "desc", "limit": 1})
+            body = r.json() if r.status_code == 200 else {}
+            obs = body.get("observations", []) if isinstance(body, dict) else []
+            out["probes"]["fred"] = {"enabled": True, "status": r.status_code,
+                                     "ok": (r.status_code == 200 and bool(obs)),
+                                     "sample_unrate": (obs[0].get("value") if obs else None)}
+        except Exception as e:
+            out["probes"]["fred"] = {"enabled": True, "error": str(e)[:120]}
+    else:
+        out["probes"]["fred"] = {"enabled": False}
     return out
 
 @app.get("/api/auth/health")
@@ -4946,10 +4961,10 @@ def _is_premium(u):
     return (u.get("plan") or "free") in ("premium", "pro", "admin")
 
 @app.get("/api/admin/users")
-async def admin_users(key: str = ""):
+async def admin_users(key: str = "", authorization: str = Header("")):
     """Lista de usuarios segmentada por plan (free vs premium)."""
-    if key != ADMIN_KEY:
-        raise HTTPException(403, "clave incorrecta")
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
     users = await users_list("all")
     free = [u for u in users if not _is_premium(u)]
     premium = [u for u in users if _is_premium(u)]
@@ -4957,11 +4972,11 @@ async def admin_users(key: str = ""):
             "free": free, "premium": premium}
 
 @app.post("/api/admin/email/broadcast")
-async def admin_email_broadcast(request: Request, key: str = ""):
+async def admin_email_broadcast(request: Request, key: str = "", authorization: str = Header("")):
     """Envía un correo a un grupo (free | premium | all). Throttle anti-spam.
     OJO: Gmail limita ~500/día; para listas grandes usar un ESP (MailerLite/Brevo)."""
-    if key != ADMIN_KEY:
-        raise HTTPException(403, "clave incorrecta")
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
     if not EMAIL_ON:
         raise HTTPException(400, "Gmail no configurado (GMAIL_USER/GMAIL_APP_PASSWORD)")
     try:
@@ -5029,19 +5044,19 @@ async def send_daily_briefs():
     return out
 
 @app.get("/api/admin/daily-brief/preview")
-async def admin_daily_preview(key: str = ""):
+async def admin_daily_preview(key: str = "", authorization: str = Header("")):
     """Previsualiza los dos mensajes (free sin GEX / premium con GEX) sin enviar."""
-    if key != ADMIN_KEY:
-        raise HTTPException(403, "clave incorrecta")
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
     return {"free": _daily_brief_text(False), "premium": _daily_brief_text(True),
             "discord_free_configured": bool(DISCORD_WEBHOOK_URL),
             "discord_premium_configured": bool(DISCORD_PREMIUM_WEBHOOK_URL)}
 
 @app.post("/api/admin/daily-brief/send")
-async def admin_daily_send(key: str = ""):
+async def admin_daily_send(key: str = "", authorization: str = Header("")):
     """Dispara el envío del brief diario AHORA (prueba manual)."""
-    if key != ADMIN_KEY:
-        raise HTTPException(403, "clave incorrecta")
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
     return await send_daily_briefs()
 
 @app.post("/api/auth/register")
@@ -6410,6 +6425,19 @@ async def contact_form(request: Request):
 # en Railway para reactivar los diagnósticos.
 import secrets as _secrets
 ADMIN_KEY = os.getenv("ADMIN_KEY", "").strip() or ("disabled-" + _secrets.token_hex(12))
+# Admins por EMAIL: quien inicie sesión con uno de estos correos tiene acceso admin
+# SIN necesidad de ADMIN_KEY (usa su propio JWT). Dave por defecto.
+ADMIN_EMAILS = {e.strip().lower() for e in os.getenv("ADMIN_EMAILS", "liberatoceo@gmail.com").split(",") if e.strip()}
+def _is_admin(key="", authorization=""):
+    """True si trae la ADMIN_KEY correcta O un JWT válido de un email admin."""
+    if key and ADMIN_KEY and not ADMIN_KEY.startswith("disabled-") and key == ADMIN_KEY:
+        return True
+    tok = (authorization or "").replace("Bearer ", "").strip()
+    if tok:
+        p = _verify_jwt(tok)
+        if p and (p.get("email") or "").lower() in ADMIN_EMAILS:
+            return True
+    return False
 
 @app.get("/api/admin/refresh-gex")
 async def manual_refresh_gex(key: str = ""):
