@@ -615,6 +615,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-wk-btn{font-size:11px;letter-spacing:0.03em;color:rgba(232,228,217,0.7);background:transparent;border:0.5px solid rgba(232,228,217,0.16);border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap;transition:all 0.2s ease;font-family:inherit;}
 .lg-wk-btn:hover{color:#E8E4D9;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);}
 .lg-wk-range{font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.02em;text-align:center;flex:1;min-width:120px;}
+/* Pestañas por día laboral */
+.lg-day-tabs{display:flex;gap:6px;margin:0 0 var(--sp3);flex-wrap:wrap;}
+.lg-day-tab{position:relative;flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 6px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(232,228,217,0.1);border-radius:8px;cursor:pointer;transition:all 0.2s ease;font-family:var(--mono);line-height:1;}
+.lg-day-tab:hover{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);}
+.lg-day-tab-d{font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);transition:color 0.2s;}
+.lg-day-tab-n{font-size:14px;font-weight:700;color:var(--ink-2);transition:color 0.2s;}
+.lg-day-tab.today .lg-day-tab-d{color:var(--ink-2);}
+.lg-day-tab.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);box-shadow:inset 0 0 0 0.5px rgba(201,168,76,0.3);}
+.lg-day-tab.active .lg-day-tab-d{color:var(--gold);}
+.lg-day-tab.active .lg-day-tab-n{color:#E7CC74;}
+.lg-day-tab-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:#CCA94F;box-shadow:0 0 5px rgba(204,169,79,0.7);}
 .lg-day{display:flex;align-items:center;gap:var(--sp1);margin:var(--sp2) 0 var(--sp2);}
 .lg-day-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
 .lg-day-txt{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-2);}
@@ -2724,9 +2735,12 @@ function lbcMemberLogout(){
 
   // ── Navegación por semana del calendario macro (0 = semana actual) ──
   var MACRO_WEEK_OFFSET=0;
-  function macroWeekPrev(){MACRO_WEEK_OFFSET--;renderLegacy();}
-  function macroWeekNext(){MACRO_WEEK_OFFSET++;renderLegacy();}
-  window.macroWeekPrev=macroWeekPrev; window.macroWeekNext=macroWeekNext;
+  var MACRO_DAY=null;   // clave 'YYYY-MM-DD' del día seleccionado (null = auto)
+  // Al cambiar de semana reseteamos el día para que se recalcule el default.
+  function macroWeekPrev(){MACRO_WEEK_OFFSET--;MACRO_DAY=null;renderLegacy();}
+  function macroWeekNext(){MACRO_WEEK_OFFSET++;MACRO_DAY=null;renderLegacy();}
+  function macroSelectDay(k){MACRO_DAY=k;renderLegacy();}
+  window.macroWeekPrev=macroWeekPrev; window.macroWeekNext=macroWeekNext; window.macroSelectDay=macroSelectDay;
   // Lunes (00:00) de la semana actual desplazada 'offset' semanas, en fecha ET.
   function macroWeekStart(offset){
     var et=etNow();
@@ -2787,74 +2801,93 @@ function lbcMemberLogout(){
     var list=$('lg-macro-list');
     if(list){
       if(!mc.days||!mc.days.length)mc.days=typeof buildMacroDays==='function'?buildMacroDays():[];
-      // ── Filtrar a la semana seleccionada (lunes–viernes) por fecha del día ──
-      var wkStartK=macroDateKey(macroWeekStart(MACRO_WEEK_OFFSET));
-      var _wkEnd=macroWeekStart(MACRO_WEEK_OFFSET); _wkEnd.setDate(_wkEnd.getDate()+6); // incluir fin de semana por seguridad
-      var wkEndK=macroDateKey(_wkEnd);
-      var weekDays=mc.days.filter(function(day){
-        var dk=day.date||'';
-        if(!dk)return MACRO_WEEK_OFFSET===0; // días sin fecha: solo en la semana actual
-        return dk>=wkStartK&&dk<=wkEndK;
-      });
-      // Controles de navegación de semana + rango
+      // ── Semana seleccionada: fechas reales de lunes a viernes ──
+      var _mon=macroWeekStart(MACRO_WEEK_OFFSET);
+      var dayMap={};
+      mc.days.forEach(function(d){ if(d.date)dayMap[d.date]=d; });
+      var DOWK=['Lun','Mar','Mié','Jue','Vie'];
+      var weekdays=[];
+      for(var _wd=0;_wd<5;_wd++){
+        var _dd=new Date(_mon); _dd.setDate(_dd.getDate()+_wd);
+        var _k=macroDateKey(_dd);
+        var _dob=dayMap[_k]||null;
+        var _evs=(_dob&&_dob.events)?_dob.events:[];
+        weekdays.push({key:_k,date:_dd,dow:_wd,dayObj:_dob,
+          hasEv:_evs.length>0,
+          hasHigh:_evs.some(function(e){return e.impact==='high'||e.impact==='extreme';})});
+      }
+      var _etD=etNow(); var _todayK=macroDateKey(new Date(_etD.getFullYear(),_etD.getMonth(),_etD.getDate()));
+      // ── Resolver el día seleccionado ──
+      // 1) el ya elegido si pertenece a esta semana · 2) HOY si es la semana actual
+      // 3) primer día laboral con eventos · 4) primer día laboral.
+      var _sel=null;
+      if(MACRO_DAY&&weekdays.some(function(w){return w.key===MACRO_DAY;}))_sel=MACRO_DAY;
+      if(!_sel&&MACRO_WEEK_OFFSET===0&&weekdays.some(function(w){return w.key===_todayK;}))_sel=_todayK;
+      if(!_sel){var _we=weekdays.filter(function(w){return w.hasEv;});_sel=_we.length?_we[0].key:weekdays[0].key;}
+      MACRO_DAY=_sel;
+      // ── Controles de navegación de semana + rango ──
       var nav='<div class="lg-macro-nav">'
         +'<button type="button" class="lg-wk-btn" onclick="macroWeekPrev()" aria-label="Semana anterior">◀ Semana anterior</button>'
         +'<span class="lg-wk-range">'+macroWeekLabel(MACRO_WEEK_OFFSET)+(MACRO_WEEK_OFFSET===0?' · esta semana':'')+'</span>'
         +'<button type="button" class="lg-wk-btn" onclick="macroWeekNext()" aria-label="Semana siguiente">Semana siguiente ▶</button>'
         +'</div>';
-      var html=nav;
-      if(!weekDays.length){
-        list.innerHTML=nav+'<div class="cat-empty"><span class="cat-empty-t">Sin eventos macro esta semana</span></div>';
-        // continuar con movers abajo
-        (function(){
-          function mvHtml0(arr,dir){return arr.map(function(m){return '<div class="lg-mv '+dir+'"><div class="lg-mv-l"><span class="lg-mv-sym">'+m.sym+'</span><span class="lg-mv-px">$'+m.px+'</span></div><span class="lg-mv-chg '+dir+'">'+m.chg+'</span></div>';}).join('');}
-          var g0=$('lg-gainers'), l0=$('lg-losers');
-          if(g0&&mv)g0.innerHTML=mvHtml0(mv.gainers,'up');
-          if(l0&&mv)l0.innerHTML=mvHtml0(mv.losers,'down');
-        })();
-        return;
-      }
-      weekDays.forEach(function(day){
-        html+='<div class="lg-day'+(day.future?' future':'')+'"><span class="lg-day-dot"></span><span class="lg-day-txt">'+day.label+'</span></div>';
-        day.events.forEach(function(e){
-          var bcl=e.impact==='high'?'high':e.impact==='med'?'med':e.impact==='holiday'?'holiday':'med';
-          var blbl=e.impact==='high'?'Alto':e.impact==='med'?'Med':e.impact==='holiday'?'Feriado':'—';
-          var isDone=e.status==='Released'||e.result;
-          var isNext=(e===nextEv); // ¿es el próximo evento pendiente?
-          // Placeholder inteligente para Actual: si el evento YA pasó su hora pero
-          // no hay dato, mostrar "Esperando dato"; si aún no ocurre, "Pendiente".
-          var actualPlaceholder='Pendiente';
-          if(e.noNumericData){
-            // Evento sin cifras (discurso del FOMC, etc.) → "No aplica"
-            actualPlaceholder='No aplica';
-          } else if(e.time&&e.time.indexOf(':')>0){
-            var evParts=e.time.split(':');
-            var evMins=parseInt(evParts[0])*60+parseInt(evParts[1]);
-            var nowM=(new Date()).getHours()*60+(new Date()).getMinutes();
-            var isToday2=day.label&&day.label.indexOf('Hoy')>=0;
-            if(isToday2&&evMins<=nowM&&!e.result)actualPlaceholder='Esperando dato…';
-          }
-          var clsColor=e.classification==='Bullish'?'up':e.classification==='Bearish'?'down':'';
-          var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+e.classification+'</span>'):'';
-          var nextBadge=isNext?'<span class="lg-ev-next-badge">◆ PRÓXIMO</span>':'';
-          html+='<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
-            +'<div class="lg-ev-inner"><div class="lg-ev-top">'
-            +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':e.time)+'</span>'
-            +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status">'+(isDone?'✓ Publicado':e.status)+'</div>'
-            +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
-            +'</div>'
-            +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'
-            +'</div>'
-            +'<div class="lg-ev-data" style="grid-template-columns:1fr 1fr 1fr 1fr;">'
-            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Previo</div><div class="lg-ev-cell-v">'+e.prev+'</div></div>'
-            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Forecast</div><div class="lg-ev-cell-v">'+e.exp+'</div></div>'
-            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Actual</div><div class="lg-ev-cell-v '+(e.result?clsColor:'pending')+'">'+(e.result||actualPlaceholder)+(e.diff?'<span class="lg-ev-diff '+clsColor+'"> ('+e.diff+')</span>':'')+'</div></div>'
-            +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+(e.nqImpact?clsColor:'pending')+'">'+(e.nqImpact||(e.status==='Released'?'—':'Al publicarse'))+'</div></div>'
-            +'</div>'
-            +'</div></div>';
-        });
+      // ── Pestañas por día laboral (Lun–Vie) con puntito de alto impacto ──
+      var tabs='<div class="lg-day-tabs">';
+      weekdays.forEach(function(w){
+        var act=(w.key===MACRO_DAY)?' active':'';
+        var tod=(w.key===_todayK)?' today':'';
+        var dot=w.hasHigh?'<span class="lg-day-tab-dot" title="Evento de alto impacto"></span>':'';
+        tabs+='<button type="button" class="lg-day-tab'+act+tod+'" onclick="macroSelectDay(\''+w.key+'\')">'
+          +'<span class="lg-day-tab-d">'+DOWK[w.dow]+'</span>'
+          +'<span class="lg-day-tab-n">'+w.date.getDate()+'</span>'
+          +dot+'</button>';
       });
-      list.innerHTML=html;
+      tabs+='</div>';
+      // ── Construye el HTML de un evento (reutilizable) ──
+      function _macroEvHtml(e,day){
+        var bcl=e.impact==='high'?'high':e.impact==='med'?'med':e.impact==='holiday'?'holiday':'med';
+        var blbl=e.impact==='high'?'Alto':e.impact==='med'?'Med':e.impact==='holiday'?'Feriado':'—';
+        var isDone=e.status==='Released'||e.result;
+        var isNext=(e===nextEv); // ¿es el próximo evento pendiente?
+        var actualPlaceholder='Pendiente';
+        if(e.noNumericData){
+          actualPlaceholder='No aplica';
+        } else if(e.time&&e.time.indexOf(':')>0){
+          var evParts=e.time.split(':');
+          var evMins=parseInt(evParts[0])*60+parseInt(evParts[1]);
+          var nowM=(new Date()).getHours()*60+(new Date()).getMinutes();
+          var isToday2=day&&day.label&&day.label.indexOf('Hoy')>=0;
+          if(isToday2&&evMins<=nowM&&!e.result)actualPlaceholder='Esperando dato…';
+        }
+        var clsColor=e.classification==='Bullish'?'up':e.classification==='Bearish'?'down':'';
+        var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+e.classification+'</span>'):'';
+        var nextBadge=isNext?'<span class="lg-ev-next-badge">◆ PRÓXIMO</span>':'';
+        return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
+          +'<div class="lg-ev-inner"><div class="lg-ev-top">'
+          +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':e.time)+'</span>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status">'+(isDone?'✓ Publicado':e.status)+'</div>'
+          +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
+          +'</div>'
+          +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'
+          +'</div>'
+          +'<div class="lg-ev-data" style="grid-template-columns:1fr 1fr 1fr 1fr;">'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Previo</div><div class="lg-ev-cell-v">'+e.prev+'</div></div>'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Forecast</div><div class="lg-ev-cell-v">'+e.exp+'</div></div>'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Actual</div><div class="lg-ev-cell-v '+(e.result?clsColor:'pending')+'">'+(e.result||actualPlaceholder)+(e.diff?'<span class="lg-ev-diff '+clsColor+'"> ('+e.diff+')</span>':'')+'</div></div>'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+(e.nqImpact?clsColor:'pending')+'">'+(e.nqImpact||(e.status==='Released'?'—':'Al publicarse'))+'</div></div>'
+          +'</div>'
+          +'</div></div>';
+      }
+      // ── Eventos SOLO del día seleccionado ──
+      var selDayObj=dayMap[MACRO_DAY]||null;
+      var selEvents=(selDayObj&&selDayObj.events)?selDayObj.events:[];
+      var body='';
+      if(selEvents.length){
+        selEvents.forEach(function(e){ body+=_macroEvHtml(e,selDayObj); });
+      } else {
+        body='<div class="cat-empty"><span class="cat-empty-t">Sin eventos macro este día</span></div>';
+      }
+      list.innerHTML=nav+tabs+body;
     }
     // movers
     function mvHtml(arr,dir){return arr.map(function(m){return '<div class="lg-mv '+dir+'"><div class="lg-mv-l"><span class="lg-mv-sym">'+m.sym+'</span><span class="lg-mv-px">$'+m.px+'</span></div><span class="lg-mv-chg '+dir+'">'+m.chg+'</span></div>';}).join('');}
