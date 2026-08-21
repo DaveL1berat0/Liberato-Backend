@@ -250,9 +250,9 @@ body::before{
     grid-template-columns:repeat(3,1fr);
     gap:6px;
   }
-  .ec{padding:8px 5px 7px;}
-  .ec-logo{width:34px;height:34px;font-size:10px;}
-  .ec-sym{font-size:9px;}
+  .ec{padding:10px 6px 9px;}
+  .ec-logo{width:44px;height:44px;font-size:12px;}
+  .ec-sym{font-size:10px;}
   /* Smaller ticker on mobile */
   .ti2{padding:0 12px;}
   .ti2-sym{font-size:10px;}
@@ -327,9 +327,9 @@ body::before{
 @media(min-width:1100px){
   .cal-week{gap:12px;}
   .day-col{padding:14px;}
-  .ec{padding:12px 8px 10px;}
-  .ec-logo{width:42px;height:42px;border-radius:11px;font-size:12px;}
-  .ec-sym{font-size:11px;}
+  .ec{padding:15px 10px 13px;}
+  .ec-logo{width:56px;height:56px;border-radius:14px;font-size:15px;}
+  .ec-sym{font-size:13px;}
   .day-header{padding:12px 14px;margin:-14px -14px 16px;}
   .dh-date{font-size:15px;}
 }
@@ -350,11 +350,24 @@ body::before{
 .sess-head.open{color:var(--amber);}
 .sess-head.close{color:var(--blue);}
 
+/* PESTAÑAS DE DÍA (mismo lenguaje visual que el calendario macro) */
+.ec-day-tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap;}
+.ec-day-tab{position:relative;flex:1;min-width:56px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(232,228,217,0.1);border-radius:9px;cursor:pointer;transition:all 0.2s ease;font-family:'DM Mono',monospace;line-height:1;}
+.ec-day-tab:hover{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);}
+.ec-day-tab-d{font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);transition:color 0.2s;}
+.ec-day-tab-n{font-size:16px;font-weight:700;color:var(--text2);transition:color 0.2s;}
+.ec-day-tab.today .ec-day-tab-d{color:var(--text2);}
+.ec-day-tab.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);box-shadow:inset 0 0 0 0.5px rgba(201,168,76,0.3);}
+.ec-day-tab.active .ec-day-tab-d{color:#C9A84C;}
+.ec-day-tab.active .ec-day-tab-n{color:#E7CC74;}
+.ec-day-tab-dot{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#CCA94F;box-shadow:0 0 5px rgba(204,169,79,0.7);}
+.ec-day-empty{text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.04em;padding:34px 0;}
+
 /* COMPANY TILES — compact grid style */
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .ec{
   display:flex;flex-direction:column;align-items:center;
-  gap:5px;padding:10px 6px 8px;
+  gap:7px;padding:13px 8px 11px;
   background:rgba(0,0,0,0.45);border-radius:var(--r-sm);
   border:0.5px solid rgba(232,228,217,0.08);cursor:pointer;
   transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -369,12 +382,12 @@ body::before{
 .ec:hover{border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.4);}
 .ec.selected{border-color:var(--gold);background:rgba(201,168,76,0.12);box-shadow:0 0 0 1px rgba(201,168,76,0.3),0 8px 24px rgba(201,168,76,0.1);}
 .ec-logo{
-  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  width:52px;height:52px;border-radius:13px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-weight:700;font-size:11px;
+  font-family:'DM Mono',monospace;font-weight:700;font-size:14px;
   color:#fff;letter-spacing:-0.02em;
 }
-.ec-sym{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--text);letter-spacing:0.02em;}
+.ec-sym{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.02em;}
 .ec-impact{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.04em;text-transform:uppercase;font-weight:700;padding:2px 5px;border-radius:3px;}
 .ec-impact.extreme{background:rgba(239,68,68,0.15);color:#fca5a5;}
 .ec-impact.high{background:rgba(245,158,11,0.12);color:var(--amber);}
@@ -1665,10 +1678,10 @@ var _DOW_ES=['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
 var _MON_ES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 document.getElementById('prev-btn').addEventListener('click',function(){
-  if(weekIdx>0){weekIdx--;updatePeriodLabel();if(activeView==='week')renderWeek();else if(activeView==='day')renderDay();else renderMonth();generateIntel();renderTape();}
+  if(weekIdx>0){weekIdx--;EARN_DAY=null;updatePeriodLabel();if(activeView==='week')renderWeek();else if(activeView==='day')renderDay();else renderMonth();generateIntel();renderTape();}
 });
 document.getElementById('next-btn').addEventListener('click',function(){
-  if(weekIdx<ALLWEEKS.length-1){weekIdx++;updatePeriodLabel();if(activeView==='week')renderWeek();else if(activeView==='day')renderDay();else renderMonth();generateIntel();renderTape();}
+  if(weekIdx<ALLWEEKS.length-1){weekIdx++;EARN_DAY=null;updatePeriodLabel();if(activeView==='week')renderWeek();else if(activeView==='day')renderDay();else renderMonth();generateIntel();renderTape();}
 });
 
 function getCurWeek(){return ALLWEEKS[weekIdx];}
@@ -1707,43 +1720,52 @@ function _findNextEarningsDate(){
   return null;
 }
 
+// Día seleccionado dentro de la semana visible (null = auto: HOY o primero con empresas).
+var EARN_DAY=null;
+function earnSelectDay(i){EARN_DAY=i;renderWeek();}
+
 function renderWeek(){
+  var host=document.getElementById('cal-week');
+  if(host)host.style.display='block';   // vista por pestañas (un día): bloque, no grid
   var w=getCurWeek();
   if(!w){
-    var cwEl=document.getElementById('cal-week');
-    if(cwEl)cwEl.innerHTML='<div class="week-empty-banner" style="grid-column:1/-1;"><span class="web-icon">⏳</span><div class="web-txt"><div class="web-title">Cargando earnings…</div><div class="web-sub">Obteniendo el calendario en vivo.</div></div></div>';
+    if(host)host.innerHTML='<div class="week-empty-banner"><span class="web-icon">⏳</span><div class="web-txt"><div class="web-title">Cargando earnings…</div><div class="web-sub">Obteniendo el calendario en vivo.</div></div></div>';
     return;
   }
-  // Detectar si toda la semana está vacía → mostrar aviso con el próximo earnings
-  var weekTotal=w.days.reduce(function(a,d){return a+d.open.length+d.close.length;},0);
-  var banner='';
-  if(weekTotal===0){
-    var next=_findNextEarningsDate();
-    var msg=next?('Próximos reportes: <strong>'+next+'</strong> — toca <strong>›</strong> para avanzar'):'No hay earnings programados en el rango disponible';
-    banner='<div class="week-empty-banner"><span class="web-icon">📅</span><div class="web-txt"><div class="web-title">Sin earnings esta semana</div><div class="web-sub">'+msg+'</div></div></div>';
+  // ── Resolver el día seleccionado: HOY si está en la semana · si no, el primero
+  //    con empresas · si no, el primero. Se recalcula al cambiar de semana. ──
+  var todayIdx=-1, firstWith=-1;
+  w.days.forEach(function(d,i){
+    if(d.today&&todayIdx<0)todayIdx=i;
+    if((d.open.length+d.close.length)>0&&firstWith<0)firstWith=i;
+  });
+  var sel=EARN_DAY;
+  if(sel===null||sel<0||sel>=w.days.length){
+    sel=(todayIdx>=0)?todayIdx:(firstWith>=0?firstWith:0);
   }
-  document.getElementById('cal-week').innerHTML=banner+w.days.map(function(d){
-    var total=d.open.length+d.close.length;
+  EARN_DAY=sel;
+  // ── Pestañas Lun–Vie con fechas reales + puntito dorado en días high/extreme ──
+  var tabs='<div class="ec-day-tabs">'+w.days.map(function(d,i){
+    var num=(d.date||'').split(' ')[0];
     var allSyms=d.open.concat(d.close);
-    var topImpact='none';
-    allSyms.forEach(function(s){var c=C[s];if(!c)return;if(c.impact==='extreme')topImpact='extreme';else if(c.impact==='high'&&topImpact!=='extreme')topImpact='high';else if(c.impact==='med'&&topImpact==='none')topImpact='med';});
-    var inner='';
-    var impactDots=allSyms.filter(function(s){var c=C[s];return c&&c.impact!=='low';}).slice(0,5).map(function(s){var c=C[s];return '<span class="dh-dot '+c.impact+'"></span>';}).join('');
-    var headerClass='day-header'+(d.today?' day-header-today':'')+(topImpact!=='none'?' day-header-'+topImpact:'');
-    if(total===0){inner='<div class="no-earn"><span>🗓️</span>Sin earnings</div>';}
-    else{
-      if(d.open.length){var cards=d.open.map(companyCard).join('');if(cards.trim())inner+='<div class="sess"><div class="sess-head open"><span class="sess-icon-wrap sess-open">☀</span>Before Open</div><div class="cards">'+cards+'</div></div>';}
-      if(d.close.length){var cards=d.close.map(companyCard).join('');if(cards.trim())inner+='<div class="sess"><div class="sess-head close"><span class="sess-icon-wrap sess-close">☽</span>After Close</div><div class="cards">'+cards+'</div></div>';}
-      if(!inner)inner='<div class="no-earn"><span>🔍</span>Sin coincidencias</div>';
-    }
-    var badge=d.today?'<span class="today-tag">HOY</span>':(total>0?'<span class="day-count-badge">'+total+'</span>':'');
-    return '<div class="day-col '+(d.today?'today':'')+'" data-impact="'+topImpact+'">'
-      +'<div class="'+headerClass+'">'
-        +'<div class="dh-left"><div class="dh-date">'+d.date+'</div><div class="dh-day">'+d.day+'</div></div>'
-        +'<div class="dh-right">'+badge+(impactDots?'<div class="dh-dots">'+impactDots+'</div>':'')+'</div>'
-      +'</div>'
-      +inner+'</div>';
-  }).join('');
+    var hasHigh=allSyms.some(function(s){var c=C[s];return c&&(c.impact==='high'||c.impact==='extreme');});
+    var cls='ec-day-tab'+(i===sel?' active':'')+(d.today?' today':'');
+    return '<button type="button" class="'+cls+'" onclick="earnSelectDay('+i+')">'
+      +'<span class="ec-day-tab-d">'+d.day+'</span>'
+      +'<span class="ec-day-tab-n">'+num+'</span>'
+      +(hasHigh?'<span class="ec-day-tab-dot" title="Empresa de alto impacto"></span>':'')
+      +'</button>';
+  }).join('')+'</div>';
+  // ── Empresas SOLO del día seleccionado (Before Open / After Close) ──
+  var d=w.days[sel];
+  var inner='';
+  if(d.open.length){var oc=d.open.map(companyCard).join('');if(oc.trim())inner+='<div class="sess"><div class="sess-head open"><span class="sess-icon-wrap sess-open">☀</span>Before Open</div><div class="cards">'+oc+'</div></div>';}
+  if(d.close.length){var cc=d.close.map(companyCard).join('');if(cc.trim())inner+='<div class="sess"><div class="sess-head close"><span class="sess-icon-wrap sess-close">☽</span>After Close</div><div class="cards">'+cc+'</div></div>';}
+  if(!inner){
+    var empty=(d.open.length+d.close.length)>0?'Sin coincidencias con el filtro':'Sin empresas este día';
+    inner='<div class="ec-day-empty">'+empty+'</div>';
+  }
+  host.innerHTML=tabs+'<div class="ec-day-panel">'+inner+'</div>';
 }
 
 function renderDay(){
@@ -2219,7 +2241,7 @@ function setView(v){
   activeView=v;
   document.querySelectorAll('.view-opt').forEach(function(o){o.classList.toggle('active',o.dataset.v===v);});
   var isMob=window.innerWidth<768;
-  document.getElementById('cal-week').style.display=v==='week'?(isMob?'flex':'grid'):'none';
+  document.getElementById('cal-week').style.display=v==='week'?'block':'none';
   document.getElementById('cal-day').classList.toggle('active',v==='day');
   document.getElementById('cal-month').classList.toggle('active',v==='month');
   if(v==='week')renderWeek();else if(v==='day')renderDay();else renderMonth();
@@ -2271,8 +2293,7 @@ _lbcInitEarnings();
 // Handle screen rotation / resize
 window.addEventListener('resize',function(){
   if(activeView==='week'){
-    var isMob=window.innerWidth<768;
-    document.getElementById('cal-week').style.display=isMob?'flex':'grid';
+    document.getElementById('cal-week').style.display='block';
   }
 });
 </script>
