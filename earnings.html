@@ -158,7 +158,21 @@ body::before{
   flex-shrink:0;
 }
 .ctrl-zone:last-child{border-right:none;flex:1;}
-.ctrl-zone.zone-nav{gap:10px;}
+/* PUNTO 4 — Resaltar el navegador de semana (panel dorado destacado) */
+.ctrl-zone.zone-nav{
+  gap:12px;flex-direction:column;align-items:stretch;justify-content:center;
+  border-right:none;height:auto;
+  margin:8px;padding:8px 16px 10px;
+  background:linear-gradient(135deg,rgba(201,168,76,0.16),rgba(201,168,76,0.04));
+  border:1px solid rgba(201,168,76,0.5);border-radius:12px;
+  box-shadow:0 0 20px -6px rgba(201,168,76,0.45),inset 0 0 0 1px rgba(201,168,76,0.08);
+}
+.zone-nav-tag{
+  font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--gold);text-align:center;opacity:0.9;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.zone-nav-tag::before,.zone-nav-tag::after{content:'';width:14px;height:0.5px;background:rgba(201,168,76,0.4);}
 .ctrl-zone.zone-views{gap:0;}
 .ctrl-zone.zone-filters{gap:8px;flex-wrap:wrap;flex:1;}
 .week-nav{display:flex;align-items:center;gap:10px;}
@@ -511,6 +525,7 @@ body::before{
 .exp-lbl{font-size:14px;color:var(--text2);}
 .exp-val{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--text);}
 .exp-val .yoy{font-size:9px;color:var(--green);margin-left:6px;}
+.d-pending-tag{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--amber);background:rgba(245,158,11,0.12);border:0.5px solid rgba(245,158,11,0.3);padding:2px 6px;border-radius:5px;margin-left:8px;vertical-align:middle;}
 
 /* News */
 .news-item{background:rgba(0,0,0,0.25);border-radius:var(--r-sm);padding:11px 12px;margin-bottom:8px;border-left:2px solid var(--border2);transition:border-color 0.2s;}
@@ -964,6 +979,27 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 .pd-avatar-btn.pd-avatar-remove{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;}
 .pd-avatar-btn.pd-avatar-remove:hover{background:rgba(239,68,68,0.12);}
 .pd-avatar-btn:disabled{opacity:0.5;cursor:not-allowed;}
+/* PUNTO 7 — Editor de avatar (recorte circular ajustable) */
+.pdc-overlay{position:fixed;inset:0;z-index:1300;background:rgba(4,5,9,0.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;}
+.pdc-overlay.open{display:flex;}
+.pdc-modal{width:min(360px,94vw);background:linear-gradient(180deg,#0C0F17,#080A0F);border:1px solid rgba(201,168,76,0.3);border-radius:18px;box-shadow:0 30px 70px -20px rgba(0,0,0,0.85);padding:22px 22px 18px;text-align:center;}
+.pdc-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;color:#E7CC74;margin-bottom:4px;}
+.pdc-sub{font-size:11px;color:rgba(232,228,217,0.5);margin-bottom:16px;line-height:1.5;}
+.pdc-stage{position:relative;width:260px;height:260px;max-width:78vw;max-height:78vw;margin:0 auto 14px;border-radius:14px;overflow:hidden;background:#05060a;touch-action:none;cursor:grab;}
+.pdc-stage:active{cursor:grabbing;}
+.pdc-canvas{display:block;width:100%;height:100%;}
+.pdc-ring{position:absolute;inset:0;pointer-events:none;box-shadow:0 0 0 9999px rgba(4,5,9,0.62);border-radius:50%;}
+.pdc-ring::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(201,168,76,0.75);}
+.pdc-zoom{display:flex;align-items:center;gap:10px;margin:0 4px 16px;}
+.pdc-zoom span{font-size:14px;color:var(--gold);}
+.pdc-zoom input[type=range]{flex:1;accent-color:#C9A84C;height:4px;cursor:pointer;}
+.pdc-actions{display:flex;gap:10px;}
+.pdc-btn{flex:1;padding:11px;border-radius:10px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.2s;}
+.pdc-btn-save{border:1px solid #C9A84C;background:linear-gradient(135deg,#C9A84C,#a07828);color:#06080D;}
+.pdc-btn-save:hover{filter:brightness(1.08);}
+.pdc-btn-save:disabled{opacity:0.55;cursor:not-allowed;}
+.pdc-btn-cancel{border:1px solid rgba(232,228,217,0.2);background:rgba(255,255,255,0.03);color:var(--text2);}
+.pdc-btn-cancel:hover{border-color:rgba(232,228,217,0.4);color:var(--text);}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -1030,6 +1066,28 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
     <button class="pd-logout" onclick="lbcLogout()" data-es="Desconectar" data-en="Disconnect">Desconectar</button>
   </div>
 </aside>
+
+<!-- PUNTO 7 — Editor de avatar: recorte circular con arrastre + zoom -->
+<div class="pdc-overlay" id="pdc-overlay">
+  <div class="pdc-modal" role="dialog" aria-label="Ajustar foto de perfil">
+    <div class="pdc-title">Ajusta tu foto</div>
+    <div class="pdc-sub">Arrastra para reposicionar · usa la barra o la rueda para acercar</div>
+    <div class="pdc-stage" id="pdc-stage">
+      <canvas class="pdc-canvas" id="pdc-canvas" width="256" height="256"></canvas>
+      <div class="pdc-ring"></div>
+    </div>
+    <div class="pdc-zoom">
+      <span>−</span>
+      <input type="range" id="pdc-zoom" min="1" max="5" step="0.01" value="1">
+      <span>＋</span>
+    </div>
+    <div class="pd-msg" id="pdc-msg" style="text-align:center;"></div>
+    <div class="pdc-actions">
+      <button class="pdc-btn pdc-btn-cancel" onclick="pdCropCancel()">Cancelar</button>
+      <button class="pdc-btn pdc-btn-save" id="pdc-save" onclick="pdCropSave()">Guardar foto</button>
+    </div>
+  </div>
+</div>
 <script>
 var LBC_AUTH='https://web-production-33671.up.railway.app';
 function lbcLogout(){
@@ -1056,7 +1114,7 @@ function openProfileDrawer(){
   var plan=(s&&s.plan)||'';
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
-  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Premium 👑':(plan?'Comunidad Libre':'—');
   ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
   lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
@@ -1073,7 +1131,7 @@ function openProfileDrawer(){
         if(!u)return;
         if(pn&&u.name)pn.textContent=u.name;
         if(pe&&u.email)pe.textContent=u.email;
-        if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
+        if(pp)pp.textContent=u.is_premium?'Acceso Premium 👑':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
         var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
         lbcApplyAvatar(av||null,(u.name||nm));
@@ -1156,43 +1214,120 @@ function lbcPaintNavName(name){
   nodes.forEach(function(el){ if(!el)return; if(first){ el.textContent=first; el.style.display='inline-flex'; } else { el.style.display='none'; } });
 }
 function pdPickAvatar(){ var f=document.getElementById('pd-avatar-file'); if(f)f.click(); }
+
+// ── PUNTO 7 — Editor de avatar: viewport circular, arrastrar + zoom ──────────
+var _pdc={img:null,zoom:1,ox:0,oy:0,base:1,drag:false,lx:0,ly:0,pinchD:0};
+var PDC_V=256; // tamaño de lienzo/exportación
 function pdAvatarFile(ev){
   var file=ev.target.files&&ev.target.files[0]; if(!file)return;
   if(!/^image\//.test(file.type)){ pdMsg('pd-avatar-msg','Elige un archivo de imagen.',false); return; }
   var reader=new FileReader();
   reader.onload=function(e){
     var img=new Image();
-    img.onload=function(){
-      function render(size,q){
-        var cv=document.createElement('canvas'); cv.width=size; cv.height=size;
-        var ctx=cv.getContext('2d');
-        var side=Math.min(img.width,img.height);
-        var sx=(img.width-side)/2, sy=(img.height-side)/2;
-        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-        return cv.toDataURL('image/jpeg', q);
-      }
-      var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.6],[160,0.55]];
-      var url=null;
-      for(var i=0;i<attempts.length;i++){ url=render(attempts[i][0],attempts[i][1]); if(url.length<=340000)break; }
-      if(!url||url.length>340000){ pdMsg('pd-avatar-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
-      var btn=document.getElementById('pd-avatar-change'); if(btn)btn.disabled=true;
-      pdMsg('pd-avatar-msg','Subiendo…',true);
-      lbcApi('/api/auth/set-avatar',{avatar:url})
-        .then(function(d){
-          var saved=(d&&d.avatar)||url;
-          lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
-          lbcSetSessionAvatar(saved);
-          pdMsg('pd-avatar-msg','Foto actualizada.',true);
-        })
-        .catch(function(e){ pdMsg('pd-avatar-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
-        .then(function(){ if(btn)btn.disabled=false; var f=document.getElementById('pd-avatar-file'); if(f)f.value=''; });
-    };
+    img.onload=function(){ _pdc.img=img; _pdcOpen(); };
     img.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer la imagen.',false); };
     img.src=e.target.result;
   };
   reader.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer el archivo.',false); };
   reader.readAsDataURL(file);
 }
+function _pdcClampBase(){
+  var img=_pdc.img; if(!img)return;
+  _pdc.base=PDC_V/Math.min(img.width,img.height); // "cover" del círculo
+}
+function _pdcClampOffsets(){
+  var img=_pdc.img; if(!img)return;
+  var s=_pdc.base*_pdc.zoom;
+  var dw=img.width*s, dh=img.height*s;
+  var mx=Math.max(0,(dw-PDC_V)/2), my=Math.max(0,(dh-PDC_V)/2);
+  if(_pdc.ox> mx)_pdc.ox= mx; if(_pdc.ox<-mx)_pdc.ox=-mx;
+  if(_pdc.oy> my)_pdc.oy= my; if(_pdc.oy<-my)_pdc.oy=-my;
+}
+function _pdcDraw(target,size){
+  var img=_pdc.img; if(!img)return;
+  var cv=target||document.getElementById('pdc-canvas'); if(!cv)return;
+  var V=size||PDC_V; cv.width=V; cv.height=V;
+  var k=V/PDC_V, s=_pdc.base*_pdc.zoom*k;
+  var dw=img.width*s, dh=img.height*s;
+  var dx=(V-dw)/2+_pdc.ox*k, dy=(V-dh)/2+_pdc.oy*k;
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,V,V); ctx.fillStyle='#05060a'; ctx.fillRect(0,0,V,V);
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(img,dx,dy,dw,dh);
+}
+function _pdcOpen(){
+  _pdc.zoom=1; _pdc.ox=0; _pdc.oy=0; _pdcClampBase();
+  var z=document.getElementById('pdc-zoom'); if(z)z.value='1';
+  pdMsg('pdc-msg','',true);
+  _pdcDraw();
+  var ov=document.getElementById('pdc-overlay'); if(ov)ov.classList.add('open');
+}
+function pdCropCancel(){
+  var ov=document.getElementById('pdc-overlay'); if(ov)ov.classList.remove('open');
+  _pdc.img=null; var f=document.getElementById('pd-avatar-file'); if(f)f.value='';
+}
+function pdCropSave(){
+  if(!_pdc.img)return;
+  var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.62],[160,0.55]];
+  var url=null, tmp=document.createElement('canvas');
+  for(var i=0;i<attempts.length;i++){
+    _pdcDraw(tmp,attempts[i][0]);
+    url=tmp.toDataURL('image/jpeg',attempts[i][1]);
+    if(url.length<=340000)break;
+  }
+  if(!url||url.length>340000){ pdMsg('pdc-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
+  var btn=document.getElementById('pdc-save'); if(btn)btn.disabled=true;
+  pdMsg('pdc-msg','Subiendo…',true);
+  lbcApi('/api/auth/set-avatar',{avatar:url})
+    .then(function(d){
+      var saved=(d&&d.avatar)||url;
+      lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
+      lbcSetSessionAvatar(saved);
+      pdMsg('pd-avatar-msg','Foto actualizada.',true);
+      pdCropCancel();
+    })
+    .catch(function(e){ pdMsg('pdc-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
+    .then(function(){ if(btn)btn.disabled=false; });
+}
+(function _pdcWire(){
+  function ready(){
+    var stage=document.getElementById('pdc-stage'), z=document.getElementById('pdc-zoom');
+    if(!stage||!z)return;
+    z.addEventListener('input',function(){ _pdc.zoom=parseFloat(z.value)||1; _pdcClampOffsets(); _pdcDraw(); });
+    stage.addEventListener('wheel',function(e){
+      e.preventDefault();
+      var nz=_pdc.zoom*(e.deltaY<0?1.08:0.926);
+      _pdc.zoom=Math.max(1,Math.min(5,nz)); z.value=String(_pdc.zoom);
+      _pdcClampOffsets(); _pdcDraw();
+    },{passive:false});
+    var pts={};
+    stage.addEventListener('pointerdown',function(e){
+      stage.setPointerCapture&&stage.setPointerCapture(e.pointerId);
+      pts[e.pointerId]={x:e.clientX,y:e.clientY};
+      _pdc.drag=true; _pdc.lx=e.clientX; _pdc.ly=e.clientY;
+    });
+    stage.addEventListener('pointermove',function(e){
+      if(!pts[e.pointerId])return;
+      pts[e.pointerId]={x:e.clientX,y:e.clientY};
+      var ids=Object.keys(pts);
+      var rect=stage.getBoundingClientRect(), ratio=PDC_V/rect.width;
+      if(ids.length>=2){ // pinch-zoom
+        var a=pts[ids[0]], b=pts[ids[1]];
+        var d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(_pdc.pinchD){ var nz=_pdc.zoom*(d/_pdc.pinchD); _pdc.zoom=Math.max(1,Math.min(5,nz)); z.value=String(_pdc.zoom); }
+        _pdc.pinchD=d; _pdcClampOffsets(); _pdcDraw(); return;
+      }
+      if(_pdc.drag){
+        _pdc.ox+=(e.clientX-_pdc.lx)*ratio; _pdc.oy+=(e.clientY-_pdc.ly)*ratio;
+        _pdc.lx=e.clientX; _pdc.ly=e.clientY; _pdcClampOffsets(); _pdcDraw();
+      }
+    });
+    function up(e){ delete pts[e.pointerId]; if(Object.keys(pts).length<2)_pdc.pinchD=0; if(!Object.keys(pts).length)_pdc.drag=false; }
+    stage.addEventListener('pointerup',up); stage.addEventListener('pointercancel',up);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready); else ready();
+})();
+window.pdCropSave=pdCropSave;window.pdCropCancel=pdCropCancel;
 function pdRemoveAvatar(){
   var rm=document.getElementById('pd-avatar-remove'); if(rm)rm.disabled=true;
   lbcApi('/api/auth/remove-avatar',{})
@@ -1305,6 +1440,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <div class="ctrl-row">
       <!-- ZONE 1: Navegación de semana -->
       <div class="ctrl-zone zone-nav">
+        <span class="zone-nav-tag">Navegar semanas</span>
         <div class="week-nav">
           <button class="week-btn" id="prev-btn">‹</button>
           <div class="week-label">
@@ -1690,6 +1826,10 @@ function _buildFromEarnings(earnings){
     var sym=String(e.symbol).toUpperCase().trim(); if(!sym)return;
     var imp=_mapImpact(e.impact);
     if(!C[sym]) C[sym]=_makeGenericCompany(sym,imp);
+    // PUNTO 5 — usar el NOMBRE REAL del feed cuando venga (nunca inventar):
+    // solo se sobreescribe si la ficha aún no tiene nombre curado (name===sym).
+    var _fname=e.name||e.company||e.companyName||e.title||'';
+    if(_fname && (!C[sym].name || C[sym].name===sym)) C[sym].name=String(_fname).trim();
     C[sym].impact=imp; // fusionar SIEMPRE el impacto real del backend
     var isBmo=(String(e.hour||'').toLowerCase()==='bmo'); // bmo=Before Open; resto=After Close
     var iso=_isoLocal(edt);
@@ -2233,12 +2373,23 @@ function _fetchDrawerLive(sym){
       }
       if(yoyEl){
         if(yoy){yoyEl.textContent=yoy;yoyEl.style.color=yoy.startsWith('+')?'var(--up)':'var(--down)';}
-        else yoyEl.textContent='—';
+        else yoyEl.innerHTML='—<span class="d-pending-tag">Pendiente</span>';
       }
-      // ── 2. Market Cap update ──────────────────────────────────────────────
+      if(epsEl&&!eps)epsEl.innerHTML='—<span class="d-pending-tag">Pendiente</span>';
+      // ── 2. Market Cap / Sector / Nombre reales del backend ────────────────
       var mc=data.marketCap||data.cap||null;
       var mcEl=document.getElementById('d-cap-val');
-      if(mcEl&&mc)mcEl.textContent=mc;
+      if(mcEl&&mc)mcEl.textContent=_fmtCap(mc);
+      var sec=data.sector||data.industry||data.finnhubIndustry||null;
+      var secEl=document.getElementById('d-sec-val');
+      if(secEl&&sec&&secEl.textContent==='—')secEl.textContent=sec;
+      // Nombre real (mejora también el tooltip en próximos hovers) — Regla #1: solo si viene del backend
+      var realName=data.name||data.companyName||null;
+      if(realName){
+        if(C[sym]&&(!C[sym].name||C[sym].name===sym))C[sym].name=realName;
+        var dn=document.getElementById('d-name'); if(dn&&(dn.textContent===sym||dn.textContent==='--'))dn.textContent=realName;
+        var card=document.querySelector('.ec[data-sym="'+sym+'"]'); if(card)card.setAttribute('data-name',realName);
+      }
       // ── 3. Historical earnings (last 4 quarters) ─────────────────────────
       var hist=data.history||[];
       if(!histSec)return;
@@ -2277,6 +2428,12 @@ function _fetchDrawerLive(sym){
       }
     })
     .catch(function(){
+      // PUNTO 6 — sin backend: dejar casillas con placeholder honesto, NO el skeleton
+      // (que se veía "vacío") ni cifras inventadas.
+      ['d-eps-val','d-rev-val','d-yoy-val'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el)el.innerHTML='—<span class="d-pending-tag">Pendiente</span>';
+      });
       if(histSec)histSec.innerHTML='<div class="hist2-nodata" style="text-align:center;padding:20px;"><div style="opacity:0.25;font-size:22px;margin-bottom:8px;">⚡</div><div style="font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--text3);">Sin conexión al servidor</div></div>';
     });
 }
@@ -2329,15 +2486,28 @@ function _fetchAndRenderHist(sym){
     });
 }
 
+// PUNTO 6 — Regla #1: '--'/vacío -> '—'. EPS/Revenue/YoY quedan como placeholder
+// hasta que _fetchDrawerLive traiga el DATO REAL del backend (nunca cifra sin verificar).
+function _valOrDash(v){ return (v&&v!=='--'&&v!=='—')?v:'—'; }
+// Formatea market cap: acepta número crudo (11658461000) o string ya formateado ($11B)
+function _fmtCap(v){
+  if(v==null)return '—';
+  if(typeof v==='string'&&/[a-zA-Z$]/.test(v))return v; // ya viene formateado
+  var n=parseFloat(v); if(isNaN(n))return String(v);
+  if(n>=1e12)return '$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9)return '$'+(n/1e9).toFixed(1)+'B';
+  if(n>=1e6)return '$'+(n/1e6).toFixed(0)+'M';
+  return '$'+n.toLocaleString('en-US');
+}
 function _renderDrawerBody(sym, c){
   var newsHtml=(c.news||[]).map(function(n){return '<div class="news-item"><div class="news-head">'+n.h+'</div><div class="news-sum">'+n.s+'</div><span class="news-impact '+n.i+'">'+(n.i==='pos'?'\u25b2 Positivo':n.i==='neg'?'\u25bc Negativo':'\u25cf Neutral')+'</span></div>';}).join('');
   if(!newsHtml)newsHtml='<div style="color:var(--text3);font-size:11px;padding:8px;">Sin noticias recientes disponibles.</div>';
   document.getElementById('drawer-body').innerHTML=
-    '<div class="dsec"><div class="dsec-title">Resumen General</div><div class="sum-grid"><div class="sum-item"><div class="sum-lbl">Ticker</div><div class="sum-val">'+sym+'</div></div><div class="sum-item"><div class="sum-lbl">Market Cap</div><div class="sum-val">'+c.cap+'</div></div><div class="sum-item" style="grid-column:span 2;"><div class="sum-lbl">Sector</div><div class="sum-val sm">'+c.sector+'</div></div></div></div>'
+    '<div class="dsec"><div class="dsec-title">Resumen General</div><div class="sum-grid"><div class="sum-item"><div class="sum-lbl">Ticker</div><div class="sum-val">'+sym+'</div></div><div class="sum-item"><div class="sum-lbl">Market Cap</div><div class="sum-val" id="d-cap-val">'+_valOrDash(c.cap)+'</div></div><div class="sum-item" style="grid-column:span 2;"><div class="sum-lbl">Sector</div><div class="sum-val sm" id="d-sec-val">'+_valOrDash(c.sector)+'</div></div></div></div>'
     +'<div class="dsec"><div class="dsec-title">Earnings Esperados</div>'+
-    '<div class="exp-row"><span class="exp-lbl">EPS estimado</span><span class="exp-val" id="d-eps-val">'+(c.eps||'—')+'</span></div>'+
-    '<div class="exp-row"><span class="exp-lbl">Revenue est.</span><span class="exp-val" id="d-rev-val">'+(c.rev||'—')+'</span></div>'+
-    '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val" style="color:'+(c.yoy&&c.yoy.startsWith('+')?'var(--up)':c.yoy&&c.yoy.startsWith('-')?'var(--down)':'inherit')+'">'+(c.yoy||'—')+'</span></div>'+
+    '<div class="exp-row"><span class="exp-lbl">EPS estimado</span><span class="exp-val" id="d-eps-val">—</span></div>'+
+    '<div class="exp-row"><span class="exp-lbl">Revenue est.</span><span class="exp-val" id="d-rev-val">—</span></div>'+
+    '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val">—</span></div>'+
     '</div>'
     +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span><span class="nq-weight">Peso: <strong>'+c.weight+'</strong></span></div><div class="nq-explain">'+c.nq+'</div></div></div>'
     +'<div class="dsec"><div class="dsec-title">Últimas Noticias</div>'+newsHtml+'</div>'

@@ -665,6 +665,19 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
 .pd-avatar-btn.pd-avatar-remove{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);color:#ef8a8a;}
 .pd-avatar-btn.pd-avatar-remove:hover{background:rgba(239,68,68,0.12);}
 .pd-avatar-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.pd-avatar-editor{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding-top:2px;}
+.pd-ave-viewport{position:relative;width:min(240px,78vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:#0b0e15;touch-action:none;cursor:grab;user-select:none;}
+.pd-ave-viewport:active{cursor:grabbing;}
+.pd-ave-viewport canvas{display:block;width:100%;height:100%;touch-action:none;}
+.pd-ave-ring{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px rgba(201,168,76,0.75) inset,0 0 0 9999px rgba(6,8,13,0.35);pointer-events:none;}
+.pd-ave-zoomrow{display:flex;align-items:center;gap:10px;width:100%;max-width:240px;}
+.pd-ave-zi{color:#C9A84C;font-size:16px;width:14px;text-align:center;flex:0 0 auto;line-height:1;}
+.pd-ave-zoom{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:3px;background:rgba(201,168,76,0.25);outline:none;margin:0;}
+.pd-ave-zoom::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#C9A84C;cursor:pointer;border:2px solid #0b0e15;}
+.pd-ave-zoom::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#C9A84C;cursor:pointer;border:2px solid #0b0e15;}
+.pd-ave-hint{font-size:11px;color:rgba(232,228,217,0.4);text-align:center;line-height:1.4;}
+.pd-avatar-btn.pd-ave-cancel{border-color:rgba(232,228,217,0.2);background:transparent;color:rgba(232,228,217,0.6);}
+.pd-avatar-btn.pd-ave-cancel:hover{border-color:rgba(232,228,217,0.4);color:#E8E4D9;}
 
 /* ── DESKTOP ── */
 @media(min-width:768px){
@@ -1540,11 +1553,27 @@ nav { max-width: 100%; }
   <div class="pd-scroll">
     <div class="pd-avatar-sec">
       <div class="pd-avatar" id="pd-avatar"><span class="pd-avatar-ph">&#128100;</span></div>
-      <div class="pd-avatar-actions">
+      <div class="pd-avatar-actions" id="pd-avatar-actions-main">
         <button class="pd-avatar-btn" id="pd-avatar-change" onclick="pdPickAvatar()" data-es="Cambiar foto" data-en="Change photo">Cambiar foto</button>
         <button class="pd-avatar-btn pd-avatar-remove" id="pd-avatar-remove" onclick="pdRemoveAvatar()" style="display:none;" data-es="Quitar foto" data-en="Remove photo">Quitar foto</button>
       </div>
       <input type="file" accept="image/*" id="pd-avatar-file" style="display:none;" onchange="pdAvatarFile(event)">
+      <div class="pd-avatar-editor" id="pd-avatar-editor" style="display:none;">
+        <div class="pd-ave-viewport" id="pd-ave-viewport">
+          <canvas id="pd-ave-canvas" width="240" height="240"></canvas>
+          <div class="pd-ave-ring"></div>
+        </div>
+        <div class="pd-ave-zoomrow">
+          <span class="pd-ave-zi">&minus;</span>
+          <input type="range" class="pd-ave-zoom" id="pd-ave-zoom" min="1" max="4" step="0.01" value="1" oninput="pdAveZoomTo(parseFloat(this.value))" aria-label="Zoom">
+          <span class="pd-ave-zi">+</span>
+        </div>
+        <div class="pd-ave-hint" data-es="Arrastra para reposicionar · rueda o barra para zoom" data-en="Drag to reposition · wheel or slider to zoom">Arrastra para reposicionar · rueda o barra para zoom</div>
+        <div class="pd-avatar-actions">
+          <button class="pd-avatar-btn" id="pd-ave-save" onclick="pdAvatarSave()" data-es="Guardar foto" data-en="Save photo">Guardar foto</button>
+          <button class="pd-avatar-btn pd-ave-cancel" id="pd-ave-cancel" onclick="pdAvatarCancel()" data-es="Cancelar" data-en="Cancel">Cancelar</button>
+        </div>
+      </div>
       <div class="pd-msg" id="pd-avatar-msg"></div>
     </div>
     <div class="pd-rows">
@@ -2129,7 +2158,7 @@ function openProfileDrawer(){
   var plan=(s&&s.plan)||'';
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
-  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo':(plan?'Comunidad Libre':'—');
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Premium 👑':(plan?'Comunidad Libre':'—');
   ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
   lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
@@ -2146,7 +2175,7 @@ function openProfileDrawer(){
         if(!u)return;
         if(pn&&u.name)pn.textContent=u.name;
         if(pe&&u.email)pe.textContent=u.email;
-        if(pp)pp.textContent=u.is_premium?'Acceso Completo':'Comunidad Libre';
+        if(pp)pp.textContent=u.is_premium?'Acceso Premium 👑':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
         var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
         lbcApplyAvatar(av||null,(u.name||nm));
@@ -2236,43 +2265,113 @@ function lbcPaintNavName(name){
   nodes.forEach(function(el){ if(!el)return; if(first){ el.textContent=first; el.style.display='inline-flex'; } else { el.style.display='none'; } });
 }
 function pdPickAvatar(){ var f=document.getElementById('pd-avatar-file'); if(f)f.click(); }
-// Al elegir imagen: recorte cuadrado centrado + resize + reintentos bajo el límite.
+// Estado del editor de recorte circular (arrastrar + zoom).
+var pdAve={img:null,d:240,base:1,zoom:1,ox:0,oy:0,drag:false,lastX:0,lastY:0,ptrs:0,pinch:0};
+// Al elegir imagen: abre el editor circular (NO auto-recorta al centro).
 function pdAvatarFile(ev){
   var file=ev.target.files&&ev.target.files[0]; if(!file)return;
-  if(!/^image\//.test(file.type)){ pdMsg('pd-avatar-msg','Elige un archivo de imagen.',false); return; }
+  if(!/^image\//.test(file.type)){ pdMsg('pd-avatar-msg','Elige un archivo de imagen.',false); ev.target.value=''; return; }
   var reader=new FileReader();
   reader.onload=function(e){
     var img=new Image();
-    img.onload=function(){
-      function render(size,q){
-        var cv=document.createElement('canvas'); cv.width=size; cv.height=size;
-        var ctx=cv.getContext('2d');
-        var side=Math.min(img.width,img.height);
-        var sx=(img.width-side)/2, sy=(img.height-side)/2;
-        ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-        return cv.toDataURL('image/jpeg', q);
-      }
-      var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.6],[160,0.55]];
-      var url=null;
-      for(var i=0;i<attempts.length;i++){ url=render(attempts[i][0],attempts[i][1]); if(url.length<=340000)break; }
-      if(!url||url.length>340000){ pdMsg('pd-avatar-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
-      var btn=document.getElementById('pd-avatar-change'); if(btn)btn.disabled=true;
-      pdMsg('pd-avatar-msg','Subiendo…',true);
-      lbcApi('/api/auth/set-avatar',{avatar:url})
-        .then(function(d){
-          var saved=(d&&d.avatar)||url;
-          lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
-          lbcSetSessionAvatar(saved);
-          pdMsg('pd-avatar-msg','Foto actualizada.',true);
-        })
-        .catch(function(e){ pdMsg('pd-avatar-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
-        .then(function(){ if(btn)btn.disabled=false; var f=document.getElementById('pd-avatar-file'); if(f)f.value=''; });
-    };
+    img.onload=function(){ pdAveOpen(img); };
     img.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer la imagen.',false); };
     img.src=e.target.result;
   };
   reader.onerror=function(){ pdMsg('pd-avatar-msg','No se pudo leer el archivo.',false); };
   reader.readAsDataURL(file);
+  ev.target.value='';
+}
+function pdAveOpen(img){
+  pdAve.img=img;
+  pdMsg('pd-avatar-msg','',true);
+  var ed=document.getElementById('pd-avatar-editor'); if(ed)ed.style.display='flex';
+  var main=document.getElementById('pd-avatar-actions-main'); if(main)main.style.display='none';
+  var vp=document.getElementById('pd-ave-viewport');
+  var d=vp?Math.round(vp.clientWidth):0; if(!d)d=240; pdAve.d=d;
+  var cv=document.getElementById('pd-ave-canvas'); if(cv){cv.width=d;cv.height=d;}
+  pdAve.base=d/Math.min(img.width,img.height);   // cubre el círculo
+  pdAve.zoom=1;
+  var s=pdAve.base*pdAve.zoom;
+  pdAve.ox=(d-img.width*s)/2; pdAve.oy=(d-img.height*s)/2;   // centrado inicial
+  var z=document.getElementById('pd-ave-zoom'); if(z)z.value=1;
+  pdAveBind();
+  pdAveRender();
+}
+function pdAveBind(){
+  var cv=document.getElementById('pd-ave-canvas'); if(!cv||cv._aveBound)return; cv._aveBound=true;
+  cv.addEventListener('pointerdown',function(e){ pdAve.ptrs++; if(pdAve.ptrs>1){pdAve.drag=false;return;} pdAve.drag=true; pdAve.lastX=e.clientX; pdAve.lastY=e.clientY; try{cv.setPointerCapture(e.pointerId);}catch(err){} });
+  cv.addEventListener('pointermove',function(e){ if(!pdAve.drag||pdAve.ptrs!==1)return; pdAve.ox+=(e.clientX-pdAve.lastX); pdAve.oy+=(e.clientY-pdAve.lastY); pdAve.lastX=e.clientX; pdAve.lastY=e.clientY; pdAveRender(); });
+  function up(){ pdAve.ptrs=Math.max(0,pdAve.ptrs-1); if(pdAve.ptrs<1)pdAve.drag=false; }
+  cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up); cv.addEventListener('pointerleave',function(){});
+  cv.addEventListener('wheel',function(e){ e.preventDefault(); pdAveZoomTo(pdAve.zoom*(e.deltaY<0?1.08:0.92)); },{passive:false});
+  cv.addEventListener('touchmove',function(e){
+    if(e.touches.length===2){ e.preventDefault();
+      var dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+      var dist=Math.sqrt(dx*dx+dy*dy);
+      if(pdAve.pinch)pdAveZoomTo(pdAve.zoom*(dist/pdAve.pinch));
+      pdAve.pinch=dist;
+    }
+  },{passive:false});
+  cv.addEventListener('touchend',function(){ pdAve.pinch=0; });
+}
+function pdAveClamp(){
+  if(!pdAve.img)return;
+  var s=pdAve.base*pdAve.zoom, d=pdAve.d, w=pdAve.img.width*s, h=pdAve.img.height*s;
+  if(w<=d){ pdAve.ox=(d-w)/2; } else { if(pdAve.ox>0)pdAve.ox=0; if(pdAve.ox<d-w)pdAve.ox=d-w; }
+  if(h<=d){ pdAve.oy=(d-h)/2; } else { if(pdAve.oy>0)pdAve.oy=0; if(pdAve.oy<d-h)pdAve.oy=d-h; }
+}
+function pdAveRender(){
+  var cv=document.getElementById('pd-ave-canvas'); if(!cv||!pdAve.img)return;
+  pdAveClamp();
+  var ctx=cv.getContext('2d'), s=pdAve.base*pdAve.zoom;
+  ctx.clearRect(0,0,pdAve.d,pdAve.d);
+  ctx.drawImage(pdAve.img, pdAve.ox, pdAve.oy, pdAve.img.width*s, pdAve.img.height*s);
+}
+function pdAveZoomTo(nz){
+  if(!pdAve.img)return;
+  var d=pdAve.d, oldS=pdAve.base*pdAve.zoom;
+  nz=Math.max(1,Math.min(4,nz||1));
+  var newS=pdAve.base*nz, cx=d/2, cy=d/2;
+  pdAve.ox=cx-(cx-pdAve.ox)*(newS/oldS);
+  pdAve.oy=cy-(cy-pdAve.oy)*(newS/oldS);
+  pdAve.zoom=nz;
+  var z=document.getElementById('pd-ave-zoom'); if(z&&parseFloat(z.value)!==nz)z.value=nz;
+  pdAveRender();
+}
+// Guardar: renderiza el círculo visible a 256x256 (JPEG 0.85 con reintentos <340k).
+function pdAvatarSave(){
+  if(!pdAve.img)return;
+  var d=pdAve.d, s=pdAve.base*pdAve.zoom;
+  function render(size,q){
+    var cv=document.createElement('canvas'); cv.width=size; cv.height=size;
+    var ctx=cv.getContext('2d'), k=size/d;
+    ctx.fillStyle='#100d06'; ctx.fillRect(0,0,size,size);
+    ctx.drawImage(pdAve.img, pdAve.ox*k, pdAve.oy*k, pdAve.img.width*s*k, pdAve.img.height*s*k);
+    return cv.toDataURL('image/jpeg', q);
+  }
+  var attempts=[[256,0.85],[256,0.7],[224,0.7],[192,0.6],[160,0.55]], url=null;
+  for(var i=0;i<attempts.length;i++){ url=render(attempts[i][0],attempts[i][1]); if(url.length<=340000)break; }
+  if(!url||url.length>340000){ pdMsg('pd-avatar-msg','La imagen es demasiado grande, prueba con otra.',false); return; }
+  var save=document.getElementById('pd-ave-save'); if(save)save.disabled=true;
+  pdMsg('pd-avatar-msg','Subiendo\u2026',true);
+  lbcApi('/api/auth/set-avatar',{avatar:url})
+    .then(function(dta){
+      var saved=(dta&&dta.avatar)||url;
+      lbcApplyAvatar(saved,(document.getElementById('pd-name')||{}).textContent);
+      lbcSetSessionAvatar(saved);
+      pdMsg('pd-avatar-msg','Foto actualizada.',true);
+      pdAveClose();
+    })
+    .catch(function(e){ pdMsg('pd-avatar-msg', /413|grande|large/i.test(e.message)?'La imagen es demasiado grande, prueba con otra.':e.message, false); })
+    .then(function(){ if(save)save.disabled=false; });
+}
+function pdAvatarCancel(){ pdAveClose(); pdMsg('pd-avatar-msg','',true); }
+function pdAveClose(){
+  pdAve.img=null;
+  var ed=document.getElementById('pd-avatar-editor'); if(ed)ed.style.display='none';
+  var main=document.getElementById('pd-avatar-actions-main'); if(main)main.style.display='flex';
+  var f=document.getElementById('pd-avatar-file'); if(f)f.value='';
 }
 function pdRemoveAvatar(){
   var rm=document.getElementById('pd-avatar-remove'); if(rm)rm.disabled=true;
@@ -2289,6 +2388,7 @@ function pdRemoveAvatar(){
   try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
 })();
 window.pdPickAvatar=pdPickAvatar; window.pdAvatarFile=pdAvatarFile; window.pdRemoveAvatar=pdRemoveAvatar;
+window.pdAvatarSave=pdAvatarSave;window.pdAvatarCancel=pdAvatarCancel;window.pdAveZoomTo=pdAveZoomTo;window.pdPickAvatar=pdPickAvatar;
 window.openProfileDrawer=openProfileDrawer; window.closeProfileDrawer=closeProfileDrawer;
 window.profileSetLang=profileSetLang; window.profileChangePassword=profileChangePassword; window.profileChangeEmail=profileChangeEmail;
 
@@ -2601,8 +2701,7 @@ function irAPlanes(e){
 <div id="lc-login" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(6,8,13,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:24px;">
   <div style="background:linear-gradient(180deg,rgba(14,18,28,0.99),rgba(6,8,13,0.97));border:0.5px solid rgba(201,168,76,0.3);border-radius:18px;padding:40px 34px;max-width:380px;width:100%;text-align:center;position:relative;">
     <button onclick="closeLoginModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(232,228,217,0.4);font-size:18px;cursor:pointer;">✕</button>
-    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(232,228,217,0.45);margin-bottom:16px;">Liberato <span style="color:#C9A84C;">Community</span></div>
-    <h3 style="font-size:19px;font-weight:600;color:#E8E4D9;margin:0 0 8px;">Acceso de miembros</h3>
+    <h3 style="font-size:19px;font-weight:600;color:#E8E4D9;margin:6px 0 8px;">Acceso de miembros</h3>
     <p style="font-size:12.5px;color:rgba(232,228,217,0.45);line-height:1.6;margin:0 0 22px;">Ingresa tu email y contraseña para acceder a tu cuenta.</p>
     <input id="lc-login-email" type="email" placeholder="tu@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid rgba(201,168,76,0.3);border-radius:10px;padding:13px 16px;color:#E8E4D9;font-size:14px;outline:none;margin-bottom:8px;box-sizing:border-box;">
     <input id="lc-login-pass" type="password" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid rgba(201,168,76,0.3);border-radius:10px;padding:13px 16px;color:#E8E4D9;font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;">
