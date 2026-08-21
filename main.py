@@ -5399,7 +5399,8 @@ async def auth_me(authorization: str = Header("")):
     uid = u.get("id") or p.get("sub")
     name = u.get("name") or p.get("name")
     plan = u.get("plan") or p.get("plan", "free")
-    is_premium = plan in ("premium", "pro", "admin")
+    # Los correos admin (ADMIN_EMAILS) pasan como premium para no toparse con el paywall.
+    is_premium = plan in ("premium", "pro", "admin") or email in ADMIN_EMAILS
     # Devolvemos tanto la forma anidada (user{}) como campos planos, para que
     # tanto la homepage como auth.html (que leen distinto) funcionen igual.
     return {"ok": True,
