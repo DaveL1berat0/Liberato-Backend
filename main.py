@@ -5084,7 +5084,7 @@ async def send_verify_code(email, name, code):
             f"<span style='display:inline-block;font-family:monospace;font-size:34px;font-weight:800;"
             f"letter-spacing:10px;color:#E7CC74;background:#0B0B12;border:1px solid rgba(204,169,79,0.3);"
             f"border-radius:12px;padding:14px 22px;'>{code}</span></div>"
-            f"<p style='color:#9a9aa2;font-size:13px;'>El código vence en 15 minutos. Si no creaste esta "
+            f"<p style='color:#9a9aa2;font-size:13px;'>El código vence en 10 minutos. Si no creaste esta "
             f"cuenta, ignora este correo.</p>")
     return await _send_email(email, "Tu código de verificación · Liberato Community",
                              _email_shell("Verifica tu correo", body))
@@ -5097,7 +5097,7 @@ async def send_reset_code(email, name, code):
             f"<span style='display:inline-block;font-family:monospace;font-size:34px;font-weight:800;"
             f"letter-spacing:10px;color:#E7CC74;background:#0B0B12;border:1px solid rgba(204,169,79,0.3);"
             f"border-radius:12px;padding:14px 22px;'>{code}</span></div>"
-            f"<p style='color:#9a9aa2;font-size:13px;'>Vence en 15 minutos. Si no lo pediste, ignora este "
+            f"<p style='color:#9a9aa2;font-size:13px;'>Vence en 10 minutos. Si no lo pediste, ignora este "
             f"correo — tu contraseña no cambia.</p>")
     return await _send_email(email, "Restablecer contraseña · Liberato Community",
                              _email_shell("Restablecer contraseña", body))
@@ -5287,7 +5287,7 @@ async def auth_register(request: Request):
     if AUTH_VERIFY and EMAIL_READY:
         code = _gen_code()
         pend = dict(rec)
-        pend.update({"code": code, "expires": int(time.time()) + 15 * 60, "email": email})
+        pend.update({"code": code, "expires": int(time.time()) + 10 * 60, "email": email})
         await _pending_set(email, pend)
         try:
             asyncio.create_task(send_verify_code(email, rec["name"], code))
@@ -5355,7 +5355,7 @@ async def auth_resend_code(request: Request):
         raise HTTPException(400, "No hay un registro pendiente para ese correo.")
     code = _gen_code()
     pend["code"] = code
-    pend["expires"] = int(time.time()) + 15 * 60
+    pend["expires"] = int(time.time()) + 10 * 60
     await _pending_set(email, pend)
     try:
         asyncio.create_task(send_verify_code(email, pend.get("name"), code))
@@ -5385,7 +5385,7 @@ async def auth_forgot(request: Request):
     u = await user_get(email)
     if u and EMAIL_READY:
         code = _gen_code()
-        await _reset_set(email, {"code": code, "expires": int(time.time()) + 15 * 60})
+        await _reset_set(email, {"code": code, "expires": int(time.time()) + 10 * 60})
         try:
             asyncio.create_task(send_reset_code(email, u.get("name"), code))
         except Exception:
