@@ -2087,9 +2087,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <span style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:0.06em;">PERIODO</span>
       <button class="fchip" data-dp="today" onclick="setTrDatePreset('today')">Hoy</button>
       <button class="fchip" data-dp="7" onclick="setTrDatePreset('7')">7 días</button>
-      <button class="fchip" data-dp="30" onclick="setTrDatePreset('30')">30 días</button>
+      <button class="fchip active" data-dp="30" onclick="setTrDatePreset('30')">30 días</button>
       <button class="fchip" data-dp="90" onclick="setTrDatePreset('90')">90 días</button>
-      <button class="fchip active" data-dp="all" onclick="setTrDatePreset('all')">Todo</button>
+      <button class="fchip" data-dp="all" onclick="setTrDatePreset('all')">Todo</button>
       <span id="tr-accounts" style="display:inline-flex;gap:6px;align-items:center;margin-left:auto;"></span>
     </div>
     <div class="tlist" id="tlist"></div>
@@ -2615,7 +2615,7 @@ var TIPS={
 };
 function calcMaxDD(arr){var sorted=arr.slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});var peak=0,dd=0,run=0;sorted.forEach(function(t){run+=t.pnl;if(run>peak)peak=run;var c=peak-run;if(c>dd)dd=c;});return Math.round(dd);}
 function perfScore(s,maxDD){
-  var FT=getFilteredT(_dfDash);
+  var FT=getFilteredT(_dfShared);
   if(!s.n)return{total:0,profit:0,discipline:0,consistency:0,ddScore:0};
   var profit=Math.min(Math.round(s.wr*0.6+Math.min(s.pf,3)*13),100);
   var chkTr=FT.filter(function(t){return t.chkAll;});
@@ -2628,7 +2628,7 @@ function perfScore(s,maxDD){
   return{total:Math.round((profit+discipline+consistency+ddScore)/4),profit:profit,discipline:discipline,consistency:consistency,ddScore:ddScore};
 }
 function buildErrorProfile(){
-  var FT=getFilteredT(_dfDash);
+  var FT=getFilteredT(_dfShared);
   var errors=[];
   var sorted=FT.slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
   var revenge=0;sorted.forEach(function(t,i){if(i>0&&sorted[i-1].result==='loss'&&t.result==='loss')revenge++;});
@@ -2647,13 +2647,13 @@ function renderLast30Trades(){
   var el=document.getElementById('last30-bars');
   var stats_el=document.getElementById('l30-stats');
   if(!el)return;
-  var sorted=getFilteredT(_dfDash).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
+  var sorted=getFilteredT(_dfShared).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
   var last=sorted.slice(-30);
   if(!last.length){el.innerHTML='<div class="empty"><p>Sin trades registrados</p></div>';return;}
   var wins=last.filter(function(t){return t.pnl>0;}).length;
   var maxVal=Math.max.apply(null,last.map(function(t){return Math.abs(t.pnl);}));
   if(maxVal===0)maxVal=1;
-  var W=700,H=140,padL=8,padR=8,padT=12,padB=22;
+  var W=700,H=140,padL=44,padR=8,padT=12,padB=22;
   var plotW=W-padL-padR,plotTot=H-padT-padB;
   // Baseline ADAPTATIVO: la línea 0 se posiciona según cuánto sube vs cuánto baja,
   // así las barras llenan el cuadro aunque sean casi todas de un signo (no "a la mitad").
@@ -2682,9 +2682,12 @@ function renderLast30Trades(){
       xlabels+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-5)+'" fill="rgba(232,228,217,0.3)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">'+(i+1)+'</text>';
     }
   });
-  // Zero line
-  var zeroline='<line x1="'+padL+'" y1="'+zY.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+zY.toFixed(1)+'" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>';
-  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:140px;" shape-rendering="geometricPrecision">'+zeroline+bars+xlabels+'</svg>';
+  // Ejes: línea 0 etiquetada + tope (+máx) y mínimo (-máx), como en P&L Diario.
+  function _l30k(v){var k=Math.round(v/100)/10;return (v>=0?'+':'')+'$'+k+'k';}
+  var axLines=[{v:maxUp,y:padT},{v:0,y:zY}]; if(maxDn>0)axLines.push({v:-maxDn,y:padT+plotTot});
+  var grid='',ylab='';
+  axLines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-6)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.42)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_l30k(g.v)+'</text>';});
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:140px;" shape-rendering="geometricPrecision">'+grid+bars+xlabels+ylab+'</svg>';
   if(stats_el){
     var wr30=last.length?Math.round((wins/last.length)*100):0;
     stats_el.innerHTML='<span class="l30-w">'+wins+'G</span> <span style="color:var(--text3);">/</span> <span class="l30-l">'+(last.length-wins)+'P</span> <span class="l30-wr">WR '+wr30+'%</span>';
@@ -2766,7 +2769,7 @@ function renderDash(){
     var _ar0=document.getElementById('dash-activity-row');if(_ar0)_ar0.innerHTML='';
     return;
   }
-  var FT=getFilteredT(_dfDash);
+  var FT=getFilteredT(_dfShared);
   var s=stats(FT),td=pnlPeriod(FT,'today'),tw=pnlPeriod(FT,'week'),tm=pnlPeriod(FT,'month'),su=bySetup(FT),maxDD=calcMaxDD(FT);
   var sU=statsU(FT);   // mismos KPIs en la UNIDAD activa ($/Puntos/% cuenta)
   try{syncUnitSeg();}catch(e){}
@@ -2831,7 +2834,7 @@ function renderScoreHero(ps){
 }
 function renderRadar(ps){
   var labels=['Win %','Profit Factor','Avg Win/Loss','Recovery','Drawdown','Consistencia'];
-  var FT=getFilteredT(_dfDash),s=stats(FT),maxDD=calcMaxDD(FT);
+  var FT=getFilteredT(_dfShared),s=stats(FT),maxDD=calcMaxDD(FT);
   var avgWL=s.avgL>0?Math.min((s.avgW/s.avgL)*33,100):60;
   var recovery=maxDD>0?Math.min((s.total/maxDD)*20,100):70;
   var vals=[s.wr,Math.min(s.pf*33,100),avgWL,recovery,ps.ddScore,ps.consistency];
@@ -2859,19 +2862,25 @@ function renderRadar(ps){
     +'</div>';
 }
 function renderEquity(){
-  var sorted=getFilteredT(_dfDash).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
+  var sorted=getFilteredT(_dfShared).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
   var run=0,pts=[0];sorted.forEach(function(t){run+=t.pnl;pts.push(run);});
   var eqEl=document.getElementById('eq-total');if(eqEl){eqEl.textContent=f$(run);eqEl.style.color=run>=0?'var(--green)':'var(--red)';}
   if(pts.length<2){document.getElementById('equity-curve').innerHTML='<div class="empty"><p>Registra trades</p></div>';return;}
-  var mn=Math.min.apply(null,pts),mx=Math.max.apply(null,pts),rng=mx-mn||1,W=800,H=200,P=10;
-  var xS=(W-P*2)/(pts.length-1),yS=(H-P*2)/rng;
-  var pathD=pts.map(function(v,i){return(i?'L':'M')+(P+i*xS).toFixed(1)+','+(H-P-(v-mn)*yS).toFixed(1);}).join(' ');
-  var zY=(H-P-(0-mn)*yS).toFixed(1),aD=pathD+' L'+(P+(pts.length-1)*xS).toFixed(1)+','+zY+' L'+P+','+zY+' Z',c=run>=0?'34,197,94':'239,68,68';
-  var lx=(P+(pts.length-1)*xS).toFixed(1),ly=(H-P-(pts[pts.length-1]-mn)*yS).toFixed(1);
-  document.getElementById('equity-curve').innerHTML='<svg class="eq-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba('+c+',0.22)"/><stop offset="100%" stop-color="rgba('+c+',0.02)"/></linearGradient></defs><line x1="'+P+'" y1="'+zY+'" x2="'+(W-P)+'" y2="'+zY+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/><path d="'+aD+'" fill="url(#eqg)"/><path d="'+pathD+'" fill="none" stroke="rgba('+c+',0.9)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="rgba('+c+',1)" stroke="var(--bg)" stroke-width="2.5"/></svg>';
+  // Ejes con etiquetas: tope (máx acumulado), línea 0 y mínimo — igual que P&L Diario.
+  var mn=Math.min.apply(null,pts.concat([0])),mx=Math.max.apply(null,pts.concat([0])),rng=(mx-mn)||1;
+  var W=820,H=190,padL=52,padR=14,padT=14,padB=14,plotW=W-padL-padR,plotH=H-padT-padB;
+  var xS=plotW/(pts.length-1),yFor=function(v){return padT+plotH-((v-mn)/rng)*plotH;};
+  var pathD=pts.map(function(v,i){return(i?'L':'M')+(padL+i*xS).toFixed(1)+','+yFor(v).toFixed(1);}).join(' ');
+  var zY=yFor(0),aD=pathD+' L'+(padL+(pts.length-1)*xS).toFixed(1)+','+zY.toFixed(1)+' L'+padL+','+zY.toFixed(1)+' Z',c=run>=0?'34,197,94':'239,68,68';
+  var lx=(padL+(pts.length-1)*xS).toFixed(1),ly=yFor(pts[pts.length-1]).toFixed(1);
+  function _kf(v){var k=Math.round(v/100)/10;return (v>=0?'+':'')+'$'+k+'k';}
+  var lines=[{v:mx,y:padT},{v:0,y:zY}]; if(mn<0)lines.push({v:mn,y:padT+plotH});
+  var grid='',ylab='';
+  lines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-7)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.45)" font-family="DM Mono,monospace" font-size="10" text-anchor="end">'+_kf(g.v)+'</text>';});
+  document.getElementById('equity-curve').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:190px;"><defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba('+c+',0.22)"/><stop offset="100%" stop-color="rgba('+c+',0.02)"/></linearGradient></defs>'+grid+'<path d="'+aD+'" fill="url(#eqg)"/><path d="'+pathD+'" fill="none" stroke="rgba('+c+',0.9)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="rgba('+c+',1)" stroke="var(--bg)" stroke-width="2.5"/>'+ylab+'</svg>';
 }
 function renderDailyBars(){
-  var byDate={};getFilteredT(_dfDash).forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
+  var byDate={};getFilteredT(_dfShared).forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
   var dates=Object.keys(byDate).sort();
   if(!dates.length){document.getElementById('daily-bars').innerHTML='<div class="empty"><p>Sin datos diarios</p></div>';return;}
   var vals=dates.map(function(d){return byDate[d];});
@@ -2916,7 +2925,7 @@ function renderDailyBars(){
 
 function donutSVG(segs,size){var total=segs.reduce(function(a,s){return a+s.v;},0)||1,r=size/2-7,cx=size/2,cy=size/2,circ=2*Math.PI*r,off=0;var paths=segs.map(function(seg){var dash=circ*(seg.v/total);var p='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+seg.c+'" stroke-width="9" stroke-dasharray="'+dash.toFixed(1)+' '+(circ-dash).toFixed(1)+'" stroke-dashoffset="'+(-off).toFixed(1)+'" transform="rotate(-90 '+cx+' '+cy+')" style="transition:all 0.8s ease;"/>';off+=dash;return p;}).join('');return '<svg class="donut-svg" viewBox="0 0 '+size+' '+size+'">'+paths+'</svg>';}
 function renderDonuts(s,su){
-  var FT=getFilteredT(_dfDash);
+  var FT=getFilteredT(_dfShared);
   var longs=FT.filter(function(t){return t.direction==='long';}),shorts=FT.filter(function(t){return t.direction==='short';});
   var lsHtml='<div class="donut-card"><div class="donut-card-title">Long vs Short</div><div class="donut-flex">'+donutSVG([{v:longs.length,c:'#22c55e'},{v:shorts.length,c:'#ef4444'}],96)+'<div class="donut-legend"><div class="dl-row"><span class="dl-dot" style="background:#22c55e"></span><span class="dl-label">Long</span><span class="dl-val">'+longs.length+'</span></div><div class="dl-row"><span class="dl-dot" style="background:#ef4444"></span><span class="dl-label">Short</span><span class="dl-val">'+shorts.length+'</span></div><div class="dl-row" style="margin-top:4px;border-top:0.5px solid var(--border2);padding-top:8px;"><span class="dl-label" style="font-size:9px;color:var(--text3);">Long WR</span><span class="dl-val" style="font-size:11px;color:'+(stats(longs).wr>=50?'var(--green)':'var(--red)')+'">'+stats(longs).wr+'%</span></div></div></div></div>';
   var byDate={};FT.forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
@@ -2967,14 +2976,14 @@ function renderDashAI(){
   var el=document.getElementById('dash-ai'); if(!el)return;
   var head='<div class="acc-head"><span class="acc-dot"></span><span class="acc-label">Coach IA</span></div>';
   var btn='<button class="acc-btn" onclick="go(\'genius\')">Ver Zona de Genio →</button>';
-  var FT=getFilteredT(_dfDash);
+  var FT=getFilteredT(_dfShared);
   if(!FT.length){
     _dashCoachSig=null; _dashCoachAnswer=null;
     el.innerHTML=head+'<div class="acc-text">No hay trades en este rango para analizar. Ajusta el filtro de fecha o registra operaciones.</div>'+btn;
     return;
   }
   var s=stats(FT);
-  var sig=(_dfDash.start||'')+'|'+(_dfDash.end||'')+'|'+FT.length+'|'+s.total+'|'+(typeof activeAccount!=='undefined'?activeAccount:'all');
+  var sig=(_dfShared.start||'')+'|'+(_dfShared.end||'')+'|'+FT.length+'|'+s.total+'|'+(typeof activeAccount!=='undefined'?activeAccount:'all');
   if(sig===_dashCoachSig && _dashCoachAnswer){
     el.innerHTML=head+'<div class="acc-text">'+_dashCoachAnswer+'</div>'+btn;
     return;
@@ -2983,7 +2992,7 @@ function renderDashAI(){
   el.innerHTML=head+'<div class="acc-text"><span class="ai-spinner"></span> Analizando '+FT.length+' trade'+(FT.length!==1?'s':'')+' del periodo…</div>'+btn;
   var q='Analiza EXCLUSIVAMENTE los trades de este periodo (ver context, incluye el rango de fechas) y dame la recomendación más importante y accionable para mejorar mi trading. Máximo 2-4 frases, concreto, en español, sin saludos ni preámbulos.';
   fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({question:q,context:dashCoachContext(FT,_dfDash),app_user_id:currentUserId()})})
+    body:JSON.stringify({question:q,context:dashCoachContext(FT,_dfShared),app_user_id:currentUserId()})})
     .then(function(r){return r.json();})
     .then(function(d){
       if(sig!==_dashCoachSig)return;               // el filtro cambió mientras respondía
@@ -3020,7 +3029,7 @@ function calVal(dt){
 }
 function renderCal(){
   try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Calendario
-  var FT=getFilteredT(_dfCal);
+  var FT=getFilteredT(_dfShared);
   document.getElementById('cal-label').textContent=MNAMES[calMo]+' '+calYr;
   var dim=new Date(calYr,calMo+1,0).getDate(),fdow=new Date(calYr,calMo,1).getDay(),off=(fdow===0)?6:fdow-1;
   var byDate={};FT.forEach(function(t){if(!byDate[t.date])byDate[t.date]=[];byDate[t.date].push(t);});
@@ -3043,7 +3052,10 @@ function renderCal(){
   document.getElementById('cnext').onclick=function(){calMo++;if(calMo>11){calMo=0;calYr++;}renderCal();};
 }
 function openDayDetail(ds){
-  var dt=T.filter(function(t){return t.date===ds;}),dp=dt.reduce(function(s,t){return s+t.pnl;},0),d=new Date(ds+'T00:00:00');
+  // Respeta la CUENTA activa: si el trader filtró por su cuenta de futuros, el detalle
+  // del día NO debe mezclar trades de la cuenta margin/opciones (mismo scope que el
+  // calendario). Si es 'all', muestra todas.
+  var dt=T.filter(function(t){return t.date===ds && (activeAccount==='all'||String(t.account)===activeAccount);}),dp=dt.reduce(function(s,t){return s+t.pnl;},0),d=new Date(ds+'T00:00:00');
   document.getElementById('tdm-title').textContent=DNAMES[d.getDay()]+', '+d.getDate()+' '+MNAMES[d.getMonth()];
   document.getElementById('tdm-body').innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">'+[{l:'P&L',v:f$(dp),c:fc(dp)},{l:'Trades',v:dt.length,c:''},{l:'WR',v:stats(dt).wr+'%',c:stats(dt).wr>=50?'pos':'neg'}].map(function(x){return '<div style="text-align:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;"><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;">'+x.l+'</div><div style="font-family:DM Mono,monospace;font-size:18px;font-weight:700;" class="'+x.c+'">'+x.v+'</div></div>';}).join('')+'</div><div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Operaciones del día</div><div class="tlist">'+renderTItems(dt)+'</div>';
   document.getElementById('tdmodal').classList.add('open');
@@ -3079,7 +3091,8 @@ function setTrDatePreset(preset){
   else if(preset==='30')start=daysAgo(30);
   else if(preset==='90')start=daysAgo(90);
   else {start=null;end=null;}
-  _dfTr={start:start,end:end};
+  _dfShared.start=start;_dfShared.end=end;   // rango compartido
+  try{dfpPersistRange();}catch(e){}
   try{dfpRenderBars();}catch(e){}
   document.querySelectorAll('[data-dp]').forEach(function(b){b.classList.toggle('active',b.dataset.dp===preset);});
   renderTrades();
@@ -3107,9 +3120,8 @@ function _acctPickerHTML(){
                  :'<div class="acct-empty">Conecta o sincroniza tu broker para ver tus cuentas aquí</div>');
   var connected=false; try{connected=_hasLocalBroker();}catch(e){}
   var refresh=connected
-    ? '<button class="acct-refresh" onclick="refreshBrokerNow(event)" title="Sincroniza tus trades del broker ahora">'
-        +'<span class="arf-ico">⟳</span> Refrescar</button>'
-        +'<span class="acct-synchint">Se sincroniza al conectar y con ⟳ · los trades aparecen tras ejecutarse en el broker.</span>'
+    ? '<button class="acct-refresh" onclick="refreshBrokerNow(event)" title="Sincroniza tus trades con el broker ahora">'
+        +'<span class="arf-ico">⟳</span> RESYNC</button>'
     : '';
   return '<button class="acct-btn" onclick="toggleAcctMenu(event)" title="Filtrar por cuenta"><span class="acct-ico">◈</span><span class="acct-cur">Cuentas</span>'+badge+'<span class="acct-caret">▼</span></button>'
     +'<div class="acct-menu" style="display:none;">'+opts+'</div>'
@@ -3160,7 +3172,7 @@ function renderTrades(){
   // solo 'verified' vía getFilteredT.
   var pool=DEMO_MODE?T:T.filter(function(t){return !t.__demo;});
   if(!DEMO_MODE && !pool.length){tl.innerHTML=emptyStateHTML();return;}
-  var r=_dfTr||{start:null,end:null};
+  var r=_dfShared||{start:null,end:null};
   var filtered=pool.filter(function(t){
     if(r.start&&t.date<r.start)return false;
     if(r.end&&t.date>r.end)return false;
@@ -3201,9 +3213,9 @@ function approveAllExpired(){var n=0;T.forEach(function(t){if(t.status==='pendin
 function approveAllClosed(){T.forEach(function(t){if(t.status==='pending'&&t.exit!=null){t.status='verified';}});saveTrades(T);go(curView);}
 
 // ══ REPORTES ══
-var repTab='resumen', _dfRep={start:null,end:null};
+var repTab='resumen';
 var REP_DOW=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-function repTrades(){var b=baseTrades(),r=_dfRep||{};return b.filter(function(t){if(r.start&&t.date<r.start)return false;if(r.end&&t.date>r.end)return false;return true;});}
+function repTrades(){var b=baseTrades(),r=_dfShared||{};return b.filter(function(t){if(r.start&&t.date<r.start)return false;if(r.end&&t.date>r.end)return false;return true;});}
 function setReportTab(tab){repTab=tab;document.querySelectorAll('[data-rt]').forEach(function(b){b.classList.toggle('active',b.dataset.rt===tab);});renderReports();}
 function pbName(k){try{var pbs=loadPlaybooks();for(var i=0;i<pbs.length;i++)if(pbs[i].id===k)return pbs[i].emoji+' '+pbs[i].name;}catch(e){}return k;}
 function repAgg(arr,keyFn){var m={};arr.forEach(function(t){var k=keyFn(t);if(k==null||k==='')return;k=String(k);if(!m[k])m[k]={key:k,n:0,w:0,pnl:0};m[k].n++;if(t.result==='win')m[k].w++;m[k].pnl+=t.pnl;});return Object.keys(m).map(function(k){var o=m[k];o.wr=Math.round(o.w/o.n*100);return o;});}
@@ -3369,7 +3381,7 @@ function twsCompress(file){return new Promise(function(res){var fr=new FileReade
 
 function twsBuildList(){
   var pool=T.filter(function(t){return !t.__demo;});
-  var r=_dfTr||{};
+  var r=_dfShared||{};
   var f=pool.filter(function(t){if(r.start&&t.date<r.start)return false;if(r.end&&t.date>r.end)return false;return true;});
   if(activeAccount&&activeAccount!=='all')f=f.filter(function(t){return String(t.account)===activeAccount;});
   if(trFilter==='win')f=f.filter(function(t){return t.result==='win';});else if(trFilter==='loss')f=f.filter(function(t){return t.result==='loss';});else if(trFilter==='chk')f=f.filter(function(t){return t.chkAll;});
@@ -4992,6 +5004,7 @@ function go(v){
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
   document.getElementById('v-'+v).classList.add('active');
   document.querySelectorAll('.sbi,.bti').forEach(function(el){el.classList.toggle('active',el.dataset.v===v);});
+  try{dfpRenderBars();}catch(e){}   // barras de fecha reflejan el rango COMPARTIDO en cada vista
   if(v==='dashboard')renderDash();else if(v==='calendar')renderCal();else if(v==='trades')renderTrades();else if(v==='reports')renderReports();else if(v==='genius')renderGenius();else if(v==='playbooks')renderPlaybooks();
   try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
 }
@@ -5081,9 +5094,11 @@ var DNAMES_S=['L','M','X','J','V','S','D'];
 function dfpLastRange(days){var today=new Date();var from=new Date(today);from.setDate(from.getDate()-(days-1));return {start:from.toISOString().slice(0,10),end:today.toISOString().slice(0,10)};}
 var _DFP_DEFAULT_DAYS=30;   // Último mes por defecto en Mis Trades, Calendario y Reportes
 // Estado de filtros por vista (arranca en "Último mes")
-var _dfDash = dfpLastRange(_DFP_DEFAULT_DAYS);
-var _dfCal  = dfpLastRange(_DFP_DEFAULT_DAYS);
-var _dfTr   = dfpLastRange(_DFP_DEFAULT_DAYS);
+// RANGO DE FECHA COMPARTIDO por TODAS las vistas (Dashboard/Calendario/Trades/
+// Reportes). Se persiste en localStorage y se re-hidrata al cargar; default: último mes.
+function dfpLoadRange(){try{var raw=localStorage.getItem(userKey('lbc_dfrange'));if(raw){var o=JSON.parse(raw);if(o&&('start' in o))return {start:o.start||null,end:o.end||null};}}catch(e){}return dfpLastRange(_DFP_DEFAULT_DAYS);}
+function dfpPersistRange(){try{localStorage.setItem(userKey('lbc_dfrange'),JSON.stringify({start:_dfShared.start||null,end:_dfShared.end||null}));}catch(e){}}
+var _dfShared = dfpLoadRange();
 
 // ── Picker state (una instancia a la vez) ──
 var _dfpState = {
@@ -5145,9 +5160,9 @@ function dfpRenderBars(){
   var dash=document.getElementById('dfp-dash');
   var cal=document.getElementById('dfp-cal');
   var tr=document.getElementById('dfp-tr');
-  if(dash)dash.innerHTML=dfpBarHtml('dash',_dfDash);
-  if(cal) cal.innerHTML =dfpBarHtml('cal', _dfCal);
-  if(tr)  tr.innerHTML  =dfpBarHtml('tr',  _dfTr);
+  if(dash)dash.innerHTML=dfpBarHtml('dash',_dfShared);
+  if(cal) cal.innerHTML =dfpBarHtml('cal', _dfShared);
+  if(tr)  tr.innerHTML  =dfpBarHtml('tr',  _dfShared);
 }
 
 // ── Open panel (uses body portal — never clipped by any parent) ──
@@ -5157,7 +5172,7 @@ function dfpOpen(inst, picking){
     dfpClose();return;
   }
   _dfpState.open=true;_dfpState.inst=inst;_dfpState.picking=picking;_dfpState.pView='days';
-  var range=inst==='dash'?_dfDash:inst==='cal'?_dfCal:_dfTr;
+  var range=inst==='dash'?_dfShared:inst==='cal'?_dfShared:_dfShared;
   _dfpState.tempStart=range.start;
   _dfpState.tempEnd=range.end;
   var refDate=picking==='start'?(range.start||dfpToday()):(range.end||range.start||dfpToday());
@@ -5239,17 +5254,15 @@ function dfpOutsideClick(e){
 
 // ── Apply filter ──
 function dfpApply(inst){
-  var range=inst==='dash'?_dfDash:inst==='cal'?_dfCal:_dfTr;
+  var range=_dfShared;   // rango COMPARTIDO por todas las vistas
   if(_dfpState.tempStart!==undefined)range.start=_dfpState.tempStart;
   if(_dfpState.tempEnd!==undefined)range.end=_dfpState.tempEnd;
+  try{dfpPersistRange();}catch(e){}
   dfpClose();
-  dfpUpdateBarLabels(inst, range);
-  if(inst==='dash'){if(typeof renderDash==='function')renderDash();}
-  else if(inst==='cal'){
-    if(range.start){var d=new Date(range.start+'T00:00:00');calMo=d.getMonth();calYr=d.getFullYear();}
-    if(typeof renderCal==='function')renderCal();
-  }
-  else if(inst==='tr'){if(typeof renderTrades==='function')renderTrades();}
+  try{dfpRenderBars();}catch(e){}   // sincroniza las 3 barras al rango compartido
+  if(range.start){var d=new Date(range.start+'T00:00:00');calMo=d.getMonth();calYr=d.getFullYear();}
+  if(typeof curView!=='undefined'&&curView&&typeof go==='function')go(curView);
+  else if(typeof renderDash==='function')renderDash();
 }
 
 // Update only the display text in the bar (no full innerHTML replace)
@@ -5278,14 +5291,14 @@ function dfpUpdateBarLabels(inst, range){
 // ── Clear ──
 function dfpClear(inst){
   _dfpState.tempStart=null;_dfpState.tempEnd=null;
-  if(inst==='dash')_dfDash={start:null,end:null};
-  else if(inst==='cal')_dfCal={start:null,end:null};
-  else if(inst==='tr')_dfTr={start:null,end:null};
+  _dfShared.start=null;_dfShared.end=null;   // "Todo" en el rango compartido
+  try{dfpPersistRange();}catch(e){}
   dfpClose();
-  dfpUpdateBarLabels(inst,{start:null,end:null});
-  if(inst==='dash'){if(typeof renderDash==='function')renderDash();}
-  else if(inst==='cal'){if(typeof renderCal==='function')renderCal();}
-  else if(inst==='tr'){if(typeof renderTrades==='function')renderTrades();}
+  try{dfpRenderBars();}catch(e){}
+  if(typeof curView!=='undefined'&&curView&&typeof go==='function'){go(curView);return;}
+  if(typeof renderDash==='function')renderDash();
+  if(typeof renderCal==='function')renderCal();
+  if(typeof renderTrades==='function')renderTrades();
 }
 
 // ── Select a day ──
@@ -5450,12 +5463,12 @@ function getFilteredT(range){
 
 // ── Legacy aliases ──
 function applyDateFilter(){if(typeof renderDash==='function')renderDash();}
-function clearDateFilter(){_dfDash={start:null,end:null};dfpUpdateBarLabels('dash',_dfDash);if(typeof renderDash==='function')renderDash();}
+function clearDateFilter(){_dfShared={start:null,end:null};dfpUpdateBarLabels('dash',_dfShared);if(typeof renderDash==='function')renderDash();}
 function applyDateFilterCal(){if(typeof renderCal==='function')renderCal();}
-function clearDateFilterCal(){_dfCal={start:null,end:null};dfpUpdateBarLabels('cal',_dfCal);if(typeof renderCal==='function')renderCal();}
+function clearDateFilterCal(){_dfShared={start:null,end:null};dfpUpdateBarLabels('cal',_dfShared);if(typeof renderCal==='function')renderCal();}
 function applyDateFilterTr(){if(typeof renderTrades==='function')renderTrades();}
-function clearDateFilterTr(){_dfTr={start:null,end:null};dfpUpdateBarLabels('tr',_dfTr);if(typeof renderTrades==='function')renderTrades();}
-function filterTradesByDate(arr){return getFilteredT(_dfDash);}
+function clearDateFilterTr(){_dfShared={start:null,end:null};dfpUpdateBarLabels('tr',_dfShared);if(typeof renderTrades==='function')renderTrades();}
+function filterTradesByDate(arr){return getFilteredT(_dfShared);}
 </script>
 
 </body>
