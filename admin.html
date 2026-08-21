@@ -201,47 +201,65 @@
 
   <div class="tabs">
     <div class="tab active" id="tab-users" onclick="showTab('users')">Usuarios</div>
-    <div class="tab" id="tab-coupons" onclick="showTab('coupons')">Cupones</div>
+    <div class="tab" id="tab-emails" onclick="showTab('emails')">Correos</div>
+    <div class="tab" id="tab-daily" onclick="showTab('daily')">Brief diario</div>
   </div>
 
   <div id="view-users">
+    <div class="tabs" style="margin-bottom:12px;">
+      <div class="tab active" id="seg-all" onclick="filterSeg('all')">Todos</div>
+      <div class="tab" id="seg-free" onclick="filterSeg('free')">Free</div>
+      <div class="tab" id="seg-premium" onclick="filterSeg('premium')">Premium</div>
+    </div>
     <div class="tbl-panel">
       <table>
-        <thead><tr><th>Email</th><th>Nombre</th><th>Plan</th><th>Verificado</th><th>Registro</th></tr></thead>
+        <thead><tr><th>Email</th><th>Nombre</th><th>Plan</th><th>Registro</th></tr></thead>
         <tbody id="users-body"></tbody>
       </table>
     </div>
   </div>
 
-  <div id="view-coupons" class="hidden">
-    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
-      <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Crear cupón / oferta temporal</div>
-      <div id="coupon-msg"></div>
+  <div id="view-emails" class="hidden">
+    <div class="tbl-panel" style="padding:22px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Enviar correo a un grupo</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">Segmentado por plan. Gmail limita ~500/día — para listas grandes usa un ESP (MailerLite/Brevo).</div>
+      <div id="email-msg"></div>
       <div class="form-row">
-        <div class="form-g"><label>Código</label><input class="field-input" id="c-code" placeholder="LANZAMIENTO20" style="text-transform:uppercase;"></div>
-        <div class="form-g"><label>Tipo</label><select class="field-input" id="c-type" onchange="toggleCType()"><option value="percent">% descuento</option><option value="amount">$ descuento</option></select></div>
-        <div class="form-g"><label id="c-val-label">Porcentaje (%)</label><input class="field-input" id="c-value" type="number" placeholder="20"></div>
+        <div class="form-g" style="flex:0;min-width:160px;"><label>Grupo</label>
+          <select class="field-input" id="e-segment"><option value="free">Free</option><option value="premium">Premium</option><option value="all">Todos</option></select></div>
+        <div class="form-g"><label>Asunto</label><input class="field-input" id="e-subject" placeholder="Novedades de la semana"></div>
       </div>
-      <div class="form-row">
-        <div class="form-g"><label>Duración</label><select class="field-input" id="c-duration"><option value="once">Una vez</option><option value="repeating">Meses repetidos</option><option value="forever">Para siempre</option></select></div>
-        <div class="form-g"><label>Expira en (días, opcional)</label><input class="field-input" id="c-expires" type="number" placeholder="7 = oferta temporal"></div>
-        <div class="form-g" style="flex:0;"><button class="btn btn-sm" id="btn-coupon" onclick="createCoupon()">Crear cupón</button></div>
-      </div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Mensaje (HTML permitido)</label>
+        <textarea class="field-input" id="e-body" rows="7" style="resize:vertical;font-family:var(--sans);" placeholder="&lt;p&gt;Hola,&lt;/p&gt;&lt;p&gt;Esta semana...&lt;/p&gt;"></textarea></div>
+      <button class="btn btn-sm" id="btn-email" onclick="sendBroadcast()">Enviar al grupo</button>
     </div>
-    <div class="tbl-panel">
-      <table>
-        <thead><tr><th>Código</th><th>Descuento</th><th>Duración</th><th>Usos</th><th>Estado</th></tr></thead>
-        <tbody id="coupons-body"></tbody>
-      </table>
+  </div>
+
+  <div id="view-daily" class="hidden">
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Brief diario a Discord</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">FREE (Discord, sin GEX) se envía 8:45 ET lun-vie. PREMIUM (con GEX) → Whop (más adelante).</div>
+      <div id="daily-msg"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="btn btn-sm" id="btn-daily-refresh" onclick="loadDailyPreview()">↻ Previsualizar</button>
+        <button class="btn btn-sm" id="btn-daily-send" onclick="sendDailyNow()" style="background:linear-gradient(135deg,#2EE8A4,#4FD6E0);">Enviar ahora (prueba)</button>
+      </div>
+      <div class="form-g" style="margin-bottom:14px;"><label>FREE · Discord (sin GEX)</label>
+        <div id="daily-free" style="white-space:pre-wrap;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px;font-size:13px;color:var(--ink-2);min-height:60px;"></div></div>
+      <div class="form-g"><label>PREMIUM · Whop (con GEX)</label>
+        <div id="daily-premium" style="white-space:pre-wrap;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px;font-size:13px;color:var(--ink-2);min-height:60px;"></div></div>
     </div>
   </div>
 </div>
 
 <script>
-  var API = window.LBC_AUTH_API || 'https://liberato-usuarios-production.up.railway.app';
+  var API = window.LBC_AUTH_API || 'https://web-production-33671.up.railway.app';
   var KEY = '';
+  var _usersCache = {free:[], premium:[]};
+  var _seg = 'all';
   function $(id){return document.getElementById(id);}
-  function msg(id,text,type){var el=$(id);el.innerHTML='<div class="msg msg-'+(type==='ok'?'ok':'err')+'">'+text+'</div>';if(type==='ok')setTimeout(function(){el.innerHTML='';},4000);}
+  function msg(id,text,type){var el=$(id);if(!el)return;el.innerHTML='<div class="msg msg-'+(type==='ok'?'ok':'err')+'">'+text+'</div>';if(type==='ok')setTimeout(function(){el.innerHTML='';},5000);}
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 
   async function api(path){
     var r=await fetch(API+path+(path.indexOf('?')>=0?'&':'?')+'key='+encodeURIComponent(KEY));
@@ -249,7 +267,7 @@
     return r.json();
   }
   async function apiPost(path,body){
-    var r=await fetch(API+path+'?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var r=await fetch(API+path+'?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})});
     if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
     return r.json();
   }
@@ -259,7 +277,7 @@
     if(!KEY){msg('gate-msg','Ingresa la clave de acceso','err');return;}
     $('btn-enter').disabled=true;
     try{
-      await api('/api/admin/metrics');
+      await api('/api/admin/users');
       sessionStorage.setItem('lbc_admin_key',KEY);
       $('gate').classList.add('hidden');
       $('deck').classList.remove('hidden');
@@ -268,28 +286,70 @@
     finally{ $('btn-enter').disabled=false; }
   }
 
-  function loadAll(){ loadMetrics(); loadUsers(); loadCoupons(); }
+  function loadAll(){ loadUsersData(); loadDailyPreview(); }
 
-  async function loadMetrics(){
+  async function loadUsersData(){
     try{
-      var m=await api('/api/admin/metrics');
+      var d=await api('/api/admin/users');
+      _usersCache={free:d.free||[], premium:d.premium||[]};
+      var c=d.counts||{total:0,free:0,premium:0};
+      var conv = c.total>0 ? Math.round(c.premium/c.total*100) : 0;
       $('kpis').innerHTML=
-        kpi(m.total_usuarios,'Usuarios totales','gold',0) +
-        kpi(m.premium,'Premium activos','up',0.05) +
-        kpi(m.verificados,'Verificados','cyan',0.1) +
-        kpi(m.registros_ultimos_7d,'Nuevos · 7 días','gold',0.15) +
-        kpi(m.sesiones_activas,'Sesiones vivas','purple',0.2);
-      var pct=m.conversion_pct||0;
-      var circ=452, off=circ-(circ*Math.min(pct,100)/100);
-      setTimeout(function(){ $('ring-fill').style.strokeDashoffset=off; },100);
-      $('ring-v').textContent=pct+'%';
-      $('rs-premium').textContent=m.premium;
-      $('rs-free').textContent=m.free;
-      drawGrowth(m.total_usuarios, m.registros_ultimos_7d);
-    }catch(e){ $('kpis').innerHTML='<div class="empty">No se pudieron cargar las métricas</div>'; }
+        kpi(c.total,'Usuarios totales','gold',0) +
+        kpi(c.premium,'Premium','up',0.05) +
+        kpi(c.free,'Free','cyan',0.1) +
+        kpi(conv+'%','Conversión','purple',0.15);
+      var circ=452, off=circ-(circ*Math.min(conv,100)/100);
+      setTimeout(function(){ if($('ring-fill'))$('ring-fill').style.strokeDashoffset=off; },100);
+      if($('ring-v'))$('ring-v').textContent=conv+'%';
+      if($('rs-premium'))$('rs-premium').textContent=c.premium;
+      if($('rs-free'))$('rs-free').textContent=c.free;
+      drawGrowth(c.total, 0);
+      renderUsers();
+    }catch(e){ $('kpis').innerHTML='<div class="empty">No se pudieron cargar los usuarios</div>'; }
   }
   function kpi(v,k,cls,delay){
     return '<div class="kpi '+cls+'" style="animation-delay:'+delay+'s;"><div class="kpi-v">'+v+'</div><div class="kpi-k">'+k+'</div></div>';
+  }
+  function filterSeg(s){
+    _seg=s;
+    ['all','free','premium'].forEach(function(x){ var t=$('seg-'+x); if(t)t.classList.toggle('active',x===s); });
+    renderUsers();
+  }
+  function renderUsers(){
+    var list = _seg==='free'?_usersCache.free : _seg==='premium'?_usersCache.premium : _usersCache.free.concat(_usersCache.premium);
+    if(!list.length){ $('users-body').innerHTML='<tr><td colspan="4" class="empty">Sin usuarios en este grupo</td></tr>'; return; }
+    $('users-body').innerHTML=list.map(function(u){
+      var isP=(u.plan==='premium'||u.plan==='pro'||u.plan==='admin');
+      var plan=isP?'<span class="badge badge-premium">'+esc(u.plan||'premium')+'</span>':'<span class="badge badge-free">Free</span>';
+      var reg='';
+      if(u.created){ try{ var t=(''+u.created).length>12?parseInt(u.created):parseInt(u.created)*1000; reg=new Date(t).toISOString().slice(0,10); }catch(e){} }
+      return '<tr><td style="color:var(--ink);">'+esc(u.email)+'</td><td>'+esc(u.name||'—')+'</td><td>'+plan+'</td><td style="font-family:var(--mono);font-size:12px;">'+reg+'</td></tr>';
+    }).join('');
+  }
+
+  async function sendBroadcast(){
+    var segment=$('e-segment').value, subject=$('e-subject').value.trim(), html=$('e-body').value.trim();
+    if(!subject||!html){ msg('email-msg','Completa asunto y mensaje','err'); return; }
+    if(!confirm('¿Enviar el correo al grupo "'+segment+'"?')) return;
+    $('btn-email').disabled=true;
+    try{ var r=await apiPost('/api/admin/email/broadcast',{segment:segment,subject:subject,html:html});
+      msg('email-msg','Enviado a '+r.recipients+' destinatarios · OK '+r.sent+' · fallos '+r.failed,'ok');
+    }catch(e){ msg('email-msg',e.message,'err'); } finally{ $('btn-email').disabled=false; }
+  }
+
+  async function loadDailyPreview(){
+    try{ var d=await api('/api/admin/daily-brief/preview');
+      $('daily-free').textContent=d.free||'(sin contexto institucional en caché aún)';
+      $('daily-premium').textContent=d.premium||'(sin contexto institucional en caché aún)';
+      msg('daily-msg','Discord free: '+(d.discord_free_configured?'configurado ✓':'sin webhook (pon DISCORD_WEBHOOK_URL)')+' · Premium/Whop: '+(d.discord_premium_configured?'configurado ✓':'pendiente'),'ok');
+    }catch(e){ msg('daily-msg',e.message,'err'); }
+  }
+  async function sendDailyNow(){
+    if(!confirm('¿Enviar el brief diario AHORA a Discord?')) return;
+    $('btn-daily-send').disabled=true;
+    try{ var r=await apiPost('/api/admin/daily-brief/send',{}); msg('daily-msg','Resultado: '+JSON.stringify(r),'ok'); }
+    catch(e){ msg('daily-msg',e.message,'err'); } finally{ $('btn-daily-send').disabled=false; }
   }
 
   function drawGrowth(total, recent7){
@@ -329,48 +389,13 @@
       '<circle cx="'+X(n).toFixed(1)+'" cy="'+Y(all[n]).toFixed(1)+'" r="3.5" fill="#B197FC"/>';
   }
 
-  async function loadUsers(){
-    try{
-      var d=await api('/api/admin/users?limit=200');
-      if(!d.users||!d.users.length){ $('users-body').innerHTML='<tr><td colspan="5" class="empty">Sin usuarios todavía · la lista aparecerá aquí</td></tr>'; return; }
-      $('users-body').innerHTML=d.users.map(function(u){
-        var plan=u.plan==='premium'?'<span class="badge badge-premium">Premium</span>':'<span class="badge badge-free">Free</span>';
-        var ver=u.verified?'<span class="badge badge-ok">Sí</span>':'<span class="badge badge-no">No</span>';
-        return '<tr><td style="color:var(--ink);">'+esc(u.email)+'</td><td>'+esc(u.name||'—')+'</td><td>'+plan+'</td><td>'+ver+'</td><td style="font-family:var(--mono);font-size:12px;">'+(u.created_at||'').slice(0,10)+'</td></tr>';
-      }).join('');
-    }catch(e){ $('users-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar usuarios</td></tr>'; }
-  }
-
-  async function loadCoupons(){
-    try{
-      var d=await api('/api/admin/coupons');
-      if(!d.coupons||!d.coupons.length){ $('coupons-body').innerHTML='<tr><td colspan="5" class="empty">Sin cupones activos · crea el primero arriba</td></tr>'; return; }
-      $('coupons-body').innerHTML=d.coupons.map(function(c){
-        var estado=c.activo?'<span class="badge badge-ok">Activo</span>':'<span class="badge badge-no">Inactivo</span>';
-        return '<tr><td style="font-family:var(--mono);color:var(--gold-2);">'+esc(c.code)+'</td><td>'+esc(c.descuento)+'</td><td>'+esc(c.duration)+'</td><td>'+c.veces_usado+'</td><td>'+estado+'</td></tr>';
-      }).join('');
-    }catch(e){ $('coupons-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar cupones · ¿Stripe configurado?</td></tr>'; }
-  }
-
-  function toggleCType(){ var t=$('c-type').value; $('c-val-label').textContent=t==='percent'?'Porcentaje (%)':'Monto ($)'; $('c-value').placeholder=t==='percent'?'20':'50'; }
-  async function createCoupon(){
-    var code=$('c-code').value.trim().toUpperCase(),type=$('c-type').value,value=parseFloat($('c-value').value),duration=$('c-duration').value,expires=$('c-expires').value.trim();
-    if(!code||!value){ msg('coupon-msg','Completa código y valor','err'); return; }
-    var body={code:code,duration:duration};
-    if(type==='percent')body.percent_off=value; else body.amount_off=value;
-    if(expires)body.expires_days=parseInt(expires);
-    $('btn-coupon').disabled=true;
-    try{ await apiPost('/api/admin/create-coupon',body); msg('coupon-msg','Cupón '+code+' creado','ok'); $('c-code').value='';$('c-value').value='';$('c-expires').value=''; loadCoupons(); }
-    catch(e){ msg('coupon-msg',e.message,'err'); } finally{ $('btn-coupon').disabled=false; }
-  }
-
   function showTab(t){
-    $('tab-users').classList.toggle('active',t==='users');
-    $('tab-coupons').classList.toggle('active',t==='coupons');
-    $('view-users').classList.toggle('hidden',t!=='users');
-    $('view-coupons').classList.toggle('hidden',t!=='coupons');
+    ['users','emails','daily'].forEach(function(x){
+      var tab=$('tab-'+x), view=$('view-'+x);
+      if(tab)tab.classList.toggle('active',x===t);
+      if(view)view.classList.toggle('hidden',x!==t);
+    });
   }
-  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 
   (function(){ var saved=sessionStorage.getItem('lbc_admin_key'); if(saved){ $('admin-key').value=saved; enter(); } })();
 </script>
