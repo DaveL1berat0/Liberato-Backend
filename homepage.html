@@ -1386,6 +1386,14 @@ nav { max-width: 100%; }
   .live-text  { font-size: 18px !important; }
   .payout-lbl { font-size: 6.5px !important; white-space: normal !important; }
 }
+
+/* ─── EXTRA-SMALL (≤ 360px): apilar las 2 tarjetas de planes en 1 columna ─── */
+/* Por encima de 360px se mantienen "2 visibles" lado a lado (diseño original). */
+@media (max-width: 360px) {
+  .plans-grid-2 { flex-direction: column !important; gap: 16px !important; }
+  .card-free-2  { padding: 1.125rem 1rem !important; }
+  .card-hero-2  { padding: 1.375rem 1rem 1.25rem !important; margin-top: 18px !important; }
+}
 @media (min-width: 1024px) {
   nav {
     padding: 1.25rem clamp(2rem, 4vw, 5rem);
