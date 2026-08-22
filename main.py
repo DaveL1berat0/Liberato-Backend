@@ -2946,16 +2946,19 @@ async def _sym_names_load():
     except Exception:
         pass
 
-async def _fill_earn_names(events, cap=20):
+async def _fill_earn_names(events, cap=50):
     """Rellena e['name'] (nombre real) y e['logo'] (URL del logo real) de cada empresa,
     para el tooltip y las fichas del calendario. El feed de Finnhub /calendar/earnings
     solo trae el ticker; aquí lo resolvemos: cache-first (nombres/logos ya vistos +
     compañías ya abiertas en el drawer), y si falta, Finnhub /stock/profile2 UNA sola vez
     por símbolo (con presupuesto y tope por refresh), persistido en app_config. Cada
-    símbolo se paga una vez en la vida (nombre+logo en la misma llamada)."""
+    símbolo se paga una vez en la vida (nombre+logo en la misma llamada). Se resuelven
+    PRIMERO las empresas de mayor impacto (extreme/high) para que las importantes tengan
+    nombre/logo cuanto antes."""
     await _sym_names_load()
     new, dirty = 0, False
-    for e in events:
+    _prio = {"extreme": 0, "high": 1, "medium": 2}
+    for e in sorted(events, key=lambda x: _prio.get(x.get("impact"), 9)):
         sym = e.get("symbol")
         if not sym:
             continue
@@ -6105,7 +6108,7 @@ async def get_ohlc(symbol: str, date: str = ""):
     order = ["1m", "5m", "60m", "1d"]
     start = _ohlc_interval_for_age(age_days)
     intervals = order[order.index(start):]
-    p1 = int((d0 - timedelta(hours=6)).timestamp())   # incluye Globex de la tarde previa
+    p1 = int((d0 - timedelta(hours=6)).timestamp())   # ventana amplia; luego se filtra a la fecha NY exacta (incluye su sesión overnight, no la tarde del día previo)
     p2 = int((d0 + timedelta(hours=34)).timestamp())
     for interval in intervals:
         # Caché: días pasados son inmutables (TTL largo); HOY caduca a 60s.
