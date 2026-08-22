@@ -1415,18 +1415,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   </div>
 </div>
 
-<div id="lbc-paywall" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(6,8,13,0.97);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px;">
-  <div style="background:linear-gradient(180deg,rgba(12,15,22,0.98),rgba(6,8,13,0.95));border:0.5px solid rgba(201,168,76,0.3);border-radius:20px;padding:48px 40px;text-align:center;max-width:420px;width:100%;">
-    <div style="font-family:serif;font-style:italic;font-size:18px;color:rgba(232,228,217,0.5);margin-bottom:20px;">Liberato <span style="color:#C9A84C;">Community</span></div>
-    <div style="font-size:40px;margin-bottom:16px;">🔐</div>
-    <h2 style="font-size:22px;font-weight:600;color:#E8E4D9;margin:0 0 10px;">Contenido exclusivo para miembros</h2>
-    <p style="font-size:14px;color:rgba(232,228,217,0.5);line-height:1.6;margin:0 0 28px;">Activa tu membresía Pro para acceder al dashboard completo.</p>
-    <a href="https://buy.stripe.com/5kQ4gsbYZcd5asM7XL1ck01" target="_blank" style="display:block;background:linear-gradient(135deg,#C9A84C,#9a7d2e);color:#06080D;font-weight:700;font-size:14px;padding:15px 28px;border-radius:10px;text-decoration:none;margin-bottom:14px;">Activar membresía Pro — $199/mes</a>
-    <a href="homepage.html" style="display:block;font-size:12px;color:rgba(232,228,217,0.4);text-decoration:none;margin-bottom:16px;">← Volver al inicio</a>
-    <button onclick="adminUnlock()" style="background:none;border:none;font-family:monospace;font-size:10px;color:rgba(232,228,217,0.12);cursor:pointer;letter-spacing:0.06em;padding:4px;">admin</button>
-  </div>
-</div>
-
 <canvas id="particle-canvas"></canvas>
 
 <header class="navbar">
@@ -1952,9 +1940,9 @@ function _lbcInitEarnings(){
 
 
 // ═══════════════════════════════════════════════════════════
-//  DATOS 100% CURADOS — Sin dependencia de backend externo
-//  El calendario usa datos hardcoded + auto-detección de fecha.
-//  (Backend Railway web-production-33671 deprecado — inestable)
+//  CALENDARIO DINÁMICO — se construye en runtime desde /api/earnings
+//  (ALLWEEKS se rellena con el feed real; si falla, estado vacío honesto,
+//  Regla #1). ALLWEEKS_LEGACY quedó como referencia, NO se usa.
 // ═══════════════════════════════════════════════════════════
 
 // Mapa de impacto (mantenido para compatibilidad interna)

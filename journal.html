@@ -4143,7 +4143,7 @@ function jchRenderTfChips(){
     var en=m>=_jchNativeMin&&_jchNativeMin<1440;
     var lbl=m>=60?(m/60)+'h':m+'m';
     if(en)html+='<button class="jch-chip'+(m===_jchTf?' on':'')+'" onclick="jchTf('+m+')">'+lbl+'</button>';
-    else html+='<button class="jch-chip dis" disabled><span class="jtip">Yahoo no guarda '+lbl+' tan atrás (nativo '+_jchInterval+')</span>'+lbl+'</button>';
+    else html+='<button class="jch-chip dis" disabled><span class="jtip">Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')</span>'+lbl+'</button>';
   });
   if(_jchNativeMin>=1440)html='<span class="jch-chip on">1D</span>';
   host.innerHTML=html;
@@ -4394,7 +4394,7 @@ function renderGenius(){
   var maxLoss=0,cur=0;bt.forEach(function(t){if(t.result==='loss'){cur++;if(cur>maxLoss)maxLoss=cur;}else cur=0;});
 
   var verdict=ps.total>=75?'vas sólido':ps.total>=50?'vas en desarrollo':'necesitas ajustar';
-  var como=['Tu Liberato Score es <strong>'+ps.total+'/100</strong> — '+verdict+'.',
+  var como=['Tu puntuación de rendimiento es <strong>'+ps.total+'/100</strong> — '+verdict+'.',
     'Neto <strong class="'+fc(s.total)+'">'+f$(s.total)+'</strong> · '+s.n+' trades · WR <strong>'+s.wr+'%</strong> · PF <strong>'+s.pf.toFixed(2)+'</strong> · Expectancy <strong class="'+fc(s.exp)+'">'+f$(s.exp)+'</strong>/trade.'];
 
   var fort=[];
