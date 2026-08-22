@@ -366,6 +366,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .eq-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .eq-value{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;}
 .eq-svg{width:100%;height:200px;}
+/* MÓVIL: la curva de P&L Acumulado (viewBox 820x190 + meet) dejaba ~55px de hueco
+   arriba/abajo en pantallas estrechas. height:auto la ajusta proporcional, sin hueco. */
+@media(max-width:600px){ #equity-curve svg{ height:auto !important; } }
 
 /* DAILY BARS */
 .daily-bars-svg{width:100%;height:150px;}
@@ -544,6 +547,29 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-tab.on{background:rgba(201,168,76,0.12);color:var(--gold);}
 .tws-tab:hover:not(.on){color:var(--text2);}
 .tws-panel-body{padding:18px;}
+/* ═══ MÓVIL · detalle de trade (tws) apilado tipo app: más aire, targets grandes ═══ */
+@media(max-width:600px){
+  .tws-inner{padding:0 14px calc(50px + var(--safe-bottom));}
+  .tws-topbar{padding:12px 0 10px;}
+  .tws-hero{padding:18px;border-radius:14px;margin-bottom:12px;}
+  .tws-asset{font-size:26px;}
+  .tws-pnl{font-size:32px;margin-top:12px;}
+  .tws-metaline{gap:10px 16px;font-size:11px;margin-top:14px;}
+  .tws-cols{gap:12px;margin-bottom:12px;}
+  .tws-panel{border-radius:14px;}
+  .tws-panel-body{padding:15px;}
+  .tws-tab{padding:9px 13px;font-size:10.5px;min-height:40px;}
+  .tws-sec{padding:16px;border-radius:14px;margin-bottom:12px;}
+  .tws-sec-h{margin-bottom:14px;}
+  /* Contexto del día: 3 stats en una fila, compactos y legibles */
+  .tws-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:8px;}
+  .tws-stat{padding:11px 10px;border-radius:10px;}
+  .tws-stat-l{font-size:8px;margin-bottom:5px;}
+  .tws-stat-v{font-size:15px;}
+  /* Estrellas de evaluación: más grandes para tocar con el pulgar */
+  .tws-star{font-size:20px;padding:2px;}
+  .tws-navfoot button{padding:14px 10px;min-height:48px;}
+}
 .tws-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border2);}
 .tws-row:last-child{border-bottom:0;}
 .tws-row-l{font-size:12px;color:var(--text2);}
@@ -901,6 +927,19 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .acm-input:focus{border-color:rgba(34,197,94,0.4);}
 .acm-send{width:42px;height:42px;border-radius:50%;background:var(--green);border:none;cursor:pointer;font-size:16px;color:var(--bg);flex-shrink:0;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
 .acm-send:hover{transform:scale(1.08);background:#1fa34a;}
+/* ═══ AI COACH · sheet nativo — asa de arrastre + targets grandes (una mano) ═══ */
+.ai-chat-modal .acm-card{padding-top:8px;}
+.ai-chat-modal .acm-card::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:42px;height:4px;border-radius:999px;background:rgba(232,228,217,0.28);z-index:3;pointer-events:none;}
+.ai-chat-modal .acm-head{padding-top:20px;}
+@media(max-width:600px){
+  .ai-chat-modal .acm-card{height:90vh;}
+  .acm-close{width:40px;height:40px;font-size:16px;}
+  .acm-messages{padding:16px;gap:14px;}
+  .acm-bubble{font-size:14px;}
+  .acm-input{font-size:16px;padding:13px 15px;}   /* 16px evita el zoom automatico de iOS */
+  .acm-send{width:46px;height:46px;font-size:18px;}
+  .acm-input-row{padding:12px 14px calc(12px + var(--safe-bottom,0px));}
+}
 .acm-send:disabled{background:rgba(34,197,94,0.3);cursor:not-allowed;transform:none;}
 .acm-suggestions{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px;border-top:0.5px solid var(--border2);flex-shrink:0;}
 .acm-sug{font-family:'DM Mono',monospace;font-size:9px;padding:6px 11px;border-radius:999px;border:0.5px solid var(--border2);background:rgba(0,0,0,0.3);color:var(--text2);cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;}
