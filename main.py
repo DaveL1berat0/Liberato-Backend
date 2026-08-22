@@ -4485,13 +4485,33 @@ async def snaptrade_accounts(app_user_id: str = ""):
 
 
 @app.get("/api/broker/snaptrade/fills")
-async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
+async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0, refresh: int = 0):
     """Trae las órdenes (fills) de todas las cuentas conectadas y las mapea a
-    trades del journal. ?raw=1 devuelve la forma cruda (para calibrar el mapeo)."""
+    trades del journal. ?raw=1 devuelve la forma cruda (para calibrar el mapeo).
+    ?refresh=1 FUERZA a SnapTrade a re-sincronizar con el broker ANTES de leer (para
+    el botón RESYNC): sin esto, SnapTrade devuelve lo último que cacheó y un trade
+    recién hecho puede no aparecer. El re-sync del broker es asíncrono, así que un
+    fill muy reciente puede tardar unos segundos aún tras forzar el refresh."""
     if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
         raise HTTPException(400, "SnapTrade no configurado en el servidor")
     ukw = await _st_user_kwargs(app_user_id, register=False)
     st = _snaptrade()
+    refreshed = []
+    if refresh:
+        # Best-effort: empuja a SnapTrade a re-sincronizar cada conexión antes de leer.
+        try:
+            resp = await st.connections.alist_brokerage_authorizations(**ukw)
+            for a in (_st_plain(resp.body) or []):
+                aid = a.get("id") if isinstance(a, dict) else None
+                if not aid:
+                    continue
+                try:
+                    await st.connections.arefresh_brokerage_authorization(authorization_id=aid, **ukw)
+                    refreshed.append(aid)
+                except Exception as e:
+                    print(f"[snaptrade] refresh auth {aid} falló: {str(getattr(e,'body','') or e)[:160]}")
+        except Exception as e:
+            print(f"[snaptrade] listar auths (refresh) falló: {str(getattr(e,'body','') or e)[:160]}")
     accts = []
     try:
         resp = await st.account_information.alist_user_accounts(**ukw)
@@ -4517,7 +4537,7 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0):
         return {"ok": True, "count": len(raw_orders), "orders": raw_orders[:50]}
     trades = [_st_map_order(o) for o in raw_orders]
     trades = [t for t in trades if t]
-    return {"ok": True, "count": len(trades), "trades": trades}
+    return {"ok": True, "count": len(trades), "trades": trades, "refreshed": len(refreshed)}
 
 
 @app.get("/api/admin/snaptrade-refresh")

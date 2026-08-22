@@ -3171,14 +3171,14 @@ function refreshBrokerNow(ev){
   var before=T.filter(function(t){return !t.__demo;}).length;
   var btns=document.querySelectorAll('.acct-refresh');
   Array.prototype.forEach.call(btns,function(b){b.classList.add('spinning');b.disabled=true;});
-  try{notif('Sincronizando…','Trayendo tus fills del broker','⟳');}catch(e){}
-  try{syncAllBrokers();}catch(e){}
+  try{notif('Sincronizando…','Forzando re-sync con tu broker','⟳');}catch(e){}
+  try{syncAllBrokers(true);}catch(e){}   // RESYNC manual → fuerza el refresh de SnapTrade
   setTimeout(function(){
     var added=T.filter(function(t){return !t.__demo;}).length-before;
     var bs=document.querySelectorAll('.acct-refresh');
     Array.prototype.forEach.call(bs,function(b){b.classList.remove('spinning');b.disabled=false;});
-    try{notif('Sincronización lista', added>0?('+'+added+' operación'+(added!==1?'es':'')+' nueva'+(added!==1?'s':'')):'Sin operaciones nuevas', added>0?'✓':'○');}catch(e){}
-  },2800);
+    try{notif('Sincronización lista', added>0?('+'+added+' operación'+(added!==1?'es':'')+' nueva'+(added!==1?'s':'')):'Sin operaciones nuevas — si acabas de operar, tu broker puede tardar unos minutos en reportarlo. Vuelve a darle a RESYNC en un momento.', added>0?'✓':'○');}catch(e){}
+  },5200);
 }
 function renderTrAccounts(){
   var legacy=document.getElementById('tr-accounts');if(legacy)legacy.innerHTML='';
@@ -4750,11 +4750,14 @@ function fetchAccountsMap(){
     .then(function(r){return r.json();})
     .then(function(d){var arr=(d&&(d.accounts||d.Accounts))||[];arr.forEach(function(a){var num=a.number||a.AccountID||a.account;if(num)m[String(num)]={name:a.name||('TradeStation '+(a.AccountType||a.type||'')).trim(),institution:'TradeStation'};});persist();}).catch(function(){});
 }
-function syncFills(){
+function syncFills(force){
   var st=document.getElementById('broker-status');
-  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando fills reales…</div>';
+  if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> '+(force?'Forzando re-sincronización con tu broker…':'Sincronizando fills reales…')+'</div>';
   fetchAccountsMap();
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120&app_user_id='+encodeURIComponent(currentUserId()))
+  // force=1 → el backend empuja a SnapTrade a re-sincronizar con el broker ANTES de
+  // leer (RESYNC). Sin esto, SnapTrade devuelve lo cacheado y un trade recién hecho
+  // puede no aparecer. Aun forzando, el broker puede tardar unos segundos.
+  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120'+(force?'&refresh=1':'')+'&app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
@@ -4801,7 +4804,7 @@ function submitTradestationCode(){
 }
 // Sincroniza TODAS las fuentes conectadas (portal SnapTrade + TradeStation directo).
 // importFromBroker deduplica por fill, así que solaparlas es seguro.
-function syncAllBrokers(){ try{syncTradestation();}catch(e){} setTimeout(function(){try{syncFills();}catch(e){}},900); }
+function syncAllBrokers(force){ try{syncTradestation();}catch(e){} setTimeout(function(){try{syncFills(force);}catch(e){}},900); }
 // Refleja en el modal si TradeStation ya está conectado: si lo está, el botón pasa a
 // "✓ Conectado · Desconectar" en vez de ofrecer conectar de nuevo.
 function refreshTsState(){
