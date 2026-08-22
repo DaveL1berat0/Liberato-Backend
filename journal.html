@@ -409,13 +409,25 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .cal-stat-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
 .cal-stat-val{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;}
 .cal-layout{display:grid;grid-template-columns:1fr 150px;gap:14px;}
-@media(max-width:800px){.cal-layout{grid-template-columns:1fr;}}
+/* MÓVIL (PUNTO 2): el resumen semanal se mantiene a la DERECHA del calendario
+   (integrado, como en desktop), NO como lista suelta debajo. Columna compacta. */
+@media(max-width:800px){.cal-layout{grid-template-columns:1fr 96px;gap:8px;}}
+@media(max-width:430px){.cal-layout{grid-template-columns:1fr 58px;gap:6px;}}
+@media(max-width:340px){.cal-layout{grid-template-columns:1fr 50px;gap:5px;}}
 .cal-week-col{display:flex;flex-direction:column;gap:5px;}
 .cal-week-card{background:linear-gradient(180deg,rgba(11,14,21,0.55),rgba(6,8,13,0.35));border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:12px;flex:1;display:flex;flex-direction:column;justify-content:center;transition:border-color 0.2s;}
 .cal-week-card:hover{border-color:rgba(201,168,76,0.2);}
 .cwc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
 .cwc-pnl{font-family:'DM Mono',monospace;font-size:20px;font-weight:800;letter-spacing:-0.01em;}
 .cwc-days{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;}
+@media(max-width:600px){
+  .cal-week-card{padding:7px 5px;border-radius:9px;gap:1px;}
+  .cwc-label{font-size:7.5px;margin-bottom:2px;letter-spacing:0.03em;}
+  .cwc-wk{display:none;}
+  .cwc-wn::before{content:'S';}
+  .cwc-pnl{font-size:12px;line-height:1.05;}
+  .cwc-days{display:none;}
+}
 
 /* PLAYBOOKS */
 .pb-cat{margin-bottom:22px;}
@@ -573,6 +585,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .jch-proj input[type=range]{flex:1;accent-color:var(--gold);cursor:pointer;}
 .jch-frame.full{position:fixed;inset:0;z-index:9999;background:var(--bg);padding:12px;gap:6px;}
 .jch-frame.full .jch-stage{flex:1;height:auto;border-radius:10px;}
+/* PUNTO 5b · MÓVIL — chart a lo ancho + Expandir/pantalla completa usable en celular */
+@media(max-width:768px){
+  .jch-stage{height:min(56vh,460px);}
+  .jch-frame.full{padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom));z-index:100002;}
+  .jch-frame.full .jch-stage{height:auto;min-height:0;border-radius:12px;}
+  .jch-bottombar{gap:5px;}
+  .jch-chip{min-height:40px;display:inline-flex;align-items:center;padding:8px 11px;}
+  #jch-fullbtn{min-height:42px;font-size:11px;padding:9px 14px;}
+  .jch-toolbar{gap:4px;padding:5px;}
+}
 .jchd .jtip{position:absolute;left:calc(100% + 7px);top:50%;transform:translateY(-50%);white-space:nowrap;background:#0c0f17;border:0.5px solid var(--border);border-radius:7px;padding:6px 9px;font-family:'DM Sans',sans-serif;font-size:10.5px;color:var(--text2);opacity:0;pointer-events:none;transition:opacity .18s;z-index:20;box-shadow:0 8px 22px rgba(0,0,0,0.5);}
 .jchd:hover .jtip{opacity:1;}
 .jch-chip .jtip{left:50%;top:auto;bottom:calc(100% + 7px);transform:translateX(-50%);}
@@ -702,6 +724,35 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .frow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
 .fchip{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:0.5px solid var(--border2);background:rgba(0,0,0,0.3);color:var(--text2);cursor:pointer;transition:all 0.2s;}
 .fchip.active{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--text);}
+/* Agrupador de acciones: transparente en desktop (no altera el layout), fila en móvil */
+.tr-actions{display:contents;}
+/* ═══ PUNTO 1 · MÓVIL — panel de controles de Mis Trades / Reportes como app nativa ═══ */
+@media(max-width:768px){
+  #v-trades .ph, #v-reports .ph{flex-direction:column;align-items:stretch !important;gap:12px;}
+  #v-trades .ph > div:last-child{width:100%;display:flex;flex-direction:column;gap:9px;align-items:stretch;}
+  /* Selector de unidad: segmentado a lo ancho */
+  #v-trades .unit-seg{width:100%;box-sizing:border-box;justify-content:space-between;}
+  #v-trades .unit-opt{flex:1;text-align:center;min-height:40px;}
+  /* Cuenta y fecha a lo ancho */
+  #v-trades .acct-picker{width:100%;}
+  #v-trades .acct-btn{width:100%;box-sizing:border-box;justify-content:space-between;min-height:44px;}
+  #v-trades #dfp-tr{width:100%;}
+  #v-trades .dfp-bar{display:flex;width:100%;box-sizing:border-box;}
+  #v-trades .dfp-seg{flex:1;justify-content:center;min-height:44px;}
+  /* Acciones: 3 botones iguales, targets grandes */
+  .tr-actions{display:flex;gap:8px;width:100%;}
+  .tr-actions .sb-cta, .tr-actions .sb-ai-chat-btn{flex:1;min-height:46px;padding:10px 5px !important;font-size:9.5px !important;letter-spacing:0.02em !important;white-space:nowrap;line-height:1.2;text-align:center;overflow-wrap:normal;word-break:normal;hyphens:none;}
+  /* Botón de broker: en móvil solo icono + "Broker" (el icono ya indica conectar/desconectar) */
+  .tr-actions #hdr-broker-btn .brk-lbl{display:none;}
+  .tr-actions #hdr-broker-btn::after{content:'Broker';}
+  /* Chips: scroll horizontal de una sola fila (segmentado nativo) */
+  #v-trades .frow, #v-reports .frow{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:6px;padding-bottom:3px;}
+  #v-trades .frow::-webkit-scrollbar, #v-reports .frow::-webkit-scrollbar{display:none;}
+  #v-trades .fchip, #v-reports .fchip{flex:0 0 auto;min-height:38px;display:inline-flex;align-items:center;padding:8px 13px;font-size:9.5px;white-space:nowrap;}
+  #v-trades #tfilters2{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;align-items:center;}
+  #v-trades #tfilters2 > span{white-space:nowrap;flex:0 0 auto;}
+  #tr-accounts{margin-left:0 !important;}
+}
 
 /* ZONA DE GENIO */
 .genius-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(0,0,0,0.2));border:0.5px solid rgba(201,168,76,0.2);border-radius:var(--r);margin-bottom:16px;}
@@ -891,6 +942,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
   .content{margin-left:0;padding:80px 16px 90px;}
 }
 @media(min-width:1400px){.content{padding:32px 36px 50px;}}
+/* ═══ PUNTO 3 · Barra inferior estilo APP NATIVA (targets ≥44px, activo evidente) ═══ */
+@media(max-width:1100px){
+  .btabs-row{padding:6px 4px 4px;}
+  .bti{position:relative;min-width:52px;min-height:48px;justify-content:center;gap:3px;padding:5px 6px;font-size:8.5px;border-radius:12px;}
+  .bti .btic{font-size:20px;display:inline-flex;align-items:center;justify-content:center;padding:3px 15px;border-radius:999px;}
+  .bti.active{color:var(--gold);font-weight:700;}
+  .bti.active .btic{background:rgba(201,168,76,0.16);color:var(--gold);transform:none;}
+  .bti:active .btic{transform:scale(0.9);}
+  .bt-fab{width:52px;height:52px;font-size:24px;margin-top:-10px;box-shadow:0 6px 22px rgba(201,168,76,0.42);}
+  .bt-fab:active{transform:scale(0.94);}
+}
 
 
 /* ═══════════════════════════════════════════════════════════
@@ -1209,7 +1271,9 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 /* ── Calendar day P&L: no overflow, auto font ── */
 .cal-day{overflow:hidden !important;position:relative;}
 .cal-pnl,.cd-pnl{
-  font-size:clamp(8px,1.4vw,11px) !important;
+  /* PUNTO 2b — resultado del día más grande y legible, sin desbordar la celda */
+  font-size:clamp(10px,2.7vw,14px) !important;
+  font-weight:800 !important;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -1224,12 +1288,14 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 /* Calendar grid responsive */
 @media(max-width:480px){
   .cal-grid,.calendar-grid{grid-template-columns:repeat(7,1fr) !important;}
-  .cal-day{padding:4px 3px !important;min-height:44px !important;}
-  .cal-pnl,.cd-pnl{font-size:8px !important;}
+  .cal-day{padding:5px 2px !important;min-height:52px !important;}
+  .cd-num{font-size:11px !important;}
+  .cal-pnl,.cd-pnl{font-size:clamp(9px,2.5vw,12px) !important;}
 }
 @media(max-width:360px){
-  .cal-pnl,.cd-pnl{display:none;}
-  .cal-day{min-height:36px !important;}
+  .cal-pnl,.cd-pnl{font-size:9px !important;}
+  .cal-day{min-height:46px !important;}
+  .cd-num{font-size:10px !important;}
 }
 
 
@@ -1438,18 +1504,33 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
   z-index:20;
 }
 
-/* Panel uses fixed positioning on mobile to escape any overflow:hidden parents */
+/* MÓVIL: el date-picker se comporta como un BOTTOM SHEET nativo (no un dropdown
+   flotante que quedaba mal posicionado y no dejaba elegir fecha en el celular). */
+#dfp-backdrop{display:none;position:fixed;inset:0;background:rgba(4,5,9,0.5);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);z-index:99998;}
 @media(max-width:768px){
   #dash-dfp-wrap{position:static;margin-bottom:12px;}
-  .dfp-panel{
+  #dfp-backdrop.on{display:block;}
+  #dfp-portal.dfp-panel{
     position:fixed !important;
-    top:auto !important;
-    left:16px !important;
-    right:16px !important;
-    width:auto !important;
-    max-width:none !important;
+    left:0 !important; right:0 !important;
+    bottom:0 !important; top:auto !important;
+    width:100% !important; max-width:none !important;
+    border-radius:20px 20px 0 0 !important;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+    max-height:88vh !important; overflow:auto !important;
+    box-shadow:0 -20px 60px rgba(0,0,0,0.65) !important;
+    animation:dfpSheetUp .28s cubic-bezier(.16,1,.3,1) both !important;
   }
+  .dfp-day{font-size:15px;}
+  .dfp-day-grid{gap:5px;padding:0 16px 16px;}
+  .dfp-dow{font-size:10px;}
+  .dfp-preset{font-size:11px;padding:9px 13px;}
+  .dfp-p-nav{width:38px;height:38px;font-size:18px;}
+  .dfp-p-month{font-size:15px;}
+  .dfp-p-head{padding:14px 14px 8px;}
+  .dfp-yr-item,.dfp-mo-item{padding:12px 6px;font-size:13px;}
 }
+@keyframes dfpSheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
 
 /* Ensure flex parents don't clip the dropdown */
 #v-calendar .ph,
@@ -2087,9 +2168,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <button class="cnav" id="cnext">›</button>
       </div>
       <div class="cal-mode-row" id="cal-mode-row">
-        <button class="cal-mode-btn active" data-m="money" onclick="setCalMode('money')">$ Dinero</button>
+        <button class="cal-mode-btn active" data-m="money" onclick="setCalMode('money')">$</button>
         <button class="cal-mode-btn" data-m="pts" onclick="setCalMode('pts')">Puntos</button>
-        <button class="cal-mode-btn" data-m="pct" onclick="setCalMode('pct')" title="Retorno del día sobre el riesgo (P&amp;L ÷ riesgo del día). Necesita stop en los trades; si no hay stop, muestra —.">% s/Riesgo</button>
+        <button class="cal-mode-btn" data-m="pct" onclick="setCalMode('pct')">%</button>
       </div>
       <div id="cal-mode-legend" style="font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(232,228,217,0.4);letter-spacing:0.02em;margin:-2px 0 8px;display:none;"></div>
       <div class="cal-layout">
@@ -2116,16 +2197,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <div class="unit-seg" role="group" aria-label="Unidad de las métricas">
           <span class="unit-seg-lbl">Unidad</span>
-          <button class="unit-opt" data-u="money" onclick="setJUnit('money')">$ Dinero</button>
+          <button class="unit-opt" data-u="money" onclick="setJUnit('money')">$</button>
           <button class="unit-opt" data-u="points" onclick="setJUnit('points')">Puntos</button>
-          <button class="unit-opt" data-u="pct" onclick="setJUnit('pct')">% Cuenta</button>
+          <button class="unit-opt" data-u="pct" onclick="setJUnit('pct')">%</button>
           <button class="unit-cfg" onclick="openAcctSizeCfg()" title="Definir tamaño de cuenta">⚙</button>
         </div>
         <div id="acct-picker" class="acct-picker"></div>
         <div id="dfp-tr" class="dfp-instance"></div>
-        <button class="sb-cta" style="padding:10px 14px;" onclick="openForm()">+ Trade</button>
-        <button id="hdr-broker-btn" class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()"><span class="brk-ico">🔗</span> <span class="brk-lbl">Conectar broker</span></button>
-        <button class="sb-ai-chat-btn" style="padding:10px 14px;font-size:10px;" onclick="openAIChat()">✦ AI Coach</button>
+        <div class="tr-actions">
+          <button class="sb-cta" style="padding:10px 14px;" onclick="openForm()">+ Trade</button>
+          <button id="hdr-broker-btn" class="sb-cta" style="padding:10px 14px;background:rgba(201,168,76,0.1);color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);" onclick="openCsvImport()"><span class="brk-ico">🔗</span> <span class="brk-lbl">Conectar broker</span></button>
+          <button class="sb-ai-chat-btn" style="padding:10px 14px;font-size:10px;" onclick="openAIChat()">✦ AI Coach</button>
+        </div>
       </div>
     </div>
     <div class="frow" id="tfilters">
@@ -2624,7 +2707,8 @@ var T=loadTrades();
 })();
 // DEMO efímero: se ve solo con el botón "Ver ejemplo", nunca se persiste (Regla #1).
 var DEMO_MODE=false;
-function seedDemoEphemeral(){DEMO_MODE=true;T=DEMO.map(function(d){var x=calcTrade(d);x.__demo=true;return x;});go(curView);}
+// Modo ejemplo ELIMINADO: estas funciones quedan como no-op por compatibilidad.
+function seedDemoEphemeral(){/* demo desactivado */}
 function exitDemo(){DEMO_MODE=false;T=loadTrades();go(curView);}
 
 // ── STATS ──
@@ -3060,14 +3144,14 @@ function renderDashAI(){
 
 // ── CALENDAR ──
 function setCalMode(m){
+  // PUNTO 6 — % del calendario = % de la CUENTA (mismo criterio que el resto).
+  // Si aún no hay tamaño de cuenta, se pide una vez (nunca se inventa).
+  if(m==='pct'&&acctSize()<=0){ openAcctSizeCfg(); return; }
   calMode=m;
   document.querySelectorAll('.cal-mode-btn').forEach(function(b){b.classList.toggle('active',b.dataset.m===m);});
+  // Sin leyendas explicativas de unidades (Regla del dueño): el número solo.
   var lg=document.getElementById('cal-mode-legend');
-  if(lg){
-    if(m==='pct'){lg.style.display='block';lg.textContent='% s/Riesgo = P&L del día ÷ riesgo arriesgado ese día (necesita stop; sin stop = —).';}
-    else if(m==='pts'){lg.style.display='block';lg.textContent='Puntos = suma de puntos capturados en el día (movimiento de precio).';}
-    else{lg.style.display='none';}
-  }
+  if(lg){lg.style.display='none';lg.textContent='';}
   renderCal();
 }
 function calVal(dt){
@@ -3075,8 +3159,19 @@ function calVal(dt){
   var pnl=dt.reduce(function(s,t){return s+t.pnl;},0);
   if(calMode==='money')return f$(pnl);
   if(calMode==='pts'){var pts=dt.reduce(function(s,t){return s+(t.points||0);},0);return(pts>=0?'+':'')+pts.toFixed(1)+'p';}
-  if(calMode==='pct'){var risk=dt.reduce(function(s,t){return s+((t.risk!=null&&+t.risk>0)?Math.abs(+t.risk)*(t.mult||CV[t.asset]||1)*(t.contracts||1):0);},0);if(risk<=0)return '—';var pct=(pnl/risk)*100;return(pct>=0?'+':'')+pct.toFixed(1)+'%';}
+  if(calMode==='pct'){
+    // % de la CUENTA = (P&L del día en $ / tamaño de cuenta) × 100, automático.
+    var a=acctSize(); if(a<=0)return '—';
+    var pct=(pnl/a)*100;
+    return(pct>=0?'+':'')+pct.toFixed(2)+'%';
+  }
   return f$(pnl);
+}
+// Resumen semanal en la unidad activa del calendario (mismo criterio que las celdas).
+function calWeekVal(w){
+  if(calMode==='pts'){var p=Math.round((w.pts||0)*10)/10;return(p>=0?'+':'')+p+'p';}
+  if(calMode==='pct'){var a=acctSize();if(a<=0)return '—';var q=(w.pnl/a)*100;return(q>=0?'+':'')+q.toFixed(2)+'%';}
+  return f$(w.pnl);
 }
 function renderCal(){
   try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Calendario
@@ -3094,11 +3189,11 @@ function renderCal(){
   var bestDow=-1,worstDow=-1;for(var wi=0;wi<7;wi++){if(dowN[wi]){if(bestDow<0||dowPnl[wi]>dowPnl[bestDow])bestDow=wi;if(worstDow<0||dowPnl[wi]<dowPnl[worstDow])worstDow=wi;}}
   document.getElementById('cal-stats').innerHTML=[{l:'P&L del Mes',v:f$(ms.total),c:ms.total>=0?'var(--green)':'var(--red)'},{l:'Win Rate',v:ms.wr+'%',c:ms.wr>=50?'var(--green)':'var(--red)'},{l:'Días Verdes',v:winD+'/'+(winD+lossD),c:'var(--green)'},{l:'Mejor Racha',v:maxStreak+' días',c:'var(--gold)'},{l:'Mejor día',v:bestDow>=0?DOW_ES[bestDow]:'—',c:'var(--green)'},{l:'Peor día',v:worstDow>=0&&worstDow!==bestDow?DOW_ES[worstDow]:'—',c:'var(--red)'},{l:'Trades',v:ms.n,c:'var(--text)'}].map(function(c){return '<div class="cal-stat"><div class="cal-stat-lbl">'+c.l+'</div><div class="cal-stat-val" style="color:'+c.c+'">'+c.v+'</div></div>';}).join('');
   var html='';for(var i=0;i<off;i++)html+='<div class="cal-day empty"></div>';
-  var weekPnls=[],curWeekPnl=0,curWeekDays=0,cellCount=off;
-  for(var d=1;d<=dim;d++){var ds=calYr+'-'+pad(calMo+1)+'-'+pad(d),dt=byDate[ds]||[],dp=dt.reduce(function(s,t){return s+t.pnl;},0),cls='notr',dW=dt.filter(function(x){return x.result==='win';}).length,dL=dt.filter(function(x){return x.result==='loss';}).length;if(dt.length){cls=dp>600?'great':dp>0?'good':dp>-500?'sloss':'bloss';}var onclick=dt.length?' onclick="openDayDetail(this.dataset.date)" data-date="'+ds+'"':'';html+='<div class="cal-day '+cls+'"'+onclick+'><div class="cd-num">'+d+'</div>'+(dt.length?'<div class="cd-pnl">'+calVal(dt)+'</div><div class="cd-n">'+dt.length+'T'+((dW+dL)?' · '+Math.round(dW/(dW+dL)*100)+'%':'')+'</div>':'')+'</div>';if(dt.length){curWeekPnl+=dp;curWeekDays+=dt.length;}cellCount++;if(cellCount%7===0){weekPnls.push({pnl:curWeekPnl,days:curWeekDays});curWeekPnl=0;curWeekDays=0;}}
-  if(cellCount%7!==0)weekPnls.push({pnl:curWeekPnl,days:curWeekDays});
+  var weekPnls=[],curWeekPnl=0,curWeekPts=0,curWeekDays=0,cellCount=off;
+  for(var d=1;d<=dim;d++){var ds=calYr+'-'+pad(calMo+1)+'-'+pad(d),dt=byDate[ds]||[],dp=dt.reduce(function(s,t){return s+t.pnl;},0),dpt=dt.reduce(function(s,t){return s+(t.points||0);},0),cls='notr',dW=dt.filter(function(x){return x.result==='win';}).length,dL=dt.filter(function(x){return x.result==='loss';}).length;if(dt.length){cls=dp>600?'great':dp>0?'good':dp>-500?'sloss':'bloss';}var onclick=dt.length?' onclick="openDayDetail(this.dataset.date)" data-date="'+ds+'"':'';html+='<div class="cal-day '+cls+'"'+onclick+'><div class="cd-num">'+d+'</div>'+(dt.length?'<div class="cd-pnl">'+calVal(dt)+'</div><div class="cd-n">'+dt.length+'T'+((dW+dL)?' · '+Math.round(dW/(dW+dL)*100)+'%':'')+'</div>':'')+'</div>';if(dt.length){curWeekPnl+=dp;curWeekPts+=dpt;curWeekDays+=dt.length;}cellCount++;if(cellCount%7===0){weekPnls.push({pnl:curWeekPnl,pts:curWeekPts,days:curWeekDays});curWeekPnl=0;curWeekPts=0;curWeekDays=0;}}
+  if(cellCount%7!==0)weekPnls.push({pnl:curWeekPnl,pts:curWeekPts,days:curWeekDays});
   document.getElementById('cal-grid').innerHTML=html;
-  document.getElementById('cal-week-col').innerHTML=weekPnls.map(function(w,i){var c=w.pnl>0?'var(--green)':w.pnl<0?'var(--red)':'var(--text3)';return '<div class="cal-week-card"><div class="cwc-label">Semana '+(i+1)+'</div><div class="cwc-pnl" style="color:'+c+'">'+(w.days?f$(w.pnl):'$0')+'</div><div class="cwc-days">'+w.days+' trade'+(w.days!==1?'s':'')+'</div></div>';}).join('');
+  document.getElementById('cal-week-col').innerHTML=weekPnls.map(function(w,i){var c=w.pnl>0?'var(--green)':w.pnl<0?'var(--red)':'var(--text3)';return '<div class="cal-week-card"><div class="cwc-label"><span class="cwc-wk">Semana </span><span class="cwc-wn">'+(i+1)+'</span></div><div class="cwc-pnl" style="color:'+c+'">'+(w.days?calWeekVal(w):'—')+'</div><div class="cwc-days">'+w.days+' trade'+(w.days!==1?'s':'')+'</div></div>';}).join('');
   document.getElementById('cprev').onclick=function(){calMo--;if(calMo<0){calMo=11;calYr--;}renderCal();};
   document.getElementById('cnext').onclick=function(){calMo++;if(calMo>11){calMo=0;calYr++;}renderCal();};
 }
@@ -3118,17 +3213,15 @@ function emptyStateHTML(){
   return '<div class="empty" style="padding:44px 20px;text-align:center;">'
     +'<div class="ei" style="font-size:42px;opacity:0.85;">📊</div>'
     +'<p style="font-size:15px;color:var(--text);font-weight:700;margin:8px 0 2px;">Aún no tienes operaciones</p>'
-    +'<p style="font-size:12px;color:var(--text3);margin-bottom:18px;">Conecta tu broker para traer tus fills reales, o mira un ejemplo del journal.</p>'
+    +'<p style="font-size:12px;color:var(--text3);margin-bottom:18px;">Conecta tu broker para traer tus fills reales y empezar tu journal.</p>'
     +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">'
     +'<button onclick="openCsvImport()" style="padding:12px 20px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">🔗 Conectar broker</button>'
-    +'<button onclick="seedDemoEphemeral()" style="padding:12px 20px;border-radius:9px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12.5px;cursor:pointer;">Ver ejemplo</button>'
+    +'<button onclick="openForm()" style="padding:12px 20px;border-radius:9px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12.5px;cursor:pointer;">+ Añadir trade</button>'
     +'</div></div>';
 }
-function demoBannerHTML(){
-  return DEMO_MODE?'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(177,151,252,0.1);border:0.5px solid rgba(177,151,252,0.3);border-radius:9px;padding:9px 13px;margin-bottom:14px;">'
-    +'<span style="font-size:11px;color:var(--purple);font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">◆ MODO EJEMPLO — no son trades reales</span>'
-    +'<button onclick="exitDemo()" style="padding:6px 12px;border-radius:7px;border:0.5px solid rgba(177,151,252,0.4);background:transparent;color:var(--purple);font-size:11px;cursor:pointer;">Salir del ejemplo</button></div>':'';
-}
+// Modo ejemplo/demo ELIMINADO (solo era para pruebas iniciales). Se neutraliza
+// cualquier inyección de trades de ejemplo para no romper llamadas legadas.
+function demoBannerHTML(){ return ''; }
 // ── FILTROS: periodo (presets) + CUENTA GLOBAL (scopea TODO: KPIs, calendario, coach) ──
 var activeAccount=(function(){try{return localStorage.getItem(userKey('lbc_active_account'))||'all';}catch(e){return 'all';}})();
 function acctMap(){try{return JSON.parse(localStorage.getItem(userKey('lbc_accounts'))||'{}');}catch(e){return {};}}
@@ -3863,7 +3956,8 @@ function jchFetchAndDraw(t){
     jchRenderTfChips();
     jchDrawAll(true);
     var src=document.getElementById('jch-src');
-    if(src)src.textContent='NQ · velas reales '+_jchInterval+(d.cached?' (caché)':'')+' · '+_jchRaw.length+' barras · Yahoo '+(d.symbol||'NQ=F');
+    // Sin jerga de proveedor: solo el instrumento y que son velas reales.
+    if(src)src.textContent=(t.asset==='ES'?'ES':'NQ')+' · velas reales';
   });
 }
 // Convierte crudas {hhmm,o,h,l,c} → {time,open,high,low,close,min} en el tf activo.
@@ -4078,10 +4172,11 @@ function jchFallback(reason){
   var ck=String(t.id)+'|'+t.date,cached=_jchBarsCache[ck];
   try{
     if(cached&&cached.ok&&cached.bars&&cached.bars.length){cached.bars._interval=cached.interval||'1m';fb.innerHTML=twsRealChartSVG(t,cached.bars,1);}
-    else fb.innerHTML=twsChartSVG(t)+'<div style="font-size:9px;color:var(--text3);font-family:\'DM Mono\',monospace;text-align:center;padding:3px 0;">esquema · '+_esc(reason||'sin velas reales')+'</div>';
-  }catch(e){fb.innerHTML='<div style="padding:20px;font-size:11px;color:var(--text3);text-align:center;">Chart no disponible ('+_esc(reason||'')+')</div>';}
+    // Sin jerga técnica/de proveedor: mostramos el esquema Entrada/Stop/Objetivo con una etiqueta neutral.
+    else fb.innerHTML=twsChartSVG(t)+'<div style="font-size:9px;color:var(--text3);font-family:\'DM Mono\',monospace;text-align:center;padding:3px 0;">Vista esquemática · Entrada / Stop / Objetivo</div>';
+  }catch(e){fb.innerHTML='<div style="padding:20px;font-size:11px;color:var(--text3);text-align:center;">Chart no disponible por ahora.</div>';}
   fb.style.display='block';
-  if(src)src.textContent=cached&&cached.ok?('NQ · velas reales '+(cached.interval||'')+' (fallback)'):('esquema R:R · '+_esc(reason||''));
+  if(src)src.textContent=cached&&cached.ok?((t.asset==='ES'?'ES':'NQ')+' · velas reales'):'Vista esquemática';
 }
 
 /* ── Motor de dibujo _jdw (portado de daytrading_preview) ── */
@@ -5676,6 +5771,18 @@ function dfpGetPortal(){
   }
   return el;
 }
+// Scrim del bottom-sheet (solo visible en móvil vía CSS). Cerrar al tocar fuera.
+function dfpGetBackdrop(){
+  var b=document.getElementById('dfp-backdrop');
+  if(!b){
+    b=document.createElement('div');
+    b.id='dfp-backdrop';
+    b.addEventListener('click',dfpClose);
+    b.addEventListener('touchstart',function(){dfpClose();},{passive:true});
+    document.body.appendChild(b);
+  }
+  return b;
+}
 
 // ── Render all 3 bars ──
 function dfpRenderBars(){
@@ -5703,6 +5810,7 @@ function dfpOpen(inst, picking){
 
   // Render into portal
   var portal=dfpGetPortal();
+  dfpGetBackdrop().classList.add('on');
   dfpRenderPanel();
 
   // Position portal below the trigger bar using getBoundingClientRect
@@ -5758,6 +5866,8 @@ function dfpRepositionPortal(){
 function dfpClose(){
   var portal=document.getElementById('dfp-portal');
   if(portal)portal.style.display='none';
+  var bd=document.getElementById('dfp-backdrop');
+  if(bd)bd.classList.remove('on');
   _dfpState.open=false;_dfpState.inst=null;
   document.removeEventListener('mousedown',dfpOutsideClick);
   document.removeEventListener('touchstart',dfpOutsideClick);
