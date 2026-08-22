@@ -2271,7 +2271,7 @@ function lbcSetSessionAvatar(url){ try{var s=JSON.parse(localStorage.getItem('lb
 function lbcPaintNavAvatar(url){
   var nodes=[document.getElementById('nav-mem-acct'), document.querySelector('.lbcn-profile')];
   nodes.forEach(function(btn){ if(!btn)return;
-    if(url){ btn.classList.add('lbc-has-avatar'); btn.innerHTML='<img src="'+url+'" alt="Perfil">'; }
+    if(url){ btn.classList.add('lbc-has-avatar'); btn.textContent=''; var im=document.createElement('img'); im.src=url; im.alt='Perfil'; btn.appendChild(im); }
     else { btn.classList.remove('lbc-has-avatar'); btn.innerHTML='<span class="nav-mem-ic">&#128100;</span>'; }
   });
 }
@@ -2279,7 +2279,7 @@ function lbcPaintNavAvatar(url){
 function lbcPaintDrawerAvatar(url,name){
   var av=document.getElementById('pd-avatar'); if(!av)return;
   var rm=document.getElementById('pd-avatar-remove');
-  if(url){ av.innerHTML='<img src="'+url+'" alt="Perfil">'; if(rm)rm.style.display=''; }
+  if(url){ av.textContent=''; var im=document.createElement('img'); im.src=url; im.alt='Perfil'; av.appendChild(im); if(rm)rm.style.display=''; }
   else {
     var ini=(name&&name.trim()&&name.trim()!=='—')?name.trim().charAt(0).toUpperCase():'';
     av.innerHTML=ini?('<span class="pd-avatar-ph">'+ini+'</span>'):'<span class="pd-avatar-ph">&#128100;</span>';
