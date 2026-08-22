@@ -140,8 +140,15 @@ nav,section,.bridge,footer,.modal-overlay,.menu-drawer{position:relative;z-index
 .menu-item-text{font-size:15px;letter-spacing:0.06em;color:rgba(232,228,217,0.7);}
 .menu-item-lock{font-size:13px;color:rgba(201,168,76,0.5);}
 .menu-item-badge{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.08);border:0.5px solid rgba(201,168,76,0.18);padding:2px 8px;border-radius:10px;margin-left:auto;}
-.menu-cta{margin-top:auto;padding-top:1.5rem;}
+.menu-cta{margin-top:auto;padding-top:1.5rem;display:flex;flex-direction:column;gap:10px;}
+#menu-cta-member{margin-top:auto;}
 .menu-cta button{width:100%;padding:15px;background:#C9A84C;border:none;border-radius:8px;color:#080A0F;font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;min-height:50px;}
+.menu-cta button.menu-cta-alt{background:transparent;border:0.5px solid rgba(201,168,76,0.35);color:rgba(232,228,217,0.75);text-transform:none;letter-spacing:0.02em;font-size:12px;min-height:44px;padding:12px;}
+/* Móvil: el top bar deja solo logo + idioma + hamburguesa (o perfil si logueado).
+   LOGIN/UNIRSE viven en el drawer para no desbordar la barra en pantallas chicas. */
+@media(max-width:640px){
+  #nav-login-btn, #nav-join-btn{display:none!important;}
+}
 
 /* ── NAV ── */
 nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:0.5px solid rgba(201,168,76,0.1);position:sticky;top:0;background:rgba(8,10,15,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:100;overflow:visible;}
@@ -1538,8 +1545,13 @@ nav { max-width: 100%; }
     <span class="menu-item-text">Educación</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <div class="menu-cta">
+  <div class="menu-cta" id="menu-cta-join">
     <button onclick="closeMenu();openModal();">Unirse ahora &#8594;</button>
+    <button class="menu-cta-alt" onclick="closeMenu();openLoginModal();">¿Ya tienes cuenta? Inicia sesión</button>
+  </div>
+  <div class="menu-cta" id="menu-cta-member" style="display:none;">
+    <button onclick="closeMenu();openProfileDrawer();">Mi perfil</button>
+    <button class="menu-cta-alt" onclick="lbcLogout();">Desconectar</button>
   </div>
 </div>
 
@@ -2103,6 +2115,9 @@ function lbcShowMemberChrome(){
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='none';
   var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='none';
+  // Drawer móvil: al estar logueado, fuera "Unirse ahora/Inicia sesión" → dentro "Mi perfil/Desconectar".
+  var cj=document.getElementById('menu-cta-join'); if(cj)cj.style.display='none';
+  var cm=document.getElementById('menu-cta-member'); if(cm)cm.style.display='';
   try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
   // Options/Educación → "soon" (siempre cerrados, para cualquier miembro).
   var soon=document.querySelectorAll('.nav-desktop-links a[data-app="soon"], .menu-drawer a.menu-item[data-app="soon"]');
@@ -2137,6 +2152,8 @@ function lbcHideMemberNav(){
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='';
   var jn=document.getElementById('nav-join-btn'); if(jn)jn.style.display='';
   var lang=document.querySelector('.nav-lang'); if(lang)lang.style.display='';
+  var cj=document.getElementById('menu-cta-join'); if(cj)cj.style.display='';
+  var cm=document.getElementById('menu-cta-member'); if(cm)cm.style.display='none';
   var items=document.querySelectorAll('.nav-desktop-links a[data-app], .menu-drawer a.menu-item[data-app]');
   Array.prototype.forEach.call(items,lbcRelockItem);
 }
