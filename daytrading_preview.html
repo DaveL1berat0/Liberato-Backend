@@ -756,7 +756,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 }
 /* Tablet portrait: ≤800px */
 @media(max-width:800px){
-  .wrap{padding:12px 14px 50px;gap:12px;}
+  .wrap{padding:12px 14px 50px;gap:16px;}
   .rg-dir{font-size:48px!important;}
   .rg-price-px{font-size:26px!important;}
   .imap{height:250px!important;}
@@ -774,7 +774,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .brand-p{display:none;}
   .bar-nq-px{font-size:15px!important;}
   .bar-nq-c{font-size:9px!important;}
-  .wrap{padding:10px 12px 44px;gap:10px;}
+  /* Más aire entre paneles: lista de tarjetas tipo app nativa */
+  .wrap{padding:12px 12px 48px;gap:16px;}
+  /* Cabeceras de panel un poco más presentes/tocables en móvil */
+  .g-hd{padding:14px 16px;}
+  .g-ttl{font-size:11.5px;}
+  .g-sub{font-size:8.5px;}
   .rg-dir{font-size:40px!important;}
   .rg-verdict{padding:14px 16px 18px!important;}
   /* SPEEDOMETER — force center on mobile */
