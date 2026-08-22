@@ -787,7 +787,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .imap{height:210px!important;}
   .imap-ro{grid-template-columns:1fr 1fr;}
   .sm-brief{font-size:12px!important;line-height:1.6!important;}
-  
+  /* Slide de semanas del calendario macro — compacto: flechas a los lados, rango centrado */
+  .lg-macro-nav{flex-wrap:nowrap;gap:6px;padding:6px 8px;}
+  .lg-wk-tx{display:none;}
+  .lg-wk-btn{flex:0 0 auto;padding:6px 12px;font-size:15px;line-height:1;}
+  .lg-wk-range{flex:1 1 auto;min-width:0;font-size:11.5px;}
+  /* Pestañas por día laboral — que quepan 5 en una fila */
+  .lg-day-tabs{flex-wrap:nowrap;gap:4px;}
+  .lg-day-tab{min-width:0;padding:6px 3px;}
+  .lg-day-tab-n{font-size:13px;}
+
   .diag-row{grid-template-columns:1.4fr 1fr 0.7fr!important;}
   .diag-lat,.diag-sync{display:none;}
   /* Heatmap — smaller on mobile */
@@ -995,7 +1004,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lbcn-profile{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
 .lbcn-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
 .lbcn-profile img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;}
-@media(max-width:720px){.lbcn{padding:7px 12px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 4px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);}.lbcn-item{font-size:10.5px;}.lbcn-item.lbcn-pill{padding:5px 9px;}}
+@media(max-width:768px){.lbcn{padding:7px 12px 6px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 5px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);font-size:14px;}.lbcn-links{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:7px;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}.lbcn-links::-webkit-scrollbar{display:none;}.lbcn-item{font-size:10px;letter-spacing:0.05em;gap:4px;}.lbcn-item.lbcn-pill{padding:5px 9px;flex:0 0 auto;}.lbc-lock{width:12px;height:12px;}.lbcn-soon-label{gap:0;}.lbcn-soon-tag{font-size:7px;padding:0 4px;margin-top:1px;}.lbcn-right{flex:0 0 auto;margin-left:6px;gap:8px;}.lbcn-profile{width:32px;height:32px;font-size:15px;}}
 @media(max-width:600px){.lbcn-name{display:none!important;}}
 /* ── DRAWER LATERAL · MI PERFIL ── */
 .profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
@@ -3289,9 +3298,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       MACRO_DAY=_sel;
       // ── Controles de navegación de semana + rango ──
       var nav='<div class="lg-macro-nav">'
-        +'<button type="button" class="lg-wk-btn" onclick="macroWeekPrev()" aria-label="Semana anterior">◀ Semana anterior</button>'
+        +'<button type="button" class="lg-wk-btn lg-wk-prev" onclick="macroWeekPrev()" aria-label="Semana anterior"><span class="lg-wk-ar">◀</span><span class="lg-wk-tx"> Semana anterior</span></button>'
         +'<span class="lg-wk-range">'+macroWeekLabel(MACRO_WEEK_OFFSET)+(MACRO_WEEK_OFFSET===0?' · esta semana':'')+'</span>'
-        +'<button type="button" class="lg-wk-btn" onclick="macroWeekNext()" aria-label="Semana siguiente">Semana siguiente ▶</button>'
+        +'<button type="button" class="lg-wk-btn lg-wk-next" onclick="macroWeekNext()" aria-label="Semana siguiente"><span class="lg-wk-tx">Semana siguiente </span><span class="lg-wk-ar">▶</span></button>'
         +'</div>';
       // ── Pestañas por día laboral (Lun–Vie) con puntito de alto impacto ──
       var tabs='<div class="lg-day-tabs">';
