@@ -937,7 +937,7 @@ a[title="Volver al inicio"]{width:32px !important;padding:0 !important;border-ra
 .lbcn-profile{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
 .lbcn-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
 .lbcn-profile img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;}
-@media(max-width:720px){.lbcn{padding:7px 12px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 4px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);}.lbcn-item{font-size:10.5px;}.lbcn-item.lbcn-pill{padding:5px 9px;}}
+@media(max-width:768px){.lbcn{padding:7px 12px 6px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 5px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);font-size:14px;}.lbcn-links{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:7px;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}.lbcn-links::-webkit-scrollbar{display:none;}.lbcn-item{font-size:10px;letter-spacing:0.05em;gap:4px;}.lbcn-item.lbcn-pill{padding:5px 9px;flex:0 0 auto;}.lbc-lock{width:12px;height:12px;}.lbcn-soon-label{gap:0;}.lbcn-soon-tag{font-size:7px;padding:0 4px;margin-top:1px;}.lbcn-right{flex:0 0 auto;margin-left:6px;gap:8px;}.lbcn-profile{width:32px;height:32px;font-size:15px;}}
 @media(max-width:600px){.lbcn-name{display:none!important;}}
 /* ── DRAWER LATERAL · MI PERFIL ── */
 .profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
@@ -1836,6 +1836,10 @@ function _buildFromEarnings(earnings){
     if(!byDate[iso])byDate[iso]={dt:edt,open:[],close:[]};
     var arr=isBmo?byDate[iso].open:byDate[iso].close;
     if(arr.indexOf(sym)<0)arr.push(sym);
+    // PUNTO 2 — logo real del backend (Finnhub) si viene como URL http:
+    if(e.logo && /^https?:\/\//i.test(String(e.logo))) C[sym].logoUrl=String(e.logo).trim();
+    // PUNTO 3 — próxima fecha de reporte (la más cercana desde hoy) desde el propio calendario:
+    if(edt>=todayDate && (!C[sym]._nextObj || edt<C[sym]._nextObj)){ C[sym]._nextObj=edt; C[sym].nextEarnings=_fmtNextDate(edt); }
     if(edt>maxDate)maxDate=edt;
   });
 
@@ -1949,13 +1953,42 @@ function updatePeriodLabel(){
   if(ps)ps.textContent=w.sub||'';
 }
 
+// PUNTO 3 — formatea una fecha (Date o 'YYYY-MM-DD') en español: "27 Ago 2026"
+function _fmtNextDate(d){
+  var dt=(d instanceof Date)?d:(function(){var p=String(d).split('-');return (p.length>=3)?new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10)):null;})();
+  if(!dt||isNaN(dt.getTime()))return String(d||'—');
+  var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return dt.getDate()+' '+M[dt.getMonth()]+' '+dt.getFullYear();
+}
+// PUNTO 2 — pinta el logo real (img) en un elemento ya existente; cae a iniciales si falla.
+function _applyLogoEl(el,c){
+  if(!el||!c)return;
+  el.style.color=c.tcolor||'#fff';
+  if(c.logoUrl){
+    el.innerHTML='';el.style.overflow='hidden';el.style.background='#fff';
+    var im=document.createElement('img');im.src=c.logoUrl;im.alt='';
+    im.style.cssText='width:100%;height:100%;object-fit:contain;display:block;';
+    im.onerror=function(){el.innerHTML='';el.style.background=c.color;el.textContent=c.logo;};
+    el.appendChild(im);
+  }else{el.innerHTML='';el.style.background=c.color;el.textContent=c.logo;}
+}
+// PUNTO 2 — HTML del logo (img real o bloque de iniciales) para tarjetas del calendario.
+function _logoHtml(c,cls){
+  var tc=c.tcolor||'#fff';
+  var ini=(c.logo||'').replace(/"/g,'&quot;');
+  if(c.logoUrl){
+    var url=String(c.logoUrl).replace(/"/g,'&quot;');
+    return '<div class="'+cls+'" data-ini="'+ini+'" data-bg="'+c.color+'" style="background:#fff;color:'+tc+';overflow:hidden;">'
+      +'<img src="'+url+'" alt="" style="width:100%;height:100%;object-fit:contain;display:block;" onerror="var p=this.parentNode;p.removeChild(this);p.textContent=p.getAttribute(\'data-ini\');p.style.background=p.getAttribute(\'data-bg\');"></div>';
+  }
+  return '<div class="'+cls+'" style="background:'+c.color+';color:'+tc+';">'+ini+'</div>';
+}
 function companyCard(sym){
   var c=C[sym];if(!c)return '';
   if(activeFilter!=='all'&&c.impact!==activeFilter)return '';
-  var tcolor=c.tcolor||'#fff';
   var impactHtml=(c.impact!=='low')?'<div class="ec-impact '+c.impact+'">'+IMPACT_LABEL[c.impact]+'</div>':'';
   return '<div class="ec '+c.impact+'" data-sym="'+sym+'" data-name="'+(c.name||'').replace(/"/g,'&quot;')+'" onclick="openDrawer(\''+sym+'\')">'
-    +'<div class="ec-logo" style="background:'+c.color+';color:'+tcolor+';">'+c.logo+'</div>'
+    +_logoHtml(c,'ec-logo')
     +'<div class="ec-sym">'+sym+'</div>'
     +impactHtml
     +'</div>';
@@ -2314,8 +2347,7 @@ function buildHistHTML(hist){
 function openDrawer(sym){
   var c=C[sym];if(!c)return;
   document.querySelectorAll('.ec').forEach(function(e){e.classList.toggle('selected',e.dataset.sym===sym);});
-  var tc=c.tcolor||'#fff';var dl=document.getElementById('d-logo');
-  dl.style.background=c.color;dl.style.color=tc;dl.textContent=c.logo;
+  _applyLogoEl(document.getElementById('d-logo'),c);
   document.getElementById('d-sym').textContent=sym;
   document.getElementById('d-name').textContent=c.name;
   var ne=document.getElementById('d-next-earnings');
@@ -2389,6 +2421,23 @@ function _fetchDrawerLive(sym){
         if(C[sym]&&(!C[sym].name||C[sym].name===sym))C[sym].name=realName;
         var dn=document.getElementById('d-name'); if(dn&&(dn.textContent===sym||dn.textContent==='--'))dn.textContent=realName;
         var card=document.querySelector('.ec[data-sym="'+sym+'"]'); if(card)card.setAttribute('data-name',realName);
+      }
+      // PUNTO 2 — logo real desde /api/company si el calendario no lo traía
+      var realLogo=data.logo||data.image||data.logoUrl||null;
+      if(realLogo && /^https?:\/\//i.test(String(realLogo)) && C[sym]){
+        C[sym].logoUrl=String(realLogo).trim();
+        _applyLogoEl(document.getElementById('d-logo'),C[sym]);
+        var _ecCard=document.querySelector('.ec[data-sym="'+sym+'"] .ec-logo');
+        if(_ecCard)_applyLogoEl(_ecCard,C[sym]);
+      }
+      // PUNTO 3 — próxima fecha desde backend si el calendario aún no la fijó
+      var _nd=data.nextDate||data.nextEarningsDate||null;
+      var _neEl=document.getElementById('d-next-earnings');
+      if(_nd && _neEl && _neEl.style.display==='none'){
+        var _ndTxt=_fmtNextDate(_nd);
+        if(C[sym])C[sym].nextEarnings=_ndTxt;
+        _neEl.style.display='block';
+        _neEl.innerHTML='<div class="dne-label">Próximo Earnings Report</div><div class="dne-val">'+_ndTxt+'</div><div class="dne-sub">'+sym+' · '+((C[sym]&&C[sym].sector)||'—')+'</div>';
       }
       // ── 3. Historical earnings (last 4 quarters) ─────────────────────────
       var hist=data.history||[];
@@ -2594,8 +2643,17 @@ window.addEventListener('unhandledrejection',function(e){e.preventDefault&&e.pre
 <script>
 (function(){
   var tip=document.getElementById('ec-tip');
+  // En táctil el hover se queda "pegado" tras un tap → nunca mostramos el tooltip ahí.
+  var isTouch = (window.matchMedia && window.matchMedia('(hover:none),(pointer:coarse)').matches)
+                || ('ontouchstart' in window);
+  function drawerOpen(){
+    var d=document.getElementById('drawer');
+    return !!(d && d.classList.contains('open'));
+  }
+  function hide(){tip.style.opacity='0';tip.style.transform='translateY(4px)';}
   function show(name,x,y){
-    if(!name)return;
+    // No mostrar sobre la ficha abierta (el nombre ya sale en la cabecera del drawer).
+    if(!name || isTouch || drawerOpen()){hide();return;}
     tip.textContent=name;
     tip.style.opacity='1';tip.style.transform='translateY(0)';
     var pad=12,tw=tip.offsetWidth,th=tip.offsetHeight;
@@ -2604,19 +2662,23 @@ window.addEventListener('unhandledrejection',function(e){e.preventDefault&&e.pre
     if(top+th+pad>window.innerHeight)top=y-th-16;
     tip.style.left=Math.max(pad,left)+'px';tip.style.top=Math.max(pad,top)+'px';
   }
-  function hide(){tip.style.opacity='0';tip.style.transform='translateY(4px)';}
-  document.addEventListener('mouseover',function(e){
-    var el=e.target.closest&&e.target.closest('[data-name]');
-    if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);
-  });
-  document.addEventListener('mousemove',function(e){
-    var el=e.target.closest&&e.target.closest('[data-name]');
-    if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);else hide();
-  });
-  document.addEventListener('mouseout',function(e){
-    var el=e.target.closest&&e.target.closest('[data-name]');
-    if(!el)hide();
-  });
+  if(!isTouch){
+    document.addEventListener('mouseover',function(e){
+      var el=e.target.closest&&e.target.closest('[data-name]');
+      if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);
+    });
+    document.addEventListener('mousemove',function(e){
+      var el=e.target.closest&&e.target.closest('[data-name]');
+      if(el&&el.getAttribute('data-name'))show(el.getAttribute('data-name'),e.clientX,e.clientY);else hide();
+    });
+    document.addEventListener('mouseout',function(e){
+      var el=e.target.closest&&e.target.closest('[data-name]');
+      if(!el)hide();
+    });
+  }
+  // Seguridad: ocultar siempre al hacer scroll o tocar (por si quedó visible).
+  window.addEventListener('scroll',hide,true);
+  document.addEventListener('touchstart',hide,{passive:true});
 })();
 </script>
 </body>
