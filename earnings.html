@@ -122,6 +122,9 @@ body::before{
   padding-top:var(--safe-top);margin-bottom:24px;
 }
 .nav-inner{max-width:1500px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;gap:12px;}
+/* MÓVIL: fuera el sub-header que DUPLICA la marca (la nav de pills ya la tiene).
+   La pagina queda con un solo header nativo. */
+@media(max-width:768px){.navbar{display:none !important;}.wrap{padding-top:14px;}}
 .back-btn{
   display:inline-flex;align-items:center;justify-content:center;
   width:30px;height:30px;border-radius:50%;
@@ -550,6 +553,32 @@ body::before{
 .nq-explain{font-size:13px;line-height:1.6;color:var(--text2);margin-top:10px;}
 .nq-explain .g{color:var(--green);}.nq-explain .r{color:var(--red);}
 
+/* MÓVIL: jerarquía del drawer de empresa — más aire, métricas legibles,
+   próxima fecha e impacto destacados (menos denso). */
+@media(max-width:768px){
+  .drawer-next-earnings{padding:14px 20px;}
+  .dne-label{font-size:10px;}
+  .dne-val{font-size:20px;margin-top:5px;}
+  .dne-sub{font-size:10px;margin-top:3px;}
+  .drawer-body{padding:18px 18px 34px;}
+  .dsec{margin-bottom:26px;}
+  .dsec-title{font-size:12px;margin-bottom:14px;}
+  .sum-grid{gap:10px;}
+  .sum-item{padding:13px 14px;}
+  .sum-lbl{font-size:10px;}
+  .sum-val{font-size:17px;}
+  .sum-val.sm{font-size:15px;}
+  .exp-row{padding:13px 0;}
+  .exp-lbl{font-size:14.5px;}
+  .exp-val{font-size:16px;}
+  .nq-impact-box{padding:16px;}
+  .nq-level{margin-bottom:12px;flex-wrap:wrap;}
+  .nq-level-badge{font-size:12px;padding:6px 13px;}
+  .nq-explain{font-size:13.5px;margin-top:12px;}
+  .news-head{font-size:14.5px;}
+  .news-sum{font-size:13px;}
+}
+
 /* History */
 /* ENHANCED HISTORY */
 .trend-summary{background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(0,0,0,0.2));border:0.5px solid rgba(201,168,76,0.2);border-radius:var(--r-sm);padding:14px;margin-bottom:16px;}
@@ -646,6 +675,11 @@ body::before{
   flex-shrink:0;white-space:nowrap;
 }
 @media(max-width:560px){.hs-kbd{display:none;}}
+/* MÓVIL: el placeholder largo del buscador no debe cortarse feo -> elipsis + input full-width */
+@media(max-width:560px){
+  .hero-search-input{font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:12px;}
+  .hs-icon{padding:0 10px 0 14px;font-size:18px;}
+}
 .hero-search-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;justify-content:center;}
 .hs-tag-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);width:100%;text-align:center;margin-bottom:4px;}
 .hs-tag{
