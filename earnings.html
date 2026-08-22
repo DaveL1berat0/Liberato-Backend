@@ -1466,7 +1466,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <div class="week-nav">
           <button class="week-btn" id="prev-btn">‹</button>
           <div class="week-label">
-            <span class="week-label-main" id="period-label">1 — 5 Jun</span>
+            <span class="week-label-main" id="period-label">Cargando…</span>
             <span class="week-label-sub" id="period-sub">Esta semana</span>
           </div>
           <button class="week-btn" id="next-btn">›</button>
@@ -1504,7 +1504,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   <div class="cal-month" id="cal-month">
     <div class="month-nav-bar">
       <button class="week-btn" id="month-prev">‹</button>
-      <span class="month-nav-label" id="month-nav-label">Junio 2026</span>
+      <span class="month-nav-label" id="month-nav-label">—</span>
       <button class="week-btn" id="month-next">›</button>
     </div>
     <div class="month-grid" id="month-grid"></div>
@@ -2398,8 +2398,10 @@ function _fetchDrawerLive(sym){
       [60,40,40,50,50].map(function(w){return '<div class="skel-pulse" style="height:11px;width:'+w+'px;border-radius:3px;background:rgba(255,255,255,0.06);animation:skelPulse 1.2s ease-in-out infinite;"></div>';}).join('')+
       '</div>';}).join('')+
     '</div>';
-  // Skeleton pulse — invisible transition, user no percibe la carga
-  ['d-eps-val','d-rev-val','d-yoy-val'].forEach(function(id){
+  // Skeleton pulse — invisible transition, user no percibe la carga.
+  // Incluye Market Cap y Sector: así NO se muestra el valor curado/hardcoded
+  // mientras carga, y solo se rellena con el dato REAL del backend (Regla #1).
+  ['d-eps-val','d-rev-val','d-yoy-val','d-cap-val','d-sec-val'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){
       el.innerHTML='<span class="skel-pulse" style="display:inline-block;width:40px;height:11px;border-radius:3px;background:rgba(255,255,255,0.06);animation:skelPulse 1.2s ease-in-out infinite;vertical-align:middle;"></span>';
@@ -2433,10 +2435,10 @@ function _fetchDrawerLive(sym){
       // ── 2. Market Cap / Sector / Nombre reales del backend ────────────────
       var mc=data.marketCap||data.cap||null;
       var mcEl=document.getElementById('d-cap-val');
-      if(mcEl&&mc)mcEl.textContent=_fmtCap(mc);
+      if(mcEl)mcEl.innerHTML=mc?_fmtCap(mc):'—<span class="d-pending-tag">Pendiente</span>';
       var sec=data.sector||data.industry||data.finnhubIndustry||null;
       var secEl=document.getElementById('d-sec-val');
-      if(secEl&&sec&&secEl.textContent==='—')secEl.textContent=sec;
+      if(secEl)secEl.textContent=sec||'—';
       // Nombre real (mejora también el tooltip en próximos hovers) — Regla #1: solo si viene del backend
       var realName=data.name||data.companyName||null;
       if(realName){
@@ -2501,7 +2503,7 @@ function _fetchDrawerLive(sym){
     .catch(function(){
       // PUNTO 6 — sin backend: dejar casillas con placeholder honesto, NO el skeleton
       // (que se veía "vacío") ni cifras inventadas.
-      ['d-eps-val','d-rev-val','d-yoy-val'].forEach(function(id){
+      ['d-eps-val','d-rev-val','d-yoy-val','d-cap-val','d-sec-val'].forEach(function(id){
         var el=document.getElementById(id);
         if(el)el.innerHTML='—<span class="d-pending-tag">Pendiente</span>';
       });

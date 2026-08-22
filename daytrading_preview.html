@@ -1921,7 +1921,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       // → ratio 1.0 falso, y el precio del NQ salía = QQQ (708). Solo se deriva
       // en modo ETF, donde underlying_price (ETF ~708) ≠ price (futuro).
       if(d.ratio>0){_NQ_RATIO=d.ratio;S.ratio=d.ratio;}
-      else{var _idx=(d.price||d.nq_price);if(d.underlying_price>0&&_idx>0&&Math.abs(d.underlying_price-_idx)>1){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;console.log('[ratio]',r);}}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
+      else{var _idx=(d.price||d.nq_price);if(d.underlying_price>0&&_idx>0&&Math.abs(d.underlying_price-_idx)>1){var r=Math.round((_idx/d.underlying_price)*1000000)/1000000;_NQ_RATIO=r;S.ratio=r;}}S.callWall=d.call_wall?cvNQ(d.call_wall):S.callWall;S.putWall=d.put_wall?cvNQ(d.put_wall):S.putWall;S.gammaFlip=(d.gamma_flip||d.zero_gamma)?cvNQ(d.gamma_flip||d.zero_gamma):S.gammaFlip;
         S.maxPain=d.max_pain?cvNQ(d.max_pain):S.maxPain;
         // Volume profile por strike (ya en escala NQ desde el backend; NO re-escalar)
         S.perStrike=(Array.isArray(d.per_strike)&&d.per_strike.length)?d.per_strike:null;
@@ -3019,7 +3019,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         if(tf==='5'){S.candles=out;S.momCandles=out;if(typeof renderMomentum==='function')renderMomentum();}
         setHealth('candles','connected','real',null);
         cxPriceRender();
-        console.log('[candles] reales NQ:',out.length,'velas ('+(d.source||'backend')+')');
         return;
       }
     }}catch(e){console.warn('[candles] backend falló:',e);}
@@ -3708,7 +3707,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       _realCalLoaded=true;   // datos reales cargados
       renderLegacy();
       setHealth('calendar','connected','real',null);
-      console.log('[calendar] OK —',d.macro_calendar.length,'eventos');
       var badge=document.getElementById('api-status-badge');
       if(badge){badge.textContent='✓ '+d.macro_calendar.length+' eventos reales';badge.style.background='rgba(46,232,164,0.1)';badge.style.color='var(--up)';}
     }catch(e){console.error('[calendar] error:',e);var b=document.getElementById('api-status-badge');if(b){b.textContent='✗ '+e.message;b.style.background='rgba(255,59,48,0.1)';b.style.color='#FF6B6B';}}
@@ -3797,7 +3795,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         var moverKey=(topMover.headline||topMover.title||'').substring(0,60);
         var score=topMover.impact_score||0;
         var alertLvl=topMover.alert_level||'';
-        console.log('[movers] top:',moverKey,'score:',score,'lvl:',alertLvl);
         // ── ALERTAS DE MOVERS — lógica robusta ───────────────────────
         // Umbral: score ≥8.5 O nivel CRITICAL/ULTRA = evento de alto impacto.
         // Solo en sesión regular RTH (fuera de horario no hay popup ni sonido).
@@ -3816,11 +3813,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           var scoreJumped=(score-(_lastMoverScore||0))>=1.0;
           var firstLoad=(_lastMoverKey===null);
           if((firstLoad||isNew||scoreJumped)&&cooledDown){
-            console.log('[movers] 🔔 ALERTA disparada:',moverKey,'('+score+')');
             showMoverAlert(topMover);
             window._moverAlertHistory[moverKey]=nowMs;
           }else{
-            console.log('[movers] sin alerta — firstLoad:'+firstLoad+' isNew:'+isNew+' jumped:'+scoreJumped+' cooled:'+cooledDown);
           }
         }
         _lastMoverKey=moverKey;
@@ -3828,7 +3823,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       }
 
       setHealth('movers','connected','real',null);
-      console.log('[movers] OK —',mv.length,'noticias reales');
     }catch(e){console.error('[movers] error:',e);}
   }
 
