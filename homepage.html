@@ -1319,6 +1319,10 @@ nav { max-width: 100%; }
   .payouts-grid { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
+/* Evita el scroll horizontal fantasma en móvil/tablet (drawers off-canvas, sticky CTA)
+   usando clip (no hidden) para NO romper position:sticky. */
+@media (max-width: 1023px){ html, body { overflow-x: clip; } }
+
 /* ─── MOBILE (≤ 767px) ─────────────────────────────────── */
 @media (max-width: 767px) {
   :root { --page-gutter: 1.1rem; }
