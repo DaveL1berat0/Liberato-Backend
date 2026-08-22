@@ -2821,34 +2821,33 @@ function renderLast30Trades(){
   var el=document.getElementById('last30-bars');
   var stats_el=document.getElementById('l30-stats');
   if(!el)return;
+  if(!_uReady()){_uNeedAcct(el);if(stats_el)stats_el.innerHTML='';return;}
   var sorted=getFilteredT(_dfShared).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
   var last=sorted.slice(-30);
   if(!last.length){el.innerHTML='<div class="empty"><p>Sin trades registrados</p></div>';return;}
   var wins=last.filter(function(t){return t.pnl>0;}).length;
-  var maxVal=Math.max.apply(null,last.map(function(t){return Math.abs(t.pnl);}));
-  if(maxVal===0)maxVal=1;
   var W=700,H=140,padL=44,padR=8,padT=12,padB=22;
   var plotW=W-padL-padR,plotTot=H-padT-padB;
   // Baseline ADAPTATIVO: la línea 0 se posiciona según cuánto sube vs cuánto baja,
   // así las barras llenan el cuadro aunque sean casi todas de un signo (no "a la mitad").
-  var maxUp=Math.max.apply(null,last.map(function(t){return t.pnl>0?t.pnl:0;}).concat([0]));
-  var maxDn=Math.max.apply(null,last.map(function(t){return t.pnl<0?-t.pnl:0;}).concat([0]));
+  var maxUp=Math.max.apply(null,last.map(function(t){var v=_uv(t);return v>0?v:0;}).concat([0]));
+  var maxDn=Math.max.apply(null,last.map(function(t){var v=_uv(t);return v<0?-v:0;}).concat([0]));
   if(maxUp===0&&maxDn===0){maxUp=1;maxDn=1;}
   var upH=plotTot*(maxUp/(maxUp+maxDn)),dnH=plotTot-upH;
   var zY=padT+upH;
   var n=last.length,bw=Math.max(Math.floor(plotW/n)-2,3),gap=Math.floor((plotW-bw*n)/(n+1));
   var bars='',xlabels='';
   last.forEach(function(t,i){
-    var pnl=t.pnl;
+    var pnl=_uv(t);
     var bh=pnl>=0?(maxUp>0?pnl/maxUp*upH:0):(maxDn>0?(-pnl)/maxDn*dnH:0);
     var x=padL+gap+i*(bw+gap);
     var col=pnl>=0?'#22c55e':'#ef4444';
     var alpha=pnl>=0?'rgba(34,197,94,':'rgba(239,68,68,';
     if(pnl>=0){
-      bars+='<rect x="'+x.toFixed(1)+'" y="'+(zY-bh).toFixed(1)+'" width="'+bw+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="1.5" fill="url(#l30g'+i+')" opacity="0.9"><title>'+t.date+' '+t.setup+': '+(pnl>=0?'+':'')+f$(pnl)+'</title></rect>';
+      bars+='<rect x="'+x.toFixed(1)+'" y="'+(zY-bh).toFixed(1)+'" width="'+bw+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="1.5" fill="url(#l30g'+i+')" opacity="0.9"><title>'+t.date+' '+t.setup+': '+fUnit(pnl)+'</title></rect>';
       bars+='<defs><linearGradient id="l30g'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="rgba(34,197,94,0.5)"/></linearGradient></defs>';
     }else{
-      bars+='<rect x="'+x.toFixed(1)+'" y="'+zY.toFixed(1)+'" width="'+bw+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="1.5" fill="url(#l30gn'+i+')" opacity="0.9"><title>'+t.date+' '+t.setup+': '+f$(pnl)+'</title></rect>';
+      bars+='<rect x="'+x.toFixed(1)+'" y="'+zY.toFixed(1)+'" width="'+bw+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="1.5" fill="url(#l30gn'+i+')" opacity="0.9"><title>'+t.date+' '+t.setup+': '+fUnit(pnl)+'</title></rect>';
       bars+='<defs><linearGradient id="l30gn'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(239,68,68,0.5)"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>';
     }
     // X labels every 5
@@ -2856,11 +2855,10 @@ function renderLast30Trades(){
       xlabels+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-5)+'" fill="rgba(232,228,217,0.3)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">'+(i+1)+'</text>';
     }
   });
-  // Ejes: línea 0 etiquetada + tope (+máx) y mínimo (-máx), como en P&L Diario.
-  function _l30k(v){var k=Math.round(v/100)/10;return (v>=0?'+':'')+'$'+k+'k';}
+  // Ejes: línea 0 etiquetada + tope (+máx) y mínimo (-máx), como en P&L Diario. En la unidad activa.
   var axLines=[{v:maxUp,y:padT},{v:0,y:zY}]; if(maxDn>0)axLines.push({v:-maxDn,y:padT+plotTot});
   var grid='',ylab='';
-  axLines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-6)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.42)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_l30k(g.v)+'</text>';});
+  axLines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-6)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.42)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';});
   el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:140px;" shape-rendering="geometricPrecision">'+grid+bars+xlabels+ylab+'</svg>';
   if(stats_el){
     var wr30=last.length?Math.round((wins/last.length)*100):0;
@@ -2884,6 +2882,16 @@ function fUnit(v){
   if(JUNIT==='pct'){var q=Math.round(v*100)/100;return (q>=0?'+':'')+q+'%';}
   return f$(v);
 }
+// Helpers de UNIDAD para los charts (equity/últimos 30/diario respetan $/Puntos/%).
+function _uReady(){return !(JUNIT==='pct'&&acctSize()<=0);}   // % necesita tamaño de cuenta
+function _uv(t){var v=tUnitVal(t);return (v==null)?0:v;}       // valor del trade en la unidad activa
+function _uAxisLbl(v){                                          // etiqueta de eje compacta en la unidad
+  if(v==null||!isFinite(v))return '—';
+  if(JUNIT==='points')return (v>=0?'+':'')+Math.round(v)+'p';
+  if(JUNIT==='pct')return (v>=0?'+':'')+(Math.round(v*10)/10)+'%';
+  var k=Math.round(v/100)/10;return (v>=0?'+':'')+'$'+k+'k';
+}
+function _uNeedAcct(el){ if(el)el.innerHTML='<div class="empty"><p>Define tu tamaño de cuenta (⚙) para ver en %</p></div>'; }
 // stats() en la unidad activa (n, wr, pf, avgW/L, exp, total). Si % sin cuenta → nulos.
 function statsU(arr){
   if(!arr||!arr.length)return{n:0,wins:0,losses:0,wr:0,pf:0,avgW:0,avgL:0,exp:0,total:0,unitNull:false};
@@ -3036,9 +3044,11 @@ function renderRadar(ps){
     +'</div>';
 }
 function renderEquity(){
+  var _eqc=document.getElementById('equity-curve');
+  if(!_uReady()){_uNeedAcct(_eqc);var e0=document.getElementById('eq-total');if(e0)e0.textContent='—';return;}
   var sorted=getFilteredT(_dfShared).slice().sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time);});
-  var run=0,pts=[0];sorted.forEach(function(t){run+=t.pnl;pts.push(run);});
-  var eqEl=document.getElementById('eq-total');if(eqEl){eqEl.textContent=f$(run);eqEl.style.color=run>=0?'var(--green)':'var(--red)';}
+  var run=0,pts=[0];sorted.forEach(function(t){run+=_uv(t);pts.push(run);});
+  var eqEl=document.getElementById('eq-total');if(eqEl){eqEl.textContent=fUnit(run);eqEl.style.color=run>=0?'var(--green)':'var(--red)';}
   if(pts.length<2){document.getElementById('equity-curve').innerHTML='<div class="empty"><p>Registra trades</p></div>';return;}
   // Ejes con etiquetas: tope (máx acumulado), línea 0 y mínimo — igual que P&L Diario.
   var mn=Math.min.apply(null,pts.concat([0])),mx=Math.max.apply(null,pts.concat([0])),rng=(mx-mn)||1;
@@ -3047,14 +3057,15 @@ function renderEquity(){
   var pathD=pts.map(function(v,i){return(i?'L':'M')+(padL+i*xS).toFixed(1)+','+yFor(v).toFixed(1);}).join(' ');
   var zY=yFor(0),aD=pathD+' L'+(padL+(pts.length-1)*xS).toFixed(1)+','+zY.toFixed(1)+' L'+padL+','+zY.toFixed(1)+' Z',c=run>=0?'34,197,94':'239,68,68';
   var lx=(padL+(pts.length-1)*xS).toFixed(1),ly=yFor(pts[pts.length-1]).toFixed(1);
-  function _kf(v){var k=Math.round(v/100)/10;return (v>=0?'+':'')+'$'+k+'k';}
   var lines=[{v:mx,y:padT},{v:0,y:zY}]; if(mn<0)lines.push({v:mn,y:padT+plotH});
   var grid='',ylab='';
-  lines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-7)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.45)" font-family="DM Mono,monospace" font-size="10" text-anchor="end">'+_kf(g.v)+'</text>';});
+  lines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-7)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.45)" font-family="DM Mono,monospace" font-size="10" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';});
   document.getElementById('equity-curve').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:190px;"><defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba('+c+',0.22)"/><stop offset="100%" stop-color="rgba('+c+',0.02)"/></linearGradient></defs>'+grid+'<path d="'+aD+'" fill="url(#eqg)"/><path d="'+pathD+'" fill="none" stroke="rgba('+c+',0.9)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="rgba('+c+',1)" stroke="var(--bg)" stroke-width="2.5"/>'+ylab+'</svg>';
 }
 function renderDailyBars(){
-  var byDate={};getFilteredT(_dfShared).forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
+  var _db=document.getElementById('daily-bars');
+  if(!_uReady()){_uNeedAcct(_db);return;}
+  var byDate={};getFilteredT(_dfShared).forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+_uv(t);});
   var dates=Object.keys(byDate).sort();
   if(!dates.length){document.getElementById('daily-bars').innerHTML='<div class="empty"><p>Sin datos diarios</p></div>';return;}
   var vals=dates.map(function(d){return byDate[d];});
@@ -3071,7 +3082,7 @@ function renderDailyBars(){
   var grid='',ylabels='';
   [{v:maxPos,y:padT},{v:0,y:zY},{v:-maxNeg,y:padT+plotH}].forEach(function(g){
     grid+='<line x1="'+padL+'" y1="'+g.y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+g.y.toFixed(1)+'" stroke="rgba(255,255,255,'+(g.v===0?'0.12':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';
-    ylabels+='<text x="'+(padL-6)+'" y="'+(g.y+3).toFixed(1)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+(g.v>=0?'+':'')+'$'+Math.round(g.v/100)/10+'k</text>';
+    ylabels+='<text x="'+(padL-6)+'" y="'+(g.y+3).toFixed(1)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';
   });
   // Bars
   var bars='';
@@ -3080,7 +3091,7 @@ function renderDailyBars(){
     var bh=v>=0?(maxPos>0?v/maxPos*upH:0):(maxNeg>0?(-v)/maxNeg*dnH:0);
     var y=v>=0?zY-bh:zY;
     var col=v>=0?'34,197,94':'239,68,68';
-    bars+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(bw,2).toFixed(1)+'" height="'+Math.max(bh,1.5).toFixed(1)+'" rx="2" fill="url(#dbg'+(v>=0?'p':'n')+')"><title>'+d+': '+(v>=0?'+$':'-$')+Math.abs(v).toLocaleString()+'</title></rect>';
+    bars+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(bw,2).toFixed(1)+'" height="'+Math.max(bh,1.5).toFixed(1)+'" rx="2" fill="url(#dbg'+(v>=0?'p':'n')+')"><title>'+d+': '+fUnit(v)+'</title></rect>';
   });
   // X labels (first, mid, last)
   var xlabels='';
@@ -3090,9 +3101,9 @@ function renderDailyBars(){
   var netTotal=totalGain+totalDD;
   document.getElementById('daily-bars').innerHTML=
     '<div class="daily-pnl-legend">'
-    +'<div class="dpll-item"><div class="dpll-label"><span class="dpll-dot" style="background:var(--green);"></span>Ganancia</div><div class="dpll-val pos">+$'+Math.abs(totalGain).toLocaleString()+'</div></div>'
-    +'<div class="dpll-item"><div class="dpll-label"><span class="dpll-dot" style="background:var(--red);"></span>Drawdown</div><div class="dpll-val neg">-$'+Math.abs(totalDD).toLocaleString()+'</div></div>'
-    +'<div class="dpll-item" style="margin-left:auto;"><div class="dpll-label">Neto</div><div class="dpll-val" style="color:'+(netTotal>=0?'var(--green)':'var(--red)')+';">'+(netTotal>=0?'+':'')+netTotal.toLocaleString()+'</div></div>'
+    +'<div class="dpll-item"><div class="dpll-label"><span class="dpll-dot" style="background:var(--green);"></span>Ganancia</div><div class="dpll-val pos">'+fUnit(totalGain)+'</div></div>'
+    +'<div class="dpll-item"><div class="dpll-label"><span class="dpll-dot" style="background:var(--red);"></span>Drawdown</div><div class="dpll-val neg">'+fUnit(totalDD)+'</div></div>'
+    +'<div class="dpll-item" style="margin-left:auto;"><div class="dpll-label">Neto</div><div class="dpll-val" style="color:'+(netTotal>=0?'var(--green)':'var(--red)')+';">'+fUnit(netTotal)+'</div></div>'
     +'</div>'
     +'<svg class="daily-bars-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="height:180px;"><defs><linearGradient id="dbgp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="rgba(34,197,94,0.45)"/></linearGradient><linearGradient id="dbgn" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(239,68,68,0.45)"/><stop offset="100%" stop-color="#ef4444"/></linearGradient></defs>'+grid+ylabels+bars+xlabels+'</svg>';
 }
@@ -4433,6 +4444,9 @@ function renderGenius(){
 }
 
 function renderPatterns(){
+  // Guard: el contenedor 'genius-patterns' fue retirado en el rediseño de la Zona de
+  // Genio; esta función quedó huérfana. Sin este guard reventaría si se recablea.
+  if(!document.getElementById('genius-patterns'))return;
   var patterns=[];
   var s=stats(baseTrades());
   // ── CONDUCTA (local/determinista, sobre trades reales cronológicos) ──
