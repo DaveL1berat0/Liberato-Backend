@@ -2925,6 +2925,7 @@ EARN_HIGH    = {
 }
 
 _sym_names = {}            # sym -> nombre real de la empresa (persistente en app_config)
+_sym_logos = {}            # sym -> URL del logo real (persistente en app_config)
 _sym_names_loaded = False
 
 async def _sym_names_load():
@@ -2938,13 +2939,20 @@ async def _sym_names_load():
             _sym_names.update(v)
     except Exception:
         pass
+    try:
+        vl = await _sb_get_config("sym_logos")
+        if isinstance(vl, dict):
+            _sym_logos.update(vl)
+    except Exception:
+        pass
 
 async def _fill_earn_names(events, cap=20):
-    """Rellena e['name'] con el NOMBRE REAL de la empresa (para el tooltip del
-    calendario). El feed de Finnhub /calendar/earnings solo trae el ticker; aquí lo
-    resolvemos: cache-first (nombres ya vistos + compañías ya abiertas en el drawer),
-    y si falta, Finnhub /stock/profile2 UNA sola vez por símbolo (con presupuesto y
-    tope por refresh), persistido en app_config. Cada nombre se paga una vez en la vida."""
+    """Rellena e['name'] (nombre real) y e['logo'] (URL del logo real) de cada empresa,
+    para el tooltip y las fichas del calendario. El feed de Finnhub /calendar/earnings
+    solo trae el ticker; aquí lo resolvemos: cache-first (nombres/logos ya vistos +
+    compañías ya abiertas en el drawer), y si falta, Finnhub /stock/profile2 UNA sola vez
+    por símbolo (con presupuesto y tope por refresh), persistido en app_config. Cada
+    símbolo se paga una vez en la vida (nombre+logo en la misma llamada)."""
     await _sym_names_load()
     new, dirty = 0, False
     for e in events:
@@ -2952,27 +2960,37 @@ async def _fill_earn_names(events, cap=20):
         if not sym:
             continue
         nm = _sym_names.get(sym)
-        if not nm:
-            c = (cache.get("company") or {}).get(sym)
-            if c and (c.get("data") or {}).get("name"):
-                nm = c["data"]["name"]; _sym_names[sym] = nm; dirty = True
-        if not nm and new < cap and FINNHUB_KEY and fh_budget_ok(1):
+        lg = _sym_logos.get(sym)
+        if not nm or lg is None:
+            c = ((cache.get("company") or {}).get(sym) or {}).get("data") or {}
+            if not nm and c.get("name"):
+                nm = c["name"]; _sym_names[sym] = nm; dirty = True
+            if lg is None and c.get("logo") is not None:
+                lg = c["logo"]; _sym_logos[sym] = lg; dirty = True
+        if (not nm or lg is None) and new < cap and FINNHUB_KEY and fh_budget_ok(1):
             try:
                 async with httpx.AsyncClient(timeout=6) as client:
                     r = await client.get(f"{FH_BASE}/stock/profile2",
                                          params={"symbol": sym, "token": FINNHUB_KEY})
                 fh_charge(1); new += 1
                 if r.status_code == 200:
-                    nm = (r.json() or {}).get("name")
-                    if nm:
-                        _sym_names[sym] = nm; dirty = True
+                    p = r.json() or {}
+                    if not nm and p.get("name"):
+                        nm = p["name"]; _sym_names[sym] = nm; dirty = True
+                    # Guardamos el logo aunque venga vacío ("") para no re-consultar
+                    # eternamente a las empresas que Finnhub no tiene con logo.
+                    lg = p.get("logo", "") or ""
+                    _sym_logos[sym] = lg; dirty = True
             except Exception as ex:
                 print(f"[earn-names] {sym}: {ex}")
         if nm:
             e["name"] = nm
+        if lg:
+            e["logo"] = lg
     if dirty:
         try:
             await _sb_set_config("sym_names", _sym_names)
+            await _sb_set_config("sym_logos", _sym_logos)
         except Exception:
             pass
 
