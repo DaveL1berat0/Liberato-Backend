@@ -3330,7 +3330,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         } else if(e.time&&e.time.indexOf(':')>0){
           var evParts=e.time.split(':');
           var evMins=parseInt(evParts[0])*60+parseInt(evParts[1]);
-          var nowM=(new Date()).getHours()*60+(new Date()).getMinutes();
+          var _etn={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).forEach(function(x){_etn[x.type]=x.value;});
+          var nowM=parseInt(_etn.hour==='24'?'0':_etn.hour)*60+parseInt(_etn.minute);
           var isToday2=day&&day.label&&day.label.indexOf('Hoy')>=0;
           if(isToday2&&evMins<=nowM&&!e.result)actualPlaceholder='Esperando dato…';
         }
@@ -3339,7 +3340,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         var nextBadge=isNext?'<span class="lg-ev-next-badge">◆ PRÓXIMO</span>':'';
         return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
-          +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':e.time)+'</span>'
+          +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
           +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status">'+(isDone?'✓ Publicado':e.status)+'</div>'
           +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
           +'</div>'
@@ -3609,9 +3610,21 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       }
       MOCK.macro.days=[];
       var grouped={};
+      // El backend entrega la hora del evento en UTC ("YYYY-MM-DD HH:MM:SS").
+      // La convertimos a ET (zona del mercado NQ) para que TODOS los alumnos —sin
+      // importar su país— vean la MISMA hora de referencia, y para que la hora
+      // programada coincida con cuándo aparece el 'actual'. Antes se mostraba el
+      // UTC crudo (ej. 13:45 para un evento de 9:45 ET) → "resultado antes de hora".
+      function _etFromRaw(raw){
+        var t=Date.parse(String(raw).replace(' ','T')+'Z');   // raw es UTC
+        if(isNaN(t))return {dateKey:String(raw).substring(0,10),time:(String(raw).length>=16?String(raw).substring(11,16):''),ts:0};
+        var o={};new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(t)).forEach(function(x){o[x.type]=x.value;});
+        return {dateKey:o.year+'-'+o.month+'-'+o.day,time:(o.hour==='24'?'00':o.hour)+':'+o.minute,ts:t};
+      }
       d.macro_calendar.forEach(function(ev){
         var raw=ev.time||ev.date||'';
-        var dateKey=raw.length>=10?raw.substring(0,10):'';
+        var _et=_etFromRaw(raw);
+        var dateKey=_et.dateKey;
         if(!dateKey)return;
         if(!grouped[dateKey])grouped[dateKey]=[];
         // Usar surprise/classification del BACKEND si están disponibles (preferido),
@@ -3647,8 +3660,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         var hasNoNumericData = !prev && !forecast && !actual;
         var naLabel = 'No aplica';
         grouped[dateKey].push({
-          time:raw.length>=16?raw.substring(11,16):'',
-          _ts:(function(){var t=Date.parse(raw);return isNaN(t)?0:t;})(),
+          time:_et.time,
+          _ts:_et.ts,
           name:ev.title||ev.name||'',
           impact:ev.impact==='extreme'||ev.impact==='high'?'high':ev.impact==='medium'?'med':'med',
           status:ev.status||'Upcoming',
@@ -3701,7 +3714,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(d.next_macro_event){
         MOCK.macro.next={
           name:d.next_macro_event.title||'',
-          time:d.next_macro_event.time?d.next_macro_event.time.substring(11,16):'—'
+          time:d.next_macro_event.time?_etFromRaw(d.next_macro_event.time).time:'—'
         };
       }
       _realCalLoaded=true;   // datos reales cargados
