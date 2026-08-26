@@ -2313,21 +2313,21 @@ async def _yahoo_spot_c(client, sym):
     return None
 
 async def refresh_scanner():
-    """Escanea un universo amplio del Nasdaq (no solo las magníficas). 1 llamada Finnhub
-    (metric=all) por ticker + precio de Yahoo (gratis) → cabe en el budget de 55/min de
-    Finnhub incluso con ~36 nombres. Fetch concurrente (semáforo 8). Guard: solo actualiza
-    la caché si obtuvo ≥60% del universo (evita que un fetch parcial pise uno bueno)."""
+    """Escanea un universo amplio del Nasdaq (no solo las magníficas). SECUENCIAL con corte
+    grácil: 1 llamada Finnhub (metric=all) por ticker + precio de Yahoo (gratis). Chequea el
+    budget de Finnhub POR TICKER y se detiene cuando se agota (cacheando lo obtenido) — así
+    NO se bloquea por pedir 36 slots de golpe (el budget es 55/min y es compartido). Guard:
+    cachea si obtuvo ≥8 tickers o si aún no había caché (evita pisar una buena con una parcial)."""
     if not FINNHUB_KEY:
         return None
     n = len(SCAN_LIST)
-    if not fh_budget_ok(n):
-        print("[scanner] budget Finnhub insuficiente — se mantiene caché")
-        return _scan_cache["data"]
-    fh_charge(n)
-    sem = asyncio.Semaphore(8)
-
-    async def one(sym, sector, client):
-        async with sem:
+    rows = []
+    async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as client:
+        for sym, sector in SCAN_LIST:
+            if not fh_budget_ok(1):
+                print(f"[scanner] budget Finnhub agotado tras {len(rows)} tickers")
+                break
+            fh_charge(1)
             try:
                 rm = await client.get(f"{FH_BASE}/stock/metric",
                                      params={"symbol": sym, "metric": "all", "token": FINNHUB_KEY})
@@ -2346,9 +2346,11 @@ async def refresh_scanner():
                 }
                 have = [v for v in pillars.values() if v is not None]
                 fscore = round(sum(have) / len(have), 0) if have else None
+                if fscore is None:
+                    continue
                 dist_high = round((price - hi52) / hi52 * 100, 1) if (price and hi52) else None
                 cls = "—"
-                if fscore is not None and dist_high is not None:
+                if dist_high is not None:
                     if fscore >= 70 and dist_high <= -12:
                         cls = "HIGH QUALITY / PRICE DISLOCATION"
                     elif fscore >= 65 and dist_high <= -6:
@@ -2357,23 +2359,17 @@ async def refresh_scanner():
                         cls = "WEAK FUNDAMENTALS"
                     else:
                         cls = "NEUTRAL"
-                if fscore is None:
-                    return None
-                return {
+                rows.append({
                     "ticker": sym, "sector": sector, "price": round(price, 2) if price else None,
                     "high52": round(hi52, 2) if hi52 else None, "distHigh": dist_high,
                     "fscore": fscore, "class": cls, "pillars": pillars,
                     "revGrowth": m.get("revenueGrowthTTMYoy"), "epsGrowth": m.get("epsGrowthTTMYoy"),
                     "pe": m.get("peTTM"), "roe": m.get("roeTTM"),
-                }
+                })
             except Exception as e:
                 print(f"[scanner] {sym}: {e}")
-                return None
-
-    async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as client:
-        results = await asyncio.gather(*[one(s, sec, client) for s, sec in SCAN_LIST])
-    rows = [r for r in results if r]
-    if rows and (len(rows) >= int(0.6 * n) or not _scan_cache["data"]):
+                continue
+    if rows and (len(rows) >= 8 or not _scan_cache["data"]):
         rows.sort(key=lambda r: (r.get("fscore") or 0), reverse=True)
         _scan_cache["data"] = {"rows": rows, "as_of": datetime.now(NY).isoformat(), "count": len(rows)}
         _scan_cache["ts"] = time.time()
