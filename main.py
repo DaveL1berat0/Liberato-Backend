@@ -2271,10 +2271,18 @@ SCAN_TTL = 6 * 3600
 # Watchlist de calidad (megacaps/compounders). Sector estático para no gastar una
 # llamada extra de profile2 por ticker.
 SCAN_LIST = [
-    ("NVDA", "Technology"), ("AAPL", "Technology"), ("MSFT", "Technology"),
-    ("GOOGL", "Communication"), ("AMZN", "Consumer Disc."), ("META", "Communication"),
-    ("AVGO", "Technology"), ("LLY", "Health Care"), ("V", "Financials"),
-    ("COST", "Consumer Staples"), ("NFLX", "Communication"), ("JPM", "Financials"),
+    ("NVDA", "Tecnología"), ("AAPL", "Tecnología"), ("MSFT", "Tecnología"),
+    ("GOOGL", "Comunicación"), ("AMZN", "Consumo Disc."), ("META", "Comunicación"),
+    ("AVGO", "Tecnología"), ("TSLA", "Consumo Disc."), ("COST", "Consumo Básico"),
+    ("NFLX", "Comunicación"), ("AMD", "Tecnología"), ("ADBE", "Tecnología"),
+    ("QCOM", "Tecnología"), ("TXN", "Tecnología"), ("AMAT", "Tecnología"),
+    ("INTU", "Tecnología"), ("ISRG", "Salud"), ("BKNG", "Consumo Disc."),
+    ("AMGN", "Salud"), ("VRTX", "Salud"), ("PANW", "Tecnología"),
+    ("GILD", "Salud"), ("LRCX", "Tecnología"), ("MU", "Tecnología"),
+    ("KLAC", "Tecnología"), ("SNPS", "Tecnología"), ("CDNS", "Tecnología"),
+    ("MRVL", "Tecnología"), ("CRWD", "Tecnología"), ("ORLY", "Consumo Disc."),
+    ("ADP", "Industrial"), ("MELI", "Consumo Disc."), ("CTAS", "Industrial"),
+    ("FTNT", "Tecnología"), ("ADI", "Tecnología"), ("NXPI", "Tecnología"),
 ]
 
 def _pillar(v, lo, hi):
@@ -2287,42 +2295,58 @@ def _pillar(v, lo, hi):
         return None
     return max(0.0, min(100.0, (v - lo) / (hi - lo) * 100.0)) if hi != lo else 50.0
 
+async def _yahoo_spot_c(client, sym):
+    """Precio spot de Yahoo (gratis) con un cliente compartido. None si falla."""
+    for host in ("query1", "query2"):
+        try:
+            r = await client.get(f"https://{host}.finance.yahoo.com/v8/finance/chart/{sym}"
+                                 f"?interval=1d&range=1d")
+            if r.status_code != 200:
+                continue
+            res = ((r.json().get("chart") or {}).get("result") or [None])[0]
+            if res:
+                p = (res.get("meta") or {}).get("regularMarketPrice")
+                if p is not None:
+                    return p
+        except Exception:
+            continue
+    return None
+
 async def refresh_scanner():
+    """Escanea un universo amplio del Nasdaq (no solo las magníficas). 1 llamada Finnhub
+    (metric=all) por ticker + precio de Yahoo (gratis) → cabe en el budget de 55/min de
+    Finnhub incluso con ~36 nombres. Fetch concurrente (semáforo 8). Guard: solo actualiza
+    la caché si obtuvo ≥60% del universo (evita que un fetch parcial pise uno bueno)."""
     if not FINNHUB_KEY:
         return None
-    rows = []
-    async with httpx.AsyncClient(timeout=10) as client:
-        for sym, sector in SCAN_LIST:
+    n = len(SCAN_LIST)
+    if not fh_budget_ok(n):
+        print("[scanner] budget Finnhub insuficiente — se mantiene caché")
+        return _scan_cache["data"]
+    fh_charge(n)
+    sem = asyncio.Semaphore(8)
+
+    async def one(sym, sector, client):
+        async with sem:
             try:
-                if not fh_budget_ok(2):
-                    break
-                fh_charge(2)
-                rm, rq = await asyncio.gather(
-                    client.get(f"{FH_BASE}/stock/metric", params={"symbol": sym, "metric": "all", "token": FINNHUB_KEY}),
-                    client.get(f"{FH_BASE}/quote", params={"symbol": sym, "token": FINNHUB_KEY}),
-                    return_exceptions=True)
-                m = (rm.json().get("metric") if not isinstance(rm, Exception) and rm.status_code == 200 else {}) or {}
-                q = (rq.json() if not isinstance(rq, Exception) and rq.status_code == 200 else {}) or {}
-                price = q.get("c")
+                rm = await client.get(f"{FH_BASE}/stock/metric",
+                                     params={"symbol": sym, "metric": "all", "token": FINNHUB_KEY})
+                m = (rm.json().get("metric") if rm.status_code == 200 else {}) or {}
+                price = await _yahoo_spot_c(client, sym)
                 hi52 = m.get("52WeekHigh")
-                lo52 = m.get("52WeekLow")
-                # ── 8 pilares (los que Finnhub metric=all provee de forma fiable) ──
                 pillars = {
                     "revenue":   _pillar(m.get("revenueGrowthTTMYoy"), -5, 25),
                     "eps":       _pillar(m.get("epsGrowthTTMYoy"), -10, 40),
                     "margin":    _pillar(m.get("netProfitMarginTTM"), 0, 30),
                     "gross":     _pillar(m.get("grossMarginTTM"), 20, 70),
                     "roe":       _pillar(m.get("roeTTM"), 5, 40),
-                    "balance":   _pillar(-(m.get("totalDebt/totalEquityQuarterly") or 0), -2.0, 0),  # menos deuda = mejor
+                    "balance":   _pillar(-(m.get("totalDebt/totalEquityQuarterly") or 0), -2.0, 0),
                     "fcf":       _pillar(m.get("currentRatioQuarterly"), 0.8, 3.0),
-                    "valuation": _pillar(-(m.get("peTTM") or 0), -60, -10),  # menor PE = mejor
+                    "valuation": _pillar(-(m.get("peTTM") or 0), -60, -10),
                 }
                 have = [v for v in pillars.values() if v is not None]
                 fscore = round(sum(have) / len(have), 0) if have else None
-                # Technical location (Regla #1: 52w high como referencia real; ATH exacto
-                # requeriría histórico largo — se etiqueta como distancia a máx 52 semanas).
                 dist_high = round((price - hi52) / hi52 * 100, 1) if (price and hi52) else None
-                # Clasificación: "el precio cayó pero el negocio NO está roto"
                 cls = "—"
                 if fscore is not None and dist_high is not None:
                     if fscore >= 70 and dist_high <= -12:
@@ -2333,21 +2357,27 @@ async def refresh_scanner():
                         cls = "WEAK FUNDAMENTALS"
                     else:
                         cls = "NEUTRAL"
-                rows.append({
+                if fscore is None:
+                    return None
+                return {
                     "ticker": sym, "sector": sector, "price": round(price, 2) if price else None,
                     "high52": round(hi52, 2) if hi52 else None, "distHigh": dist_high,
                     "fscore": fscore, "class": cls, "pillars": pillars,
                     "revGrowth": m.get("revenueGrowthTTMYoy"), "epsGrowth": m.get("epsGrowthTTMYoy"),
                     "pe": m.get("peTTM"), "roe": m.get("roeTTM"),
-                })
+                }
             except Exception as e:
                 print(f"[scanner] {sym}: {e}")
-                continue
-    if rows:
+                return None
+
+    async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as client:
+        results = await asyncio.gather(*[one(s, sec, client) for s, sec in SCAN_LIST])
+    rows = [r for r in results if r]
+    if rows and (len(rows) >= int(0.6 * n) or not _scan_cache["data"]):
         rows.sort(key=lambda r: (r.get("fscore") or 0), reverse=True)
         _scan_cache["data"] = {"rows": rows, "as_of": datetime.now(NY).isoformat(), "count": len(rows)}
         _scan_cache["ts"] = time.time()
-        print(f"[scanner] ok: {len(rows)} tickers")
+        print(f"[scanner] ok: {len(rows)}/{n} tickers")
     return _scan_cache["data"]
 
 @app.get("/api/leaps/scanner")
@@ -2461,14 +2491,16 @@ async def get_leaps_brief():
             "score": env.get("score"), "classification": env.get("classification")}
 
 # ═══════════════════ LEAPS CHART — velas DIARIAS de cualquier ticker (Yahoo) ═══════════════════
-_leaps_ohlc_cache = {}  # (ysym, rng) → {"ts": epoch, "bars": [...]}
-_LEAPS_RANGES = {"6mo", "1y", "2y", "5y"}
+_leaps_ohlc_cache = {}  # (ysym, rng, interval) → {"ts": epoch, "bars": [...]}
+_LEAPS_RANGES = {"1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "max"}
+_LEAPS_INTERVALS = {"1d", "1wk", "1mo"}
 
 @app.get("/api/leaps/ohlc/{symbol}")
-async def get_leaps_ohlc(symbol: str, rng: str = "1y"):
-    """Velas DIARIAS reales (Yahoo, lado servidor) de cualquier subyacente para el chart
-    nativo de la sección Options — índices (NDX→^NDX, SPX→^GSPC), futuros (=F) o acciones.
-    Respuesta Lightweight-Charts-ready: {ok, symbol, ysym, rng, bars:[{t:'YYYY-MM-DD',o,h,l,c}]}."""
+async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
+    """Velas reales (Yahoo, lado servidor) de cualquier subyacente para el chart nativo de
+    la sección Options — índices (NDX→^NDX, SPX→^GSPC), futuros (=F) o acciones. Soporta
+    intervalo diario/semanal/mensual (D/W/M). Respuesta Lightweight-Charts-ready:
+    {ok, symbol, ysym, rng, interval, bars:[{t:'YYYY-MM-DD',o,h,l,c}]}."""
     raw = (symbol or "").upper().strip()
     if not raw:
         raise HTTPException(400, "falta symbol")
@@ -2481,14 +2513,16 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y"):
         ysym = raw  # acción normal (NVDA, AAPL, …)
     if rng not in _LEAPS_RANGES:
         rng = "1y"
-    ck = (ysym, rng)
+    if interval not in _LEAPS_INTERVALS:
+        interval = "1d"
+    ck = (ysym, rng, interval)
     cached = _leaps_ohlc_cache.get(ck)
     if cached and (time.time() - cached["ts"] < 900) and cached["bars"]:  # 15 min
-        return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng,
+        return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng, "interval": interval,
                 "bars": cached["bars"], "cached": True, "source": f"yahoo:{ysym}"}
     for host in ("query1", "query2"):
         url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{ysym.replace('=', '%3D')}"
-               f"?interval=1d&range={rng}")
+               f"?interval={interval}&range={rng}")
         try:
             async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
                 r = await c.get(url)
@@ -2517,9 +2551,9 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y"):
                     for k in list(_leaps_ohlc_cache)[:120]:
                         _leaps_ohlc_cache.pop(k, None)
                 return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng,
-                        "bars": bars, "source": f"yahoo:{ysym}"}
+                        "interval": interval, "bars": bars, "source": f"yahoo:{ysym}"}
         except Exception as e:
-            print(f"[leaps-ohlc] {host} {ysym} {rng}: {e}")
+            print(f"[leaps-ohlc] {host} {ysym} {rng} {interval}: {e}")
             continue
     return {"ok": False, "symbol": raw, "ysym": ysym, "reason": f"sin velas para {ysym}"}
 
@@ -2534,28 +2568,42 @@ SECTOR_ETFS = [
 ]
 
 async def refresh_sectors():
-    """% de cambio diario real de los 11 ETFs sectoriales SPDR (Finnhub /quote → dp).
-    Ordenado de líder a rezagado = rotación sectorial. Cacheado 10 min."""
-    if not FINNHUB_KEY or not budget_ok("finnhub", len(SECTOR_ETFS)):
-        return
+    """% de cambio diario real de los 11 ETFs sectoriales SPDR desde YAHOO (gratis, NO
+    consume el budget de Finnhub — antes lo estrangulaba con el scanner). Ordenado de
+    líder a rezagado = rotación sectorial. Cacheado 10 min."""
     out = []
-    async with httpx.AsyncClient(timeout=10) as client:
+    async with httpx.AsyncClient(timeout=10, headers={"User-Agent": "Mozilla/5.0"}) as client:
         for sym, name in SECTOR_ETFS:
-            try:
-                fh_charge(1)
-                r = await client.get(f"{FH_BASE}/quote",
-                                     params={"symbol": sym, "token": FINNHUB_KEY})
-                if r.status_code != 200:
+            chg = None
+            price = None
+            for host in ("query1", "query2"):
+                try:
+                    r = await client.get(
+                        f"https://{host}.finance.yahoo.com/v8/finance/chart/{sym}"
+                        f"?interval=1d&range=5d")
+                    if r.status_code != 200:
+                        continue
+                    res = ((r.json().get("chart") or {}).get("result") or [None])[0]
+                    if not res:
+                        continue
+                    meta = res.get("meta") or {}
+                    price = meta.get("regularMarketPrice")
+                    prev = meta.get("chartPreviousClose") or meta.get("previousClose")
+                    if price is not None and prev:
+                        chg = (price - prev) / prev * 100.0
+                    else:
+                        cl = [x for x in (((res.get("indicators") or {}).get("quote")
+                              or [{}])[0].get("close") or []) if x is not None]
+                        if len(cl) >= 2:
+                            price = cl[-1]
+                            chg = (cl[-1] - cl[-2]) / cl[-2] * 100.0
+                    break
+                except Exception as e:
+                    print(f"[sectors] {host} {sym}: {e}")
                     continue
-                q = r.json() or {}
-                dp = q.get("dp")
-                if dp is None:
-                    continue
-                out.append({"sym": sym, "name": name, "chg": round(float(dp), 2),
-                            "price": q.get("c")})
-            except Exception as e:
-                print(f"[sectors] {sym}: {e}")
-                continue
+            if chg is not None:
+                out.append({"sym": sym, "name": name, "chg": round(chg, 2),
+                            "price": round(price, 2) if price else None})
     if out:
         out.sort(key=lambda x: x["chg"], reverse=True)
         _sectors_cache["data"] = {"sectors": out, "as_of": datetime.now(NY).isoformat(),
@@ -2571,6 +2619,71 @@ async def get_leaps_sectors():
         except Exception as e:
             print(f"[sectors] refresh falló: {e}")
     return _sectors_cache["data"] or {"sectors": [], "note": "sin datos aún (Finnhub)"}
+
+# ═══════ SECTOR ROTATION MAP (RRG) — dónde se mueve el dinero entre sectores ═══════
+# Estilo Relative Rotation Graph: cada sector se ubica por su FUERZA relativa (eje X, 3m
+# vs SPY) y su MOMENTUM relativo (eje Y). Cuadrantes: LÍDER (fuerte+momentum), MEJORANDO
+# (débil pero acelerando → entra dinero), REZAGADO (débil+cayendo), DEBILITÁNDOSE (fuerte
+# pero perdiendo momentum → sale dinero). Todo desde Yahoo (gratis), cacheado 30 min.
+_rotation_cache = {"data": None, "ts": 0.0}
+ROTATION_TTL = 1800
+
+@app.get("/api/leaps/rotation")
+async def get_leaps_rotation():
+    now = time.time()
+    if _rotation_cache["data"] and (now - _rotation_cache["ts"] < ROTATION_TTL):
+        return _rotation_cache["data"]
+    bench = "SPY"
+    syms = [bench] + [s for s, _ in SECTOR_ETFS]
+    async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as client:
+        async def closes(sym):
+            for host in ("query1", "query2"):
+                try:
+                    r = await client.get(f"https://{host}.finance.yahoo.com/v8/finance/chart/{sym}"
+                                        f"?interval=1d&range=6mo")
+                    if r.status_code != 200:
+                        continue
+                    res = ((r.json().get("chart") or {}).get("result") or [None])[0]
+                    if not res:
+                        continue
+                    return [x for x in (((res.get("indicators") or {}).get("quote")
+                            or [{}])[0].get("close") or []) if x is not None]
+                except Exception:
+                    continue
+            return []
+        allc = await asyncio.gather(*[closes(s) for s in syms])
+    data = dict(zip(syms, allc))
+    spy = data.get(bench) or []
+    if len(spy) < 64:
+        return _rotation_cache["data"] or {"sectors": [], "note": "sin histórico suficiente"}
+    out = []
+    for sym, name in SECTOR_ETFS:
+        c = data.get(sym) or []
+        L = min(len(c), len(spy))
+        if L < 64:
+            continue
+        cc, ss = c[-L:], spy[-L:]
+        rs = [cc[i] / ss[i] for i in range(L) if ss[i]]
+        if len(rs) < 64:
+            continue
+        def rel(days):
+            return (rs[-1] / rs[-days] - 1) * 100.0 if len(rs) > days else 0.0
+        x = rel(63)                      # fuerza relativa 3 meses vs SPY
+        y = rel(21) - x * (21.0 / 63.0)  # momentum: 1m por encima/debajo de la tendencia 3m
+        chg = ((cc[-1] - cc[-2]) / cc[-2] * 100.0) if (len(cc) >= 2 and cc[-2]) else None
+        if x >= 0 and y >= 0:   q = "LIDER"
+        elif x < 0 and y >= 0:  q = "MEJORANDO"
+        elif x < 0 and y < 0:   q = "REZAGADO"
+        else:                   q = "DEBILITANDOSE"
+        out.append({"sym": sym, "name": name, "x": round(x, 2), "y": round(y, 2),
+                    "quadrant": q, "chg": round(chg, 2) if chg is not None else None})
+    if out:
+        _rotation_cache["data"] = {"sectors": out, "benchmark": bench,
+                                   "as_of": datetime.now(NY).isoformat(),
+                                   "axes": {"x": "Fuerza relativa 3m vs SPY",
+                                            "y": "Momentum relativo"}}
+        _rotation_cache["ts"] = now
+    return _rotation_cache["data"] or {"sectors": [], "note": "sin datos aún"}
 
 # (frases_en_titulo [más específicas primero], series_id, transform)
 BLS_SERIES = [
