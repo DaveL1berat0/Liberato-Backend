@@ -2523,6 +2523,55 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y"):
             continue
     return {"ok": False, "symbol": raw, "ysym": ysym, "reason": f"sin velas para {ysym}"}
 
+# ═══════════════════ SECTOR ROTATION — 11 ETFs SPDR reales (Finnhub) ═══════════════════
+_sectors_cache = {"data": None, "ts": 0.0}
+SECTORS_TTL = 600   # 10 min
+SECTOR_ETFS = [
+    ("XLK", "Tecnología"), ("XLC", "Comunicación"), ("XLY", "Consumo Discr."),
+    ("XLP", "Consumo Básico"), ("XLV", "Salud"), ("XLF", "Financiero"),
+    ("XLI", "Industrial"), ("XLE", "Energía"), ("XLB", "Materiales"),
+    ("XLU", "Utilities"), ("XLRE", "Inmobiliario"),
+]
+
+async def refresh_sectors():
+    """% de cambio diario real de los 11 ETFs sectoriales SPDR (Finnhub /quote → dp).
+    Ordenado de líder a rezagado = rotación sectorial. Cacheado 10 min."""
+    if not FINNHUB_KEY or not budget_ok("finnhub", len(SECTOR_ETFS)):
+        return
+    out = []
+    async with httpx.AsyncClient(timeout=10) as client:
+        for sym, name in SECTOR_ETFS:
+            try:
+                fh_charge(1)
+                r = await client.get(f"{FH_BASE}/quote",
+                                     params={"symbol": sym, "token": FINNHUB_KEY})
+                if r.status_code != 200:
+                    continue
+                q = r.json() or {}
+                dp = q.get("dp")
+                if dp is None:
+                    continue
+                out.append({"sym": sym, "name": name, "chg": round(float(dp), 2),
+                            "price": q.get("c")})
+            except Exception as e:
+                print(f"[sectors] {sym}: {e}")
+                continue
+    if out:
+        out.sort(key=lambda x: x["chg"], reverse=True)
+        _sectors_cache["data"] = {"sectors": out, "as_of": datetime.now(NY).isoformat(),
+                                  "count": len(out)}
+        _sectors_cache["ts"] = time.time()
+        print(f"[sectors] ok: {len(out)} sectores")
+
+@app.get("/api/leaps/sectors")
+async def get_leaps_sectors():
+    if not _sectors_cache["data"] or (time.time() - _sectors_cache["ts"] > SECTORS_TTL):
+        try:
+            await refresh_sectors()
+        except Exception as e:
+            print(f"[sectors] refresh falló: {e}")
+    return _sectors_cache["data"] or {"sectors": [], "note": "sin datos aún (Finnhub)"}
+
 # (frases_en_titulo [más específicas primero], series_id, transform)
 BLS_SERIES = [
     (["core cpi m/m", "core cpi mom"],                         "CUSR0000SA0L1E", "mom"),
