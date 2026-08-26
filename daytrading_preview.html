@@ -705,6 +705,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-mv-upd{display:flex;align-items:center;gap:7px;margin-bottom:14px;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;}
 .lg-mv-upd .d{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 6px var(--up);}
 .lg-mv-filter{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap;}
+.lg-macro-filter{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap;}
+.mif{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all 0.18s var(--ease);min-height:32px;}
+.mif:hover{border-color:rgba(204,169,79,0.4);color:var(--ink-2);}
+.mif.active{background:rgba(204,169,79,0.14);border-color:var(--gold);color:var(--gold);}
+.mif-n{font-size:9px;font-weight:800;opacity:0.7;background:rgba(255,255,255,0.06);border-radius:999px;padding:1px 6px;}
+.mif.active .mif-n{background:rgba(204,169,79,0.25);opacity:1;}
 .lg-mv-ftab{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all 0.18s var(--ease);min-height:32px;}
 .lg-mv-ftab:hover{border-color:rgba(204,169,79,0.4);color:var(--ink-2);}
 .lg-mv-ftab.active{background:rgba(204,169,79,0.14);border-color:var(--gold);color:var(--gold);}
@@ -3280,6 +3286,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   function macroWeekNext(){MACRO_WEEK_OFFSET++;MACRO_DAY=null;renderLegacy();}
   function macroSelectDay(k){MACRO_DAY=k;renderLegacy();}
   window.macroWeekPrev=macroWeekPrev; window.macroWeekNext=macroWeekNext; window.macroSelectDay=macroSelectDay;
+  var MACRO_IMPACT='all';   // filtro de impacto del calendario macro (all/high/med)
+  function macroSetImpact(k){MACRO_IMPACT=k;renderLegacy();}
+  window.macroSetImpact=macroSetImpact;
   // Lunes (00:00) de la semana actual desplazada 'offset' semanas, en fecha ET.
   function macroWeekStart(offset){
     var et=etNow();
@@ -3418,16 +3427,24 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           +'</div>'
           +'</div></div>';
       }
-      // ── Eventos SOLO del día seleccionado ──
+      // ── Eventos SOLO del día seleccionado, con filtro de impacto ──
       var selDayObj=dayMap[MACRO_DAY]||null;
-      var selEvents=(selDayObj&&selDayObj.events)?selDayObj.events:[];
+      var allSel=(selDayObj&&selDayObj.events)?selDayObj.events:[];
+      var _mc={all:allSel.length,high:0,med:0};
+      allSel.forEach(function(e){ if(e.impact==='high')_mc.high++; else if(e.impact==='med')_mc.med++; });
+      var selEvents=(MACRO_IMPACT==='all')?allSel:allSel.filter(function(e){return MACRO_IMPACT==='high'?e.impact==='high':e.impact==='med';});
+      var mfilter='<div class="lg-macro-filter">'
+        +'<button class="mif'+(MACRO_IMPACT==='all'?' active':'')+'" onclick="macroSetImpact(\'all\')">Todos<span class="mif-n">'+_mc.all+'</span></button>'
+        +'<button class="mif'+(MACRO_IMPACT==='high'?' active':'')+'" onclick="macroSetImpact(\'high\')">Alto<span class="mif-n">'+_mc.high+'</span></button>'
+        +'<button class="mif'+(MACRO_IMPACT==='med'?' active':'')+'" onclick="macroSetImpact(\'med\')">Medio<span class="mif-n">'+_mc.med+'</span></button>'
+        +'</div>';
       var body='';
       if(selEvents.length){
         selEvents.forEach(function(e){ body+=_macroEvHtml(e,selDayObj); });
       } else {
-        body='<div class="cat-empty"><span class="cat-empty-t">Sin eventos macro este día</span></div>';
+        body='<div class="cat-empty"><span class="cat-empty-t">Sin eventos macro'+(MACRO_IMPACT!=='all'?' de impacto '+(MACRO_IMPACT==='high'?'alto':'medio'):'')+' este día</span></div>';
       }
-      list.innerHTML=nav+tabs+body;
+      list.innerHTML=nav+tabs+mfilter+body;
     }
     // movers
     function mvHtml(arr,dir){return arr.map(function(m){return '<div class="lg-mv '+dir+'"><div class="lg-mv-l"><span class="lg-mv-sym">'+m.sym+'</span><span class="lg-mv-px">$'+m.px+'</span></div><span class="lg-mv-chg '+dir+'">'+m.chg+'</span></div>';}).join('');}
@@ -3801,7 +3818,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   function _mvNewsHtml(items){
     var SENT_COLOR={'Bullish':'rgba(46,232,164,0.85)','Bearish':'rgba(177,151,252,0.85)','Neutral':'rgba(239,236,227,0.45)'};
     var SENT_BG={'Bullish':'rgba(46,232,164,0.10)','Bearish':'rgba(177,151,252,0.10)','Neutral':'rgba(239,236,227,0.06)'};
-    var ALERT_BG={'CRITICAL':'rgba(255,59,48,0.12)','HIGH':'rgba(204,169,79,0.09)','ELEVATED':'rgba(239,236,227,0.05)'};
+    // Fondo de la tarjeta por SENTIMIENTO (lectura inmediata): alcista=verde, bajista=MORADO (regla), neutral=tenue.
+    var SENT_ITEM_BG={'Bullish':'rgba(46,232,164,0.13)','Bearish':'rgba(177,151,252,0.13)','Neutral':'rgba(239,236,227,0.04)'};
     function relTime(m){
       var ts=+(m.ts||0); if(!ts)return m.time_et||'—';
       var diff=Math.floor(Date.now()/1000)-ts; if(diff<0)diff=0;
@@ -3815,7 +3833,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var alert=m.alert_level||'HIGH';
       var score=m.impact_score?m.impact_score.toFixed(1):'—';
       var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🔴':'⬜';
-      return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+ALERT_BG[alert]+'">'
+      return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+(SENT_ITEM_BG[sent]||SENT_ITEM_BG.Neutral)+'">'
         +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
         +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERT</span>'
         +'<span style="font-size:10px;">'+sentIcon+'</span>'
@@ -3833,17 +3851,13 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   }
   function _mvTab(k,lbl,n){return '<button class="lg-mv-ftab'+(MOVERS_FILTER===k?' active':'')+'" data-mvf="'+k+'">'+lbl+'<span class="lg-mv-fn">'+n+'</span></button>';}
   function renderMoversPane(){
+    // High Impact News: SIN filtro de impacto (por definición todas son de alto impacto).
+    // El fondo de cada tarjeta va por SENTIMIENTO (verde/morado) para lectura inmediata.
     var movPane=document.getElementById('lg-pane-movers'); if(!movPane)return;
     var all=(S.movers||[]);
     if(!all.length){ movPane.innerHTML='<div class="cat-empty" style="padding:24px;text-align:center;"><span class="cat-empty-t">Sin noticias de alto impacto ahora mismo</span></div>'; return; }
-    var counts={all:all.length,alto:0,medio:0};
-    all.forEach(function(m){counts[_moverTier(m)]++;});
-    var filtered=MOVERS_FILTER==='all'?all:all.filter(function(m){return _moverTier(m)===MOVERS_FILTER;});
-    var tabs='<div class="lg-mv-filter">'+_mvTab('all','Todos',counts.all)+_mvTab('alto','Alto',counts.alto)+_mvTab('medio','Medio',counts.medio)+'</div>';
-    var list=filtered.length?_mvNewsHtml(filtered):'<div class="cat-empty" style="padding:22px;text-align:center;"><span class="cat-empty-t">Sin noticias de impacto '+(MOVERS_FILTER==='alto'?'alto':'medio')+' ahora</span></div>';
-    movPane.innerHTML='<div class="lg-mv-upd"><span class="d"></span><span id="lg-mv-upd-txt">Movers en tiempo real</span></div>'+tabs+list;
+    movPane.innerHTML='<div class="lg-mv-upd"><span class="d"></span><span id="lg-mv-upd-txt">Movers en tiempo real</span></div>'+_mvNewsHtml(all);
     movPane.onclick=function(e){
-      var ft=e.target.closest('[data-mvf]'); if(ft){MOVERS_FILTER=ft.getAttribute('data-mvf');renderMoversPane();return;}
       var el=e.target.closest('[data-url]'); if(el&&el.dataset.url)window.open(el.dataset.url,'_blank');
     };
   }
