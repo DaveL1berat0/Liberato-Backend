@@ -111,6 +111,20 @@ a{color:inherit;text-decoration:none;}
 .scan-tab{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:4px 10px;cursor:pointer;}
 .scan-tab.active{background:rgba(201,168,76,0.14);border-color:var(--gold);color:var(--gold);}
 .stub{padding:26px 16px;text-align:center;color:var(--ink-4);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;}
+.scan-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.scan-tbl th{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--hair);font-weight:700;}
+.scan-tbl th.r,.scan-tbl td.r{text-align:right;}
+.scan-tbl td{padding:10px 12px;border-bottom:0.5px solid var(--hair);color:var(--ink-2);}
+.scan-tbl tr{cursor:pointer;transition:background 0.15s;}
+.scan-tbl tbody tr:hover{background:rgba(201,168,76,0.05);}
+.scan-tk{font-family:var(--mono);font-weight:700;color:var(--ink);}
+.scan-sec{font-size:10px;color:var(--ink-4);}
+.scan-fs{font-family:var(--mono);font-weight:700;}
+.scan-cls{font-family:var(--mono);font-size:8px;font-weight:800;letter-spacing:0.04em;padding:2px 6px;border-radius:4px;white-space:nowrap;}
+.scan-cls.disloc{background:rgba(46,232,164,0.15);color:var(--up);}
+.scan-cls.pull{background:rgba(201,168,76,0.15);color:var(--gold);}
+.scan-cls.weak{background:rgba(177,151,252,0.13);color:var(--down);}
+.scan-cls.neut{background:rgba(239,236,227,0.06);color:var(--ink-3);}
 .stub b{color:var(--gold);display:block;margin-bottom:5px;font-size:12px;}
 .tv-wrap{height:420px;background:var(--panel-2);border-radius:var(--r-sm);overflow:hidden;}
 @media(max-width:960px){.tv-wrap{height:320px;}}
@@ -207,7 +221,7 @@ a{color:inherit;text-decoration:none;}
   <div class="orow r3">
     <section class="panel">
       <div class="p-hd"><span class="p-ttl">▦ LEAPS Opportunity Scanner</span><div class="scan-tabs"><span class="scan-tab active">Ticker</span><span class="scan-tab">Sector</span><span class="scan-tab">Trend</span><span class="scan-tab">Location</span></div></div>
-      <div class="p-bd"><div class="stub"><b>Scanner — Fase 1</b>Detecta "el precio cayó pero el negocio NO está roto" (location técnica + 8 pillars fundamentales de Finnhub). Cableado en la siguiente iteración de datos.</div></div>
+      <div class="p-bd" style="padding:0;"><div id="scan-body"><div class="stub">Escaneando oportunidades…</div></div></div>
     </section>
     <section class="panel">
       <div class="p-hd"><span class="p-ttl">↻ Sector Rotation</span><span class="p-sub" id="rot-sub">—</span></div>
@@ -338,17 +352,48 @@ function lcStrat(){
 }
 
 /* ── TRADINGVIEW EMBED ── */
-function loadTV(){
+function loadTV(sym){
+  sym=sym||'NASDAQ:NDX';
+  var w=document.getElementById('tv-wrap'); if(!w)return; w.innerHTML='';
   var s=document.createElement('script');
   s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
   s.type='text/javascript'; s.async=true;
   s.innerHTML=JSON.stringify({
-    autosize:true, symbol:'NASDAQ:NDX', interval:'D', timezone:'America/New_York',
+    autosize:true, symbol:sym, interval:'D', timezone:'America/New_York',
     theme:'dark', style:'1', locale:'es', hide_side_toolbar:false, allow_symbol_change:true,
     calendar:false, backgroundColor:'#0E121B', gridColor:'rgba(255,255,255,0.05)', support_host:'https://www.tradingview.com'
   });
-  var w=document.getElementById('tv-wrap');
-  if(w){ var c=document.createElement('div'); c.className='tradingview-widget-container'; c.style.height='100%'; var inner=document.createElement('div'); inner.className='tradingview-widget-container__widget'; inner.style.height='100%'; c.appendChild(inner); c.appendChild(s); w.appendChild(c); }
+  var c=document.createElement('div'); c.className='tradingview-widget-container'; c.style.height='100%';
+  var inner=document.createElement('div'); inner.className='tradingview-widget-container__widget'; inner.style.height='100%';
+  c.appendChild(inner); c.appendChild(s); w.appendChild(c);
+  var lbl=document.getElementById('tv-sym'); if(lbl)lbl.textContent=sym;
+}
+
+/* ── LEAPS OPPORTUNITY SCANNER ── */
+function scanClsMap(c){ if(/DISLOCATION/.test(c))return['disloc','Dislocación']; if(/PULLBACK/.test(c))return['pull','Pullback']; if(/WEAK/.test(c))return['weak','Débil']; return['neut','Neutral']; }
+function loadScanner(){
+  fetch(API+'/api/leaps/scanner').then(function(r){return r.json();}).then(function(d){
+    var host=document.getElementById('scan-body'); if(!host)return;
+    var rows=(d&&d.rows)||[];
+    if(!rows.length){ host.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
+    var body=rows.map(function(x){
+      var cm=scanClsMap(x['class']||'');
+      var dh=(x.distHigh!=null)?((x.distHigh>=0?'+':'')+x.distHigh+'%'):'—';
+      var dhc=(x.distHigh!=null&&x.distHigh<=-6)?'var(--gold)':'var(--ink-2)';
+      var fsc=(x.fscore!=null)?x.fscore:'—';
+      var fscCol=(x.fscore>=70)?'var(--up)':(x.fscore>=50)?'var(--gold)':'var(--down)';
+      return '<tr onclick="selectTicker(\''+x.ticker+'\')"><td><span class="scan-tk">'+x.ticker+'</span><span class="scan-sec"> · '+(x.sector||'')+'</span></td>'
+        +'<td class="r"><span class="scan-fs" style="color:'+fscCol+'">'+fsc+'</span></td>'
+        +'<td class="r" style="color:'+dhc+';font-family:var(--mono);">'+dh+'</td>'
+        +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
+    }).join('');
+    host.innerHTML='<table class="scan-tbl"><thead><tr><th>Ticker</th><th class="r">Fund. Score</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
+  }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
+}
+function selectTicker(tk){
+  var inp=document.getElementById('lc-tkr'); if(inp){ inp.value=tk; lcStrat(); }
+  loadTV(tk.indexOf(':')>=0?tk:('NASDAQ:'+tk));
+  try{ document.getElementById('tv-wrap').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
 }
 
 /* ── SECTOR ROTATION (real desde heatmap si disponible) ── */
@@ -367,7 +412,7 @@ function loadRotation(){
 }
 
 /* init */
-loadEnv(); loadTV(); loadRotation(); lcCalc();
+loadEnv(); loadTV(); loadRotation(); loadScanner(); lcCalc();
 setInterval(loadEnv, 6*3600*1000);
 </script>
 
