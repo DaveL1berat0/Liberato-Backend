@@ -2079,7 +2079,9 @@ async def refresh_environment():
     ser = {}
     ids = ["T10Y2Y", "FEDFUNDS", "DGS10", "CPIAUCSL", "PCEPI", "TDSP",
            "MORTGAGE30US", "HOUST", "UNRATE", "INDPRO", "DCOILWTICO",
-           "BAMLH0A0HYM2", "NFCI"]
+           "BAMLH0A0HYM2", "NFCI",
+           # Curva de rendimientos real (para dibujarla): tramos por vencimiento
+           "DGS3MO", "DGS2", "DGS5", "DGS30"]
     results = await asyncio.gather(*[_fred_obs(i, 26) for i in ids], return_exceptions=True)
     for i, sid in enumerate(ids):
         ser[sid] = results[i] if not isinstance(results[i], Exception) else []
@@ -2195,11 +2197,23 @@ async def refresh_environment():
     if (_m("yield_curve").get("score") or 100) < 35 and (_m("economy").get("score") or 0) >= 60:
         conflicts.append("Curva invertida pese a datos de actividad aún firmes")
 
+    # Curva de rendimientos REAL (para dibujarla) — tramos por vencimiento.
+    curve = []
+    for lbl, sid, yrs in [("3M", "DGS3MO", 0.25), ("2Y", "DGS2", 2),
+                          ("5Y", "DGS5", 5), ("10Y", "DGS10", 10), ("30Y", "DGS30", 30)]:
+        v = last(sid)
+        if v is not None:
+            curve.append({"label": lbl, "yrs": yrs, "yield": round(v, 2)})
+    _yc_motor = next((m for m in motors if m["key"] == "yield_curve"), None)
+    if _yc_motor is not None:
+        _yc_motor["curve"] = curve
+
     data = {
         "score": total,
         "classification": _classify(total),
         "motors": motors,
         "conflicts": conflicts,
+        "yield_curve": curve,
         "coverage": f"{len(avail)}/{len(motors)}",
         "as_of": datetime.now(NY).isoformat(),
         "source": "FRED",
