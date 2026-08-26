@@ -1964,7 +1964,7 @@ function openMenu(){document.getElementById('menu-drawer').classList.add('open')
 function closeMenu(){document.getElementById('menu-drawer').classList.remove('open');document.getElementById('menu-overlay').classList.remove('open');}
 
 // MODAL
-function openModal(){document.getElementById('modal-overlay').classList.add('visible');var s=document.getElementById('sticky-cta');if(s)s.style.display='none';}
+function openModal(){try{if(localStorage.getItem('lbc_token')||localStorage.getItem('lbc_session'))return;}catch(e){}document.getElementById('modal-overlay').classList.add('visible');var s=document.getElementById('sticky-cta');if(s)s.style.display='none';}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('visible');var s=document.getElementById('sticky-cta');if(s)s.style.display='';}
 document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 // Backend real de autenticación (durable en Supabase). Un solo origen de verdad.
@@ -2437,6 +2437,8 @@ function lbcLogout(){
   var shown=false;
   function triggerModal(){
     if(shown||sessionStorage.getItem('lbc_modal_seen'))return;
+    // No mostrar el registro si el usuario YA está logueado (gratis o pagado).
+    try{ if(localStorage.getItem('lbc_token')||localStorage.getItem('lbc_session'))return; }catch(e){}
     shown=true;
     try{sessionStorage.setItem('lbc_modal_seen','1');}catch(e){}
     openModal();
