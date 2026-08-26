@@ -76,6 +76,10 @@ a{color:inherit;text-decoration:none;}
 .motor-fill{height:100%;border-radius:3px;transition:width 0.6s ease;}
 .motor-sc{flex:0 0 74px;text-align:right;font-family:var(--mono);font-size:12px;font-weight:700;}
 .motor-st{flex:0 0 74px;text-align:right;font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+.env-curve{margin-top:14px;padding:12px 14px 8px;border:0.5px solid var(--hair);border-radius:var(--r-sm);background:var(--panel-2);}
+.env-curve-hd{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px;}
+.env-curve-spread{font-weight:700;}
+.env-curve svg{width:100%;height:110px;display:block;}
 .env-conflicts{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,0.07);border:0.5px solid rgba(245,166,35,0.25);}
 .env-conflicts-t{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:5px;}
 .env-conflicts li{font-size:12px;color:var(--ink-2);margin-left:16px;line-height:1.5;}
@@ -151,6 +155,10 @@ a{color:inherit;text-decoration:none;}
           </div>
         </div>
         <div id="env-motors"></div>
+        <div class="env-curve" id="env-curve" style="display:none;">
+          <div class="env-curve-hd"><span>Curva de rendimientos · US Treasury</span><span id="env-curve-spread" class="env-curve-spread">—</span></div>
+          <div id="env-curve-svg"></div>
+        </div>
         <div class="env-conflicts" id="env-conflicts" style="display:none;">
           <div class="env-conflicts-t">⚠ Señales en conflicto</div>
           <ul id="env-conflicts-list"></ul>
@@ -241,6 +249,36 @@ function renderEnv(d){
   }
   var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
   if(cf&&cl2){ if(d.conflicts&&d.conflicts.length){ cf.style.display='block'; cl2.innerHTML=d.conflicts.map(function(x){return '<li>'+x+'</li>';}).join(''); } else cf.style.display='none'; }
+  renderYieldCurve(d.yield_curve);
+}
+function renderYieldCurve(curve){
+  var wrap=document.getElementById('env-curve'); if(!wrap)return;
+  if(!curve||curve.length<3){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  var W=460,H=110,padL=30,padR=14,padT=14,padB=22, n=curve.length;
+  var ys=curve.map(function(p){return p.yield;});
+  var mn=Math.min.apply(null,ys), mx=Math.max.apply(null,ys), rng=(mx-mn)||1;
+  mn-=rng*0.25; mx+=rng*0.25; rng=mx-mn;
+  var xw=(W-padL-padR)/(n-1), plotH=H-padT-padB;
+  function X(i){return padL+i*xw;} function Y(v){return padT+plotH-((v-mn)/rng)*plotH;}
+  var pts=curve.map(function(p,i){return X(i).toFixed(1)+','+Y(p.yield).toFixed(1);});
+  // ¿invertida? tramo corto (2Y) por encima del largo (10Y)
+  var y2=curve.find(function(p){return p.label==='2Y';}), y10=curve.find(function(p){return p.label==='10Y';});
+  var inverted=(y2&&y10&&y2.yield>y10.yield);
+  var lineCol=inverted?'#FF6B81':'#C9A84C';
+  var grid=''; for(var g=0;g<=2;g++){var yy=(padT+plotH*g/2).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';}
+  var dots='',labels='';
+  curve.forEach(function(p,i){
+    dots+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.yield).toFixed(1)+'" r="2.6" fill="'+lineCol+'"/>';
+    dots+='<text x="'+X(i).toFixed(1)+'" y="'+(Y(p.yield)-7).toFixed(1)+'" fill="rgba(239,236,227,0.72)" font-family="DM Mono,monospace" font-size="8.5" text-anchor="middle">'+p.yield.toFixed(2)+'</text>';
+    labels+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" fill="rgba(239,236,227,0.42)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">'+p.label+'</text>';
+  });
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+grid
+    +'<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+lineCol+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+    +dots+labels+'</svg>';
+  document.getElementById('env-curve-svg').innerHTML=svg;
+  var sp=document.getElementById('env-curve-spread');
+  if(sp){ if(y2&&y10){ var d10_2=y10.yield-y2.yield; sp.textContent='10Y-2Y '+(d10_2>=0?'+':'')+d10_2.toFixed(2)+'%'+(inverted?' · INVERTIDA':''); sp.style.color=inverted?'var(--risk)':'var(--up)'; } else sp.textContent=''; }
 }
 
 /* ── AI MACRO BRIEF (derivado del dato REAL — Regla #1, no inventa cifras) ── */
