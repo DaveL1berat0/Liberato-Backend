@@ -837,7 +837,7 @@ async def refresh_real_indices():
     """Niveles reales vía Finnhub (throttle 4 min). Verificable, sin cookie/crumb."""
     global _indices_last_ts
     now = time.time()
-    if now - _indices_last_ts < 20:
+    if now - _indices_last_ts < 10:   # precio más fresco: 20s→10s (feed gratis, self-guarded por presupuesto)
         return
     if not FINNHUB_KEY:
         return
@@ -6989,7 +6989,7 @@ async def startup():
     # ── Índices reales (Yahoo): SIEMPRE, incluso fuera de RTH y fines de semana ──
     # Cubre VIX/DXY/yields/Gold/WTI/BTC/SPX que Finnhub no tiene. Sin créditos.
     # Throttle interno de 4 min protege aunque el job corra cada 3.
-    scheduler.add_job(refresh_real_indices, IntervalTrigger(seconds=20))  # macro correlations ~2.6x más rápido (throttle interno 90s)
+    scheduler.add_job(refresh_real_indices, IntervalTrigger(seconds=10))  # precio del índice ~10s (throttle interno 10s)
     # SPX vía Yahoo (gratis): Finnhub free no da ^GSPC. Sin SPX el ratio ES/SPY se
     # queda sin respaldo y el chart depende SOLO de FlashAlpha.
     scheduler.add_job(refresh_cash_index_yahoo, IntervalTrigger(minutes=3))
