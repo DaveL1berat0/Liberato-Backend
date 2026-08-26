@@ -2235,6 +2235,100 @@ async def get_environment():
                                   "motors": [], "conflicts": [],
                                   "note": "FRED_API_KEY no configurada o sin datos aún"}
 
+# ═══════════════════ LEAPS OPPORTUNITY SCANNER (fundamentals reales) ═══════════════════
+_scan_cache = {"data": None, "ts": 0.0}
+SCAN_TTL = 6 * 3600
+# Watchlist de calidad (megacaps/compounders). Sector estático para no gastar una
+# llamada extra de profile2 por ticker.
+SCAN_LIST = [
+    ("NVDA", "Technology"), ("AAPL", "Technology"), ("MSFT", "Technology"),
+    ("GOOGL", "Communication"), ("AMZN", "Consumer Disc."), ("META", "Communication"),
+    ("AVGO", "Technology"), ("LLY", "Health Care"), ("V", "Financials"),
+    ("COST", "Consumer Staples"), ("NFLX", "Communication"), ("JPM", "Financials"),
+]
+
+def _pillar(v, lo, hi):
+    """Score 0-100 lineal de un pilar (v==lo→0, v==hi→100), None si falta."""
+    if v is None:
+        return None
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return None
+    return max(0.0, min(100.0, (v - lo) / (hi - lo) * 100.0)) if hi != lo else 50.0
+
+async def refresh_scanner():
+    if not FINNHUB_KEY:
+        return None
+    rows = []
+    async with httpx.AsyncClient(timeout=10) as client:
+        for sym, sector in SCAN_LIST:
+            try:
+                if not fh_budget_ok(2):
+                    break
+                fh_charge(2)
+                rm, rq = await asyncio.gather(
+                    client.get(f"{FH_BASE}/stock/metric", params={"symbol": sym, "metric": "all", "token": FINNHUB_KEY}),
+                    client.get(f"{FH_BASE}/quote", params={"symbol": sym, "token": FINNHUB_KEY}),
+                    return_exceptions=True)
+                m = (rm.json().get("metric") if not isinstance(rm, Exception) and rm.status_code == 200 else {}) or {}
+                q = (rq.json() if not isinstance(rq, Exception) and rq.status_code == 200 else {}) or {}
+                price = q.get("c")
+                hi52 = m.get("52WeekHigh")
+                lo52 = m.get("52WeekLow")
+                # ── 8 pilares (los que Finnhub metric=all provee de forma fiable) ──
+                pillars = {
+                    "revenue":   _pillar(m.get("revenueGrowthTTMYoy"), -5, 25),
+                    "eps":       _pillar(m.get("epsGrowthTTMYoy"), -10, 40),
+                    "margin":    _pillar(m.get("netProfitMarginTTM"), 0, 30),
+                    "gross":     _pillar(m.get("grossMarginTTM"), 20, 70),
+                    "roe":       _pillar(m.get("roeTTM"), 5, 40),
+                    "balance":   _pillar(-(m.get("totalDebt/totalEquityQuarterly") or 0), -2.0, 0),  # menos deuda = mejor
+                    "fcf":       _pillar(m.get("currentRatioQuarterly"), 0.8, 3.0),
+                    "valuation": _pillar(-(m.get("peTTM") or 0), -60, -10),  # menor PE = mejor
+                }
+                have = [v for v in pillars.values() if v is not None]
+                fscore = round(sum(have) / len(have), 0) if have else None
+                # Technical location (Regla #1: 52w high como referencia real; ATH exacto
+                # requeriría histórico largo — se etiqueta como distancia a máx 52 semanas).
+                dist_high = round((price - hi52) / hi52 * 100, 1) if (price and hi52) else None
+                # Clasificación: "el precio cayó pero el negocio NO está roto"
+                cls = "—"
+                if fscore is not None and dist_high is not None:
+                    if fscore >= 70 and dist_high <= -12:
+                        cls = "HIGH QUALITY / PRICE DISLOCATION"
+                    elif fscore >= 65 and dist_high <= -6:
+                        cls = "QUALITY PULLBACK"
+                    elif fscore < 45:
+                        cls = "WEAK FUNDAMENTALS"
+                    else:
+                        cls = "NEUTRAL"
+                rows.append({
+                    "ticker": sym, "sector": sector, "price": round(price, 2) if price else None,
+                    "high52": round(hi52, 2) if hi52 else None, "distHigh": dist_high,
+                    "fscore": fscore, "class": cls, "pillars": pillars,
+                    "revGrowth": m.get("revenueGrowthTTMYoy"), "epsGrowth": m.get("epsGrowthTTMYoy"),
+                    "pe": m.get("peTTM"), "roe": m.get("roeTTM"),
+                })
+            except Exception as e:
+                print(f"[scanner] {sym}: {e}")
+                continue
+    if rows:
+        rows.sort(key=lambda r: (r.get("fscore") or 0), reverse=True)
+        _scan_cache["data"] = {"rows": rows, "as_of": datetime.now(NY).isoformat(), "count": len(rows)}
+        _scan_cache["ts"] = time.time()
+        print(f"[scanner] ok: {len(rows)} tickers")
+    return _scan_cache["data"]
+
+@app.get("/api/leaps/scanner")
+async def get_leaps_scanner():
+    if not _scan_cache["data"] or (time.time() - _scan_cache["ts"] > SCAN_TTL):
+        try:
+            await refresh_scanner()
+        except Exception as e:
+            print(f"[scanner] refresh falló: {e}")
+    return _scan_cache["data"] or {"rows": [], "note": "sin datos aún (Finnhub)"}
+
 # (frases_en_titulo [más específicas primero], series_id, transform)
 BLS_SERIES = [
     (["core cpi m/m", "core cpi mom"],                         "CUSR0000SA0L1E", "mom"),
