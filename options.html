@@ -24,19 +24,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#06080D; --panel:#0C0F16; --panel-2:#0E121B; --hair:rgba(255,255,255,0.06);
-  --brd:rgba(255,255,255,0.08); --gold:#C9A84C; --gold-2:#E7CC74;
-  --ink:#EFECE3; --ink-2:rgba(239,236,227,0.72); --ink-3:rgba(239,236,227,0.42); --ink-4:rgba(239,236,227,0.26);
+  --bg:#06080D; --panel:#0C0F16; --panel-2:#0E121B; --hair:rgba(255,255,255,0.055);
+  --brd:rgba(255,255,255,0.075); --gold:#C9A84C; --gold-2:#E7CC74;
+  --ink:#EFECE3; --ink-2:rgba(239,236,227,0.70); --ink-3:rgba(239,236,227,0.42); --ink-4:rgba(239,236,227,0.24);
   --up:#2EE8A4; --down:#B197FC; --warn:#F5A623; --risk:#FF6B81;
   --mono:'DM Mono',ui-monospace,Menlo,monospace; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
-  --r:14px; --r-sm:9px;
+  --r:14px; --r-sm:9px; --gap:16px; --pad:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-  background-image:radial-gradient(1200px 600px at 82% -8%,rgba(201,168,76,0.05),transparent 60%);}
+  background-image:radial-gradient(1100px 560px at 84% -10%,rgba(201,168,76,0.045),transparent 60%);}
 a{color:inherit;text-decoration:none;}
 /* ── HEADER ── */
-.oh{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 22px;border-bottom:1px solid var(--hair);background:linear-gradient(180deg,rgba(12,15,22,0.92),rgba(12,15,22,0.55));position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);}
+.oh{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 24px;border-bottom:1px solid var(--hair);background:linear-gradient(180deg,rgba(12,15,22,0.92),rgba(12,15,22,0.55));position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);}
 .oh-l{display:flex;align-items:center;gap:14px;min-width:0;}
 .oh-logo{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--ink-2);white-space:nowrap;cursor:pointer;}
 .oh-logo b{font-style:normal;font-weight:600;color:var(--gold);}
@@ -48,86 +48,95 @@ a{color:inherit;text-decoration:none;}
 .oh-back{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border:0.5px solid var(--brd);border-radius:7px;padding:7px 13px;cursor:pointer;transition:all 0.2s;}
 .oh-back:hover{color:var(--gold);border-color:rgba(201,168,76,0.4);}
 @keyframes pul{0%,100%{opacity:1;}50%{opacity:0.35;}}
-/* ── GRID ── */
-.owrap{padding:18px 22px 48px;max-width:1560px;margin:0 auto;}
-.orow{display:grid;gap:16px;margin-bottom:16px;}
-.orow.r1{grid-template-columns:1fr 1.12fr;}
-.orow.r3{grid-template-columns:1fr 1.12fr;}
-.orow.r4{grid-template-columns:1.3fr 1fr;}
-@media(max-width:1000px){.orow.r1,.orow.r3,.orow.r4{grid-template-columns:1fr;}}
-.panel{background:linear-gradient(180deg,rgba(255,255,255,0.015),transparent),var(--panel);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
-.p-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 17px;border-bottom:1px solid var(--hair);}
-.p-ttl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px;}
-.p-sub{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;text-align:right;}
-.p-bd{padding:17px;}
+/* ── LAYOUT (2 columnas alineadas + fila inferior) ── */
+.owrap{padding:var(--gap) 24px 48px;max-width:1520px;margin:0 auto;}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gap);align-items:stretch;margin-bottom:var(--gap);}
+.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0;}
+.bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gap);}
+@media(max-width:1000px){.stage,.bottom{grid-template-columns:1fr;}}
+/* ── PANEL ── */
+.panel{background:linear-gradient(180deg,rgba(255,255,255,0.014),transparent),var(--panel);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;position:relative;}
+.panel.grow{flex:1;min-height:360px;display:flex;flex-direction:column;}
+.panel.grow .p-bd{flex:1;min-height:0;padding:0;}
+.p-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--hair);min-height:46px;}
+.p-ttl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px;min-width:0;}
+.p-sub{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;text-align:right;white-space:nowrap;}
+.p-bd{padding:var(--pad);}
 .info-i{cursor:help;opacity:0.5;font-size:0.85em;margin-left:3px;}
+.divider{height:1px;background:var(--hair);margin:16px 0;}
+.sec-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .c-up{color:var(--up);} .c-warn{color:var(--warn);} .c-risk{color:var(--risk);} .c-gold{color:var(--gold);}
-/* ── ENVIRONMENT (hero gauge + motor gauges) ── */
-.env-hero{display:flex;align-items:center;gap:16px;padding:2px 0 14px;margin-bottom:14px;border-bottom:1px solid var(--hair);}
-.env-hero-g{flex:0 0 148px;width:148px;}
+/* ── AI BRIEF (compacto, un solo acento) ── */
+.brief .p-bd{padding:15px 17px;}
+.bl{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--gold);margin:12px 0 3px;}
+.bl:first-child{margin-top:0;}
+.brief p{font-size:12.5px;color:var(--ink-2);line-height:1.55;margin:0;}
+.brief b{color:var(--ink);font-weight:600;}
+.brief .conflict{margin-top:12px;font-size:11.5px;color:var(--warn);line-height:1.45;}
+.brief-foot{margin-top:13px;padding-top:11px;border-top:0.5px solid var(--hair);font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);display:flex;align-items:center;gap:6px;}
+.brief-foot .d{width:5px;height:5px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up);}
+/* ── ENVIRONMENT ── */
+.env-hero{display:flex;align-items:center;gap:16px;padding:0 0 14px;margin-bottom:14px;border-bottom:1px solid var(--hair);}
+.env-hero-g{flex:0 0 140px;width:140px;}
 .env-hero-g svg{width:100%;height:auto;display:block;}
 .env-hero-meta{min-width:0;}
-.env-hero-meta .cls{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1.2;}
-.env-hero-meta .cls-d{font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.45;}
+.env-hero-meta .cls{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1.15;}
+.env-hero-meta .cls-d{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.45;}
 .env-hero-meta .cov{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:8px;letter-spacing:0.05em;}
 .gg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.gcell{background:var(--panel-2);border:0.5px solid var(--hair);border-radius:10px;padding:9px 6px 8px;text-align:center;}
-.gcell svg{width:100%;height:auto;max-height:62px;display:block;}
-.gcell .gn{font-family:var(--mono);font-size:8.5px;letter-spacing:0.03em;text-transform:uppercase;color:var(--ink-3);margin-top:2px;line-height:1.2;}
-.gcell .gv{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:1px;}
-.env-conflicts{margin-top:14px;padding:11px 13px;border-radius:var(--r-sm);background:rgba(245,166,35,0.07);border:0.5px solid rgba(245,166,35,0.24);}
-.env-conflicts-t{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:5px;}
-.env-conflicts li{font-size:12px;color:var(--ink-2);margin-left:16px;line-height:1.5;}
-/* ── AI BRIEF ── */
-.brief-bd{min-height:120px;}
-.brief p{font-size:13.5px;color:var(--ink-2);line-height:1.66;margin-bottom:9px;}
-.brief p:last-child{margin-bottom:0;}
-.brief strong{color:var(--gold-2);font-weight:600;}
-.brief-imp{margin-top:8px;padding:11px 13px;border-radius:var(--r-sm);background:rgba(201,168,76,0.07);border-left:2px solid var(--gold);font-size:13px;color:var(--ink-2);}
-.brief-imp b{color:var(--gold-2);}
-.brief-ai{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-top:12px;padding-top:10px;border-top:0.5px solid var(--hair);}
-.brief-ai .d{width:5px;height:5px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up);}
-/* ── NATIVE CHART ── */
-.chart-tf{display:flex;gap:6px;}
-.chart-tf button{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.04em;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:5px 12px;cursor:pointer;transition:all 0.15s;}
-.chart-tf button.on{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);}
-.chart-tf button:hover{color:var(--ink);}
-.lchart-wrap{height:560px;width:100%;position:relative;background:var(--panel-2);}
-@media(max-width:1000px){.lchart-wrap{height:400px;}}
-.lchart-note{position:absolute;left:14px;bottom:10px;z-index:3;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.05em;pointer-events:none;}
-.lchart-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--ink-4);}
-/* ── YIELD CURVE X/Y ── */
-.yc-hd{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:9.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;}
-.yc-spread{font-weight:700;}
+.gcell{background:var(--panel-2);border:0.5px solid var(--hair);border-radius:10px;padding:8px 5px 7px;text-align:center;}
+.gcell svg{width:100%;height:auto;max-height:56px;display:block;}
+.gcell .gn{font-family:var(--mono);font-size:8px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink-3);margin-top:2px;line-height:1.15;}
+.gcell .gv{font-family:var(--mono);font-size:8.5px;color:var(--ink-4);margin-top:1px;}
+.env-conflicts{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,0.06);border:0.5px solid rgba(245,166,35,0.22);}
+.env-conflicts-t{font-family:var(--mono);font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:4px;}
+.env-conflicts li{font-size:11.5px;color:var(--ink-2);margin-left:15px;line-height:1.5;}
+/* ── YIELD CURVE (dentro de Environment) ── */
 .yc-svg{width:100%;}
 .yc-svg svg{width:100%;height:auto;display:block;}
-.yc-legend{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:6px;text-align:center;letter-spacing:0.04em;}
+.yc-spread{font-weight:700;font-family:var(--mono);font-size:9.5px;}
+.yc-legend{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:7px;text-align:center;letter-spacing:0.04em;}
+/* ── NATIVE CHART ── */
+.chart-tf{display:flex;gap:5px;}
+.chart-tf button{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:0.04em;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:4px 10px;cursor:pointer;transition:all 0.15s;}
+.chart-tf button.on{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);}
+.chart-tf button:hover{color:var(--ink);}
+.lchart-wrap{position:relative;height:100%;min-height:340px;width:100%;background:var(--panel-2);}
+.lchart-note{position:absolute;left:14px;bottom:10px;z-index:3;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.05em;pointer-events:none;}
+.lchart-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--ink-4);z-index:2;}
 /* ── LEAPS ANALYZER ── */
 .lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .lc-f{display:flex;flex-direction:column;gap:4px;}
-.lc-f label{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
+.lc-f label{font-family:var(--mono);font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);}
 .lc-f input{background:var(--panel-2);border:1px solid var(--brd);border-radius:var(--r-sm);color:var(--ink);font-family:var(--mono);font-size:14px;padding:9px 11px;width:100%;transition:border-color 0.2s;}
 .lc-f input:focus{outline:none;border-color:rgba(201,168,76,0.5);}
 .lc-out{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border-radius:var(--r-sm);overflow:hidden;}
 .lc-cell{background:var(--panel-2);padding:11px 12px;}
-.lc-cell .k{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
+.lc-cell .k{font-family:var(--mono);font-size:8.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);}
 .lc-cell .v{font-family:var(--mono);font-size:16px;font-weight:700;margin-top:3px;}
-.lc-hero{grid-column:span 2;background:linear-gradient(135deg,rgba(201,168,76,0.1),var(--panel-2));text-align:center;padding:14px;}
-.lc-hero .v{font-size:26px;}
-.lc-strat{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:11px 14px;border:0.5px solid rgba(201,168,76,0.3);border-radius:var(--r-sm);background:rgba(201,168,76,0.04);}
+.lc-hero{grid-column:span 2;background:linear-gradient(135deg,rgba(201,168,76,0.1),var(--panel-2));text-align:center;padding:13px;}
+.lc-hero .v{font-size:25px;}
+.lc-strat{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:11px 14px;border:0.5px solid rgba(201,168,76,0.28);border-radius:var(--r-sm);background:rgba(201,168,76,0.04);}
 .lc-strat-t{font-size:12px;color:var(--ink-2);}
 .lc-strat a{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold-2);border:0.5px solid rgba(201,168,76,0.4);border-radius:7px;padding:7px 12px;transition:all 0.2s;white-space:nowrap;}
 .lc-strat a:hover{background:rgba(201,168,76,0.14);}
-/* ── SCANNER / ROTATION ── */
+.orow-full{margin-bottom:var(--gap);}
+@media(min-width:760px){
+  .lc-grid{grid-template-columns:repeat(4,1fr);}
+  .lc-out{grid-template-columns:repeat(4,1fr);}
+  .lc-hero{grid-column:span 2;}
+}
+/* ── SCANNER ── */
 .stub{padding:26px 16px;text-align:center;color:var(--ink-4);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;}
 .stub b{color:var(--gold);display:block;margin-bottom:5px;font-size:12px;}
 .scan-tbl{width:100%;border-collapse:collapse;font-size:12px;}
-.scan-tbl th{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:9px 14px;border-bottom:1px solid var(--hair);font-weight:700;}
+.scan-tbl th{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:10px 16px;border-bottom:1px solid var(--hair);font-weight:700;}
 .scan-tbl th.r,.scan-tbl td.r{text-align:right;}
-.scan-tbl td{padding:10px 14px;border-bottom:0.5px solid var(--hair);color:var(--ink-2);}
+.scan-tbl td{padding:11px 16px;border-bottom:0.5px solid var(--hair);color:var(--ink-2);}
 .scan-tbl tbody tr{cursor:pointer;transition:background 0.15s;}
 .scan-tbl tbody tr:hover{background:rgba(201,168,76,0.05);}
-.scan-tbl tbody tr.sel{background:rgba(201,168,76,0.09);}
+.scan-tbl tbody tr.sel{background:rgba(201,168,76,0.09);box-shadow:inset 2px 0 0 var(--gold);}
+.scan-tbl tbody tr:last-child td{border-bottom:none;}
 .scan-tk{font-family:var(--mono);font-weight:700;color:var(--ink);}
 .scan-sec{font-size:10px;color:var(--ink-4);}
 .scan-fs{font-family:var(--mono);font-weight:700;}
@@ -136,10 +145,14 @@ a{color:inherit;text-decoration:none;}
 .scan-cls.pull{background:rgba(201,168,76,0.15);color:var(--gold);}
 .scan-cls.weak{background:rgba(177,151,252,0.13);color:var(--down);}
 .scan-cls.neut{background:rgba(239,236,227,0.06);color:var(--ink-3);}
-.rot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border-radius:var(--r-sm);overflow:hidden;}
-.rot-cell{background:var(--panel-2);padding:14px;text-align:center;}
-.rot-cell .rk{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
-.rot-cell .rv{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:5px;}
+/* ── SECTOR ROTATION ── */
+.sec-row{display:grid;grid-template-columns:1fr 86px 58px;align-items:center;gap:12px;padding:7px 0;border-bottom:0.5px solid var(--hair);}
+.sec-row:last-child{border-bottom:none;}
+.sec-nm{font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sec-nm em{font-family:var(--mono);font-size:9px;color:var(--ink-4);font-style:normal;margin-left:5px;}
+.sec-bar{height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;}
+.sec-bar i{display:block;height:100%;border-radius:3px;transition:width 0.6s ease;}
+.sec-v{font-family:var(--mono);font-size:12px;font-weight:700;text-align:right;}
 .loading{color:var(--ink-4);font-family:var(--mono);font-size:10px;}
 </style>
 </head>
@@ -157,60 +170,58 @@ a{color:inherit;text-decoration:none;}
 </header>
 
 <div class="owrap">
-  <!-- ROW 1: AI Brief | Environment -->
-  <div class="orow r1">
-    <section class="panel brief">
-      <div class="p-hd"><span class="p-ttl">◆ AI Market Brief <span class="info-i" title="Lectura macro generada por IA (Groq) que narra EXCLUSIVAMENTE las cifras reales del Environment y el scanner. No inventa datos (Regla #1). Si la IA no está disponible, se muestra un resumen determinista del mismo dato real.">&#9432;</span></span><span class="p-sub" id="brief-sub">—</span></div>
-      <div class="p-bd brief-bd" id="brief-body"><p class="loading">Analizando el entorno macro…</p></div>
-    </section>
-    <section class="panel">
-      <div class="p-hd"><span class="p-ttl">⬡ Environment <span class="info-i" title="Puntuación 0-100 del entorno macro para asumir riesgo de largo plazo (LEAPS). Combina 9 motores reales de FRED con pesos: alto = sano, bajo = defensivo. Cada velocímetro es un motor; la aguja marca su salud 0-100.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
-      <div class="p-bd">
-        <div class="env-hero">
-          <div class="env-hero-g" id="env-hero-g"></div>
-          <div class="env-hero-meta">
-            <div class="cls" id="env-cls">—</div>
-            <div class="cls-d" id="env-cls-d">Cargando motores macro…</div>
-            <div class="cov" id="env-cov">—</div>
+  <div class="stage">
+    <!-- COLUMNA IZQUIERDA: AI Brief (compacto) + Chart (grande) -->
+    <div class="col">
+      <section class="panel brief">
+        <div class="p-hd"><span class="p-ttl">◆ AI Market Brief <span class="info-i" title="Lectura macro por IA (Groq) que narra EXCLUSIVAMENTE las cifras reales del Environment y el scanner. No inventa datos (Regla #1). Si la IA no está disponible, se muestra un resumen determinista del mismo dato real.">&#9432;</span></span><span class="p-sub" id="brief-sub">—</span></div>
+        <div class="p-bd" id="brief-body"><p class="loading">Analizando el entorno macro…</p></div>
+      </section>
+      <section class="panel grow">
+        <div class="p-hd">
+          <span class="p-ttl">◪ Chart <span class="info-i" title="Velas diarias REALES (Yahoo Finance, del lado servidor). Click en una fila del scanner para cargar ese ticker. Verde = alcista, morado = bajista.">&#9432;</span> <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span></span>
+          <div class="chart-tf" id="chart-tf"></div>
+        </div>
+        <div class="p-bd">
+          <div class="lchart-wrap" id="lchart-wrap">
+            <div class="lchart-load" id="lchart-load">Cargando velas reales…</div>
+            <div class="lchart-note" id="lchart-note"></div>
           </div>
         </div>
-        <div class="gg" id="env-gg"></div>
-        <div class="env-conflicts" id="env-conflicts" style="display:none;">
-          <div class="env-conflicts-t">⚠ Señales en conflicto</div>
-          <ul id="env-conflicts-list"></ul>
+      </section>
+    </div>
+
+    <!-- COLUMNA DERECHA: Environment (+ curva integrada) + LEAPS Analyzer -->
+    <div class="col">
+      <section class="panel">
+        <div class="p-hd"><span class="p-ttl">⬡ Environment <span class="info-i" title="Puntuación 0-100 del entorno macro para asumir riesgo de largo plazo (LEAPS). Combina 9 motores reales de FRED con pesos. Cada velocímetro es un motor; la aguja marca su salud 0-100. Incluye la curva del Tesoro como parte del mismo bloque.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
+        <div class="p-bd">
+          <div class="env-hero">
+            <div class="env-hero-g" id="env-hero-g"></div>
+            <div class="env-hero-meta">
+              <div class="cls" id="env-cls">—</div>
+              <div class="cls-d" id="env-cls-d">Cargando motores macro…</div>
+              <div class="cov" id="env-cov">—</div>
+            </div>
+          </div>
+          <div class="gg" id="env-gg"></div>
+          <div class="env-conflicts" id="env-conflicts" style="display:none;">
+            <div class="env-conflicts-t">⚠ Señales en conflicto</div>
+            <ul id="env-conflicts-list"></ul>
+          </div>
+          <div class="divider"></div>
+          <div class="sec-label"><span>Curva de rendimientos · US Treasury</span><span class="yc-spread" id="yc-spread">—</span></div>
+          <div class="yc-svg" id="yc-svg"><div class="stub">Cargando curva…</div></div>
+          <div class="yc-legend" id="yc-legend"></div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 
-  <!-- ROW 2: Chart (nativo, gran altura) -->
-  <div class="orow">
+  <!-- BANDA: LEAPS Structure Analyzer (ancho completo) -->
+  <div class="orow-full">
     <section class="panel">
-      <div class="p-hd">
-        <span class="p-ttl">◪ Chart <span class="info-i" title="Velas diarias REALES (Yahoo Finance, del lado servidor). Al hacer click en una fila del scanner, el chart carga ese ticker. Verde = alcista, morado = bajista.">&#9432;</span> <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span></span>
-        <div class="chart-tf" id="chart-tf"></div>
-      </div>
-      <div class="p-bd" style="padding:0;">
-        <div class="lchart-wrap" id="lchart-wrap">
-          <div class="lchart-load" id="lchart-load">Cargando velas reales…</div>
-          <div class="lchart-note" id="lchart-note"></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ROW 3: Yield Curve X/Y | LEAPS Analyzer -->
-  <div class="orow r3">
-    <section class="panel">
-      <div class="p-hd"><span class="p-ttl">📈 Curva de rendimientos <span class="info-i" title="Rendimiento del Tesoro de EEUU por vencimiento (3M a 30Y), datos reales de FRED. Eje X = plazo, eje Y = tasa %. Una curva invertida (corto plazo por encima del largo) ha precedido recesiones históricamente.">&#9432;</span></span><span class="p-sub">US Treasury · FRED</span></div>
-      <div class="p-bd">
-        <div class="yc-hd"><span>Rendimiento por vencimiento</span><span class="yc-spread" id="yc-spread">—</span></div>
-        <div class="yc-svg" id="yc-svg"><div class="stub">Cargando curva…</div></div>
-        <div class="yc-legend" id="yc-legend"></div>
-      </div>
-    </section>
-    <section class="panel">
-      <div class="p-hd"><span class="p-ttl">▤ LEAPS Structure Analyzer <span class="info-i" title="Introduce los datos del LEAP desde tu broker. El sistema calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1).">&#9432;</span></span><span class="p-sub">Inputs manuales</span></div>
+      <div class="p-hd"><span class="p-ttl">▤ LEAPS Structure Analyzer <span class="info-i" title="Introduce los datos del LEAP desde tu broker. El sistema calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1).">&#9432;</span></span><span class="p-sub">Inputs manuales · matemática verificable</span></div>
       <div class="p-bd">
         <div class="lc-grid">
           <div class="lc-f"><label>Underlying (precio)</label><input id="lc-spot" type="number" inputmode="decimal" placeholder="200" oninput="lcCalc()"></div>
@@ -239,15 +250,15 @@ a{color:inherit;text-decoration:none;}
     </section>
   </div>
 
-  <!-- ROW 4: Scanner | Rotation -->
-  <div class="orow r4">
+  <!-- FILA INFERIOR: Scanner | Rotation (alineados a la grilla) -->
+  <div class="bottom">
     <section class="panel">
       <div class="p-hd"><span class="p-ttl">▦ LEAPS Opportunity Scanner <span class="info-i" title="Escanea empresas de calidad y cruza fundamentales reales (Finnhub) con la distancia a máximos. Busca DISLOCACIÓN: negocio fuerte + precio caído = candidato LEAPS. Click en una fila para cargarla en el chart y el analizador.">&#9432;</span></span><span class="p-sub" id="scan-sub">—</span></div>
       <div class="p-bd" style="padding:0;"><div id="scan-body"><div class="stub">Escaneando oportunidades…</div></div></div>
     </section>
     <section class="panel">
-      <div class="p-hd"><span class="p-ttl">↻ Sector Rotation</span><span class="p-sub" id="rot-sub">—</span></div>
-      <div class="p-bd"><div class="rot-grid" id="rot-grid"><div class="rot-cell"><div class="rk">Cargando…</div></div></div></div>
+      <div class="p-hd"><span class="p-ttl">↻ Sector Rotation <span class="info-i" title="Rendimiento diario real de los 11 ETFs sectoriales SPDR (Finnhub), ordenados de líder a rezagado. Muestra qué sectores lideran el mercado hoy.">&#9432;</span></span><span class="p-sub" id="rot-sub">—</span></div>
+      <div class="p-bd"><div id="rot-body"><div class="stub">Cargando sectores…</div></div></div>
     </section>
   </div>
 </div>
@@ -258,7 +269,7 @@ var API='https://web-production-33671.up.railway.app';
 var ENV=null;
 
 /* ── VELOCÍMETRO (gauge SVG) ── */
-function scColor(s){ if(s==null)return 'rgba(239,236,227,0.26)'; if(s>=65)return '#2EE8A4'; if(s>=45)return '#F5A623'; return '#FF6B81'; }
+function scColor(s){ if(s==null)return 'rgba(239,236,227,0.24)'; if(s>=65)return '#2EE8A4'; if(s>=45)return '#F5A623'; return '#FF6B81'; }
 function classColor(c){ if(/HEALTHY|CONSTRUCTIVE/.test(c))return 'var(--up)'; if(/CAUTION/.test(c))return 'var(--warn)'; if(/RISK|DEFENSIVE/.test(c))return 'var(--risk)'; return 'var(--ink-3)'; }
 function gauge(score,big){
   var cx=60,cy=62,r=46,sw=8;
@@ -267,7 +278,7 @@ function gauge(score,big){
   var sc=score==null?null:Math.max(0,Math.min(100,score));
   var col=scColor(sc);
   var vEnd=sc==null?180:180-sc*1.8; var np=pt(vEnd);
-  var ticks='';[0,25,50,75,100].forEach(function(t){var a=180-t*1.8;var rad=a*Math.PI/180;var p1=pt(a);var p0=[cx+(r-sw/2-1)*Math.cos(rad),cy-(r-sw/2-1)*Math.sin(rad)];ticks+='<line x1="'+p0[0].toFixed(1)+'" y1="'+p0[1].toFixed(1)+'" x2="'+p1[0].toFixed(1)+'" y2="'+p1[1].toFixed(1)+'" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>';});
+  var ticks='';[0,25,50,75,100].forEach(function(t){var a=180-t*1.8;var rad=a*Math.PI/180;var p1=pt(a);var p0=[cx+(r-sw/2-1)*Math.cos(rad),cy-(r-sw/2-1)*Math.sin(rad)];ticks+='<line x1="'+p0[0].toFixed(1)+'" y1="'+p0[1].toFixed(1)+'" x2="'+p1[0].toFixed(1)+'" y2="'+p1[1].toFixed(1)+'" stroke="rgba(255,255,255,0.13)" stroke-width="0.8"/>';});
   var fs=big?30:22;
   return '<svg viewBox="0 0 120 74">'
     +'<polyline points="'+arc(180,0)+'" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="'+sw+'" stroke-linecap="round"/>'
@@ -280,7 +291,7 @@ function gauge(score,big){
 }
 
 /* ── ENVIRONMENT ── */
-function classDesc(c,sc){
+function classDesc(c){
   if(/HEALTHY/.test(c))return 'Entorno macro sano para asumir riesgo de largo plazo.';
   if(/CONSTRUCTIVE/.test(c))return 'Entorno constructivo: exposición selectiva razonable.';
   if(/CAUTION/.test(c))return 'Cautela: favorece calidad, valoración y margin of safety.';
@@ -299,7 +310,7 @@ function renderEnv(d){
   var sc=d.score;
   document.getElementById('env-hero-g').innerHTML=gauge(sc,true);
   var cl=document.getElementById('env-cls'); cl.textContent=d.classification||'—'; cl.style.color=classColor(d.classification||'');
-  document.getElementById('env-cls-d').textContent=classDesc(d.classification||'',sc);
+  document.getElementById('env-cls-d').textContent=classDesc(d.classification||'');
   document.getElementById('env-cov').textContent='Cobertura '+(d.coverage||'—')+' motores · ponderado';
   document.getElementById('env-sub').textContent='FRED · '+(d.coverage||'');
   var host=document.getElementById('env-gg');
@@ -318,7 +329,7 @@ function renderEnv(d){
 function renderYieldCurve(curve){
   var host=document.getElementById('yc-svg'); if(!host)return;
   if(!curve||curve.length<3){ host.innerHTML='<div class="stub">Curva no disponible.</div>'; return; }
-  var W=560,H=220,padL=46,padR=20,padT=16,padB=34;
+  var W=560,H=190,padL=44,padR=18,padT=14,padB=30;
   var ys=curve.map(function(p){return p.yield;});
   var mn=Math.min.apply(null,ys),mx=Math.max.apply(null,ys),rng=(mx-mn)||1;
   mn=Math.floor((mn-rng*0.2)*10)/10; mx=Math.ceil((mx+rng*0.2)*10)/10; rng=mx-mn;
@@ -337,7 +348,7 @@ function renderYieldCurve(curve){
   curve.forEach(function(p,i){
     dots+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.yield).toFixed(1)+'" r="3" fill="'+col+'"/>';
     dots+='<text x="'+X(i).toFixed(1)+'" y="'+(Y(p.yield)-8).toFixed(1)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(239,236,227,0.82)">'+p.yield.toFixed(2)+'</text>';
-    xlab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-12)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="rgba(239,236,227,0.55)">'+p.label+'</text>';
+    xlab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="rgba(239,236,227,0.55)">'+p.label+'</text>';
   });
   host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'
     +'<defs><linearGradient id="ycg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+col+'" stop-opacity="0.18"/><stop offset="1" stop-color="'+col+'" stop-opacity="0"/></linearGradient></defs>'
@@ -349,24 +360,27 @@ function renderYieldCurve(curve){
     +dots+xlab+'</svg>';
   var sp=document.getElementById('yc-spread');
   if(sp){ if(y2&&y10){ var dd=y10.yield-y2.yield; sp.textContent='10Y-2Y '+(dd>=0?'+':'')+dd.toFixed(2)+'%'+(inv?' · INVERTIDA':''); sp.style.color=inv?'var(--risk)':'var(--up)'; } else sp.textContent=''; }
-  var lg=document.getElementById('yc-legend'); if(lg)lg.textContent=inv?'Curva invertida — históricamente antesala de recesión':'Curva con pendiente normal';
+  var lg=document.getElementById('yc-legend'); if(lg)lg.textContent=inv?'Curva invertida — históricamente antesala de recesión':'Pendiente normal · plazo (X) vs tasa % (Y)';
 }
 
-/* ── AI BRIEF (Groq narra el dato real; fallback determinista) ── */
+/* ── AI BRIEF (compacto, un solo acento) ── */
+function fmtInline(s){ return s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
 function loadBrief(){
   fetch(API+'/api/leaps/brief').then(function(r){return r.json();}).then(function(d){
     var sub=document.getElementById('brief-sub');
     if(sub)sub.textContent=(d.classification||(ENV&&ENV.classification)||'—')+((d.score!=null)?(' · '+Math.round(d.score)+'/100'):'');
-    if(d&&d.brief){ renderBriefGroq(d.brief, d.model); }
+    if(d&&d.brief){ renderBriefGroq(d.brief); }
     else { renderBriefDet(ENV); }
   }).catch(function(){ renderBriefDet(ENV); });
 }
-function renderBriefGroq(text, model){
+function renderBriefGroq(text){
   var b=document.getElementById('brief-body'); if(!b)return;
-  var html=text.split(/\n+/).map(function(l){return l.trim();}).filter(Boolean).map(function(line){
-    return '<p>'+line.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</p>';
+  var out=text.split(/\n+/).map(function(l){return l.trim();}).filter(Boolean).map(function(line){
+    var m=line.match(/^\*\*(.+?):\*\*\s*(.*)$/);
+    if(m){ return '<div class="bl">'+m[1]+'</div><p>'+fmtInline(m[2])+'</p>'; }
+    return '<p>'+fmtInline(line)+'</p>';
   }).join('');
-  b.innerHTML=html+'<div class="brief-ai"><span class="d"></span>Generado por IA · narra el dato real (Regla #1)</div>';
+  b.innerHTML=out+'<div class="brief-foot"><span class="d"></span>Generado por IA · narra el dato real (Regla #1)</div>';
 }
 function renderBriefDet(d){
   var b=document.getElementById('brief-body'); if(!b)return;
@@ -374,19 +388,20 @@ function renderBriefDet(d){
   function nm(k){return (d.motors||[]).find(function(m){return m.key===k;})||{};}
   var econ=nm('economy'), infl=nm('inflation'), rates=nm('rates'), fin=nm('financial'), re=nm('real_estate');
   var favorable=d.score>=65, cautious=d.score>=45&&d.score<65;
-  var p1='El entorno macro está en <strong>'+(d.classification||'—')+'</strong> ('+Math.round(d.score)+'/100). ';
-  p1+= (econ.status==='Healthy'?'La economía base se mantiene resiliente':'La economía muestra signos de debilidad')+' ('+ (econ.value||'—') +') ';
-  p1+= (fin.status==='Healthy'?'y el estrés del sistema financiero está contenido':'con tensión en el sistema financiero')+'. ';
-  var p2='';
-  if(infl.status!=='Healthy') p2+='La inflación ('+(infl.value||'—')+') sigue presionando y ';
-  p2+= (rates.status==='Risky'||rates.status==='Caution'?'la política monetaria restrictiva':'las tasas acomodaticias')+' condicionan la exposición a duración larga. ';
-  if(re.status==='Risky') p2+='El sector inmobiliario ('+(re.value||'—')+') es un punto de fricción. ';
-  var impl;
-  if(favorable) impl='Entorno favorable para <b>exposición selectiva de largo plazo</b>. Prioriza empresas de alta calidad, balance sólido y valoración razonable.';
-  else if(cautious) impl='Entorno de <b>cautela</b>: favorece selección estricta — calidad + valoración + margin of safety. Evita pagar prima extrema por negocios de flujo débil.';
-  else impl='Entorno <b>defensivo</b>: reduce el riesgo de duración. Mejor esperar mejor location/valoración antes de estructuras LEAPS agresivas.';
-  var cflx = (d.conflicts&&d.conflicts.length)?('<p style="color:var(--warn);font-size:12.5px;">⚠ '+d.conflicts[0]+'.</p>'):'';
-  b.innerHTML='<p>'+p1+'</p><p>'+p2+'</p>'+cflx+'<div class="brief-imp"><b>Implicación LEAPS:</b> '+impl+'</div>';
+  var l1='El entorno está en <b>'+(d.classification||'—')+'</b> ('+Math.round(d.score)+'/100). '
+    +(econ.status==='Healthy'?'Economía base resiliente':'Economía con signos de debilidad')+' ('+(econ.value||'—')+'), '
+    +(fin.status==='Healthy'?'estrés financiero contenido.':'tensión en el sistema financiero.');
+  var l2=(infl.status!=='Healthy'?('Inflación ('+(infl.value||'—')+') presiona y '):'')
+    +(rates.status==='Risky'||rates.status==='Caution'?'la política monetaria restrictiva':'las tasas acomodaticias')
+    +' condiciona la duración larga'
+    +(re.status==='Risky'?('; inmobiliario ('+(re.value||'—')+') es fricción.'):'.');
+  var l3=favorable?'Favorable para <b>exposición selectiva de largo plazo</b>: calidad, balance sólido y valoración razonable.'
+    :cautious?'<b>Cautela</b>: selección estricta — calidad + valoración + margin of safety. Evita prima extrema por flujo débil.'
+    :'<b>Defensivo</b>: reduce duración. Espera mejor valoración antes de LEAPS agresivos.';
+  var cflx=(d.conflicts&&d.conflicts.length)?('<div class="conflict">⚠ '+d.conflicts[0]+'.</div>'):'';
+  b.innerHTML='<div class="bl">Entorno</div><p>'+l1+'</p>'
+    +'<div class="bl">Tensión</div><p>'+l2+'</p>'
+    +'<div class="bl">Implicación LEAPS</div><p>'+l3+'</p>'+cflx;
 }
 
 /* ── LEAPS CALCULATOR (matemática verificable, inputs manuales) ── */
@@ -440,12 +455,12 @@ function loadChart(){
   if(!lseries)return;
   var ld=document.getElementById('lchart-load'); if(ld)ld.style.display='flex';
   fetch(API+'/api/leaps/ohlc/'+encodeURIComponent(LC_SYM)+'?rng='+LC_RNG).then(function(r){return r.json();}).then(function(d){
-    if(ld)ld.style.display='none';
     if(!d||!d.ok||!d.bars||!d.bars.length){ if(ld){ld.style.display='flex';ld.textContent='Sin velas para '+LC_SYM+'.';} return; }
+    if(ld)ld.style.display='none';
     lseries.setData(d.bars.map(function(b){return {time:b.t,open:b.o,high:b.h,low:b.l,close:b.c};}));
     lchart.timeScale().fitContent();
     var note=document.getElementById('lchart-note'); if(note)note.textContent=d.bars.length+' velas diarias · Yahoo';
-    var sym=document.getElementById('chart-sym'); if(sym)sym.textContent=LC_LABEL+' · '+LC_SYM;
+    var sym=document.getElementById('chart-sym'); if(sym)sym.textContent=LC_LABEL+(LC_LABEL!==LC_SYM?(' · '+LC_SYM):'');
   }).catch(function(){ if(ld){ld.style.display='flex';ld.textContent='Chart no disponible ahora.';} });
 }
 function chartTF(rng){
@@ -491,19 +506,22 @@ function selectTicker(tk){
   try{ document.getElementById('lchart-wrap').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
 }
 
-/* ── SECTOR ROTATION (real desde heatmap) ── */
+/* ── SECTOR ROTATION (11 ETFs SPDR reales) ── */
 function loadRotation(){
-  fetch(API+'/api/heatmap',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
-    var g=document.getElementById('rot-grid'); if(!g)return;
-    var hm=(d&&d.heatmap)||{};
-    var picks=[['XLK','Tech'],['XLE','Energy'],['XLP','Consumo Def.'],['XLB','Materiales']];
-    var rows=picks.map(function(p){ var q=hm[p[0]]||{}; var chg=(typeof q.dp==='number')?q.dp:(typeof q.change==='number'?q.change:null);
-      var col=chg==null?'var(--ink-4)':chg>=0?'var(--up)':'var(--down)';
-      return '<div class="rot-cell"><div class="rk">'+p[1]+'</div><div class="rv" style="color:'+col+'">'+(chg!=null?((chg>=0?'+':'')+chg.toFixed(2)+'%'):'—')+'</div></div>';
+  fetch(API+'/api/leaps/sectors').then(function(r){return r.json();}).then(function(d){
+    var g=document.getElementById('rot-body'); if(!g)return;
+    var s=(d&&d.sectors)||[];
+    if(!s.length){ g.innerHTML='<div class="stub">Sin datos de sectores ahora mismo.</div>'; return; }
+    var mx=Math.max.apply(null,s.map(function(x){return Math.abs(x.chg);}))||1;
+    g.innerHTML=s.map(function(x){
+      var pos=x.chg>=0, col=pos?'var(--up)':'var(--down)';
+      var w=Math.max(4,Math.abs(x.chg)/mx*100);
+      return '<div class="sec-row"><span class="sec-nm">'+x.name+'<em>'+x.sym+'</em></span>'
+        +'<span class="sec-bar"><i style="width:'+w.toFixed(0)+'%;background:'+col+'"></i></span>'
+        +'<span class="sec-v" style="color:'+col+'">'+(pos?'+':'')+x.chg.toFixed(2)+'%</span></div>';
     }).join('');
-    g.innerHTML=rows;
-    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent='ETFs sectoriales';
-  }).catch(function(){});
+    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent=s.length+' sectores SPDR · hoy';
+  }).catch(function(){ var g=document.getElementById('rot-body'); if(g)g.innerHTML='<div class="stub">Rotación no disponible ahora.</div>'; });
 }
 
 /* init */
@@ -511,6 +529,7 @@ buildTF();
 if(typeof LightweightCharts!=='undefined'){ initChart(); } else { window.addEventListener('load', initChart); }
 loadEnv(); loadRotation(); loadScanner(); lcCalc();
 setInterval(loadEnv, 6*3600*1000);
+setInterval(loadRotation, 10*60*1000);
 </script>
 
 <script>
