@@ -104,6 +104,11 @@ a{color:inherit;text-decoration:none;}
 .lchart-wrap{position:relative;height:100%;min-height:340px;width:100%;background:var(--panel-2);}
 .lchart-note{position:absolute;left:14px;bottom:10px;z-index:3;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.05em;pointer-events:none;}
 .lchart-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--ink-4);z-index:2;}
+.doverlay{position:absolute;inset:0;z-index:4;}
+.dtoolbar{position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:3px;background:rgba(12,15,22,0.82);border:0.5px solid var(--brd);border-radius:10px;padding:5px;backdrop-filter:blur(6px);}
+.dtool{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink-3);background:transparent;border:none;border-radius:7px;cursor:pointer;transition:all 0.15s;font-family:var(--mono);}
+.dtool:hover{background:rgba(255,255,255,0.06);color:var(--ink);}
+.dtool.on{background:rgba(201,168,76,0.18);color:var(--gold);}
 /* ── LEAPS ANALYZER ── */
 .lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .lc-f{display:flex;flex-direction:column;gap:4px;}
@@ -145,14 +150,14 @@ a{color:inherit;text-decoration:none;}
 .scan-cls.pull{background:rgba(201,168,76,0.15);color:var(--gold);}
 .scan-cls.weak{background:rgba(177,151,252,0.13);color:var(--down);}
 .scan-cls.neut{background:rgba(239,236,227,0.06);color:var(--ink-3);}
-/* ── SECTOR ROTATION ── */
-.sec-row{display:grid;grid-template-columns:1fr 86px 58px;align-items:center;gap:12px;padding:7px 0;border-bottom:0.5px solid var(--hair);}
-.sec-row:last-child{border-bottom:none;}
-.sec-nm{font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sec-nm em{font-family:var(--mono);font-size:9px;color:var(--ink-4);font-style:normal;margin-left:5px;}
-.sec-bar{height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;}
-.sec-bar i{display:block;height:100%;border-radius:3px;transition:width 0.6s ease;}
-.sec-v{font-family:var(--mono);font-size:12px;font-weight:700;text-align:right;}
+/* ── SECTOR ROTATION MAP (RRG) ── */
+.rrg-legend{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;margin-top:13px;font-family:var(--mono);font-size:9px;color:var(--ink-3);}
+.rrg-legend span{display:flex;align-items:center;gap:6px;}
+.rrg-legend i{width:8px;height:8px;border-radius:50%;flex:0 0 8px;}
+/* Scanner scroll (universo ampliado ~36) */
+#scan-body{max-height:452px;overflow-y:auto;}
+#scan-body::-webkit-scrollbar{width:8px;} #scan-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
+.scan-tbl thead th{position:sticky;top:0;background:var(--panel);z-index:2;}
 .loading{color:var(--ink-4);font-family:var(--mono);font-size:10px;}
 </style>
 </head>
@@ -432,7 +437,14 @@ function lcStrat(){
 }
 
 /* ── CHART NATIVO (Lightweight Charts + velas reales Yahoo) ── */
-var LC_SYM='NDX', LC_LABEL='NASDAQ 100', LC_RNG='1y', lchart=null, lseries=null;
+var LC_SYM='NDX', LC_LABEL='NASDAQ 100', LC_RNG='1y', LC_INT='1d', lchart=null, lseries=null;
+var LC_TF=[
+  {k:'6M',rng:'6mo',iv:'1d',t:'Diario · 6 meses'},
+  {k:'1A',rng:'1y',iv:'1d',t:'Diario · 1 año'},
+  {k:'2A',rng:'2y',iv:'1d',t:'Diario · 2 años'},
+  {k:'W',rng:'5y',iv:'1wk',t:'Velas SEMANALES · 5 años'},
+  {k:'M',rng:'max',iv:'1mo',t:'Velas MENSUALES · histórico'}
+];
 function initChart(){
   if(typeof LightweightCharts==='undefined'){ var w=document.getElementById('lchart-load'); if(w)w.textContent='Chart no disponible (librería).'; return; }
   var el=document.getElementById('lchart-wrap'); if(!el)return;
@@ -448,31 +460,36 @@ function initChart(){
   });
   lseries=lchart.addCandlestickSeries({upColor:'#2EE8A4',downColor:'#B197FC',borderVisible:false,
     wickUpColor:'rgba(46,232,164,0.6)',wickDownColor:'rgba(177,151,252,0.6)',priceFormat:{type:'price',precision:2,minMove:0.01}});
-  try{new ResizeObserver(function(){var r=el.getBoundingClientRect();if(lchart)lchart.applyOptions({width:Math.round(r.width),height:Math.round(r.height)});}).observe(el);}catch(e){}
+  try{new ResizeObserver(function(){var r=el.getBoundingClientRect();if(lchart){lchart.applyOptions({width:Math.round(r.width),height:Math.round(r.height)});redrawOverlays();}}).observe(el);}catch(e){}
+  initDrawing(el);
+  try{ lchart.timeScale().subscribeVisibleLogicalRangeChange(redrawOverlays); }catch(e){}
   loadChart();
 }
 function loadChart(){
   if(!lseries)return;
   var ld=document.getElementById('lchart-load'); if(ld)ld.style.display='flex';
-  fetch(API+'/api/leaps/ohlc/'+encodeURIComponent(LC_SYM)+'?rng='+LC_RNG).then(function(r){return r.json();}).then(function(d){
+  var ivName=LC_INT==='1wk'?'semanales':LC_INT==='1mo'?'mensuales':'diarias';
+  fetch(API+'/api/leaps/ohlc/'+encodeURIComponent(LC_SYM)+'?rng='+LC_RNG+'&interval='+LC_INT).then(function(r){return r.json();}).then(function(d){
     if(!d||!d.ok||!d.bars||!d.bars.length){ if(ld){ld.style.display='flex';ld.textContent='Sin velas para '+LC_SYM+'.';} return; }
     if(ld)ld.style.display='none';
     lseries.setData(d.bars.map(function(b){return {time:b.t,open:b.o,high:b.h,low:b.l,close:b.c};}));
     lchart.timeScale().fitContent();
-    var note=document.getElementById('lchart-note'); if(note)note.textContent=d.bars.length+' velas diarias · Yahoo';
+    drawLoad(); redrawOverlays();
+    var note=document.getElementById('lchart-note'); if(note)note.textContent=d.bars.length+' velas '+ivName+' · Yahoo';
     var sym=document.getElementById('chart-sym'); if(sym)sym.textContent=LC_LABEL+(LC_LABEL!==LC_SYM?(' · '+LC_SYM):'');
   }).catch(function(){ if(ld){ld.style.display='flex';ld.textContent='Chart no disponible ahora.';} });
 }
-function chartTF(rng){
-  LC_RNG=rng;
-  [].forEach.call(document.querySelectorAll('#chart-tf button'),function(b){ b.className=(b.getAttribute('data-r')===rng)?'on':''; });
+function chartTF(tf){
+  LC_RNG=tf.rng; LC_INT=tf.iv;
+  [].forEach.call(document.querySelectorAll('#chart-tf button'),function(b){ b.className=(b.getAttribute('data-k')===tf.k)?'on':''; });
   loadChart();
 }
 function buildTF(){
-  var host=document.getElementById('chart-tf'); if(!host)return;
-  ['6mo','1y','2y','5y'].forEach(function(r){
-    var b=document.createElement('button'); b.textContent=(r==='6mo'?'6M':r.toUpperCase()); b.setAttribute('data-r',r);
-    if(r===LC_RNG)b.className='on'; b.onclick=function(){chartTF(r);}; host.appendChild(b);
+  var host=document.getElementById('chart-tf'); if(!host)return; host.innerHTML='';
+  LC_TF.forEach(function(tf){
+    var b=document.createElement('button'); b.textContent=tf.k; b.setAttribute('data-k',tf.k); b.setAttribute('title',tf.t);
+    if(tf.rng===LC_RNG&&tf.iv===LC_INT)b.className='on';
+    b.onclick=function(){chartTF(tf);}; host.appendChild(b);
   });
 }
 
@@ -506,22 +523,118 @@ function selectTicker(tk){
   try{ document.getElementById('lchart-wrap').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
 }
 
-/* ── SECTOR ROTATION (11 ETFs SPDR reales) ── */
+/* ── SECTOR ROTATION MAP (RRG) — dónde se mueve el dinero entre sectores ── */
+var SEC_ABBR={XLK:'TEC',XLC:'COM',XLY:'DIS',XLP:'CSB',XLV:'SAL',XLF:'FIN',XLI:'IND',XLE:'ENE',XLB:'MAT',XLU:'UTL',XLRE:'REI'};
+var RRG_COL={LIDER:'#2EE8A4',MEJORANDO:'#C9A84C',REZAGADO:'#B197FC',DEBILITANDOSE:'#FF6B81'};
+function renderRRG(s){
+  var W=400,H=372,padX=40,padTop=24,padBot=38;
+  var L=padX,R=W-padX,T=padTop,B=H-padBot,cx=(L+R)/2,cy=(T+B)/2,halfW=(R-L)/2,halfH=(B-T)/2;
+  var maxX=Math.max.apply(null,s.map(function(p){return Math.abs(p.x);}))||3;
+  var maxY=Math.max.apply(null,s.map(function(p){return Math.abs(p.y);}))||3;
+  var mx=Math.max(3,maxX*1.22),my=Math.max(3,maxY*1.22);
+  function X(v){return (cx+v/mx*halfW).toFixed(1);}
+  function Y(v){return (cy-v/my*halfH).toFixed(1);}
+  var q='<rect x="'+cx+'" y="'+T+'" width="'+(R-cx)+'" height="'+(cy-T)+'" fill="#2EE8A4" opacity="0.055"/>'
+    +'<rect x="'+L+'" y="'+T+'" width="'+(cx-L)+'" height="'+(cy-T)+'" fill="#C9A84C" opacity="0.055"/>'
+    +'<rect x="'+L+'" y="'+cy+'" width="'+(cx-L)+'" height="'+(B-cy)+'" fill="#B197FC" opacity="0.05"/>'
+    +'<rect x="'+cx+'" y="'+cy+'" width="'+(R-cx)+'" height="'+(B-cy)+'" fill="#FF6B81" opacity="0.05"/>';
+  var ax='<rect x="'+L+'" y="'+T+'" width="'+(R-L)+'" height="'+(B-T)+'" rx="6" fill="none" stroke="rgba(255,255,255,0.08)"/>'
+    +'<line x1="'+cx+'" y1="'+T+'" x2="'+cx+'" y2="'+B+'" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3"/>'
+    +'<line x1="'+L+'" y1="'+cy+'" x2="'+R+'" y2="'+cy+'" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3"/>';
+  function ql(x,y,a,t,c){return '<text x="'+x+'" y="'+y+'" text-anchor="'+a+'" font-family="DM Mono,monospace" font-size="8" font-weight="700" letter-spacing="0.4" fill="'+c+'" opacity="0.8">'+t+'</text>';}
+  var lbl=ql(R-7,T+13,'end','LÍDER',RRG_COL.LIDER)+ql(L+7,T+13,'start','MEJORANDO ↑$',RRG_COL.MEJORANDO)
+    +ql(L+7,B-7,'start','REZAGADO',RRG_COL.REZAGADO)+ql(R-7,B-7,'end','DEBILITÁNDOSE ↓$',RRG_COL.DEBILITANDOSE);
+  var bub=s.map(function(p){
+    var c=RRG_COL[p.quadrant]||'#888',bx=X(p.x),by=Y(p.y),code=SEC_ABBR[p.sym]||p.sym;
+    return '<g><circle cx="'+bx+'" cy="'+by+'" r="14" fill="'+c+'" fill-opacity="0.18" stroke="'+c+'" stroke-width="1.6"/>'
+      +'<text x="'+bx+'" y="'+(parseFloat(by)+3).toFixed(1)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" font-weight="700" fill="'+c+'">'+code+'</text></g>';
+  }).join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;">'+q+ax+lbl
+    +'<text x="'+R+'" y="'+(cy-4)+'" text-anchor="end" font-family="DM Mono,monospace" font-size="7.5" fill="rgba(239,236,227,0.34)">fuerza →</text>'
+    +'<text x="'+(cx+4)+'" y="'+(T+9)+'" font-family="DM Mono,monospace" font-size="7.5" fill="rgba(239,236,227,0.34)">↑ momentum</text>'
+    +bub+'</svg>';
+}
 function loadRotation(){
-  fetch(API+'/api/leaps/sectors').then(function(r){return r.json();}).then(function(d){
+  fetch(API+'/api/leaps/rotation').then(function(r){return r.json();}).then(function(d){
     var g=document.getElementById('rot-body'); if(!g)return;
     var s=(d&&d.sectors)||[];
-    if(!s.length){ g.innerHTML='<div class="stub">Sin datos de sectores ahora mismo.</div>'; return; }
-    var mx=Math.max.apply(null,s.map(function(x){return Math.abs(x.chg);}))||1;
-    g.innerHTML=s.map(function(x){
-      var pos=x.chg>=0, col=pos?'var(--up)':'var(--down)';
-      var w=Math.max(4,Math.abs(x.chg)/mx*100);
-      return '<div class="sec-row"><span class="sec-nm">'+x.name+'<em>'+x.sym+'</em></span>'
-        +'<span class="sec-bar"><i style="width:'+w.toFixed(0)+'%;background:'+col+'"></i></span>'
-        +'<span class="sec-v" style="color:'+col+'">'+(pos?'+':'')+x.chg.toFixed(2)+'%</span></div>';
-    }).join('');
-    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent=s.length+' sectores SPDR · hoy';
+    if(!s.length){ g.innerHTML='<div class="stub">Rotación no disponible ahora mismo.</div>'; return; }
+    g.innerHTML=renderRRG(s)+'<div class="rrg-legend">'
+      +'<span><i style="background:#2EE8A4"></i>Líder</span>'
+      +'<span><i style="background:#C9A84C"></i>Mejorando · entra $</span>'
+      +'<span><i style="background:#B197FC"></i>Rezagado</span>'
+      +'<span><i style="background:#FF6B81"></i>Debilitándose · sale $</span></div>';
+    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent='vs '+(d.benchmark||'SPY')+' · fuerza 3m / momentum';
   }).catch(function(){ var g=document.getElementById('rot-body'); if(g)g.innerHTML='<div class="stub">Rotación no disponible ahora.</div>'; });
+}
+
+/* ── HERRAMIENTAS DE DIBUJO (overlay sobre Lightweight Charts) ── */
+var DRAW={tool:'cursor',items:[],drag:null,svg:null,tb:null,wrap:null};
+function drawKey(){return 'lbc_draw_'+LC_SYM+'_'+LC_RNG+'_'+LC_INT;}
+function drawLoad(){ try{DRAW.items=JSON.parse(localStorage.getItem(drawKey())||'[]');}catch(e){DRAW.items=[];} }
+function drawSave(){ try{localStorage.setItem(drawKey(),JSON.stringify(DRAW.items));}catch(e){} }
+function initDrawing(wrap){
+  DRAW.wrap=wrap;
+  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','doverlay');
+  wrap.appendChild(svg); DRAW.svg=svg;
+  var tb=document.createElement('div'); tb.className='dtoolbar';
+  var tools=[['cursor','⌖','Cursor / mover el chart'],['trend','／','Línea de tendencia'],['hline','—','Línea horizontal'],['ray','↗','Rayo (extiende)'],['rect','▭','Rectángulo / zona'],['clear','⌫','Borrar todo']];
+  tools.forEach(function(t){
+    var b=document.createElement('button'); b.className='dtool'; b.textContent=t[1]; b.title=t[2]; b.setAttribute('data-tool',t[0]);
+    if(t[0]==='cursor')b.classList.add('on');
+    b.onclick=function(){ if(t[0]==='clear'){ if(DRAW.items.length&&confirm('¿Borrar todos los dibujos de este chart?')){DRAW.items=[];drawSave();redrawOverlays();} return;} setTool(t[0]); };
+    tb.appendChild(b);
+  });
+  wrap.appendChild(tb); DRAW.tb=tb;
+  svg.addEventListener('mousedown',function(e){dDown(e,e);});
+  window.addEventListener('mousemove',dMove);
+  window.addEventListener('mouseup',dUp);
+  svg.addEventListener('touchstart',function(e){if(e.touches[0])dDown(e.touches[0],e);},{passive:false});
+  window.addEventListener('touchmove',function(e){if(DRAW.drag&&e.touches[0]){dMove(e.touches[0]);e.preventDefault();}},{passive:false});
+  window.addEventListener('touchend',function(e){dUp(e.changedTouches?e.changedTouches[0]:null);});
+  setTool('cursor');
+}
+function setTool(t){
+  DRAW.tool=t;
+  if(DRAW.tb)[].forEach.call(DRAW.tb.querySelectorAll('.dtool'),function(b){b.classList.toggle('on',b.getAttribute('data-tool')===t);});
+  if(DRAW.svg){ DRAW.svg.style.pointerEvents=(t==='cursor')?'none':'auto'; DRAW.svg.style.cursor=(t==='cursor')?'default':'crosshair'; }
+}
+function relXY(ev){ var r=DRAW.wrap.getBoundingClientRect(); return {x:ev.clientX-r.left,y:ev.clientY-r.top}; }
+function pxToData(px,py){ try{ return {l:lchart.timeScale().coordinateToLogical(px),p:lseries.coordinateToPrice(py)}; }catch(e){ return {l:null,p:null}; } }
+function dDown(ev,orig){
+  if(DRAW.tool==='cursor'||!lseries)return; if(orig&&orig.preventDefault)orig.preventDefault();
+  var xy=relXY(ev),d=pxToData(xy.x,xy.y); if(d.l==null||d.p==null)return;
+  DRAW.drag={type:DRAW.tool,l1:d.l,p1:d.p,l2:d.l,p2:d.p};
+}
+function dMove(ev){ if(!DRAW.drag)return; var xy=relXY(ev),d=pxToData(xy.x,xy.y); if(d.l!=null)DRAW.drag.l2=d.l; if(d.p!=null)DRAW.drag.p2=d.p; redrawOverlays(); }
+function dUp(){
+  if(!DRAW.drag)return; var dr=DRAW.drag; DRAW.drag=null;
+  if(dr.type==='hline'){ DRAW.items.push({type:'hline',p1:dr.p1}); }
+  else { var tiny=Math.abs(dr.l2-dr.l1)<0.6 && Math.abs((dr.p2-dr.p1)/(dr.p1||1))<0.0015; if(!tiny)DRAW.items.push(dr); }
+  drawSave(); redrawOverlays();
+}
+function drawShape(d,LX,YY,w){
+  var c='#E7CC74';
+  if(d.type==='hline'){ var y=YY(d.p1); return '<line x1="0" y1="'+y.toFixed(1)+'" x2="'+w+'" y2="'+y.toFixed(1)+'" stroke="'+c+'" stroke-width="1.1" stroke-dasharray="5 3"/>'
+    +'<rect x="0" y="'+(y-8).toFixed(1)+'" width="46" height="15" fill="#14110b" opacity="0.85"/>'
+    +'<text x="4" y="'+(y+3).toFixed(1)+'" fill="'+c+'" font-family="DM Mono,monospace" font-size="9">'+d.p1.toFixed(2)+'</text>'; }
+  var ax=LX(d.l1),ay=YY(d.p1),bx=LX(d.l2),by=YY(d.p2);
+  if(d.type==='rect'){ var x=Math.min(ax,bx),y=Math.min(ay,by); return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.abs(bx-ax).toFixed(1)+'" height="'+Math.abs(by-ay).toFixed(1)+'" fill="'+c+'" fill-opacity="0.08" stroke="'+c+'" stroke-width="1.1"/>'; }
+  var x2=bx,y2=by; if(d.type==='ray'){ x2=ax+(bx-ax)*4; y2=ay+(by-ay)*4; }
+  return '<line x1="'+ax.toFixed(1)+'" y1="'+ay.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+c+'" stroke-width="1.4"/>';
+}
+function redrawOverlays(){
+  if(!DRAW.svg||!lchart||!lseries)return;
+  var w=DRAW.wrap.clientWidth,h=DRAW.wrap.clientHeight; if(!w||!h)return;
+  DRAW.svg.setAttribute('width',w); DRAW.svg.setAttribute('height',h);
+  var ts=lchart.timeScale();
+  var la,lb,pa,pb;
+  try{ la=ts.coordinateToLogical(w*0.25); lb=ts.coordinateToLogical(w*0.75); pa=lseries.coordinateToPrice(h*0.25); pb=lseries.coordinateToPrice(h*0.75); }catch(e){ DRAW.svg.innerHTML=''; return; }
+  if(la==null||lb==null||pa==null||pb==null||lb===la||pb===pa){ DRAW.svg.innerHTML=''; return; }
+  var kx=(w*0.5)/(lb-la), ky=(h*0.5)/(pb-pa);
+  function LX(l){return w*0.25+(l-la)*kx;} function YY(p){return h*0.25+(p-pa)*ky;}
+  var all=DRAW.items.slice(); if(DRAW.drag)all.push(DRAW.drag);
+  DRAW.svg.innerHTML=all.map(function(d){return drawShape(d,LX,YY,w);}).join('');
 }
 
 /* init */
