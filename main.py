@@ -2036,6 +2036,23 @@ async def _fred_obs(sid, limit=26):
         print(f"[env] FRED {sid}: {e}")
         return []
 
+async def _yahoo_closes(ysym, rng="3mo"):
+    """Cierres diarios de Yahoo (para el oro GC=F, etc.). [] si falla."""
+    try:
+        url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ysym.replace('=', '%3D')}"
+               f"?interval=1d&range={rng}")
+        async with httpx.AsyncClient(timeout=10, headers={"User-Agent": "Mozilla/5.0"}) as c:
+            r = await c.get(url)
+        if r.status_code != 200:
+            return []
+        res = ((r.json().get("chart") or {}).get("result") or [None])[0]
+        if not res:
+            return []
+        cl = (((res.get("indicators") or {}).get("quote") or [{}])[0].get("close") or [])
+        return [x for x in cl if x is not None]
+    except Exception:
+        return []
+
 def _envclamp(v, lo=0.0, hi=100.0):
     return max(lo, min(hi, v))
 
@@ -2158,9 +2175,22 @@ async def refresh_environment():
          else "Energía estable" if oil_chg is not None else "Sin dato"), invert=True)
 
     # 8) GOLD (5%) — oro subiendo fuerte = aversión al riesgo/estrés (contextual).
-    gold = ser.get("DCOILWTICO")  # placeholder; el oro real se añade luego (Yahoo GC=F)
-    add("gold", "Gold", 5, None, [], None,
-        "Oro: pendiente de fuente (se añade Yahoo GC=F en la siguiente iteración)")
+    gclose = await _yahoo_closes("GC=F", "6mo")
+    gold_chg = None
+    gold_obs = []
+    if gclose and len(gclose) > 5:
+        g_now = gclose[-1]
+        g_idx = max(0, len(gclose) - 64)  # ~3 meses de sesiones atrás
+        g_3m = gclose[g_idx]
+        gold_chg = ((g_now - g_3m) / g_3m * 100.0) if g_3m else None
+        tail = gclose[-16:][::-1]  # newest-first para la tendencia (submuestreo)
+        gold_obs = [[i, v] for i, v in enumerate(tail)]
+    add("gold", "Gold", 5,
+        (_envlin(gold_chg, 25.0, -10.0) if gold_chg is not None else None), gold_obs,
+        (f"Oro {gold_chg:+.0f}%/3m" if gold_chg is not None else None),
+        ("Oro disparado — aversión al riesgo/estrés" if (gold_chg is not None and gold_chg > 15)
+         else "Oro estable — sin señal de pánico" if gold_chg is not None else "Sin dato"),
+        invert=True)
 
     # 9) FINANCIAL SYSTEM (10%) — HY OAS (spreads de crédito basura): anchos = estrés.
     hy = last("BAMLH0A0HYM2")
