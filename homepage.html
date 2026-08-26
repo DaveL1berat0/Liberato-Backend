@@ -3179,5 +3179,32 @@ async function submitContact(){
   }
 }
 </script>
+
+<script>
+/* Tooltip universal para los (!) info-i: funciona al TOCAR/click (móvil) y en desktop,
+   leyendo el atributo title. El title nativo solo salía al hover (nunca en touch). */
+(function(){
+  var tip=null,forEl=null;
+  function ensure(){ if(!tip){ tip=document.createElement('div'); tip.id='lbc-info-tip';
+    tip.style.cssText='position:fixed;z-index:100000;max-width:min(280px,86vw);background:#14110b;border:0.5px solid rgba(201,168,76,0.5);color:#E8E4D9;font-family:inherit;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,0.55);display:none;';
+    document.body.appendChild(tip);} return tip; }
+  function show(el){ var t=el.getAttribute('data-tip')||el.getAttribute('title'); if(!t)return;
+    var tp=ensure(); tp.textContent=t; tp.style.display='block';
+    var r=el.getBoundingClientRect(), pad=8;
+    var left=Math.min(Math.max(pad, r.left+r.width/2 - tp.offsetWidth/2), window.innerWidth-tp.offsetWidth-pad);
+    var top=r.bottom+8; if(top+tp.offsetHeight>window.innerHeight-pad) top=r.top-tp.offsetHeight-8;
+    tp.style.left=left+'px'; tp.style.top=Math.max(pad,top)+'px'; forEl=el; }
+  function hide(){ if(tip)tip.style.display='none'; forEl=null; }
+  document.addEventListener('click',function(e){
+    var el=e.target.closest&&e.target.closest('.info-i'); 
+    if(el){ e.preventDefault(); e.stopPropagation();
+      if(tip&&tip.style.display==='block'&&forEl===el){ hide(); return; } show(el); }
+    else hide();
+  },true);
+  window.addEventListener('scroll',hide,true);
+  window.addEventListener('resize',hide);
+})();
+</script>
+
 </body>
 </html>
