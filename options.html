@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script>
+// GATE REAL: la sección Options (LEAPS Decision Engine) es contenido PREMIUM.
+(function(){
+  var BACKEND='https://web-production-33671.up.railway.app';
+  function deny(){ try{location.replace('homepage.html#pro-plan');}catch(e){location.href='homepage.html#pro-plan';} }
+  function cachedPrem(){ try{return JSON.parse(localStorage.getItem('lbc_session')||'{}').is_premium===true;}catch(e){return false;} }
+  var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
+  if(!token){ deny(); return; }
+  fetch(BACKEND+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){ if(r.status===401||r.status===403){deny();return null;} return r.ok?r.json():'neterr'; })
+    .then(function(d){ if(d==='neterr'){ if(!cachedPrem())deny(); return; } if(d&&!d.is_premium){ deny(); } })
+    .catch(function(){ if(!cachedPrem())deny(); });
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06080D">
+<title>Liberato Community — LEAPS Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080D; --panel:#0C0F16; --panel-2:#0E121B; --hair:rgba(255,255,255,0.06);
+  --brd:rgba(255,255,255,0.08); --gold:#C9A84C; --gold-2:#E7CC74;
+  --ink:#EFECE3; --ink-2:rgba(239,236,227,0.72); --ink-3:rgba(239,236,227,0.42); --ink-4:rgba(239,236,227,0.26);
+  --up:#2EE8A4; --down:#B197FC; --warn:#F5A623; --risk:#FF6B81;
+  --mono:'DM Mono',ui-monospace,Menlo,monospace; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
+  --r:12px; --r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+/* ── HEADER ── */
+.oh{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 20px;border-bottom:1px solid var(--hair);background:linear-gradient(180deg,rgba(12,15,22,0.9),transparent);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);}
+.oh-l{display:flex;align-items:center;gap:14px;min-width:0;}
+.oh-logo{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink-2);white-space:nowrap;cursor:pointer;}
+.oh-logo b{font-style:normal;font-weight:600;color:var(--gold);}
+.oh-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);border:0.5px solid rgba(201,168,76,0.3);border-radius:999px;padding:3px 10px;}
+.oh-r{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+.oh-status{display:flex;align-items:center;gap:6px;}
+.oh-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-4);}
+.oh-dot.on{background:var(--up);box-shadow:0 0 6px var(--up);animation:pul 1.8s infinite;}
+.oh-back{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border:0.5px solid var(--brd);border-radius:6px;padding:6px 12px;cursor:pointer;transition:all 0.2s;}
+.oh-back:hover{color:var(--gold);border-color:rgba(201,168,76,0.4);}
+@keyframes pul{0%,100%{opacity:1;}50%{opacity:0.35;}}
+/* ── GRID ── */
+.owrap{padding:16px 20px 40px;max-width:1680px;margin:0 auto;}
+.orow{display:grid;gap:16px;margin-bottom:16px;}
+.orow.r1{grid-template-columns:1fr 1.15fr;}
+.orow.r2{grid-template-columns:1.25fr 1fr;}
+.orow.r3{grid-template-columns:1.3fr 1fr;}
+@media(max-width:960px){.orow.r1,.orow.r2,.orow.r3{grid-template-columns:1fr;}}
+.panel{background:var(--panel);border:1px solid var(--brd);border-radius:var(--r);overflow:hidden;}
+.p-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--hair);}
+.p-ttl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px;}
+.p-sub{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;}
+.p-bd{padding:16px;}
+.info-i{cursor:help;opacity:0.5;font-size:0.85em;margin-left:3px;}
+/* ── ENVIRONMENT ── */
+.env-top{display:flex;align-items:center;gap:20px;margin-bottom:16px;}
+.env-score{font-family:var(--serif);font-size:64px;font-weight:600;line-height:0.9;letter-spacing:-0.02em;}
+.env-score small{font-size:22px;color:var(--ink-3);font-family:var(--sans);}
+.env-class{font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-top:6px;}
+.env-bar{height:8px;border-radius:999px;background:linear-gradient(90deg,#FF6B81,#F5A623,#CCA94F,#2EE8A4);position:relative;margin:10px 0 4px;}
+.env-bar .knob{position:absolute;top:-3px;width:3px;height:14px;background:#fff;border-radius:2px;box-shadow:0 0 6px rgba(0,0,0,0.6);transform:translateX(-50%);}
+.env-coverage{font-family:var(--mono);font-size:9px;color:var(--ink-4);}
+.motor{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--hair);}
+.motor:last-child{border-bottom:none;}
+.motor-nm{flex:0 0 130px;font-size:12px;color:var(--ink-2);}
+.motor-nm .mv{display:block;font-family:var(--mono);font-size:9px;color:var(--ink-4);}
+.motor-track{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;min-width:40px;}
+.motor-fill{height:100%;border-radius:3px;transition:width 0.6s ease;}
+.motor-sc{flex:0 0 74px;text-align:right;font-family:var(--mono);font-size:12px;font-weight:700;}
+.motor-st{flex:0 0 74px;text-align:right;font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+.env-conflicts{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,0.07);border:0.5px solid rgba(245,166,35,0.25);}
+.env-conflicts-t{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:5px;}
+.env-conflicts li{font-size:12px;color:var(--ink-2);margin-left:16px;line-height:1.5;}
+.c-up{color:var(--up);} .c-warn{color:var(--warn);} .c-risk{color:var(--risk);} .c-gold{color:var(--gold);}
+/* ── AI BRIEF ── */
+.brief p{font-size:13.5px;color:var(--ink-2);line-height:1.65;margin-bottom:10px;}
+.brief strong{color:var(--ink);font-weight:600;}
+.brief-imp{margin-top:6px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(201,168,76,0.07);border-left:2px solid var(--gold);font-size:13px;color:var(--ink-2);}
+.brief-imp b{color:var(--gold-2);}
+/* ── LEAPS CALC ── */
+.lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.lc-f{display:flex;flex-direction:column;gap:4px;}
+.lc-f label{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
+.lc-f input{background:var(--panel-2);border:1px solid var(--brd);border-radius:var(--r-sm);color:var(--ink);font-family:var(--mono);font-size:14px;padding:9px 11px;width:100%;transition:border-color 0.2s;}
+.lc-f input:focus{outline:none;border-color:rgba(201,168,76,0.5);}
+.lc-out{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border-radius:var(--r-sm);overflow:hidden;}
+.lc-cell{background:var(--panel-2);padding:11px 12px;}
+.lc-cell .k{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
+.lc-cell .v{font-family:var(--mono);font-size:16px;font-weight:700;margin-top:3px;}
+.lc-hero{grid-column:span 2;background:linear-gradient(135deg,rgba(201,168,76,0.1),var(--panel-2));text-align:center;padding:14px;}
+.lc-hero .v{font-size:26px;}
+.lc-badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-top:4px;}
+.lc-strat{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:11px 14px;border:0.5px solid rgba(201,168,76,0.3);border-radius:var(--r-sm);background:rgba(201,168,76,0.04);}
+.lc-strat-t{font-size:12px;color:var(--ink-2);}
+.lc-strat a{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold-2);border:0.5px solid rgba(201,168,76,0.4);border-radius:6px;padding:7px 12px;transition:all 0.2s;white-space:nowrap;}
+.lc-strat a:hover{background:rgba(201,168,76,0.14);}
+/* ── SCANNER / ROTATION ── */
+.scan-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.scan-tab{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:4px 10px;cursor:pointer;}
+.scan-tab.active{background:rgba(201,168,76,0.14);border-color:var(--gold);color:var(--gold);}
+.stub{padding:26px 16px;text-align:center;color:var(--ink-4);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;}
+.stub b{color:var(--gold);display:block;margin-bottom:5px;font-size:12px;}
+.tv-wrap{height:420px;background:var(--panel-2);border-radius:var(--r-sm);overflow:hidden;}
+@media(max-width:960px){.tv-wrap{height:320px;}}
+.rot-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border-radius:var(--r-sm);overflow:hidden;}
+.rot-cell{background:var(--panel-2);padding:14px;text-align:center;}
+.rot-cell .rk{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
+.rot-cell .rv{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:5px;}
+.loading{color:var(--ink-4);font-family:var(--mono);font-size:10px;}
+</style>
+</head>
+<body>
+
+<header class="oh">
+  <div class="oh-l">
+    <div class="oh-logo" onclick="location.href='homepage.html'">Liberato <b>Community</b></div>
+    <span class="oh-tag">LEAPS Intelligence</span>
+  </div>
+  <div class="oh-r">
+    <span class="oh-status"><span class="oh-dot" id="oh-data-dot"></span><span id="oh-updated">—</span></span>
+    <span class="oh-back" onclick="location.href='homepage.html'">← Home</span>
+  </div>
+</header>
+
+<div class="owrap">
+  <!-- ROW 1: AI Macro Brief | Environment -->
+  <div class="orow r1">
+    <section class="panel brief">
+      <div class="p-hd"><span class="p-ttl">◆ AI Market Brief</span><span class="p-sub" id="brief-sub">—</span></div>
+      <div class="p-bd" id="brief-body"><p class="loading">Analizando el entorno macro…</p></div>
+    </section>
+    <section class="panel">
+      <div class="p-hd"><span class="p-ttl">⬡ Environment <span class="info-i" title="Puntuación 0-100 del entorno macro para asumir riesgo de largo plazo (LEAPS). Combina 9 motores reales de FRED con pesos: alto = sano, bajo = defensivo. No es un promedio simple.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
+      <div class="p-bd">
+        <div class="env-top">
+          <div>
+            <div class="env-score" id="env-score">—<small>/100</small></div>
+            <div class="env-class" id="env-class">—</div>
+          </div>
+          <div style="flex:1;">
+            <div class="env-bar"><div class="knob" id="env-knob" style="left:50%;"></div></div>
+            <div class="env-coverage" id="env-coverage">Cargando motores…</div>
+          </div>
+        </div>
+        <div id="env-motors"></div>
+        <div class="env-conflicts" id="env-conflicts" style="display:none;">
+          <div class="env-conflicts-t">⚠ Señales en conflicto</div>
+          <ul id="env-conflicts-list"></ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ROW 2: Chart | LEAPS Calculator -->
+  <div class="orow r2">
+    <section class="panel">
+      <div class="p-hd"><span class="p-ttl">◪ Chart</span><span class="p-sub">TradingView · <span id="tv-sym">NASDAQ:NDX</span></span></div>
+      <div class="p-bd"><div class="tv-wrap" id="tv-wrap"></div></div>
+    </section>
+    <section class="panel">
+      <div class="p-hd"><span class="p-ttl">▤ LEAPS Structure Analyzer <span class="info-i" title="Introduce los datos del LEAP desde tu broker. El sistema calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1).">&#9432;</span></span><span class="p-sub">Inputs manuales</span></div>
+      <div class="p-bd">
+        <div class="lc-grid">
+          <div class="lc-f"><label>Underlying (precio)</label><input id="lc-spot" type="number" inputmode="decimal" placeholder="200" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Strike</label><input id="lc-strike" type="number" inputmode="decimal" placeholder="200" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Premium</label><input id="lc-prem" type="number" inputmode="decimal" placeholder="30" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Contratos</label><input id="lc-qty" type="number" inputmode="numeric" placeholder="1" value="1" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Delta</label><input id="lc-delta" type="number" inputmode="decimal" placeholder="0.72" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Theta / día ($)</label><input id="lc-theta" type="number" inputmode="decimal" placeholder="-0.04" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Días a exp.</label><input id="lc-dte" type="number" inputmode="numeric" placeholder="540" oninput="lcCalc()"></div>
+          <div class="lc-f"><label>Ticker</label><input id="lc-tkr" type="text" placeholder="SPY" oninput="lcStrat()"></div>
+        </div>
+        <div class="lc-out" id="lc-out">
+          <div class="lc-cell lc-hero"><div class="k">Recovery Required</div><div class="v" id="lc-recovery">—</div></div>
+          <div class="lc-cell"><div class="k">Break-even</div><div class="v" id="lc-be">—</div></div>
+          <div class="lc-cell"><div class="k">Theta Burden</div><div class="v" id="lc-thetab">—</div></div>
+          <div class="lc-cell"><div class="k">Intrinsic / Extrinsic</div><div class="v" id="lc-inex">—</div></div>
+          <div class="lc-cell"><div class="k">Extrinsic %</div><div class="v" id="lc-expct">—</div></div>
+          <div class="lc-cell"><div class="k">Delta exposure</div><div class="v" id="lc-dexp">—</div></div>
+          <div class="lc-cell"><div class="k">Total premium</div><div class="v" id="lc-total">—</div></div>
+        </div>
+        <div class="lc-strat">
+          <span class="lc-strat-t">Visualiza el payoff completo del LEAP →</span>
+          <a id="lc-optionstrat" href="https://optionstrat.com/build/long-call" target="_blank" rel="noopener">OptionStrat ↗</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ROW 3: Scanner | Rotation -->
+  <div class="orow r3">
+    <section class="panel">
+      <div class="p-hd"><span class="p-ttl">▦ LEAPS Opportunity Scanner</span><div class="scan-tabs"><span class="scan-tab active">Ticker</span><span class="scan-tab">Sector</span><span class="scan-tab">Trend</span><span class="scan-tab">Location</span></div></div>
+      <div class="p-bd"><div class="stub"><b>Scanner — Fase 1</b>Detecta "el precio cayó pero el negocio NO está roto" (location técnica + 8 pillars fundamentales de Finnhub). Cableado en la siguiente iteración de datos.</div></div>
+    </section>
+    <section class="panel">
+      <div class="p-hd"><span class="p-ttl">↻ Sector Rotation</span><span class="p-sub" id="rot-sub">—</span></div>
+      <div class="p-bd"><div class="rot-grid" id="rot-grid"><div class="rot-cell"><div class="rk">Cargando…</div></div></div></div>
+    </section>
+  </div>
+</div>
+
+<script>
+var API='https://web-production-33671.up.railway.app';
+
+/* ── ENVIRONMENT ── */
+function scColor(s){ if(s==null)return 'var(--ink-4)'; if(s>=65)return 'var(--up)'; if(s>=45)return 'var(--warn)'; return 'var(--risk)'; }
+function classColor(c){ if(/HEALTHY|CONSTRUCTIVE/.test(c))return 'var(--up)'; if(/CAUTION/.test(c))return 'var(--warn)'; if(/RISK|DEFENSIVE/.test(c))return 'var(--risk)'; return 'var(--ink-3)'; }
+function loadEnv(){
+  fetch(API+'/api/environment').then(function(r){return r.json();}).then(function(d){
+    renderEnv(d); renderBrief(d);
+    var dot=document.getElementById('oh-data-dot'); if(dot&&d.score!=null)dot.classList.add('on');
+    var up=document.getElementById('oh-updated'); if(up&&d.as_of){try{up.textContent='FRED '+new Date(d.as_of).toLocaleDateString('es',{day:'2-digit',month:'short'});}catch(e){}}
+  }).catch(function(){ var b=document.getElementById('brief-body'); if(b)b.innerHTML='<p class="loading">Environment no disponible ahora mismo.</p>'; });
+}
+function renderEnv(d){
+  var sc=d.score;
+  var se=document.getElementById('env-score'); if(se)se.innerHTML=(sc!=null?Math.round(sc):'—')+'<small>/100</small>';
+  var cl=document.getElementById('env-class'); if(cl){cl.textContent=d.classification||'—';cl.style.color=classColor(d.classification||'');}
+  var kb=document.getElementById('env-knob'); if(kb&&sc!=null)kb.style.left=Math.max(0,Math.min(100,sc))+'%';
+  var cov=document.getElementById('env-coverage'); if(cov)cov.textContent='Cobertura de motores: '+(d.coverage||'—')+(d.source?(' · '+d.source):'');
+  var sub=document.getElementById('env-sub'); if(sub)sub.textContent='FRED · '+(d.coverage||'');
+  var host=document.getElementById('env-motors'); if(host){
+    host.innerHTML=(d.motors||[]).map(function(m){
+      var s=m.score, col=scColor(s);
+      var tr=m.trend==='improving'?'▲':m.trend==='deteriorating'?'▼':'·';
+      var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--risk)':'var(--ink-4)';
+      return '<div class="motor"><div class="motor-nm">'+m.name+'<span class="mv">'+(m.value||'—')+' · '+m.weight+'%</span></div>'
+        +'<div class="motor-track"><div class="motor-fill" style="width:'+(s!=null?s:0)+'%;background:'+col+'"></div></div>'
+        +'<div class="motor-sc" style="color:'+col+'">'+(s!=null?Math.round(s):'—')+'</div>'
+        +'<div class="motor-st" style="color:'+trc+'">'+tr+' '+(m.status||'')+'</div></div>';
+    }).join('');
+  }
+  var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
+  if(cf&&cl2){ if(d.conflicts&&d.conflicts.length){ cf.style.display='block'; cl2.innerHTML=d.conflicts.map(function(x){return '<li>'+x+'</li>';}).join(''); } else cf.style.display='none'; }
+}
+
+/* ── AI MACRO BRIEF (derivado del dato REAL — Regla #1, no inventa cifras) ── */
+function renderBrief(d){
+  var b=document.getElementById('brief-body'); if(!b)return;
+  var sub=document.getElementById('brief-sub'); if(sub)sub.textContent=(d.classification||'—')+(d.score!=null?(' · '+Math.round(d.score)+'/100'):'');
+  if(d.score==null){ b.innerHTML='<p class="loading">Datos macro insuficientes para el brief.</p>'; return; }
+  function nm(k){return (d.motors||[]).find(function(m){return m.key===k;})||{};}
+  var econ=nm('economy'), infl=nm('inflation'), rates=nm('rates'), fin=nm('financial'), re=nm('real_estate'), yc=nm('yield_curve');
+  var favorable=d.score>=65, cautious=d.score>=45&&d.score<65;
+  var p1='El entorno macro está en <strong>'+(d.classification||'—')+'</strong> ('+Math.round(d.score)+'/100). ';
+  p1+= (econ.status==='Healthy'?'La economía base se mantiene resiliente':'La economía muestra signos de debilidad')+' ('+ (econ.value||'—') +') ';
+  p1+= (fin.status==='Healthy'?'y el estrés del sistema financiero está contenido':'con tensión en el sistema financiero')+'. ';
+  var p2='';
+  if(infl.status!=='Healthy') p2+='La inflación ('+(infl.value||'—')+') sigue presionando y ';
+  p2+= (rates.status==='Risky'||rates.status==='Caution'?'la política monetaria restrictiva':'las tasas acomodaticias')+' condicionan la exposición a duración larga. ';
+  if(re.status==='Risky') p2+='El sector inmobiliario ('+(re.value||'—')+') es un punto de fricción. ';
+  var impl;
+  if(favorable) impl='Entorno favorable para <b>exposición selectiva de largo plazo</b>. Prioriza empresas de alta calidad, balance sólido y valoración razonable.';
+  else if(cautious) impl='Entorno de <b>cautela</b>: favorece selección estricta — calidad + valoración + margin of safety. Evita pagar prima extrema por negocios de flujo débil.';
+  else impl='Entorno <b>defensivo</b>: reduce el riesgo de duración. Mejor esperar mejor location/valoración antes de estructuras LEAPS agresivas.';
+  var cflx = (d.conflicts&&d.conflicts.length)?('<p style="color:var(--warn);font-size:12.5px;">⚠ '+d.conflicts[0]+'.</p>'):'';
+  b.innerHTML='<p>'+p1+'</p><p>'+p2+'</p>'+cflx+'<div class="brief-imp"><b>LEAPS implication:</b> '+impl+'</div>';
+}
+
+/* ── LEAPS CALCULATOR (matemática verificable, inputs manuales) ── */
+function num(id){ var v=parseFloat(document.getElementById(id).value); return isFinite(v)?v:null; }
+function f2(v){ return (v>=0?'+':'')+v.toFixed(2); }
+function money(v){ return (v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0}); }
+function setT(id,t){ var e=document.getElementById(id); if(e)e.textContent=t; }
+function lcCalc(){
+  var spot=num('lc-spot'),strike=num('lc-strike'),prem=num('lc-prem'),qty=num('lc-qty')||1,delta=num('lc-delta'),theta=num('lc-theta'),dte=num('lc-dte');
+  var mult=100;
+  // Break-even (long call) = strike + premium
+  if(strike!=null&&prem!=null){ var be=strike+prem; setT('lc-be','$'+be.toFixed(2));
+    if(spot!=null&&spot>0){ var rec=(be-spot)/spot*100; var rl=document.getElementById('lc-recovery'); rl.textContent=(rec>=0?'+':'')+rec.toFixed(1)+'%'; rl.style.color=rec<=8?'var(--up)':rec<=18?'var(--warn)':'var(--risk)'; }
+  } else { setT('lc-be','—'); setT('lc-recovery','—'); }
+  // Intrinsic / Extrinsic
+  if(spot!=null&&strike!=null&&prem!=null){ var intr=Math.max(0,spot-strike), extr=prem-intr; setT('lc-inex','$'+intr.toFixed(2)+' / $'+extr.toFixed(2));
+    var exp=prem>0?extr/prem*100:0; setT('lc-expct',exp.toFixed(0)+'%'); } else { setT('lc-inex','—'); setT('lc-expct','—'); }
+  // Theta Burden
+  var tb=document.getElementById('lc-thetab');
+  if(theta!=null&&prem!=null&&prem>0){ var mth=Math.abs(theta)*30, pctm=mth/(prem*mult)*100;
+    var lbl=pctm<1.5?'LOW':pctm<3.5?'MODERATE':'HIGH', col=pctm<1.5?'var(--up)':pctm<3.5?'var(--warn)':'var(--risk)';
+    tb.innerHTML=lbl+' <span style="font-size:10px;color:var(--ink-4);">~'+money(Math.abs(theta)*mult)+'/día</span>'; tb.style.color=col;
+  } else setT('lc-thetab','—');
+  // Delta exposure
+  if(delta!=null&&spot!=null){ setT('lc-dexp',money(delta*mult*qty*spot)); } else setT('lc-dexp','—');
+  // Total premium
+  if(prem!=null){ setT('lc-total',money(prem*mult*qty)); } else setT('lc-total','—');
+  lcStrat();
+}
+function lcStrat(){
+  var t=(document.getElementById('lc-tkr').value||'').trim().toUpperCase();
+  var a=document.getElementById('lc-optionstrat');
+  a.href = t ? ('https://optionstrat.com/build/long-call/'+encodeURIComponent(t)) : 'https://optionstrat.com/build/long-call';
+}
+
+/* ── TRADINGVIEW EMBED ── */
+function loadTV(){
+  var s=document.createElement('script');
+  s.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+  s.type='text/javascript'; s.async=true;
+  s.innerHTML=JSON.stringify({
+    autosize:true, symbol:'NASDAQ:NDX', interval:'D', timezone:'America/New_York',
+    theme:'dark', style:'1', locale:'es', hide_side_toolbar:false, allow_symbol_change:true,
+    calendar:false, backgroundColor:'#0E121B', gridColor:'rgba(255,255,255,0.05)', support_host:'https://www.tradingview.com'
+  });
+  var w=document.getElementById('tv-wrap');
+  if(w){ var c=document.createElement('div'); c.className='tradingview-widget-container'; c.style.height='100%'; var inner=document.createElement('div'); inner.className='tradingview-widget-container__widget'; inner.style.height='100%'; c.appendChild(inner); c.appendChild(s); w.appendChild(c); }
+}
+
+/* ── SECTOR ROTATION (real desde heatmap si disponible) ── */
+function loadRotation(){
+  fetch(API+'/api/heatmap',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    var g=document.getElementById('rot-grid'); if(!g)return;
+    var hm=(d&&d.heatmap)||{};
+    var picks=[['XLK','Tech'],['XLE','Energy'],['XLP','Consumo Def.'],['XLB','Materiales']];
+    var rows=picks.map(function(p){ var q=hm[p[0]]||{}; var chg=(typeof q.dp==='number')?q.dp:(typeof q.change==='number'?q.change:null);
+      var col=chg==null?'var(--ink-4)':chg>=0?'var(--up)':'var(--down)';
+      return '<div class="rot-cell"><div class="rk">'+p[1]+'</div><div class="rv" style="color:'+col+'">'+(chg!=null?((chg>=0?'+':'')+chg.toFixed(2)+'%'):'—')+'</div></div>';
+    }).join('');
+    g.innerHTML=rows;
+    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent='ETFs sectoriales';
+  }).catch(function(){});
+}
+
+/* init */
+loadEnv(); loadTV(); loadRotation(); lcCalc();
+setInterval(loadEnv, 6*3600*1000);
+</script>
+
+<script>
+/* Tooltip universal (!) — tap/click en móvil */
+(function(){
+  var tip=null,forEl=null;
+  function ensure(){ if(!tip){ tip=document.createElement('div'); tip.style.cssText='position:fixed;z-index:100000;max-width:min(280px,86vw);background:#14110b;border:0.5px solid rgba(201,168,76,0.5);color:#E8E4D9;font-family:inherit;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,0.55);display:none;'; document.body.appendChild(tip);} return tip; }
+  function show(el){ var t=el.getAttribute('title'); if(!t)return; var tp=ensure(); tp.textContent=t; tp.style.display='block'; var r=el.getBoundingClientRect(),pad=8; var left=Math.min(Math.max(pad,r.left+r.width/2-tp.offsetWidth/2),window.innerWidth-tp.offsetWidth-pad); var top=r.bottom+8; if(top+tp.offsetHeight>window.innerHeight-pad)top=r.top-tp.offsetHeight-8; tp.style.left=left+'px'; tp.style.top=Math.max(pad,top)+'px'; forEl=el; }
+  function hide(){ if(tip)tip.style.display='none'; forEl=null; }
+  document.addEventListener('click',function(e){ var el=e.target.closest&&e.target.closest('.info-i'); if(el){e.preventDefault();e.stopPropagation(); if(tip&&tip.style.display==='block'&&forEl===el){hide();return;} show(el);} else hide(); },true);
+  window.addEventListener('scroll',hide,true); window.addEventListener('resize',hide);
+})();
+</script>
+</body>
+</html>
