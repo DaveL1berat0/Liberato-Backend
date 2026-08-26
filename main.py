@@ -2002,6 +2002,225 @@ _fred_last_fetch = 0.0
 BLS_API_KEY = os.getenv("BLS_API_KEY", "").strip()
 FRED_API_KEY = os.getenv("FRED_API_KEY", "").strip()
 
+# ═══════════════════════ ENVIRONMENT ENGINE (Options / LEAPS) ═══════════════════════
+# 9 motores macro ponderados → Environment Score 0-100. Cada motor sale de series
+# REALES de FRED (Regla #1: si una serie falla, ese motor = "no disponible" y se
+# EXCLUYE del score, renormalizando pesos — nunca se inventa un número). Score alto =
+# entorno sano para asumir riesgo de largo plazo (LEAPS). Pesos configurables.
+_env_cache = {"data": None, "ts": 0.0}
+ENV_TTL = 6 * 3600   # el macro se mueve lento; refrescar cada 6h basta
+
+async def _fred_obs(sid, limit=26):
+    """Últimas `limit` observaciones (más reciente PRIMERO) de una serie FRED, como
+    lista de (fecha, float). Descarta puntos '.' (sin dato). [] si falla/no hay key."""
+    if not FRED_API_KEY:
+        return []
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.get("https://api.stlouisfed.org/fred/series/observations",
+                            params={"series_id": sid, "api_key": FRED_API_KEY,
+                                    "file_type": "json", "sort_order": "desc", "limit": limit})
+        if r.status_code != 200:
+            return []
+        out = []
+        for o in (r.json().get("observations") or []):
+            v = o.get("value")
+            if v in (None, ".", ""):
+                continue
+            try:
+                out.append((o.get("date"), float(v)))
+            except (TypeError, ValueError):
+                continue
+        return out
+    except Exception as e:
+        print(f"[env] FRED {sid}: {e}")
+        return []
+
+def _envclamp(v, lo=0.0, hi=100.0):
+    return max(lo, min(hi, v))
+
+def _envlin(x, x0, x1):
+    """Score 0-100 lineal: x==x0 → 0, x==x1 → 100 (clamp)."""
+    if x is None or x1 == x0:
+        return None
+    return round(_envclamp((x - x0) / (x1 - x0) * 100.0), 1)
+
+def _env_status(score):
+    if score is None:      return "n/a"
+    if score >= 65:        return "Healthy"
+    if score >= 45:        return "Caution"
+    return "Risky"
+
+def _env_trend(obs, invert=False):
+    """Tendencia por el cambio reciente de la serie. invert=True cuando 'sube' es malo."""
+    if not obs or len(obs) < 4:
+        return "flat"
+    recent, older = obs[0][1], obs[3][1]
+    d = recent - older
+    if abs(d) < abs(older) * 0.005 if older else abs(d) < 1e-9:
+        return "flat"
+    up = d > 0
+    if invert:
+        up = not up
+    return "improving" if up else "deteriorating"
+
+def _env_yoy(obs):
+    """% interanual desde observaciones mensuales (más reciente primero): compara con
+    el punto ~12 meses atrás."""
+    if not obs or len(obs) < 13:
+        return None
+    a, b = obs[0][1], obs[12][1]
+    return round((a - b) / b * 100.0, 2) if b else None
+
+async def refresh_environment():
+    """Calcula el Environment Score (9 motores FRED ponderados) y lo cachea."""
+    now = time.time()
+    # Series FRED por motor (todas gratis). Traer suficientes puntos para YoY/tendencia.
+    ser = {}
+    ids = ["T10Y2Y", "FEDFUNDS", "DGS10", "CPIAUCSL", "PCEPI", "TDSP",
+           "MORTGAGE30US", "HOUST", "UNRATE", "INDPRO", "DCOILWTICO",
+           "BAMLH0A0HYM2", "NFCI"]
+    results = await asyncio.gather(*[_fred_obs(i, 26) for i in ids], return_exceptions=True)
+    for i, sid in enumerate(ids):
+        ser[sid] = results[i] if not isinstance(results[i], Exception) else []
+
+    def last(sid):
+        return ser.get(sid, [None])[0][1] if ser.get(sid) else None
+
+    motors = []  # cada uno: {key,name,score,status,trend,weight,value,explain}
+    def add(key, name, weight, score, obs, value, explain, invert=False):
+        motors.append({"key": key, "name": name, "weight": weight,
+                       "score": score, "status": _env_status(score),
+                       "trend": _env_trend(obs, invert) if score is not None else "n/a",
+                       "value": value, "explain": explain})
+
+    # 1) YIELD CURVE (15%) — T10Y2Y: invertida (<0) = mala; empinada positiva = sana.
+    yc = last("T10Y2Y")
+    add("yield_curve", "Yield Curve", 15,
+        _envlin(yc, -1.0, 1.5), ser["T10Y2Y"],
+        (f"{yc:+.2f}%" if yc is not None else None),
+        ("Curva invertida — históricamente antesala de recesión" if (yc is not None and yc < 0)
+         else "Curva positiva/normal" if yc is not None else "Sin dato"))
+
+    # 2) INTEREST RATES (10%) — FEDFUNDS: restrictivas/altas = caución.
+    ff = last("FEDFUNDS")
+    add("rates", "Interest Rates", 10,
+        _envlin(ff, 6.0, 0.5), ser["FEDFUNDS"],
+        (f"{ff:.2f}%" if ff is not None else None),
+        ("Política restrictiva (tasas altas)" if (ff is not None and ff >= 4)
+         else "Política acomodaticia" if ff is not None else "Sin dato"), invert=True)
+
+    # 3) INFLATION (15%) — CPI YoY: 2% ideal, ≥6% mala; penaliza aceleración.
+    cpi_yoy = _env_yoy(ser["CPIAUCSL"])
+    add("inflation", "Inflation", 15,
+        _envlin(cpi_yoy, 6.0, 2.0), ser["CPIAUCSL"],
+        (f"{cpi_yoy:.1f}% YoY" if cpi_yoy is not None else None),
+        ("Inflación elevada — presiona tasas y duración" if (cpi_yoy is not None and cpi_yoy > 3.5)
+         else "Inflación contenida" if cpi_yoy is not None else "Sin dato"), invert=True)
+
+    # 4) LEVERAGE / DEBT (15%) — TDSP (carga de deuda de hogares): más alta = peor.
+    tdsp = last("TDSP")
+    add("leverage", "Leverage / Debt", 15,
+        _envlin(tdsp, 13.5, 9.0), ser["TDSP"],
+        (f"{tdsp:.1f}%" if tdsp is not None else None),
+        ("Carga de deuda de hogares elevada" if (tdsp is not None and tdsp > 12)
+         else "Servicio de deuda manejable" if tdsp is not None else "Sin dato"), invert=True)
+
+    # 5) REAL ESTATE (10%) — Mortgage 30y: >7% aprieta; combinar con housing starts.
+    mtg = last("MORTGAGE30US")
+    add("real_estate", "Real Estate", 10,
+        _envlin(mtg, 8.0, 3.0), ser["MORTGAGE30US"],
+        (f"{mtg:.2f}%" if mtg is not None else None),
+        ("Hipotecas caras enfrían la vivienda" if (mtg is not None and mtg > 6.5)
+         else "Financiación hipotecaria razonable" if mtg is not None else "Sin dato"), invert=True)
+
+    # 6) BASE ECONOMY (15%) — Desempleo: 3.5% sano, ≥6% débil (+ tendencia INDPRO).
+    ur = last("UNRATE")
+    add("economy", "Base Economy", 15,
+        _envlin(ur, 6.5, 3.3), ser["UNRATE"],
+        (f"{ur:.1f}% paro" if ur is not None else None),
+        ("Mercado laboral sólido" if (ur is not None and ur < 4.5)
+         else "Empleo debilitándose" if ur is not None else "Sin dato"), invert=True)
+
+    # 7) SUPPLY SHOCK (5%) — WTI: subida brusca (>25% en ~3m) = shock.
+    oil = ser["DCOILWTICO"]
+    oil_now = oil[0][1] if oil else None
+    oil_3m = None
+    if oil and len(oil) > 12:
+        oil_3m = oil[min(12, len(oil) - 1)][1]
+    oil_chg = ((oil_now - oil_3m) / oil_3m * 100.0) if (oil_now and oil_3m) else None
+    add("supply", "Supply Shock", 5,
+        (_envlin(oil_chg, 40.0, -10.0) if oil_chg is not None else None), oil,
+        (f"WTI {oil_chg:+.0f}%/3m" if oil_chg is not None else None),
+        ("Salto de energía — posible shock de oferta" if (oil_chg is not None and oil_chg > 25)
+         else "Energía estable" if oil_chg is not None else "Sin dato"), invert=True)
+
+    # 8) GOLD (5%) — oro subiendo fuerte = aversión al riesgo/estrés (contextual).
+    gold = ser.get("DCOILWTICO")  # placeholder; el oro real se añade luego (Yahoo GC=F)
+    add("gold", "Gold", 5, None, [], None,
+        "Oro: pendiente de fuente (se añade Yahoo GC=F en la siguiente iteración)")
+
+    # 9) FINANCIAL SYSTEM (10%) — HY OAS (spreads de crédito basura): anchos = estrés.
+    hy = last("BAMLH0A0HYM2")
+    add("financial", "Financial System", 10,
+        _envlin(hy, 8.0, 3.0), ser["BAMLH0A0HYM2"],
+        (f"HY OAS {hy:.2f}%" if hy is not None else None),
+        ("Spreads de crédito anchos — estrés financiero" if (hy is not None and hy > 5)
+         else "Condiciones de crédito calmadas" if hy is not None else "Sin dato"), invert=True)
+
+    # ── Score ponderado, renormalizando sobre los motores CON dato (Regla #1) ──
+    avail = [m for m in motors if m["score"] is not None]
+    wsum = sum(m["weight"] for m in avail)
+    total = None
+    if wsum > 0:
+        total = round(sum(m["score"] * m["weight"] for m in avail) / wsum, 1)
+        for m in motors:
+            m["contribution"] = (round(m["score"] * m["weight"] / wsum, 1)
+                                 if m["score"] is not None else None)
+    # Clasificación
+    def _classify(s):
+        if s is None: return "SIN DATOS"
+        if s >= 80: return "HEALTHY"
+        if s >= 65: return "CONSTRUCTIVE"
+        if s >= 50: return "CAUTION"
+        if s >= 35: return "HIGH RISK"
+        return "DEFENSIVE"
+    # Conflicting signals (economía fuerte pero inflación/tasas restrictivas, etc.)
+    conflicts = []
+    def _m(k): return next((x for x in motors if x["key"] == k), {})
+    if (_m("economy").get("score") or 0) >= 65 and (_m("inflation").get("score") or 100) < 50:
+        conflicts.append("Economía resiliente pero inflación acelerando")
+    if (_m("economy").get("score") or 0) >= 65 and (_m("rates").get("score") or 100) < 45:
+        conflicts.append("Crecimiento sólido con política monetaria restrictiva")
+    if (_m("yield_curve").get("score") or 100) < 35 and (_m("economy").get("score") or 0) >= 60:
+        conflicts.append("Curva invertida pese a datos de actividad aún firmes")
+
+    data = {
+        "score": total,
+        "classification": _classify(total),
+        "motors": motors,
+        "conflicts": conflicts,
+        "coverage": f"{len(avail)}/{len(motors)}",
+        "as_of": datetime.now(NY).isoformat(),
+        "source": "FRED",
+    }
+    _env_cache["data"] = data
+    _env_cache["ts"] = now
+    print(f"[env] score={total} class={data['classification']} motores={len(avail)}/{len(motors)}")
+    return data
+
+@app.get("/api/environment")
+async def get_environment():
+    """Environment Score (9 motores macro FRED ponderados) para la sección Options."""
+    if not _env_cache["data"] or (time.time() - _env_cache["ts"] > ENV_TTL):
+        try:
+            await refresh_environment()
+        except Exception as e:
+            print(f"[env] refresh falló: {e}")
+    return _env_cache["data"] or {"score": None, "classification": "SIN DATOS",
+                                  "motors": [], "conflicts": [],
+                                  "note": "FRED_API_KEY no configurada o sin datos aún"}
+
 # (frases_en_titulo [más específicas primero], series_id, transform)
 BLS_SERIES = [
     (["core cpi m/m", "core cpi mom"],                         "CUSR0000SA0L1E", "mom"),
