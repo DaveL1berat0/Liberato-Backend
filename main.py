@@ -6836,6 +6836,28 @@ async def get_dashboard():
 # ══ SCHEDULER ════════════════════════════════════════════════════════════════
 scheduler = AsyncIOScheduler(timezone=NY)
 
+async def _seed_auditor():
+    """Cuenta de AUDITOR con acceso PREMIUM sin pago (supervisión de la web),
+    pre-creada y pre-verificada. Solo el HASH de la contraseña vive en el código
+    (el texto plano se entrega aparte). No es admin: solo premium (ve todo, sin
+    poderes de administración)."""
+    email = "auditor@liberatocommunity.com"
+    try:
+        if await user_get(email):
+            return   # ya existe → no sobrescribir
+        await user_put(email, {
+            "id": "aud_1096260d7bf1",
+            "name": "Auditor",
+            "salt": "Ji0DFYMA3JV5k2nFQgIcdA==",
+            "pass_hash": "fhn4R2xGMIgZh5oaD0I1X52wQO0LMjRVL14880kr6Zo",
+            "plan": "premium",
+            "created": int(time.time()),
+            "language": "es",
+        })
+        print("[seed] cuenta auditor creada (premium)")
+    except Exception as e:
+        print(f"[seed] auditor: {e}")
+
 @app.on_event("startup")
 async def startup():
     load_cache()
@@ -6844,6 +6866,10 @@ async def startup():
         print(f"[auth] store: {'Supabase' if _sb_on() else 'snapshot (efímero)'}")
     except Exception as e:
         print(f"[auth] _load_auth_secret: {e}")
+    try:
+        await _seed_auditor()
+    except Exception as e:
+        print(f"[seed] auditor: {e}")
     cache["company"] = {}   # clear company cache on startup — ensures new endpoint logic runs
 
     # ── TwelveData WebSocket: una sola tarea persistente ──────────────────
