@@ -1013,6 +1013,12 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
     cw   = j.get("major_pos_oi")         # call wall  (mayor gamma positivo, por OI)
     pw   = j.get("major_neg_oi")         # put wall   (mayor gamma negativo, por OI)
     net  = j.get("sum_gex_oi")           # net gex (por OI)
+    # ── EXTRA de Classic que no usábamos (sacar el 100% al plan) ──
+    cw_v = j.get("major_pos_vol")        # call wall por VOLUMEN (posicionamiento intradía fresco)
+    pw_v = j.get("major_neg_vol")        # put wall  por VOLUMEN
+    net_v= j.get("sum_gex_vol")          # net gex por VOLUMEN
+    skew = j.get("delta_risk_reversal")  # sesgo call/put (>0 alcista / calls más caros; <0 bajista)
+    min_dte = j.get("min_dte")           # DTE del vencimiento más cercano (0 = hay 0DTE hoy)
     ts_src = j.get("timestamp")
 
     # strikes: filas [precio, gex_vol, gex_oi, [priors]] → {strike, gex} usando gex_oi.
@@ -1037,6 +1043,9 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
         "underlying_price": spot,
         "call_wall": cw, "put_wall": pw, "gamma_flip": gf,
         "net_gex": net,
+        # Capa por VOLUMEN (intradía fresco) + skew, todo de Classic:
+        "call_wall_vol": cw_v, "put_wall_vol": pw_v, "net_gex_vol": net_v,
+        "skew": skew, "min_dte": min_dte,
         "per_strike": per_strike,
         "per_strike_count": len(per_strike),
         "ticker": GEXBOT_SYMBOL,
@@ -1051,6 +1060,30 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
             g["as_of"] = datetime.fromtimestamp(ts_src, timezone.utc).isoformat().replace("+00:00", "Z")
         except Exception:
             pass
+    # ── 2ª llamada: 0DTE (classic/zero) → capa filosa del scalper (toggle) ──
+    # Mismos campos pero solo del vencimiento de HOY. Se guarda en g["zero"].
+    try:
+        async with httpx.AsyncClient(timeout=10, headers=_gexbot_headers()) as c0:
+            r0 = await c0.get(f"{GEXBOT_BASE}/{GEXBOT_SYMBOL}/classic/zero")
+        if r0.status_code == 200:
+            j0 = r0.json() or {}
+            _z_net = j0.get("sum_gex_oi")
+            g["zero"] = {
+                "gamma_flip":   j0.get("zero_gamma"),
+                "call_wall":    j0.get("major_pos_oi"),
+                "put_wall":     j0.get("major_neg_oi"),
+                "call_wall_vol":j0.get("major_pos_vol"),
+                "put_wall_vol": j0.get("major_neg_vol"),
+                "net_gex":      _z_net,
+                "net_gex_vol":  j0.get("sum_gex_vol"),
+                "skew":         j0.get("delta_risk_reversal"),
+                "regime": ("trending" if (isinstance(_z_net,(int,float)) and _z_net < 0)
+                           else "pinning" if isinstance(_z_net,(int,float)) else None),
+            }
+        else:
+            print(f"[gexbot] classic/zero HTTP {r0.status_code}")
+    except Exception as _e0:
+        print(f"[gexbot] 0DTE (zero) falló: {_e0}")
     cache["gex"][asset] = g
     if isinstance(spot, (int, float)) and spot > 0:
         _set_px_ratio_from_spot(spot)
@@ -4106,6 +4139,19 @@ async def gamma_levels():
     gex_nq["gamma_flip"] = _to_px(gex.get("gamma_flip"))
     if gex.get("max_pain") is not None:
         gex_nq["max_pain"] = _to_px(gex.get("max_pain"))
+    # Walls por VOLUMEN (mismos precios → misma conversión). skew/net_vol/min_dte NO son precios.
+    gex_nq["call_wall_vol"] = _to_px(gex.get("call_wall_vol"))
+    gex_nq["put_wall_vol"]  = _to_px(gex.get("put_wall_vol"))
+    # Niveles 0DTE (capa scalper): escalar sus precios igual que los del full.
+    _z = gex.get("zero")
+    if isinstance(_z, dict):
+        gex_nq["zero"] = {**_z,
+            "gamma_flip":    _to_px(_z.get("gamma_flip")),
+            "call_wall":     _to_px(_z.get("call_wall")),
+            "put_wall":      _to_px(_z.get("put_wall")),
+            "call_wall_vol": _to_px(_z.get("call_wall_vol")),
+            "put_wall_vol":  _to_px(_z.get("put_wall_vol")),
+        }
     gex_nq["conversion"] = ("none-direct" if is_direct
                             else (f"{FA_PROXY_ETF.lower()}-ratio-{ratio}" if ratio else "sin-ratio"))
     # Timestamp: preferir as_of de FlashAlpha (cuándo se CALCULÓ el dato).
