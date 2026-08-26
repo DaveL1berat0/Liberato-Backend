@@ -154,6 +154,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .g-ttl{font-size:11px;font-weight:700;color:var(--ink-2);letter-spacing:0.07em;text-transform:uppercase;}
 .g-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);}
 .g-live{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--up);}
+.gf-0dte{font-family:var(--mono);font-size:9px;font-weight:800;letter-spacing:0.08em;color:var(--ink-3);background:rgba(255,255,255,0.04);border:0.5px solid var(--glass-brd);border-radius:999px;padding:4px 10px;cursor:pointer;transition:all 0.18s var(--ease);min-height:26px;}
+.gf-0dte:hover{border-color:rgba(204,169,79,0.45);color:var(--ink-2);}
+.gf-0dte.active{background:rgba(204,169,79,0.16);border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px -3px rgba(204,169,79,0.5);}
   .g-hd-r{display:flex;align-items:center;gap:12px;}
   .gf-timestamp{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
     font-size:9px;font-weight:500;letter-spacing:0.03em;color:var(--ink-3);
@@ -1497,6 +1500,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             <div class="rg-ms"><span class="rg-ms-k">⊘ Points to Flip <em>→ define régimen</em> <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">◎ VIX <span class="info-i" title="Índice de volatilidad del S&amp;P 500 (el &quot;medidor de miedo&quot; del mercado). VIX alto = más miedo y movimientos amplios · VIX bajo = calma. Clave para dimensionar riesgo intradía.">&#9432;</span></span><span class="rg-ms-v" id="rg-atm-iv">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">⬡ Exp Move <span class="info-i" title="Movimiento esperado (±puntos) para la sesión, derivado del ATM IV. Rango probable del NQ hoy según las opciones.">&#9432;</span></span><span class="rg-ms-v cyan" id="rg-expmove">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⇄ Skew <span class="info-i" title="Sesgo call/put del posicionamiento en opciones (risk reversal de GexBot). POSITIVO = sesgo ALCISTA (calls más demandadas/caras) · NEGATIVO = sesgo BAJISTA (puts más demandadas) · ~0 = neutral. Muestra hacia qué lado se inclinan los dealers.">&#9432;</span></span><span class="rg-ms-v" id="rg-skew">—</span></div>
             </div>
         </div>
         <div class="rg-vol">
@@ -1523,6 +1527,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div class="g-hd">
         <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Mapa de zonas de liquidez del posicionamiento en opciones: Put Wall (soporte), Gamma Flip (frontera de régimen), Max Pain y Call Wall (resistencia).">&#9432;</span></div><div class="g-sub">Liquidity Zones · Price Flow</div></div></div>
         <div class="g-hd-r">
+          <button class="gf-0dte" id="gf-0dte" onclick="toggle0dte()" title="0DTE = niveles del vencimiento de HOY: la gamma que domina el movimiento intradía (para scalping). Apagado = vencimiento COMPLETO (por OI), el mapa estructural del día. Ambos de GexBot.">0DTE</button>
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
           <span class="g-live"><span class="bl"></span>Live</span>
         </div>
@@ -1543,6 +1548,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
         <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
         <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
+        <div class="iro"><span class="iro-k">Call Wall vol <span class="info-i" title="Muro de resistencia por VOLUMEN de hoy (posicionamiento intradía fresco), distinto del muro por OI (estructural). Fuente GexBot.">&#9432;</span></span><span class="iro-v up" id="iro-callvol">—</span></div>
+        <div class="iro"><span class="iro-k">Put Wall vol <span class="info-i" title="Muro de soporte por VOLUMEN de hoy (posicionamiento intradía fresco), distinto del muro por OI (estructural). Fuente GexBot.">&#9432;</span></span><span class="iro-v down" id="iro-putvol">—</span></div>
       </div>
       <!-- Session Momentum eliminado (Dave): el GEX profile es el hero de esta sección -->
       <div class="cxh" id="cx-head">
@@ -1703,7 +1710,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   var _realCalLoaded=false;  // global: calendario real cargado
   var _lastMoverKey=null;    // global: última noticia top vista
   var _lastMoverScore=0;     // global: score de la última noticia top
-  var S={dir:'NEUTRAL',score:50,callWall:null,putWall:null,gammaFlip:null,maxPain:null,netGex:null,_gexMin:null,_gexMax:null,regime:null,fearScore:null,fearRating:null,momCandles:null,vix:null,
+  var S={dir:'NEUTRAL',score:50,callWall:null,putWall:null,gammaFlip:null,maxPain:null,netGex:null,skew:null,callWallVol:null,putWallVol:null,minDte:null,zero:null,show0dte:false,_gexMin:null,_gexMax:null,regime:null,fearScore:null,fearRating:null,momCandles:null,vix:null,
          ratio:null,price:null,prevPrice:null,dayOpen:null,dayHigh:null,dayLow:null,corr:{},events:[],candles:[],
          vwap:null,atr:null,structure:null,volatility:null,expectedMove:null,atmIv:null,pcRatio:null,_ratioError:null,_lastQQQ:null,
          perStrike:null,_pfLo:null,_pfHi:null};
@@ -1942,6 +1949,25 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           if(d.gamma_flip||d.zero_gamma){localStorage.setItem(LS('gammaFlip'),String(S.gammaFlip));S.gammaFlipReal=true;}
           if(d.max_pain){localStorage.setItem(LS('maxPain'),String(S.maxPain));S.maxPainReal=true;}
         }catch(e){console.warn('[gex] no se pudo persistir wall real:',e);}S.netGex=(typeof d.net_gex==='number')?d.net_gex:S.netGex;S.regime=d.regime||S.regime;S.fearScore=(d.fear_score!=null)?d.fear_score:S.fearScore;S.fearRating=d.fear_rating||S.fearRating;S.vix=(d.vix!=null)?d.vix:S.vix;if(typeof d.price==='number')S.price=d.price;else if(typeof d.nq_price==='number')S.price=d.nq_price;if(typeof d.vwap==='number')S.vwap=cv(d.vwap);if(typeof d.atr==='number')S.atr=d.atr;
+        // ── Campos NUEVOS de GexBot Classic (100% del plan) ──
+        // skew (delta_risk_reversal): NO es precio → sin conversión. Walls por volumen y
+        // niveles 0DTE: MISMA conversión cvNQ que los walls por OI (mismo pipeline).
+        S.skew=(typeof d.skew==='number')?d.skew:S.skew;
+        S.callWallVol=(typeof d.call_wall_vol==='number')?cvNQ(d.call_wall_vol):S.callWallVol;
+        S.putWallVol=(typeof d.put_wall_vol==='number')?cvNQ(d.put_wall_vol):S.putWallVol;
+        S.minDte=(d.min_dte!=null)?d.min_dte:S.minDte;
+        if(d.zero&&typeof d.zero==='object'){
+          S.zero={
+            flip:(typeof d.zero.gamma_flip==='number')?cvNQ(d.zero.gamma_flip):null,
+            call:(typeof d.zero.call_wall==='number')?cvNQ(d.zero.call_wall):null,
+            put:(typeof d.zero.put_wall==='number')?cvNQ(d.zero.put_wall):null,
+            callVol:(typeof d.zero.call_wall_vol==='number')?cvNQ(d.zero.call_wall_vol):null,
+            putVol:(typeof d.zero.put_wall_vol==='number')?cvNQ(d.zero.put_wall_vol):null,
+            net:(typeof d.zero.net_gex==='number')?d.zero.net_gex:null,
+            skew:(typeof d.zero.skew==='number')?d.zero.skew:null,
+            regime:d.zero.regime||null
+          };
+        }
         // Timestamp de última llamada a FlashAlpha (para label de frescura)
         if(d.last_call_ts){S.gexLastCall=d.last_call_ts;S.gexIsToday=d.last_call_is_today;S.gexIsMock=false;}
         if(d.next_update&&d.next_update.time)S.gexNextUpdate=d.next_update.time;
@@ -2201,6 +2227,14 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var df=$('rg-distflip');if(df){if(S.price&&S.gammaFlip){var dist=S.price-S.gammaFlip;df.textContent=(dist>=0?'+':'')+nfmt(dist);df.className='rg-ms-v '+(dist>=0?'up':'down');}else df.textContent='—';}
     var _iv=$('rg-atm-iv');if(_iv)_iv.textContent=(S.vix!=null)?Number(S.vix).toFixed(1):'—';
     var _em=$('rg-expmove');if(_em)_em.textContent=S.expectedMove?'±'+Math.round(S.expectedMove)+'pts':'—';
+    var _sk=$('rg-skew');if(_sk){
+      if(typeof S.skew==='number'){
+        var _sv=Math.round(S.skew*100)/100;
+        var _sl=_sv>0.02?'Alcista':_sv<-0.02?'Bajista':'Neutral';
+        _sk.textContent=(_sv>0?'+':'')+_sv+' · '+_sl;
+        _sk.className='rg-ms-v '+(_sv>0.02?'up':_sv<-0.02?'down':'');
+      } else { _sk.textContent='—'; _sk.className='rg-ms-v'; }
+    }
     /* P/C Ratio eliminado del diseño — FlashAlpha Basic no lo expone. */
     // STRUCTURE METER (radial) — light active segment, swing needle to its center
     ['range','neutral','trend'].forEach(function(z){var seg=$('seg-'+z);if(seg)seg.setAttribute('class','sm-seg '+z+(S.structure===z?' on':''));});
@@ -2433,9 +2467,14 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
      To add VWAP/ATR/etc later: push into levels and it renders. */
   function buildLevels(){
     var levels=[];
-    if(S.putWall)   levels.push({type:'put',  price:S.putWall,  label:'Put Wall'});
-    if(S.gammaFlip) levels.push({type:'flip', price:S.gammaFlip, label:'Gamma Flip'});
-    if(S.callWall)  levels.push({type:'call', price:S.callWall,  label:'Call Wall'});
+    // Respeta el toggle 0DTE: si está activo y hay datos 0DTE, usa esos niveles.
+    var _z0=(S.show0dte&&S.zero)?S.zero:null;
+    var _mPut =(_z0&&_z0.put!=null)?_z0.put:S.putWall;
+    var _mFlip=(_z0&&_z0.flip!=null)?_z0.flip:S.gammaFlip;
+    var _mCall=(_z0&&_z0.call!=null)?_z0.call:S.callWall;
+    if(_mPut)   levels.push({type:'put',  price:_mPut,  label:'Put Wall'+(_z0?' 0DTE':'')});
+    if(_mFlip)  levels.push({type:'flip', price:_mFlip, label:'Gamma Flip'+(_z0?' 0DTE':'')});
+    if(_mCall)  levels.push({type:'call', price:_mCall,  label:'Call Wall'+(_z0?' 0DTE':'')});
     if(S.maxPain)   levels.push({type:'maxpain', price:S.maxPain, label:'Max Pain'});
     // VWAP removido del Gamma Field (a pedido) para reducir carga visual.
     // Sigue disponible en el gráfico de velas como línea de referencia.
@@ -2660,6 +2699,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }else{
       if(ic)ic.textContent='—'; if(ip)ip.textContent='—'; if(ipos)ipos.textContent='—';
     }
+    // Muros por VOLUMEN (posicionamiento intradía fresco de GexBot).
+    var icv=$('iro-callvol'),ipv=$('iro-putvol');
+    if(icv)icv.textContent=(typeof S.callWallVol==='number')?nfmt(S.callWallVol):'—';
+    if(ipv)ipv.textContent=(typeof S.putWallVol==='number')?nfmt(S.putWallVol):'—';
   }
   function renderMap(){ renderMapStatic(); renderMapLive(); }
 
@@ -2725,18 +2768,33 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   // ── Niveles institucionales: SOLO Call Wall · Gamma Flip · Put Wall ────────
   // Líneas de 1px limpias sin cajas; el label vive como micro-tag en el borde
   // derecho (CALL 30,000 · GAMMA 29,566 · PUT 29,000), integrado a la escala.
+  // Nivel ACTIVO: si el toggle 0DTE está encendido y hay datos 0DTE, usa esos;
+  // si no, los del vencimiento completo (OI). Swap limpio, sin saturar el chart.
+  function _actCW(){return (S.show0dte&&S.zero&&S.zero.call!=null)?S.zero.call:S.callWall;}
+  function _actPW(){return (S.show0dte&&S.zero&&S.zero.put!=null)?S.zero.put:S.putWall;}
+  function _actGF(){return (S.show0dte&&S.zero&&S.zero.flip!=null)?S.zero.flip:S.gammaFlip;}
   function drawLines(){if(!chart||!series)return;var LS=LightweightCharts.LineStyle;
     Object.keys(lines).forEach(function(k){try{series.removePriceLine(lines[k]);}catch(e){}});lines={};
-    if(S.callWall!=null)lines.call=series.createPriceLine({price:S.callWall,color:'#2EE8A4',lineWidth:1,lineStyle:LS.Solid,axisLabelVisible:false,title:''});
-    if(S.gammaFlip!=null)lines.flip=series.createPriceLine({price:S.gammaFlip,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:false,title:''});
-    if(S.putWall!=null)lines.put=series.createPriceLine({price:S.putWall,color:'#B197FC',lineWidth:1,lineStyle:LS.Solid,axisLabelVisible:false,title:''});
+    var _z=(S.show0dte&&S.zero); var _st=_z?LS.Dotted:LS.Solid; // 0DTE punteado para distinguir
+    var _cw=_actCW(),_pw=_actPW(),_gf=_actGF();
+    if(_cw!=null)lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
+    if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:false,title:''});
+    if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
     cxTagsSync();
   }
+  // Toggle 0DTE: cambia los niveles mostrados entre vencimiento completo (OI) y 0DTE.
+  window.toggle0dte=function(){
+    S.show0dte=!S.show0dte;
+    var b=document.getElementById('gf-0dte'); if(b)b.classList.toggle('active',S.show0dte);
+    try{drawLines();}catch(e){}
+    try{if(typeof renderMap==='function')renderMap();}catch(e){}
+    try{if(typeof renderMapLive==='function')renderMapLive();}catch(e){}
+  };
   // Tags de nivel en el borde derecho — se crean una vez y solo se reposicionan.
   var _cxTagDefs=[
-    {k:'call',lbl:'CALL',get:function(){return S.callWall;}},
-    {k:'flip',lbl:'GAMMA',get:function(){return S.gammaFlip;}},
-    {k:'put', lbl:'PUT', get:function(){return S.putWall;}}
+    {k:'call',lbl:'CALL',get:function(){return _actCW();}},
+    {k:'flip',lbl:'GAMMA',get:function(){return _actGF();}},
+    {k:'put', lbl:'PUT', get:function(){return _actPW();}}
   ];
   function cxTagsSync(){
     var host=$('cx-tags');if(!host)return;
