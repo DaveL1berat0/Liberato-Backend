@@ -220,7 +220,7 @@ a{color:inherit;text-decoration:none;}
   <!-- ROW 3: Scanner | Rotation -->
   <div class="orow r3">
     <section class="panel">
-      <div class="p-hd"><span class="p-ttl">▦ LEAPS Opportunity Scanner</span><div class="scan-tabs"><span class="scan-tab active">Ticker</span><span class="scan-tab">Sector</span><span class="scan-tab">Trend</span><span class="scan-tab">Location</span></div></div>
+      <div class="p-hd"><span class="p-ttl">▦ LEAPS Opportunity Scanner <span class="info-i" title="Escanea empresas de calidad y cruza fundamentales reales (Finnhub) con la distancia a máximos. Busca DISLOCACIÓN: negocio fuerte + precio caído = candidato LEAPS. Click en una fila para cargarla en el analizador.">&#9432;</span></span><span class="p-sub" id="scan-sub">—</span></div>
       <div class="p-bd" style="padding:0;"><div id="scan-body"><div class="stub">Escaneando oportunidades…</div></div></div>
     </section>
     <section class="panel">
@@ -388,6 +388,8 @@ function loadScanner(){
         +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
     }).join('');
     host.innerHTML='<table class="scan-tbl"><thead><tr><th>Ticker</th><th class="r">Fund. Score</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
+    var disl=rows.filter(function(x){return /DISLOCATION/.test(x['class']||'');}).length;
+    var sub=document.getElementById('scan-sub'); if(sub)sub.textContent=rows.length+' activos · '+disl+' dislocación';
   }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
 }
 function selectTicker(tk){
