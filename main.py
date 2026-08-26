@@ -2360,7 +2360,7 @@ async def get_leaps_scanner():
     return _scan_cache["data"] or {"rows": [], "note": "sin datos aún (Finnhub)"}
 
 # ═══════════════════ LEAPS AI BRIEF (Groq narra el dato REAL — Regla #1) ═══════════════════
-_brief_cache = {"text": None, "ts": 0.0, "score": None, "classification": None}
+_brief_cache = {"text": None, "ts": 0.0, "score": None, "classification": None, "cooldown": 0.0}
 BRIEF_TTL = 3 * 3600   # el Environment se mueve lento (FRED); 3h basta y protege el budget Groq
 
 async def refresh_leaps_brief():
@@ -2429,10 +2429,14 @@ async def refresh_leaps_brief():
             _brief_cache["score"] = env.get("score")
             _brief_cache["classification"] = env.get("classification")
             cache["health"]["groq"] = "online"
+            _brief_cache["cooldown"] = 0.0
             print("[leaps-brief] ok")
         else:
-            print(f"[leaps-brief] groq {r.status_code}")
+            # 429 (cuota) u otro error → back-off para no martillear Groq (30 min si 429, 10 min resto)
+            _brief_cache["cooldown"] = time.time() + (1800 if r.status_code == 429 else 600)
+            print(f"[leaps-brief] groq {r.status_code} — cooldown")
     except Exception as e:
+        _brief_cache["cooldown"] = time.time() + 600
         print(f"[leaps-brief] error: {e}")
 
 @app.get("/api/leaps/brief")
@@ -2447,7 +2451,7 @@ async def get_leaps_brief():
         except Exception as e: print(f"[leaps-brief] scan: {e}")
     stale = (not _brief_cache["text"]) or (time.time() - _brief_cache["ts"] > BRIEF_TTL) \
         or (_brief_cache.get("score") != (_env_cache.get("data") or {}).get("score"))
-    if stale:
+    if stale and time.time() > _brief_cache.get("cooldown", 0.0):
         try: await refresh_leaps_brief()
         except Exception as e: print(f"[leaps-brief] gen: {e}")
     env = _env_cache.get("data") or {}
