@@ -1112,6 +1112,62 @@ async def _refresh_market_sentiment(asset=FA_ASSET):
     return {"vix": g.get("vix"), "fear_score": g.get("fear_score"),
             "expected_move": g.get("expected_move")}
 
+@app.get("/api/admin/diag-gexbot-full")
+async def diag_gexbot_full(key: str = ""):
+    """Sonda TODAS las categorías de GexBot v2 para ver la FORMA REAL de cada respuesta
+    (max pain / orderflow / 0DTE / vanna / charm) ANTES de cablearlas — así no mostramos
+    números equivocados (Regla #1). Uso: ?key=ADMIN_KEY"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    if not GEXBOT_API_KEY:
+        return {"error": "falta GEXBOT_API_KEY"}
+    import urllib.parse as _up
+    sym = GEXBOT_SYMBOL
+    probes = [
+        ("classic/full",     f"{GEXBOT_BASE}/{sym}/classic/full"),
+        ("classic/zero",     f"{GEXBOT_BASE}/{sym}/classic/zero"),
+        ("classic/one",      f"{GEXBOT_BASE}/{sym}/classic/one"),
+        ("orderflow",        f"{GEXBOT_BASE}/{sym}/orderflow/orderflow"),
+        ("state/gamma_zero", f"{GEXBOT_BASE}/{sym}/state/gamma_zero"),
+        ("state/vanna_zero", f"{GEXBOT_BASE}/{sym}/state/vanna_zero"),
+        ("state/charm_zero", f"{GEXBOT_BASE}/{sym}/state/charm_zero"),
+        ("classic/categories", f"{GEXBOT_BASE}/classic/categories"),
+        ("research/maxpain_a", f"{GEXBOT_BASE}/research/{sym}/{_up.quote('max pain')}?format=json"),
+        ("research/maxpain_b", f"{GEXBOT_BASE}/research/{sym}/maxpain?format=json"),
+        ("research/maxpain_c", f"{GEXBOT_BASE}/research/NDX/{_up.quote('max pain')}?format=json"),
+    ]
+    def _compact(j):
+        if isinstance(j, dict):
+            samp = {}
+            for k, v in j.items():
+                if isinstance(v, list):
+                    samp[k] = {"list_len": len(v), "e0": v[0] if v else None}
+                elif isinstance(v, dict):
+                    samp[k] = {"keys": list(v.keys())}
+                else:
+                    samp[k] = v
+            return {"keys": list(j.keys()), "sample": samp}
+        if isinstance(j, list):
+            return {"type": "list", "len": len(j), "e0": j[0] if j else None}
+        return {"value": j}
+    out = {}
+    async with httpx.AsyncClient(timeout=12, headers=_gexbot_headers()) as c:
+        for name, url in probes:
+            try:
+                r = await c.get(url)
+                entry = {"http": r.status_code}
+                if r.status_code == 200:
+                    try:
+                        entry.update(_compact(r.json()))
+                    except Exception:
+                        entry["body"] = r.text[:300]
+                else:
+                    entry["body"] = r.text[:200]
+                out[name] = entry
+            except Exception as e:
+                out[name] = {"error": f"{type(e).__name__}: {str(e)[:150]}"}
+    return {"symbol": sym, "probes": out}
+
 
 async def _refresh_gex_qqq(asset=FA_ASSET):
     """PLAN FREE: usa /v1/stock/<ETF>/summary y guarda niveles en escala del ETF.
