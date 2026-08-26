@@ -2359,6 +2359,166 @@ async def get_leaps_scanner():
             print(f"[scanner] refresh falló: {e}")
     return _scan_cache["data"] or {"rows": [], "note": "sin datos aún (Finnhub)"}
 
+# ═══════════════════ LEAPS AI BRIEF (Groq narra el dato REAL — Regla #1) ═══════════════════
+_brief_cache = {"text": None, "ts": 0.0, "score": None, "classification": None}
+BRIEF_TTL = 3 * 3600   # el Environment se mueve lento (FRED); 3h basta y protege el budget Groq
+
+async def refresh_leaps_brief():
+    """Genera un brief macro para LEAPS con Groq (qwen) narrando SOLO las cifras reales
+    del Environment + Scanner. No inventa datos (Regla #1). Cachea y respeta el budget.
+    Si Groq no está disponible, deja text=None y el frontend usa su brief determinista."""
+    if not GROQ_KEY or not budget_ok("groq", 1):
+        return
+    env = _env_cache.get("data") or {}
+    scan = _scan_cache.get("data") or {}
+    if env.get("score") is None:
+        return  # sin Environment real no hay brief (Regla #1)
+
+    motors = env.get("motors") or []
+    def mv(k):
+        m = next((x for x in motors if x.get("key") == k), {})
+        return f"{m.get('name')}: {m.get('value') or '—'} ({m.get('status') or 'n/a'}, score {m.get('score')})"
+    curve = env.get("yield_curve") or []
+    y2 = next((p for p in curve if p.get("label") == "2Y"), None)
+    y10 = next((p for p in curve if p.get("label") == "10Y"), None)
+    curve_txt = "sin datos"
+    if y2 and y10:
+        spr = y10["yield"] - y2["yield"]
+        curve_txt = (f"10Y-2Y {spr:+.2f}%" + (" (INVERTIDA)" if spr < 0 else " (normal)"))
+    disloc = [r for r in (scan.get("rows") or []) if "DISLOCATION" in (r.get("class") or "")]
+    disloc_txt = ", ".join(f"{r['ticker']} (fscore {r.get('fscore')}, {r.get('distHigh')}% vs máx)"
+                           for r in disloc[:5]) or "ninguna ahora mismo"
+
+    ctx = (f"ENVIRONMENT SCORE: {round(env['score'],1)}/100 — {env.get('classification','—')}\n"
+           f"Cobertura motores: {env.get('coverage','—')}\n"
+           f"Motores clave:\n"
+           f"- {mv('economy')}\n- {mv('inflation')}\n- {mv('rates')}\n- {mv('yield_curve')}\n"
+           f"- {mv('financial')}\n- {mv('real_estate')}\n- {mv('leverage')}\n- {mv('gold')}\n"
+           f"Curva de rendimientos: {curve_txt}\n"
+           f"Conflictos macro: {', '.join(env.get('conflicts') or []) or 'ninguno'}\n"
+           f"Dislocaciones de calidad (scanner LEAPS): {disloc_txt}")
+
+    sys_msg = (
+        "Eres el estratega macro de una mesa que invierte en LEAPS (opciones call de largo plazo, "
+        "1-3 años) sobre acciones de calidad del Nasdaq. Escribes en ESPAÑOL, tono institucional y "
+        "sobrio, para un inversor avanzado. REGLA ABSOLUTA: usa EXCLUSIVAMENTE las cifras que te doy; "
+        "NUNCA inventes un número, precio, nivel ni dato que no esté en el contexto. Si algo no está, "
+        "no lo menciones. Nada de disclaimers ni de 'no soy asesor'. Sin emojis.\n"
+        "FORMATO EXACTO (markdown, usa **negrita** en el dato clave de cada frase):\n"
+        "**Entorno:** <1-2 frases: qué dice el score y su clasificación, apoyado en 2-3 motores concretos con su valor>\n"
+        "**Tensión:** <1 frase: el punto de fricción principal (inflación/tasas/curva/inmobiliario/crédito) con su cifra>\n"
+        "**Implicación LEAPS:** <1-2 frases ACCIONABLES: si el entorno pide exposición selectiva de largo plazo, "
+        "prudencia o postura defensiva, y qué tipo de nombre priorizar (calidad/valoración/margin of safety). "
+        "Si hay dislocaciones de calidad en el scanner, nómbralas como candidatas a estudiar.>\n"
+        "Total: 4 a 6 frases. Nada más.")
+    usr_msg = f"Datos macro reales de ahora mismo:\n\n{ctx}\n\nEscribe el brief en el formato exacto."
+
+    budget_charge("groq", 1)
+    try:
+        async with httpx.AsyncClient(timeout=20) as client:
+            r = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                json={"model": "qwen/qwen3.6-27b", "max_tokens": 420, "temperature": 0.5,
+                      "reasoning_effort": "none",
+                      "messages": [{"role": "system", "content": sys_msg},
+                                   {"role": "user", "content": usr_msg}]})
+        if r.status_code == 200:
+            _brief_cache["text"] = r.json()["choices"][0]["message"]["content"].strip()
+            _brief_cache["ts"] = time.time()
+            _brief_cache["score"] = env.get("score")
+            _brief_cache["classification"] = env.get("classification")
+            cache["health"]["groq"] = "online"
+            print("[leaps-brief] ok")
+        else:
+            print(f"[leaps-brief] groq {r.status_code}")
+    except Exception as e:
+        print(f"[leaps-brief] error: {e}")
+
+@app.get("/api/leaps/brief")
+async def get_leaps_brief():
+    """Brief macro para LEAPS (Groq narrando el dato real). Asegura Environment+Scanner
+    frescos, regenera si el brief caducó, y devuelve el texto (o null → fallback determinista)."""
+    if not _env_cache["data"] or (time.time() - _env_cache["ts"] > ENV_TTL):
+        try: await refresh_environment()
+        except Exception as e: print(f"[leaps-brief] env: {e}")
+    if not _scan_cache["data"] or (time.time() - _scan_cache["ts"] > SCAN_TTL):
+        try: await refresh_scanner()
+        except Exception as e: print(f"[leaps-brief] scan: {e}")
+    stale = (not _brief_cache["text"]) or (time.time() - _brief_cache["ts"] > BRIEF_TTL) \
+        or (_brief_cache.get("score") != (_env_cache.get("data") or {}).get("score"))
+    if stale:
+        try: await refresh_leaps_brief()
+        except Exception as e: print(f"[leaps-brief] gen: {e}")
+    env = _env_cache.get("data") or {}
+    return {"brief": _brief_cache["text"], "model": "qwen/qwen3.6-27b (Groq)",
+            "generated_at": (datetime.fromtimestamp(_brief_cache["ts"], NY).isoformat()
+                             if _brief_cache["ts"] else None),
+            "score": env.get("score"), "classification": env.get("classification")}
+
+# ═══════════════════ LEAPS CHART — velas DIARIAS de cualquier ticker (Yahoo) ═══════════════════
+_leaps_ohlc_cache = {}  # (ysym, rng) → {"ts": epoch, "bars": [...]}
+_LEAPS_RANGES = {"6mo", "1y", "2y", "5y"}
+
+@app.get("/api/leaps/ohlc/{symbol}")
+async def get_leaps_ohlc(symbol: str, rng: str = "1y"):
+    """Velas DIARIAS reales (Yahoo, lado servidor) de cualquier subyacente para el chart
+    nativo de la sección Options — índices (NDX→^NDX, SPX→^GSPC), futuros (=F) o acciones.
+    Respuesta Lightweight-Charts-ready: {ok, symbol, ysym, rng, bars:[{t:'YYYY-MM-DD',o,h,l,c}]}."""
+    raw = (symbol or "").upper().strip()
+    if not raw:
+        raise HTTPException(400, "falta symbol")
+    _MAP = {"NDX": "^NDX", "SPX": "^GSPC", "NASDAQ": "^NDX", "US100": "^NDX"}
+    if raw in _MAP:
+        ysym = _MAP[raw]
+    elif raw.endswith("=F") or raw.startswith("^"):
+        ysym = raw
+    else:
+        ysym = raw  # acción normal (NVDA, AAPL, …)
+    if rng not in _LEAPS_RANGES:
+        rng = "1y"
+    ck = (ysym, rng)
+    cached = _leaps_ohlc_cache.get(ck)
+    if cached and (time.time() - cached["ts"] < 900) and cached["bars"]:  # 15 min
+        return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng,
+                "bars": cached["bars"], "cached": True, "source": f"yahoo:{ysym}"}
+    for host in ("query1", "query2"):
+        url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{ysym.replace('=', '%3D')}"
+               f"?interval=1d&range={rng}")
+        try:
+            async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
+                r = await c.get(url)
+            if r.status_code != 200:
+                continue
+            res = ((r.json().get("chart") or {}).get("result") or [None])[0]
+            if not res:
+                continue
+            ts = res.get("timestamp") or []
+            q = ((res.get("indicators") or {}).get("quote") or [{}])[0]
+            op, hi, lo, cl = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
+            bars = []
+            for i, tt in enumerate(ts):
+                try:
+                    o, h, l, c2 = op[i], hi[i], lo[i], cl[i]
+                except Exception:
+                    continue
+                if None in (o, h, l, c2):
+                    continue
+                d = datetime.fromtimestamp(tt, NY).strftime("%Y-%m-%d")
+                bars.append({"t": d, "o": round(o, 2), "h": round(h, 2),
+                             "l": round(l, 2), "c": round(c2, 2)})
+            if bars:
+                _leaps_ohlc_cache[ck] = {"ts": time.time(), "bars": bars}
+                if len(_leaps_ohlc_cache) > 400:
+                    for k in list(_leaps_ohlc_cache)[:120]:
+                        _leaps_ohlc_cache.pop(k, None)
+                return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng,
+                        "bars": bars, "source": f"yahoo:{ysym}"}
+        except Exception as e:
+            print(f"[leaps-ohlc] {host} {ysym} {rng}: {e}")
+            continue
+    return {"ok": False, "symbol": raw, "ysym": ysym, "reason": f"sin velas para {ysym}"}
+
 # (frases_en_titulo [más específicas primero], series_id, transform)
 BLS_SERIES = [
     (["core cpi m/m", "core cpi mom"],                         "CUSR0000SA0L1E", "mom"),
