@@ -701,6 +701,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* movers */
 .lg-mv-upd{display:flex;align-items:center;gap:7px;margin-bottom:14px;font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;}
 .lg-mv-upd .d{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 6px var(--up);}
+.lg-mv-filter{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap;}
+.lg-mv-ftab{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all 0.18s var(--ease);min-height:32px;}
+.lg-mv-ftab:hover{border-color:rgba(204,169,79,0.4);color:var(--ink-2);}
+.lg-mv-ftab.active{background:rgba(204,169,79,0.14);border-color:var(--gold);color:var(--gold);}
+.lg-mv-fn{font-size:9px;font-weight:800;opacity:0.7;background:rgba(255,255,255,0.06);border-radius:999px;padding:1px 6px;}
+.lg-mv-ftab.active .lg-mv-fn{background:rgba(204,169,79,0.25);opacity:1;}
 .lg-mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp3);min-height:200px;}
 @media(max-width:680px){.lg-mv-grid{grid-template-columns:1fr;}}
 .lg-mv-col-t{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
@@ -3725,6 +3731,65 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }catch(e){console.error('[calendar] error:',e);var b=document.getElementById('api-status-badge');if(b){b.textContent='✗ '+e.message;b.style.background='rgba(255,59,48,0.1)';b.style.color='#FF6B6B';}}
   }
 
+  /* ── HIGH IMPACT NEWS: filtro de impacto (Todos / Alto / Medio) ─────────── */
+  var MOVERS_FILTER='all';
+  // Clasifica una noticia en 'alto' o 'medio' por su alert_level / impact_score.
+  function _moverTier(m){
+    var a=(m.alert_level||'').toUpperCase();
+    if(a==='CRITICAL'||a==='HIGH')return 'alto';
+    if((+m.impact_score||0)>=8.5)return 'alto';
+    return 'medio';
+  }
+  function _mvNewsHtml(items){
+    var SENT_COLOR={'Bullish':'rgba(46,232,164,0.85)','Bearish':'rgba(177,151,252,0.85)','Neutral':'rgba(239,236,227,0.45)'};
+    var SENT_BG={'Bullish':'rgba(46,232,164,0.10)','Bearish':'rgba(177,151,252,0.10)','Neutral':'rgba(239,236,227,0.06)'};
+    var ALERT_BG={'CRITICAL':'rgba(255,59,48,0.12)','HIGH':'rgba(204,169,79,0.09)','ELEVATED':'rgba(239,236,227,0.05)'};
+    function relTime(m){
+      var ts=+(m.ts||0); if(!ts)return m.time_et||'—';
+      var diff=Math.floor(Date.now()/1000)-ts; if(diff<0)diff=0;
+      if(diff<60)return 'hace un momento';
+      var mins=Math.floor(diff/60); if(mins<60)return 'hace '+mins+(mins===1?' minuto':' minutos');
+      var hrs=Math.floor(mins/60); if(hrs<24)return 'hace '+hrs+(hrs===1?' hora':' horas');
+      var days=Math.floor(hrs/24); return 'hace '+days+(days===1?' día':' días');
+    }
+    return items.map(function(m){
+      var sent=m.sentiment||'Neutral';
+      var alert=m.alert_level||'HIGH';
+      var score=m.impact_score?m.impact_score.toFixed(1):'—';
+      var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🔴':'⬜';
+      return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+ALERT_BG[alert]+'">'
+        +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
+        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERT</span>'
+        +'<span style="font-size:10px;">'+sentIcon+'</span>'
+        +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+sent.toUpperCase()+'</span>'
+        +'</div>'
+        +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+(m.headline||m.title||'')+'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impact <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Scope <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Source <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Time <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }
+  function _mvTab(k,lbl,n){return '<button class="lg-mv-ftab'+(MOVERS_FILTER===k?' active':'')+'" data-mvf="'+k+'">'+lbl+'<span class="lg-mv-fn">'+n+'</span></button>';}
+  function renderMoversPane(){
+    var movPane=document.getElementById('lg-pane-movers'); if(!movPane)return;
+    var all=(S.movers||[]);
+    if(!all.length){ movPane.innerHTML='<div class="cat-empty" style="padding:24px;text-align:center;"><span class="cat-empty-t">Sin noticias de alto impacto ahora mismo</span></div>'; return; }
+    var counts={all:all.length,alto:0,medio:0};
+    all.forEach(function(m){counts[_moverTier(m)]++;});
+    var filtered=MOVERS_FILTER==='all'?all:all.filter(function(m){return _moverTier(m)===MOVERS_FILTER;});
+    var tabs='<div class="lg-mv-filter">'+_mvTab('all','Todos',counts.all)+_mvTab('alto','Alto',counts.alto)+_mvTab('medio','Medio',counts.medio)+'</div>';
+    var list=filtered.length?_mvNewsHtml(filtered):'<div class="cat-empty" style="padding:22px;text-align:center;"><span class="cat-empty-t">Sin noticias de impacto '+(MOVERS_FILTER==='alto'?'alto':'medio')+' ahora</span></div>';
+    movPane.innerHTML='<div class="lg-mv-upd"><span class="d"></span><span id="lg-mv-upd-txt">Movers en tiempo real</span></div>'+tabs+list;
+    movPane.onclick=function(e){
+      var ft=e.target.closest('[data-mvf]'); if(ft){MOVERS_FILTER=ft.getAttribute('data-mvf');renderMoversPane();return;}
+      var el=e.target.closest('[data-url]'); if(el&&el.dataset.url)window.open(el.dataset.url,'_blank');
+    };
+  }
+
   /* ── FETCH MOVERS FROM BACKEND ─────────────────────────────────────────── */
   async function fetchMovers(){
     if(!BACKEND_URL)return;
@@ -3742,50 +3807,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         return;
       }
 
-      function makeNewsHtml(items){
-        var SENT_COLOR={'Bullish':'rgba(46,232,164,0.85)','Bearish':'rgba(177,151,252,0.85)','Neutral':'rgba(239,236,227,0.45)'};
-        var SENT_BG={'Bullish':'rgba(46,232,164,0.10)','Bearish':'rgba(177,151,252,0.10)','Neutral':'rgba(239,236,227,0.06)'};
-        var ALERT_BG={'CRITICAL':'rgba(255,59,48,0.12)','HIGH':'rgba(204,169,79,0.09)','ELEVATED':'rgba(239,236,227,0.05)'};
-        // Time relativo ("hace 3 horas") desde el ts (unix seg) real de la noticia.
-        function relTime(m){
-          var ts=+(m.ts||0); if(!ts)return m.time_et||'—';
-          var diff=Math.floor(Date.now()/1000)-ts; if(diff<0)diff=0;
-          if(diff<60)return 'hace un momento';
-          var mins=Math.floor(diff/60); if(mins<60)return 'hace '+mins+(mins===1?' minuto':' minutos');
-          var hrs=Math.floor(mins/60); if(hrs<24)return 'hace '+hrs+(hrs===1?' hora':' horas');
-          var days=Math.floor(hrs/24); return 'hace '+days+(days===1?' día':' días');
-        }
-        return items.map(function(m){
-          var sent=m.sentiment||'Neutral';
-          var alert=m.alert_level||'HIGH';
-          var score=m.impact_score?m.impact_score.toFixed(1):'—';
-          var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🔴':'⬜';
-          return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+ALERT_BG[alert]+'">'
-            +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
-            +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERT</span>'
-            +'<span style="font-size:10px;">'+sentIcon+'</span>'
-            +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+sent.toUpperCase()+'</span>'
-            +'</div>'
-            +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+(m.headline||m.title||'')+'</div>'
-            +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
-            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impact <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
-            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Scope <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
-            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Source <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
-            +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Time <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
-            +'</div>'
-            +'</div>';
-        }).join('');
-      }
-
-      // Write real news to Movers pane (visible when user clicks Movers tab)
-      var movPane=document.getElementById('lg-pane-movers');
-      if(movPane){
-        movPane.innerHTML=makeNewsHtml(mv);
-        movPane.onclick=function(e){
-          var el=e.target.closest('[data-url]');
-          if(el&&el.dataset.url)window.open(el.dataset.url,'_blank');
-        };
-      }
+      // Render con el filtro de impacto activo (Todos / Alto / Medio).
+      renderMoversPane();
 
       // Update gainers list (visible in macro pane)
       var gEl=$('lg-gainers');
