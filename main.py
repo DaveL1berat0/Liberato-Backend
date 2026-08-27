@@ -74,6 +74,11 @@ GMAIL_USER         = os.getenv("GMAIL_USER", "")           # correo emisor
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD", "")   # App Password de Gmail
 SUPPORT_EMAIL      = os.getenv("SUPPORT_EMAIL", "SupportLiberatoCommunity@gmail.com").strip()
 GROQ_KEY         = os.getenv("GROQ_KEY",         "").strip()
+# Modelos Groq: el brief rápido (1 línea, se pide seguido) usa uno LIGERO para no quemar la
+# cuota diaria; el Investment Committee (10 secciones, se cachea 6h) usa el grande.
+# Configurables por env sin redeploy si Groq cambia el catálogo de modelos.
+GROQ_BRIEF_MODEL     = os.getenv("GROQ_BRIEF_MODEL",     "llama-3.1-8b-instant").strip()
+GROQ_COMMITTEE_MODEL = os.getenv("GROQ_COMMITTEE_MODEL", "qwen/qwen3.6-27b").strip()
 # ── TradeStation (journal automático, SOLO LECTURA) ──────────────────────────
 # Se obtienen por email a ClientExperience@tradestation.com (no hay self-service).
 # El scope pedido NO incluye "Trade": el sistema puede VER trades, nunca operar.
@@ -2462,14 +2467,16 @@ async def refresh_leaps_brief():
 
     budget_charge("groq", 1)
     try:
+        payload = {"model": GROQ_BRIEF_MODEL, "max_tokens": 420, "temperature": 0.5,
+                   "messages": [{"role": "system", "content": sys_msg},
+                                {"role": "user", "content": usr_msg}]}
+        if GROQ_BRIEF_MODEL.startswith("qwen"):   # reasoning_effort solo lo aceptan los qwen
+            payload["reasoning_effort"] = "none"
         async with httpx.AsyncClient(timeout=20) as client:
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json={"model": "qwen/qwen3.6-27b", "max_tokens": 420, "temperature": 0.5,
-                      "reasoning_effort": "none",
-                      "messages": [{"role": "system", "content": sys_msg},
-                                   {"role": "user", "content": usr_msg}]})
+                json=payload)
         if r.status_code == 200:
             _brief_cache["text"] = r.json()["choices"][0]["message"]["content"].strip()
             _brief_cache["ts"] = time.time()
@@ -2502,7 +2509,7 @@ async def get_leaps_brief():
         try: await refresh_leaps_brief()
         except Exception as e: print(f"[leaps-brief] gen: {e}")
     env = _env_cache.get("data") or {}
-    return {"brief": _brief_cache["text"], "model": "qwen/qwen3.6-27b (Groq)",
+    return {"brief": _brief_cache["text"], "model": f"{GROQ_BRIEF_MODEL} (Groq)",
             "generated_at": (datetime.fromtimestamp(_brief_cache["ts"], NY).isoformat()
                              if _brief_cache["ts"] else None),
             "score": env.get("score"), "classification": env.get("classification")}
@@ -2793,7 +2800,7 @@ async def refresh_committee_brief():
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json={"model": "qwen/qwen3.6-27b", "max_tokens": 1900, "temperature": 0.45,
+                json={"model": GROQ_COMMITTEE_MODEL, "max_tokens": 1900, "temperature": 0.45,
                       "reasoning_effort": "none",
                       "messages": [{"role": "system", "content": sys_msg},
                                    {"role": "user", "content": usr_msg}]})
@@ -2824,7 +2831,7 @@ async def get_committee_brief():
         try: await refresh_committee_brief()
         except Exception as e: print(f"[committee] gen: {e}")
     if _committee_cache["text"]:
-        return {"brief": _committee_cache["text"], "mode": "IA", "model": "qwen/qwen3.6-27b (Groq)",
+        return {"brief": _committee_cache["text"], "mode": "IA", "model": f"{GROQ_COMMITTEE_MODEL} (Groq)",
                 "generated_at": (datetime.fromtimestamp(_committee_cache["ts"], NY).isoformat()
                                  if _committee_cache["ts"] else None)}
     # Fallback determinista (Groq sin cuota) — mismas 10 secciones, mismo dato real.
