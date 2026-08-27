@@ -2489,7 +2489,41 @@ async def get_leaps_brief():
 # ═══════════════════ LEAPS CHART — velas DIARIAS de cualquier ticker (Yahoo) ═══════════════════
 _leaps_ohlc_cache = {}  # (ysym, rng, interval) → {"ts": epoch, "bars": [...]}
 _LEAPS_RANGES = {"1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "max"}
-_LEAPS_INTERVALS = {"1d", "1wk", "1mo"}
+# intervalos que expone el chart: D/W/M nativos de Yahoo + 4h y anual (Y) por resampleo servidor.
+_LEAPS_INTERVALS = {"1d", "1wk", "1mo", "4h", "1y"}
+# requested -> (yahoo_interval, yahoo_range fijo o None si usa rng)
+_IV_BASE = {"4h": ("60m", "3mo"), "1y": ("1mo", "max"),
+            "1d": ("1d", None), "1wk": ("1wk", None), "1mo": ("1mo", None)}
+
+def _resample_4h(raw):
+    """Agrupa velas horarias (60m) en bloques de 4 → velas de ~4h. t = timestamp unix."""
+    out = []
+    for i in range(0, len(raw), 4):
+        g = raw[i:i + 4]
+        if not g:
+            continue
+        out.append({"t": int(g[0][0]), "o": round(g[0][1], 2),
+                    "h": round(max(x[2] for x in g), 2), "l": round(min(x[3] for x in g), 2),
+                    "c": round(g[-1][4], 2)})
+    return out
+
+def _resample_year(raw):
+    """Agrupa velas mensuales por año calendario → velas anuales. t = 'YYYY-01-01'."""
+    years = {}
+    order = []
+    for (tt, o, h, l, c) in raw:
+        y = datetime.fromtimestamp(tt, NY).year
+        if y not in years:
+            years[y] = []
+            order.append(y)
+        years[y].append((tt, o, h, l, c))
+    out = []
+    for y in order:
+        g = years[y]
+        out.append({"t": f"{y}-01-01", "o": round(g[0][1], 2),
+                    "h": round(max(x[2] for x in g), 2), "l": round(min(x[3] for x in g), 2),
+                    "c": round(g[-1][4], 2)})
+    return out
 
 @app.get("/api/leaps/ohlc/{symbol}")
 async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
@@ -2511,14 +2545,20 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
         rng = "1y"
     if interval not in _LEAPS_INTERVALS:
         interval = "1d"
-    ck = (ysym, rng, interval)
+    # resolver intervalo/rango REAL a pedir a Yahoo (4h y 1y se derivan por resampleo)
+    yint, fixed = _IV_BASE[interval]
+    if interval == "4h":
+        yrng = rng if rng in ("1mo", "3mo", "6mo") else "3mo"  # 60m limita el histórico
+    else:
+        yrng = fixed if fixed else rng
+    ck = (ysym, yrng, interval)
     cached = _leaps_ohlc_cache.get(ck)
     if cached and (time.time() - cached["ts"] < 900) and cached["bars"]:  # 15 min
         return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng, "interval": interval,
                 "bars": cached["bars"], "cached": True, "source": f"yahoo:{ysym}"}
     for host in ("query1", "query2"):
         url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{ysym.replace('=', '%3D')}"
-               f"?interval={interval}&range={rng}")
+               f"?interval={yint}&range={yrng}")
         try:
             async with httpx.AsyncClient(timeout=12, headers={"User-Agent": "Mozilla/5.0"}) as c:
                 r = await c.get(url)
@@ -2530,7 +2570,7 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
             ts = res.get("timestamp") or []
             q = ((res.get("indicators") or {}).get("quote") or [{}])[0]
             op, hi, lo, cl = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
-            bars = []
+            raw_bars = []
             for i, tt in enumerate(ts):
                 try:
                     o, h, l, c2 = op[i], hi[i], lo[i], cl[i]
@@ -2538,9 +2578,15 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
                     continue
                 if None in (o, h, l, c2):
                     continue
-                d = datetime.fromtimestamp(tt, NY).strftime("%Y-%m-%d")
-                bars.append({"t": d, "o": round(o, 2), "h": round(h, 2),
-                             "l": round(l, 2), "c": round(c2, 2)})
+                raw_bars.append((tt, o, h, l, c2))
+            if interval == "4h":
+                bars = _resample_4h(raw_bars)
+            elif interval == "1y":
+                bars = _resample_year(raw_bars)
+            else:
+                bars = [{"t": datetime.fromtimestamp(tt, NY).strftime("%Y-%m-%d"),
+                         "o": round(o, 2), "h": round(h, 2), "l": round(l, 2), "c": round(c2, 2)}
+                        for (tt, o, h, l, c2) in raw_bars]
             if bars:
                 _leaps_ohlc_cache[ck] = {"ts": time.time(), "bars": bars}
                 if len(_leaps_ohlc_cache) > 400:
@@ -2549,7 +2595,7 @@ async def get_leaps_ohlc(symbol: str, rng: str = "1y", interval: str = "1d"):
                 return {"ok": True, "symbol": raw, "ysym": ysym, "rng": rng,
                         "interval": interval, "bars": bars, "source": f"yahoo:{ysym}"}
         except Exception as e:
-            print(f"[leaps-ohlc] {host} {ysym} {rng} {interval}: {e}")
+            print(f"[leaps-ohlc] {host} {ysym} {yrng} {interval}: {e}")
             continue
     return {"ok": False, "symbol": raw, "ysym": ysym, "reason": f"sin velas para {ysym}"}
 

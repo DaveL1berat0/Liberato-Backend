@@ -593,11 +593,10 @@ function prefillStructure(ticker, spot){
 /* ── ③ CHART NATIVO ── */
 var LC_SYM='NDX', LC_LABEL='NASDAQ 100', LC_RNG='1y', LC_INT='1d', lchart=null, lseries=null;
 var LC_TF=[
-  {k:'6M',rng:'6mo',iv:'1d',t:'Diario · 6 meses'},
-  {k:'1A',rng:'1y',iv:'1d',t:'Diario · 1 año'},
-  {k:'2A',rng:'2y',iv:'1d',t:'Diario · 2 años'},
-  {k:'W',rng:'5y',iv:'1wk',t:'Velas SEMANALES · 5 años'},
-  {k:'M',rng:'max',iv:'1mo',t:'Velas MENSUALES · histórico'}
+  {k:'Y',rng:'max',iv:'1y',t:'Velas ANUALES · histórico completo'},
+  {k:'M',rng:'max',iv:'1mo',t:'Velas MENSUALES · histórico'},
+  {k:'D',rng:'1y',iv:'1d',t:'Velas DIARIAS · 1 año'},
+  {k:'4H',rng:'3mo',iv:'4h',t:'Velas de 4 HORAS · 3 meses'}
 ];
 function initChart(){
   if(typeof LightweightCharts==='undefined'){ var w=document.getElementById('lchart-load'); if(w)w.textContent='Chart no disponible (librería).'; return; }
@@ -627,7 +626,7 @@ function renderChartStats(bars){
   var pull=(price/hi-1)*100, rec=(hi/price-1)*100;
   if(!isFinite(pull)||!isFinite(rec)||hi<=0||price<=0){ el.innerHTML=''; LC_STATS=null; return; }
   LC_STATS={price:price,hi:hi,lo:lo,pull:pull,rec:rec};
-  var tfLabel=LC_INT==='1wk'?'5A':LC_INT==='1mo'?'hist':(LC_RNG==='6mo'?'6M':LC_RNG==='1y'?'52s':LC_RNG==='2y'?'2A':LC_RNG);
+  var tfLabel=LC_INT==='4h'?'3m':(LC_INT==='1mo'||LC_INT==='1y')?'hist':LC_INT==='1wk'?'5A':(LC_RNG==='1y'?'52s':LC_RNG);
   var pc=pull<=-12?'var(--down)':pull<=-6?'var(--warn)':'var(--ink)';
   function tile(k,v,c){ return '<div class="cstat"><div class="cstat-k">'+k+'</div><div class="cstat-v"'+(c?(' style="color:'+c+'"'):'')+'>'+v+'</div></div>'; }
   el.innerHTML=tile('Precio','$'+fmtNum(price))
@@ -642,7 +641,8 @@ function renderChartStats(bars){
 function loadChart(){
   if(!lseries)return;
   var ld=document.getElementById('lchart-load'); if(ld)ld.style.display='flex';
-  var ivName=LC_INT==='1wk'?'semanales':LC_INT==='1mo'?'mensuales':'diarias';
+  var ivName=LC_INT==='4h'?'de 4h':LC_INT==='1wk'?'semanales':LC_INT==='1mo'?'mensuales':LC_INT==='1y'?'anuales':'diarias';
+  try{ lchart.timeScale().applyOptions({timeVisible:LC_INT==='4h',secondsVisible:false}); }catch(e){}
   fetch(API+'/api/leaps/ohlc/'+encodeURIComponent(LC_SYM)+'?rng='+LC_RNG+'&interval='+LC_INT).then(function(r){return r.json();}).then(function(d){
     if(!d||!d.ok||!d.bars||!d.bars.length){ if(ld){ld.style.display='flex';ld.textContent='Sin velas para '+LC_SYM+'.';} return; }
     if(ld)ld.style.display='none';
