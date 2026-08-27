@@ -2542,31 +2542,35 @@ def _fmt_series(label, obs, kind):
     return f"- {label}: {v:,.1f}"
 
 # ── Recolector ÚNICO de datos reales (lo consumen la narración Groq y el fallback determinista) ──
-_committee_facts_cache = {"facts": None, "ts": 0.0}
-COMMITTEE_FACTS_TTL = 3600   # 1h; el macro se mueve lento y protege a FRED
+_committee_facts_cache = {"macro": None, "gold": None, "ts": 0.0}
+COMMITTEE_FACTS_TTL = 3600   # 1h; solo el bloque MACRO (FRED, lento) se cachea
 
 async def _committee_facts():
-    """Reúne TODO el dato real (macro FRED + Environment + curva + rotación + scanner +
-    calendario) una vez y lo cachea 1h. Regla #1: el MISMO dato real alimenta la narración
-    Groq y el fallback determinista."""
+    """Reúne el dato real. El bloque MACRO (FRED, ~30 series, lento) se cachea 1h; pero el
+    Environment / scanner / rotación / calendario se leen FRESCOS de sus cachés vivas en CADA
+    llamada (antes se congelaban en un snapshot 1h → el brief iba por detrás del endpoint
+    /scanner o /rotation y la sección 10 salía 'sin oportunidades' con el scanner lleno)."""
     now = time.time()
     fc = _committee_facts_cache
-    if fc["facts"] and now - fc["ts"] < COMMITTEE_FACTS_TTL:
-        return fc["facts"]
-    obs_list = await asyncio.gather(*[_fred_obs(sid, 14) for (_, sid, _) in COMMITTEE_FRED],
-                                    return_exceptions=True)
-    macro = {}
-    for (label, sid, kind), obs in zip(COMMITTEE_FRED, obs_list):
-        if isinstance(obs, Exception):
-            obs = []
-        macro[sid] = {"label": label, "kind": kind, "obs": obs,
-                      "line": _fmt_series(label, obs, kind),
-                      "val": (obs[0][1] if obs else None),
-                      "yoy": (_env_yoy(obs) if (kind == "yoy" and obs) else None),
-                      "chg": ((obs[0][1] - obs[1][1]) if len(obs) > 1 else None)}
-    gclose = await _yahoo_closes("GC=F", "3mo")
-    # Calienta las cachés dependientes: si no, la rotación/scanner del brief saldrían vacíos
-    # (all "—") aunque sus endpoints dedicados sí tengan datos (el committee no pasa por ellos).
+    if fc["macro"] and now - fc["ts"] < COMMITTEE_FACTS_TTL:
+        macro, gold = fc["macro"], fc["gold"]
+    else:
+        obs_list = await asyncio.gather(*[_fred_obs(sid, 14) for (_, sid, _) in COMMITTEE_FRED],
+                                        return_exceptions=True)
+        macro = {}
+        for (label, sid, kind), obs in zip(COMMITTEE_FRED, obs_list):
+            if isinstance(obs, Exception):
+                obs = []
+            macro[sid] = {"label": label, "kind": kind, "obs": obs,
+                          "line": _fmt_series(label, obs, kind),
+                          "val": (obs[0][1] if obs else None),
+                          "yoy": (_env_yoy(obs) if (kind == "yoy" and obs) else None),
+                          "chg": ((obs[0][1] - obs[1][1]) if len(obs) > 1 else None)}
+        gclose = await _yahoo_closes("GC=F", "3mo")
+        gold = gclose[-1] if gclose else None
+        fc["macro"], fc["gold"], fc["ts"] = macro, gold, now
+    # Environment / scanner / rotación: SIEMPRE frescos de sus cachés (con warming si están frías),
+    # nunca congelados → el brief no va por detrás de sus endpoints dedicados.
     if not _env_cache["data"] or (now - _env_cache["ts"] > ENV_TTL):
         try: await refresh_environment()
         except Exception as e: print(f"[committee-facts] env: {e}")
@@ -2576,15 +2580,12 @@ async def _committee_facts():
     if not _rotation_cache["data"] or (now - _rotation_cache["ts"] > ROTATION_TTL):
         try: await get_leaps_rotation()
         except Exception as e: print(f"[committee-facts] rotation: {e}")
-    facts = {"macro": macro, "gold": (gclose[-1] if gclose else None),
-             "env": _env_cache.get("data") or {},
-             "rot": (_rotation_cache.get("data") or {}).get("sectors") or [],
-             "scan": ((_scan_cache.get("data") or {}).get("rows") or []),
-             "cal": [e for e in (cache.get("calendar", {}).get("data") or [])
-                     if e.get("impact") == "high"][:12]}
-    fc["facts"] = facts
-    fc["ts"] = now
-    return facts
+    return {"macro": macro, "gold": gold,
+            "env": _env_cache.get("data") or {},
+            "rot": (_rotation_cache.get("data") or {}).get("sectors") or [],
+            "scan": ((_scan_cache.get("data") or {}).get("rows") or []),
+            "cal": [e for e in (cache.get("calendar", {}).get("data") or [])
+                    if e.get("impact") == "high"][:12]}
 
 _REGIMEN = {"HEALTHY": "Expansivo", "CONSTRUCTIVE": "Constructivo", "CAUTION": "Cauteloso",
             "HIGH RISK": "Riesgo elevado", "DEFENSIVE": "Defensivo"}
@@ -2629,7 +2630,7 @@ def _committee_deterministic(facts):
 
     # 03 ROTACIÓN SECTORIAL
     rot = facts["rot"]
-    def rq(q): return ", ".join(x["name"] for x in rot if x.get("quadrant") == q) or "—"
+    def rq(q): return ", ".join(x["name"] for x in rot if x.get("quadrant") == q) or ("ninguno ahora" if rot else "sin dato")
     L.append("[03 · ROTACIÓN SECTORIAL]")
     L.append(f"Líderes (fuertes + con impulso): {rq('LIDER')}.")
     L.append(f"Entrando dinero (ganan momentum): {rq('MEJORANDO')}. Saliendo (lo pierden): {rq('DEBILITANDOSE')}. Rezagados: {rq('REZAGADO')}.")
