@@ -2565,6 +2565,17 @@ async def _committee_facts():
                       "yoy": (_env_yoy(obs) if (kind == "yoy" and obs) else None),
                       "chg": ((obs[0][1] - obs[1][1]) if len(obs) > 1 else None)}
     gclose = await _yahoo_closes("GC=F", "3mo")
+    # Calienta las cachés dependientes: si no, la rotación/scanner del brief saldrían vacíos
+    # (all "—") aunque sus endpoints dedicados sí tengan datos (el committee no pasa por ellos).
+    if not _env_cache["data"] or (now - _env_cache["ts"] > ENV_TTL):
+        try: await refresh_environment()
+        except Exception as e: print(f"[committee-facts] env: {e}")
+    if not _scan_cache["data"] or (now - _scan_cache["ts"] > SCAN_TTL):
+        try: await refresh_scanner()
+        except Exception as e: print(f"[committee-facts] scanner: {e}")
+    if not _rotation_cache["data"] or (now - _rotation_cache["ts"] > ROTATION_TTL):
+        try: await get_leaps_rotation()
+        except Exception as e: print(f"[committee-facts] rotation: {e}")
     facts = {"macro": macro, "gold": (gclose[-1] if gclose else None),
              "env": _env_cache.get("data") or {},
              "rot": (_rotation_cache.get("data") or {}).get("sectors") or [],
