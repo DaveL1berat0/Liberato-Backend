@@ -2486,6 +2486,160 @@ async def get_leaps_brief():
                              if _brief_cache["ts"] else None),
             "score": env.get("score"), "classification": env.get("classification")}
 
+# ═══════════ AI MARKET BRIEF — INVESTMENT COMMITTEE (10 secciones, Groq narra el dato real) ═══════════
+_committee_cache = {"text": None, "ts": 0.0, "cooldown": 0.0}
+COMMITTEE_TTL = 6 * 3600   # macro se mueve lento; 6h protege budget Groq
+# Universo macro (FRED, gratis). (label, series_id, kind): last / last% / last$ / yoy / chg
+COMMITTEE_FRED = [
+    ("PIB real (QoQ anualizado)", "A191RL1Q225SBEA", "last%"),
+    ("CPI", "CPIAUCSL", "yoy"), ("Core CPI", "CPILFESL", "yoy"),
+    ("PCE", "PCEPI", "yoy"), ("Core PCE", "PCEPILFE", "yoy"), ("PPI", "PPIACO", "yoy"),
+    ("Nóminas no agrícolas (Δ mensual, miles)", "PAYEMS", "chg"),
+    ("Desempleo", "UNRATE", "last%"), ("Peticiones iniciales desempleo", "ICSA", "last"),
+    ("Peticiones continuas", "CCSA", "last"), ("Salario horario medio", "CES0500000003", "yoy"),
+    ("JOLTS (vacantes, miles)", "JTSJOL", "last"), ("Ventas minoristas", "RSAFS", "yoy"),
+    ("Producción industrial", "INDPRO", "yoy"), ("Confianza consumidor (UMich)", "UMCSENT", "last"),
+    ("Permisos de construcción", "PERMIT", "last"), ("Inicios de vivienda", "HOUST", "last"),
+    ("Venta viviendas nuevas", "HSN1F", "last"),
+    ("Rendimiento 2Y", "DGS2", "last%"), ("Rendimiento 10Y", "DGS10", "last%"),
+    ("Rendimiento 30Y", "DGS30", "last%"), ("Rendimiento real 10Y (TIPS)", "DFII10", "last%"),
+    ("Fed Funds (efectivo)", "DFF", "last%"), ("Spread 10Y-2Y", "T10Y2Y", "last%"),
+    ("Dólar (índice amplio)", "DTWEXBGS", "last"), ("Petróleo WTI", "DCOILWTICO", "last$"),
+    ("Spread crédito high-yield (OAS)", "BAMLH0A0HYM2", "last%"), ("M2 (masa monetaria)", "M2SL", "yoy"),
+    ("Expectativas inflación 10Y (breakeven)", "T10YIE", "last%"),
+    ("Breakeven forward 5Y5Y", "T5YIFR", "last%"),
+]
+
+def _fmt_series(label, obs, kind):
+    if not obs:
+        return f"- {label}: (sin dato)"
+    v = obs[0][1]
+    if kind == "yoy":
+        yy = _env_yoy(obs)
+        return f"- {label}: {yy:+.1f}% interanual" if yy is not None else f"- {label}: {v}"
+    if kind == "chg":
+        d = (v - obs[1][1]) if len(obs) > 1 else None
+        return f"- {label}: {v:,.0f} (Δ {d:+,.0f})" if d is not None else f"- {label}: {v:,.0f}"
+    if kind == "last%":
+        return f"- {label}: {v:.2f}%"
+    if kind == "last$":
+        return f"- {label}: ${v:.1f}"
+    return f"- {label}: {v:,.1f}"
+
+async def refresh_committee_brief():
+    if not GROQ_KEY or not budget_ok("groq", 1):
+        return
+    # 1) Macro (FRED, concurrente)
+    obs_list = await asyncio.gather(*[_fred_obs(sid, 14) for (_, sid, _) in COMMITTEE_FRED],
+                                    return_exceptions=True)
+    macro_lines = []
+    for (label, sid, kind), obs in zip(COMMITTEE_FRED, obs_list):
+        if isinstance(obs, Exception):
+            obs = []
+        macro_lines.append(_fmt_series(label, obs, kind))
+    # Oro (Yahoo) como complemento de commodities
+    gclose = await _yahoo_closes("GC=F", "3mo")
+    if gclose:
+        macro_lines.append(f"- Oro (spot): ${gclose[-1]:.0f}")
+
+    # 2) Environment (9 motores) + curva + rotación + scanner + calendario (ya cacheados)
+    env = _env_cache.get("data") or {}
+    motors = env.get("motors") or []
+    eng_lines = [f"  · {m.get('name')}: {m.get('value') or '—'} ({m.get('status') or 'n/a'}, score {m.get('score')})"
+                 for m in motors]
+    curve = env.get("yield_curve") or []
+    curve_txt = " | ".join(f"{p.get('label')} {p.get('yield')}%" for p in curve) or "sin dato"
+    rot = (_rotation_cache.get("data") or {}).get("sectors") or []
+    def _rq(q):
+        return ", ".join(x["name"] for x in rot if x.get("quadrant") == q) or "—"
+    rot_txt = (f"Líderes: {_rq('LIDER')} | Entrando (ganan momentum): {_rq('MEJORANDO')} | "
+               f"Saliendo (pierden momentum): {_rq('DEBILITANDOSE')} | Rezagados: {_rq('REZAGADO')}")
+    scan = ((_scan_cache.get("data") or {}).get("rows") or [])[:6]
+    scan_txt = "\n".join(f"  · {r['ticker']}: score {r.get('fscore')}, {r.get('distHigh')}% vs máx 52s, {r.get('class')}"
+                         for r in scan) or "  (sin datos del scanner)"
+    cal = [e for e in (cache.get("calendar", {}).get("data") or []) if e.get("impact") == "high"][:12]
+    cal_txt = "\n".join(f"  · {e.get('time','')[:16]} {e.get('title')} "
+                        f"(prev {e.get('previous') or '—'}, est {e.get('forecast') or '—'}, act {e.get('actual') or '—'})"
+                        for e in cal) or "  (sin eventos de alto impacto en la ventana)"
+
+    ctx = (f"═ MACRO (FRED, valores reales) ═\n" + "\n".join(macro_lines) +
+           f"\n\n═ 9 MOTORES DEL ENVIRONMENT (score {round(env.get('score'),1) if env.get('score') is not None else '—'}/100, "
+           f"{env.get('classification','—')}) ═\n" + "\n".join(eng_lines) +
+           f"\n\n═ CURVA DE RENDIMIENTOS ═\n{curve_txt}" +
+           f"\n\n═ ROTACIÓN SECTORIAL (vs SPY) ═\n{rot_txt}" +
+           f"\n\n═ TOP DEL SCANNER (empresas calidad a descuento) ═\n{scan_txt}" +
+           f"\n\n═ CALENDARIO ALTO IMPACTO (próximos catalizadores) ═\n{cal_txt}" +
+           f"\n\n═ COT ═\n  (fuente de posicionamiento COT pendiente de integrar — decláralo como 'sin dato' en su sección)")
+
+    sys_msg = (
+        "Eres el estratega jefe del comité de inversión de una mesa que gestiona LEAPS (calls de 1-3 años) "
+        "y swing trades sobre acciones de calidad del Nasdaq. Escribes en ESPAÑOL, tono institucional, para un "
+        "inversor avanzado. REGLA ABSOLUTA (Regla #1): usa EXCLUSIVAMENTE las cifras reales que te doy; NUNCA "
+        "inventes un número, nivel o dato. Si un dato falta, escribe 'sin dato' y sigue. No des disclaimers. Sin emojis.\n"
+        "Produce un INVESTMENT COMMITTEE BRIEF con EXACTAMENTE estas 10 secciones, en este orden, cada una encabezada "
+        "por su título en MAYÚSCULAS entre corchetes y una conclusión breve. NO vuelques listas de datos crudos: "
+        "ANALIZA y COMPRIME en conclusiones accionables.\n"
+        "[01 · CONTEXTO MACRO] — 2-3 frases integrando crecimiento, inflación, empleo, tasas, dólar, crédito y liquidez. "
+        "Termina con una línea 'Régimen macro: <p.ej. Cauteloso / Desinflacionario>'.\n"
+        "[02 · CONSENSO DE LOS 9 MOTORES] — qué dicen EN CONJUNTO. Línea 'Consenso: X/9 positivos' + 1-2 frases.\n"
+        "[03 · ROTACIÓN SECTORIAL] — hacia dónde rota el capital y por qué importa para LEAPS/swing.\n"
+        "[04 · CURVA DE RENDIMIENTOS] — interpreta (empinamiento/aplanamiento/inversión, tramo corto vs largo) y su "
+        "implicación para acciones de larga duración. Termina 'Implicación: Positiva/Neutral/Negativa'.\n"
+        "[05 · CATALIZADORES DE LA SEMANA] — a partir del calendario, para cada catalizador clave: Catalizador → "
+        "resultado esperado → transmisión al mercado → caso alcista → caso bajista. NO es una agenda; es interpretación.\n"
+        "[06 · GEOPOLÍTICA] — evento → impacto económico → sectores afectados → riesgo para equities. Línea "
+        "'Riesgo geopolítico: Bajo/Moderado/Alto'. Si no hay señal clara en los datos, dilo.\n"
+        "[07 · COT] — si no hay dato, escribe 'COT: sin dato (fuente pendiente)'. No inventes posicionamiento.\n"
+        "[08 · INFLACIÓN] — tendencia: 'Acelerando / Pegajosa / Desinflacionando' + implicación para tasas, Fed, "
+        "valoraciones y LEAPS.\n"
+        "[09 · MERCADO LABORAL] — 'Fuerte / Enfriándose / Debilitándose' con lectura de nóminas, paro, claims, salarios, "
+        "JOLTS + impacto sobre la Fed y las acciones.\n"
+        "[10 · GUÍA LEAPS & SWING] — traduce TODO lo anterior en decisión. LEAPS: postura preferida (p.ej. 'Largo "
+        "selectivo') + qué evitar. Swing: identifica las 1-2 MEJORES oportunidades del scanner (usa sus tickers y "
+        "scores REALES) y para cada una: 'Por qué ahora', 'Catalizador principal', 'Riesgo principal', 'Horizonte "
+        "preferido (LEAPS/Swing)'.\n"
+        "Formato: markdown. Cada sección: su [TÍTULO] en su propia línea, luego el análisis. Frases cortas. "
+        "Termina con la sección 10 y sus 1-2 oportunidades destacadas. No añadas nada tras la sección 10.")
+    usr_msg = f"Datos reales de mesa ahora mismo:\n\n{ctx}\n\nEscribe el Investment Committee Brief con las 10 secciones."
+
+    budget_charge("groq", 1)
+    try:
+        async with httpx.AsyncClient(timeout=40) as client:
+            r = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                json={"model": "qwen/qwen3.6-27b", "max_tokens": 1900, "temperature": 0.45,
+                      "reasoning_effort": "none",
+                      "messages": [{"role": "system", "content": sys_msg},
+                                   {"role": "user", "content": usr_msg}]})
+        if r.status_code == 200:
+            _committee_cache["text"] = r.json()["choices"][0]["message"]["content"].strip()
+            _committee_cache["ts"] = time.time()
+            _committee_cache["cooldown"] = 0.0
+            cache["health"]["groq"] = "online"
+            print("[committee] ok")
+        else:
+            _committee_cache["cooldown"] = time.time() + (1800 if r.status_code == 429 else 600)
+            print(f"[committee] groq {r.status_code} — cooldown")
+    except Exception as e:
+        _committee_cache["cooldown"] = time.time() + 600
+        print(f"[committee] error: {e}")
+
+@app.get("/api/leaps/committee")
+async def get_committee_brief():
+    """AI Market Brief completo tipo Investment Committee (10 secciones). Se genera bajo demanda
+    (al expandir 'análisis completo') y se cachea 6h. Narra el dato macro real (Regla #1)."""
+    if not _env_cache["data"] or (time.time() - _env_cache["ts"] > ENV_TTL):
+        try: await refresh_environment()
+        except Exception as e: print(f"[committee] env: {e}")
+    stale = (not _committee_cache["text"]) or (time.time() - _committee_cache["ts"] > COMMITTEE_TTL)
+    if stale and time.time() > _committee_cache.get("cooldown", 0.0):
+        try: await refresh_committee_brief()
+        except Exception as e: print(f"[committee] gen: {e}")
+    return {"brief": _committee_cache["text"], "model": "qwen/qwen3.6-27b (Groq)",
+            "generated_at": (datetime.fromtimestamp(_committee_cache["ts"], NY).isoformat()
+                             if _committee_cache["ts"] else None)}
+
 # ═══════════════════ LEAPS CHART — velas DIARIAS de cualquier ticker (Yahoo) ═══════════════════
 _leaps_ohlc_cache = {}  # (ysym, rng, interval) → {"ts": epoch, "bars": [...]}
 _LEAPS_RANGES = {"1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "max"}
