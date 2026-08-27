@@ -225,6 +225,8 @@ a{color:inherit;text-decoration:none;}
 @media(max-width:640px){.lc-f input{font-size:16px;}}
 @media(max-width:600px){.owrap{padding:var(--gap) 12px 40px;}}
 @media(max-width:420px){.gg{grid-template-columns:repeat(2,1fr);}}
+/* móvil: el scanner fluye con la página (sin scroll anidado / trampa de scroll) y se ve grande */
+@media(max-width:760px){#scan-body{max-height:none;overflow:visible;}}
 </style>
 </head>
 <body>
@@ -527,17 +529,19 @@ function toggleBriefFull(){
 function loadCommittee(f){
   f.innerHTML='<p class="loading">Generando el Investment Committee Brief (macro completo)…</p>';
   fetch(API+'/api/leaps/committee').then(function(r){return r.json();}).then(function(d){
-    if(d&&d.brief){ COMMITTEE_LOADED=true; f.innerHTML=renderCommittee(d.brief); }
-    else { f.innerHTML=(BRIEF_FALLBACK||'<p class="loading">Análisis completo no disponible ahora (IA sin cuota). Reintenta en unos minutos.</p>'); }
+    if(d&&d.brief){ COMMITTEE_LOADED=true; f.innerHTML=renderCommittee(d.brief, d.mode); }
+    else { f.innerHTML=(BRIEF_FALLBACK||'<p class="loading">Análisis completo no disponible ahora. Reintenta en unos minutos.</p>'); }
   }).catch(function(){ f.innerHTML=BRIEF_FALLBACK||'<p class="loading">No disponible ahora.</p>'; });
 }
-function renderCommittee(text){
+function renderCommittee(text, mode){
   var out=text.split(/\n/).map(function(l){return l.replace(/\s+$/,'');}).filter(function(l){return l.trim();}).map(function(line){
     var t=line.trim(); var m=t.match(/^\[(.+?)\]\s*(.*)$/);
     if(m){ return '<div class="cm-sec">'+m[1]+'</div>'+(m[2]?('<p>'+fmtInline(m[2])+'</p>'):''); }
     return '<p'+(/^[-·*•]/.test(t)?' class="cm-li"':'')+'>'+fmtInline(t.replace(/^[-·*]\s*/,''))+'</p>';
   }).join('');
-  return '<div class="committee">'+out+'<div class="brief-ai" style="margin-top:14px;"><span class="d"></span>Generado por IA · narra el dato macro real (Regla #1)</div></div>';
+  var foot=(mode==='IA')?'Generado por IA · narra el dato macro real (Regla #1)'
+                        :'Análisis determinista · dato real FRED / Environment (Regla #1)';
+  return '<div class="committee">'+out+'<div class="brief-ai" style="margin-top:14px;"><span class="d"></span>'+foot+'</div></div>';
 }
 
 /* ── ④ LEAPS POSTURE (contextual, sin señal dura) ── */

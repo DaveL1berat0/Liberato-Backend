@@ -2008,6 +2008,7 @@ FRED_API_KEY = os.getenv("FRED_API_KEY", "").strip()
 # EXCLUYE del score, renormalizando pesos — nunca se inventa un número). Score alto =
 # entorno sano para asumir riesgo de largo plazo (LEAPS). Pesos configurables.
 _env_cache = {"data": None, "ts": 0.0}
+_curve_cache = {}    # "3M"->{"label":..,"yrs":..,"yield":..}  último valor bueno por vencimiento
 ENV_TTL = 6 * 3600   # el macro se mueve lento; refrescar cada 6h basta
 
 async def _fred_obs(sid, limit=26):
@@ -2102,6 +2103,13 @@ async def refresh_environment():
     results = await asyncio.gather(*[_fred_obs(i, 26) for i in ids], return_exceptions=True)
     for i, sid in enumerate(ids):
         ser[sid] = results[i] if not isinstance(results[i], Exception) else []
+    # Robustez: el burst concurrente de ~17 series FRED a veces deja varias vacías por
+    # throttling/timeout transitorio → antes la cobertura bajaba a 4/9 y la curva se caía.
+    # Se reintenta UNA vez, secuencialmente, cada serie que quedó vacía.
+    for sid in [s for s in ids if not ser.get(s)]:
+        _retry = await _fred_obs(sid, 26)
+        if _retry:
+            ser[sid] = _retry
 
     def last(sid):
         return ser.get(sid, [None])[0][1] if ser.get(sid) else None
@@ -2228,12 +2236,19 @@ async def refresh_environment():
         conflicts.append("Curva invertida pese a datos de actividad aún firmes")
 
     # Curva de rendimientos REAL (para dibujarla) — tramos por vencimiento.
+    # (Las series ya pasaron por el reintento general de arriba; aquí solo se conserva el
+    #  último valor bueno por vencimiento como última red ante un fallo persistente.)
+    _CURVE_SIDS = [("3M", "DGS3MO", 0.25), ("2Y", "DGS2", 2),
+                   ("5Y", "DGS5", 5), ("10Y", "DGS10", 10), ("30Y", "DGS30", 30)]
     curve = []
-    for lbl, sid, yrs in [("3M", "DGS3MO", 0.25), ("2Y", "DGS2", 2),
-                          ("5Y", "DGS5", 5), ("10Y", "DGS10", 10), ("30Y", "DGS30", 30)]:
+    for lbl, sid, yrs in _CURVE_SIDS:
         v = last(sid)
         if v is not None:
-            curve.append({"label": lbl, "yrs": yrs, "yield": round(v, 2)})
+            pt = {"label": lbl, "yrs": yrs, "yield": round(v, 2)}
+            _curve_cache[lbl] = pt
+            curve.append(pt)
+        elif lbl in _curve_cache:
+            curve.append(_curve_cache[lbl])   # fallback: FRED falló este tramo esta vez
     _yc_motor = next((m for m in motors if m["key"] == "yield_curve"), None)
     if _yc_motor is not None:
         _yc_motor["curve"] = curve
@@ -2526,38 +2541,190 @@ def _fmt_series(label, obs, kind):
         return f"- {label}: ${v:.1f}"
     return f"- {label}: {v:,.1f}"
 
-async def refresh_committee_brief():
-    if not GROQ_KEY or not budget_ok("groq", 1):
-        return
-    # 1) Macro (FRED, concurrente)
+# ── Recolector ÚNICO de datos reales (lo consumen la narración Groq y el fallback determinista) ──
+_committee_facts_cache = {"facts": None, "ts": 0.0}
+COMMITTEE_FACTS_TTL = 3600   # 1h; el macro se mueve lento y protege a FRED
+
+async def _committee_facts():
+    """Reúne TODO el dato real (macro FRED + Environment + curva + rotación + scanner +
+    calendario) una vez y lo cachea 1h. Regla #1: el MISMO dato real alimenta la narración
+    Groq y el fallback determinista."""
+    now = time.time()
+    fc = _committee_facts_cache
+    if fc["facts"] and now - fc["ts"] < COMMITTEE_FACTS_TTL:
+        return fc["facts"]
     obs_list = await asyncio.gather(*[_fred_obs(sid, 14) for (_, sid, _) in COMMITTEE_FRED],
                                     return_exceptions=True)
-    macro_lines = []
+    macro = {}
     for (label, sid, kind), obs in zip(COMMITTEE_FRED, obs_list):
         if isinstance(obs, Exception):
             obs = []
-        macro_lines.append(_fmt_series(label, obs, kind))
-    # Oro (Yahoo) como complemento de commodities
+        macro[sid] = {"label": label, "kind": kind, "obs": obs,
+                      "line": _fmt_series(label, obs, kind),
+                      "val": (obs[0][1] if obs else None),
+                      "yoy": (_env_yoy(obs) if (kind == "yoy" and obs) else None),
+                      "chg": ((obs[0][1] - obs[1][1]) if len(obs) > 1 else None)}
     gclose = await _yahoo_closes("GC=F", "3mo")
-    if gclose:
-        macro_lines.append(f"- Oro (spot): ${gclose[-1]:.0f}")
+    facts = {"macro": macro, "gold": (gclose[-1] if gclose else None),
+             "env": _env_cache.get("data") or {},
+             "rot": (_rotation_cache.get("data") or {}).get("sectors") or [],
+             "scan": ((_scan_cache.get("data") or {}).get("rows") or []),
+             "cal": [e for e in (cache.get("calendar", {}).get("data") or [])
+                     if e.get("impact") == "high"][:12]}
+    fc["facts"] = facts
+    fc["ts"] = now
+    return facts
 
-    # 2) Environment (9 motores) + curva + rotación + scanner + calendario (ya cacheados)
-    env = _env_cache.get("data") or {}
+_REGIMEN = {"HEALTHY": "Expansivo", "CONSTRUCTIVE": "Constructivo", "CAUTION": "Cauteloso",
+            "HIGH RISK": "Riesgo elevado", "DEFENSIVE": "Defensivo"}
+
+def _committee_deterministic(facts):
+    """Investment Committee Brief construido SOLO con el dato real (sin IA). Es el piso
+    siempre disponible cuando Groq no tiene cuota. Descriptivo (mandato #10: nada de señal
+    dura de compra/venta hasta el estudio MAE/MFE)."""
+    M = facts["macro"]
+    def v(sid): return (M.get(sid) or {}).get("val")
+    def yy(sid): return (M.get(sid) or {}).get("yoy")
+    def ln(sid): return (M.get(sid) or {}).get("line") or f"- {sid}: sin dato"
+    def pct(x, d=1): return f"{x:.{d}f}%" if x is not None else "sin dato"
+    def n0(x): return f"{x:,.0f}" if x is not None else "sin dato"
+    env = facts["env"]; motors = env.get("motors") or []
+    score = env.get("score"); clsf = env.get("classification", "—")
+    regimen = _REGIMEN.get(clsf, clsf)
+    L = []
+
+    # 01 CONTEXTO MACRO
+    gdp, cpce, unemp, dff = v("A191RL1Q225SBEA"), yy("PCEPILFE"), v("UNRATE"), v("DFF")
+    hy, m2 = v("BAMLH0A0HYM2"), yy("M2SL")
+    g = ("crecimiento sólido" if (gdp or 0) >= 2.5 else "crecimiento moderado" if (gdp or 0) >= 1
+         else "crecimiento débil" if (gdp or 0) >= 0 else "contracción") if gdp is not None else "crecimiento sin dato"
+    pol = ("política monetaria restrictiva" if (dff or 0) >= 4 else "política monetaria neutral" if (dff or 0) >= 2.5
+           else "política monetaria acomodaticia") if dff is not None else "política sin dato"
+    cred = ("crédito calmado" if (hy or 99) < 3.5 else "crédito normal" if (hy or 99) < 5 else "tensión de crédito") if hy is not None else "crédito sin dato"
+    L.append("[01 · CONTEXTO MACRO]")
+    L.append(f"PIB {pct(gdp)} anualizado ({g}); inflación subyacente PCE {pct(cpce)}; paro {pct(unemp)}; "
+             f"Fed funds {pct(dff)} ({pol}); spread high-yield {pct(hy)} ({cred}); M2 {pct(m2)} interanual.")
+    L.append(f"Régimen macro: {regimen}")
+
+    # 02 CONSENSO 9 MOTORES
+    scored = [m for m in motors if m.get("score") is not None]
+    pos = [m for m in scored if m["score"] >= 55]
+    sup = sorted(scored, key=lambda m: -m["score"])[:2]
+    ris = sorted(scored, key=lambda m: m["score"])[:2]
+    L.append("[02 · CONSENSO DE LOS 9 MOTORES]")
+    L.append(f"Consenso: {len(pos)}/{len(motors) or 9} positivos · score global {round(score,1) if score is not None else '—'}/100 ({clsf}).")
+    L.append(f"- Soportes: {', '.join(m.get('name','') for m in sup) or '—'}")
+    L.append(f"- Presionan: {', '.join(m.get('name','') for m in ris) or '—'}")
+
+    # 03 ROTACIÓN SECTORIAL
+    rot = facts["rot"]
+    def rq(q): return ", ".join(x["name"] for x in rot if x.get("quadrant") == q) or "—"
+    L.append("[03 · ROTACIÓN SECTORIAL]")
+    L.append(f"Líderes (fuertes + con impulso): {rq('LIDER')}.")
+    L.append(f"Entrando dinero (ganan momentum): {rq('MEJORANDO')}. Saliendo (lo pierden): {rq('DEBILITANDOSE')}. Rezagados: {rq('REZAGADO')}.")
+    L.append("Para LEAPS/swing interesa la calidad que ya lidera o empieza a ganar momentum, no la que se debilita.")
+
+    # 04 CURVA DE RENDIMIENTOS
+    spread = v("T10Y2Y"); curve = env.get("yield_curve") or []
+    ctxt = " · ".join(f"{p.get('label')} {p.get('yield')}%" for p in curve) or "sin dato"
+    if spread is None:
+        forma, impl = "sin dato", "Neutral"
+    elif spread < 0:
+        forma, impl = "invertida", "Negativa (señal histórica de desaceleración)"
+    elif spread < 0.5:
+        forma, impl = "plana / en normalización", "Neutral"
+    else:
+        forma, impl = "positiva y con pendiente", "Positiva (favorece la larga duración)"
+    L.append("[04 · CURVA DE RENDIMIENTOS]")
+    L.append(f"Tramos: {ctxt}. Spread 10Y-2Y {pct(spread,2)} → curva {forma}.")
+    L.append(f"Implicación: {impl}")
+
+    # 05 CATALIZADORES DE LA SEMANA
+    cal = facts["cal"][:5]
+    L.append("[05 · CATALIZADORES DE LA SEMANA]")
+    if cal:
+        for e in cal:
+            when = (e.get("time", "") or "")[:16].replace("T", " ")
+            L.append(f"- {e.get('title','(evento)')} ({when}) · prev {e.get('previous') or '—'}, est {e.get('forecast') or '—'}, act {e.get('actual') or '—'}. "
+                     f"Sorpresa al alza → presiona tasas y frena la larga duración; por debajo de lo estimado → alivio para LEAPS.")
+    else:
+        L.append("Sin eventos de alto impacto en la ventana del calendario ahora mismo.")
+
+    # 06 GEOPOLÍTICA
+    L.append("[06 · GEOPOLÍTICA]")
+    L.append("Riesgo geopolítico: sin señal directa en los datos macro (fuente dedicada pendiente de integrar). "
+             "El proxy más cercano es el spread de crédito high-yield: " + pct(hy) + ".")
+
+    # 07 COT
+    L.append("[07 · COT]")
+    L.append("COT: sin dato (fuente de posicionamiento pendiente de integrar). No se infiere posicionamiento.")
+
+    # 08 INFLACIÓN
+    corecpi, cpi, ppi, be = yy("CPILFESL"), yy("CPIAUCSL"), yy("PPIACO"), v("T10YIE")
+    if cpce is None:
+        infl_t = "sin dato"
+    elif cpce >= 3.0:
+        infl_t = "Pegajosa"
+    elif cpce >= 2.5:
+        infl_t = "Moderándose"
+    else:
+        infl_t = "Desinflacionando"
+    L.append("[08 · INFLACIÓN]")
+    L.append(f"Core PCE {pct(cpce)} · Core CPI {pct(corecpi)} · CPI {pct(cpi)} · PPI {pct(ppi)} · expectativas 10Y {pct(be)}. Tendencia: {infl_t}.")
+    L.append("Cuanto más pegajosa, más tarda la Fed en bajar y más presión sobre valoraciones de larga duración (LEAPS).")
+
+    # 09 MERCADO LABORAL
+    payems, claims, ahe, jolts = M.get("PAYEMS", {}).get("chg"), v("ICSA"), yy("CES0500000003"), v("JTSJOL")
+    if payems is None or unemp is None:
+        lab_t = "sin dato"
+    elif (payems or 0) >= 150 and (unemp or 9) < 4.2:
+        lab_t = "Fuerte"
+    elif (payems or 0) >= 50:
+        lab_t = "Enfriándose"
+    else:
+        lab_t = "Debilitándose"
+    L.append("[09 · MERCADO LABORAL]")
+    L.append(f"Nóminas Δ {n0(payems)} mil · paro {pct(unemp)} · peticiones iniciales {n0(claims)} · salarios {pct(ahe)} interanual · vacantes JOLTS {n0(jolts)} mil. Estado: {lab_t}.")
+    L.append("Un mercado laboral que se enfría acerca los recortes de la Fed (viento de cola para larga duración); si se rompe, domina el miedo a recesión.")
+
+    # 10 GUÍA LEAPS & SWING
+    scan = sorted([r for r in facts["scan"] if r.get("fscore") is not None], key=lambda r: -r["fscore"])
+    prefer = [r for r in scan if "DISLOCATION" in (r.get("class") or "") or "PULLBACK" in (r.get("class") or "")] or scan
+    top = prefer[:2]
+    L.append("[10 · GUÍA LEAPS & SWING]")
+    L.append(f"LEAPS: el entorno {clsf} favorece calidad de negocio con margin of safety y duración medida; "
+             f"evita estructuras agresivas mientras el consenso de motores no mejore. (Descriptivo — sin señal dura hasta el estudio MAE/MFE.)")
+    if top:
+        L.append("Mejores dislocaciones de calidad del scanner ahora mismo:")
+        for r in top:
+            L.append(f"- {r.get('ticker')}: score {r.get('fscore')}/100 · {r.get('distHigh')}% desde el máximo de 52s · {r.get('class')}. "
+                     f"Por qué ahora: pilares fundamentales intactos a descuento. Riesgo principal: que el descuento refleje deterioro real, no ruido. Horizonte: LEAPS.")
+    else:
+        L.append("El scanner no devuelve oportunidades con datos suficientes ahora mismo.")
+    return "\n".join(L)
+
+async def refresh_committee_brief():
+    if not GROQ_KEY or not budget_ok("groq", 1):
+        return
+    facts = await _committee_facts()
+    macro_lines = [facts["macro"][sid]["line"] for (_, sid, _) in COMMITTEE_FRED]
+    if facts.get("gold") is not None:
+        macro_lines.append(f"- Oro (spot): ${facts['gold']:.0f}")
+    env = facts["env"]
     motors = env.get("motors") or []
     eng_lines = [f"  · {m.get('name')}: {m.get('value') or '—'} ({m.get('status') or 'n/a'}, score {m.get('score')})"
                  for m in motors]
     curve = env.get("yield_curve") or []
     curve_txt = " | ".join(f"{p.get('label')} {p.get('yield')}%" for p in curve) or "sin dato"
-    rot = (_rotation_cache.get("data") or {}).get("sectors") or []
+    rot = facts["rot"]
     def _rq(q):
         return ", ".join(x["name"] for x in rot if x.get("quadrant") == q) or "—"
     rot_txt = (f"Líderes: {_rq('LIDER')} | Entrando (ganan momentum): {_rq('MEJORANDO')} | "
                f"Saliendo (pierden momentum): {_rq('DEBILITANDOSE')} | Rezagados: {_rq('REZAGADO')}")
-    scan = ((_scan_cache.get("data") or {}).get("rows") or [])[:6]
+    scan = facts["scan"][:6]
     scan_txt = "\n".join(f"  · {r['ticker']}: score {r.get('fscore')}, {r.get('distHigh')}% vs máx 52s, {r.get('class')}"
                          for r in scan) or "  (sin datos del scanner)"
-    cal = [e for e in (cache.get("calendar", {}).get("data") or []) if e.get("impact") == "high"][:12]
+    cal = facts["cal"]
     cal_txt = "\n".join(f"  · {e.get('time','')[:16]} {e.get('title')} "
                         f"(prev {e.get('previous') or '—'}, est {e.get('forecast') or '—'}, act {e.get('actual') or '—'})"
                         for e in cal) or "  (sin eventos de alto impacto en la ventana)"
@@ -2628,7 +2795,9 @@ async def refresh_committee_brief():
 @app.get("/api/leaps/committee")
 async def get_committee_brief():
     """AI Market Brief completo tipo Investment Committee (10 secciones). Se genera bajo demanda
-    (al expandir 'análisis completo') y se cachea 6h. Narra el dato macro real (Regla #1)."""
+    (al expandir 'análisis completo'). Groq NARRA el dato real (Regla #1); si Groq no tiene cuota,
+    se devuelve un brief DETERMINISTA con las mismas 10 secciones y los mismos datos reales, para
+    que el análisis NUNCA salga vacío."""
     if not _env_cache["data"] or (time.time() - _env_cache["ts"] > ENV_TTL):
         try: await refresh_environment()
         except Exception as e: print(f"[committee] env: {e}")
@@ -2636,9 +2805,19 @@ async def get_committee_brief():
     if stale and time.time() > _committee_cache.get("cooldown", 0.0):
         try: await refresh_committee_brief()
         except Exception as e: print(f"[committee] gen: {e}")
-    return {"brief": _committee_cache["text"], "model": "qwen/qwen3.6-27b (Groq)",
-            "generated_at": (datetime.fromtimestamp(_committee_cache["ts"], NY).isoformat()
-                             if _committee_cache["ts"] else None)}
+    if _committee_cache["text"]:
+        return {"brief": _committee_cache["text"], "mode": "IA", "model": "qwen/qwen3.6-27b (Groq)",
+                "generated_at": (datetime.fromtimestamp(_committee_cache["ts"], NY).isoformat()
+                                 if _committee_cache["ts"] else None)}
+    # Fallback determinista (Groq sin cuota) — mismas 10 secciones, mismo dato real.
+    try:
+        facts = await _committee_facts()
+        det = _committee_deterministic(facts)
+    except Exception as e:
+        print(f"[committee] determinista: {e}")
+        det = None
+    return {"brief": det, "mode": "determinista", "model": "determinista · dato real FRED/Environment",
+            "generated_at": datetime.now(NY).isoformat() if det else None}
 
 # ═══════════════════ LEAPS CHART — velas DIARIAS de cualquier ticker (Yahoo) ═══════════════════
 _leaps_ohlc_cache = {}  # (ysym, rng, interval) → {"ts": epoch, "bars": [...]}
