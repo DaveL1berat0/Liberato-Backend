@@ -2384,11 +2384,17 @@ async def refresh_scanner():
             except Exception as e:
                 print(f"[scanner] {sym}: {e}")
                 continue
-    if rows and (len(rows) >= 8 or not _scan_cache["data"]):
-        rows.sort(key=lambda r: (r.get("fscore") or 0), reverse=True)
-        _scan_cache["data"] = {"rows": rows, "as_of": datetime.now(NY).isoformat(), "count": len(rows)}
-        _scan_cache["ts"] = time.time()
-        print(f"[scanner] ok: {len(rows)}/{n} tickers")
+    if rows:
+        prev = (_scan_cache["data"] or {}).get("rows") or []
+        full = len(rows) >= 8
+        # No pisar una caché buena (≥8) con una parcial; aceptar si es completa, si mejora, o si no hay nada.
+        if full or len(rows) > len(prev) or not _scan_cache["data"]:
+            rows.sort(key=lambda r: (r.get("fscore") or 0), reverse=True)
+            _scan_cache["data"] = {"rows": rows, "as_of": datetime.now(NY).isoformat(), "count": len(rows)}
+            # completa → TTL normal (6h); parcial → caduca en ~4min para reintentar cuando el
+            # budget de Finnhub (55/min, compartido) se reponga → evita servir 2 filas durante 6h.
+            _scan_cache["ts"] = time.time() if full else (time.time() - SCAN_TTL + 240)
+            print(f"[scanner] {'ok' if full else 'parcial'}: {len(rows)}/{n} tickers")
     return _scan_cache["data"]
 
 @app.get("/api/leaps/scanner")
