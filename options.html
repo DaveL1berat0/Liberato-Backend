@@ -72,8 +72,6 @@ a{color:inherit;text-decoration:none;}
 .sec-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
 /* ── ① AI BRIEF (titular + chips) ── */
 .brief-1l{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin-top:8px;max-width:820px;}
-.brief-stance{margin-top:9px;font-size:12.5px;color:var(--ink-3);}
-.brief-stance b{color:var(--gold-2);font-weight:600;}
 .brief-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
 .chip{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:0.03em;padding:4px 10px;border-radius:999px;border:0.5px solid var(--hair);}
 .chip.warn{color:var(--risk);background:rgba(255,107,129,0.08);border-color:rgba(255,107,129,0.25);}
@@ -498,7 +496,6 @@ function detHtml(d){
   if(re.status==='Risky') p2.push('Inmobiliario ('+(re.value||'—')+') es punto de fricción.');
   return '<div class="bl">Entorno</div><p>'+p1.join(' ')+'</p>'+(p2.length?('<div class="bl">Tensión</div><p>'+p2.join(' ')+'</p>'):'');
 }
-function stanceFor(sc){ return sc>=65?'Constructivo / desplegar selectivo':sc>=45?'Selectivo / Calidad':'Defensivo / esperar'; }
 function loadBrief(){
   fetch(API+'/api/leaps/brief').then(function(r){return r.json();}).then(function(d){
     var sub=document.getElementById('brief-sub');
@@ -515,7 +512,6 @@ function renderBrief(d, fullHtml, isAI){
   var chips=''; if(rsd){ chips=rsd.risks.map(function(m){return '<span class="chip warn">'+m.name+' ⚠</span>';}).join('')+'<span class="chip ok">'+rsd.sups[0].name+' ✓</span>'; }
   BRIEF_FALLBACK=fullHtml||'';
   b.innerHTML='<p class="brief-1l" style="margin-top:2px;">'+interp+'</p>'
-    +'<div class="brief-stance">LEAPS stance: <b>'+stanceFor(d.score)+'</b></div>'
     +'<div class="brief-chips">'+chips+'</div>'
     +'<button class="brief-more" id="brief-more-btn" onclick="toggleBriefFull()">▾ Investment Committee Brief</button>'
     +'<div class="brief-full" id="brief-full" style="display:none;"></div>';
