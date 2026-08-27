@@ -48,6 +48,13 @@ a{color:inherit;text-decoration:none;}
 .oh-back{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border:0.5px solid var(--brd);border-radius:7px;padding:7px 13px;cursor:pointer;transition:all 0.2s;}
 .oh-back:hover{color:var(--gold);border-color:rgba(201,168,76,0.4);}
 .oh-logo{cursor:pointer;transition:color 0.2s;}.oh-logo:hover b{color:var(--gold-2);}
+.oh-nav{display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;}
+.oh-nav::-webkit-scrollbar{display:none;}
+.oh-nav a,.oh-nav span{font-family:var(--mono);font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-3);padding:6px 11px;border-radius:7px;white-space:nowrap;cursor:pointer;transition:all 0.18s;text-decoration:none;}
+.oh-nav a:hover{color:var(--gold);background:rgba(201,168,76,0.08);}
+.oh-nav .active{color:var(--gold);background:rgba(201,168,76,0.14);border:0.5px solid rgba(201,168,76,0.35);cursor:default;}
+.oh-nav .soon{opacity:0.4;cursor:not-allowed;}
+@media(max-width:920px){.oh{flex-wrap:wrap;}.oh-nav{order:3;width:100%;justify-content:flex-start;padding-top:6px;border-top:0.5px solid var(--hair);margin-top:2px;}}
 @keyframes pul{0%,100%{opacity:1;}50%{opacity:0.35;}}
 @media(max-width:600px){.oh{padding:12px 16px;gap:10px;}.oh-tag{display:none;}.oh-status{display:none;}.oh-logo{font-size:18px;}}
 /* ── DECISION FLOW (bandas verticales) ── */
@@ -173,7 +180,12 @@ a{color:inherit;text-decoration:none;}
 /* ── ⑥ SCANNER ── */
 .stub{padding:26px 16px;text-align:center;color:var(--ink-4);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;}
 .stub b{color:var(--gold);display:block;margin-bottom:5px;font-size:12px;}
-#scan-body{max-height:520px;overflow-y:auto;overflow-x:auto;}
+#scan-body{max-height:720px;overflow-y:auto;overflow-x:auto;}
+.scan-hd-r{display:flex;align-items:center;gap:12px;}
+.scan-search{background:var(--panel-2);border:1px solid var(--brd);border-radius:999px;color:var(--ink);font-family:var(--mono);font-size:11px;padding:7px 13px;width:190px;transition:border-color 0.2s,width 0.2s;}
+.scan-search:focus{outline:none;border-color:rgba(201,168,76,0.5);width:220px;}
+.scan-search::placeholder{color:var(--ink-4);}
+@media(max-width:560px){.scan-search{width:130px;}.scan-search:focus{width:150px;}}
 #scan-body::-webkit-scrollbar{width:8px;} #scan-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
 .scan-tbl{width:100%;border-collapse:collapse;font-size:12px;}
 .scan-tbl th{font-family:var(--mono);font-size:8.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:10px 16px;border-bottom:1px solid var(--hair);font-weight:700;position:sticky;top:0;background:var(--panel);z-index:2;}
@@ -199,9 +211,10 @@ a{color:inherit;text-decoration:none;}
 .rot-table th.r{text-align:right;}
 .rot-table td{padding:8px;border-bottom:0.5px solid var(--hair);vertical-align:top;}
 .rot-table tr:last-child td{border-bottom:none;}
-.rb-fase{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;}
+.rb-fase{white-space:normal;padding-right:14px;}
+.rb-lbl{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;}
+.rb-mean{display:block;font-size:9.5px;color:var(--ink-3);line-height:1.3;margin-top:1px;}
 .rb-sec{color:var(--ink-2);line-height:1.35;font-size:11.5px;}
-.rb-flujo{font-family:var(--mono);font-size:8.5px;font-weight:700;text-align:right;white-space:nowrap;}
 .loading{color:var(--ink-4);font-family:var(--mono);font-size:10px;}
 #rot-body{overflow-x:auto;}
 @media(max-width:700px){.chart-tf button{padding:8px 13px;font-size:11px;}.dtool{width:32px;height:32px;font-size:15px;}.dtoolbar{left:4px;}}
@@ -217,6 +230,13 @@ a{color:inherit;text-decoration:none;}
     <div class="oh-logo" onclick="location.href='homepage.html'">Liberato <b>Community</b></div>
     <span class="oh-tag">LEAPS Intelligence</span>
   </div>
+  <nav class="oh-nav" aria-label="Secciones">
+    <a href="daytrading_preview.html">Day Trading</a>
+    <a href="journal.html">Journal</a>
+    <a href="earnings.html">Earnings</a>
+    <span class="active" aria-current="page">Options</span>
+    <span class="soon" title="Próximamente">Educación</span>
+  </nav>
   <div class="oh-r">
     <span class="oh-status"><span class="oh-dot" id="oh-data-dot"></span><span id="oh-updated">—</span></span>
     <span class="oh-back" onclick="location.href='homepage.html'">← Home</span>
@@ -285,10 +305,6 @@ a{color:inherit;text-decoration:none;}
             <div class="lchart-note" id="lchart-note"></div>
           </div>
         </div>
-        <div class="posture-inpanel">
-          <div class="sec-label"><span>◈ LEAPS Posture <span class="info-i" title="Síntesis contextual: cruza el Environment + la estructura del underlying + la oportunidad del scanner en una postura cualitativa. NO es una señal de compra/venta: los umbrales de entrada/salida esperan el estudio MAE/MFE (Pullback→Stress→Recovery).">&#9432;</span></span><span style="font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.04em;">contexto · sin señal dura</span></div>
-          <div id="posture-body"><p class="loading">Sintetizando postura…</p></div>
-        </div>
       </section>
       <section class="panel step lc-panel">
         <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
@@ -327,7 +343,7 @@ a{color:inherit;text-decoration:none;}
 
     <!-- ⑤ OPPORTUNITY SCANNER (rectangular · ancho completo) -->
     <section class="panel step">
-      <div class="p-hd"><span class="p-ttl"><span class="stepn">4</span> Opportunity Scanner <span class="info-i" title="Empresas del Nasdaq con los 8 pilares fundamentales INTACTOS pero a DESCUENTO — para decidir si vale la pena el LEAP. Score = promedio de 8 pilares reales de Finnhub (crecimiento ingresos/EPS, márgenes neto/bruto, ROE, balance, liquidez, valoración). Cada fila se descompone en Fund / Val / Bal / Precio. Umbrales: DISLOCACIÓN = score≥70 y ≥12% bajo el máximo de 52 semanas; PULLBACK = score≥65 y ≥6% bajo; DÉBIL = score<45; NEUTRAL = resto (se auditará con metodología). Click en una fila → carga el ticker en Market + Structure.">&#9432;</span></span><span class="p-sub" id="scan-sub">—</span></div>
+      <div class="p-hd"><span class="p-ttl"><span class="stepn">4</span> Opportunity Scanner <span class="info-i" title="Empresas del Nasdaq con los 8 pilares fundamentales INTACTOS pero a DESCUENTO — para decidir si vale la pena el LEAP. Score = promedio de 8 pilares reales de Finnhub (crecimiento ingresos/EPS, márgenes neto/bruto, ROE, balance, liquidez, valoración). Cada fila se descompone en Fund / Val / Bal / Precio. Umbrales: DISLOCACIÓN = score≥70 y ≥12% bajo el máximo de 52 semanas; PULLBACK = score≥65 y ≥6% bajo; DÉBIL = score<45; NEUTRAL = resto (se auditará con metodología). Click en una fila → carga el ticker en Market + Structure.">&#9432;</span></span><div class="scan-hd-r"><input id="scan-search" class="scan-search" type="text" placeholder="Buscar ticker o sector…" oninput="scanFilter()"><span class="p-sub" id="scan-sub">—</span></div></div>
       <div class="p-bd" style="padding:0;"><div id="scan-body"><div class="stub">Escaneando oportunidades…</div></div></div>
     </section>
   </div>
@@ -362,6 +378,17 @@ function gauge(score,big){
 function fmtNum(v){ if(v==null||!isFinite(v))return '—'; return v>=1000?Math.round(v).toLocaleString('en-US'):v.toFixed(2); }
 
 /* ── ② ENVIRONMENT ── */
+var MOTOR_INFO={
+ yield_curve:'Curva de rendimientos (10Y-2Y). Invertida (corto por encima del largo) = históricamente antesala de recesión; pendiente positiva = expansión.',
+ rates:'Tasas de política de la Fed (Fed Funds). Altas = restrictivo: encarecen el capital y presionan las acciones de larga duración (como los LEAPS).',
+ inflation:'Inflación (CPI interanual). Alta presiona las tasas y comprime valoraciones; controlada es favorable para duración larga.',
+ leverage:'Carga de deuda de los hogares (servicio de deuda sobre ingreso). Alta = menos capacidad de gasto y consumo.',
+ real_estate:'Coste hipotecario a 30 años. Alto enfría la vivienda y el consumo; bajo = financiación accesible.',
+ economy:'Salud del mercado laboral (tasa de desempleo). Bajo = economía sólida; en ascenso = debilidad.',
+ supply:'Shock de oferta (petróleo WTI). Una subida brusca genera presión inflacionaria y de costos (shock de oferta).',
+ gold:'Oro (momentum a 3 meses). Disparado = aversión al riesgo / estrés; estable = calma.',
+ financial:'Estrés del sistema financiero (spreads de crédito high-yield). Anchos = tensión; estrechos = crédito calmado.'
+};
 function classDesc(c){
   if(/HEALTHY/.test(c))return 'Entorno macro sano para asumir riesgo de largo plazo.';
   if(/CONSTRUCTIVE/.test(c))return 'Entorno constructivo: exposición selectiva razonable.';
@@ -399,7 +426,7 @@ function renderEnv(d){
     var tr=m.trend==='improving'?'▲':m.trend==='deteriorating'?'▼':'';
     var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--down)':'var(--ink-4)';
     var tint=riskKeys.indexOf(m.key)>=0?' risk':supKeys.indexOf(m.key)>=0?' sup':'';
-    return '<div class="gcell'+tint+'">'+gauge(m.score)+'<div class="gn">'+m.name+'</div>'
+    return '<div class="gcell'+tint+'">'+gauge(m.score)+'<div class="gn">'+m.name+' <span class="info-i" title="'+(MOTOR_INFO[m.key]||'Motor macro del Environment.')+'">&#9432;</span></div>'
       +'<div class="gv">'+(m.value||'—')+' <span style="color:'+trc+'">'+tr+'</span></div></div>';
   }).join('');
   var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
@@ -649,28 +676,38 @@ function whyChips(x){
   return chip('Fund',avg(['revenue','eps','margin','gross','roe']))+chip('Val',p.valuation)+chip('Bal',avg(['balance','fcf']))
     +'<span class="why" style="color:'+locC+'">Precio '+locMk+'</span>';
 }
+var SCAN_ALL=[];
+function renderScanRows(rows){
+  var host=document.getElementById('scan-body'); if(!host)return;
+  if(!rows.length){ host.innerHTML='<div class="stub">Sin resultados para tu búsqueda.</div>'; return; }
+  var body=rows.map(function(x){
+    var cm=scanClsMap(x['class']||'');
+    var dh=(x.distHigh!=null)?((x.distHigh>=0?'+':'')+x.distHigh+'%'):'—';
+    var dhc=(x.distHigh!=null&&x.distHigh<=-6)?'var(--gold)':'var(--ink-2)';
+    var fsc=(x.fscore!=null)?x.fscore:'—';
+    var fscCol=(x.fscore>=70)?'var(--up)':(x.fscore>=50)?'var(--gold)':'var(--down)';
+    var sel=(x.ticker===LC_SYM)?' class="sel"':'';
+    return '<tr data-tk="'+x.ticker+'"'+sel+' onclick="selectTicker(\''+x.ticker+'\')"><td><span class="scan-tk">'+x.ticker+'</span><span class="scan-sec"> · '+(x.sector||'')+'</span><div class="scan-why">'+whyChips(x)+'</div></td>'
+      +'<td class="r"><span class="scan-fs" style="color:'+fscCol+'">'+fsc+'</span></td>'
+      +'<td class="r" style="color:'+dhc+';font-family:var(--mono);">'+dh+'</td>'
+      +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
+  }).join('');
+  host.innerHTML='<table class="scan-tbl"><thead><tr><th>Ticker · por qué está aquí</th><th class="r">Score elección ▾</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
+}
+function scanFilter(){
+  var i=document.getElementById('scan-search'); var q=i?(i.value||'').trim().toUpperCase():'';
+  var rows=q?SCAN_ALL.filter(function(x){return x.ticker.indexOf(q)>=0||(x.sector||'').toUpperCase().indexOf(q)>=0;}):SCAN_ALL;
+  renderScanRows(rows);
+  var disl=SCAN_ALL.filter(function(x){return /DISLOCATION/.test(x['class']||'');}).length;
+  var sub=document.getElementById('scan-sub'); if(sub)sub.textContent=q?(rows.length+' de '+SCAN_ALL.length+' · "'+q+'"'):(SCAN_ALL.length+' activos · '+disl+' dislocación');
+}
 function loadScanner(){
   fetch(API+'/api/leaps/scanner').then(function(r){return r.json();}).then(function(d){
-    var host=document.getElementById('scan-body'); if(!host)return;
-    var rows=(d&&d.rows)||[]; SCAN_ROWS={};
+    var rows=(d&&d.rows)||[]; SCAN_ROWS={}; SCAN_ALL=rows;
     rows.forEach(function(x){ SCAN_ROWS[x.ticker]=x; });
-    if(!rows.length){ host.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
-    var body=rows.map(function(x){
-      var cm=scanClsMap(x['class']||'');
-      var dh=(x.distHigh!=null)?((x.distHigh>=0?'+':'')+x.distHigh+'%'):'—';
-      var dhc=(x.distHigh!=null&&x.distHigh<=-6)?'var(--gold)':'var(--ink-2)';
-      var fsc=(x.fscore!=null)?x.fscore:'—';
-      var fscCol=(x.fscore>=70)?'var(--up)':(x.fscore>=50)?'var(--gold)':'var(--down)';
-      return '<tr data-tk="'+x.ticker+'" onclick="selectTicker(\''+x.ticker+'\')"><td><span class="scan-tk">'+x.ticker+'</span><span class="scan-sec"> · '+(x.sector||'')+'</span><div class="scan-why">'+whyChips(x)+'</div></td>'
-        +'<td class="r"><span class="scan-fs" style="color:'+fscCol+'">'+fsc+'</span></td>'
-        +'<td class="r" style="color:'+dhc+';font-family:var(--mono);">'+dh+'</td>'
-        +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
-    }).join('');
-    host.innerHTML='<table class="scan-tbl"><thead><tr><th>Ticker · por qué</th><th class="r">Score</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
-    var disl=rows.filter(function(x){return /DISLOCATION/.test(x['class']||'');}).length;
-    var sub=document.getElementById('scan-sub'); if(sub)sub.textContent=rows.length+' activos · '+disl+' dislocación';
-    // Ejemplo inicial del Structure = la top oportunidad (empresa real a descuento), sin tocar el chart macro NDX
-    if(!USER_PICKED && !LC_PREFILLED && rows.length && rows[0].price!=null){ LC_PREFILLED=true; prefillStructure(rows[0].ticker, rows[0].price); }
+    if(!rows.length){ var h0=document.getElementById('scan-body'); if(h0)h0.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
+    scanFilter();
+    if(!USER_PICKED && !LC_PREFILLED && rows[0].price!=null){ LC_PREFILLED=true; prefillStructure(rows[0].ticker, rows[0].price); }
     renderPosture();
   }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
 }
@@ -687,7 +724,7 @@ function selectTicker(tk){
 
 /* ── ⑦ SECTOR ROTATION (RRG) ── */
 var SEC_ABBR={XLK:'TEC',XLC:'COM',XLY:'DIS',XLP:'CSB',XLV:'SAL',XLF:'FIN',XLI:'IND',XLE:'ENE',XLB:'MAT',XLU:'UTL',XLRE:'REI'};
-var RRG_COL={LIDER:'#2EE8A4',MEJORANDO:'#C9A84C',REZAGADO:'#B197FC',DEBILITANDOSE:'#FF6B81'};
+var RRG_COL={LIDER:'#2EE8A4',MEJORANDO:'#C9A84C',DEBILITANDOSE:'#B197FC',REZAGADO:'rgba(239,236,227,0.45)'};
 function renderRRG(s){
   var W=400,H=372,padX=40,padTop=24,padBot=38;
   var L=padX,R=W-padX,T=padTop,B=H-padBot,cx=(L+R)/2,cy=(T+B)/2,halfW=(R-L)/2,halfH=(B-T)/2;
@@ -697,14 +734,14 @@ function renderRRG(s){
   function X(v){return (cx+v/mx*halfW).toFixed(1);} function Y(v){return (cy-v/my*halfH).toFixed(1);}
   var q='<rect x="'+cx+'" y="'+T+'" width="'+(R-cx)+'" height="'+(cy-T)+'" fill="#2EE8A4" opacity="0.055"/>'
     +'<rect x="'+L+'" y="'+T+'" width="'+(cx-L)+'" height="'+(cy-T)+'" fill="#C9A84C" opacity="0.055"/>'
-    +'<rect x="'+L+'" y="'+cy+'" width="'+(cx-L)+'" height="'+(B-cy)+'" fill="#B197FC" opacity="0.05"/>'
-    +'<rect x="'+cx+'" y="'+cy+'" width="'+(R-cx)+'" height="'+(B-cy)+'" fill="#FF6B81" opacity="0.05"/>';
+    +'<rect x="'+L+'" y="'+cy+'" width="'+(cx-L)+'" height="'+(B-cy)+'" fill="rgba(239,236,227,0.5)" opacity="0.04"/>'
+    +'<rect x="'+cx+'" y="'+cy+'" width="'+(R-cx)+'" height="'+(B-cy)+'" fill="#B197FC" opacity="0.05"/>';
   var ax='<rect x="'+L+'" y="'+T+'" width="'+(R-L)+'" height="'+(B-T)+'" rx="6" fill="none" stroke="rgba(255,255,255,0.08)"/>'
     +'<line x1="'+cx+'" y1="'+T+'" x2="'+cx+'" y2="'+B+'" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3"/>'
     +'<line x1="'+L+'" y1="'+cy+'" x2="'+R+'" y2="'+cy+'" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3"/>';
   function ql(x,y,a,t,c){return '<text x="'+x+'" y="'+y+'" text-anchor="'+a+'" font-family="DM Mono,monospace" font-size="8" font-weight="700" letter-spacing="0.4" fill="'+c+'" opacity="0.8">'+t+'</text>';}
-  var lbl=ql(R-7,T+13,'end','LÍDER',RRG_COL.LIDER)+ql(L+7,T+13,'start','MEJORANDO ↑$',RRG_COL.MEJORANDO)
-    +ql(L+7,B-7,'start','REZAGADO',RRG_COL.REZAGADO)+ql(R-7,B-7,'end','DEBILITÁNDOSE ↓$',RRG_COL.DEBILITANDOSE);
+  var lbl=ql(R-7,T+13,'end','LÍDERES',RRG_COL.LIDER)+ql(L+7,T+13,'start','ENTRA $ ↗',RRG_COL.MEJORANDO)
+    +ql(L+7,B-7,'start','REZAGADOS','rgba(239,236,227,0.55)')+ql(R-7,B-7,'end','SALE $ ↘',RRG_COL.DEBILITANDOSE);
   var bub=s.map(function(p){
     var c=RRG_COL[p.quadrant]||'#888',bx=X(p.x),by=Y(p.y),code=SEC_ABBR[p.sym]||p.sym;
     return '<g><circle cx="'+bx+'" cy="'+by+'" r="14" fill="'+c+'" fill-opacity="0.18" stroke="'+c+'" stroke-width="1.6"/>'
@@ -722,14 +759,14 @@ function loadRotation(){
     if(!s.length){ g.innerHTML='<div class="stub">Rotación no disponible ahora mismo.</div>'; return; }
     var bk={LIDER:[],MEJORANDO:[],DEBILITANDOSE:[],REZAGADO:[]};
     s.forEach(function(x){ (bk[x.quadrant]||(bk[x.quadrant]=[])).push(x.name); });
-    function row(k,lbl,col,flujo,fcol){ var v=bk[k]&&bk[k].length?bk[k].join(' · '):'—'; return '<tr><td class="rb-fase" style="color:'+col+'">'+lbl+'</td><td class="rb-sec">'+v+'</td><td class="rb-flujo" style="color:'+fcol+'">'+flujo+'</td></tr>'; }
-    g.innerHTML=renderRRG(s)+'<table class="rot-table"><thead><tr><th>Fase</th><th>Sectores</th><th class="r">Flujo&nbsp;$</th></tr></thead><tbody>'
-      +row('LIDER','Líderes','#2EE8A4','Entrante','var(--up)')
-      +row('MEJORANDO','Ganando momentum','#C9A84C','Entrante','var(--up)')
-      +row('DEBILITANDOSE','Perdiendo momentum','#FF6B81','Saliente','var(--down)')
-      +row('REZAGADO','Rezagados','#B197FC','Saliente','var(--down)')
+    function row(k,lbl,meaning,col){ var v=bk[k]&&bk[k].length?bk[k].join(' · '):'—'; return '<tr><td class="rb-fase"><span class="rb-lbl" style="color:'+col+'">'+lbl+'</span><span class="rb-mean">'+meaning+'</span></td><td class="rb-sec">'+v+'</td></tr>'; }
+    g.innerHTML=renderRRG(s)+'<table class="rot-table"><thead><tr><th>Fase · a dónde va el dinero</th><th>Sectores</th></tr></thead><tbody>'
+      +row('LIDER','● Líderes','ya fuertes y con impulso','#2EE8A4')
+      +row('MEJORANDO','↗ Entra dinero','ganando fuerza — el capital rota HACIA aquí','#C9A84C')
+      +row('DEBILITANDOSE','↘ Sale dinero','perdiendo fuerza — el capital se retira','#B197FC')
+      +row('REZAGADO','○ Rezagados','débiles y sin interés del mercado','rgba(239,236,227,0.6)')
       +'</tbody></table>';
-    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent='vs '+(d.benchmark||'SPY')+' · fuerza 3m / momentum';
+    var sub=document.getElementById('rot-sub'); if(sub)sub.textContent='vs '+(d.benchmark||'SPY')+' · fuerza 3m × momentum';
   }).catch(function(){ var g=document.getElementById('rot-body'); if(g)g.innerHTML='<div class="stub">Rotación no disponible ahora.</div>'; });
 }
 
