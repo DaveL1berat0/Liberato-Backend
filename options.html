@@ -99,10 +99,12 @@ a{color:inherit;text-decoration:none;}
 .env-rs-col span{display:block;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;}
 .env-rs-col.risk span{color:var(--risk);} .env-rs-col.sup span{color:var(--up);}
 .env-rs-col b{font-size:12.5px;color:var(--ink);font-weight:600;line-height:1.3;}
-.env-grid{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:22px;align-items:start;}
 .env-col{min-width:0;}
-@media(max-width:1000px){.env-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:680px){.env-grid{grid-template-columns:1fr;}}
+.env-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--hair);align-items:start;}
+.env-topL{min-width:0;}
+.env-topR{min-width:0;border-left:1px solid var(--hair);padding-left:24px;}
+.env-grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:start;}
+@media(max-width:900px){.env-top{grid-template-columns:1fr;} .env-topR{border-left:none;padding-left:0;border-top:1px solid var(--hair);padding-top:16px;} .env-grid2{grid-template-columns:1fr;}}
 .mrow{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--gap);align-items:start;}
 @media(max-width:900px){.mrow{grid-template-columns:1fr;}}
 .posture-inpanel{padding:16px 18px;border-top:1px solid var(--hair);}
@@ -228,27 +230,28 @@ a{color:inherit;text-decoration:none;}
 <div class="owrap">
   <div class="flow">
 
-    <!-- ① AI MARKET BRIEF -->
-    <section class="panel brief step">
-      <div class="p-hd"><span class="p-ttl"><span class="stepn">1</span> AI Market Brief <span class="info-i" title="Lectura macro por IA (Groq) que narra EXCLUSIVAMENTE las cifras reales del Environment y el scanner. No inventa datos (Regla #1). El titular y los chips resumen; el análisis completo se expande.">&#9432;</span></span><span class="p-sub" id="brief-sub">—</span></div>
-      <div class="p-bd" id="brief-body"><p class="loading">Analizando el entorno macro…</p></div>
-    </section>
-    <div class="flow-arrow">↓</div>
-
-    <!-- ② ENVIRONMENT (+ curva como evidencia) -->
+    <!-- ① ENVIRONMENT (cockpit macro · AI Brief integrado arriba) -->
     <section class="panel step">
-      <div class="p-hd"><span class="p-ttl"><span class="stepn">2</span> Environment <span class="info-i" title="Cockpit macro. Puntuación 0-100 del entorno para asumir riesgo de largo plazo (LEAPS): 9 motores reales de FRED ponderados. Se destacan auto los 2 riesgos y 2 soportes. Incluye como evidencia del mismo bloque la curva del Tesoro y la rotación sectorial (a dónde se mueve el dinero).">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
+      <div class="p-hd"><span class="p-ttl"><span class="stepn">1</span> Environment <span class="info-i" title="Cockpit macro. Puntuación 0-100 del entorno para asumir riesgo de largo plazo (LEAPS): 9 motores reales de FRED ponderados. Se destacan auto los 2 riesgos y 2 soportes. Integra la lectura de IA, la curva del Tesoro y la rotación sectorial como evidencia del mismo bloque.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
       <div class="p-bd">
-        <div class="env-hero">
-          <div class="env-hero-g" id="env-hero-g"></div>
-          <div class="env-hero-meta">
-            <div class="cls" id="env-cls">—</div>
-            <div class="cls-d" id="env-cls-d">Cargando motores macro…</div>
-            <div class="cov" id="env-cov">—</div>
+        <div class="env-top">
+          <div class="env-topL">
+            <div class="env-hero">
+              <div class="env-hero-g" id="env-hero-g"></div>
+              <div class="env-hero-meta">
+                <div class="cls" id="env-cls">—</div>
+                <div class="cls-d" id="env-cls-d">Cargando motores macro…</div>
+                <div class="cov" id="env-cov">—</div>
+              </div>
+            </div>
+            <div class="env-rs" id="env-rs"></div>
+          </div>
+          <div class="env-topR">
+            <div class="sec-label"><span>◆ AI Market Brief <span class="info-i" title="Lectura macro por IA (Groq) que narra EXCLUSIVAMENTE las cifras reales del Environment y el scanner. No inventa datos (Regla #1). El análisis completo se expande.">&#9432;</span></span><span id="brief-sub" style="font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.04em;">—</span></div>
+            <div id="brief-body"><p class="loading">Analizando el entorno macro…</p></div>
           </div>
         </div>
-        <div class="env-rs" id="env-rs"></div>
-        <div class="env-grid">
+        <div class="env-grid2">
           <div class="env-col">
             <div class="sec-label"><span>9 drivers macro</span></div>
             <div class="gg" id="env-gg"></div>
@@ -256,9 +259,7 @@ a{color:inherit;text-decoration:none;}
               <div class="env-conflicts-t">⚠ Señales en conflicto</div>
               <ul id="env-conflicts-list"></ul>
             </div>
-          </div>
-          <div class="env-col">
-            <div class="sec-label"><span>Curva de rendimientos · US Treasury</span><span class="yc-spread" id="yc-spread">—</span></div>
+            <div class="sec-label" style="margin-top:18px;"><span>Curva de rendimientos · US Treasury</span><span class="yc-spread" id="yc-spread">—</span></div>
             <div class="yc-svg" id="yc-svg"><div class="stub">Cargando curva…</div></div>
             <div class="yc-legend" id="yc-legend"></div>
           </div>
@@ -276,7 +277,7 @@ a{color:inherit;text-decoration:none;}
       <section class="panel step">
         <div class="p-hd">
           <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
-            <span class="p-ttl"><span class="stepn">3</span> Market <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span> <span class="info-i" title="¿Dónde está el underlying dentro de su estructura? Velas diarias/semanales/mensuales REALES (Yahoo). Contexto: máximo del periodo, pullback y % para recuperar el ATH. Herramientas de dibujo a la izquierda. Verde=alcista, morado=bajista.">&#9432;</span></span>
+            <span class="p-ttl"><span class="stepn">2</span> Market <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span> <span class="info-i" title="¿Dónde está el underlying dentro de su estructura? Velas diarias/semanales/mensuales REALES (Yahoo). Contexto: máximo del periodo, pullback y % para recuperar el ATH. Herramientas de dibujo a la izquierda. Verde=alcista, morado=bajista.">&#9432;</span></span>
             <span id="chart-price" style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink-3);"></span>
           </div>
           <div class="chart-tf" id="chart-tf"></div>
@@ -294,7 +295,7 @@ a{color:inherit;text-decoration:none;}
         </div>
       </section>
       <section class="panel step lc-panel">
-        <div class="p-hd"><span class="p-ttl"><span class="stepn">4</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
+        <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
         <div class="p-bd">
          <div class="lc-card">
           <div class="lc-grid">
@@ -330,7 +331,7 @@ a{color:inherit;text-decoration:none;}
 
     <!-- ⑤ OPPORTUNITY SCANNER (rectangular · ancho completo) -->
     <section class="panel step">
-      <div class="p-hd"><span class="p-ttl"><span class="stepn">5</span> Opportunity Scanner <span class="info-i" title="Empresas del Nasdaq con los 8 pilares fundamentales INTACTOS pero a DESCUENTO — para decidir si vale la pena el LEAP. Score = promedio de 8 pilares reales de Finnhub (crecimiento ingresos/EPS, márgenes neto/bruto, ROE, balance, liquidez, valoración). Cada fila se descompone en Fund / Val / Bal / Precio. Umbrales: DISLOCACIÓN = score≥70 y ≥12% bajo el máximo de 52 semanas; PULLBACK = score≥65 y ≥6% bajo; DÉBIL = score<45; NEUTRAL = resto (se auditará con metodología). Click en una fila → carga el ticker en Market + Structure.">&#9432;</span></span><span class="p-sub" id="scan-sub">—</span></div>
+      <div class="p-hd"><span class="p-ttl"><span class="stepn">4</span> Opportunity Scanner <span class="info-i" title="Empresas del Nasdaq con los 8 pilares fundamentales INTACTOS pero a DESCUENTO — para decidir si vale la pena el LEAP. Score = promedio de 8 pilares reales de Finnhub (crecimiento ingresos/EPS, márgenes neto/bruto, ROE, balance, liquidez, valoración). Cada fila se descompone en Fund / Val / Bal / Precio. Umbrales: DISLOCACIÓN = score≥70 y ≥12% bajo el máximo de 52 semanas; PULLBACK = score≥65 y ≥6% bajo; DÉBIL = score<45; NEUTRAL = resto (se auditará con metodología). Click en una fila → carga el ticker en Market + Structure.">&#9432;</span></span><span class="p-sub" id="scan-sub">—</span></div>
       <div class="p-bd" style="padding:0;"><div id="scan-body"><div class="stub">Escaneando oportunidades…</div></div></div>
     </section>
   </div>
@@ -481,8 +482,7 @@ function renderBrief(d, fullHtml, isAI){
   var interp='—';
   if(rsd){ interp=rsd.risks.map(function(m){return m.name;}).join(' y ')+' presionan; '+rsd.sups[0].name+' sostiene.'; }
   var chips=''; if(rsd){ chips=rsd.risks.map(function(m){return '<span class="chip warn">'+m.name+' ⚠</span>';}).join('')+'<span class="chip ok">'+rsd.sups[0].name+' ✓</span>'; }
-  b.innerHTML='<div class="brief-head"><span class="brief-score" style="color:'+col+'">'+(d.classification||'—')+' · '+Math.round(d.score)+'</span><span class="brief-100">/100</span></div>'
-    +'<p class="brief-1l">'+interp+'</p>'
+  b.innerHTML='<p class="brief-1l" style="margin-top:2px;">'+interp+'</p>'
     +'<div class="brief-stance">LEAPS stance: <b>'+stanceFor(d.score)+'</b></div>'
     +'<div class="brief-chips">'+chips+'</div>'
     +'<button class="brief-more" onclick="toggleBriefFull()">+ análisis '+(isAI?'IA ':'')+'completo</button>'
