@@ -1547,7 +1547,7 @@ nav { max-width: 100%; }
     <span class="menu-item-text">Earnings</span>
     <span class="menu-item-badge">Miembros</span>
   </a>
-  <a href="#pro-plan" class="menu-item" data-app="soon" onclick="irAPlanes(event)">
+  <a href="#pro-plan" class="menu-item" data-app="options.html" onclick="irAPlanes(event)">
     <span class="menu-item-lock" style="font-size:13px;color:rgba(201,168,76,0.55);">&#128274;</span>
     <span class="menu-item-text">Options</span>
     <span class="menu-item-badge">Miembros</span>
@@ -1676,7 +1676,7 @@ nav { max-width: 100%; }
     <li><a href="#pro-plan" class="nav-locked" data-app="daytrading_preview.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Day Trading</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="journal.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Journal</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="earnings.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Earnings</a></li>
-    <li><a href="#pro-plan" class="nav-locked" data-app="soon" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Options</a></li>
+    <li><a href="#pro-plan" class="nav-locked" data-app="options.html" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Options</a></li>
     <li><a href="#pro-plan" class="nav-locked" data-app="soon" onclick="irAPlanes(event)"><span class="lock-icon">&#128274;</span>Educación</a></li>
   </ul>
   <div class="nav-right">
@@ -2129,8 +2129,8 @@ function lbcUnlockItem(a){
 }
 
 // CHROME de miembro: muestra el ícono de perfil + nombre y oculta Login/Unirse
-// y el toggle de idioma. NO abre candados (eso depende de is_premium). Options y
-// Educación quedan siempre en modo "soon".
+// y el toggle de idioma. NO abre candados (eso depende de is_premium). Educación
+// queda en modo "soon" (Options ya es una pestaña premium real).
 function lbcShowMemberChrome(){
   var acct=document.getElementById('nav-mem-acct'); if(acct)acct.style.display='inline-flex';
   var lg=document.getElementById('nav-login-btn'); if(lg)lg.style.display='none';
@@ -2140,7 +2140,7 @@ function lbcShowMemberChrome(){
   var cj=document.getElementById('menu-cta-join'); if(cj)cj.style.display='none';
   var cm=document.getElementById('menu-cta-member'); if(cm)cm.style.display='';
   try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');lbcPaintNavName((s&&s.name)||localStorage.getItem('lbc_user_name')||'');}catch(e){}
-  // Options/Educación → "soon" (siempre cerrados, para cualquier miembro).
+  // Educación → "soon" (siempre cerrado, para cualquier miembro).
   var soon=document.querySelectorAll('.nav-desktop-links a[data-app="soon"], .menu-drawer a.menu-item[data-app="soon"]');
   Array.prototype.forEach.call(soon,lbcUnlockItem);
 }
