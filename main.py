@@ -2104,7 +2104,9 @@ async def refresh_environment():
            "MORTGAGE30US", "HOUST", "UNRATE", "INDPRO", "DCOILWTICO",
            "BAMLH0A0HYM2", "NFCI",
            # Curva de rendimientos real (para dibujarla): tramos por vencimiento
-           "DGS3MO", "DGS2", "DGS5", "DGS30"]
+           "DGS3MO", "DGS2", "DGS5", "DGS30",
+           # Curva de INFLACIÓN esperada (breakevens TIPS) para superponerla
+           "T5YIE", "T10YIE", "T30YIEM"]
     results = await asyncio.gather(*[_fred_obs(i, 26) for i in ids], return_exceptions=True)
     for i, sid in enumerate(ids):
         ser[sid] = results[i] if not isinstance(results[i], Exception) else []
@@ -2258,12 +2260,25 @@ async def refresh_environment():
     if _yc_motor is not None:
         _yc_motor["curve"] = curve
 
+    # Curva de INFLACIÓN esperada (breakevens TIPS) — se superpone a la de rendimientos.
+    # El hueco entre ambas (nominal − breakeven) es el rendimiento REAL de cada tramo.
+    infl_curve = []
+    for lbl, sid, yrs in [("5Y", "T5YIE", 5), ("10Y", "T10YIE", 10), ("30Y", "T30YIEM", 30)]:
+        v = last(sid)
+        if v is not None:
+            pt = {"label": lbl, "yrs": yrs, "yield": round(v, 2)}
+            _curve_cache["INF" + lbl] = pt
+            infl_curve.append(pt)
+        elif "INF" + lbl in _curve_cache:
+            infl_curve.append(_curve_cache["INF" + lbl])
+
     data = {
         "score": total,
         "classification": _classify(total),
         "motors": motors,
         "conflicts": conflicts,
         "yield_curve": curve,
+        "inflation_curve": infl_curve,
         "coverage": f"{len(avail)}/{len(motors)}",
         "as_of": datetime.now(NY).isoformat(),
         "source": "FRED",

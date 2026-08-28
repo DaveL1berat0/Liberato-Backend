@@ -74,6 +74,11 @@ a{color:inherit;text-decoration:none;}
 .sec-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
 /* ── ① AI BRIEF (titular + chips) ── */
 .brief-1l{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin-top:8px;max-width:820px;}
+.brief-narr{margin-top:4px;max-width:840px;}
+.brief-narr .bl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:12px 0 3px;}
+.brief-narr .bl:first-child{margin-top:0;}
+.brief-narr p{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 4px;}
+.brief-narr b{color:var(--ink);font-weight:600;}
 .brief-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
 .chip{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.03em;padding:4px 10px;border-radius:999px;border:0.5px solid var(--hair);}
 .chip.warn{color:var(--risk);background:rgba(255,107,129,0.08);border-color:rgba(255,107,129,0.25);}
@@ -98,7 +103,8 @@ a{color:inherit;text-decoration:none;}
 .env-hero-g{flex:0 0 150px;width:150px;}
 .env-hero-g svg{width:100%;height:auto;display:block;}
 .env-hero-meta{min-width:0;}
-.env-hero-meta .cls{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1.15;}
+.env-hero-meta .cls-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.04em;color:var(--ink-3);margin-bottom:5px;}
+.env-hero-meta .cls{font-family:var(--mono);font-size:18px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;line-height:1.15;}
 .env-hero-meta .cls-d{font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.45;max-width:520px;}
 .env-hero-meta .cov{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:8px;letter-spacing:0.05em;}
 .env-rs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px;}
@@ -136,6 +142,7 @@ a{color:inherit;text-decoration:none;}
 .yc-spread{font-weight:700;font-family:var(--mono);font-size:10.5px;}
 .yc-legend{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:8px;letter-spacing:0.03em;}
 .yc-legend .yc-next{color:var(--ink-3);} .yc-legend .yc-next b{color:var(--gold-2);font-weight:700;}
+.yc-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 /* ── ③ MARKET (chart + contexto) ── */
 .chart-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);border-bottom:1px solid var(--hair);}
 @media(max-width:700px){.chart-stats{grid-template-columns:repeat(2,1fr);}}
@@ -442,6 +449,7 @@ a{color:inherit;text-decoration:none;}
             <div class="env-hero">
               <div class="env-hero-g" id="env-hero-g"></div>
               <div class="env-hero-meta">
+                <div class="cls-eyebrow">¿El macro acompaña para abrir un LEAP ahora?</div>
                 <div class="cls" id="env-cls">—</div>
                 <div class="cls-d" id="env-cls-d">Cargando motores macro…</div>
                 <div class="cov" id="env-cov">—</div>
@@ -610,7 +618,7 @@ function envRiskSupport(d){
 function renderEnv(d){
   if(!d||typeof d!=='object'){ return; }
   document.getElementById('env-hero-g').innerHTML=gauge(d.score,true);
-  var cl=document.getElementById('env-cls'); cl.textContent=clsLabel(d.classification||''); cl.style.color=classColor(d.classification||'');
+  var cl=document.getElementById('env-cls'); cl.innerHTML=clsLabel(d.classification||'')+(d.score!=null?(' <span style="color:var(--ink-4);font-weight:400;">· '+Math.round(d.score)+'/100</span>'):''); cl.style.color=classColor(d.classification||'');
   document.getElementById('env-cls-d').textContent=classDesc(d.classification||'');
   document.getElementById('env-cov').textContent='Cobertura '+(d.coverage||'—')+' motores · ponderado';
   document.getElementById('env-sub').textContent='FRED · '+(d.coverage||'');
@@ -628,13 +636,14 @@ function renderEnv(d){
   }).join('');
   var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
   if(cf&&cl2){ if(d.conflicts&&d.conflicts.length){ cf.style.display='block'; cl2.innerHTML=d.conflicts.map(function(x){return '<li>'+x+'</li>';}).join(''); } else cf.style.display='none'; }
-  renderYieldCurve(d.yield_curve);
+  renderYieldCurve(d.yield_curve, d.inflation_curve);
 }
-function renderYieldCurve(curve){
+function renderYieldCurve(curve, infl){
   var host=document.getElementById('yc-svg'); if(!host)return;
   if(!curve||curve.length<3){ host.innerHTML='<div class="stub">Curva no disponible.</div>'; return; }
+  infl=(infl||[]).filter(function(p){return p&&p.yield!=null;});
   var W=560,H=210,padL=44,padR=18,padT=14,padB=30;
-  var ys=curve.map(function(p){return p.yield;});
+  var ys=curve.map(function(p){return p.yield;}).concat(infl.map(function(p){return p.yield;}));
   var mn=Math.min.apply(null,ys),mx=Math.max.apply(null,ys),rng=(mx-mn)||1;
   mn=Math.floor((mn-rng*0.2)*10)/10; mx=Math.ceil((mx+rng*0.2)*10)/10; rng=mx-mn;
   var pw=W-padL-padR,ph=H-padT-padB,n=curve.length,xw=pw/(n-1);
@@ -654,6 +663,16 @@ function renderYieldCurve(curve){
     dots+='<text x="'+X(i).toFixed(1)+'" y="'+(Y(p.yield)-8).toFixed(1)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="rgba(239,236,227,0.82)">'+p.yield.toFixed(2)+'</text>';
     xlab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="rgba(239,236,227,0.55)">'+p.label+'</text>';
   });
+  // Curva de INFLACIÓN esperada (breakevens) en AZUL, alineada por vencimiento con la de tasas
+  var INF_COL='#5B9DF9', inflSvg='';
+  if(infl.length){
+    var labIdx={}; curve.forEach(function(p,i){labIdx[p.label]=i;});
+    var ip=infl.filter(function(p){return labIdx[p.label]!=null;}).map(function(p){return {x:X(labIdx[p.label]),y:Y(p.yield),v:p.yield};});
+    if(ip.length){
+      inflSvg='<polyline points="'+ip.map(function(p){return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+'" fill="none" stroke="'+INF_COL+'" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round" stroke-linecap="round"/>'
+        +ip.map(function(p){return '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="2.6" fill="'+INF_COL+'"/>'+'<text x="'+p.x.toFixed(1)+'" y="'+(p.y+13).toFixed(1)+'" text-anchor="middle" font-family="DM Mono,monospace" font-size="8.5" fill="'+INF_COL+'">'+p.v.toFixed(1)+'</text>';}).join('');
+    }
+  }
   host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'
     +'<defs><linearGradient id="ycg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+col+'" stop-opacity="0.18"/><stop offset="1" stop-color="'+col+'" stop-opacity="0"/></linearGradient></defs>'
     +grid+yaxis
@@ -661,10 +680,12 @@ function renderYieldCurve(curve){
     +'<line x1="'+padL+'" y1="'+(padT+ph)+'" x2="'+(W-padR)+'" y2="'+(padT+ph)+'" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>'
     +'<path d="'+area+'" fill="url(#ycg)"/>'
     +'<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>'
-    +dots+xlab+'</svg>';
+    +dots+inflSvg+xlab+'</svg>';
   var sp=document.getElementById('yc-spread');
   if(sp){ if(y2&&y10){ var dd=y10.yield-y2.yield; sp.textContent='10Y-2Y '+(dd>=0?'+':'')+dd.toFixed(2)+'%'+(inv?' · INVERTIDA':''); sp.style.color=inv?'var(--risk)':'var(--up)'; } else sp.textContent=''; }
-  var lg=document.getElementById('yc-legend'); if(lg){ var slope=inv?'Curva invertida — antesala histórica de recesión':'Pendiente normal · plazo (X) · tasa % (Y)'; lg.innerHTML='<span class="yc-slope">'+slope+'</span><span class="yc-next" id="yc-next"></span>'; loadNextRateEvent(); }
+  var lg=document.getElementById('yc-legend'); if(lg){ var slope=inv?'Curva invertida — antesala histórica de recesión':'Pendiente normal';
+    var leg='<span class="yc-slope"><span class="yc-dot" style="background:'+col+'"></span>Tasa nominal'+(infl.length?(' &nbsp;<span class="yc-dot" style="background:'+INF_COL+'"></span>Inflación esperada'):'')+' · '+slope+'</span>';
+    lg.innerHTML=leg+'<span class="yc-next" id="yc-next"></span>'; loadNextRateEvent(); }
 }
 
 // Próximo evento macro que puede MOVER la curva (Fed/CPI/PCE/empleo). Se muestra junto a la leyenda.
@@ -712,14 +733,14 @@ function loadBrief(){
 function renderBrief(d, fullHtml, isAI){
   var b=document.getElementById('brief-body'); if(!b)return;
   if(!d||d.score==null){ b.innerHTML='<p class="loading">Datos macro insuficientes para el brief.</p>'; return; }
-  var rsd=envRiskSupport(d), col=classColor(d.classification||'');
-  var interp='—';
-  if(rsd){ interp=rsd.risks.map(function(m){return m.name;}).join(' y ')+' presionan; '+rsd.sups[0].name+' sostiene.'; }
+  var rsd=envRiskSupport(d);
   var chips=''; if(rsd){ chips=rsd.risks.map(function(m){return '<span class="chip warn">'+m.name+' ⚠</span>';}).join('')+'<span class="chip ok">'+rsd.sups[0].name+' ✓</span>'; }
-  BRIEF_FALLBACK=fullHtml||'';
-  b.innerHTML='<p class="brief-1l" style="margin-top:2px;">'+interp+'</p>'
+  // El CUERPO del brief muestra la narración de IA cuando la hay; si no, la lectura determinista (siempre con dato real).
+  var body=fullHtml||detHtml(d);
+  BRIEF_FALLBACK=body;
+  b.innerHTML='<div class="brief-narr">'+body+'</div>'
     +'<div class="brief-chips">'+chips+'</div>'
-    +'<button class="brief-more" id="brief-more-btn" onclick="toggleBriefFull()">▾ Investment Committee Brief</button>'
+    +'<button class="brief-more" id="brief-more-btn" onclick="toggleBriefFull()">▾ Investment Committee Brief · análisis completo</button>'
     +'<div class="brief-full" id="brief-full" style="display:none;"></div>';
 }
 var COMMITTEE_LOADED=false, BRIEF_FALLBACK='';
