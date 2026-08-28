@@ -2466,29 +2466,36 @@ async def refresh_leaps_brief():
     usr_msg = f"Datos macro reales de ahora mismo:\n\n{ctx}\n\nEscribe el brief en el formato exacto."
 
     budget_charge("groq", 1)
+    # Intenta el modelo LIGERO primero; si falla (p.ej. no está en el tier gratuito), cae al
+    # modelo del committee (qwen, probado). Así el brief SIEMPRE narra si Groq está arriba.
+    models = [GROQ_BRIEF_MODEL] + ([GROQ_COMMITTEE_MODEL] if GROQ_COMMITTEE_MODEL != GROQ_BRIEF_MODEL else [])
+    last_status = None
     try:
-        payload = {"model": GROQ_BRIEF_MODEL, "max_tokens": 420, "temperature": 0.5,
-                   "messages": [{"role": "system", "content": sys_msg},
-                                {"role": "user", "content": usr_msg}]}
-        if GROQ_BRIEF_MODEL.startswith("qwen"):   # reasoning_effort solo lo aceptan los qwen
-            payload["reasoning_effort"] = "none"
         async with httpx.AsyncClient(timeout=20) as client:
-            r = await client.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json=payload)
-        if r.status_code == 200:
-            _brief_cache["text"] = r.json()["choices"][0]["message"]["content"].strip()
-            _brief_cache["ts"] = time.time()
-            _brief_cache["score"] = env.get("score")
-            _brief_cache["classification"] = env.get("classification")
-            cache["health"]["groq"] = "online"
-            _brief_cache["cooldown"] = 0.0
-            print("[leaps-brief] ok")
-        else:
-            # 429 (cuota) u otro error → back-off para no martillear Groq (30 min si 429, 10 min resto)
-            _brief_cache["cooldown"] = time.time() + (1800 if r.status_code == 429 else 600)
-            print(f"[leaps-brief] groq {r.status_code} — cooldown")
+            for mdl in models:
+                payload = {"model": mdl, "max_tokens": 420, "temperature": 0.5,
+                           "messages": [{"role": "system", "content": sys_msg},
+                                        {"role": "user", "content": usr_msg}]}
+                if mdl.startswith("qwen"):   # reasoning_effort solo lo aceptan los qwen
+                    payload["reasoning_effort"] = "none"
+                r = await client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                    json=payload)
+                last_status = r.status_code
+                if r.status_code == 200:
+                    _brief_cache["text"] = r.json()["choices"][0]["message"]["content"].strip()
+                    _brief_cache["ts"] = time.time()
+                    _brief_cache["score"] = env.get("score")
+                    _brief_cache["classification"] = env.get("classification")
+                    _brief_cache["model"] = mdl
+                    cache["health"]["groq"] = "online"
+                    _brief_cache["cooldown"] = 0.0
+                    print(f"[leaps-brief] ok ({mdl})")
+                    return
+                print(f"[leaps-brief] groq {r.status_code} con {mdl} — probando siguiente")
+        # ningún modelo respondió 200 → back-off (30 min si 429, 10 min resto)
+        _brief_cache["cooldown"] = time.time() + (1800 if last_status == 429 else 600)
     except Exception as e:
         _brief_cache["cooldown"] = time.time() + 600
         print(f"[leaps-brief] error: {e}")
@@ -2509,7 +2516,7 @@ async def get_leaps_brief():
         try: await refresh_leaps_brief()
         except Exception as e: print(f"[leaps-brief] gen: {e}")
     env = _env_cache.get("data") or {}
-    return {"brief": _brief_cache["text"], "model": f"{GROQ_BRIEF_MODEL} (Groq)",
+    return {"brief": _brief_cache["text"], "model": f"{_brief_cache.get('model') or GROQ_BRIEF_MODEL} (Groq)",
             "generated_at": (datetime.fromtimestamp(_brief_cache["ts"], NY).isoformat()
                              if _brief_cache["ts"] else None),
             "score": env.get("score"), "classification": env.get("classification")}
