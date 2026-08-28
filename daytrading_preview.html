@@ -1540,7 +1540,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <!-- ════ BLOCK 2 · GAMMA FIELD ════ -->
     <section class="g" aria-label="Gamma Field">
       <div class="g-hd">
-        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Mapa de zonas de liquidez del posicionamiento en opciones: Put Wall (soporte), Gamma Flip (frontera de régimen), Max Pain y Call Wall (resistencia).">&#9432;</span></div><div class="g-sub">Liquidity Zones · Price Flow</div></div></div>
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Niveles de MAYOR GAMMA POR VOLUMEN (posicionamiento intradía fresco de hoy, el que domina el movimiento — menos ruido que por OI): Put Wall (soporte), Gamma Flip (frontera de régimen) y Call Wall (resistencia). Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Gamma por volumen · Liquidity Zones</div></div></div>
         <div class="g-hd-r">
           <button class="gf-0dte" id="gf-0dte" onclick="toggle0dte()" title="0DTE = niveles del vencimiento de HOY: la gamma que domina el movimiento intradía (para scalping). Apagado = vencimiento COMPLETO (por OI), el mapa estructural del día. Ambos de GexBot.">0DTE</button>
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
@@ -1563,8 +1563,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
         <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
         <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
-        <div class="iro"><span class="iro-k">Call Wall vol <span class="info-i" title="Muro de resistencia por VOLUMEN de hoy (posicionamiento intradía fresco), distinto del muro por OI (estructural). Fuente GexBot.">&#9432;</span></span><span class="iro-v up" id="iro-callvol">—</span></div>
-        <div class="iro"><span class="iro-k">Put Wall vol <span class="info-i" title="Muro de soporte por VOLUMEN de hoy (posicionamiento intradía fresco), distinto del muro por OI (estructural). Fuente GexBot.">&#9432;</span></span><span class="iro-v down" id="iro-putvol">—</span></div>
       </div>
       <!-- Session Momentum eliminado (Dave): el GEX profile es el hero de esta sección -->
       <div class="cxh" id="cx-head">
@@ -1970,6 +1968,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         S.skew=(typeof d.skew==='number')?d.skew:S.skew;
         S.callWallVol=(typeof d.call_wall_vol==='number')?cvNQ(d.call_wall_vol):S.callWallVol;
         S.putWallVol=(typeof d.put_wall_vol==='number')?cvNQ(d.put_wall_vol):S.putWallVol;
+        // ── PRIMARIO POR VOLUMEN (Dave): el Gamma Field muestra la gamma por VOLUMEN (intradía
+        //    fresco, menos ruido). Si el volumen no está (off-hours → 0), se queda el de OI ya puesto.
+        if(S.callWallVol){ S.callWall=S.callWallVol; try{localStorage.setItem(LS('callWall'),String(S.callWall));S.callWallReal=true;}catch(e){} }
+        if(S.putWallVol){ S.putWall=S.putWallVol; try{localStorage.setItem(LS('putWall'),String(S.putWall));S.putWallReal=true;}catch(e){} }
         S.minDte=(d.min_dte!=null)?d.min_dte:S.minDte;
         if(d.zero&&typeof d.zero==='object'){
           S.zero={
@@ -2490,7 +2492,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(_mPut)   levels.push({type:'put',  price:_mPut,  label:'Put Wall'+(_z0?' 0DTE':'')});
     if(_mFlip)  levels.push({type:'flip', price:_mFlip, label:'Gamma Flip'+(_z0?' 0DTE':'')});
     if(_mCall)  levels.push({type:'call', price:_mCall,  label:'Call Wall'+(_z0?' 0DTE':'')});
-    if(S.maxPain)   levels.push({type:'maxpain', price:S.maxPain, label:'Max Pain'});
+    // Max Pain retirado del mapa (Dave): es un nivel por OI, no gamma por volumen → menos ruido.
     // VWAP removido del Gamma Field (a pedido) para reducir carga visual.
     // Sigue disponible en el gráfico de velas como línea de referencia.
     // ATR levels (when backend provides): push 'atr' type bands here
@@ -2651,20 +2653,22 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     // ── barras por strike (perfil real) ──
     var drew=0;
     if(ps){
-      var inRange=ps.filter(function(s){return typeof s.strike==='number'&&typeof s.gex==='number'&&s.strike>=b.lo&&s.strike<=b.hi;});
-      // SOLO los strikes de MAYOR OI (Dave): perfil limpio, no saturado. Se muestran
-      // los 3-6 más significativos (top ~10%) por |gex| (OI). Los 4 niveles clave se
-      // dibujan aparte con etiqueta.
-      var byOI=inRange.slice().sort(function(a,b){return Math.abs(b.gex)-Math.abs(a.gex);});
-      var keepN=Math.min(8,inRange.length);   // los 8 strikes de mayor OI (estético tipo profile)
-      var top=byOI.slice(0,keepN);
-      var maxAbs=top.length?Math.abs(top[0].gex):0;
+      // Gamma por VOLUMEN (Dave): el perfil usa gex_vol (intradía fresco, menos ruido).
+      // Si el volumen no está disponible (off-hours → todo 0), cae a la gamma por OI.
+      var useVol=ps.some(function(s){return Math.abs(s.gex_vol||0)>0;});
+      function G(s){ return useVol ? (s.gex_vol||0) : (s.gex||0); }
+      var inRange=ps.filter(function(s){return typeof s.strike==='number'&&s.strike>=b.lo&&s.strike<=b.hi&&Math.abs(G(s))>0;});
+      // SOLO los strikes de MAYOR GAMMA (por volumen): perfil limpio, no saturado.
+      var byG=inRange.slice().sort(function(a,b){return Math.abs(G(b))-Math.abs(G(a));});
+      var keepN=Math.min(8,inRange.length);   // los 8 strikes de mayor gamma (estético tipo profile)
+      var top=byG.slice(0,keepN);
+      var maxAbs=top.length?Math.abs(G(top[0])):0;
       if(maxAbs>0){
         top.forEach(function(s){
-          var a=Math.abs(s.gex);
+          var a=Math.abs(G(s));
           var w=clamp(Math.sqrt(Math.min(a/maxAbs,1))*46,8,46);  // escala raíz, mínimo visible
           var y=yForPrice(s.strike);
-          var pos=(s.gex>=0);
+          var pos=(G(s)>=0);
           var bar=document.createElement('div');
           bar.className='imap-pf-bar '+(pos?'pos':'neg');
           if(pos){bar.style.cssText='left:50%;width:'+w+'%;top:'+y+'%;';}

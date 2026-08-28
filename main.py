@@ -1026,15 +1026,16 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
     min_dte = j.get("min_dte")           # DTE del vencimiento más cercano (0 = hay 0DTE hoy)
     ts_src = j.get("timestamp")
 
-    # strikes: filas [precio, gex_vol, gex_oi, [priors]] → {strike, gex} usando gex_oi.
+    # strikes: filas [precio, gex_vol, gex_oi, [priors]] → {strike, gex(=oi), gex_vol}.
     # Signo: negativo = put side (morado), positivo = call side (verde). Ya en NQ.
+    # gex = por OI (estructural); gex_vol = por VOLUMEN (intradía fresco, el del Gamma Field).
     per_strike = []
     for row in (j.get("strikes") or []):
         try:
             if not isinstance(row, (list, tuple)) or len(row) < 3:
                 continue
-            strike = float(row[0]); gex_oi = float(row[2])
-            per_strike.append({"strike": strike, "gex": gex_oi})
+            strike = float(row[0]); gex_vol = float(row[1]); gex_oi = float(row[2])
+            per_strike.append({"strike": strike, "gex": gex_oi, "gex_vol": gex_vol})
         except (TypeError, ValueError):
             continue
 
