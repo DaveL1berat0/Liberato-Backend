@@ -455,6 +455,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-tag.call{color:var(--up);border-color:rgba(46,232,164,0.4);}
 .cx-tag.put{color:var(--down);border-color:rgba(177,151,252,0.4);}
 .cx-tag.flip{color:var(--gold);border-color:rgba(204,169,79,0.45);}
+.cx-tag.maxpain{color:#4FD6E0;border-color:rgba(79,214,224,0.4);}
+.cx-tag.near{animation:cxNearPulse 1.15s ease-in-out infinite;border-color:currentColor;}
+@keyframes cxNearPulse{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 11px -1px currentColor;}}
 @media(max-width:680px){#chart-tv{height:300px;}.cxh-px{font-size:14px;}.cxh-sym{font-size:11px;letter-spacing:0.1em;}.cxh-l{gap:9px;}}
 /* ── Herramientas de dibujo (overlay propio, sin APIs externas) ─────────────── */
 #cx-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
@@ -1540,31 +1543,15 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <!-- ════ BLOCK 2 · GAMMA FIELD ════ -->
     <section class="g" aria-label="Gamma Field">
       <div class="g-hd">
-        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Niveles clave + los strikes de MAYOR GAMMA POR VOLUMEN (posicionamiento intradía fresco de hoy, el que domina el movimiento — menos ruido que por OI): Put Wall (soporte), Gamma Flip (frontera de régimen), Call Wall (resistencia) y Max Pain, más el perfil de gamma por strike. Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Gamma por volumen · Liquidity Zones</div></div></div>
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Chart <span class="info-i" title="Velas de NQ + los niveles de gamma sobre el mismo chart: Call Wall (resistencia), Gamma Flip (régimen), Put Wall (soporte) y Max Pain, con badge de si el precio está arriba/abajo de cada uno. A la derecha, el histograma de gamma POR VOLUMEN por strike (dónde está el muro). Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Velas + gamma por volumen · todo en uno</div></div></div>
         <div class="g-hd-r">
           <button class="gf-0dte" id="gf-0dte" onclick="toggle0dte()" title="0DTE = niveles del vencimiento de HOY: la gamma que domina el movimiento intradía (para scalping). Apagado = vencimiento COMPLETO (por OI), el mapa estructural del día. Ambos de GexBot.">0DTE</button>
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
           <span class="g-live"><span class="bl"></span>Live</span>
         </div>
       </div>
-      <div class="imap" id="imap">
-        <div class="imap-grid"></div>
-        <div class="imap-axis"></div>
-        <!-- zones, lines, tags, values injected by renderMap() from levels[] -->
-        <!-- pressure bars -->
-        <div class="imap-press put" id="imap-press-put" style="left:50%;width:0;"></div>
-        <div class="imap-press call" id="imap-press-call" style="left:50%;width:0;"></div>
-        <!-- price particle -->
-        <div class="imap-ptag" id="imap-ptag" style="left:50%;">—</div>
-        <div class="imap-particle" id="imap-particle" style="left:50%;"></div>
-      </div>
-      <div class="imap-ro">
-        <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
-        <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
-        <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
-        <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
-      </div>
-      <!-- Session Momentum eliminado (Dave): el GEX profile es el hero de esta sección -->
+      <!-- Gamma Field (mapa #imap) FUSIONADO dentro del chart de velas: los niveles son priceLines
+           sobre las velas + el histograma de gamma se pinta en el canvas overlay. Readouts abajo. -->
       <div class="cxh" id="cx-head">
         <div class="cxh-l">
           <span class="cxh-sym">NQ Futures</span>
@@ -1590,6 +1577,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           <button class="cxd cxd-trash" data-tool="clear" title="Borrar dibujos"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l0.7 8.5h5.6l0.7-8.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
         <div class="cx-tags" id="cx-tags" aria-hidden="true"></div>
+      </div>
+      <div class="imap-ro">
+        <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
+        <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
+        <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
+        <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
       </div>
     </section>
 
@@ -2718,10 +2711,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }else{
       if(ic)ic.textContent='—'; if(ip)ip.textContent='—'; if(ipos)ipos.textContent='—';
     }
-    // Muros por VOLUMEN (posicionamiento intradía fresco de GexBot).
-    var icv=$('iro-callvol'),ipv=$('iro-putvol');
-    if(icv)icv.textContent=(typeof S.callWallVol==='number')?nfmt(S.callWallVol):'—';
-    if(ipv)ipv.textContent=(typeof S.putWallVol==='number')?nfmt(S.putWallVol):'—';
   }
   function renderMap(){ renderMapStatic(); renderMapLive(); }
 
@@ -2799,6 +2788,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(_cw!=null)lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
     if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:false,title:''});
     if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
+    if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:false,title:''});
     cxTagsSync();
   }
   // Toggle 0DTE: cambia los niveles mostrados entre vencimiento completo (OI) y 0DTE.
@@ -2813,8 +2803,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   var _cxTagDefs=[
     {k:'call',lbl:'CALL',get:function(){return _actCW();}},
     {k:'flip',lbl:'GAMMA',get:function(){return _actGF();}},
-    {k:'put', lbl:'PUT', get:function(){return _actPW();}}
+    {k:'put', lbl:'PUT', get:function(){return _actPW();}},
+    {k:'maxpain',lbl:'MAX PAIN',get:function(){return S.maxPain;}}
   ];
+  // Badge que dice si el PRECIO está arriba/abajo del nivel (lo que Dave quería ver de un vistazo).
+  function _tagBadge(k,v){
+    var p=S.price; if(typeof p!=='number'||p<1000||v==null) return '';
+    if(k==='flip') return p>=v?' · γ+ rango':' · γ− tend';
+    if(k==='call') return p<v?' · resist':' · roto ↑';
+    if(k==='put')  return p>v?' · soporte':' · roto ↓';
+    if(k==='maxpain') return ' · imán';
+    return '';
+  }
   function cxTagsSync(){
     var host=$('cx-tags');if(!host)return;
     _cxTagDefs.forEach(function(d){
@@ -2822,7 +2822,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(!el){el=document.createElement('span');el.className='cx-tag '+d.k;el.dataset.k=d.k;host.appendChild(el);}
       var v=d.get();
       if(v==null){el.classList.remove('on');el._px=null;return;}
-      var txt=d.lbl+' '+nfmt(v);
+      var txt=d.lbl+' '+nfmt(v)+_tagBadge(d.k,v);
       if(el.textContent!==txt)el.textContent=txt;
       el._px=v;
     });
@@ -2839,13 +2839,16 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         if(host&&series&&chart&&host.children.length){
           var sw=56;try{sw=chart.priceScale('right').width()||56;}catch(e){}
           var h=host.clientHeight;
+          var pY=null; if(typeof S.price==='number'&&S.price>1000){try{pY=series.priceToCoordinate(S.price);}catch(e){}}
           for(var i=0;i<host.children.length;i++){
             var el=host.children[i],p=el._px;
-            if(p==null){el.classList.remove('on');continue;}
+            if(p==null){el.classList.remove('on','near');continue;}
             var y=null;try{y=series.priceToCoordinate(p);}catch(e){}
-            if(y==null||y<10||y>h-14){el.classList.remove('on');continue;}
+            if(y==null||y<10||y>h-14){el.classList.remove('on','near');continue;}
             el.style.top=y+'px';el.style.right=(sw+8)+'px';
             el.classList.add('on');
+            // glow de proximidad: cuando el precio está cerca del nivel, la tag pulsa (reimplementa el viejo efecto del imap)
+            if(pY!=null&&Math.abs(y-pY)<34)el.classList.add('near');else el.classList.remove('near');
           }
         }
       }catch(e){}
@@ -2977,12 +2980,50 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }
     ctx.restore();
   }
+  // ── Histograma de gamma POR VOLUMEN alineado al eje de precio del chart (Dave: TODO EN UNO) ──
+  // Se pinta en el MISMO canvas overlay (#cx-ov), DEBAJO de los dibujos, en cada frame del RAF
+  // (sigue zoom/pan/resize sin suscripciones). Reutiliza gex_vol con fallback a gex. Se ancla al
+  // hueco derecho (rightOffset) para no tapar las velas. Verde=gamma+ (call), morado=gamma− (put).
+  function cxGexRender(ctx,cv){
+    var ps=Array.isArray(S.perStrike)?S.perStrike:null; if(!ps||!ps.length)return;
+    var useVol=ps.some(function(s){return Math.abs(s.gex_vol||0)>0;});
+    function G(s){ return useVol?(s.gex_vol||0):(s.gex||0); }
+    var W=cv.width/_dw.dpr, H=cv.height/_dw.dpr;
+    var sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
+    var x0=W-sw-3;                               // borde derecho del área de velas (antes del eje)
+    // Ancho máx = el HUECO real a la derecha (rightOffset ≈ 8 barras del barSpacing EFECTIVO),
+    // medido en vivo → nunca tapa las velas, ni en móvil ni con zoom (la vista fija 103 barras).
+    var bs=9; try{bs=Math.abs(chart.timeScale().logicalToCoordinate(1)-chart.timeScale().logicalToCoordinate(0))||9;}catch(e){}
+    var maxBarW=Math.max(16,Math.min(92,bs*8-4));
+    var rows=[];
+    ps.forEach(function(s){
+      var g=G(s); if(!g)return;
+      var y=null; try{y=series.priceToCoordinate(s.strike);}catch(e){}
+      if(y==null||y<8||y>H-8)return;
+      rows.push({y:y,g:g,a:Math.abs(g)});
+    });
+    if(!rows.length)return;
+    rows.sort(function(a,b){return b.a-a.a;});
+    if(rows.length>14)rows=rows.slice(0,14);
+    var maxAbs=rows[0].a||1;
+    ctx.save();
+    ctx.font='9px "DM Mono",ui-monospace,monospace'; ctx.textAlign='right';
+    ctx.fillStyle='rgba(232,228,217,0.30)'; ctx.fillText('γ vol', x0, 11);
+    rows.forEach(function(r){
+      var w=Math.max(5,Math.sqrt(Math.min(r.a/maxAbs,1))*maxBarW);
+      var pos=r.g>=0, strong=r.a>=maxAbs*0.55;
+      ctx.fillStyle=pos?('rgba(46,232,164,'+(strong?0.85:0.4)+')'):('rgba(177,151,252,'+(strong?0.85:0.4)+')');
+      ctx.fillRect(x0-w, r.y-2.5, w, 5);
+    });
+    ctx.restore();
+  }
   function cxDrawRender(){
     var cv=_dwCanvas();if(!cv)return;
     var ctx=cv.getContext('2d');
     ctx.setTransform(_dw.dpr,0,0,_dw.dpr,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
     if(!chart||!series)return;
+    try{cxGexRender(ctx,cv);}catch(e){}          // histograma primero → los dibujos quedan encima
     if(_dw.sel!=null&&_dw.sel>=_dw.items.length)_dw.sel=null;
     if(!_dw.items.length&&!_dw.draft)return;
     for(var i=0;i<_dw.items.length;i++){
