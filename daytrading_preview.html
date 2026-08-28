@@ -1540,7 +1540,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <!-- ════ BLOCK 2 · GAMMA FIELD ════ -->
     <section class="g" aria-label="Gamma Field">
       <div class="g-hd">
-        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Niveles de MAYOR GAMMA POR VOLUMEN (posicionamiento intradía fresco de hoy, el que domina el movimiento — menos ruido que por OI): Put Wall (soporte), Gamma Flip (frontera de régimen) y Call Wall (resistencia). Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Gamma por volumen · Liquidity Zones</div></div></div>
+        <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Field <span class="info-i" title="Niveles clave + los strikes de MAYOR GAMMA POR VOLUMEN (posicionamiento intradía fresco de hoy, el que domina el movimiento — menos ruido que por OI): Put Wall (soporte), Gamma Flip (frontera de régimen), Call Wall (resistencia) y Max Pain, más el perfil de gamma por strike. Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Gamma por volumen · Liquidity Zones</div></div></div>
         <div class="g-hd-r">
           <button class="gf-0dte" id="gf-0dte" onclick="toggle0dte()" title="0DTE = niveles del vencimiento de HOY: la gamma que domina el movimiento intradía (para scalping). Apagado = vencimiento COMPLETO (por OI), el mapa estructural del día. Ambos de GexBot.">0DTE</button>
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
@@ -2492,7 +2492,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(_mPut)   levels.push({type:'put',  price:_mPut,  label:'Put Wall'+(_z0?' 0DTE':'')});
     if(_mFlip)  levels.push({type:'flip', price:_mFlip, label:'Gamma Flip'+(_z0?' 0DTE':'')});
     if(_mCall)  levels.push({type:'call', price:_mCall,  label:'Call Wall'+(_z0?' 0DTE':'')});
-    // Max Pain retirado del mapa (Dave): es un nivel por OI, no gamma por volumen → menos ruido.
+    if(S.maxPain)   levels.push({type:'maxpain', price:S.maxPain, label:'Max Pain'});
     // VWAP removido del Gamma Field (a pedido) para reducir carga visual.
     // Sigue disponible en el gráfico de velas como línea de referencia.
     // ATR levels (when backend provides): push 'atr' type bands here
