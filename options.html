@@ -68,7 +68,9 @@ a{color:inherit;text-decoration:none;}
 .stepn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(201,168,76,0.14);border:0.5px solid rgba(201,168,76,0.4);color:var(--gold);font-size:9px;font-weight:700;flex:0 0 18px;}
 .p-sub{font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.06em;text-align:right;white-space:nowrap;}
 .p-bd{padding:var(--pad);}
-.info-i{cursor:help;opacity:0.5;font-size:0.85em;margin-left:3px;padding:5px;}
+.info-i{cursor:pointer;opacity:0.7;font-size:0.95em;color:var(--gold-2);margin-left:2px;padding:7px;-webkit-tap-highlight-color:transparent;}
+.info-i:hover{opacity:1;}
+@media(max-width:760px){.info-i{padding:9px;font-size:1.05em;}}
 .sec-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
 /* ── ① AI BRIEF (titular + chips) ── */
 .brief-1l{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin-top:8px;max-width:820px;}
@@ -116,18 +118,24 @@ a{color:inherit;text-decoration:none;}
 .lc-panel .lc-card{max-width:none;}
 .gg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .gcell{background:var(--panel-2);border:0.5px solid var(--hair);border-radius:10px;padding:7px 5px 6px;text-align:center;}
-.gcell.risk{background:rgba(255,107,129,0.06);border-color:rgba(255,107,129,0.22);}
-.gcell.sup{background:rgba(46,232,164,0.06);border-color:rgba(46,232,164,0.22);}
+/* Cada tarjeta se tiñe por su PROPIO score (mismo criterio que el velocímetro): verde=sano, ámbar=vigilar, rojo=presión. Sin tarjetas "sin color". */
+.gcell.g-good{background:rgba(46,232,164,0.05);border-color:rgba(46,232,164,0.20);}
+.gcell.g-warn{background:rgba(245,166,35,0.05);border-color:rgba(245,166,35,0.20);}
+.gcell.g-risk{background:rgba(255,107,129,0.05);border-color:rgba(255,107,129,0.22);}
 .gcell svg{width:100%;height:auto;max-height:52px;display:block;}
 .gcell .gn{font-family:var(--mono);font-size:8.5px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink-3);margin-top:3px;line-height:1.15;}
 .gcell .gv{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:1px;}
+.gg-leg{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:8px;letter-spacing:0.03em;color:var(--ink-3);text-transform:none;font-weight:500;}
+.gg-leg i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle;}
+.gg-leg .d-good{background:#2EE8A4;} .gg-leg .d-warn{background:#F5A623;} .gg-leg .d-risk{background:#FF6B81;}
 .env-conflicts{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,0.06);border:0.5px solid rgba(245,166,35,0.22);}
 .env-conflicts-t{font-family:var(--mono);font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:4px;}
 .env-conflicts li{font-size:11.5px;color:var(--ink-2);margin-left:15px;line-height:1.5;}
 .yc-svg{width:100%;}
 .yc-svg svg{width:100%;height:auto;display:block;}
 .yc-spread{font-weight:700;font-family:var(--mono);font-size:9.5px;}
-.yc-legend{font-family:var(--mono);font-size:9px;color:var(--ink-4);margin-top:7px;text-align:center;letter-spacing:0.04em;}
+.yc-legend{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:8px;letter-spacing:0.03em;}
+.yc-legend .yc-next{color:var(--ink-3);} .yc-legend .yc-next b{color:var(--gold-2);font-weight:700;}
 /* ── ③ MARKET (chart + contexto) ── */
 .chart-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);border-bottom:1px solid var(--hair);}
 @media(max-width:700px){.chart-stats{grid-template-columns:repeat(2,1fr);}}
@@ -199,9 +207,15 @@ a{color:inherit;text-decoration:none;}
 .scan-tbl tbody tr:hover{background:rgba(201,168,76,0.05);}
 .scan-tbl tbody tr.sel{background:rgba(201,168,76,0.09);box-shadow:inset 2px 0 0 var(--gold);}
 .scan-tbl tbody tr:last-child td{border-bottom:none;}
-.scan-tk{font-family:var(--mono);font-weight:700;color:var(--ink);}
+.scan-id{display:flex;align-items:center;gap:10px;}
+.scan-logo{width:30px;height:30px;border-radius:7px;object-fit:contain;background:#fff;padding:3px;flex:0 0 30px;box-sizing:border-box;}
+.scan-logo.mono{display:inline-flex;align-items:center;justify-content:center;background:rgba(201,168,76,0.16);color:var(--gold);font-family:var(--mono);font-weight:700;font-size:11px;padding:0;}
+.scan-idtxt{display:flex;flex-direction:column;gap:1px;min-width:0;}
+.scan-tk{font-family:var(--mono);font-weight:700;color:var(--ink);font-size:15px;letter-spacing:0.02em;line-height:1.1;}
 .scan-sec{font-size:10px;color:var(--ink-4);}
-.scan-why{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.scan-stars{font-size:13px;letter-spacing:1.5px;white-space:nowrap;}
+.st-on{color:var(--gold);} .st-off{color:rgba(255,255,255,0.16);}
+.scan-why{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
 .why{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.02em;}
 .scan-fs{font-family:var(--mono);font-weight:700;}
 .scan-cls{font-family:var(--mono);font-size:8px;font-weight:800;letter-spacing:0.04em;padding:3px 7px;border-radius:5px;white-space:nowrap;}
@@ -211,13 +225,13 @@ a{color:inherit;text-decoration:none;}
 .scan-cls.neut{background:rgba(239,236,227,0.06);color:var(--ink-3);}
 /* ── SECTOR ROTATION (RRG) ── */
 .rot-table{width:100%;border-collapse:collapse;margin-top:14px;}
-.rot-table th{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:7px 8px;border-bottom:1px solid var(--hair);font-weight:700;}
+.rot-table th{font-family:var(--mono);font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:8px;border-bottom:1px solid var(--hair);font-weight:700;}
 .rot-table th.r{text-align:right;}
 .rot-table td{padding:8px;border-bottom:0.5px solid var(--hair);vertical-align:top;}
 .rot-table tr:last-child td{border-bottom:none;}
 .rb-fase{white-space:normal;padding-right:14px;}
-.rb-lbl{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;}
-.rb-mean{display:block;font-size:9.5px;color:var(--ink-3);line-height:1.3;margin-top:1px;}
+.rb-lbl{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;}
+.rb-mean{display:block;font-size:11px;color:var(--ink-2);line-height:1.35;margin-top:2px;}
 .rb-sec{color:var(--ink-2);line-height:1.35;font-size:11.5px;}
 .loading{color:var(--ink-4);font-family:var(--mono);font-size:10px;}
 #rot-body{overflow-x:auto;}
@@ -276,7 +290,7 @@ a{color:inherit;text-decoration:none;}
         </div>
         <div class="env-grid2">
           <div class="env-col">
-            <div class="sec-label"><span>9 motores macro</span></div>
+            <div class="sec-label"><span>9 motores macro</span><span class="gg-leg"><span><i class="d-good"></i>sano</span><span><i class="d-warn"></i>vigilar</span><span><i class="d-risk"></i>presión</span></span></div>
             <div class="gg" id="env-gg"></div>
             <div class="env-conflicts" id="env-conflicts" style="display:none;">
               <div class="env-conflicts-t">⚠ Señales en conflicto</div>
@@ -396,13 +410,23 @@ var MOTOR_INFO={
  gold:'Oro (momentum a 3 meses). Disparado = aversión al riesgo / estrés; estable = calma.',
  financial:'Estrés del sistema financiero (spreads de crédito high-yield). Anchos = tensión; estrechos = crédito calmado.'
 };
+// Etiqueta en español del régimen (el backend la manda en inglés)
+function clsLabel(c){
+  if(/HEALTHY/.test(c))return 'ENTORNO SANO';
+  if(/CONSTRUCTIVE/.test(c))return 'CONSTRUCTIVO';
+  if(/CAUTION/.test(c))return 'CAUTELA';
+  if(/HIGH RISK/.test(c))return 'RIESGO ALTO';
+  if(/DEFENSIVE/.test(c))return 'DEFENSIVO';
+  return c||'—';
+}
+// Qué significa el régimen para TOMAR un LEAP ahora mismo (concreto, no genérico)
 function classDesc(c){
-  if(/HEALTHY/.test(c))return 'Entorno macro sano para asumir riesgo de largo plazo.';
-  if(/CONSTRUCTIVE/.test(c))return 'Entorno constructivo: exposición selectiva razonable.';
-  if(/CAUTION/.test(c))return 'Cautela: favorece calidad, valoración y margin of safety.';
-  if(/HIGH RISK/.test(c))return 'Riesgo elevado: reduce duración y sé muy selectivo.';
-  if(/DEFENSIVE/.test(c))return 'Postura defensiva: espera mejor valoración antes de LEAPS agresivos.';
-  return 'Entorno macro ponderado sobre 9 motores reales.';
+  if(/HEALTHY/.test(c))return 'El macro acompaña: buen momento para abrir LEAPS de calidad con más holgura.';
+  if(/CONSTRUCTIVE/.test(c))return 'Viento a favor moderado: puedes abrir LEAPS, pero elige calidad y no te apalanques de más.';
+  if(/CAUTION/.test(c))return 'Macro mixto para abrir LEAPS: prioriza empresas de calidad a buen precio y evita duración/apalancamiento agresivos.';
+  if(/HIGH RISK/.test(c))return 'Macro en contra: momento pobre para abrir LEAPS nuevos; si lo haces, tramos cortos y muy selectivo.';
+  if(/DEFENSIVE/.test(c))return 'Macro adverso: mejor esperar mejor precio/entorno antes de abrir LEAPS agresivos.';
+  return 'Termómetro macro (0-100) que pondera 9 motores reales para decidir si el entorno acompaña un LEAP.';
 }
 function loadEnv(){
   fetch(API+'/api/environment').then(function(r){return r.json();}).then(function(d){
@@ -420,7 +444,7 @@ function envRiskSupport(d){
 function renderEnv(d){
   if(!d||typeof d!=='object'){ return; }
   document.getElementById('env-hero-g').innerHTML=gauge(d.score,true);
-  var cl=document.getElementById('env-cls'); cl.textContent=d.classification||'—'; cl.style.color=classColor(d.classification||'');
+  var cl=document.getElementById('env-cls'); cl.textContent=clsLabel(d.classification||''); cl.style.color=classColor(d.classification||'');
   document.getElementById('env-cls-d').textContent=classDesc(d.classification||'');
   document.getElementById('env-cov').textContent='Cobertura '+(d.coverage||'—')+' motores · ponderado';
   document.getElementById('env-sub').textContent='FRED · '+(d.coverage||'');
@@ -428,11 +452,11 @@ function renderEnv(d){
   if(rs){ rs.innerHTML= rsd ? ('<div class="env-rs-col risk"><span>⚠ Riesgos</span><b>'+rsd.risks.map(function(m){return m.name;}).join(' · ')+'</b></div>'
       +'<div class="env-rs-col sup"><span>✓ Soportes</span><b>'+rsd.sups.map(function(m){return m.name;}).join(' · ')+'</b></div>') : ''; }
   var host=document.getElementById('env-gg');
-  var riskKeys=rsd?rsd.risks.map(function(m){return m.key;}):[], supKeys=rsd?rsd.sups.map(function(m){return m.key;}):[];
   host.innerHTML=(d.motors||[]).map(function(m){
     var tr=m.trend==='improving'?'▲':m.trend==='deteriorating'?'▼':'';
     var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--down)':'var(--ink-4)';
-    var tint=riskKeys.indexOf(m.key)>=0?' risk':supKeys.indexOf(m.key)>=0?' sup':'';
+    // tinte por el PROPIO score del motor (consistente con el color del velocímetro)
+    var tint=(m.score==null)?'':(m.score>=65?' g-good':m.score>=45?' g-warn':' g-risk');
     return '<div class="gcell'+tint+'">'+gauge(m.score)+'<div class="gn">'+m.name+' <span class="info-i" title="'+(MOTOR_INFO[m.key]||'Motor macro del Environment.')+'">&#9432;</span></div>'
       +'<div class="gv">'+(m.value||'—')+' <span style="color:'+trc+'">'+tr+'</span></div></div>';
   }).join('');
@@ -474,9 +498,22 @@ function renderYieldCurve(curve){
     +dots+xlab+'</svg>';
   var sp=document.getElementById('yc-spread');
   if(sp){ if(y2&&y10){ var dd=y10.yield-y2.yield; sp.textContent='10Y-2Y '+(dd>=0?'+':'')+dd.toFixed(2)+'%'+(inv?' · INVERTIDA':''); sp.style.color=inv?'var(--risk)':'var(--up)'; } else sp.textContent=''; }
-  var lg=document.getElementById('yc-legend'); if(lg)lg.textContent=inv?'Curva invertida — históricamente antesala de recesión':'Pendiente normal · plazo (X) vs tasa % (Y)';
+  var lg=document.getElementById('yc-legend'); if(lg){ var slope=inv?'Curva invertida — antesala histórica de recesión':'Pendiente normal · plazo (X) · tasa % (Y)'; lg.innerHTML='<span class="yc-slope">'+slope+'</span><span class="yc-next" id="yc-next"></span>'; loadNextRateEvent(); }
 }
 
+// Próximo evento macro que puede MOVER la curva (Fed/CPI/PCE/empleo). Se muestra junto a la leyenda.
+var CURVE_EVENT_RE=/\b(FOMC|Fed|Federal|Interest Rate|Rate Decision|CPI|Inflation|PCE|Payroll|Nonfarm|Jobs|Employment|Unemployment|PPI|Powell)\b/i;
+function loadNextRateEvent(){
+  fetch(API+'/api/calendar').then(function(r){return r.json();}).then(function(d){
+    var evs=(d&&d.macro_calendar)||[]; var now=Date.now();
+    var cand=evs.filter(function(e){ if(String(e.impact).toLowerCase()!=='high')return false; if(!CURVE_EVENT_RE.test(e.title||''))return false; var t=new Date(e.time).getTime(); return isFinite(t)&&t>now; })
+                .sort(function(a,b){return new Date(a.time)-new Date(b.time);});
+    var nx=cand[0]||(d&&d.next_macro_event)||null;
+    var el=document.getElementById('yc-next'); if(!el||!nx)return;
+    var dt=''; try{dt=new Date(nx.time).toLocaleDateString('es',{day:'2-digit',month:'short'});}catch(e){}
+    el.innerHTML='próx. dato que puede moverla: <b>'+(nx.title||'—')+'</b>'+(dt?(' · '+dt):'');
+  }).catch(function(){});
+}
 /* ── ① AI BRIEF (titular + chips + análisis expandible) ── */
 function fmtInline(s){ return s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
 function groqToHtml(text){
@@ -593,8 +630,11 @@ function lcCalc(){
   if(q){
     if(rec!=null&&pctm!=null&&expp!=null){
       var good=(rec<=8&&pctm<1.5&&expp<40), bad=(rec>18||pctm>=3.5||expp>=60);
-      var lab=good?'SÓLIDA':bad?'FRÁGIL':'VIGILAR', c=good?'var(--up)':bad?'var(--risk)':'var(--warn)', bg=good?'rgba(46,232,164,0.14)':bad?'rgba(255,107,129,0.14)':'rgba(245,166,35,0.14)';
-      q.innerHTML='Calidad estructural <span class="lc-qbadge" style="color:'+c+';background:'+bg+'">'+lab+'</span>';
+      var lab=good?'✓ ÓPTIMA':bad?'✕ NO ÓPTIMA':'~ REVISAR', c=good?'var(--up)':bad?'var(--risk)':'var(--warn)', bg=good?'rgba(46,232,164,0.14)':bad?'rgba(255,107,129,0.14)':'rgba(245,166,35,0.14)';
+      var why;
+      if(good){ why='Bien construido para operar: recupera poco ('+rec.toFixed(0)+'%), theta baja y poco valor extrínseco ('+expp.toFixed(0)+'%).'; }
+      else { var pr=[]; if(rec>18)pr.push('necesita recuperar mucho ('+rec.toFixed(0)+'%)'); if(pctm>=3.5)pr.push('theta alta, se derrite rápido'); else if(pctm>=1.5)pr.push('theta moderada'); if(expp>=60)pr.push('demasiado valor extrínseco ('+expp.toFixed(0)+'%)'); else if(expp>=40)pr.push('valor extrínseco elevado ('+expp.toFixed(0)+'%)'); why=(bad?'Mal construido — ':'Operable con reservas — ')+(pr.join('; ')||'revisa los números')+'.'; }
+      q.innerHTML='Calidad estructural <span class="lc-qbadge" title="'+why+'" style="color:'+c+';background:'+bg+';cursor:help">'+lab+'</span>';
     } else q.textContent='—';
   }
   lcStrat();
@@ -707,6 +747,20 @@ function whyChips(x){
     +'<span class="why" style="color:'+locC+'">Precio '+locMk+'</span>';
 }
 var SCAN_ALL=[];
+// Score de elección (0-100) → 5 estrellas. Cada estrella = 20 puntos.
+function starRating(fscore){
+  if(fscore==null||!isFinite(fscore)) return '<span class="st-off">☆☆☆☆☆</span>';
+  var full=Math.max(0,Math.min(5,Math.round(fscore/20)));
+  var s='';
+  for(var i=0;i<5;i++){ s+='<span class="'+(i<full?'st-on':'st-off')+'">★</span>'; }
+  return s;
+}
+// Si el logo de la empresa no carga, se sustituye por un monograma (2 letras del ticker).
+function scanLogoErr(img){
+  var tk=img.getAttribute('data-tk')||'';
+  var sp=document.createElement('span'); sp.className='scan-logo mono'; sp.textContent=tk.slice(0,2);
+  if(img.parentNode) img.parentNode.replaceChild(sp,img);
+}
 function renderScanRows(rows){
   var host=document.getElementById('scan-body'); if(!host)return;
   if(!rows.length){ host.innerHTML='<div class="stub">Sin resultados para tu búsqueda.</div>'; return; }
@@ -714,15 +768,16 @@ function renderScanRows(rows){
     var cm=scanClsMap(x['class']||'');
     var dh=(x.distHigh!=null)?((x.distHigh>=0?'+':'')+x.distHigh+'%'):'—';
     var dhc=(x.distHigh!=null&&x.distHigh<=-6)?'var(--gold)':'var(--ink-2)';
-    var fsc=(x.fscore!=null)?x.fscore:'—';
-    var fscCol=(x.fscore>=70)?'var(--up)':(x.fscore>=50)?'var(--gold)':'var(--down)';
     var sel=(x.ticker===LC_SYM)?' class="sel"':'';
-    return '<tr data-tk="'+x.ticker+'"'+sel+' onclick="selectTicker(\''+x.ticker+'\')"><td><span class="scan-tk">'+x.ticker+'</span><span class="scan-sec"> · '+(x.sector||'')+'</span><div class="scan-why">'+whyChips(x)+'</div></td>'
-      +'<td class="r"><span class="scan-fs" style="color:'+fscCol+'">'+fsc+'</span></td>'
+    return '<tr data-tk="'+x.ticker+'"'+sel+' onclick="selectTicker(\''+x.ticker+'\')">'
+      +'<td><div class="scan-id"><img class="scan-logo" data-tk="'+x.ticker+'" src="https://financialmodelingprep.com/image-stock/'+x.ticker+'.png" alt="" loading="lazy" onerror="scanLogoErr(this)">'
+      +'<div class="scan-idtxt"><span class="scan-tk">'+x.ticker+'</span><span class="scan-sec">'+(x.sector||'')+'</span></div></div>'
+      +'<div class="scan-why">'+whyChips(x)+'</div></td>'
+      +'<td class="r"><span class="scan-stars" title="Score de elección: '+((x.fscore!=null)?x.fscore+' / 100 (promedio de 8 pilares)':'sin dato')+'">'+starRating(x.fscore)+'</span></td>'
       +'<td class="r" style="color:'+dhc+';font-family:var(--mono);">'+dh+'</td>'
       +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
   }).join('');
-  host.innerHTML='<table class="scan-tbl"><thead><tr><th>Ticker · por qué está aquí</th><th class="r">Score elección ▾</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
+  host.innerHTML='<table class="scan-tbl"><thead><tr><th>Empresa · por qué está aquí</th><th class="r">Score elección</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
 }
 function scanFilter(){
   var i=document.getElementById('scan-search'); var q=i?(i.value||'').trim().toUpperCase():'';
@@ -882,7 +937,7 @@ setInterval(loadRotation, 30*60*1000);
   function ensure(){ if(!tip){ tip=document.createElement('div'); tip.style.cssText='position:fixed;z-index:100000;max-width:min(300px,86vw);background:#14110b;border:0.5px solid rgba(201,168,76,0.5);color:#E8E4D9;font-family:inherit;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,0.55);display:none;'; document.body.appendChild(tip);} return tip; }
   function show(el){ var t=el.getAttribute('title'); if(!t)return; var tp=ensure(); tp.textContent=t; tp.style.display='block'; var r=el.getBoundingClientRect(),pad=8; var left=Math.min(Math.max(pad,r.left+r.width/2-tp.offsetWidth/2),window.innerWidth-tp.offsetWidth-pad); var top=r.bottom+8; if(top+tp.offsetHeight>window.innerHeight-pad)top=r.top-tp.offsetHeight-8; tp.style.left=left+'px'; tp.style.top=Math.max(pad,top)+'px'; forEl=el; }
   function hide(){ if(tip)tip.style.display='none'; forEl=null; }
-  document.addEventListener('click',function(e){ var el=e.target.closest&&e.target.closest('.info-i'); if(el){e.preventDefault();e.stopPropagation(); if(tip&&tip.style.display==='block'&&forEl===el){hide();return;} show(el);} else hide(); },true);
+  document.addEventListener('click',function(e){ var el=e.target.closest&&e.target.closest('.info-i,.lc-qbadge[title]'); if(el){e.preventDefault();e.stopPropagation(); if(tip&&tip.style.display==='block'&&forEl===el){hide();return;} show(el);} else hide(); },true);
   window.addEventListener('scroll',hide,true); window.addEventListener('resize',hide);
 })();
 </script>
