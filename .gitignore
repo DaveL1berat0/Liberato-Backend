@@ -2,3 +2,8 @@
 
 # Lab file: gate-OFF copy for local verification — NUNCA desplegar
 _labopt.html
+_labday.html
+
+# Python
+__pycache__/
+*.pyc

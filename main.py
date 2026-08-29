@@ -608,7 +608,19 @@ async def refresh_heatmap_finnhub():
                 price = q.get("c"); dp = q.get("dp")  # c=current, dp=percent change diario
                 if price is None or price == 0:
                     return
-                chg = dp if isinstance(dp, (int, float)) else 0
+                if not isinstance(dp, (int, float)):
+                    # Regla#1: si Finnhub no trae el % diario, NO lo inventamos como
+                    # 0.00% (flat gris). Se preserva el precio real y chg_pct=None →
+                    # el frontend conserva el último % real o cae a "—" (nunca un 0
+                    # falso). Mismo rigor que refresh_heatmap_rest (que descarta sin
+                    # percent). El tile cuenta como cargado (no fuerza fallback TD).
+                    cache["heatmap"]["data"][sym] = {
+                        "symbol": sym, "price": round(float(price), 4),
+                        "chg_pct": None, "direction": "flat", "source": "finnhub",
+                    }
+                    loaded += 1
+                    return
+                chg = dp
                 cache["heatmap"]["data"][sym] = {
                     "symbol": sym, "price": round(float(price), 4),
                     "chg_pct": round(float(chg), 3),
@@ -838,6 +850,7 @@ async def refresh_cash_index_yahoo():
         print(f"[cash-idx] error (no crítico): {e}")
 
 _indices_last_ts = 0
+_heatmap_ondemand_ts = 0   # throttle del refresh Finnhub on-demand del heatmap (findes/after-hours)
 async def refresh_real_indices():
     """Niveles reales vía Finnhub (throttle 4 min). Verificable, sin cookie/crumb."""
     global _indices_last_ts
@@ -1057,7 +1070,13 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
         "ticker": GEXBOT_SYMBOL,
         "source": "gexbot-direct",
         "gex_source": "GexBot",          # atribución obligatoria (permiso escrito)
-        "regime": ("trending" if (isinstance(net, (int, float)) and net < 0)
+        # Régimen = PRECIO (spot) vs FLIP (gf), la misma frontera que el velocímetro
+        # del frontend. El signo del net GEX es solo INTENSIDAD, NO define el régimen
+        # (net +5K con precio bajo el flip NO es rango). Respaldo al signo de net
+        # solo si falta spot o flip.
+        "regime": ("pinning" if (isinstance(spot,(int,float)) and isinstance(gf,(int,float)) and spot >= gf)
+                   else "trending" if (isinstance(spot,(int,float)) and isinstance(gf,(int,float)))
+                   else "trending" if (isinstance(net, (int, float)) and net < 0)
                    else "pinning" if isinstance(net, (int, float)) else g.get("regime")),
         "_ts": time.time(),
     })
@@ -1083,7 +1102,11 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
                 "net_gex":      _z_net,
                 "net_gex_vol":  j0.get("sum_gex_vol"),
                 "skew":         j0.get("delta_risk_reversal"),
-                "regime": ("trending" if (isinstance(_z_net,(int,float)) and _z_net < 0)
+                # Régimen 0DTE = spot vs flip del vencimiento de hoy (zero_gamma);
+                # _z_net (signo) solo como respaldo si falta spot/flip.
+                "regime": ("pinning" if (isinstance(spot,(int,float)) and isinstance(j0.get('zero_gamma'),(int,float)) and spot >= j0.get('zero_gamma'))
+                           else "trending" if (isinstance(spot,(int,float)) and isinstance(j0.get('zero_gamma'),(int,float)))
+                           else "trending" if (isinstance(_z_net,(int,float)) and _z_net < 0)
                            else "pinning" if isinstance(_z_net,(int,float)) else None),
             }
         else:
@@ -1585,10 +1608,13 @@ async def _refresh_gex_ndx(asset=FA_ASSET):
         "vix": vix_value,
         # Régimen: EXACTAMENTE la etiqueta de FlashAlpha (net_gex_label).
         # Fallback al signo del net_gex solo si la etiqueta no llegó.
-        "regime": (("trending" if "neg" in str(gex_label).lower() else "pinning")
-                   if gex_label
-                   else ("pinning" if (isinstance(net_gex,(int,float)) and net_gex>=0)
-                         else "trending" if isinstance(net_gex,(int,float)) else None)),
+        # Régimen = precio (spot) vs flip (gf), misma frontera que el velocímetro.
+        # La etiqueta/signo de net_gex queda solo como respaldo si falta spot/flip.
+        "regime": ("pinning" if (isinstance(spot,(int,float)) and isinstance(gf,(int,float)) and spot >= gf)
+                   else "trending" if (isinstance(spot,(int,float)) and isinstance(gf,(int,float)))
+                   else ("trending" if "neg" in str(gex_label).lower() else "pinning") if gex_label
+                   else "pinning" if (isinstance(net_gex,(int,float)) and net_gex>=0)
+                   else "trending" if isinstance(net_gex,(int,float)) else None),
         "ticker": sym, "as_of": None,
         "per_strike_count": len(per_strike) if isinstance(per_strike, list) else 0,
         "source": ("futures-direct" if "=" in sym else "index-direct"), "_ts": time.time(),
@@ -4381,14 +4407,26 @@ async def refresh_institutional():
         ctx.append(f"- {FA_ASSET} Futures: {nq_price:.0f}")
 
     # Gamma (si está disponible)
-    cw = gex.get("call_wall"); pw = gex.get("put_wall")
+    # TODO a Gamma por VOLUMEN (decisión de Dave: "son los niveles que vamos a
+    # trabajar"). El chart del frontend YA dibuja walls por volumen; el brief debe
+    # citar los MISMOS para no mostrar dos precios bajo el rótulo "Call/Put Wall".
+    # Fallback a OI solo si el volumen no existe (off-hours) → Regla#1: si faltan
+    # ambos, cw/pw=None → has_gamma=False → "esperando cálculo RTH", nunca inventa.
+    cw = gex.get("call_wall_vol") or gex.get("call_wall"); pw = gex.get("put_wall_vol") or gex.get("put_wall")
     gf = gex.get("gamma_flip"); ng = gex.get("net_gex")
-    rg = gex.get("regime", "")
+    # (el campo 'regime' del cache ya no se cita literal en el brief; el régimen se
+    #  deriva aquí de precio vs flip para que concuerde con el velocímetro)
     has_gamma = bool(cw and pw and gf)
     if has_gamma:
-        pdir = "sobre" if (nq_price and nq_price > gf) else "bajo"
-        ctx.append(f"- Gamma: Call Wall {cw:.0f} | Put Wall {pw:.0f} | Flip {gf:.0f} | {FA_ASSET} {pdir} del flip")
-        if ng: ctx.append(f"- Régimen dealer: {rg} | Net GEX: {ng:,.0f}")
+        if nq_price and gf:
+            pdir = "sobre" if nq_price >= gf else "bajo"
+            regimen_pf = "γ+ rango (dealers absorben)" if pdir == "sobre" else "γ− tendencia (dealers amplifican)"
+            ctx.append(f"- Gamma: Call Wall {cw:.0f} | Put Wall {pw:.0f} | Flip {gf:.0f} | {FA_ASSET} {pdir} del flip → régimen {regimen_pf}")
+        else:
+            # Sin precio NQ no se puede fijar el régimen (precio vs flip). No se
+            # afirma dirección — Regla#1: no inventar un régimen sin poder compararlo.
+            ctx.append(f"- Gamma: Call Wall {cw:.0f} | Put Wall {pw:.0f} | Flip {gf:.0f} (régimen no determinado: falta precio NQ)")
+        if ng: ctx.append(f"- Net GEX: {ng:,.0f} (INTENSIDAD del régimen, NO lo define — el régimen lo fija precio vs Flip)")
         em = gex.get("expected_move"); iv = gex.get("atm_iv")
         if em: ctx.append(f"- Movimiento esperado: ±{em:.0f}pts | IV: {iv:.1f}%" if iv else f"- Movimiento esperado: ±{em:.0f}pts")
     else:
@@ -4546,23 +4584,25 @@ async def refresh_institutional():
                "como titular de última hora que mueve el mercado ahora>\n"
                "**Earnings:** <1 oración: earnings que impacten directamente el Nasdaq hoy; si no hay, di 'sin earnings "
                "relevantes para el NQ hoy'>\n"
-               "**Técnico:** <1 oración: niveles GEX (Call/Put Wall, Flip, Max Pain) + Market Regime (gamma +/−) + "
+               "**Técnico:** <1 oración: niveles GEX (Call/Put Wall, Flip, Max Pain) + Market Regime (precio vs Flip: γ+ rango / γ− tendencia) + "
                "VAH/VAL + cambio de precio + % del sector tecnológico + gap (alcista/bajista)>\n"
                "**Volatilidad:** <1 oración: VIX (nivel + si sube/baja) + movimiento esperado (±pts) + régimen de vol "
-               "(compresión si gamma+ / expansión si gamma−) + Fear&Greed si está>\n"
-               "**Gestión:** <1 oración ACCIONABLE de gestión de riesgo para el scalper: tamaño (reducir/normal), "
-               "apalancamiento (evitar agresivo si hay riesgo), y stops (ajustados/normales) — JUSTIFICADO por lo que "
-               "manda hoy (guerra/geopolítica, evento de alto impacto y su hora, volatilidad/expansión, o posicionamiento "
-               "extremo SI está en los datos). Ej: 'Reduce tamaño y stops ajustados: geopolítica Irán + subasta 30Y 13:00 "
-               "ET son los gatillos de gap; evita apalancamiento agresivo'. NO inventes cifras de posicionamiento>\n"
+               "(compresión si el precio está SOBRE el Flip / expansión si está BAJO el Flip) + Fear&Greed si está>\n"
+               "**Gestión:** <1 oración DESCRIPTIVA del entorno de riesgo del scalper: caracteriza qué condiciones "
+               "elevan o reducen el riesgo HOY (guerra/geopolítica, evento de alto impacto y su hora, volatilidad/"
+               "expansión de rango, o posicionamiento extremo SI está en los datos), SIN ordenar tamaño, apalancamiento "
+               "ni stops. Describe el entorno, no dictes la operativa. Ej: 'Entorno de gaps: geopolítica Irán + subasta 30Y "
+               "13:00 ET son los gatillos; régimen de expansión con dealers persiguiendo el precio'. PROHIBIDO 'reduce/añade "
+               "tamaño', 'stops ajustados', 'evita apalancamiento' o cualquier orden operativa. NO inventes cifras de posicionamiento>\n"
                "**Claridad:** <n>/10 hacia <alza / baja / sin dirección clara> · Vol <alta/media/baja>\n"
                "FORMATO: 5 a 7 oraciones en total (una por etiqueta que tenga datos), SIN EMOJIS. Usa las etiquetas en "
                "negrita **Macro:**, **Hoy:**, **Earnings:**, **Técnico:**, **Volatilidad:**, **Gestión:**, **Claridad:** tal cual, y pon en **negrita** "
                "el dato/nivel más importante de cada oración. Nada de iconos ni símbolos decorativos.\n"
                "IMPORTANTE: NO marques un sesgo alcista/bajista duro. En su lugar, la línea **Claridad:** da un SCORE "
                "1-10 de qué tan claro/limpio está el día y hacia qué lado se inclina (alza/baja/sin dirección). "
-               "REGLAS: usa números EXACTOS de los datos. En gamma negativo piensa momentum/expansión (dealers "
-               "persiguen); en gamma positivo reversión/compresión (dealers absorben). NUNCA inventes un dato: si algo "
+               "REGLAS: usa números EXACTOS de los datos. El régimen lo define PRECIO vs Gamma Flip, NO el signo del "
+               "Net GEX: precio BAJO el Flip = γ negativo = momentum/expansión (dealers persiguen); precio SOBRE el Flip "
+               "= γ positivo = reversión/compresión (dealers absorben). El Net GEX es SOLO intensidad. NUNCA inventes un dato: si algo "
                "no está en los datos, omite esa etiqueta (no la escribas). Cada oración es corta. Prohibida la prosa larga.")
 
     if has_gamma:
@@ -4571,7 +4611,7 @@ async def refresh_institutional():
                    "Cubre Macro (GDP/inflación/empleo/bonos/tasas + fase del ciclo), catalizadores de HOY + geopolítica, "
                    "earnings del Nasdaq, el técnico (GEX/regime/VAH-VAL/precio/tech%/gap), una línea propia de "
                    "**Volatilidad:** (VIX nivel+dirección, movimiento esperado ±pts, régimen de vol, Fear&Greed), y una "
-                   "línea **Gestión:** con la acción de riesgo (tamaño/apalancamiento/stops justificados por lo que manda hoy). "
+                   "línea **Gestión:** que DESCRIBE el entorno de riesgo del día (catalizadores, volatilidad/expansión, posicionamiento) SIN ordenar tamaño, apalancamiento ni stops. "
                    "Cierra con **Claridad:** score 1-10 hacia alza/baja/sin dirección — NO un sesgo duro. Usa los "
                    "números exactos; omite la etiqueta de cualquier tema sin datos.")
     else:
@@ -7593,8 +7633,21 @@ async def get_heatmap():
     # cada 30s, los niveles reales llegan solos sin gastar créditos de nadie.
     asyncio.create_task(refresh_real_indices())
     data = cache["heatmap"]["data"]
-    if not data:
-        # Dispara carga inicial si está vacío
+    # Las acciones (REST_SYMBOLS: AAPL…NFLX + SPY + TIP) solo las llena el job
+    # Finnhub, que está gated a mon-fri 7-16. Fuera de RTH y en fin de semana
+    # quedaban en '—': el scheduler no corre y refresh_heatmap_rest cae a Yahoo,
+    # que 429ea las IPs de Railway. Además refresh_real_indices() (arriba) llena
+    # 7 tiles macro → data nunca está vacío → el refresh on-demand jamás disparaba.
+    # Finnhub /quote SÍ da el último cierre los findes (lo prueban esos 7 índices).
+    # Disparamos la ruta Finnhub (gratis, auto-limitada por fh_budget_ok) SIN
+    # bloquear la respuesta, con throttle de 90s para no gastar créditos en cada
+    # poll de 15s del frontend. Regla#1: se sirve el último cierre REAL; si Finnhub
+    # no responde, el tile sigue en '—' (nunca se inventa).
+    global _heatmap_ondemand_ts
+    if "AAPL" not in data and (time.time() - _heatmap_ondemand_ts) > 90:
+        _heatmap_ondemand_ts = time.time()
+        asyncio.create_task(refresh_heatmap_finnhub())
+    elif not data:
         await refresh_heatmap_rest()
     return {
         "heatmap":      cache["heatmap"]["data"],
@@ -8348,8 +8401,8 @@ async def manual_refresh_gex(key: str = ""):
                     "success": True,
                     "message": f"FlashAlpha {gex.get('ticker','?')} directo ✓ (sin conversión)",
                     "source": gex.get("source"),
-                    "call_wall": gex.get("call_wall"),
-                    "put_wall": gex.get("put_wall"),
+                    "call_wall": gex.get("call_wall_vol") or gex.get("call_wall"),
+                    "put_wall": gex.get("put_wall_vol") or gex.get("put_wall"),
                     "gamma_flip": gex.get("gamma_flip"),
                     "max_pain": gex.get("max_pain"),
                     "net_gex": gex.get("net_gex"),

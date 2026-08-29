@@ -178,9 +178,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .regime{position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--panel);border:1px solid var(--glass-brd);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);}
 .regime::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
 .regime::after{content:'';position:absolute;inset:0;opacity:0.5;transition:background 0.8s var(--ease);pointer-events:none;}
-.regime.bull::after{background:linear-gradient(90deg,rgba(52,224,161,0.1),transparent 40%);}
-.regime.bear::after{background:linear-gradient(90deg,rgba(255,107,129,0.1),transparent 40%);}
+.regime.up::after{background:linear-gradient(90deg,rgba(52,224,161,0.1),transparent 40%);}
+.regime.down::after{background:linear-gradient(90deg,rgba(177,151,252,0.12),transparent 40%);}
 .regime.neut::after{background:linear-gradient(90deg,rgba(204,169,79,0.08),transparent 40%);}
+/* clases emitidas por renderRegime: up/down/neut (antes bull/bear no casaban → wash invisible). down = MORADO #B197FC, no rojo (Regla de color). */
 .rg-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 22px 0;position:relative;z-index:1;}
 .rg-hd-title{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink);} /* WHITE always */
 .rg-hd-dot{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 2s infinite,liveBreath 4s ease-in-out infinite;box-shadow:0 0 6px var(--up);}
@@ -567,7 +568,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .rg-price:hover{border-color:rgba(204,169,79,0.28);}
 .rg-price-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .rg-price-lbl{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4);}
-.rg-price-live{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--up);}
+.rg-price-live{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--up);}
 .rg-price-live .d{width:5px;height:5px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite,liveBreath 3s ease-in-out infinite;box-shadow:0 0 6px var(--up);}
 .rg-price-row{display:flex;align-items:baseline;gap:11px;}
 .rg-price-px{font-family:var(--mono);font-weight:800;font-size:34px;line-height:1;letter-spacing:-0.02em;transition:color 0.3s var(--ease);}
@@ -744,7 +745,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-mv-col-t.up{color:var(--up);} .lg-mv-col-t.down{color:var(--down);}
 .lg-mv{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2);border-radius:var(--r-sm);background:rgba(0,0,0,0.22);border:1px solid var(--hair);margin-bottom:7px;transition:transform 0.2s var(--smooth),border-color 0.25s var(--ease);}
 .lg-mv:hover{transform:translateX(3px);}
-.lg-mv.up:hover{border-color:rgba(52,224,161,0.3);} .lg-mv.down:hover{border-color:rgba(255,107,129,0.3);}
+.lg-mv.up:hover{border-color:rgba(52,224,161,0.3);} .lg-mv.down:hover{border-color:rgba(177,151,252,0.3);}
 .lg-mv-l{display:flex;flex-direction:column;gap:2px;}
 .lg-mv-sym{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink);}
 .lg-mv-px{font-family:var(--mono);font-size:9px;color:var(--ink-4);}
@@ -934,7 +935,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* legend */
 .hmap-legend{display:flex;align-items:center;justify-content:center;gap:var(--sp2);
   padding:var(--sp2) var(--sp3);border-top:1px solid var(--hair);flex-wrap:wrap;}
-.hmap-leg-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
+.hmap-leg-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
 .hmap-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
 .hmap-leg-dot.up-strong{background:rgba(46,232,164,0.80);} .hmap-leg-dot.up-mild{background:rgba(46,232,164,0.32);}
 .hmap-leg-dot.neutral{background:rgba(242,239,232,0.10);} .hmap-leg-dot.dn-mild{background:rgba(177,151,252,0.32);}
@@ -995,6 +996,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   transition:transform 0.5s cubic-bezier(0.16,1,0.3,1),opacity 0.4s;
   backdrop-filter:blur(20px);cursor:pointer;}
 .gamma-alert.show{transform:translateX(0);opacity:1;}
+/* En móvil estrecho 380px+right:24px superaba el viewport (375px) y se recortaba por la izquierda con overflow-x:hidden → se fija a ambos lados. */
+@media(max-width:600px){.mover-alert,.gamma-alert{left:12px;right:12px;max-width:none;}}
 .gamma-alert-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .gamma-alert-x{position:absolute;top:10px;right:12px;color:var(--ink-3);font-size:16px;cursor:pointer;line-height:1;transition:color 0.2s;}
 .gamma-alert-x:hover{color:var(--ink);}
@@ -1046,7 +1049,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lbcn-profile{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center;box-sizing:border-box;width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#E7CC74;font-size:16px;line-height:1;cursor:pointer;transition:all 0.2s ease;padding:0;}
 .lbcn-profile:hover{border-color:#C9A84C;background:rgba(201,168,76,0.16);transform:translateY(-1px);}
 .lbcn-profile img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;}
-@media(max-width:768px){.lbcn{padding:7px 12px 6px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 5px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);font-size:14px;}.lbcn-links{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:7px;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}.lbcn-links::-webkit-scrollbar{display:none;}.lbcn-item{font-size:10px;letter-spacing:0.05em;gap:4px;}.lbcn-item.lbcn-pill{padding:5px 9px;flex:0 0 auto;}.lbc-lock{width:12px;height:12px;}.lbcn-soon-label{gap:0;}.lbcn-soon-tag{font-size:7px;padding:0 4px;margin-top:1px;}.lbcn-right{flex:0 0 auto;margin-left:6px;gap:8px;}.lbcn-profile{width:32px;height:32px;font-size:15px;}}
+@media(max-width:768px){.lbcn{padding:7px 12px 6px;gap:6px;}.lbcn-brand{width:100%;margin:0 0 5px;padding:0 0 6px;border-right:none;border-bottom:1px solid rgba(201,168,76,0.12);font-size:14px;}.lbcn-links{flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:7px;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}.lbcn-links::-webkit-scrollbar{display:none;}.lbcn-item{font-size:10px;letter-spacing:0.05em;gap:4px;}.lbcn-item.lbcn-pill{padding:5px 9px;flex:0 0 auto;}.lbc-lock{width:12px;height:12px;}.lbcn-soon-label{gap:0;}.lbcn-soon-tag{font-size:8px;padding:0 4px;margin-top:1px;}.lbcn-right{flex:0 0 auto;margin-left:6px;gap:8px;}.lbcn-profile{width:32px;height:32px;font-size:15px;}}
 @media(max-width:600px){.lbcn-name{display:none!important;}}
 /* ── DRAWER LATERAL · MI PERFIL ── */
 .profile-overlay{position:fixed;inset:0;background:rgba(4,5,9,0.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:1200;}
@@ -1471,7 +1474,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
   <header class="bar">
     <div class="bar-in">
-      <div class="brand"><span class="brand-l">Liberato <span class="a">Community</span></span></div>
+      <div class="brand"></div><!-- wordmark quitado: ya está en la nav lbcn de arriba (evita marca duplicada apilada) -->
       <div class="bar-r">
         <span class="bar-clock" id="bar-clock">--:-- ET</span>
         <span class="bar-st pre" id="bar-st"><span class="bar-st-dot"></span><span id="bar-st-txt">Pre-Market</span></span>
@@ -2408,8 +2411,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       }
     }catch(e){console.warn('[momentum] fetch 5m:',e);}
   }
-  setInterval(fetchMomentumCandles, 60000);
-  setTimeout(fetchMomentumCandles, 2500);  // arranque temprano
+  // El panel 'Session Momentum' (mom-*) se retiró del HTML → renderMomentum() sale
+  // en la 1ª línea. Se elimina el loop de red cada 60s que pedía velas para nada.
+  // setInterval(fetchMomentumCandles, 60000);
+  // setTimeout(fetchMomentumCandles, 2500);
 
   function renderMomentum(){
     var buy=$('mom-buy'),sell=$('mom-sell'),div=$('mom-divider'),net=$('mom-net'),bv=$('mom-buy-v'),sv=$('mom-sell-v');
@@ -3400,14 +3405,14 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var gb=[];
     if(hasFlip) gb.push('Flip <span class="hl-gold">'+fl+'</span>');
     if(hasWalls) gb.push('Call Wall <span class="hl-num">'+cw+'</span> · Put Wall <span class="hl-num">'+pw+'</span>');
-    if(S.netGex!=null){var rc=S.netGex>=0?'hl-up':'hl-dn';gb.push('Net GEX <span class="'+rc+'">'+netGexLabel()+'</span> '+(S.netGex>=0?'(long gamma → rango)':'(short gamma → expansión)'));}
+    if(S.netGex!=null){var _g=gammaState();var nc=S.netGex>=0?'hl-up':'hl-dn';var rw=_g==='positive'?'<span class="hl-up">γ+ rango</span>':_g==='negative'?'<span class="hl-dn">γ− tendencia</span>':'—';gb.push('Net GEX <span class="'+nc+'">'+netGexLabel()+'</span> (intensidad) · régimen '+rw+' (precio vs Flip)');}
     if(gb.length) parts.push('<strong>GEX:</strong> '+gb.join(' · ')+'.');
 
     // ── VOLATILIDAD ──
     var vb=[];
     if(S.vix!=null) vb.push('VIX <span class="hl-num">'+Number(S.vix).toFixed(1)+'</span>');
     if(S.expectedMove) vb.push('mov. esperado <span class="hl-num">±'+Math.round(S.expectedMove)+'pts</span>');
-    if(S.netGex!=null) vb.push('régimen '+(S.netGex>=0?'<span class="hl-up">compresión</span>':'<span class="hl-dn">expansión</span>'));
+    var _gv=gammaState(); if(_gv==='positive') vb.push('régimen <span class="hl-up">compresión</span>'); else if(_gv==='negative') vb.push('régimen <span class="hl-dn">expansión</span>');
     if(S.fearRating) vb.push('Fear&Greed '+S.fearRating+(S.fearScore!=null?' ('+S.fearScore+'/100)':''));
     if(vb.length) parts.push('<strong>Volatilidad:</strong> '+vb.join(' · ')+'.');
 
@@ -3416,7 +3421,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(hasFlip&&S.price){
       var dist=Math.round(S.price-S.gammaFlip);
       var nearFlip=Math.abs(dist)<(S.atr||150)*0.5;
-      if(nearFlip) st='precio en el Flip ('+(dist>=0?'+':'')+dist+'pts) — zona de decisión; esperar confirmación direccional antes de comprometer riesgo.';
+      if(nearFlip) st='precio en el Flip ('+(dist>=0?'+':'')+dist+'pts) — zona de decisión donde el mercado aún no define dirección; sin confirmación direccional clara todavía.';
       else if(aboveFlip) st='precio <span class="hl-up">sobre</span> el Flip (+'+dist+'pts) — sesgo a continuación hacia '+cw+(aboveVwap?', VWAP '+vw+' como soporte':'')+'.';
       else st='precio <span class="hl-dn">bajo</span> el Flip ('+dist+'pts) — vigilar '+pw+' como soporte institucional.';
     } else {
@@ -3428,15 +3433,15 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var risks=[];
     var mvTop=mv.length?mv[0]:null;
     if(mvTop&&mvTop.sentiment==='Bearish'&&(mvTop.impact_score||0)>=8.5) risks.push('titular de alto impacto/geopolítica');
-    if(S.netGex!=null&&S.netGex<0) risks.push('régimen de expansión (short gamma)');
+    if(gammaState()==='negative') risks.push('régimen de expansión (precio bajo el flip)');
     if(S.vix!=null&&Number(S.vix)>=20) risks.push('VIX elevado');
     var evHi2=(S.events||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high';});
     if(evHi2.length) risks.push('evento de alto impacto hoy'+(evHi2[0].time?' ('+evHi2[0].time+' ET)':''));
     var gestion;
     if(risks.length){
-      gestion='<span class="hl-dn">Reduce tamaño</span>, evita apalancamiento agresivo y usa <strong>stops ajustados</strong> — '+risks.slice(0,2).join(' + ')+'.';
+      gestion='Entorno de <strong>riesgo elevado</strong> — '+risks.slice(0,2).join(' + ')+'; condiciones típicas de gaps y expansión de rango.';
     }else{
-      gestion='Tamaño normal; respeta los niveles institucionales y no anticipes la ruptura.';
+      gestion='Entorno <strong>ordenado</strong>: el precio respeta los niveles institucionales y no hay catalizadores de alto impacto pendientes.';
     }
     parts.push('<strong>Gestión:</strong> '+gestion);
 
@@ -3585,10 +3590,16 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       // ── Resolver el día seleccionado ──
       // 1) el ya elegido si pertenece a esta semana · 2) HOY si es la semana actual
       // 3) primer día laboral con eventos · 4) primer día laboral.
+      // Se mantiene el día ya elegido SOLO si tiene eventos (o si ningún día de la
+      // semana los tiene). Antes se pegaba al día previo aunque estuviera vacío: en
+      // fin de semana quedaba fijo en Lunes (sin eventos) pese a haber datos de
+      // martes a viernes → el calendario se veía vacío. Ahora salta al 1er día con
+      // eventos.
       var _sel=null;
-      if(MACRO_DAY&&weekdays.some(function(w){return w.key===MACRO_DAY;}))_sel=MACRO_DAY;
-      if(!_sel&&MACRO_WEEK_OFFSET===0&&weekdays.some(function(w){return w.key===_todayK;}))_sel=_todayK;
-      if(!_sel){var _we=weekdays.filter(function(w){return w.hasEv;});_sel=_we.length?_we[0].key:weekdays[0].key;}
+      var _weAll=weekdays.filter(function(w){return w.hasEv;});
+      if(MACRO_DAY&&weekdays.some(function(w){return w.key===MACRO_DAY&&(w.hasEv||!_weAll.length);}))_sel=MACRO_DAY;
+      if(!_sel&&MACRO_WEEK_OFFSET===0&&weekdays.some(function(w){return w.key===_todayK&&w.hasEv;}))_sel=_todayK;
+      if(!_sel){_sel=_weAll.length?_weAll[0].key:weekdays[0].key;}
       MACRO_DAY=_sel;
       // ── Controles de navegación de semana + rango ──
       var nav='<div class="lg-macro-nav">'
@@ -3830,8 +3841,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           a.chg=parseFloat(backend.chg_pct.toFixed(2));
         }
       });
-      // Sync NQ price if available
-      if(d.nq_ratio&&d.nq_ratio.value){_NQ_RATIO=d.nq_ratio.value;S.ratio=_NQ_RATIO;}
+      // Sync NQ price if available (backend usa px_ratio; nq_ratio es legacy)
+      var _pr=d.px_ratio||d.nq_ratio;if(_pr&&_pr.value){_NQ_RATIO=_pr.value;S.ratio=_NQ_RATIO;}
       // Persistir el último valor REAL de cada activo (para mostrar en mercado cerrado)
       try{var _sv={};_hmapState.forEach(function(a){if(a.chg!=null&&!isNaN(a.chg))_sv[a.sym]=a.chg;});if(Object.keys(_sv).length)localStorage.setItem('lbc_hmap',JSON.stringify(_sv));}catch(e){}
       // ── S.corr con ÍNDICES REALES (backend/Yahoo) — val real, adiós "—" ──────
@@ -3984,7 +3995,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           }
         }
       });
-      (function(){var et3f=etNow(),p3f=function(n){return String(n).padStart(2,'0');};var todayKf=et3f.getFullYear()+'-'+p3f(et3f.getMonth()+1)+'-'+p3f(et3f.getDate());Object.keys(grouped).sort().forEach(function(dk,i){var DE3=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],ME3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],et3=etNow(),p3=function(n){return String(n).padStart(2,'0');};var todayK=et3.getFullYear()+'-'+p3(et3.getMonth()+1)+'-'+p3(et3.getDate());if(dk<todayK)return;/* FIX: descartar días pasados */var pts=dk.split('-'),d3=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));var l3=DE3[d3.getDay()]+' '+d3.getDate()+' '+ME3[d3.getMonth()];if(dk===todayK)l3='Hoy · '+l3;MOCK.macro.days.push({label:l3,future:dk>todayK,date:dk,events:grouped[dk]});});})();
+      (function(){var et3f=etNow(),p3f=function(n){return String(n).padStart(2,'0');};var todayKf=et3f.getFullYear()+'-'+p3f(et3f.getMonth()+1)+'-'+p3f(et3f.getDate());Object.keys(grouped).sort().forEach(function(dk,i){var DE3=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],ME3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],et3=etNow(),p3=function(n){return String(n).padStart(2,'0');};var todayK=et3.getFullYear()+'-'+p3(et3.getMonth()+1)+'-'+p3(et3.getDate());/* Se muestran TODOS los días de la ventana: pasados (con su resultado real) + hoy + futuros. El flag future=dk>todayK los distingue en el render. Antes 'if(dk<todayK)return' descartaba los pasados y en fin de semana la semana visible (ya pasada) quedaba TODA vacía pese a haber eventos. */var pts=dk.split('-'),d3=new Date(parseInt(pts[0]),parseInt(pts[1])-1,parseInt(pts[2]));var l3=DE3[d3.getDay()]+' '+d3.getDate()+' '+ME3[d3.getMonth()];if(dk===todayK)l3='Hoy · '+l3;MOCK.macro.days.push({label:l3,future:dk>todayK,date:dk,events:grouped[dk]});});})();
       // ── RECUPERAR eventos de HOY que el backend dejó de enviar ──
       // Si un evento del día ya salió y el backend lo quitó de su respuesta,
       // lo volvemos a insertar desde el store para que NO desaparezca.
@@ -4018,9 +4029,14 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       _realCalLoaded=true;   // datos reales cargados
       renderLegacy();
       setHealth('calendar','connected','real',null);
-      var badge=document.getElementById('api-status-badge');
-      if(badge){badge.textContent='✓ '+d.macro_calendar.length+' eventos reales';badge.style.background='rgba(46,232,164,0.1)';badge.style.color='var(--up)';}
-    }catch(e){console.error('[calendar] error:',e);var b=document.getElementById('api-status-badge');if(b){b.textContent='✗ '+e.message;b.style.background='rgba(255,59,48,0.1)';b.style.color='#FF6B6B';}}
+      var _lu=document.getElementById('lg-updated');
+      if(_lu&&d.macro_calendar&&d.macro_calendar.length)_lu.textContent=d.macro_calendar.length+' eventos · actualizado';
+    }catch(e){console.error('[calendar] error:',e);
+      // Antes se escribía en 'api-status-badge' (id inexistente) → el error no se veía
+      // y el placeholder 'Cargando calendario…' quedaba colgado. Ahora se limpia.
+      var _lm=document.getElementById('lg-macro-list');
+      if(_lm&&!_realCalLoaded)_lm.innerHTML='<div class="cat-empty"><span class="cat-empty-t">Calendario no disponible ahora · reintentando…</span></div>';
+      var _lu=document.getElementById('lg-updated');if(_lu)_lu.textContent='sin conexión';}
   }
 
   /* ── HIGH IMPACT NEWS: filtro de impacto (Todos / Alto / Medio) ─────────── */
@@ -4492,21 +4508,30 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       fetch(BACKEND_URL+'/api/heatmap',{cache:'no-store'})
         .then(function(r){return r.ok?r.json():null;})
         .then(function(d){
-          if(!d||!d.heatmap)return;
-          if(d.nq_ratio&&d.nq_ratio.value){_NQ_RATIO=d.nq_ratio.value;S.ratio=_NQ_RATIO;}
-          var etf=d.heatmap[PROXY_ETF],idxD=d.heatmap[ASSET];
-          var nqDirect=(idxD&&idxD.source==='direct')?idxD.price:null;
+          if(!d)return;
+          // El backend publica px_ratio {value,spot,etf_price,...}. 'nq_ratio' es el
+          // nombre legacy (ya NO existe en el contrato) → fallback defensivo.
+          // BUG (corregido 29-ago): se leía d.nq_ratio y d.heatmap['NQ']/'QQQ' —
+          // ninguno existe → newTarget nunca se calculaba → el precio (y con él el
+          // régimen) se congelaban en el snapshot de la ventana GEX. Por eso el
+          // régimen "no coincidía" y no flipaba al cruzar el flip como en MotiWave.
+          var pr=d.px_ratio||d.nq_ratio||{};
+          if(pr.value>0){_NQ_RATIO=pr.value;S.ratio=pr.value;}
+          var hm=d.heatmap||{};
+          var etf=hm[PROXY_ETF];  // QQQ (WS realtime en horario de mercado)
+          var etfPx=(etf&&etf.price>0)?etf.price:(pr.etf_price>0?pr.etf_price:null);
           var newTarget=null;
-          if(nqDirect>0){
-            newTarget=Math.round(nqDirect*4)/4;
-            if(etf&&etf.price>0){
-              var nr=Math.round((nqDirect/etf.price)*1000000)/1000000;
+          if(pr.spot>0){
+            // spot = NQ ya derivado por el backend (QQQ×ratio real o feed directo)
+            newTarget=Math.round(pr.spot*4)/4;
+            if(etfPx>0){
+              var nr=Math.round((pr.spot/etfPx)*1000000)/1000000;
               _NQ_RATIO=nr;S.ratio=nr;
-              S._ratioError=Math.round(Math.abs(nqDirect-(etf.price*nr))*100)/100;
+              S._ratioError=Math.round(Math.abs(pr.spot-(etfPx*nr))*100)/100;
             }
-          } else if(etf&&etf.price>0&&getRatio()){
-            S._lastQQQ=etf.price;
-            newTarget=Math.round(etf.price*getRatio()*4)/4;
+          } else if(etfPx>0&&getRatio()){
+            S._lastQQQ=etfPx;
+            newTarget=Math.round(etfPx*getRatio()*4)/4;
           }
           if(newTarget>0){   // antes rango 25000-45000: era del NQ
             // Solo resetear stale si el precio REALMENTE cambió (tick nuevo genuino)
