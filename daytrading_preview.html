@@ -477,7 +477,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-xtip .xt-ohlc span:first-child{margin-left:0;}
 .cx-xtip .xt-px{color:var(--gold);font-weight:700;font-size:12px;margin-top:2px;}
 .cx-xtip .xt-lvl{margin-top:2px;font-size:10px;}
-@media(max-width:680px){#chart-tv{height:300px;}.cxh-px{font-size:14px;}.cxh-sym{font-size:11px;letter-spacing:0.1em;}.cxh-l{gap:9px;}}
+@media(max-width:680px){#chart-tv{height:300px;}.cxh{flex-wrap:wrap;row-gap:7px;}.cxh-px{font-size:15px;}.cxh-sym{font-size:14px;letter-spacing:0.06em;}.cxh-l{gap:9px;}.cxh-r{gap:8px;}.cxh-regime{font-size:8.5px;padding:3px 7px;}.cxh-chg{font-size:10px;}}
 /* ── Herramientas de dibujo (overlay propio, sin APIs externas) ─────────────── */
 #cx-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
 #cx-ov.armed{pointer-events:auto;cursor:crosshair;}
@@ -2769,6 +2769,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
   function loadChart(){if(chart)return;if(typeof LightweightCharts==='undefined'){var s=document.createElement('script');s.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';s.onload=buildChart;s.onerror=function(){var l=$('chart-load');if(l)l.querySelector('.chart-load-t').textContent='Chart no disponible';};document.head.appendChild(s);}else buildChart();}
   function buildChart(){
+    if(chart)return;   // guard de re-entrada: si el usuario toca un TF mientras el CDN carga, evita 2º createChart + 2ª suscripción (leak)
     var el=$('chart-tv');if(!el||!window.LightweightCharts)return;var l=$('chart-load');if(l)l.style.display='none';el.style.display='block';
     var LS=LightweightCharts.LineStyle;
     chart=LightweightCharts.createChart(el,{
@@ -2893,7 +2894,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             if(p==null){el.classList.remove('on','near');continue;}
             var y=null;try{y=series.priceToCoordinate(p);}catch(e){}
             if(y==null||y<10||y>h-14){el.classList.remove('on','near');continue;}
-            el.style.top=y+'px';el.style.right=(sw+7)+'px';el.style.left='auto';   // pequeño, a la derecha, junto al eje (el precio va en el eje)
+            el.style.top=y+'px';el.style.right=(sw+(S._gexW||0)+11)+'px';el.style.left='auto';   // a la izquierda del histograma (no lo pisa); el precio va en el eje
             el.classList.add('on');
             // glow de proximidad: cuando el precio está cerca del nivel, la tag pulsa (reimplementa el viejo efecto del imap)
             if(pY!=null&&Math.abs(y-pY)<34)el.classList.add('near');else el.classList.remove('near');
@@ -2927,7 +2928,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var op=(S.dayOpen&&S.dayOpen>0)?S.dayOpen:null;
       if(!op){var cc=candleCache['c'+(window._activeTf||'5')];if(cc&&cc.d&&cc.d.length&&cc.d[0].open>0)op=cc.d[0].open;}
       if(px!=null&&op){ var dd=px-op,pct=dd/op*100; ch.textContent=(dd>=0?'+':'')+Math.round(dd)+' ('+(dd>=0?'+':'')+pct.toFixed(2)+'%)'; ch.className='cxh-chg '+(dd>=0?'up':'down'); }
-      else { ch.textContent=''; ch.className='cxh-chg'; }
+      else { ch.textContent='—'; ch.className='cxh-chg'; }
     }
   }
   setInterval(cxPriceRender,800);
@@ -3056,6 +3057,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     // medido en vivo → nunca tapa las velas, ni en móvil ni con zoom.
     var bs=9; try{bs=Math.abs(chart.timeScale().logicalToCoordinate(1)-chart.timeScale().logicalToCoordinate(0))||9;}catch(e){}
     var maxBarW=Math.max(22,Math.min(116,bs*11-4));
+    S._gexW=maxBarW;   // ancho del histograma → las tags de nombre se colocan a su IZQUIERDA (no lo pisan)
     var rows=[];
     ps.forEach(function(s){
       var g=G(s); if(!g)return;
@@ -3081,7 +3083,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.save();
     ctx.fillStyle='rgba(255,255,255,0.09)'; ctx.fillRect(x0,8,1,H-16);   // baseline del perfil
     ctx.font='9px "DM Mono",ui-monospace,monospace'; ctx.textAlign='right';
-    ctx.fillStyle='rgba(232,228,217,0.38)'; ctx.fillText('γ vol', x0-2, 12);
+    ctx.fillStyle='rgba(232,228,217,0.38)'; ctx.fillText(S.show0dte?'γ vol · vto.compl.':'γ vol', x0-2, 12);
     // barras + puntos (las líneas guía de los muros secundarios ahora son priceLines con label en el eje)
     rows.forEach(function(r){
       var t=_wtier(r);          // 2=primario (Call/Put Wall), 1=muro secundario, 0=fondo
@@ -3161,11 +3163,11 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var it=_dw.items[i], bx=null, by=null;
     if(it.t==='hline'){ by=_dwP2Y(it.p1); } else { bx=_dwL2X(it.l2); by=_dwP2Y(it.p2); }
     if(by==null){ btn.classList.remove('on'); return; }
-    var stage=btn.parentNode, W=stage.clientWidth;
+    var stage=btn.parentNode, W=stage.clientWidth, Hs=stage.clientHeight;
     var sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
     var x=(bx!=null?bx:(W-sw-46));
     x=Math.max(6,Math.min(x, W-sw-34));
-    btn.style.left=(x+10)+'px'; btn.style.top=(Math.max(4,by-30))+'px';
+    btn.style.left=(x+10)+'px'; btn.style.top=Math.max(4,Math.min(by-30, Hs-34))+'px';   // clamp Y al alto del chart
     btn.classList.add('on');
   }
   function cxDrawRender(){
@@ -3202,6 +3204,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(t==='clear'){_dw.items=[];_dw.draft=null;_dw.sel=null;_dwSave();try{cxDrawRender();}catch(x){}return;}
       if(!chart){loadChart();}
       _dw.tool=t;_dw.draft=null;
+      if(t!=='move'){ _dw.sel=null; var db=$('cx-del'); if(db)db.classList.remove('on'); }   // cambiar de herramienta deselecciona (el ✕ no queda flotando)
       bar.querySelectorAll('.cxd').forEach(function(x){x.classList.toggle('active',x===b);});
       ov.classList.toggle('armed',t!=='cursor');
     });
