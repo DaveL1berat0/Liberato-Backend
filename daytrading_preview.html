@@ -2754,7 +2754,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         vertLine:{color:'rgba(239,236,227,0.25)',width:1,style:LS.Dashed,labelBackgroundColor:'#11141F'},
         horzLine:{color:'rgba(239,236,227,0.25)',width:1,style:LS.Dashed,labelBackgroundColor:'#11141F'}},
       rightPriceScale:{borderColor:'rgba(239,236,227,0.07)',scaleMargins:{top:0.12,bottom:0.14}},
-      timeScale:{borderColor:'rgba(239,236,227,0.07)',timeVisible:true,secondsVisible:false,barSpacing:9,minBarSpacing:3,rightOffset:8},
+      timeScale:{borderColor:'rgba(239,236,227,0.07)',timeVisible:true,secondsVisible:false,barSpacing:9,minBarSpacing:3,rightOffset:10},
       handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:false},
       handleScale:{mouseWheel:true,pinch:true,axisPressedMouseMove:{time:true,price:true},axisDoubleClickReset:true},
       kineticScroll:{mouse:false,touch:true}
@@ -2822,7 +2822,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(!el){el=document.createElement('span');el.className='cx-tag '+d.k;el.dataset.k=d.k;host.appendChild(el);}
       var v=d.get();
       if(v==null){el.classList.remove('on');el._px=null;return;}
-      var txt=d.lbl+' '+nfmt(v)+_tagBadge(d.k,v);
+      var txt=d.lbl+' '+nfmt(v);   // solo etiqueta + precio (sin la 2ª palabra: resist/soporte/roto/tend)
       if(el.textContent!==txt)el.textContent=txt;
       el._px=v;
     });
@@ -2845,7 +2845,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             if(p==null){el.classList.remove('on','near');continue;}
             var y=null;try{y=series.priceToCoordinate(p);}catch(e){}
             if(y==null||y<10||y>h-14){el.classList.remove('on','near');continue;}
-            el.style.top=y+'px';el.style.right=(sw+8)+'px';
+            el.style.top=y+'px';el.style.left='42px';el.style.right='auto';   // labels a la IZQUIERDA (no pisan el eje/niveles a la derecha)
             el.classList.add('on');
             // glow de proximidad: cuando el precio está cerca del nivel, la tag pulsa (reimplementa el viejo efecto del imap)
             if(pY!=null&&Math.abs(y-pY)<34)el.classList.add('near');else el.classList.remove('near');
@@ -2991,10 +2991,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var W=cv.width/_dw.dpr, H=cv.height/_dw.dpr;
     var sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
     var x0=W-sw-3;                               // borde derecho del área de velas (antes del eje)
-    // Ancho máx = el HUECO real a la derecha (rightOffset ≈ 8 barras del barSpacing EFECTIVO),
-    // medido en vivo → nunca tapa las velas, ni en móvil ni con zoom (la vista fija 103 barras).
+    // Ancho máx = el HUECO real a la derecha (rightOffset ≈ 11 barras del barSpacing EFECTIVO),
+    // medido en vivo → nunca tapa las velas, ni en móvil ni con zoom.
     var bs=9; try{bs=Math.abs(chart.timeScale().logicalToCoordinate(1)-chart.timeScale().logicalToCoordinate(0))||9;}catch(e){}
-    var maxBarW=Math.max(16,Math.min(92,bs*8-4));
+    var maxBarW=Math.max(22,Math.min(116,bs*11-4));
     var rows=[];
     ps.forEach(function(s){
       var g=G(s); if(!g)return;
@@ -3004,16 +3004,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     });
     if(!rows.length)return;
     rows.sort(function(a,b){return b.a-a.a;});
-    if(rows.length>14)rows=rows.slice(0,14);
+    if(rows.length>16)rows=rows.slice(0,16);
     var maxAbs=rows[0].a||1;
     ctx.save();
+    // baseline vertical (eje del perfil) + etiqueta
+    ctx.fillStyle='rgba(255,255,255,0.10)'; ctx.fillRect(x0,8,1,H-16);
     ctx.font='9px "DM Mono",ui-monospace,monospace'; ctx.textAlign='right';
-    ctx.fillStyle='rgba(232,228,217,0.30)'; ctx.fillText('γ vol', x0, 11);
+    ctx.fillStyle='rgba(232,228,217,0.38)'; ctx.fillText('γ vol', x0-2, 12);
     rows.forEach(function(r){
-      var w=Math.max(5,Math.sqrt(Math.min(r.a/maxAbs,1))*maxBarW);
-      var pos=r.g>=0, strong=r.a>=maxAbs*0.55;
-      ctx.fillStyle=pos?('rgba(46,232,164,'+(strong?0.85:0.4)+')'):('rgba(177,151,252,'+(strong?0.85:0.4)+')');
-      ctx.fillRect(x0-w, r.y-2.5, w, 5);
+      var w=Math.max(9,Math.sqrt(Math.min(r.a/maxAbs,1))*maxBarW);
+      var pos=r.g>=0, strong=r.a>=maxAbs*0.5;
+      ctx.fillStyle=pos?('rgba(46,232,164,'+(strong?0.95:0.55)+')'):('rgba(177,151,252,'+(strong?0.95:0.55)+')');
+      ctx.fillRect(x0-w, r.y-3.5, w, 7);
     });
     ctx.restore();
   }
@@ -3112,7 +3114,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   //   solo la vela que cambió o añade la nueva, preservando zoom y posición.
   var _cxPaintedTf=null;
   function cxInitialView(n){
-    try{chart.timeScale().setVisibleLogicalRange({from:Math.max(0,n-96),to:n+7});}catch(e){}
+    try{chart.timeScale().setVisibleLogicalRange({from:Math.max(0,n-93),to:n+10});}catch(e){}
   }
   async function fetchCandles(tf){
     window._activeTf=tf;  // recordar timeframe activo para auto-refresh
