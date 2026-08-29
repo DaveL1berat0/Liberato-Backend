@@ -462,6 +462,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-del.on{display:inline-flex;}
 .cx-del:hover{background:rgba(255,107,129,0.18);transform:scale(1.08);}
 @media(max-width:680px){.cx-del{width:30px;height:30px;font-size:14px;}}
+.cx-xtip{position:absolute;display:none;z-index:5;pointer-events:none;background:rgba(10,12,18,0.94);border:0.5px solid rgba(201,168,76,0.28);border-radius:8px;padding:7px 9px;font-family:var(--mono);font-size:10.5px;line-height:1.5;color:var(--ink-1);box-shadow:0 10px 30px rgba(0,0,0,0.55);white-space:nowrap;backdrop-filter:blur(6px);}
+.cx-xtip .xt-ohlc span{color:var(--ink-3);margin:0 2px 0 6px;}
+.cx-xtip .xt-ohlc span:first-child{margin-left:0;}
+.cx-xtip .xt-px{color:var(--gold);font-weight:700;font-size:12px;margin-top:2px;}
+.cx-xtip .xt-lvl{margin-top:2px;font-size:10px;}
 @media(max-width:680px){#chart-tv{height:300px;}.cxh-px{font-size:14px;}.cxh-sym{font-size:11px;letter-spacing:0.1em;}.cxh-l{gap:9px;}}
 /* ── Herramientas de dibujo (overlay propio, sin APIs externas) ─────────────── */
 #cx-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
@@ -1582,6 +1587,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         </div>
         <div class="cx-tags" id="cx-tags" aria-hidden="true"></div>
         <button class="cx-del" id="cx-del" type="button" title="Borrar este dibujo" aria-label="Borrar dibujo seleccionado">✕</button>
+        <div class="cx-xtip" id="cx-xtip" aria-hidden="true"></div>
       </div>
       <div class="imap-ro">
         <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
@@ -2776,6 +2782,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       ro.observe(el);
     }catch(e){addEventListener('resize',function(){if(chart)chart.applyOptions({width:el.clientWidth});});}
     drawLines();cxTagsLoop();cxPriceRender();
+    try{chart.subscribeCrosshairMove(cxCrossMove);}catch(e){}   // tooltip de datos al pasar el cursor
     fetchCandles(window._activeTf||'5');
   }
   // ── Niveles institucionales: SOLO Call Wall · Gamma Flip · Put Wall ────────
@@ -3066,6 +3073,24 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.shadowBlur=0;
     ctx.restore();
   }
+  // ZONAS DE RÉGIMEN (signature gamma-chart): tinte MUY sutil según el Gamma Flip.
+  // Verde arriba del flip = gamma positiva (dealers absorben → rango). Morado debajo = gamma
+  // negativa (amplifican → tendencia). Se pinta primero (fondo) y clampeado (maneja flip fuera de vista).
+  function cxZones(ctx,cv){
+    var gf=_actGF(); if(gf==null)return;
+    var y=null; try{y=series.priceToCoordinate(gf);}catch(e){}
+    if(y==null)return;
+    var W=cv.width/_dw.dpr, H=cv.height/_dw.dpr, sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
+    var pw=W-sw, yy=Math.max(0,Math.min(H,y));
+    ctx.save();
+    ctx.fillStyle='rgba(46,232,164,0.035)'; ctx.fillRect(0,0,pw,yy);           // γ+ (rango)
+    ctx.fillStyle='rgba(177,151,252,0.05)'; ctx.fillRect(0,yy,pw,H-yy);        // γ− (tendencia)
+    // etiquetas tenues de régimen (solo si hay banda visible suficiente)
+    ctx.font='8px "DM Mono",ui-monospace,monospace'; ctx.textAlign='left';
+    if(yy>26){ ctx.fillStyle='rgba(46,232,164,0.34)'; ctx.fillText('γ+ · RANGO', 10, 20); }
+    if(H-yy>26){ ctx.fillStyle='rgba(177,151,252,0.36)'; ctx.fillText('γ− · TENDENCIA', 10, H-10); }
+    ctx.restore();
+  }
   // Línea de ÚLTIMO PRECIO corta: de la última vela al eje (no cruza todo el chart). El precio
   // sigue en el eje (lastValueVisible). Se pinta cada frame para seguir zoom/pan.
   function cxLastLine(ctx,cv){
@@ -3080,6 +3105,26 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(239,236,227,0.45)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(Math.max(0,xL),y); ctx.lineTo(W-sw,y); ctx.stroke();
     ctx.setLineDash([]); ctx.restore();
+  }
+  // Crosshair con tooltip de datos (OHLC de la vela + nivel de gamma más cercano) — feature pro.
+  function cxCrossMove(param){
+    var tip=$('cx-xtip'); if(!tip)return;
+    if(!param||!param.point||param.point.x<0||param.point.y<0||!param.time){ tip.style.display='none'; return; }
+    var d=param.seriesData&&param.seriesData.get?param.seriesData.get(series):null;
+    var cp=null; try{cp=series.coordinateToPrice(param.point.y);}catch(e){}
+    var levels=[{n:'Call',p:_actCW(),c:'#2EE8A4'},{n:'Flip',p:_actGF(),c:'#CCA94F'},{n:'Put',p:_actPW(),c:'#B197FC'},{n:'MaxPain',p:S.maxPain,c:'#4FD6E0'}].filter(function(l){return l.p!=null;});
+    var near=null,nd=1e9;
+    if(cp!=null) levels.forEach(function(l){var dd=Math.abs(l.p-cp);if(dd<nd){nd=dd;near=l;}});
+    var html='';
+    if(d&&d.open!=null){ html+='<div class="xt-ohlc"><span>O</span>'+nfmt(d.open)+'<span>H</span>'+nfmt(d.high)+'<span>L</span>'+nfmt(d.low)+'<span>C</span>'+nfmt(d.close)+'</div>'; }
+    if(cp!=null){ html+='<div class="xt-px">'+nfmt(cp)+'</div>'; }
+    if(near&&cp!=null){ var dir=(near.p>=cp)?'↑':'↓'; html+='<div class="xt-lvl" style="color:'+near.c+'">'+dir+' '+near.n+' '+nfmt(near.p)+' · '+Math.round(nd)+'p</div>'; }
+    if(!html){ tip.style.display='none'; return; }
+    tip.innerHTML=html; tip.style.display='block';
+    var stage=tip.parentNode, sw=stage.clientWidth, sh=stage.clientHeight, tw=tip.offsetWidth, th=tip.offsetHeight;
+    var tx=param.point.x+16; if(tx+tw>sw-4) tx=param.point.x-tw-16;
+    var ty=param.point.y+16; if(ty+th>sh-4) ty=param.point.y-th-16;
+    tip.style.left=Math.max(4,tx)+'px'; tip.style.top=Math.max(4,ty)+'px';
   }
   // Botón ✕ flotante para borrar el dibujo SELECCIONADO (móvil no tiene tecla Del).
   function cxDelSync(){
@@ -3102,6 +3147,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.setTransform(_dw.dpr,0,0,_dw.dpr,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
     if(!chart||!series)return;
+    try{cxZones(ctx,cv);}catch(e){}              // zonas de régimen (fondo, lo más atrás)
     try{cxLastLine(ctx,cv);}catch(e){}           // línea corta de último precio (vela→eje)
     try{cxGexRender(ctx,cv);}catch(e){}          // histograma → los dibujos quedan encima
     if(_dw.sel!=null&&_dw.sel>=_dw.items.length)_dw.sel=null;
