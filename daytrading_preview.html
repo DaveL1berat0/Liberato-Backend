@@ -440,14 +440,24 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes spin{to{transform:rotate(360deg);}}
 .chart-load-t{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
 /* ── CHART · rediseño cx (header mínimo · tags de niveles · stage) ─────────── */
-.cxh{display:flex;align-items:center;justify-content:space-between;gap:var(--sp2);padding:10px var(--sp3);border-top:1px solid var(--hair);}
-.cxh-l{display:flex;align-items:center;gap:14px;min-width:0;}
-.cxh-sym{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-1);white-space:nowrap;}
+.cxh{display:flex;align-items:center;justify-content:space-between;gap:var(--sp2);padding:9px var(--sp3);border-top:1px solid var(--hair);background:linear-gradient(180deg,rgba(239,236,227,0.018),transparent);}
+.cxh-l{display:flex;align-items:center;gap:13px;min-width:0;}
+.cxh-symwrap{display:flex;flex-direction:column;line-height:1;gap:2px;}
+.cxh-sym{font-family:var(--sans);font-size:16px;font-weight:800;letter-spacing:0.08em;color:var(--ink-1);white-space:nowrap;}
+.cxh-symsub{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);white-space:nowrap;}
 .cxh-tf{display:flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--hair);border-radius:7px;background:rgba(239,236,227,0.02);}
-.cxh-tf .tf{border:none;padding:4px 10px;border-radius:5px;}
+.cxh-tf .tf{border:none;padding:4px 10px;border-radius:5px;transition:all .15s var(--ease);}
+.cxh-tf .tf:hover{color:var(--ink-1);}
 .cxh-tf .tf.active{background:var(--gold-faint);color:var(--gold);}
-.cxh-px{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:0.02em;color:var(--ink-1);font-variant-numeric:tabular-nums;transition:color 0.25s var(--ease);}
+.cxh-r{display:flex;align-items:center;gap:12px;}
+.cxh-regime{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.06em;padding:4px 9px;border-radius:6px;border:1px solid;white-space:nowrap;opacity:0;transition:opacity .3s var(--ease);}
+.cxh-regime.on{opacity:1;}
+.cxh-regime.pos{color:var(--up);border-color:rgba(46,232,164,0.4);background:rgba(46,232,164,0.07);}
+.cxh-regime.neg{color:var(--down);border-color:rgba(177,151,252,0.4);background:rgba(177,151,252,0.07);}
+.cxh-px{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:0.02em;color:var(--ink-1);font-variant-numeric:tabular-nums;transition:color 0.25s var(--ease);}
 .cxh-px.up{color:var(--up);} .cxh-px.down{color:var(--down);}
+.cxh-chg{font-family:var(--mono);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink-3);white-space:nowrap;}
+.cxh-chg.up{color:var(--up);} .cxh-chg.down{color:var(--down);}
 #chart-tv{width:100%;height:380px;display:none;}
 .cx-tags{position:absolute;inset:0;pointer-events:none;z-index:3;}
 .cx-tag{position:absolute;right:0;transform:translateY(-50%);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 7px;border-radius:4px;background:rgba(6,7,13,0.9);border:1px solid;white-space:nowrap;opacity:0;transition:opacity 0.2s var(--ease);}
@@ -1563,14 +1573,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
            sobre las velas + el histograma de gamma se pinta en el canvas overlay. Readouts abajo. -->
       <div class="cxh" id="cx-head">
         <div class="cxh-l">
-          <span class="cxh-sym">NQ Futures</span>
+          <div class="cxh-symwrap"><span class="cxh-sym">NQ</span><span class="cxh-symsub">Nasdaq&nbsp;100 · Fut</span></div>
           <div class="cxh-tf" role="tablist" aria-label="Timeframe">
             <button class="tf active" data-tf="5">5m</button>
             <button class="tf" data-tf="15">15m</button>
             <button class="tf" data-tf="30">30m</button>
           </div>
         </div>
-        <span class="cxh-px" id="cx-price">—</span>
+        <div class="cxh-r">
+          <span class="cxh-regime" id="cx-regime">—</span>
+          <span class="cxh-px" id="cx-price">—</span>
+          <span class="cxh-chg" id="cx-chg">—</span>
+        </div>
       </div>
       <div class="chart-stage" id="chart-stage">
         <div class="chart-load" id="chart-load"><div class="chart-ring"></div><div class="chart-load-t">Cargando velas · NQ</div></div>
@@ -2762,8 +2776,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       layout:{background:{color:'transparent'},textColor:'rgba(239,236,227,0.42)',fontFamily:"'JetBrains Mono',monospace",fontSize:10},
       grid:{vertLines:{color:'rgba(239,236,227,0.03)'},horzLines:{color:'rgba(239,236,227,0.03)'}},
       crosshair:{mode:LightweightCharts.CrosshairMode.Normal,
-        vertLine:{color:'rgba(239,236,227,0.25)',width:1,style:LS.Dashed,labelBackgroundColor:'#11141F'},
-        horzLine:{color:'rgba(239,236,227,0.25)',width:1,style:LS.Dashed,labelBackgroundColor:'#11141F'}},
+        vertLine:{color:'rgba(201,168,76,0.32)',width:1,style:LS.Dashed,labelBackgroundColor:'#2a2416'},
+        horzLine:{color:'rgba(201,168,76,0.32)',width:1,style:LS.Dashed,labelBackgroundColor:'#2a2416'}},
       rightPriceScale:{borderColor:'rgba(239,236,227,0.07)',scaleMargins:{top:0.12,bottom:0.14}},
       timeScale:{borderColor:'rgba(239,236,227,0.07)',timeVisible:true,secondsVisible:false,barSpacing:9,minBarSpacing:3,rightOffset:10},
       handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:false},
@@ -2772,7 +2786,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     });
     series=chart.addCandlestickSeries({
       upColor:'#2EE8A4',downColor:'#B197FC',borderVisible:false,
-      wickUpColor:'rgba(46,232,164,0.65)',wickDownColor:'rgba(177,151,252,0.65)',
+      wickUpColor:'rgba(46,232,164,0.85)',wickDownColor:'rgba(177,151,252,0.85)',
       priceFormat:{type:'price',precision:2,minMove:0.25},
       lastValueVisible:true,priceLineVisible:false,
       priceLineColor:'rgba(239,236,227,0.3)',priceLineWidth:1,priceLineStyle:LS.Dotted
@@ -2895,12 +2909,25 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var el=$('cx-price');if(!el)return;
     var px=(S.price&&S.price>1000)?S.price:null;
     if(px==null){var c=candleCache['c'+(window._activeTf||'5')];if(c&&c.d&&c.d.length)px=c.d[c.d.length-1].close;}
-    if(px==null){el.textContent='—';return;}
-    var t=px.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    if(el.textContent!==t){
-      el.classList.remove('up','down');
-      if(_cxLastShown!=null){if(px>_cxLastShown)el.classList.add('up');else if(px<_cxLastShown)el.classList.add('down');}
-      el.textContent=t;_cxLastShown=px;
+    if(px==null){ el.textContent='—'; }
+    else {
+      var t=px.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+      if(el.textContent!==t){
+        el.classList.remove('up','down');
+        if(_cxLastShown!=null){if(px>_cxLastShown)el.classList.add('up');else if(px<_cxLastShown)el.classList.add('down');}
+        el.textContent=t;_cxLastShown=px;
+      }
+    }
+    // badge de RÉGIMEN (precio vs Gamma Flip) — γ+ RANGO / γ− TENDENCIA
+    var rg=$('cx-regime');
+    if(rg){ if(px!=null&&S.gammaFlip!=null){ var pos=px>=S.gammaFlip; rg.textContent=pos?'γ+ RANGO':'γ− TEND'; rg.className='cxh-regime on '+(pos?'pos':'neg'); } else { rg.className='cxh-regime'; rg.textContent='—'; } }
+    // CAMBIO del día vs apertura (prev close; fallback: apertura de la 1ª vela cargada)
+    var ch=$('cx-chg');
+    if(ch){
+      var op=(S.dayOpen&&S.dayOpen>0)?S.dayOpen:null;
+      if(!op){var cc=candleCache['c'+(window._activeTf||'5')];if(cc&&cc.d&&cc.d.length&&cc.d[0].open>0)op=cc.d[0].open;}
+      if(px!=null&&op){ var dd=px-op,pct=dd/op*100; ch.textContent=(dd>=0?'+':'')+Math.round(dd)+' ('+(dd>=0?'+':'')+pct.toFixed(2)+'%)'; ch.className='cxh-chg '+(dd>=0?'up':'down'); }
+      else { ch.textContent=''; ch.className='cxh-chg'; }
     }
   }
   setInterval(cxPriceRender,800);
