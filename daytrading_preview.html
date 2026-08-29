@@ -458,6 +458,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-tag.maxpain{color:#4FD6E0;border-color:rgba(79,214,224,0.4);}
 .cx-tag.near{animation:cxNearPulse 1.15s ease-in-out infinite;border-color:currentColor;}
 @keyframes cxNearPulse{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 11px -1px currentColor;}}
+.cx-del{position:absolute;display:none;z-index:6;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,107,129,0.55);background:rgba(20,10,12,0.95);color:#FF6B81;font-size:12px;line-height:1;cursor:pointer;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 14px rgba(0,0,0,0.5);transition:background .15s,transform .15s;}
+.cx-del.on{display:inline-flex;}
+.cx-del:hover{background:rgba(255,107,129,0.18);transform:scale(1.08);}
+@media(max-width:680px){.cx-del{width:30px;height:30px;font-size:14px;}}
 @media(max-width:680px){#chart-tv{height:300px;}.cxh-px{font-size:14px;}.cxh-sym{font-size:11px;letter-spacing:0.1em;}.cxh-l{gap:9px;}}
 /* ── Herramientas de dibujo (overlay propio, sin APIs externas) ─────────────── */
 #cx-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
@@ -1577,6 +1581,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           <button class="cxd cxd-trash" data-tool="clear" title="Borrar dibujos"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l0.7 8.5h5.6l0.7-8.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
         <div class="cx-tags" id="cx-tags" aria-hidden="true"></div>
+        <button class="cx-del" id="cx-del" type="button" title="Borrar este dibujo" aria-label="Borrar dibujo seleccionado">✕</button>
       </div>
       <div class="imap-ro">
         <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
@@ -2763,7 +2768,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       upColor:'#2EE8A4',downColor:'#B197FC',borderVisible:false,
       wickUpColor:'rgba(46,232,164,0.65)',wickDownColor:'rgba(177,151,252,0.65)',
       priceFormat:{type:'price',precision:2,minMove:0.25},
-      lastValueVisible:true,priceLineVisible:true,
+      lastValueVisible:true,priceLineVisible:false,
       priceLineColor:'rgba(239,236,227,0.3)',priceLineWidth:1,priceLineStyle:LS.Dotted
     });
     try{
@@ -2785,11 +2790,33 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     Object.keys(lines).forEach(function(k){try{series.removePriceLine(lines[k]);}catch(e){}});lines={};
     var _z=(S.show0dte&&S.zero); var _st=_z?LS.Dotted:LS.Solid; // 0DTE punteado para distinguir
     var _cw=_actCW(),_pw=_actPW(),_gf=_actGF();
-    if(_cw!=null)lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
-    if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:false,title:''});
-    if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:1,lineStyle:_st,axisLabelVisible:false,title:''});
-    if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:false,title:''});
+    // PRIMARIOS + flip + maxpain: línea nítida + PRECIO en el eje (axisLabelVisible).
+    if(_cw!=null)lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
+    if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
+    // MUROS SECUNDARIOS de gamma por volumen (Dave): también con PRECIO en el eje para que el
+    // trader identifique el nivel exacto, no solo el perfil. Línea sparse tenue (color atenuado).
+    var gw=_computeGexWalls(); S.gexWalls=gw;
+    var used=[_cw,_pw,_gf,S.maxPain].filter(function(v){return v!=null;});
+    var sn=0;
+    [{arr:gw.pos,c:'#1f7d5c'},{arr:gw.neg,c:'#6f5cae'}].forEach(function(side){
+      side.arr.slice(1,2).forEach(function(wl){  // solo el 2º muro de cada lado ([0] ya es Call/Put Wall)
+        if(used.some(function(u){return Math.abs(u-wl.strike)<12;})) return;  // no saturar el eje con niveles pegados
+        used.push(wl.strike);
+        lines['sec'+(sn++)]=series.createPriceLine({price:wl.strike,color:side.c,lineWidth:1,lineStyle:LS.SparseDotted,axisLabelVisible:true,title:''});
+      });
+    });
     cxTagsSync();
+  }
+  // Muros de gamma por volumen: top-3 de |γ| por lado (comparten drawLines y el histograma).
+  function _computeGexWalls(){
+    var ps=Array.isArray(S.perStrike)?S.perStrike:[];
+    var useVol=ps.some(function(s){return Math.abs(s.gex_vol||0)>0;});
+    var arr=ps.map(function(s){var g=useVol?(s.gex_vol||0):(s.gex||0);return {strike:s.strike,g:g,a:Math.abs(g)};}).filter(function(s){return s.a>0;});
+    var pos=arr.filter(function(s){return s.g>=0;}).sort(function(a,b){return b.a-a.a;});
+    var neg=arr.filter(function(s){return s.g<0;}).sort(function(a,b){return b.a-a.a;});
+    return {pos:pos.slice(0,3),neg:neg.slice(0,3)};
   }
   // Toggle 0DTE: cambia los niveles mostrados entre vencimiento completo (OI) y 0DTE.
   window.toggle0dte=function(){
@@ -2822,7 +2849,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(!el){el=document.createElement('span');el.className='cx-tag '+d.k;el.dataset.k=d.k;host.appendChild(el);}
       var v=d.get();
       if(v==null){el.classList.remove('on');el._px=null;return;}
-      var txt=d.lbl+' '+nfmt(v);   // solo etiqueta + precio (sin la 2ª palabra: resist/soporte/roto/tend)
+      var txt=d.lbl;   // SOLO el nombre (CALL/GAMMA/PUT/MAX PAIN); el precio va en el eje (axisLabelVisible)
       if(el.textContent!==txt)el.textContent=txt;
       el._px=v;
     });
@@ -2845,7 +2872,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             if(p==null){el.classList.remove('on','near');continue;}
             var y=null;try{y=series.priceToCoordinate(p);}catch(e){}
             if(y==null||y<10||y>h-14){el.classList.remove('on','near');continue;}
-            el.style.top=y+'px';el.style.left='56px';el.style.right='auto';   // izquierda, PASADA la barra de dibujo (que ocupa ~8-46px)
+            el.style.top=y+'px';el.style.right=(sw+7)+'px';el.style.left='auto';   // pequeño, a la derecha, junto al eje (el precio va en el eje)
             el.classList.add('on');
             // glow de proximidad: cuando el precio está cerca del nivel, la tag pulsa (reimplementa el viejo efecto del imap)
             if(pY!=null&&Math.abs(y-pY)<34)el.classList.add('near');else el.classList.remove('near');
@@ -3021,16 +3048,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.fillStyle='rgba(255,255,255,0.09)'; ctx.fillRect(x0,8,1,H-16);   // baseline del perfil
     ctx.font='9px "DM Mono",ui-monospace,monospace'; ctx.textAlign='right';
     ctx.fillStyle='rgba(232,228,217,0.38)'; ctx.fillText('γ vol', x0-2, 12);
-    // 1) líneas guía tenues de los muros SECUNDARIOS (los primarios ya tienen su priceLine)
-    ctx.setLineDash([2,4]);
-    rows.forEach(function(r){
-      if(_wtier(r)!==1) return;
-      var col=(r.g>=0)?'46,232,164':'177,151,252';
-      ctx.strokeStyle='rgba('+col+',0.17)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(6,r.y); ctx.lineTo(x0,r.y); ctx.stroke();
-    });
-    ctx.setLineDash([]);
-    // 2) barras + puntos
+    // barras + puntos (las líneas guía de los muros secundarios ahora son priceLines con label en el eje)
     rows.forEach(function(r){
       var t=_wtier(r);          // 2=primario (Call/Put Wall), 1=muro secundario, 0=fondo
       var frac=Math.min(r.a/maxAbs,1);
@@ -3048,14 +3066,46 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.shadowBlur=0;
     ctx.restore();
   }
+  // Línea de ÚLTIMO PRECIO corta: de la última vela al eje (no cruza todo el chart). El precio
+  // sigue en el eje (lastValueVisible). Se pinta cada frame para seguir zoom/pan.
+  function cxLastLine(ctx,cv){
+    var cc=candleCache['c'+(window._activeTf||'5')]; var d=cc&&cc.d;
+    if(!d||!d.length)return;
+    var px=d[d.length-1].close; if(px==null)return;
+    var y=null,xL=null;
+    try{ y=series.priceToCoordinate(px); xL=chart.timeScale().logicalToCoordinate(d.length-1); }catch(e){}
+    if(y==null||xL==null)return;
+    var W=cv.width/_dw.dpr, sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
+    ctx.save();
+    ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(239,236,227,0.45)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(Math.max(0,xL),y); ctx.lineTo(W-sw,y); ctx.stroke();
+    ctx.setLineDash([]); ctx.restore();
+  }
+  // Botón ✕ flotante para borrar el dibujo SELECCIONADO (móvil no tiene tecla Del).
+  function cxDelSync(){
+    var btn=$('cx-del'); if(!btn)return;
+    var i=_dw.sel;
+    if(i==null||i<0||i>=_dw.items.length){ btn.classList.remove('on'); return; }
+    var it=_dw.items[i], bx=null, by=null;
+    if(it.t==='hline'){ by=_dwP2Y(it.p1); } else { bx=_dwL2X(it.l2); by=_dwP2Y(it.p2); }
+    if(by==null){ btn.classList.remove('on'); return; }
+    var stage=btn.parentNode, W=stage.clientWidth;
+    var sw=56; try{sw=chart.priceScale('right').width()||56;}catch(e){}
+    var x=(bx!=null?bx:(W-sw-46));
+    x=Math.max(6,Math.min(x, W-sw-34));
+    btn.style.left=(x+10)+'px'; btn.style.top=(Math.max(4,by-30))+'px';
+    btn.classList.add('on');
+  }
   function cxDrawRender(){
     var cv=_dwCanvas();if(!cv)return;
     var ctx=cv.getContext('2d');
     ctx.setTransform(_dw.dpr,0,0,_dw.dpr,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
     if(!chart||!series)return;
-    try{cxGexRender(ctx,cv);}catch(e){}          // histograma primero → los dibujos quedan encima
+    try{cxLastLine(ctx,cv);}catch(e){}           // línea corta de último precio (vela→eje)
+    try{cxGexRender(ctx,cv);}catch(e){}          // histograma → los dibujos quedan encima
     if(_dw.sel!=null&&_dw.sel>=_dw.items.length)_dw.sel=null;
+    try{cxDelSync();}catch(e){}                   // posiciona/oculta el botón ✕ del dibujo seleccionado
     if(!_dw.items.length&&!_dw.draft)return;
     for(var i=0;i<_dw.items.length;i++){
       if(_dw.sel===i)_dwHalo(ctx,_dw.items[i]);
@@ -3065,6 +3115,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   }
   (function(){
     var bar=$('cx-draw'),ov=$('cx-ov');if(!bar||!ov)return;
+    var delBtn=$('cx-del');
+    if(delBtn) delBtn.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var i=_dw.sel;
+      if(i!=null&&i>=0&&i<_dw.items.length){ _dw.items.splice(i,1); _dw.sel=null; _dw.drag=null; _dwSave(); delBtn.classList.remove('on'); try{cxDrawRender();}catch(x){} }
+    });
     function reset(){_dw.tool='cursor';_dw.draft=null;ov.classList.remove('armed');
       bar.querySelectorAll('.cxd').forEach(function(x){x.classList.toggle('active',x.dataset.tool==='cursor');});}
     bar.addEventListener('click',function(e){
@@ -4598,8 +4654,16 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var top=r.bottom+8; if(top+tp.offsetHeight>window.innerHeight-pad) top=r.top-tp.offsetHeight-8;
     tp.style.left=left+'px'; tp.style.top=Math.max(pad,top)+'px'; forEl=el; }
   function hide(){ if(tip)tip.style.display='none'; forEl=null; }
+  // Mueve el title→data-tip para MATAR el tooltip nativo del navegador (que salía en hover con delay,
+  // creando un doble-tooltip con el custom). Corre al init y ante nodos nuevos.
+  (function killNativeTitles(){
+    document.querySelectorAll('.info-i[title]').forEach(function(el){
+      if(!el.getAttribute('data-tip')) el.setAttribute('data-tip', el.getAttribute('title'));
+      el.removeAttribute('title');
+    });
+  })();
   document.addEventListener('click',function(e){
-    var el=e.target.closest&&e.target.closest('.info-i'); 
+    var el=e.target.closest&&e.target.closest('.info-i');
     if(el){ e.preventDefault(); e.stopPropagation();
       if(tip&&tip.style.display==='block'&&forEl===el){ hide(); return; } show(el); }
     else hide();
