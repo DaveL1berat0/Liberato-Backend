@@ -3006,17 +3006,28 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     rows.sort(function(a,b){return b.a-a.a;});
     if(rows.length>16)rows=rows.slice(0,16);
     var maxAbs=rows[0].a||1;
+    // JERARQUÍA: el pico positivo (Call Wall) y el pico negativo (Put Wall) son los MUROS
+    // dominantes → resaltan (ancho pleno, opacos, gruesos, con punto y halo). El resto es un
+    // perfil de fondo (escala potencia 1.8 → contraste fuerte, para que el muro salte a la vista).
+    var maxPos=null,maxNeg=null;
+    rows.forEach(function(r){ if(r.g>=0){ if(!maxPos||r.a>maxPos.a)maxPos=r; } else if(!maxNeg||r.a>maxNeg.a)maxNeg=r; });
     ctx.save();
-    // baseline vertical (eje del perfil) + etiqueta
-    ctx.fillStyle='rgba(255,255,255,0.10)'; ctx.fillRect(x0,8,1,H-16);
+    ctx.fillStyle='rgba(255,255,255,0.09)'; ctx.fillRect(x0,8,1,H-16);   // baseline del perfil
     ctx.font='9px "DM Mono",ui-monospace,monospace'; ctx.textAlign='right';
     ctx.fillStyle='rgba(232,228,217,0.38)'; ctx.fillText('γ vol', x0-2, 12);
     rows.forEach(function(r){
-      var w=Math.max(9,Math.sqrt(Math.min(r.a/maxAbs,1))*maxBarW);
-      var pos=r.g>=0, strong=r.a>=maxAbs*0.5;
-      ctx.fillStyle=pos?('rgba(46,232,164,'+(strong?0.95:0.55)+')'):('rgba(177,151,252,'+(strong?0.95:0.55)+')');
-      ctx.fillRect(x0-w, r.y-3.5, w, 7);
+      var hero=(r===maxPos||r===maxNeg);
+      var frac=Math.min(r.a/maxAbs,1);
+      var w=hero?maxBarW:Math.max(5,Math.pow(frac,1.8)*maxBarW*0.82);   // fondo mucho más corto
+      var col=(r.g>=0)?'46,232,164':'177,151,252';
+      var alpha=hero?1:(0.22+frac*0.33);
+      var bh=hero?9:5;
+      if(hero){ ctx.shadowColor='rgba('+col+',0.9)'; ctx.shadowBlur=9; } else { ctx.shadowBlur=0; }
+      ctx.fillStyle='rgba('+col+','+alpha+')';
+      ctx.fillRect(x0-w, r.y-bh/2, w, bh);
+      if(hero){ ctx.shadowBlur=0; ctx.fillStyle='rgba('+col+',1)'; ctx.beginPath(); ctx.arc(x0-w-1,r.y,3.6,0,6.2832); ctx.fill(); }
     });
+    ctx.shadowBlur=0;
     ctx.restore();
   }
   function cxDrawRender(){
