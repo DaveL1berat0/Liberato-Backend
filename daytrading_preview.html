@@ -1490,7 +1490,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <!-- ════ BLOCK 1 · MARKET REGIME ════ -->
     <section class="regime neut" id="regime" aria-label="Market Regime">
       <div class="rg-hd">
-        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Market Regime <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = precio SOBRE el gamma flip (dealers long γ, absorben, rango). NEGATIVE = precio BAJO el flip (short γ, amplifican, tendencia). Sincronizado con los niveles de GexBot.">&#9432;</span> · NQ Futures</div>
+        <div class="rg-hd-title"><span class="rg-hd-dot"></span> Régimen de Mercado <span class="info-i" title="Régimen según el gamma dealer: POSITIVE = precio SOBRE el gamma flip (dealers long γ, absorben, rango). NEGATIVE = precio BAJO el flip (short γ, amplifican, tendencia). Sincronizado con los niveles de GexBot.">&#9432;</span> · Futuros NQ</div>
       </div>
       <div class="rg-in">
         <div class="rg-verdict">
@@ -1500,7 +1500,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           <div class="rg-price" id="rg-price-wrap">
             <div class="rg-price-top">
               <span class="rg-price-lbl">NQ · Nasdaq-100</span>
-              <span class="rg-price-live"><span class="d"></span>Live</span>
+              <span class="rg-price-live"><span class="d"></span>En vivo</span>
             </div>
             <div class="rg-price-row">
               <span class="rg-price-px neut empty" id="rg-price">—.—</span>
@@ -1533,15 +1533,15 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
               </svg>
               <div class="sm-ctr"><div class="sm-ctr-v" id="sm-v">—</div></div>
             </div>
-            <div class="sm-poles"><span class="sm-pole range">Range</span><span class="sm-pole neutral">Neutral</span><span class="sm-pole trend">Trend</span></div>
+            <div class="sm-poles"><span class="sm-pole range">Rango</span><span class="sm-pole neutral">Neutral</span><span class="sm-pole trend">Tendencia</span></div>
           </div>
           <div class="rg-meter-stats">
             <!-- Dealer (Long/Short γ) eliminado: redundante con el POSITIVE/NEGATIVE grande -->
             <div class="rg-ms rg-ms-source"><span class="rg-ms-k">⟡ Gamma neta <em>→ intensidad</em></span><span class="rg-ms-v" id="rg-netgex">—</span></div>
             <div class="rg-gex-bar-wrap"><div class="rg-gex-bar"><div class="rg-gex-fill" id="rg-gex-fill"></div></div><span class="rg-gex-int" id="rg-gex-int">—</span></div>
-            <div class="rg-ms"><span class="rg-ms-k">⊘ Points to Flip <em>→ define régimen</em> <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⊘ Puntos al Flip <em>→ define régimen</em> <span class="info-i" title="Puntos de distancia entre el precio actual y el Gamma Flip. Al cruzarlo, el mercado cambia de régimen.">&#9432;</span></span><span class="rg-ms-v gold" id="rg-distflip">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">◎ VIX <span class="info-i" title="Índice de volatilidad del S&amp;P 500 (el &quot;medidor de miedo&quot; del mercado). VIX alto = más miedo y movimientos amplios · VIX bajo = calma. Clave para dimensionar riesgo intradía.">&#9432;</span></span><span class="rg-ms-v" id="rg-atm-iv">—</span></div>
-            <div class="rg-ms"><span class="rg-ms-k">⬡ Exp Move <span class="info-i" title="Movimiento esperado (±puntos) para la sesión, derivado del ATM IV. Rango probable del NQ hoy según las opciones.">&#9432;</span></span><span class="rg-ms-v cyan" id="rg-expmove">—</span></div>
+            <div class="rg-ms"><span class="rg-ms-k">⬡ Mov. Esperado <span class="info-i" title="Movimiento esperado (±puntos) para la sesión, derivado del ATM IV. Rango probable del NQ hoy según las opciones.">&#9432;</span></span><span class="rg-ms-v cyan" id="rg-expmove">—</span></div>
             <div class="rg-ms"><span class="rg-ms-k">⇄ Skew <span class="info-i" title="Sesgo call/put del posicionamiento en opciones (risk reversal de GexBot). POSITIVO = sesgo ALCISTA (calls más demandadas/caras) · NEGATIVO = sesgo BAJISTA (puts más demandadas) · ~0 = neutral. Muestra hacia qué lado se inclinan los dealers.">&#9432;</span></span><span class="rg-ms-v" id="rg-skew">—</span></div>
             </div>
         </div>
@@ -1609,10 +1609,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <div class="cx-xtip" id="cx-xtip" aria-hidden="true"></div>
       </div>
       <div class="imap-ro">
-        <div class="iro"><span class="iro-k">NQ Price</span><span class="iro-v gold" id="iro-price">—</span></div>
-        <div class="iro"><span class="iro-k">Range Position</span><span class="iro-v cyan" id="iro-pos">—</span></div>
-        <div class="iro"><span class="iro-k">↑ To Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
-        <div class="iro"><span class="iro-k">↓ To Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
+        <div class="iro"><span class="iro-k">Precio NQ</span><span class="iro-v gold" id="iro-price">—</span></div>
+        <div class="iro"><span class="iro-k">Posición en Rango</span><span class="iro-v cyan" id="iro-pos">—</span></div>
+        <div class="iro"><span class="iro-k">↑ Al Call Wall</span><span class="iro-v up" id="iro-call">—</span></div>
+        <div class="iro"><span class="iro-k">↓ Al Put Wall</span><span class="iro-v down" id="iro-put">—</span></div>
       </div>
     </section>
 
@@ -1659,7 +1659,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <!-- tabs -->
       <div class="lg-tabs">
         <button class="lg-tab active" data-lgtab="macro">📊 Macro Económico</button>
-        <button class="lg-tab" data-lgtab="movers">⚡ High Impact News</button>
+        <button class="lg-tab" data-lgtab="movers">⚡ Noticias de Alto Impacto</button>
       </div>
       <!-- macro pane -->
       <div class="lg-pane active" id="lg-pane-macro">
@@ -2231,7 +2231,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     // ── El headline es el RÉGIMEN GAMMA (precio vs flip), sincronizado con GexBot ──
     // POSITIVE = precio sobre el flip (dealers long γ, absorben). NEGATIVE = bajo el
     // flip (short γ, amplifican). El velocímetro de momentum es su propio indicador.
-    var regimeWord=(g==null)?'—':(g==='positive'?'POSITIVE':'NEGATIVE');
+    var regimeWord=(g==null)?'—':(g==='positive'?'POSITIVO':'NEGATIVO');
     var regCls=g==='positive'?'up':g==='negative'?'down':'neut';
     var sec=$('regime');if(sec)sec.className='regime '+regCls;
     var dir=$('rg-dir');if(dir){dir.textContent=regimeWord;dir.className='rg-dir '+regCls;}
@@ -2289,7 +2289,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var ang=clamp(baseAng+breath,-79,79);
     if(needle)needle.style.transform='rotate('+ang+'deg)';
     // Etiqueta central: muestra el régimen (RANGE/NEUTRAL/TREND) traducido
-    var stLabel={'range':'RANGE','neutral':'NEUTRAL','trend':'TREND'}[S.structure]||'—';
+    var stLabel={'range':'RANGO','neutral':'NEUTRAL','trend':'TENDENCIA'}[S.structure]||'—';
     if(smv){smv.className='sm-ctr-v '+(S.structure||'neutral');smv.textContent=stLabel;}
     // AGUA/FILL: se llena proporcionalmente a la intensidad del régimen
     // regimeScore -100→llenado mínimo (compresión), +100→llenado completo (trend fuerte)
@@ -3651,11 +3651,11 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           if(isToday2&&evMins<=nowM&&!e.result)actualPlaceholder='Esperando dato…';
         }
         var clsColor=e.classification==='Bullish'?'up':e.classification==='Bearish'?'down':'';
-        var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+e.classification+'</span>'):'';
+        var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+({Bullish:'Alcista',Bearish:'Bajista'}[e.classification]||e.classification)+'</span>'):'';
         var nextBadge=isNext?'<span class="lg-ev-next-badge">◆ PRÓXIMO</span>':'';
         return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
-          +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'ALL DAY':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
+          +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'TODO EL DÍA':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
           +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status">'+(isDone?'✓ Publicado':e.status)+'</div>'
           +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
           +'</div>'
@@ -3663,7 +3663,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           +'</div>'
           +'<div class="lg-ev-data" style="grid-template-columns:1fr 1fr 1fr 1fr;">'
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Previo</div><div class="lg-ev-cell-v">'+e.prev+'</div></div>'
-          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Forecast</div><div class="lg-ev-cell-v">'+e.exp+'</div></div>'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Estimado</div><div class="lg-ev-cell-v">'+e.exp+'</div></div>'
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Actual</div><div class="lg-ev-cell-v '+(e.result?clsColor:'pending')+'">'+(e.result||actualPlaceholder)+(e.diff?'<span class="lg-ev-diff '+clsColor+'"> ('+e.diff+')</span>':'')+'</div></div>'
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+(e.nqImpact?clsColor:'pending')+'">'+(e.nqImpact||(e.status==='Released'?'—':'Al publicarse'))+'</div></div>'
           +'</div>'
@@ -4079,19 +4079,19 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var sent=m.sentiment||'Neutral';
       var alert=m.alert_level||'HIGH';
       var score=m.impact_score?m.impact_score.toFixed(1):'—';
-      var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🔴':'⬜';
+      var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🟣':'⬜';
       return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+(SENT_ITEM_BG[sent]||SENT_ITEM_BG.Neutral)+'">'
         +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
-        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERT</span>'
+        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERTA</span>'
         +'<span style="font-size:10px;">'+sentIcon+'</span>'
-        +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+sent.toUpperCase()+'</span>'
+        +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+({Bullish:'ALCISTA',Bearish:'BAJISTA',Neutral:'NEUTRAL'}[sent]||sent.toUpperCase())+'</span>'
         +'</div>'
         +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+(m.headline||m.title||'')+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impact <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Scope <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Source <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Time <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impacto <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Fuente <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Hora <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
         +'</div>'
         +'</div>';
     }).join('');
@@ -4354,7 +4354,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       +'<div class="mover-alert-hl">'+(mover.headline||mover.title||'')+'</div>'
       +'<div class="mover-alert-meta">'
       +'<span>Impacto <span style="color:var(--ink);">'+score+'/10</span></span>'
-      +'<span>Sesgo <span style="color:'+sentColor+';">'+sent+'</span></span>'
+      +'<span>Sesgo <span style="color:'+sentColor+';">'+({Bullish:'Alcista',Bearish:'Bajista',Neutral:'Neutral'}[sent]||sent)+'</span></span>'
       +'<span>'+(mover.scope||'')+'</span>'
       +'</div>';
     document.body.appendChild(el);

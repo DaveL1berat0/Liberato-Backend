@@ -489,7 +489,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-asset{font-family:'Cormorant Garamond',Georgia,serif;font-size:30px;font-weight:600;color:var(--text);line-height:1;}
 .tws-dir{display:inline-block;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;padding:3px 10px;border-radius:6px;margin-left:10px;vertical-align:middle;}
 .tws-dir.long{background:rgba(46,232,164,0.12);color:var(--green);}
-.tws-dir.short{background:rgba(239,68,68,0.12);color:#ef4444;}
+.tws-dir.short{background:rgba(177,151,252,0.12);color:#B197FC;}
 .tws-result{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;padding:5px 12px;border-radius:8px;text-transform:uppercase;}
 .tws-result.win{background:rgba(46,232,164,0.14);color:var(--green);}
 .tws-result.loss{background:rgba(239,68,68,0.14);color:#ef4444;}
@@ -716,7 +716,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .titem:hover{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04);transform:translateX(3px);}
 .tdir{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;}
 .tdir.long{background:var(--green-soft);color:var(--green);}
-.tdir.short{background:var(--red-soft);color:var(--red);}
+.tdir.short{background:rgba(177,151,252,0.12);color:var(--purple);}
 .tdir.sideways{background:rgba(245,158,11,0.1);color:var(--amber);}
 .tinfo{flex:1;min-width:0;}
 .ti-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
@@ -725,12 +725,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .ti-bottom{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .ctx-tag{font-family:'DM Mono',monospace;font-size:10px;padding:1px 6px;border-radius:3px;font-weight:600;}
 .ctx-tag.vwap-above{background:rgba(34,197,94,0.12);color:var(--green);}
-.ctx-tag.vwap-below{background:rgba(239,68,68,0.1);color:var(--red);}
+.ctx-tag.vwap-below{background:rgba(177,151,252,0.1);color:var(--purple);}
 .ctx-tag.gamma-up{background:rgba(34,197,94,0.12);color:var(--green);}
-.ctx-tag.gamma-down{background:rgba(239,68,68,0.1);color:var(--red);}
+.ctx-tag.gamma-down{background:rgba(177,151,252,0.1);color:var(--purple);}
 .ctx-tag.gamma-contract{background:rgba(245,158,11,0.1);color:var(--amber);}
 .ctx-tag.bull{background:rgba(34,197,94,0.08);color:var(--green);}
-.ctx-tag.bear{background:rgba(239,68,68,0.08);color:var(--red);}
+.ctx-tag.bear{background:rgba(177,151,252,0.08);color:var(--purple);}
 .chk-dot{width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:2px;}
 .chk-dot.miss{background:var(--red);}
 .tpnl{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;min-width:72px;text-align:right;}
@@ -842,14 +842,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .dtoggle{display:flex;gap:8px;}
 .dbtn{flex:1;padding:12px;border-radius:var(--r-sm);border:0.5px solid var(--border2);background:rgba(0,0,0,0.3);cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;transition:all 0.2s;color:var(--text3);}
 .dbtn.long.active{background:rgba(34,197,94,0.14);border-color:var(--green);color:var(--green);}
-.dbtn.short.active{background:rgba(239,68,68,0.12);border-color:var(--red);color:var(--red);}
+.dbtn.short.active{background:rgba(177,151,252,0.12);border-color:var(--purple);color:var(--purple);}
 .dbtn.sideways.active{background:rgba(245,158,11,0.12);border-color:var(--amber);color:var(--amber);}
 
 /* CONTEXT TOGGLES */
 .ctx-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ctxbtn{padding:9px 10px;border-radius:var(--r-sm);border:0.5px solid var(--border2);background:rgba(0,0,0,0.3);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.03em;transition:all 0.2s;color:var(--text3);text-align:center;}
 .ctxbtn.active-green{background:rgba(34,197,94,0.12);border-color:var(--green);color:var(--green);}
-.ctxbtn.active-red{background:rgba(239,68,68,0.1);border-color:var(--red);color:var(--red);}
+.ctxbtn.active-red{background:rgba(177,151,252,0.1);border-color:var(--purple);color:var(--purple);}
 .ctxbtn.active-amber{background:rgba(245,158,11,0.1);border-color:var(--amber);color:var(--amber);}
 .ctxbtn.active-blue{background:rgba(96,165,250,0.1);border-color:var(--blue);color:var(--blue);}
 .ctxbtn.active-gold{background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold);}
@@ -2349,7 +2349,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   <div class="td-head"><span class="td-title">Nuevo Trade</span><button class="td-close" onclick="closeForm()">✕</button></div>
   <div class="td-body">
     <div class="fsec"><div class="fsec-lbl">Dirección</div>
-      <div class="dtoggle"><button class="dbtn long active" id="btn-l" onclick="setDir('long')">▲ Long</button><button class="dbtn short" id="btn-s" onclick="setDir('short')">▼ Short</button><button class="dbtn sideways" id="btn-sw" onclick="setDir('sideways')">⟺ Sideways</button></div>
+      <div class="dtoggle"><button class="dbtn long active" id="btn-l" onclick="setDir('long')">▲ Long</button><button class="dbtn short" id="btn-s" onclick="setDir('short')">▼ Short</button><button class="dbtn sideways" id="btn-sw" onclick="setDir('sideways')">⟺ Lateral</button></div>
     </div>
     <div class="fsec"><div class="fsec-lbl">Playbook / Setup</div>
       <div class="pb-select-grid" id="f-pb-grid"></div>
@@ -2596,16 +2596,16 @@ var DEFAULT_PLAYBOOKS=[
   {id:'p2',category:'long',name:'P2 · P Long',emoji:'🟢',color:'#22c55e',
    desc:'P Long. Espera a que una vela cierre por ENCIMA del VAH (aceptación, no mecha) y entra a la apertura siguiente, stop bajo esa vela y target en la primera referencia medible arriba (VAH/VAL/POC del día previo u overnight). Exige que el POC del bloque esté DENTRO del value del día previo — continuación iniciativa, no fade.',
    confirmations:[],active:true,custom:false},
-  {id:'b1',category:'short',name:'b1 · b Short',emoji:'🔴',color:'#ef4444',
+  {id:'b1',category:'short',name:'b1 · b Short',emoji:'🟣',color:'#B197FC',
    desc:'b Short. Espejo exacto de P1: vela que cierra por encima del VAH, luego vuelta dentro; entrada corta a la apertura siguiente, stop sobre el máximo y target en el VAL. La clase b da el sesgo corto.',
    confirmations:[],active:true,custom:false},
-  {id:'b2',category:'short',name:'b2 · b Short',emoji:'🔴',color:'#ef4444',
+  {id:'b2',category:'short',name:'b2 · b Short',emoji:'🟣',color:'#B197FC',
    desc:'b Short. Espejo de P2: vela que cierra bajo el VAL, entrada corta, stop sobre esa vela y target en cierre − 1,5w. Filtro contrario: exige el POC FUERA del value previo; invalida si el precio vuelve a cerrar dentro.',
    confirmations:[],active:true,custom:false},
   {id:'d1',category:'long',name:'D1 · D Long',emoji:'🟢',color:'#22c55e',
    desc:'D Long. Exige que el pinchazo bajo el VAL dure ≤3 velas (rotación, no ruptura) y que luego una vela cierre DENTRO; entra largo con stop en el mínimo de TODO el pinchazo y target en el VAH (borde opuesto). Rotación completa con stop al swing — el más rentable de los ocho.',
    confirmations:[],active:true,custom:false},
-  {id:'d2',category:'short',name:'D2 · D Short',emoji:'🔴',color:'#ef4444',
+  {id:'d2',category:'short',name:'D2 · D Short',emoji:'🟣',color:'#B197FC',
    desc:'D Short. Espejo de D1: pinchazo ≤3 velas SOBRE el VAH, cierre de vuelta dentro, entrada corta con stop en el máximo del pinchazo y target en el VAL. Filtro: POC dentro del value previo.',
    confirmations:[],active:true,custom:false},
   {id:'t1',category:'trending',name:'T1 · T Long',emoji:'🔵',color:'#60a5fa',
@@ -2615,9 +2615,9 @@ var DEFAULT_PLAYBOOKS=[
    desc:'T Short. Espejo de T1: toca el NVN, cierra por DEBAJO; entrada corta, stop sobre el máximo desde el toque y target en el mínimo del día previo.',
    confirmations:[],active:true,custom:false}
 ];
-var CAT_LABELS={long:'Long',short:'Short',sideways:'Sideways',trending:'Trending'};
-var CAT_COLORS={long:'#22c55e',short:'#ef4444',sideways:'#f59e0b',trending:'#60a5fa'};
-var CAT_EMOJI={long:'🟢',short:'🔴',sideways:'🟡',trending:'🔵'};
+var CAT_LABELS={long:'Largo',short:'Corto',sideways:'Lateral',trending:'Tendencial'};
+var CAT_COLORS={long:'#22c55e',short:'#B197FC',sideways:'#f59e0b',trending:'#60a5fa'};
+var CAT_EMOJI={long:'🟢',short:'🟣',sideways:'🟡',trending:'🔵'};
 // Inyecta los 8 playbooks canónicos que falten (por id) sin tocar los que ya tengas.
 function ensureCanonPb(list){
   var have={};list.forEach(function(p){if(p&&p.id)have[p.id]=1;});
@@ -3131,7 +3131,7 @@ function donutSVG(segs,size){var total=segs.reduce(function(a,s){return a+s.v;},
 function renderDonuts(s,su){
   var FT=getFilteredT(_dfShared);
   var longs=FT.filter(function(t){return t.direction==='long';}),shorts=FT.filter(function(t){return t.direction==='short';});
-  var lsHtml='<div class="donut-card"><div class="donut-card-title">Long vs Short</div><div class="donut-flex">'+donutSVG([{v:longs.length,c:'#22c55e'},{v:shorts.length,c:'#ef4444'}],96)+'<div class="donut-legend"><div class="dl-row"><span class="dl-dot" style="background:#22c55e"></span><span class="dl-label">Long</span><span class="dl-val">'+longs.length+'</span></div><div class="dl-row"><span class="dl-dot" style="background:#ef4444"></span><span class="dl-label">Short</span><span class="dl-val">'+shorts.length+'</span></div><div class="dl-row" style="margin-top:4px;border-top:0.5px solid var(--border2);padding-top:8px;"><span class="dl-label" style="font-size:10px;color:var(--text3);">Long WR</span><span class="dl-val" style="font-size:11px;color:'+(stats(longs).wr>=50?'var(--green)':'var(--red)')+'">'+stats(longs).wr+'%</span></div></div></div></div>';
+  var lsHtml='<div class="donut-card"><div class="donut-card-title">Long vs Short</div><div class="donut-flex">'+donutSVG([{v:longs.length,c:'#22c55e'},{v:shorts.length,c:'#B197FC'}],96)+'<div class="donut-legend"><div class="dl-row"><span class="dl-dot" style="background:#22c55e"></span><span class="dl-label">Long</span><span class="dl-val">'+longs.length+'</span></div><div class="dl-row"><span class="dl-dot" style="background:#B197FC"></span><span class="dl-label">Short</span><span class="dl-val">'+shorts.length+'</span></div><div class="dl-row" style="margin-top:4px;border-top:0.5px solid var(--border2);padding-top:8px;"><span class="dl-label" style="font-size:10px;color:var(--text3);">Long WR</span><span class="dl-val" style="font-size:11px;color:'+(stats(longs).wr>=50?'var(--green)':'var(--red)')+'">'+stats(longs).wr+'%</span></div></div></div></div>';
   var byDate={};FT.forEach(function(t){byDate[t.date]=(byDate[t.date]||0)+t.pnl;});
   var winDays=0,lossDays=0;Object.values(byDate).forEach(function(p){if(p>0)winDays++;else if(p<0)lossDays++;});
   var daysHtml='<div class="donut-card"><div class="donut-card-title">Días Ganadores vs Perdedores</div><div class="donut-flex">'+donutSVG([{v:winDays||0.001,c:'#22c55e'},{v:lossDays||0.001,c:'#ef4444'}],96)+'<div class="donut-legend"><div class="dl-row"><span class="dl-dot" style="background:#22c55e"></span><span class="dl-label">Ganadores</span><span class="dl-val">'+winDays+'</span></div><div class="dl-row"><span class="dl-dot" style="background:#ef4444"></span><span class="dl-label">Perdedores</span><span class="dl-val">'+lossDays+'</span></div><div class="dl-row" style="margin-top:4px;border-top:0.5px solid var(--border2);padding-top:8px;"><span class="dl-label" style="font-size:10px;color:var(--text3);">% Verdes</span><span class="dl-val" style="font-size:11px;color:var(--green)">'+(winDays+lossDays>0?Math.round(winDays/(winDays+lossDays)*100):0)+'%</span></div></div></div></div>';
@@ -3576,7 +3576,7 @@ function renderTItems(arr){
     var pnlCls=isOpen?'neu':(t.pnl>=0?'pos':'neg');
     var ptsTxt=isOpen?'abierta':((t.points>=0?'+':'')+t.points+' pts');
     // Etiqueta WIN/LOSS/BE clara para identificar de un vistazo.
-    var wl=isOpen?'':(t.result==='win'?'<span class="wl-pill win">WIN</span>':t.result==='loss'?'<span class="wl-pill loss">LOSS</span>':'<span class="wl-pill be">BE</span>');
+    var wl=isOpen?'':(t.result==='win'?'<span class="wl-pill win">GANADA</span>':t.result==='loss'?'<span class="wl-pill loss">PERDIDA</span>':'<span class="wl-pill be">TABLAS</span>');
     return '<div class="titem'+(isOpen||t.status==='pending'?' pending':'')+'" onclick="openTDetail(\''+t.id+'\')"><div class="tdir '+(t.direction||'long')+'">'+(t.direction==='long'?'▲':t.direction==='short'?'▼':'⟺')+'</div><div class="tinfo"><div class="ti-top">'+wl+'<span class="ti-asset">'+t.asset+'</span><span class="ti-setup">'+t.setup+'</span>'+badge+'</div><div class="ti-bottom"><span>'+t.date+' '+t.time+'</span>'+ctx+chkDots+'</div></div><div><div class="tpts">'+ptsTxt+'</div><div class="tpnl '+pnlCls+'">'+pnlTxt+'</div></div></div>';
   }).join('');
 }
@@ -3664,7 +3664,7 @@ function renderTws(){
   var host=document.getElementById('tws-inner');
   var dir=t.direction==='short'?'short':'long';
   var resCls=t.result==='win'?'win':t.result==='loss'?'loss':'be';
-  var resTxt=t.result==='win'?'WIN':t.result==='loss'?'LOSS':'BREAKEVEN';
+  var resTxt=t.result==='win'?'GANADA':t.result==='loss'?'PERDIDA':'EN TABLAS';
   var isOpenTr=(t.status==='open'||t.isOpen||(t.exit==null&&!t.expired));
   var mult=t.mult||1,c=t.contracts||1,fees=t.fees||0;
   var gross=(t.pnl||0)+fees;
@@ -3833,7 +3833,7 @@ function twsChartSVG(t){
   }
   // marcador ENTRADA (triángulo + contratos)
   var _c=t.contracts||1;
-  s+=_twsMark(+xEnt,+Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#ef4444'),'ENT ×'+_c);
+  s+=_twsMark(+xEnt,+Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#B197FC'),'ENT ×'+_c);
   s+='<text x="'+xEnt+'" y="'+(H-10)+'" fill="rgba(232,228,217,0.5)" font-family="DM Mono,monospace" font-size="9" text-anchor="middle">'+t.time+'</text>';
   // marcador SALIDA (orden contraria)
   if(hasExit){
@@ -3881,7 +3881,7 @@ function twsRealChartSVG(t,bars,ratio){
   if(hasTgt)s+=hl(+t.target,'#2EE8A4','TGT',true);
   if(hasStop)s+=hl(+t.stop,'#ef4444','STOP',true);
   win.forEach(function(b,i){
-    var up=b.c>=b.o,col=up?'#2EE8A4':'#ef4444',x=X(i);
+    var up=b.c>=b.o,col=up?'#2EE8A4':'#B197FC',x=X(i);
     s+='<line x1="'+x+'" y1="'+Y(b.h)+'" x2="'+x+'" y2="'+Y(b.l)+'" stroke="'+col+'" stroke-width="1" opacity="0.8"/>';
     var yo=Y(b.o),yc=Y(b.c),top=Math.min(yo,yc),hgt=Math.max(1,Math.abs(yc-yo));
     s+='<rect x="'+(x-cw/2)+'" y="'+top+'" width="'+cw+'" height="'+hgt+'" fill="'+col+'" opacity="0.92"/>';
@@ -3891,7 +3891,7 @@ function twsRealChartSVG(t,bars,ratio){
   var c=t.contracts||1;
   var ei=barIdx(String(t.time).slice(0,5)); if(ei<0)ei=Math.floor(win.length*0.2);
   // Marcador de ENTRADA: triángulo (buy=abajo/long, sell=arriba/short) + pastilla con contratos.
-  s+=_twsMark(X(ei),Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#ef4444'),'ENT ×'+c);
+  s+=_twsMark(X(ei),Y(+t.entry),dir==='long',(dir==='long'?'#2EE8A4':'#B197FC'),'ENT ×'+c);
   if(hasExit){
     var xi=barIdx((String(t.exitTime).split('T')[1]||'').slice(0,5)); if(xi<0)xi=win.length-1;
     var xcol=(t.result==='win')?'#2EE8A4':(t.result==='loss')?'#ef4444':'#C9A84C';
@@ -4069,7 +4069,7 @@ function jchDrawAll(reframe){
   var eHM=jchHM(t.time),xHM=hasExit?jchHM(t.exitTime):'';
   var eIdx=jchNearestIdx(bars,eHM); if(eIdx<0)eIdx=0;
   var realR=(hasStop&&riskU>0&&!(t.status==='open'||t.isOpen))?Math.round((t.points/riskU)*100)/100:null;
-  var mk=[{time:jchEpoch(t.date,bars[eIdx].hhmm),position:dir==='long'?'belowBar':'aboveBar',shape:dir==='long'?'arrowUp':'arrowDown',color:dir==='long'?JCH_LONG:JCH_LOSS,text:'ENT ×'+(t.contracts||1)}];
+  var mk=[{time:jchEpoch(t.date,bars[eIdx].hhmm),position:dir==='long'?'belowBar':'aboveBar',shape:dir==='long'?'arrowUp':'arrowDown',color:dir==='long'?JCH_LONG:JCH_PURP,text:'ENT ×'+(t.contracts||1)}];
   // Etiquetas de PRECIO exacto (blanco) junto a cada marker — siguen zoom/pan (capa overlay).
   _jchTradeMarks=[{l:eIdx,p:+t.entry,txt:String(t.entry),below:(dir==='long')}];
   if(hasExit){var xIdx=jchNearestIdx(bars,xHM);if(xIdx<0)xIdx=bars.length-1;var xcol=(t.result==='win')?JCH_LONG:(t.result==='loss')?JCH_LOSS:JCH_GOLD;mk.push({time:jchEpoch(t.date,bars[xIdx].hhmm),position:dir==='long'?'aboveBar':'belowBar',shape:dir==='long'?'arrowDown':'arrowUp',color:xcol,text:'SAL'+(realR!=null?' '+(realR>=0?'+':'')+realR+'R':'')});_jchTradeMarks.push({l:xIdx,p:+t.exit,txt:String(t.exit),below:(dir!=='long')});}
@@ -4396,7 +4396,7 @@ document.addEventListener('keydown',function(e){
 function genTradeAI(t){
   var ins=[];
   if(t.vwap&&t.direction){var al=(t.vwap==='above'&&t.direction==='long')||(t.vwap==='below'&&t.direction==='short');if(al)ins.push('Precio '+(t.vwap==='above'?'sobre':'bajo')+' VWAP alineado con tu dirección <strong>'+t.direction+'</strong> — buena confluencia.');else ins.push('<strong>Conflicto:</strong> operaste '+t.direction+' con precio '+(t.vwap==='above'?'sobre':'bajo')+' VWAP. Reduce probabilidades.');}
-  if(t.gamma&&t.exitType){if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='win')ins.push('Gamma en <strong>contracción</strong> — salida completa correcta. Sin energía para extenderse.');else if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='loss')ins.push('Gamma en <strong>contracción</strong> + salida completa = pérdida. Considera no operar en contracción.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='full')ins.push('Gamma en <strong>expansión</strong> — saliste completo. Considera salida parcial (50%) y dejar runner.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='partial')ins.push('Gamma en <strong>expansión</strong> + salida parcial — <strong>correcto.</strong> Maximizas el ganador.');}
+  if(t.gamma&&t.exitType){if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='win')ins.push('Gamma en <strong>contracción</strong> — salida completa correcta. Sin energía para extenderse.');else if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='loss')ins.push('Gamma en <strong>contracción</strong> + salida completa = pérdida. Considera no operar en contracción.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='full')ins.push('Gamma en <strong>expansión</strong> — saliste completo. En tu histórico, en expansión la salida parcial con runner capturó más recorrido.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='partial')ins.push('Gamma en <strong>expansión</strong> + salida parcial — <strong>correcto.</strong> Maximizas el ganador.');}
   if(t.t4h&&t.direction){var a4=(t.t4h==='bull'&&t.direction==='long')||(t.t4h==='bear'&&t.direction==='short');if(a4)ins.push('Tendencia 4H alineada — mejor Win Rate estadístico.');else if(t.t4h!=='neut'&&t.t4h!=='mixed')ins.push('Operaste <strong>contra la tendencia 4H</strong>. Requiere confirmación extra.');}
   if(t.checklist){var comp=t.checklist.filter(Boolean).length;if(comp===4)ins.push('Checklist <strong>completo (4/4)</strong>. Mejor resultado esperado.');else ins.push('Checklist <strong>'+comp+'/4</strong>. '+(comp<2?'Múltiples señales de alerta.':'Criterios faltantes reducen probabilidad.'));}
   return ins.length?ins.join(' '):(t.note||'Agrega contexto al registrar para recibir análisis.');
@@ -4438,11 +4438,11 @@ function renderGenius(){
 
   var falla=[];
   if(s.avgW>0&&s.avgL>s.avgW*1.5)falla.push('Tu perdedor medio (<strong>$'+s.avgL+'</strong>) es mucho mayor que tu ganador medio (<strong>$'+s.avgW+'</strong>) — la matemática te destruye aunque ganes seguido.');
-  if(worstH&&worstH.pnl<0)falla.push('Tu peor hora: <strong>'+(worstH.key<10?'0'+worstH.key:worstH.key)+':00</strong> ('+f$(worstH.pnl)+') — reduce tamaño o evítala.');
+  if(worstH&&worstH.pnl<0)falla.push('Tu peor hora: <strong>'+(worstH.key<10?'0'+worstH.key:worstH.key)+':00</strong> ('+f$(worstH.pnl)+') — concentra P&L negativo en tu histórico.');
   if(byD[byD.length-1]&&byD[byD.length-1].pnl<0)falla.push('Pierdes los <strong>'+REP_DOW[byD[byD.length-1].key]+'</strong> ('+f$(byD[byD.length-1].pnl)+').');
   if(revenge>=2)falla.push('<strong>'+revenge+' revenge trades</strong>: entras tras perder y con más tamaño.');
   if(overDays)falla.push('<strong>Overtrading</strong> en '+overDays+' día(s) con 10+ operaciones.');
-  if(maxLoss>=3)falla.push('Racha de <strong>'+maxLoss+' pérdidas seguidas</strong> — define un stop diario.');
+  if(maxLoss>=3)falla.push('Racha de <strong>'+maxLoss+' pérdidas seguidas</strong> — tu racha negativa más larga registrada.');
   if(!falla.length)falla.push('Sin fugas grandes detectadas. Bien.');
 
   var falta=[];
@@ -4479,7 +4479,7 @@ function renderPatterns(){
   var overDays=Object.keys(perDay).filter(function(d){return perDay[d]>=10;});
   if(overDays.length){var mx=Math.max.apply(null,Object.keys(perDay).map(function(d){return perDay[d];}));patterns.push({icon:'🌀',warn:true,text:'<strong>Overtrading</strong>: '+overDays.length+' día(s) con 10+ operaciones (máx '+mx+' en un día). Menos y mejores suele batir a más y peores.'});}
   var maxLoss=0,cur=0;bt.forEach(function(t){if(t.result==='loss'){cur++;if(cur>maxLoss)maxLoss=cur;}else cur=0;});
-  if(maxLoss>=3)patterns.push({icon:'🧠',warn:true,text:'Tu peor racha fue de <strong>'+maxLoss+' pérdidas seguidas</strong>. Define un stop diario: tras 3 seguidas, cierra la sesión.'});
+  if(maxLoss>=3)patterns.push({icon:'🧠',warn:true,text:'Tu peor racha fue de <strong>'+maxLoss+' pérdidas seguidas</strong>. Las rachas largas suelen coincidir con tus peores días.'});
   // VWAP edge
   var vwapAbove=T.filter(function(t){return t.vwap==='above';});
   var vwapBelow=T.filter(function(t){return t.vwap==='below';});
@@ -5328,12 +5328,12 @@ function loadCoach(force){
 }
 function fallbackCoach(s,chkWR,noChkWR,morWR,aftWR,fullGammaExp,su,errors){
   var ins=[];
-  ins.push({category:'checklist',icon:'☑',insight:'Con checklist completo tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> sin él. Diferencia de '+(chkWR-noChkWR)+'% = dinero real.',action:'Antes de cada trade: 4 checks, 4 segundos. Si falta uno, no entres.'});
-  if(fullGammaExp>0)ins.push({category:'gamma',icon:'⚡',insight:'Cerraste <span class="r">'+fullGammaExp+' trade'+(fullGammaExp>1?'s':'')+'</span> completo con gamma en expansión. Dejar un runner del 50% captura el movimiento extra.',action:'Gamma en expansión = salida parcial. 50% en target 1, resto corre.'});
-  else ins.push({category:'gamma',icon:'⚡',insight:'Mapea el estado de gamma antes de cada sesión. En expansión deja runner, en contracción protege ganancias.',action:'Incorpora el gamma como criterio obligatorio del checklist.'});
-  ins.push({category:'horarios',icon:'🕐',insight:'Mañana: <strong>'+morWR+'%</strong> WR. Tarde (>14:00): <span class="r">'+aftWR+'%</span>. Diferencia de '+(morWR-aftWR)+'% sistemática.',action:'Cierra la plataforma a las 12:00 ET. Si operas tarde, mitad de tamaño.'});
-  if(errors.length)ins.push({category:'psicologia',icon:'🧠',insight:'Tu error más repetido: <span class="r">'+errors[0].name+'</span> ('+errors[0].count+'x). Explica parte de tus pérdidas.',action:'Si cometes este error, para 30 minutos antes del siguiente trade.'});
-  var worst=su[su.length-1];if(worst&&worst.pnl<0)ins.push({category:'setups',icon:'📊',insight:'<strong>'+su[0].name+'</strong>: '+f$(su[0].pnl)+' ('+su[0].wr+'% WR). <span class="r">'+worst.name+'</span>: '+f$(worst.pnl)+' ('+worst.wr+'% WR).',action:'Elimina '+worst.name+' por 30 días. Concentra en '+su[0].name+'.'});
+  ins.push({category:'checklist',icon:'☑',insight:'Con checklist completo tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> sin él. Diferencia de '+(chkWR-noChkWR)+'% = dinero real.',action:'En tu historial, los trades con los 4 checks completos muestran mejor Win Rate que los que omiten alguno.'});
+  if(fullGammaExp>0)ins.push({category:'gamma',icon:'⚡',insight:'Cerraste <span class="r">'+fullGammaExp+' trade'+(fullGammaExp>1?'s':'')+'</span> completo con gamma en expansión. Dejar un runner del 50% captura el movimiento extra.',action:'En tu histórico, con gamma en expansión las salidas parciales (dejando runner) capturaron más recorrido que la salida completa.'});
+  else ins.push({category:'gamma',icon:'⚡',insight:'Mapea el estado de gamma antes de cada sesión. En expansión deja runner, en contracción protege ganancias.',action:'Los trades sin el gamma anotado no permiten medir su efecto sobre tu Win Rate.'});
+  ins.push({category:'horarios',icon:'🕐',insight:'Mañana: <strong>'+morWR+'%</strong> WR. Tarde (>14:00): <span class="r">'+aftWR+'%</span>. Diferencia de '+(morWR-aftWR)+'% sistemática.',action:'Tu Win Rate por la tarde (>14:00) es sistemáticamente más bajo que por la mañana.'});
+  if(errors.length)ins.push({category:'psicologia',icon:'🧠',insight:'Tu error más repetido: <span class="r">'+errors[0].name+'</span> ('+errors[0].count+'x). Explica parte de tus pérdidas.',action:'Este error concentra parte de tus pérdidas y suele repetirse en trades encadenados.'});
+  var worst=su[su.length-1];if(worst&&worst.pnl<0)ins.push({category:'setups',icon:'📊',insight:'<strong>'+su[0].name+'</strong>: '+f$(su[0].pnl)+' ('+su[0].wr+'% WR). <span class="r">'+worst.name+'</span>: '+f$(worst.pnl)+' ('+worst.wr+'% WR).',action:worst.name+' acumula P&L negativo en tu histórico; '+su[0].name+' concentra tus mejores resultados.'});
   return ins;
 }
 function showCoachInsights(ins){
@@ -5350,7 +5350,7 @@ function buildWeeklyReport(s,errors){
   if(good.length)txt+='<strong>Lo que hiciste bien:</strong> '+good.join('. ')+'. ';
   if(bad.length)txt+='<span class="r">A mejorar:</span> '+bad.join('. ')+'. ';
   var worst=su[su.length-1];
-  txt+='<strong>Objetivo:</strong> '+((worst&&worst.pnl<0)?'elimina '+worst.name+' esta semana.':'aumenta tamaño en '+(su[0]?su[0].name:'tu mejor setup')+'.');
+  txt+='<strong>Observación:</strong> '+((worst&&worst.pnl<0)?worst.name+' es tu setup con peor P&L.':(su[0]?su[0].name:'tu mejor setup')+' es tu setup más rentable.');
   return txt||'Sigue registrando trades para tu reporte semanal.';
 }
 

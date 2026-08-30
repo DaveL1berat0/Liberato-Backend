@@ -537,7 +537,7 @@ body::before{
 .news-sum{font-size:12.5px;color:var(--text2);line-height:1.6;}
 .news-impact{font-size:10px;font-family:'DM Mono',monospace;margin-top:6px;display:inline-block;}
 .news-impact.pos{color:var(--green);}
-.news-impact.neg{color:var(--red);}
+.news-impact.neg{color:#B197FC;}
 .news-impact.neu{color:var(--text3);}
 
 /* NQ impact */
@@ -551,7 +551,7 @@ body::before{
 .nq-weight{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);}
 .nq-weight strong{color:var(--gold);font-size:14px;}
 .nq-explain{font-size:13px;line-height:1.6;color:var(--text2);margin-top:10px;}
-.nq-explain .g{color:var(--green);}.nq-explain .r{color:var(--red);}
+.nq-explain .g{color:var(--green);}.nq-explain .r{color:#B197FC;}
 
 /* MÓVIL: jerarquía del drawer de empresa — más aire, métricas legibles,
    próxima fecha e impacto destacados (menos denso). */
@@ -594,8 +594,8 @@ body::before{
 .trend-sent.verybull{background:rgba(34,197,94,0.15);color:#86efac;border:0.5px solid rgba(34,197,94,0.3);}
 .trend-sent.bull{background:rgba(34,197,94,0.1);color:var(--green);border:0.5px solid rgba(34,197,94,0.2);}
 .trend-sent.neut{background:rgba(232,228,217,0.06);color:var(--text2);border:0.5px solid var(--border2);}
-.trend-sent.bear{background:rgba(239,68,68,0.1);color:var(--red);border:0.5px solid rgba(239,68,68,0.2);}
-.trend-sent.verybear{background:rgba(239,68,68,0.15);color:#fca5a5;border:0.5px solid rgba(239,68,68,0.3);}
+.trend-sent.bear{background:rgba(177,151,252,0.1);color:#B197FC;border:0.5px solid rgba(177,151,252,0.2);}
+.trend-sent.verybear{background:rgba(177,151,252,0.15);color:#B197FC;border:0.5px solid rgba(177,151,252,0.3);}
 .hist2{background:rgba(0,0,0,0.22);border-radius:var(--r-sm);border:0.5px solid var(--border2);overflow:hidden;margin-bottom:8px;transition:border-color 0.2s;}
 .hist2:hover{border-color:rgba(201,168,76,0.2);}
 .hist2-head{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:0.5px solid var(--border2);background:rgba(0,0,0,0.15);}
@@ -609,8 +609,8 @@ body::before{
 .hist2-sent.verybull{background:rgba(34,197,94,0.2);color:#86efac;}
 .hist2-sent.bull{background:rgba(34,197,94,0.12);color:var(--green);}
 .hist2-sent.neut{background:rgba(232,228,217,0.06);color:var(--text3);}
-.hist2-sent.bear{background:rgba(239,68,68,0.12);color:var(--red);}
-.hist2-sent.verybear{background:rgba(239,68,68,0.2);color:#fca5a5;}
+.hist2-sent.bear{background:rgba(177,151,252,0.12);color:#B197FC;}
+.hist2-sent.verybear{background:rgba(177,151,252,0.2);color:#B197FC;}
 .hist2-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .hist2-metric{display:flex;flex-direction:column;gap:3px;}
 .hist2-mlbl{font-size:9.5px;font-family:'DM Mono',monospace;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);}
@@ -623,7 +623,7 @@ body::before{
 .hist2-mv-lbl{font-size:9px;font-family:'DM Mono',monospace;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);}
 .hist2-mv-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;}
 .hist2-mv-val.pos{color:var(--green);}
-.hist2-mv-val.neg{color:var(--red);}
+.hist2-mv-val.neg{color:#B197FC;}
 .hist2-mv-val.zero{color:var(--text3);}
 .hist2-nodata{padding:24px 12px;text-align:center;color:var(--text3);font-size:11px;line-height:1.6;}
 
@@ -640,7 +640,7 @@ body::before{
 .hist-cell-lbl{color:var(--text3);font-size:8px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;}
 .hist-cell-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text);}
 .hist-react{margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border2);font-size:10px;color:var(--text2);}
-.hist-react .g{color:var(--green);font-weight:700;}.hist-react .r{color:var(--red);font-weight:700;}
+.hist-react .g{color:var(--green);font-weight:700;}.hist-react .r{color:#B197FC;font-weight:700;}
 
 
 /* HERO SEARCH */
@@ -2329,15 +2329,15 @@ function generateIntel(){
   }
 
   // Swing risk
-  narr+='<strong>Swing risk:</strong> <span class="ic-risk '+swingColor+'" style="display:inline-flex;font-size:10px;padding:2px 8px;">'+swingLabel+'</span> ';
-  if(swingRisk==='high')narr+='— mega-caps reportan, gaps probables. Reducir exposición antes de reportes clave. ';
-  else if(swingRisk==='med')narr+='— movimientos sectoriales posibles. Ajustar stops. ';
+  narr+='<strong>Riesgo de swing:</strong> <span class="ic-risk '+swingColor+'" style="display:inline-flex;font-size:10px;padding:2px 8px;">'+swingLabel+'</span> ';
+  if(swingRisk==='high')narr+='— reportan mega-caps y los gaps son más probables; históricamente son los días de mayor movimiento de la semana. ';
+  else if(swingRisk==='med')narr+='— posibles movimientos sectoriales más amplios de lo habitual. ';
   else narr+='— bajo riesgo de gaps por earnings. ';
 
   // Options
   if(wkHigh.length>0){
-    narr+='<strong>Options:</strong> IV elevada en '+wkHigh.slice(0,3).map(function(x){return x.sym;}).join(', ')+'. ';
-    narr+='Covered calls en riesgo de assignment. CSP post-earnings atractivos si hay caída. Wheel: vender DESPUÉS, no antes. ';
+    narr+='<strong>Opciones:</strong> IV elevada en '+wkHigh.slice(0,3).map(function(x){return x.sym;}).join(', ')+'. ';
+    narr+='Las covered calls quedan más expuestas a asignación cuando la IV es alta. Tras el reporte la IV suele colapsar y las opciones se abaratan. La prima de la rueda (wheel) históricamente es mayor antes del reporte y menor después. ';
   }
 
   // Biggest risk
@@ -2345,7 +2345,7 @@ function generateIntel(){
     narr+='<strong>Mayor riesgo:</strong> <span class="r">'+heaviestDay+'</span> — '+wkExtreme.map(function(x){return x.sym;}).join(', ')+' con movimiento esperado de 8-10%.';
   }
 
-  el.innerHTML='<div class="intel-card wide gold"><div class="ic-head"><span class="ic-icon">🤖</span><span class="ic-title">Earnings Intelligence · '+w.label+'</span></div><div class="ic-body"><div class="ic-narrative">'+narr+'</div><div style="margin-top:8px;font-size:9px;color:var(--text3);font-family:DM Mono,monospace;">Análisis contextual automático. No constituye recomendación financiera.</div></div></div>';
+  el.innerHTML='<div class="intel-card wide gold"><div class="ic-head"><span class="ic-icon">🤖</span><span class="ic-title">Inteligencia de Ganancias · '+w.label+'</span></div><div class="ic-body"><div class="ic-narrative">'+narr+'</div><div style="margin-top:8px;font-size:9px;color:var(--text3);font-family:DM Mono,monospace;">Análisis contextual automático. No constituye recomendación financiera.</div></div></div>';
 }
 
 function parsePct(s){if(!s)return null;var n=parseFloat(s.replace('%','').replace(/[^0-9.\-]/g,''));return isNaN(n)?null:n;}
@@ -2361,7 +2361,7 @@ function buildHistHTML(hist){
     +'<div class="trend-summary">'
     +'<div class="trend-row"><span class="trend-lbl">EPS Beats</span><div class="trend-bar-wrap"><div class="trend-bar green" style="width:'+epsPct+'%"></div></div><span class="trend-val">'+epsB+'/'+n+'</span></div>'
     +'<div class="trend-row"><span class="trend-lbl">Rev Beats</span><div class="trend-bar-wrap"><div class="trend-bar amber" style="width:'+revPct+'%"></div></div><span class="trend-val">'+revB+'/'+n+'</span></div>'
-    +'<div class="trend-row"><span class="trend-lbl">Mov Prom</span><div style="flex:1"></div><span class="trend-val" style="color:'+(avg>=0?'var(--green)':'var(--red)')+'">'+(avg>=0?'+':'')+avg.toFixed(1)+'%</span></div>'
+    +'<div class="trend-row"><span class="trend-lbl">Mov Prom</span><div style="flex:1"></div><span class="trend-val" style="color:'+(avg>=0?'var(--green)':'#B197FC')+'">'+(avg>=0?'+':'')+avg.toFixed(1)+'%</span></div>'
     +'<div class="trend-row"><span class="trend-lbl">Sentimiento</span><div style="flex:1"></div><span class="trend-sent '+sent+'">'+SENT_LBL[sent]+'</span></div>'
     +'</div>';
   var rows=hist.map(function(h){
@@ -2370,12 +2370,12 @@ function buildHistHTML(hist){
     var rsh=rs!==null?'<span class="hist2-surp '+(rs>0?'pos':'neg')+'"> ('+(rs>0?'+':'')+rs.toFixed(1)+'%)</span>':'';
     var rc=rp===null?'zero':rp>0?'pos':'neg',ac=ap===null?'zero':ap>0?'pos':'neg';
     return '<div class="hist2">'
-      +'<div class="hist2-head"><span class="hist2-date">'+h.d+'</span><div class="hist2-badges"><span class="hist2-result '+h.r+'">'+(h.r==='beat'?'BEAT':h.r==='miss'?'MISS':'INLINE')+'</span><span class="hist2-sent '+s+'">'+SENT_LBL[s]+'</span></div></div>'
+      +'<div class="hist2-head"><span class="hist2-date">'+h.d+'</span><div class="hist2-badges"><span class="hist2-result '+h.r+'">'+(h.r==='beat'?'SUPERÓ':h.r==='miss'?'FALLÓ':'EN LÍNEA')+'</span><span class="hist2-sent '+s+'">'+SENT_LBL[s]+'</span></div></div>'
       +'<div class="hist2-body"><div class="hist2-metric"><span class="hist2-mlbl">EPS Esperado</span><span class="hist2-mval">'+h.ee+'</span></div>'
       +'<div class="hist2-metric"><span class="hist2-mlbl">EPS Real'+esh+'</span><span class="hist2-mval">'+h.ea+'</span></div>'
       +'<div class="hist2-metric"><span class="hist2-mlbl">Rev Esperado</span><span class="hist2-mval">'+h.re+'</span></div>'
       +'<div class="hist2-metric"><span class="hist2-mlbl">Rev Real'+rsh+'</span><span class="hist2-mval">'+h.ra+'</span></div></div>'
-      +'<div class="hist2-moves"><div class="hist2-mv"><span class="hist2-mv-lbl">After Hours</span><span class="hist2-mv-val '+ac+'">'+(h.ah||h.react||'N/D')+'</span></div>'
+      +'<div class="hist2-moves"><div class="hist2-mv"><span class="hist2-mv-lbl">Tras el cierre</span><span class="hist2-mv-val '+ac+'">'+(h.ah||h.react||'N/D')+'</span></div>'
       +'<div class="hist2-mv"><span class="hist2-mv-lbl">Sesión siguiente</span><span class="hist2-mv-val '+rc+'">'+(h.react||'N/D')+'</span></div></div>'
       +'</div>';
   }).join('');
@@ -2391,7 +2391,7 @@ function openDrawer(sym){
   if(ne){
     if(c.nextEarnings){
       ne.style.display='block';
-      ne.innerHTML='<div class="dne-label">Próximo Earnings Report</div><div class="dne-val">'+c.nextEarnings+'</div><div class="dne-sub">'+sym+' · '+c.sector+'</div>';
+      ne.innerHTML='<div class="dne-label">Próximo Reporte</div><div class="dne-val">'+c.nextEarnings+'</div><div class="dne-sub">'+sym+' · '+c.sector+'</div>';
     }else{ne.style.display='none';}
   }
   _renderDrawerBody(sym, c);
@@ -2476,7 +2476,7 @@ function _fetchDrawerLive(sym){
         var _ndTxt=_fmtNextDate(_nd);
         if(C[sym])C[sym].nextEarnings=_ndTxt;
         _neEl.style.display='block';
-        _neEl.innerHTML='<div class="dne-label">Próximo Earnings Report</div><div class="dne-val">'+_ndTxt+'</div><div class="dne-sub">'+sym+' · '+((C[sym]&&C[sym].sector)||'—')+'</div>';
+        _neEl.innerHTML='<div class="dne-label">Próximo Reporte</div><div class="dne-val">'+_ndTxt+'</div><div class="dne-sub">'+sym+' · '+((C[sym]&&C[sym].sector)||'—')+'</div>';
       }
       // ── 3. Historical earnings (last 4 quarters) ─────────────────────────
       var hist=data.history||[];
@@ -2592,7 +2592,7 @@ function _renderDrawerBody(sym, c){
   if(!newsHtml)newsHtml='<div style="color:var(--text3);font-size:11px;padding:8px;">Sin noticias recientes disponibles.</div>';
   document.getElementById('drawer-body').innerHTML=
     '<div class="dsec"><div class="dsec-title">Resumen General</div><div class="sum-grid"><div class="sum-item"><div class="sum-lbl">Ticker</div><div class="sum-val">'+sym+'</div></div><div class="sum-item"><div class="sum-lbl">Market Cap</div><div class="sum-val" id="d-cap-val">'+_valOrDash(c.cap)+'</div></div><div class="sum-item" style="grid-column:span 2;"><div class="sum-lbl">Sector</div><div class="sum-val sm" id="d-sec-val">'+_valOrDash(c.sector)+'</div></div></div></div>'
-    +'<div class="dsec"><div class="dsec-title">Earnings Esperados</div>'+
+    +'<div class="dsec"><div class="dsec-title">Ganancias Esperadas</div>'+
     '<div class="exp-row"><span class="exp-lbl">EPS estimado</span><span class="exp-val" id="d-eps-val">—</span></div>'+
     '<div class="exp-row"><span class="exp-lbl">Revenue est.</span><span class="exp-val" id="d-rev-val">—</span></div>'+
     '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val">—</span></div>'+
