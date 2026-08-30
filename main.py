@@ -7789,23 +7789,28 @@ async def get_company(ticker: str):
     if FINNHUB_KEY:
         # Llamadas paralelas a Finnhub — ~300ms en vez de ~900ms secuencial
         async with httpx.AsyncClient(timeout=8) as client:
+            _news_from = (datetime.now(NY).date() - timedelta(days=14)).isoformat()
+            _news_to   = datetime.now(NY).date().isoformat()
             urls = {
                 "profile": f"{FH_BASE}/stock/profile2",
                 "earnings": f"{FH_BASE}/stock/earnings",
                 "metric":   f"{FH_BASE}/stock/metric",
+                "news":     f"{FH_BASE}/company-news",
             }
             params = {
                 "profile":  {"symbol": sym, "token": FINNHUB_KEY},
                 "earnings": {"symbol": sym, "limit": 8, "token": FINNHUB_KEY},
                 "metric":   {"symbol": sym, "metric": "all", "token": FINNHUB_KEY},
+                "news":     {"symbol": sym, "from": _news_from, "to": _news_to, "token": FINNHUB_KEY},
             }
             responses = await asyncio.gather(
                 client.get(urls["profile"],  params=params["profile"]),
                 client.get(urls["earnings"], params=params["earnings"]),
                 client.get(urls["metric"],   params=params["metric"]),
+                client.get(urls["news"],     params=params["news"]),
                 return_exceptions=True
             )
-            rp, rh, rm = responses
+            rp, rh, rm, rn = responses
 
             # ── Perfil: nombre, sector, market cap ──────────────────────────
             if not isinstance(rp, Exception) and rp.status_code == 200:
@@ -7863,6 +7868,31 @@ async def get_company(ticker: str):
                     epsg = m.get("epsGrowthTTMYoy") or m.get("epsGrowthQuarterlyYoy")
                     if epsg is not None:
                         data["epsGrowthYoY"] = f"{'+' if epsg>=0 else ''}{epsg:.1f}%"
+
+            # ── Noticias REALES por empresa (Finnhub company-news) ──────────
+            # Regla #1: SOLO titulares reales del feed, con su fuente y enlace;
+            # si el feed no trae nada, no se inventa (queda sin news → "Sin noticias").
+            if not isinstance(rn, Exception) and getattr(rn, "status_code", 0) == 200:
+                try:
+                    _raw = rn.json() or []
+                    _seen, _news = set(), []
+                    for _a in sorted(_raw, key=lambda x: x.get("datetime", 0), reverse=True):
+                        _h = (_a.get("headline") or "").strip()
+                        if not _h or _h in _seen:
+                            continue
+                        _seen.add(_h)
+                        _news.append({
+                            "headline": _h,
+                            "source":   _a.get("source") or "",
+                            "url":      _a.get("url") or "",
+                            "datetime": _a.get("datetime") or 0,
+                        })
+                        if len(_news) >= 5:
+                            break
+                    if _news:
+                        data["news"] = _news
+                except Exception:
+                    pass
     # ── EPS ESTIMADO: 3 fuentes en cascada ────────────────────────────────────
     # Fuente 1: cache de earnings (45 días ya cargados desde Finnhub calendar)
     all_upcoming = [e for e in cache["earnings"]["data"]

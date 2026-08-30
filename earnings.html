@@ -2399,6 +2399,8 @@ function _fetchDrawerLive(sym){
       var sec=data.sector||data.industry||data.finnhubIndustry||null;
       var secEl=document.getElementById('d-sec-val');
       if(secEl)secEl.textContent=sec||'—';
+      // Noticias REALES por empresa (Finnhub company-news) desde el backend
+      try{ _renderCompanyNews(data.news); }catch(e){}
       // Nombre real (mejora también el tooltip en próximos hovers) — Regla #1: solo si viene del backend
       var realName=data.name||data.companyName||null;
       if(realName){
@@ -2532,6 +2534,27 @@ function _fmtCap(v){
   if(n>=1e6)return '$'+(n/1e6).toFixed(0)+'M';
   return '$'+n.toLocaleString('en-US');
 }
+function _newsTimeAgo(ts){
+  if(!ts)return '';
+  var d=Date.now()/1000-ts;
+  if(d<3600)return Math.max(1,Math.round(d/60))+' min';
+  if(d<86400)return Math.round(d/3600)+' h';
+  return Math.round(d/86400)+' d';
+}
+// Pinta las NOTICIAS REALES por empresa (Finnhub company-news, desde /api/company).
+// Regla #1: solo titular real + fuente + hora + enlace; sin sentimiento inventado.
+function _renderCompanyNews(arr){
+  var el=document.getElementById('d-news-list'); if(!el)return;
+  if(!arr||!arr.length){ el.innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px;">Sin noticias recientes disponibles.</div>'; return; }
+  var esc=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  el.innerHTML=arr.slice(0,5).map(function(n){
+    var meta=[esc(n.source),_newsTimeAgo(n.datetime)].filter(Boolean).join(' · ');
+    var inner='<div class="news-head">'+esc(n.headline)+'</div>'+(meta?'<div class="news-sum">'+meta+'</div>':'');
+    return n.url
+      ? '<a class="news-item" href="'+esc(n.url).replace(/"/g,'&quot;')+'" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">'+inner+'</a>'
+      : '<div class="news-item">'+inner+'</div>';
+  }).join('');
+}
 function _renderDrawerBody(sym, c){
   var newsHtml=([]).map(function(n){return '<div class="news-item"><div class="news-head">'+n.h+'</div><div class="news-sum">'+n.s+'</div><span class="news-impact '+n.i+'">'+(n.i==='pos'?'\u25b2 Positivo':n.i==='neg'?'\u25bc Negativo':'\u25cf Neutral')+'</span></div>';}).join('');
   if(!newsHtml)newsHtml='<div style="color:var(--text3);font-size:11px;padding:8px;">Sin noticias recientes disponibles.</div>';
@@ -2543,7 +2566,7 @@ function _renderDrawerBody(sym, c){
     '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val">—</span></div>'+
     '</div>'
     +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span><span class="nq-weight">Peso: <strong>—</strong></span></div><div class="nq-explain">—</div></div></div>'
-    +'<div class="dsec"><div class="dsec-title">Últimas Noticias</div>'+newsHtml+'</div>'
+    +'<div class="dsec"><div class="dsec-title">Últimas Noticias</div><div id="d-news-list">'+newsHtml+'</div></div>'
     +'<div class="dsec" id="d-hist-section">'+''+'</div>';
 }
 
