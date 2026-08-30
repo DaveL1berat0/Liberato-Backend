@@ -502,7 +502,7 @@ a{color:inherit;text-decoration:none;}
         </div>
       </section>
       <section class="panel step lc-panel">
-        <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable, sin inventar precios (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
+        <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable sobre los datos que introduces desde tu broker — la web no genera premium, delta ni theta (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
         <div class="p-bd">
          <div class="lc-card">
           <div class="lc-grid">
@@ -524,7 +524,7 @@ a{color:inherit;text-decoration:none;}
           <div class="lc-cell"><div class="k">Delta exposure</div><div class="v" id="lc-dexp">—</div></div>
           <div class="lc-cell"><div class="k">Total premium</div><div class="v" id="lc-total">—</div></div>
         </div>
-        <div class="lc-example" id="lc-example" style="display:none;">⚠ Ejemplo ilustrativo con el precio real de <b class="lc-ex-tk">—</b>. El <b>premium / delta / theta</b> son estimados — sustitúyelos con la cadena real de tu broker.</div>
+        <div class="lc-example" id="lc-example" style="display:none;">⚠ Ejemplo ilustrativo con el precio real de <b class="lc-ex-tk">—</b>. Introduce el <b>premium / delta / theta</b> desde la cadena real de tu broker — la web no los estima ni rellena.</div>
         <div class="lc-strat">
           <span class="lc-strat-t">Visualiza el payoff completo del LEAP →</span>
           <a id="lc-optionstrat" href="https://optionstrat.com/build/long-call" target="_blank" rel="noopener">OptionStrat ↗</a>
@@ -604,7 +604,7 @@ function classDesc(c){
 }
 function loadEnv(){
   fetch(API+'/api/environment').then(function(r){return r.json();}).then(function(d){
-    ENV=d; renderEnv(d); loadBrief(); renderPosture();
+    ENV=d; renderEnv(d); loadBrief();
     var dot=document.getElementById('oh-data-dot'); if(dot&&d.score!=null)dot.classList.add('on');
     var up=document.getElementById('oh-updated'); if(up&&d.as_of){try{up.textContent='FRED '+new Date(d.as_of).toLocaleDateString('es',{day:'2-digit',month:'short'});}catch(e){}}
   }).catch(function(){ var b=document.getElementById('brief-body'); if(b)b.innerHTML='<p class="loading">Environment no disponible ahora mismo.</p>'; });
@@ -838,9 +838,9 @@ function prefillStructure(ticker, spot){
   var tk=document.getElementById('lc-tkr'); if(tk)tk.value=ticker;
   document.getElementById('lc-spot').value=r2(spot);
   document.getElementById('lc-strike').value=(spot>=1000?Math.round(spot*0.9/10)*10:Math.round(spot*0.9));
-  document.getElementById('lc-prem').value=r2(spot*0.16);
-  document.getElementById('lc-delta').value=0.75;
-  document.getElementById('lc-theta').value=-r2(spot*0.00025);
+  document.getElementById('lc-prem').value='';
+  document.getElementById('lc-delta').value='';
+  document.getElementById('lc-theta').value='';
   document.getElementById('lc-dte').value=540;
   document.getElementById('lc-qty').value=1;
   var ex=document.getElementById('lc-example'); if(ex){ ex.style.display='block'; var s=ex.querySelector('.lc-ex-tk'); if(s)s.textContent=ticker; }
@@ -893,7 +893,6 @@ function renderChartStats(bars){
     +tile('Rango','$'+fmtNum(lo)+' – $'+fmtNum(hi));
   var cp=document.getElementById('chart-price');
   if(cp)cp.innerHTML='$'+fmtNum(price)+' <span style="color:'+pc+'">'+pull.toFixed(1)+'% desde su máx.</span>';
-  renderPosture();
 }
 function loadChart(){
   if(!lseries)return;
@@ -980,7 +979,6 @@ function loadScanner(){
     if(!rows.length){ var h0=document.getElementById('scan-body'); if(h0)h0.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
     scanFilter();
     if(!USER_PICKED && !LC_PREFILLED && rows[0].price!=null){ LC_PREFILLED=true; prefillStructure(rows[0].ticker, rows[0].price); }
-    renderPosture();
   }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
 }
 function selectTicker(tk){
@@ -990,7 +988,6 @@ function selectTicker(tk){
   var px=SCAN_ROWS[tk]?SCAN_ROWS[tk].price:null;
   if(px!=null) prefillStructure(tk, px); else lcStrat();
   [].forEach.call(document.querySelectorAll('#scan-body tr'),function(tr){ tr.className=(tr.getAttribute('data-tk')===tk)?'sel':''; });
-  renderPosture();
   try{ document.getElementById('lchart-wrap').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
 }
 

@@ -2826,7 +2826,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
     if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
     if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
-    if(S.showVwap){var _vw=_sessionVWAP(); if(_vw!=null)lines.vwap=series.createPriceLine({price:_vw,color:'#8AB4F8',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});}   // VWAP real (toggle), solo si hay volumen
+    try{_updateVwapLine();}catch(e){}   // VWAP como LÍNEA (estilo EMA) que sigue la sesión, no una priceLine horizontal
     // MUROS SECUNDARIOS de gamma por volumen (Dave): también con PRECIO en el eje para que el
     // trader identifique el nivel exacto, no solo el perfil. Línea sparse tenue (color atenuado).
     var gw=_computeGexWalls(); S.gexWalls=gw;
@@ -2882,11 +2882,34 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(vv<=0)return null;                           // sin volumen real → sin VWAP
     return Math.round((pv/vv)*4)/4;
   }
+  // VWAP como LÍNEA (estilo EMA) sobre las velas: curva del VWAP acumulado que se
+  // RESETEA cada sesión (9:30 ET). No es una priceLine horizontal (hacía ruido).
+  var vwapSeries=null;
+  function _ensureVwapSeries(){
+    if(vwapSeries||!chart||!chart.addLineSeries)return;
+    try{vwapSeries=chart.addLineSeries({color:'#8AB4F8',lineWidth:2,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false});}catch(e){vwapSeries=null;}
+  }
+  function _updateVwapLine(){
+    if(!chart)return; _ensureVwapSeries(); if(!vwapSeries)return;
+    if(!S.showVwap){try{vwapSeries.setData([]);}catch(e){}return;}
+    var cs=S.candles; if(!cs||!cs.length){try{vwapSeries.setData([]);}catch(e){}return;}
+    var data=[],pv=0,vv=0,curDay=null;
+    for(var i=0;i<cs.length;i++){
+      var e=_vwapEtParts(cs[i].time); if(!e)continue;
+      if(e.min<570||e.min>=960)continue;                 // solo RTH 9:30–16:00
+      if(e.ymd!==curDay){curDay=e.ymd;pv=0;vv=0;}         // reset por sesión
+      var v=+cs[i].volume; if(!isFinite(v)||v<=0)continue;
+      var tp=(cs[i].high+cs[i].low+cs[i].close)/3;
+      pv+=tp*v; vv+=v;
+      if(vv>0)data.push({time:cs[i].time,value:Math.round((pv/vv)*4)/4});
+    }
+    try{vwapSeries.setData(data);}catch(e){}              // sin volumen → data vacía (Regla #1)
+  }
   window.toggleVwap=function(){
     S.showVwap=!S.showVwap;
     try{localStorage.setItem('lbc_vwap',S.showVwap?'on':'off');}catch(e){}
     var b=document.getElementById('gf-vwap'); if(b)b.classList.toggle('active',S.showVwap);
-    try{drawLines();}catch(e){}
+    try{_updateVwapLine();}catch(e){}
   };
   // estado inicial del toggle VWAP (persistido; apagado por defecto)
   S.showVwap=(function(){try{return localStorage.getItem('lbc_vwap')==='on';}catch(e){return false;}})();
@@ -2896,8 +2919,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     {k:'call',lbl:'CALL',get:function(){return _actCW();}},
     {k:'flip',lbl:'GAMMA',get:function(){return _actGF();}},
     {k:'put', lbl:'PUT', get:function(){return _actPW();}},
-    {k:'maxpain',lbl:'MAX PAIN',get:function(){return S.maxPain;}},
-    {k:'vwap',lbl:'VWAP',get:function(){return S.showVwap?_sessionVWAP():null;}}
+    {k:'maxpain',lbl:'MAX PAIN',get:function(){return S.maxPain;}}
   ];
   // Badge que dice si el PRECIO está arriba/abajo del nivel (lo que Dave quería ver de un vistazo).
   function _tagBadge(k,v){
@@ -3248,10 +3270,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   (function(){
     var bar=$('cx-draw'),ov=$('cx-ov');if(!bar||!ov)return;
     var delBtn=$('cx-del');
-    if(delBtn) delBtn.addEventListener('click',function(e){
-      e.preventDefault(); e.stopPropagation();
+    function _dwDeleteSel(){
       var i=_dw.sel;
-      if(i!=null&&i>=0&&i<_dw.items.length){ _dw.items.splice(i,1); _dw.sel=null; _dw.drag=null; _dwSave(); delBtn.classList.remove('on'); try{cxDrawRender();}catch(x){} }
+      if(i!=null&&i>=0&&i<_dw.items.length){ _dw.items.splice(i,1); _dw.sel=null; _dw.drag=null; _dwSave(); var db=$('cx-del'); if(db)db.classList.remove('on'); try{cxDrawRender();}catch(x){} return true; }
+      return false;
+    }
+    if(delBtn) delBtn.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); _dwDeleteSel(); });
+    // Tecla Delete/Backspace borra SOLO el dibujo seleccionado (antes había que borrar todo).
+    document.addEventListener('keydown',function(e){
+      if(e.key!=='Delete'&&e.key!=='Backspace')return;
+      var ae=document.activeElement,tag=ae?ae.tagName:'';
+      if(tag==='INPUT'||tag==='TEXTAREA'||(ae&&ae.isContentEditable))return;  // no interferir al escribir
+      if(_dw.sel!=null&&_dwDeleteSel())e.preventDefault();
     });
     function reset(){_dw.tool='cursor';_dw.draft=null;ov.classList.remove('armed');
       bar.querySelectorAll('.cxd').forEach(function(x){x.classList.toggle('active',x.dataset.tool==='cursor');});}

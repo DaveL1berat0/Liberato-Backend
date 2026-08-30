@@ -1448,10 +1448,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
   <!-- HERO SEARCH -->
   <div class="hero-search-wrap">
-    <div class="hero-search-label">Busca cualquier empresa del S&P 500 o Nasdaq 100 por ticker o nombre</div>
+    <div class="hero-search-label">Busca cualquier empresa por ticker o nombre</div>
     <div class="hero-search-field">
       <span class="hs-icon">⌕</span>
-      <input type="text" id="ticker-search" class="hero-search-input" placeholder="S&amp;P 500 · Nasdaq · Ej: NVDA, AAPL, MSFT, AMZN..." oninput="searchTicker(this.value)" autocomplete="off" spellcheck="false">
+      <input type="text" id="ticker-search" class="hero-search-input" placeholder="Ej: NVDA, AAPL, MSFT, AMZN..." oninput="searchTicker(this.value)" autocomplete="off" spellcheck="false">
       <span class="hs-kbd">⌘ K</span>
     </div>
     <div class="hero-search-tags" id="quick-tags">
@@ -1576,62 +1576,7 @@ var COMPANIES={
 // (Regla #1: dato real o vacío honesto, nunca dato falso).
 var ALLWEEKS=[];
 // Array legado CONSERVADO solo como referencia histórica — NO se usa como fuente de datos.
-var ALLWEEKS_LEGACY=[
-  {label:'1 — 5 Jun',sub:'Hace 2 semanas',days:[
-    {day:'Lun',date:'1 Jun',today:false,open:[],close:['CRDO','HPE']},
-    {day:'Mar',date:'2 Jun',today:false,open:['DG','HIVE','VSCO','ODD'],close:['PANW','GTLB','ULTA']},
-    {day:'Mie',date:'3 Jun',today:false,open:['MDT','M'],close:['CRWD','AVGO','AI','VEEV','FIVE','CHPT']},
-    {day:'Jue',date:'4 Jun',today:false,open:['CIEN'],close:['LULU','RBRK','PL','DOCU','IOT','AGX']},
-    {day:'Vie',date:'5 Jun',today:false,open:[],close:[]}]},
-  {label:'8 — 12 Jun',sub:'Semana pasada',days:[
-    {day:'Lun',date:'8 Jun',today:false,open:[],close:['ORCL']},
-    {day:'Mar',date:'9 Jun',today:false,open:['ASO'],close:['CASY','GME']},
-    {day:'Mie',date:'10 Jun',today:false,open:['CNM'],close:[]},
-    {day:'Jue',date:'11 Jun',today:false,open:['ADBE','SIG'],close:['RH','DOOO']},
-    {day:'Vie',date:'12 Jun',today:false,open:['KR'],close:[]}]},
-  {label:'15 — 19 Jun',sub:'Semana actual',days:[
-    {day:'Lun',date:'15 Jun',today:false,open:[],close:['LEN']},
-    {day:'Mar',date:'16 Jun',today:false,open:['HRB'],close:['KBH']},
-    {day:'Mie',date:'17 Jun',today:true,open:['GIS'],close:['MLKN']},
-    {day:'Jue',date:'18 Jun',today:false,open:['ACN','DRI'],close:['FDX']},
-    {day:'Vie',date:'19 Jun',today:false,open:['CMC'],close:[]}]},
-  {label:'22 — 26 Jun',sub:'Próxima semana',days:[
-    {day:'Lun',date:'22 Jun',today:false,open:[],close:[]},
-    {day:'Mar',date:'23 Jun',today:false,open:[],close:['FUL']},
-    {day:'Mie',date:'24 Jun',today:false,open:['PAYX'],close:['MU','BB']},
-    {day:'Jue',date:'25 Jun',today:false,open:['WBA','MKC','STZ'],close:['NKE']},
-    {day:'Vie',date:'26 Jun',today:false,open:[],close:[]}]},
-  {label:'29 Jun — 3 Jul',sub:'En 2 semanas',days:[
-    {day:'Lun',date:'29 Jun',today:false,open:[],close:['CALM']},
-    {day:'Mar',date:'30 Jun',today:false,open:['UNF'],close:[]},
-    {day:'Mie',date:'1 Jul',today:false,open:[],close:[]},
-    {day:'Jue',date:'2 Jul',today:false,open:['SMPL'],close:[]},
-    {day:'Vie',date:'3 Jul',today:false,open:[],close:[]}]},
-  {label:'6 — 10 Jul',sub:'En 3 semanas',days:[
-    {day:'Lun',date:'6 Jul',today:false,open:[],close:['HELE']},
-    {day:'Mar',date:'7 Jul',today:false,open:['SYY'],close:['LEVI']},
-    {day:'Mie',date:'8 Jul',today:false,open:['MSM'],close:['WDFC']},
-    {day:'Jue',date:'9 Jul',today:false,open:[],close:[]},
-    {day:'Vie',date:'10 Jul',today:false,open:['DAL','PEP'],close:[]}]},
-  {label:'13 — 17 Jul',sub:'Earnings Season Q2',days:[
-    {day:'Lun',date:'13 Jul',today:false,open:['GS'],close:['ISRG']},
-    {day:'Mar',date:'14 Jul',today:false,open:['JPM','WFC','C','BLK'],close:['NFLX','UAL']},
-    {day:'Mie',date:'15 Jul',today:false,open:['BAC','MS','UNH','JNJ'],close:['ABT']},
-    {day:'Jue',date:'16 Jul',today:false,open:['TSM','ASML','DHR'],close:['NFLX']},
-    {day:'Vie',date:'17 Jul',today:false,open:['AXP','PG'],close:[]}]},
-  {label:'20 — 24 Jul',sub:'Mega-Cap Tech Week',days:[
-    {day:'Lun',date:'20 Jul',today:false,open:['VZ'],close:['NXPI']},
-    {day:'Mar',date:'21 Jul',today:false,open:['GE','RTX','GM'],close:['GOOG','TXN','V']},
-    {day:'Mie',date:'22 Jul',today:false,open:['T','BA'],close:['TSLA','IBM','NOW']},
-    {day:'Jue',date:'23 Jul',today:false,open:['HON','CMCSA'],close:['INTC','DXCM']},
-    {day:'Vie',date:'24 Jul',today:false,open:['ABBV'],close:[]}]},
-  {label:'27 — 31 Jul',sub:'AAPL · MSFT · META · AMZN',days:[
-    {day:'Lun',date:'27 Jul',today:false,open:['ON','MCD'],close:['AMD','F']},
-    {day:'Mar',date:'28 Jul',today:false,open:['PFE','CAT'],close:['MSFT','META','SNAP']},
-    {day:'Mie',date:'29 Jul',today:false,open:['MA','HUM'],close:['AAPL','AMZN','QCOM']},
-    {day:'Jue',date:'30 Jul',today:false,open:['LLY','COP'],close:['COIN','ROKU']},
-    {day:'Vie',date:'31 Jul',today:false,open:['XOM','CVX'],close:[]}]},
-];
+// ALLWEEKS_LEGACY (calendario Jun–Jul 2026 hardcodeado) ELIMINADO: código muerto; el calendario real viene de /api/earnings (Regla #1).
 
 // Compact company DB (full detail for week 1, lighter for others)
 var C=COMPANIES; // Week 1 already loaded
@@ -2144,7 +2089,7 @@ function renderMonth(){
   if(banner)banner.remove();
   if(monthTotal===0){
     var b=document.createElement('div');b.id='month-empty';b.className='month-empty-state';
-    b.innerHTML='<span style="font-size:20px;opacity:0.4;">📅</span><p>No hay reportes de earnings programados para '+MONTH_NAMES_ES[curMonthView]+' 2026.</p><p style="font-size:11px;color:var(--text3);margin-top:4px;">Los datos disponibles cubren Junio–Julio 2026.</p>';
+    b.innerHTML='<span style="font-size:20px;opacity:0.4;">📅</span><p>No hay reportes de earnings programados para '+MONTH_NAMES_ES[curMonthView]+'.</p>';
     grid.parentNode.insertBefore(b,grid.nextSibling);
   }
   initCellHover();
@@ -2336,13 +2281,13 @@ function generateIntel(){
 
   // Options
   if(wkHigh.length>0){
-    narr+='<strong>Opciones:</strong> IV elevada en '+wkHigh.slice(0,3).map(function(x){return x.sym;}).join(', ')+'. ';
+    narr+='<strong>Opciones:</strong> ';
     narr+='Las covered calls quedan más expuestas a asignación cuando la IV es alta. Tras el reporte la IV suele colapsar y las opciones se abaratan. La prima de la rueda (wheel) históricamente es mayor antes del reporte y menor después. ';
   }
 
   // Biggest risk
   if(wkExtreme.length>0){
-    narr+='<strong>Mayor riesgo:</strong> <span class="r">'+heaviestDay+'</span> — '+wkExtreme.map(function(x){return x.sym;}).join(', ')+' con movimiento esperado de 8-10%.';
+    narr+='<strong>Mayor riesgo:</strong> <span class="r">'+heaviestDay+'</span> — '+wkExtreme.map(function(x){return x.sym;}).join(', ')+'.';
   }
 
   el.innerHTML='<div class="intel-card wide gold"><div class="ic-head"><span class="ic-icon">🤖</span><span class="ic-title">Inteligencia de Ganancias · '+w.label+'</span></div><div class="ic-body"><div class="ic-narrative">'+narr+'</div><div style="margin-top:8px;font-size:9px;color:var(--text3);font-family:DM Mono,monospace;">Análisis contextual automático. No constituye recomendación financiera.</div></div></div>';
@@ -2360,9 +2305,9 @@ function buildHistHTML(hist){
   var trend='<div class="dsec-title" style="margin-bottom:10px;">Tendencia Reciente · \u00daltimos '+n+' reportes</div>'
     +'<div class="trend-summary">'
     +'<div class="trend-row"><span class="trend-lbl">EPS Beats</span><div class="trend-bar-wrap"><div class="trend-bar green" style="width:'+epsPct+'%"></div></div><span class="trend-val">'+epsB+'/'+n+'</span></div>'
-    +'<div class="trend-row"><span class="trend-lbl">Rev Beats</span><div class="trend-bar-wrap"><div class="trend-bar amber" style="width:'+revPct+'%"></div></div><span class="trend-val">'+revB+'/'+n+'</span></div>'
-    +'<div class="trend-row"><span class="trend-lbl">Mov Prom</span><div style="flex:1"></div><span class="trend-val" style="color:'+(avg>=0?'var(--green)':'#B197FC')+'">'+(avg>=0?'+':'')+avg.toFixed(1)+'%</span></div>'
-    +'<div class="trend-row"><span class="trend-lbl">Sentimiento</span><div style="flex:1"></div><span class="trend-sent '+sent+'">'+SENT_LBL[sent]+'</span></div>'
+    +''
+    +''
+    +''
     +'</div>';
   var rows=hist.map(function(h){
     var es=calcSurprise(h.ee,h.ea),rs=calcSurprise(h.re,h.ra),rp=parsePct(h.react),ap=parsePct(h.ah||h.react),s=movSent(rp);
@@ -2370,13 +2315,13 @@ function buildHistHTML(hist){
     var rsh=rs!==null?'<span class="hist2-surp '+(rs>0?'pos':'neg')+'"> ('+(rs>0?'+':'')+rs.toFixed(1)+'%)</span>':'';
     var rc=rp===null?'zero':rp>0?'pos':'neg',ac=ap===null?'zero':ap>0?'pos':'neg';
     return '<div class="hist2">'
-      +'<div class="hist2-head"><span class="hist2-date">'+h.d+'</span><div class="hist2-badges"><span class="hist2-result '+h.r+'">'+(h.r==='beat'?'SUPERÓ':h.r==='miss'?'FALLÓ':'EN LÍNEA')+'</span><span class="hist2-sent '+s+'">'+SENT_LBL[s]+'</span></div></div>'
+      +'<div class="hist2-head"><span class="hist2-date">'+h.d+'</span><div class="hist2-badges"><span class="hist2-result '+h.r+'">'+(h.r==='beat'?'SUPERÓ':h.r==='miss'?'FALLÓ':'EN LÍNEA')+'</span></div></div>'
       +'<div class="hist2-body"><div class="hist2-metric"><span class="hist2-mlbl">EPS Esperado</span><span class="hist2-mval">'+h.ee+'</span></div>'
       +'<div class="hist2-metric"><span class="hist2-mlbl">EPS Real'+esh+'</span><span class="hist2-mval">'+h.ea+'</span></div>'
-      +'<div class="hist2-metric"><span class="hist2-mlbl">Rev Esperado</span><span class="hist2-mval">'+h.re+'</span></div>'
-      +'<div class="hist2-metric"><span class="hist2-mlbl">Rev Real'+rsh+'</span><span class="hist2-mval">'+h.ra+'</span></div></div>'
-      +'<div class="hist2-moves"><div class="hist2-mv"><span class="hist2-mv-lbl">Tras el cierre</span><span class="hist2-mv-val '+ac+'">'+(h.ah||h.react||'N/D')+'</span></div>'
-      +'<div class="hist2-mv"><span class="hist2-mv-lbl">Sesión siguiente</span><span class="hist2-mv-val '+rc+'">'+(h.react||'N/D')+'</span></div></div>'
+      +''
+      +'</div>'
+      +'<div class="hist2-moves"><div class="hist2-mv"><span class="hist2-mv-lbl">Tras el cierre</span><span class="hist2-mv-val zero">—</span></div>'
+      +'<div class="hist2-mv"><span class="hist2-mv-lbl">Sesión siguiente</span><span class="hist2-mv-val zero">—</span></div></div>'
       +'</div>';
   }).join('');
   return trend+rows;
@@ -2472,7 +2417,7 @@ function _fetchDrawerLive(sym){
       // PUNTO 3 — próxima fecha desde backend si el calendario aún no la fijó
       var _nd=data.nextDate||data.nextEarningsDate||null;
       var _neEl=document.getElementById('d-next-earnings');
-      if(_nd && _neEl && _neEl.style.display==='none'){
+      if(_nd && _neEl){
         var _ndTxt=_fmtNextDate(_nd);
         if(C[sym])C[sym].nextEarnings=_ndTxt;
         _neEl.style.display='block';
@@ -2588,18 +2533,18 @@ function _fmtCap(v){
   return '$'+n.toLocaleString('en-US');
 }
 function _renderDrawerBody(sym, c){
-  var newsHtml=(c.news||[]).map(function(n){return '<div class="news-item"><div class="news-head">'+n.h+'</div><div class="news-sum">'+n.s+'</div><span class="news-impact '+n.i+'">'+(n.i==='pos'?'\u25b2 Positivo':n.i==='neg'?'\u25bc Negativo':'\u25cf Neutral')+'</span></div>';}).join('');
+  var newsHtml=([]).map(function(n){return '<div class="news-item"><div class="news-head">'+n.h+'</div><div class="news-sum">'+n.s+'</div><span class="news-impact '+n.i+'">'+(n.i==='pos'?'\u25b2 Positivo':n.i==='neg'?'\u25bc Negativo':'\u25cf Neutral')+'</span></div>';}).join('');
   if(!newsHtml)newsHtml='<div style="color:var(--text3);font-size:11px;padding:8px;">Sin noticias recientes disponibles.</div>';
   document.getElementById('drawer-body').innerHTML=
-    '<div class="dsec"><div class="dsec-title">Resumen General</div><div class="sum-grid"><div class="sum-item"><div class="sum-lbl">Ticker</div><div class="sum-val">'+sym+'</div></div><div class="sum-item"><div class="sum-lbl">Market Cap</div><div class="sum-val" id="d-cap-val">'+_valOrDash(c.cap)+'</div></div><div class="sum-item" style="grid-column:span 2;"><div class="sum-lbl">Sector</div><div class="sum-val sm" id="d-sec-val">'+_valOrDash(c.sector)+'</div></div></div></div>'
+    '<div class="dsec"><div class="dsec-title">Resumen General</div><div class="sum-grid"><div class="sum-item"><div class="sum-lbl">Ticker</div><div class="sum-val">'+sym+'</div></div><div class="sum-item"><div class="sum-lbl">Market Cap</div><div class="sum-val" id="d-cap-val">—</div></div><div class="sum-item" style="grid-column:span 2;"><div class="sum-lbl">Sector</div><div class="sum-val sm" id="d-sec-val">—</div></div></div></div>'
     +'<div class="dsec"><div class="dsec-title">Ganancias Esperadas</div>'+
     '<div class="exp-row"><span class="exp-lbl">EPS estimado</span><span class="exp-val" id="d-eps-val">—</span></div>'+
     '<div class="exp-row"><span class="exp-lbl">Revenue est.</span><span class="exp-val" id="d-rev-val">—</span></div>'+
     '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val">—</span></div>'+
     '</div>'
-    +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span><span class="nq-weight">Peso: <strong>'+c.weight+'</strong></span></div><div class="nq-explain">'+c.nq+'</div></div></div>'
+    +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span><span class="nq-weight">Peso: <strong>—</strong></span></div><div class="nq-explain">—</div></div></div>'
     +'<div class="dsec"><div class="dsec-title">Últimas Noticias</div>'+newsHtml+'</div>'
-    +'<div class="dsec" id="d-hist-section">'+buildHistHTML(c.hist)+'</div>';
+    +'<div class="dsec" id="d-hist-section">'+''+'</div>';
 }
 
 function closeDrawer(){
