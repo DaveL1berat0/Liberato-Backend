@@ -467,6 +467,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-tag.put{color:var(--down);border-color:rgba(177,151,252,0.4);}
 .cx-tag.flip{color:var(--gold);border-color:rgba(204,169,79,0.45);}
 .cx-tag.maxpain{color:#4FD6E0;border-color:rgba(79,214,224,0.4);}
+.cx-tag.edge{border-style:dashed;opacity:0.96;}  /* nivel fijado al borde (fuera de rango vertical) */
 .cx-tag.near{animation:cxNearPulse 1.15s ease-in-out infinite;border-color:currentColor;}
 @keyframes cxNearPulse{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 11px -1px currentColor;}}
 .cx-del{position:absolute;display:none;z-index:6;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,107,129,0.55);background:rgba(20,10,12,0.95);color:#FF6B81;font-size:12px;line-height:1;cursor:pointer;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 14px rgba(0,0,0,0.5);transition:background .15s,transform .15s;}
@@ -998,6 +999,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .gamma-alert.show{transform:translateX(0);opacity:1;}
 /* En móvil estrecho 380px+right:24px superaba el viewport (375px) y se recortaba por la izquierda con overflow-x:hidden → se fija a ambos lados. */
 @media(max-width:600px){.mover-alert,.gamma-alert{left:12px;right:12px;max-width:none;}}
+/* El popup de la campana de apertura (.mkt-open-pop) lo inyecta opening_bell.js */
 .gamma-alert-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .gamma-alert-x{position:absolute;top:10px;right:12px;color:var(--ink-3);font-size:16px;cursor:pointer;line-height:1;transition:color 0.2s;}
 .gamma-alert-x:hover{color:var(--ink);}
@@ -2878,7 +2880,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(v==null){el.classList.remove('on');el._px=null;return;}
       var txt=d.lbl;   // SOLO el nombre (CALL/GAMMA/PUT/MAX PAIN); el precio va en el eje (axisLabelVisible)
       if(el.textContent!==txt)el.textContent=txt;
-      el._px=v;
+      el._px=v; el.dataset.lbl=txt;   // guardar el nombre base para reconstruir el texto de borde (max pain lejano)
     });
   }
   var _cxRafOn=false, _cxLastFr=0;
@@ -2898,7 +2900,19 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             var el=host.children[i],p=el._px;
             if(p==null){el.classList.remove('on','near');continue;}
             var y=null;try{y=series.priceToCoordinate(p);}catch(e){}
-            if(y==null||y<10||y>h-14){el.classList.remove('on','near');continue;}
+            // Nivel FUERA de rango vertical (ej. Max Pain lejano): en vez de ocultarlo,
+            // lo FIJAMOS al borde (arriba/abajo) con flecha + distancia en puntos, p.ej.
+            // "MAX PAIN 28.900 ↓ −617", para que el trader lo perciba aunque esté lejos.
+            var _off=(y==null||y<10||y>h-14);
+            if(_off){
+              if(y==null){el.classList.remove('on','near','edge');continue;}
+              var _top=(y<10); y=_top?10:h-14;
+              var _dp=(typeof S.price==='number'&&S.price>1000)?Math.round(p-S.price):null;
+              el.textContent=(el.dataset.lbl||'')+' '+Math.round(p).toLocaleString('es-ES')+(_dp!=null?(' '+(_top?'↑':'↓')+(_dp>0?'+':'')+_dp):'');
+              el.classList.add('edge');
+            } else if(el.classList.contains('edge')){
+              el.classList.remove('edge'); el.textContent=(el.dataset.lbl||el.textContent);
+            }
             el.style.top=y+'px';el.style.right=(sw+(S._gexW||0)+11)+'px';el.style.left='auto';   // a la izquierda del histograma (no lo pisa); el precio va en el eje
             el.classList.add('on');
             // glow de proximidad: cuando el precio está cerca del nivel, la tag pulsa (reimplementa el viejo efecto del imap)
@@ -3181,7 +3195,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ctx.setTransform(_dw.dpr,0,0,_dw.dpr,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
     if(!chart||!series)return;
-    try{cxZones(ctx,cv);}catch(e){}              // zonas de régimen (fondo, lo más atrás)
+    // cxZones (fondo morado/verde de régimen) ELIMINADO por decisión de Dave (30-ago): innecesario, ensucia el chart.
     try{cxLastLine(ctx,cv);}catch(e){}           // línea corta de último precio (vela→eje)
     try{cxGexRender(ctx,cv);}catch(e){}          // histograma → los dibujos quedan encima
     if(_dw.sel!=null&&_dw.sel>=_dw.items.length)_dw.sel=null;
@@ -4226,6 +4240,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(document.body)wire();else document.addEventListener('DOMContentLoaded',wire);
   })();
 
+  // La CAMPANA DE APERTURA (9:30 ET) vive ahora en el script COMPARTIDO
+  // opening_bell.js (incluido en todas las secciones) para que suene en cualquier
+  // página cuando abre el mercado. Ver <script src="opening_bell.js">.
+
   function showGammaAlert(info){
     // GATE RTH: fuera de sesión regular no hay popup ni sonido.
     if(!isRTH())return;
@@ -4774,5 +4792,6 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 })();
 </script>
 
+  <script src="opening_bell.js" defer></script>
 </body>
 </html>

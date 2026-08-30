@@ -1846,6 +1846,12 @@ function _buildFromEarnings(earnings){
   var ny=_nyToday();
   var todayDate=new Date(ny.y,ny.m,ny.d); todayDate.setHours(0,0,0,0);
   var curMonday=_mondayOf(todayDate);
+  // En FIN DE SEMANA (sáb/dom) la semana de negociación Lun-Vie ya terminó, así que
+  // la "semana actual" relevante para el trader es la PRÓXIMA. Avanzamos al lunes
+  // siguiente para que el default no se quede en la semana que ya pasó (pedido de
+  // Dave: "debe aparecer la actual siempre"). En días laborales no cambia nada.
+  var _dow=todayDate.getDay(); // 0=Dom, 6=Sáb
+  if(_dow===0||_dow===6){ curMonday=new Date(curMonday.getFullYear(),curMonday.getMonth(),curMonday.getDate()+7); }
   var byDate={}, maxDate=new Date(curMonday);
 
   (earnings||[]).forEach(function(e){
@@ -2741,5 +2747,6 @@ window.addEventListener('unhandledrejection',function(e){e.preventDefault&&e.pre
 })();
 </script>
 
+  <script src="opening_bell.js" defer></script>
 </body>
 </html>
