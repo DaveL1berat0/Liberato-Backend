@@ -468,6 +468,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cx-tag.flip{color:var(--gold);border-color:rgba(204,169,79,0.45);}
 .cx-tag.maxpain{color:#4FD6E0;border-color:rgba(79,214,224,0.4);}
 .cx-tag.edge{border-style:dashed;opacity:0.96;}  /* nivel fijado al borde (fuera de rango vertical) */
+.cx-tag.vwap{color:#8AB4F8;border-color:rgba(138,180,248,0.4);}  /* VWAP real de la sesión */
 .cx-tag.near{animation:cxNearPulse 1.15s ease-in-out infinite;border-color:currentColor;}
 @keyframes cxNearPulse{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 11px -1px currentColor;}}
 .cx-del{position:absolute;display:none;z-index:6;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,107,129,0.55);background:rgba(20,10,12,0.95);color:#FF6B81;font-size:12px;line-height:1;cursor:pointer;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 14px rgba(0,0,0,0.5);transition:background .15s,transform .15s;}
@@ -1569,6 +1570,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div class="g-hd">
         <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 7h2l1.5-4 2 8L9 5l1 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="g-ttl">Gamma Chart <span class="info-i" title="Velas de NQ + los niveles de gamma sobre el mismo chart: Call Wall (resistencia), Gamma Flip (régimen), Put Wall (soporte) y Max Pain, con badge de si el precio está arriba/abajo de cada uno. A la derecha, el histograma de gamma POR VOLUMEN por strike (dónde está el muro). Fuente GexBot. Fuera de mercado cae a gamma por OI.">&#9432;</span></div><div class="g-sub">Velas + gamma por volumen · todo en uno</div></div></div>
         <div class="g-hd-r">
+          <button class="gf-0dte" id="gf-vwap" onclick="toggleVwap()" title="VWAP = precio medio ponderado por VOLUMEN real de la sesión (RTH 9:30–16:00 ET). Nivel de referencia intradía. Se calcula con el volumen del feed; si no hay volumen no se muestra (dato real o nada).">VWAP</button>
           <button class="gf-0dte" id="gf-0dte" onclick="toggle0dte()" title="0DTE = niveles del vencimiento de HOY: la gamma que domina el movimiento intradía (para scalping). Apagado = vencimiento COMPLETO (por OI), el mapa estructural del día. Ambos de GexBot.">0DTE</button>
           <span class="gf-timestamp" id="gf-timestamp" style="display:none;"></span>
           <span class="g-live"><span class="bl"></span>Live</span>
@@ -2763,7 +2765,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(!c)continue;
       var o=+c.open,h=+c.high,l=+c.low,cl=+c.close,t=+c.time;
       if(!isFinite(o)||!isFinite(h)||!isFinite(l)||!isFinite(cl)||!isFinite(t))continue;
-      out.push({time:t,open:o,high:h,low:l,close:cl});
+      var _v=+c.volume; out.push({time:t,open:o,high:h,low:l,close:cl,volume:isFinite(_v)?_v:0});  // volumen real → VWAP
     }
     out.sort(function(a,b){return a.time-b.time;});
     var ded=[];
@@ -2824,6 +2826,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
     if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
     if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
+    if(S.showVwap){var _vw=_sessionVWAP(); if(_vw!=null)lines.vwap=series.createPriceLine({price:_vw,color:'#8AB4F8',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});}   // VWAP real (toggle), solo si hay volumen
     // MUROS SECUNDARIOS de gamma por volumen (Dave): también con PRECIO en el eje para que el
     // trader identifique el nivel exacto, no solo el perfil. Línea sparse tenue (color atenuado).
     var gw=_computeGexWalls(); S.gexWalls=gw;
@@ -2855,12 +2858,46 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     try{if(typeof renderMap==='function')renderMap();}catch(e){}
     try{if(typeof renderMapLive==='function')renderMapLive();}catch(e){}
   };
+  // ── VWAP REAL de la sesión (ponderado por VOLUMEN del feed) ──────────────
+  // typical price (H+L+C)/3 × volumen, acumulado sobre las velas RTH (9:30–16:00 ET)
+  // de la sesión más reciente. Sin volumen → null (Regla #1: no se inventa un VWAP).
+  function _vwapEtParts(sec){
+    try{
+      var p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(sec*1000));
+      var o={};p.forEach(function(x){o[x.type]=x.value;});
+      return {ymd:o.year+o.month+o.day,min:(+(o.hour==='24'?'0':o.hour))*60+(+o.minute)};
+    }catch(e){return null;}
+  }
+  function _sessionVWAP(){
+    var cs=S.candles; if(!cs||cs.length<2)return null;
+    var lp=_vwapEtParts(cs[cs.length-1].time); if(!lp)return null;
+    var pv=0,vv=0;
+    for(var i=0;i<cs.length;i++){
+      var e=_vwapEtParts(cs[i].time); if(!e||e.ymd!==lp.ymd)continue;
+      if(e.min<570||e.min>=960)continue;           // solo RTH 9:30–16:00
+      var v=+cs[i].volume; if(!isFinite(v)||v<=0)continue;
+      var tp=(cs[i].high+cs[i].low+cs[i].close)/3;
+      pv+=tp*v; vv+=v;
+    }
+    if(vv<=0)return null;                           // sin volumen real → sin VWAP
+    return Math.round((pv/vv)*4)/4;
+  }
+  window.toggleVwap=function(){
+    S.showVwap=!S.showVwap;
+    try{localStorage.setItem('lbc_vwap',S.showVwap?'on':'off');}catch(e){}
+    var b=document.getElementById('gf-vwap'); if(b)b.classList.toggle('active',S.showVwap);
+    try{drawLines();}catch(e){}
+  };
+  // estado inicial del toggle VWAP (persistido; apagado por defecto)
+  S.showVwap=(function(){try{return localStorage.getItem('lbc_vwap')==='on';}catch(e){return false;}})();
+  (function(){var b=document.getElementById('gf-vwap');if(b)b.classList.toggle('active',S.showVwap);}());
   // Tags de nivel en el borde derecho — se crean una vez y solo se reposicionan.
   var _cxTagDefs=[
     {k:'call',lbl:'CALL',get:function(){return _actCW();}},
     {k:'flip',lbl:'GAMMA',get:function(){return _actGF();}},
     {k:'put', lbl:'PUT', get:function(){return _actPW();}},
-    {k:'maxpain',lbl:'MAX PAIN',get:function(){return S.maxPain;}}
+    {k:'maxpain',lbl:'MAX PAIN',get:function(){return S.maxPain;}},
+    {k:'vwap',lbl:'VWAP',get:function(){return S.showVwap?_sessionVWAP():null;}}
   ];
   // Badge que dice si el PRECIO está arriba/abajo del nivel (lo que Dave quería ver de un vistazo).
   function _tagBadge(k,v){
@@ -2869,6 +2906,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(k==='call') return p<v?' · resist':' · roto ↑';
     if(k==='put')  return p>v?' · soporte':' · roto ↓';
     if(k==='maxpain') return ' · imán';
+    if(k==='vwap') return p>=v?' · sobre':' · bajo';
     return '';
   }
   function cxTagsSync(){

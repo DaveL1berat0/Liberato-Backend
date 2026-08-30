@@ -4909,13 +4909,14 @@ def _resample_candles(base, tf_min):
         b = c["time"] - (c["time"] % span)
         if b not in buckets:
             buckets[b] = {"time": b, "open": c["open"], "high": c["high"],
-                          "low": c["low"], "close": c["close"]}
+                          "low": c["low"], "close": c["close"], "volume": c.get("volume", 0)}
             order.append(b)
         else:
             k = buckets[b]
             if c["high"] > k["high"]: k["high"] = c["high"]
             if c["low"]  < k["low"]:  k["low"]  = c["low"]
             k["close"] = c["close"]
+            k["volume"] = k.get("volume", 0) + c.get("volume", 0)
     return [buckets[b] for b in order]
 
 async def _fetch_yahoo_5m_base():
@@ -4952,16 +4953,19 @@ async def _fetch_yahoo_5m_base():
             ts = res.get("timestamp") or []
             q = (res.get("indicators", {}).get("quote") or [{}])[0]
             o, h, l, c = q.get("open", []), q.get("high", []), q.get("low", []), q.get("close", [])
+            vol = q.get("volume", [])  # volumen REAL de Yahoo → habilita VWAP real
             out = []
             for i in range(len(ts)):
                 try:
                     if o[i] is None or h[i] is None or l[i] is None or c[i] is None:
                         continue
+                    _v = vol[i] if (i < len(vol) and vol[i] is not None) else 0
                     out.append({"time": int(ts[i]),
                                 "open": round(float(o[i])*mult, 2),
                                 "high": round(float(h[i])*mult, 2),
                                 "low":  round(float(l[i])*mult, 2),
-                                "close":round(float(c[i])*mult, 2)})
+                                "close":round(float(c[i])*mult, 2),
+                                "volume": int(_v)})
                 except (IndexError, TypeError, ValueError):
                     continue
             if len(out) >= 5:
@@ -5149,7 +5153,8 @@ async def _fetch_td_5m_base():
                             "open": round(float(v["open"])*ratio, 2),
                             "high": round(float(v["high"])*ratio, 2),
                             "low":  round(float(v["low"])*ratio, 2),
-                            "close":round(float(v["close"])*ratio, 2)})
+                            "close":round(float(v["close"])*ratio, 2),
+                            "volume": int(float(v.get("volume") or 0))})  # volumen real → VWAP
             except (KeyError, ValueError):
                 continue
         if not out:
