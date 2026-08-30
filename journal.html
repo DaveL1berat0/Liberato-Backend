@@ -2640,7 +2640,7 @@ function savePlaybooks(arr){try{localStorage.setItem(userKey(PB_KEY),JSON.string
 var PB=loadPlaybooks();
 function pbById(id){return PB.find(function(p){return p.id===id;});}
 function activePlaybooks(){return PB.filter(function(p){return p.active;});}
-var curView='dashboard',calMo=5,calYr=2026,trFilter='all',calMode='money';
+var _cdNow=new Date(),curView='dashboard',calMo=_cdNow.getMonth(),calYr=_cdNow.getFullYear(),trFilter='all',calMode='money';  // calendario arranca en el MES ACTUAL (antes fijo en junio 2026)
 var fDir='long',fCtx={vwap:null,gamma:null,t4h:null,exitType:null};
 var fChk=[false,false,false,false];
 var fPlaybook=null;
@@ -2672,13 +2672,8 @@ function selectFormPb(id){
   renderFormPlaybooks();
 }
 
-var DEMO=[
-  {id:'d1',date:'2026-06-02',time:'09:42',asset:'NQ',direction:'long',entry:21720,exit:21790,stop:21700,contracts:1,setup:'Opening Range Breakout',vwap:'above',gamma:'exp_up',t4h:'bull',exitType:'full',checklist:[true,true,true,true],note:'Break limpio del OR high. VWAP arriba, gamma alcista fuerte.'},
-  {id:'d2',date:'2026-06-03',time:'09:35',asset:'NQ',direction:'long',entry:21730,exit:21780,stop:21710,contracts:1,setup:'VWAP Reclaim',vwap:'above',gamma:'contract',t4h:'bull',exitType:'partial',checklist:[true,true,true,true],note:'Gamma en contracción, salí parcial. Buen manejo.'},
-  {id:'d3',date:'2026-06-03',time:'14:25',asset:'NQ',direction:'long',entry:21760,exit:21740,stop:21750,contracts:1,setup:'Failed Auction',vwap:'below',gamma:'contract',t4h:'neut',exitType:'full',checklist:[false,false,true,false],note:'Operar tarde, sin sesgo claro. Error clásico.'},
-  {id:'d4',date:'2026-06-04',time:'10:05',asset:'NQ',direction:'short',entry:21800,exit:21755,stop:21815,contracts:1,setup:'Gamma Reaction',vwap:'below',gamma:'exp_dn',t4h:'bear',exitType:'full',checklist:[true,true,true,true],note:'Rechazo en gamma flip level. 4H bajista.'},
-  {id:'d5',date:'2026-06-04',time:'11:15',asset:'NQ',direction:'long',entry:21760,exit:21800,stop:21740,contracts:1,setup:'Opening Range Breakout',vwap:'above',gamma:'exp_up',t4h:'bull',exitType:'full',checklist:[true,true,true,true],note:'Segunda entrada del día. Setup perfecto.'},
-];
+// Array DEMO de trades fabricados ELIMINADO (Regla #1): los trades reales vienen de
+// SnapTrade / TradeStation / entrada manual / CSV. No debe existir data de trades inventada.
 
 // ── IDENTIDAD / NAMESPACE (multiusuario: cada estudiante ve solo lo suyo) ──
 function currentUserId(){
@@ -2986,9 +2981,11 @@ function renderDash(){
   // stop real; si el trade NO trae stop (imports de broker/CSV), se usa la PÉRDIDA MEDIA
   // del periodo como unidad de R, para no dejar el dato en "—" cuando hay decenas de
   // trades. Así los perdedores promedian ~ -1R y los ganadores su múltiplo real.
-  var _lossUnit=(s.avgL>0)?s.avgL:0;
+  // R medio SOLO con riesgo REAL (|entry-stop|×mult×contratos). Si el trade no trae
+  // stop real NO se sustituye por la pérdida media (sería inventar el riesgo): se
+  // excluye. Si ningún trade tiene stop real → avgR=null → "—" (Regla #1).
   var rMults=FT.map(function(t){
-    var riskD=(t.risk!=null&&+t.risk>0)?Math.abs(+t.risk)*(t.mult||1)*(t.contracts||1):_lossUnit;
+    var riskD=(t.risk!=null&&+t.risk>0)?Math.abs(+t.risk)*(t.mult||1)*(t.contracts||1):null;
     return (riskD>0)?(t.pnl/riskD):null;
   }).filter(function(x){return x!=null&&isFinite(x);});
   var avgR=rMults.length?Math.round(rMults.reduce(function(a,b){return a+b;},0)/rMults.length*100)/100:null;
@@ -5328,10 +5325,10 @@ function loadCoach(force){
 }
 function fallbackCoach(s,chkWR,noChkWR,morWR,aftWR,fullGammaExp,su,errors){
   var ins=[];
-  ins.push({category:'checklist',icon:'☑',insight:'Con checklist completo tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> sin él. Diferencia de '+(chkWR-noChkWR)+'% = dinero real.',action:'En tu historial, los trades con los 4 checks completos muestran mejor Win Rate que los que omiten alguno.'});
+  ins.push({category:'checklist',icon:'☑',insight:'Con checklist completo tu Win Rate es <strong>'+chkWR+'%</strong> vs <span class="r">'+noChkWR+'%</span> sin él. Diferencia de '+(chkWR-noChkWR)+'%.',action:'En tu historial, los trades con los 4 checks completos muestran mejor Win Rate que los que omiten alguno.'});
   if(fullGammaExp>0)ins.push({category:'gamma',icon:'⚡',insight:'Cerraste <span class="r">'+fullGammaExp+' trade'+(fullGammaExp>1?'s':'')+'</span> completo con gamma en expansión. Dejar un runner del 50% captura el movimiento extra.',action:'En tu histórico, con gamma en expansión las salidas parciales (dejando runner) capturaron más recorrido que la salida completa.'});
   else ins.push({category:'gamma',icon:'⚡',insight:'Mapea el estado de gamma antes de cada sesión. En expansión deja runner, en contracción protege ganancias.',action:'Los trades sin el gamma anotado no permiten medir su efecto sobre tu Win Rate.'});
-  ins.push({category:'horarios',icon:'🕐',insight:'Mañana: <strong>'+morWR+'%</strong> WR. Tarde (>14:00): <span class="r">'+aftWR+'%</span>. Diferencia de '+(morWR-aftWR)+'% sistemática.',action:'Tu Win Rate por la tarde (>14:00) es sistemáticamente más bajo que por la mañana.'});
+  ins.push({category:'horarios',icon:'🕐',insight:'Mañana: <strong>'+morWR+'%</strong> WR. Tarde (>14:00): <span class="r">'+aftWR+'%</span>. Diferencia de '+(morWR-aftWR)+'%.',action:'En tu histórico, tu Win Rate por la tarde (>14:00) es más bajo que por la mañana.'});
   if(errors.length)ins.push({category:'psicologia',icon:'🧠',insight:'Tu error más repetido: <span class="r">'+errors[0].name+'</span> ('+errors[0].count+'x). Explica parte de tus pérdidas.',action:'Este error concentra parte de tus pérdidas y suele repetirse en trades encadenados.'});
   var worst=su[su.length-1];if(worst&&worst.pnl<0)ins.push({category:'setups',icon:'📊',insight:'<strong>'+su[0].name+'</strong>: '+f$(su[0].pnl)+' ('+su[0].wr+'% WR). <span class="r">'+worst.name+'</span>: '+f$(worst.pnl)+' ('+worst.wr+'% WR).',action:worst.name+' acumula P&L negativo en tu histórico; '+su[0].name+' concentra tus mejores resultados.'});
   return ins;
@@ -5390,7 +5387,7 @@ function genFallbackReply(msg){
   var s=stats(baseTrades()),su=bySetup(baseTrades()),errors=buildErrorProfile(),q=msg.toLowerCase();
   if(q.indexOf('error')>=0||q.indexOf('malo')>=0||q.indexOf('peor')>=0)return errors.length?'Tu error más frecuente es <strong>'+errors[0].name+'</strong> ('+errors[0].count+' veces). La próxima vez que lo detectes, para 15 minutos.':'Aún no tengo datos suficientes. Registra más trades con checklist.';
   if(q.indexOf('setup')>=0||q.indexOf('mejor')>=0){var b=su[0];return b?'Tu mejor setup es <strong>'+b.name+'</strong> con '+b.wr+'% WR y '+f$(b.pnl)+'. Es tu bread & butter.':'Registra más trades.';}
-  if(q.indexOf('hora')>=0||q.indexOf('cuando')>=0||q.indexOf('tiempo')>=0){var aft=T.filter(function(t){return parseInt(t.time)>=14;}),mor=T.filter(function(t){return parseInt(t.time)<12;});return 'Mañana: <strong>'+stats(mor).wr+'%</strong> WR vs tarde: '+stats(aft).wr+'%. Mejor liquidez 9:30-11:30 ET.';}
+  if(q.indexOf('hora')>=0||q.indexOf('cuando')>=0||q.indexOf('tiempo')>=0){var aft=T.filter(function(t){return parseInt(t.time)>=14;}),mor=T.filter(function(t){return parseInt(t.time)<12;});return 'Mañana: <strong>'+stats(mor).wr+'%</strong> WR vs tarde: '+stats(aft).wr+'% en tu histórico.';}
   if(q.indexOf('disciplina')>=0||q.indexOf('checklist')>=0){var chk=T.filter(function(t){return t.chkAll;}),nochk=T.filter(function(t){return !t.chkAll;});return chk.length&&nochk.length?'Con checklist: <strong>'+stats(chk).wr+'%</strong> vs <strong>'+stats(nochk).wr+'%</strong> sin él. El checklist es tu edge.':'Completa el checklist en cada trade.';}
   return 'Con tus '+s.n+' trades, tu Win Rate es '+s.wr+'% y Profit Factor '+s.pf+'. '+(su.length?'Tu mejor setup es '+su[0].name+'.':'')+' ¿Qué quieres mejorar?';
 }
