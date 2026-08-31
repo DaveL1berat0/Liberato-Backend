@@ -2224,11 +2224,11 @@ async def refresh_environment():
     if oil and len(oil) > 12:
         oil_3m = oil[min(12, len(oil) - 1)][1]
     oil_chg = ((oil_now - oil_3m) / oil_3m * 100.0) if (oil_now and oil_3m) else None
-    add("supply", "Supply Shock", 5,
+    add("supply", "Petróleo (WTI)", 5,
         (_envlin(oil_chg, 40.0, -10.0) if oil_chg is not None else None), oil,
         (f"WTI {oil_chg:+.0f}%/3m" if oil_chg is not None else None),
-        ("Salto de energía — posible shock de oferta" if (oil_chg is not None and oil_chg > 25)
-         else "Energía estable" if oil_chg is not None else "Sin dato"), invert=True)
+        ("Crudo disparado — presión inflacionaria y de costos (shock de oferta)" if (oil_chg is not None and oil_chg > 25)
+         else "Petróleo estable — sin presión de costos/inflación" if oil_chg is not None else "Sin dato"), invert=True)
 
     # 8) GOLD (5%) — oro subiendo fuerte = aversión al riesgo/estrés (contextual).
     gclose = await _yahoo_closes("GC=F", "6mo")
