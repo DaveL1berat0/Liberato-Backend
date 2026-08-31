@@ -2130,6 +2130,12 @@ async def refresh_environment():
     ids = ["T10Y2Y", "FEDFUNDS", "DGS10", "CPIAUCSL", "PCEPI", "TDSP",
            "MORTGAGE30US", "HOUST", "UNRATE", "INDPRO", "DCOILWTICO",
            "BAMLH0A0HYM2", "NFCI",
+           # NUEVO — Indicadores Adelantados (compuesto): permisos, solicitudes de
+           # desempleo, confianza del consumidor, horas trabajadas manufactura, y
+           # encuesta manufacturera de la Fed de Filadelfia (proxy del ISM, de pago).
+           "PERMIT", "ICSA", "UMCSENT", "AWHMAN", "GACDFSA066MSFRBPHI",
+           # NUEVO — Liquidez neta de la Fed (balance) — RRP/TGA se traen aparte (diario)
+           "WALCL",
            # Curva de rendimientos real (para dibujarla): tramos por vencimiento
            "DGS3MO", "DGS2", "DGS5", "DGS30",
            # Curva de INFLACIÓN esperada (breakevens TIPS) para superponerla
@@ -2137,6 +2143,12 @@ async def refresh_environment():
     results = await asyncio.gather(*[_fred_obs(i, 26) for i in ids], return_exceptions=True)
     for i, sid in enumerate(ids):
         ser[sid] = results[i] if not isinstance(results[i], Exception) else []
+    # Liquidez: RRP (repos inversos) y TGA (cuenta del Tesoro) son DIARIAS → se piden
+    # con más puntos para poder medir el cambio a ~13 semanas (63 días hábiles).
+    _liq_daily = await asyncio.gather(_fred_obs("RRPONTSYD", 70), _fred_obs("WTREGEN", 70),
+                                      return_exceptions=True)
+    ser["RRPONTSYD"] = _liq_daily[0] if not isinstance(_liq_daily[0], Exception) else []
+    ser["WTREGEN"]   = _liq_daily[1] if not isinstance(_liq_daily[1], Exception) else []
     # Robustez: el burst concurrente de ~17 series FRED a veces deja varias vacías por
     # throttling/timeout transitorio → antes la cobertura bajaba a 4/9 y la curva se caía.
     # Se reintenta UNA vez, secuencialmente, cada serie que quedó vacía.
@@ -2241,6 +2253,59 @@ async def refresh_environment():
         (f"HY OAS {hy:.2f}%" if hy is not None else None),
         ("Spreads de crédito anchos — estrés financiero" if (hy is not None and hy > 5)
          else "Condiciones de crédito calmadas" if hy is not None else "Sin dato"), invert=True)
+
+    # 10) INDICADORES ADELANTADOS (12%) — compuesto que ANTICIPA giros del ciclo:
+    #     permisos de construcción (YoY), solicitudes de desempleo, confianza del
+    #     consumidor (Michigan), horas trabajadas manufactura y encuesta manufacturera
+    #     de la Fed de Filadelfia (proxy del ISM, que es de pago). Regla #1: solo
+    #     puntúa con las componentes que traen dato real.
+    _lead_parts = []
+    _permit_yoy = _env_yoy(ser.get("PERMIT"))
+    if _permit_yoy is not None: _lead_parts.append(_envlin(_permit_yoy, -20.0, 15.0))
+    _claims = last("ICSA")
+    if _claims is not None: _lead_parts.append(_envlin(_claims, 350000.0, 200000.0))
+    _sent = last("UMCSENT")
+    if _sent is not None: _lead_parts.append(_envlin(_sent, 55.0, 95.0))
+    _hours = last("AWHMAN")
+    if _hours is not None: _lead_parts.append(_envlin(_hours, 39.5, 41.2))
+    _phil = last("GACDFSA066MSFRBPHI")
+    if _phil is not None: _lead_parts.append(_envlin(_phil, -20.0, 20.0))
+    _lead_parts = [p for p in _lead_parts if p is not None]
+    _lead_score = round(sum(_lead_parts) / len(_lead_parts), 1) if _lead_parts else None
+    add("leading", "Indicadores Adelantados", 12,
+        _lead_score, ser.get("UMCSENT") or ser.get("ICSA"),
+        (f"{len(_lead_parts)}/5 señales" if _lead_parts else None),
+        ("Adelantados debilitándose — alerta temprana del ciclo" if (_lead_score is not None and _lead_score < 45)
+         else "Adelantados estables/sólidos" if _lead_score is not None else "Sin dato"))
+
+    # 11) CONDICIONES FINANCIERAS (10%) — NFCI (Chicago Fed): índice COMPUESTO de
+    #     condiciones financieras. >0 = más restrictivas que la media (estrés);
+    #     <0 = laxas. Uno de los mejores predictores compuestos de estrés sistémico.
+    _nfci = last("NFCI")
+    add("fin_conditions", "Condiciones Financieras", 10,
+        _envlin(_nfci, 0.8, -0.6), ser.get("NFCI"),
+        (f"NFCI {_nfci:+.2f}" if _nfci is not None else None),
+        ("Condiciones financieras restrictivas — estrés" if (_nfci is not None and _nfci > 0)
+         else "Condiciones financieras laxas" if _nfci is not None else "Sin dato"), invert=True)
+
+    # 12) LIQUIDEZ NETA (8%) — Liquidez neta de la Fed = balance (WALCL) − repos
+    #     inversos (RRP) − cuenta del Tesoro (TGA). Su DIRECCIÓN a ~13 semanas:
+    #     expandiéndose = soporte al mercado; drenando = viento en contra (QT/estrés).
+    def _at(sid, idx):
+        o = ser.get(sid) or []
+        if not o: return None
+        return o[idx][1] if len(o) > idx else o[-1][1]
+    _wal0, _wal13 = _at("WALCL", 0), _at("WALCL", 13)          # semanal
+    _rrp0, _rrp13 = _at("RRPONTSYD", 0), _at("RRPONTSYD", 63)  # diario ≈13 sem
+    _tga0, _tga13 = _at("WTREGEN", 0), _at("WTREGEN", 63)
+    _liq_now = (_wal0/1000.0 - (_rrp0 or 0) - (_tga0 or 0)) if _wal0 is not None else None
+    _liq_then = (_wal13/1000.0 - (_rrp13 or 0) - (_tga13 or 0)) if _wal13 is not None else None
+    _liq_chg = (_liq_now - _liq_then) if (_liq_now is not None and _liq_then is not None) else None
+    add("liquidity", "Liquidez Neta", 8,
+        _envlin(_liq_chg, -500.0, 500.0), ser.get("WALCL"),
+        (f"{_liq_chg:+.0f}B/13sem" if _liq_chg is not None else None),
+        ("Liquidez drenando — viento en contra para el mercado" if (_liq_chg is not None and _liq_chg < 0)
+         else "Liquidez expandiéndose — soporte" if _liq_chg is not None else "Sin dato"))
 
     # ── Score ponderado, renormalizando sobre los motores CON dato (Regla #1) ──
     avail = [m for m in motors if m["score"] is not None]
