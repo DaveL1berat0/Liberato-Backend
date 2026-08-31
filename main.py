@@ -2279,6 +2279,15 @@ async def refresh_environment():
         (f"{len(_lead_parts)}/5 señales" if _lead_parts else None),
         ("Adelantados debilitándose — alerta temprana del ciclo" if (_lead_score is not None and _lead_score < 45)
          else "Adelantados estables/sólidos" if _lead_score is not None else "Sin dato"))
+    if _lead_score is not None:
+        motors[-1]["tag"] = "EXPANSIÓN" if _lead_score >= 50 else "CONTRACCIÓN"
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"ISM (Filadelfia) {_phil:+.0f}" if _phil is not None else None),
+            (f"permisos {_permit_yoy:+.1f}%" if _permit_yoy is not None else None),
+            (f"claims {int(round(_claims/1000))}K" if _claims is not None else None),
+            (f"confianza {_sent:.0f}" if _sent is not None else None),
+            (f"horas {_hours:.1f}h" if _hours is not None else None),
+        ] if x])
 
     # 11) CONDICIONES FINANCIERAS (10%) — NFCI (Chicago Fed): índice COMPUESTO de
     #     condiciones financieras. >0 = más restrictivas que la media (estrés);

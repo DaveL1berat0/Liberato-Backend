@@ -637,7 +637,7 @@ function renderEnv(d){
     var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--down)':'var(--ink-4)';
     // tinte por el PROPIO score del motor (consistente con el color del velocímetro)
     var tint=(m.score==null)?'':(m.score>=65?' g-good':m.score>=45?' g-warn':' g-risk');
-    var tagHtml=m.tag?('<div class="g-tag '+(m.tag==='RESTRICTIVA'?'g-tag-r':'g-tag-g')+'" title="'+String(m.tag_detail||'').replace(/"/g,'&quot;')+'">'+m.tag+'</div>'):'';
+    var tagHtml=m.tag?('<div class="g-tag '+((m.tag==='RESTRICTIVA'||m.tag==='CONTRACCIÓN')?'g-tag-r':'g-tag-g')+'" title="'+String(m.tag_detail||'').replace(/"/g,'&quot;')+'">'+m.tag+'</div>'):'';
     return '<div class="gcell'+tint+'">'+gauge(m.score)+'<div class="gn">'+m.name+' <span class="info-i" title="'+(MOTOR_INFO[m.key]||'Motor macro del Environment.')+'">&#9432;</span></div>'
       +'<div class="gv">'+(m.value||'—')+' <span style="color:'+trc+'">'+tr+'</span></div>'+tagHtml+'</div>';
   }).join('');
