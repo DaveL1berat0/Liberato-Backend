@@ -2344,6 +2344,33 @@ async def refresh_environment():
             (f"repo {_repo_spr*100:+.0f}pb" if _repo_spr is not None else None),
         ] if x])
 
+    # ── Etiqueta corta por motor (resumen visual para el trader) ──────────────
+    # Cada motor lleva una palabra favorable/desfavorable elegida por su propio score
+    # (>=50 favorable). El frontend la pinta verde (favorable) o morado (desfavorable).
+    # Leading/liquidity ya traen su desglose (tag_detail); aquí se fija el tag de todos.
+    _TAGS = {
+        "yield_curve":    ("NORMAL", "INVERTIDA"),
+        "rates":          ("ACOMODATICIA", "RESTRICTIVA"),
+        "inflation":      ("CONTROLADA", "ALTA"),
+        "leverage":       ("SANO", "ALTO"),
+        "real_estate":    ("ACCESIBLE", "CARO"),
+        "economy":        ("SÓLIDO", "DÉBIL"),
+        "supply":         ("ESTABLE", "CARO"),
+        "gold":           ("CALMA", "RISK-OFF"),
+        "financial":      ("CALMADO", "ESTRÉS"),
+        "leading":        ("EXPANSIÓN", "CONTRACCIÓN"),
+        "fin_conditions": ("LAXAS", "RESTRICTIVAS"),
+        "liquidity":      ("RELAJADA", "RESTRICTIVA"),
+    }
+    for _mt in motors:
+        _sc = _mt.get("score")
+        _pair = _TAGS.get(_mt.get("key"))
+        if _sc is not None and _pair:
+            _mt["tag"] = _pair[0] if _sc >= 50 else _pair[1]
+            _mt["tag_bad"] = _sc < 50
+        elif _sc is None:
+            _mt["tag"] = None  # sin dato → sin etiqueta (Regla #1)
+
     # ── Score ponderado, renormalizando sobre los motores CON dato (Regla #1) ──
     avail = [m for m in motors if m["score"] is not None]
     wsum = sum(m["weight"] for m in avail)
