@@ -131,6 +131,9 @@ a{color:inherit;text-decoration:none;}
 .gcell svg{width:100%;height:auto;max-height:52px;display:block;}
 .gcell .gn{font-family:var(--mono);font-size:10px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink-3);margin-top:3px;line-height:1.15;}
 .gcell .gv{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:1px;}
+.g-tag{display:inline-block;margin-top:5px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 8px;border-radius:6px;cursor:help;}
+.g-tag-r{background:rgba(177,151,252,0.16);color:#B197FC;border:0.5px solid rgba(177,151,252,0.4);}   /* RESTRICTIVA = morado (restrictivo/bajista) */
+.g-tag-g{background:rgba(46,232,164,0.14);color:#2EE8A4;border:0.5px solid rgba(46,232,164,0.35);}   /* RELAJADA = verde (amplia) */
 .gg-leg{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.03em;color:var(--ink-3);text-transform:none;font-weight:500;}
 .gg-leg i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle;}
 .gg-leg .d-good{background:#2EE8A4;} .gg-leg .d-warn{background:#F5A623;} .gg-leg .d-risk{background:#FF6B81;}
@@ -585,7 +588,7 @@ var MOTOR_INFO={
  financial:'Estrés del sistema financiero (spreads de crédito high-yield). Anchos = tensión; estrechos = crédito calmado.',
  leading:'Indicadores adelantados (compuesto): permisos de construcción, solicitudes de desempleo, confianza del consumidor, horas trabajadas en manufactura y la encuesta manufacturera de la Fed de Filadelfia (proxy del ISM). Anticipan giros del ciclo — alerta temprana de crash.',
  fin_conditions:'Condiciones financieras (NFCI, Chicago Fed): índice COMPUESTO de crédito, apalancamiento y riesgo. >0 = más restrictivas que la media (estrés sistémico); <0 = laxas. De los mejores predictores compuestos de estrés.',
- liquidity:'Liquidez neta de la Fed = balance (WALCL) − repos inversos (RRP) − cuenta del Tesoro (TGA). Su dirección a ~13 semanas: expandiéndose = soporte al mercado; drenando = viento en contra (QT/estrés de liquidez).'
+ liquidity:'Liquidez del Mercado (respuesta inteligente) — compuesto de 4 fuentes: (1) liquidez neta de la Fed = balance (WALCL) − repos inversos (RRP) − cuenta del Tesoro (TGA), dirección a ~13 sem; (2) oferta monetaria M2 (YoY); (3) estándares de préstamo bancario (SLOOS: % neto de bancos endureciendo crédito); (4) mercado repo (SOFR−IORB, tensión de financiación). La etiqueta al pie resume si la liquidez está RESTRICTIVA (drenando) o RELAJADA (amplia).'
 };
 // Etiqueta en español del régimen (el backend la manda en inglés)
 function clsLabel(c){
@@ -634,8 +637,9 @@ function renderEnv(d){
     var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--down)':'var(--ink-4)';
     // tinte por el PROPIO score del motor (consistente con el color del velocímetro)
     var tint=(m.score==null)?'':(m.score>=65?' g-good':m.score>=45?' g-warn':' g-risk');
+    var tagHtml=m.tag?('<div class="g-tag '+(m.tag==='RESTRICTIVA'?'g-tag-r':'g-tag-g')+'" title="'+String(m.tag_detail||'').replace(/"/g,'&quot;')+'">'+m.tag+'</div>'):'';
     return '<div class="gcell'+tint+'">'+gauge(m.score)+'<div class="gn">'+m.name+' <span class="info-i" title="'+(MOTOR_INFO[m.key]||'Motor macro del Environment.')+'">&#9432;</span></div>'
-      +'<div class="gv">'+(m.value||'—')+' <span style="color:'+trc+'">'+tr+'</span></div></div>';
+      +'<div class="gv">'+(m.value||'—')+' <span style="color:'+trc+'">'+tr+'</span></div>'+tagHtml+'</div>';
   }).join('');
   var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
   if(cf&&cl2){ if(d.conflicts&&d.conflicts.length){ cf.style.display='block'; cl2.innerHTML=d.conflicts.map(function(x){return '<li>'+x+'</li>';}).join(''); } else cf.style.display='none'; }

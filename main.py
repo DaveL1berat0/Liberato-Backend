@@ -2134,8 +2134,10 @@ async def refresh_environment():
            # desempleo, confianza del consumidor, horas trabajadas manufactura, y
            # encuesta manufacturera de la Fed de Filadelfia (proxy del ISM, de pago).
            "PERMIT", "ICSA", "UMCSENT", "AWHMAN", "GACDFSA066MSFRBPHI",
-           # NUEVO — Liquidez neta de la Fed (balance) — RRP/TGA se traen aparte (diario)
-           "WALCL",
+           # NUEVO — Liquidez del Mercado (respuesta inteligente): balance de la Fed
+           # (WALCL) + oferta monetaria M2 + estándares de préstamo bancario (SLOOS) +
+           # mercado repo (SOFR−IORB). RRP/TGA se traen aparte (diario).
+           "WALCL", "M2SL", "DRTSCILM", "SOFR", "IORB",
            # Curva de rendimientos real (para dibujarla): tramos por vencimiento
            "DGS3MO", "DGS2", "DGS5", "DGS30",
            # Curva de INFLACIÓN esperada (breakevens TIPS) para superponerla
@@ -2304,11 +2306,34 @@ async def refresh_environment():
     _liq_now = (_wal0/1000.0 - (_rrp0 or 0) - (_tga0 or 0)/1000.0) if _wal0 is not None else None
     _liq_then = (_wal13/1000.0 - (_rrp13 or 0) - (_tga13 or 0)/1000.0) if _wal13 is not None else None
     _liq_chg = (_liq_now - _liq_then) if (_liq_now is not None and _liq_then is not None) else None
-    add("liquidity", "Liquidez Neta", 8,
-        _envlin(_liq_chg, -800.0, 800.0), ser.get("WALCL"),
-        (f"{_liq_chg:+.0f}B/13sem" if _liq_chg is not None else None),
-        ("Liquidez drenando — viento en contra para el mercado" if (_liq_chg is not None and _liq_chg < 0)
-         else "Liquidez expandiéndose — soporte" if _liq_chg is not None else "Sin dato"))
+    # LIQUIDEZ DEL MERCADO = respuesta INTELIGENTE compuesta de las fuentes que la
+    # mueven: (a) liquidez neta de la Fed (dirección ~13 sem), (b) M2 (oferta monetaria,
+    # YoY), (c) estándares de préstamo bancario SLOOS (% neto de bancos endureciendo
+    # crédito), (d) mercado repo (SOFR−IORB, tensión de financiación overnight).
+    _liq_parts = []
+    if _liq_chg is not None: _liq_parts.append(_envlin(_liq_chg, -800.0, 800.0))
+    _m2_yoy = _env_yoy(ser.get("M2SL"))                         # oferta monetaria
+    if _m2_yoy is not None: _liq_parts.append(_envlin(_m2_yoy, -3.0, 8.0))
+    _sloos = last("DRTSCILM")                                   # SLOOS: alto=restrictivo
+    if _sloos is not None: _liq_parts.append(_envlin(_sloos, 50.0, -10.0))
+    _sofr, _iorb = last("SOFR"), last("IORB")                   # mercado repo
+    _repo_spr = (_sofr - _iorb) if (_sofr is not None and _iorb is not None) else None
+    if _repo_spr is not None: _liq_parts.append(_envlin(_repo_spr, 0.15, -0.05))
+    _liq_parts = [p for p in _liq_parts if p is not None]
+    _liq_score = round(sum(_liq_parts) / len(_liq_parts), 1) if _liq_parts else None
+    add("liquidity", "Liquidez del Mercado", 8,
+        _liq_score, ser.get("WALCL"),
+        (f"{len(_liq_parts)}/4 fuentes" if _liq_parts else None),
+        ("Liquidez del mercado RESTRICTIVA — se drena de las fuentes (balance Fed / M2 / crédito bancario / repo)" if (_liq_score is not None and _liq_score < 45)
+         else "Liquidez del mercado RELAJADA — amplia en las fuentes" if _liq_score is not None else "Sin dato"))
+    if _liq_score is not None:
+        motors[-1]["tag"] = "RESTRICTIVA" if _liq_score < 50 else "RELAJADA"
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"Fed neta {_liq_chg:+.0f}B" if _liq_chg is not None else None),
+            (f"M2 {_m2_yoy:+.1f}%" if _m2_yoy is not None else None),
+            (f"SLOOS {_sloos:+.0f}%" if _sloos is not None else None),
+            (f"repo {_repo_spr*100:+.0f}pb" if _repo_spr is not None else None),
+        ] if x])
 
     # ── Score ponderado, renormalizando sobre los motores CON dato (Regla #1) ──
     avail = [m for m in motors if m["score"] is not None]
