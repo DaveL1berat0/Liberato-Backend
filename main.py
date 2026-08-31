@@ -2151,10 +2151,14 @@ async def refresh_environment():
         ser[sid] = results[i] if not isinstance(results[i], Exception) else []
     # Liquidez: RRP (repos inversos) y TGA (cuenta del Tesoro) son DIARIAS → se piden
     # con más puntos para poder medir el cambio a ~13 semanas (63 días hábiles).
+    # WTI (DCOILWTICO) es DIARIA → 70 obs para medir el cambio REAL a 3 meses (~63
+    # sesiones), no ~13 días. Se pide junto a las diarias de liquidez.
     _liq_daily = await asyncio.gather(_fred_obs("RRPONTSYD", 70), _fred_obs("WTREGEN", 70),
-                                      return_exceptions=True)
+                                      _fred_obs("DCOILWTICO", 70), return_exceptions=True)
     ser["RRPONTSYD"] = _liq_daily[0] if not isinstance(_liq_daily[0], Exception) else []
     ser["WTREGEN"]   = _liq_daily[1] if not isinstance(_liq_daily[1], Exception) else []
+    if not isinstance(_liq_daily[2], Exception) and _liq_daily[2]:
+        ser["DCOILWTICO"] = _liq_daily[2]
     # Robustez: el burst concurrente de ~17 series FRED a veces deja varias vacías por
     # throttling/timeout transitorio → antes la cobertura bajaba a 4/9 y la curva se caía.
     # Se reintenta UNA vez, secuencialmente, cada serie que quedó vacía.
@@ -2183,19 +2187,24 @@ async def refresh_environment():
 
     # 2) INTEREST RATES (10%) — FEDFUNDS: restrictivas/altas = caución.
     ff = last("FEDFUNDS")
+    _ff_sc = _envlin(ff, 6.0, 0.5)
     add("rates", "Interest Rates", 10,
-        _envlin(ff, 6.0, 0.5), ser["FEDFUNDS"],
+        _ff_sc, ser["FEDFUNDS"],
         (f"{ff:.2f}%" if ff is not None else None),
-        ("Política restrictiva (tasas altas)" if (ff is not None and ff >= 4)
-         else "Política acomodaticia" if ff is not None else "Sin dato"), invert=True)
+        # La frase se alinea con la etiqueta/score (score<50 → restrictiva) para no
+        # contradecir el pill (antes usaba umbral fijo ff>=4 y en 3.25-4% se contradecían).
+        ("Política restrictiva (tasas altas)" if (_ff_sc is not None and _ff_sc < 50)
+         else "Política acomodaticia" if _ff_sc is not None else "Sin dato"), invert=True)
 
     # 3) INFLATION (15%) — CPI YoY: 2% ideal, ≥6% mala; penaliza aceleración.
     cpi_yoy = _env_yoy(ser["CPIAUCSL"])
+    _cpi_sc = _envlin(cpi_yoy, 6.0, 2.0)
     add("inflation", "Inflation", 15,
-        _envlin(cpi_yoy, 6.0, 2.0), ser["CPIAUCSL"],
+        _cpi_sc, ser["CPIAUCSL"],
         (f"{cpi_yoy:.1f}% YoY" if cpi_yoy is not None else None),
-        ("Inflación elevada — presiona tasas y duración" if (cpi_yoy is not None and cpi_yoy > 3.5)
-         else "Inflación contenida" if cpi_yoy is not None else "Sin dato"), invert=True)
+        # Frase alineada con la etiqueta/score (antes umbral fijo >3.5 contradecía el pill).
+        ("Inflación elevada — presiona tasas y duración" if (_cpi_sc is not None and _cpi_sc < 50)
+         else "Inflación contenida" if _cpi_sc is not None else "Sin dato"), invert=True)
 
     # 4) LEVERAGE / DEBT (15%) — compuesto de apalancamiento: deuda de los HOGARES
     #    (servicio TDSP) + apalancamiento del SISTEMA (NFCILEVERAGE, Chicago Fed).
@@ -2218,12 +2227,24 @@ async def refresh_environment():
         ] if x])
 
     # 5) REAL ESTATE (10%) — Mortgage 30y: >7% aprieta; combinar con housing starts.
-    mtg = last("MORTGAGE30US")
+    # Compuesto: coste hipotecario (MORTGAGE30US) + actividad (viviendas iniciadas HOUST YoY).
+    _mtg = last("MORTGAGE30US")
+    _houst_yoy = _env_yoy(ser.get("HOUST"))
+    _re_parts = []
+    if _mtg is not None: _re_parts.append(_envlin(_mtg, 8.0, 3.0))
+    if _houst_yoy is not None: _re_parts.append(_envlin(_houst_yoy, -25.0, 15.0))
+    _re_parts = [p for p in _re_parts if p is not None]
+    _re_score = round(sum(_re_parts)/len(_re_parts), 1) if _re_parts else None
     add("real_estate", "Real Estate", 10,
-        _envlin(mtg, 8.0, 3.0), ser["MORTGAGE30US"],
-        (f"{mtg:.2f}%" if mtg is not None else None),
-        ("Hipotecas caras enfrían la vivienda" if (mtg is not None and mtg > 6.5)
-         else "Financiación hipotecaria razonable" if mtg is not None else "Sin dato"), invert=True)
+        _re_score, ser["MORTGAGE30US"],
+        (f"{len(_re_parts)}/2 señales" if _re_parts else None),
+        ("Vivienda presionada (hipotecas/actividad)" if (_re_score is not None and _re_score < 45)
+         else "Vivienda estable" if _re_score is not None else "Sin dato"), invert=True)
+    if _re_score is not None:
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"hipoteca {_mtg:.2f}%" if _mtg is not None else None),
+            (f"viviendas {_houst_yoy:+.0f}%" if _houst_yoy is not None else None),
+        ] if x])
 
     # 6) BASE ECONOMY (15%) — compuesto laboral+actividad: DESEMPLEO (UNRATE), creación
     #    de EMPLEO (nóminas PAYEMS YoY) y PRODUCCIÓN industrial (INDPRO YoY).
@@ -2252,8 +2273,8 @@ async def refresh_environment():
     oil = ser["DCOILWTICO"]
     oil_now = oil[0][1] if oil else None
     oil_3m = None
-    if oil and len(oil) > 12:
-        oil_3m = oil[min(12, len(oil) - 1)][1]
+    if oil and len(oil) > 20:
+        oil_3m = oil[min(63, len(oil) - 1)][1]   # ~63 sesiones = 3 meses reales (serie diaria)
     oil_chg = ((oil_now - oil_3m) / oil_3m * 100.0) if (oil_now and oil_3m) else None
     add("supply", "Petróleo (WTI)", 5,
         (_envlin(oil_chg, 40.0, -10.0) if oil_chg is not None else None), oil,
@@ -2328,7 +2349,7 @@ async def refresh_environment():
     if _lead_score is not None:
         motors[-1]["tag"] = "EXPANSIÓN" if _lead_score >= 50 else "CONTRACCIÓN"
         motors[-1]["tag_detail"] = " · ".join([x for x in [
-            (f"ISM (Filadelfia) {_phil:+.0f}" if _phil is not None else None),
+            (f"Manuf. Filadelfia {_phil:+.0f}" if _phil is not None else None),
             (f"permisos {_permit_yoy:+.1f}%" if _permit_yoy is not None else None),
             (f"claims {int(round(_claims/1000))}K" if _claims is not None else None),
             (f"confianza {_sent:.0f}" if _sent is not None else None),

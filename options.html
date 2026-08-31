@@ -446,7 +446,7 @@ a{color:inherit;text-decoration:none;}
 
     <!-- ① ENVIRONMENT (cockpit macro · AI Brief integrado arriba) -->
     <section class="panel step">
-      <div class="p-hd"><span class="p-ttl"><span class="stepn">1</span> Environment <span class="info-i" title="Cockpit macro. Puntuación 0-100 del entorno para asumir riesgo de largo plazo (LEAPS): 9 motores reales de FRED ponderados. Se destacan auto los 2 riesgos y 2 soportes. Integra la lectura de IA, la curva del Tesoro y la rotación sectorial como evidencia del mismo bloque.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
+      <div class="p-hd"><span class="p-ttl"><span class="stepn">1</span> Environment <span class="info-i" title="Cockpit macro. Puntuación 0-100 del entorno para asumir riesgo de largo plazo (LEAPS): 12 motores reales de FRED ponderados. Se destacan auto los 2 riesgos y 2 soportes. Integra la lectura de IA, la curva del Tesoro y la rotación sectorial como evidencia del mismo bloque.">&#9432;</span></span><span class="p-sub" id="env-sub">FRED · —</span></div>
       <div class="p-bd">
         <div class="env-top">
           <div class="env-topL">
@@ -468,7 +468,7 @@ a{color:inherit;text-decoration:none;}
         </div>
         <div class="env-grid2">
           <div class="env-col">
-            <div class="sec-label"><span>9 motores macro</span><span class="gg-leg"><span><i class="d-good"></i>sano</span><span><i class="d-warn"></i>vigilar</span><span><i class="d-risk"></i>presión</span></span></div>
+            <div class="sec-label"><span>12 motores macro</span><span class="gg-leg"><span><i class="d-good"></i>sano</span><span><i class="d-warn"></i>vigilar</span><span><i class="d-risk"></i>presión</span></span></div>
             <div class="gg" id="env-gg"></div>
             <div class="env-conflicts" id="env-conflicts" style="display:none;">
               <div class="env-conflicts-t">⚠ Señales en conflicto</div>
@@ -607,7 +607,7 @@ function classDesc(c){
   if(/CAUTION/.test(c))return 'Macro mixto para abrir LEAPS: prioriza empresas de calidad a buen precio y evita duración/apalancamiento agresivos.';
   if(/HIGH RISK/.test(c))return 'Macro en contra: momento pobre para abrir LEAPS nuevos; si lo haces, tramos cortos y muy selectivo.';
   if(/DEFENSIVE/.test(c))return 'Macro adverso: mejor esperar mejor precio/entorno antes de abrir LEAPS agresivos.';
-  return 'Termómetro macro (0-100) que pondera 9 motores reales para decidir si el entorno acompaña un LEAP.';
+  return 'Termómetro macro (0-100) que pondera 12 motores reales para decidir si el entorno acompaña un LEAP.';
 }
 function loadEnv(){
   fetch(API+'/api/environment').then(function(r){return r.json();}).then(function(d){
