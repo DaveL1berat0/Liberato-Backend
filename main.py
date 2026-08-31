@@ -2295,14 +2295,17 @@ async def refresh_environment():
         o = ser.get(sid) or []
         if not o: return None
         return o[idx][1] if len(o) > idx else o[-1][1]
-    _wal0, _wal13 = _at("WALCL", 0), _at("WALCL", 13)          # semanal
-    _rrp0, _rrp13 = _at("RRPONTSYD", 0), _at("RRPONTSYD", 63)  # diario ≈13 sem
-    _tga0, _tga13 = _at("WTREGEN", 0), _at("WTREGEN", 63)
-    _liq_now = (_wal0/1000.0 - (_rrp0 or 0) - (_tga0 or 0)) if _wal0 is not None else None
-    _liq_then = (_wal13/1000.0 - (_rrp13 or 0) - (_tga13 or 0)) if _wal13 is not None else None
+    # UNIDADES FRED: WALCL y WTREGEN vienen en MILLONES → /1000 para pasarlos a
+    # billones ($B); RRPONTSYD ya viene en billones. (Sin esto, la TGA en millones
+    # dominaba el cálculo y daba cifras imposibles tipo -617.791B.)
+    _wal0, _wal13 = _at("WALCL", 0), _at("WALCL", 13)          # semanal (millones)
+    _rrp0, _rrp13 = _at("RRPONTSYD", 0), _at("RRPONTSYD", 63)  # diario ≈13 sem (billones)
+    _tga0, _tga13 = _at("WTREGEN", 0), _at("WTREGEN", 63)      # diario (millones)
+    _liq_now = (_wal0/1000.0 - (_rrp0 or 0) - (_tga0 or 0)/1000.0) if _wal0 is not None else None
+    _liq_then = (_wal13/1000.0 - (_rrp13 or 0) - (_tga13 or 0)/1000.0) if _wal13 is not None else None
     _liq_chg = (_liq_now - _liq_then) if (_liq_now is not None and _liq_then is not None) else None
     add("liquidity", "Liquidez Neta", 8,
-        _envlin(_liq_chg, -500.0, 500.0), ser.get("WALCL"),
+        _envlin(_liq_chg, -800.0, 800.0), ser.get("WALCL"),
         (f"{_liq_chg:+.0f}B/13sem" if _liq_chg is not None else None),
         ("Liquidez drenando — viento en contra para el mercado" if (_liq_chg is not None and _liq_chg < 0)
          else "Liquidez expandiéndose — soporte" if _liq_chg is not None else "Sin dato"))
