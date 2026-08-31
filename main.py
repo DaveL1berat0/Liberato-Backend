@@ -2130,6 +2130,10 @@ async def refresh_environment():
     ids = ["T10Y2Y", "FEDFUNDS", "DGS10", "CPIAUCSL", "PCEPI", "TDSP",
            "MORTGAGE30US", "HOUST", "UNRATE", "INDPRO", "DCOILWTICO",
            "BAMLH0A0HYM2", "NFCI",
+           # Enriquecimiento de motores clave: Base Economy (nóminas PAYEMS + producción
+           # INDPRO), Financial System (spread IG BAMLC0A0CM + VIX), Leverage (apalanca-
+           # miento del sistema NFCILEVERAGE). Pocas series clave, sin sobreajustar.
+           "PAYEMS", "VIXCLS", "BAMLC0A0CM", "NFCILEVERAGE",
            # NUEVO — Indicadores Adelantados (compuesto): permisos, solicitudes de
            # desempleo, confianza del consumidor, horas trabajadas manufactura, y
            # encuesta manufacturera de la Fed de Filadelfia (proxy del ISM, de pago).
@@ -2193,13 +2197,25 @@ async def refresh_environment():
         ("Inflación elevada — presiona tasas y duración" if (cpi_yoy is not None and cpi_yoy > 3.5)
          else "Inflación contenida" if cpi_yoy is not None else "Sin dato"), invert=True)
 
-    # 4) LEVERAGE / DEBT (15%) — TDSP (carga de deuda de hogares): más alta = peor.
-    tdsp = last("TDSP")
+    # 4) LEVERAGE / DEBT (15%) — compuesto de apalancamiento: deuda de los HOGARES
+    #    (servicio TDSP) + apalancamiento del SISTEMA (NFCILEVERAGE, Chicago Fed).
+    _tdsp = last("TDSP")
+    _lev_sys = last("NFCILEVERAGE")
+    _lev_parts = []
+    if _tdsp is not None: _lev_parts.append(_envlin(_tdsp, 13.5, 9.0))
+    if _lev_sys is not None: _lev_parts.append(_envlin(_lev_sys, 1.5, -0.8))
+    _lev_parts = [p for p in _lev_parts if p is not None]
+    _lev_score = round(sum(_lev_parts)/len(_lev_parts), 1) if _lev_parts else None
     add("leverage", "Leverage / Debt", 15,
-        _envlin(tdsp, 13.5, 9.0), ser["TDSP"],
-        (f"{tdsp:.1f}%" if tdsp is not None else None),
-        ("Carga de deuda de hogares elevada" if (tdsp is not None and tdsp > 12)
-         else "Servicio de deuda manejable" if tdsp is not None else "Sin dato"), invert=True)
+        _lev_score, ser.get("TDSP"),
+        (f"{len(_lev_parts)}/2 señales" if _lev_parts else None),
+        ("Apalancamiento elevado — hogares/sistema" if (_lev_score is not None and _lev_score < 45)
+         else "Apalancamiento sano" if _lev_score is not None else "Sin dato"), invert=True)
+    if _lev_score is not None:
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"hogares {_tdsp:.1f}%" if _tdsp is not None else None),
+            (f"sistema {_lev_sys:+.2f}" if _lev_sys is not None else None),
+        ] if x])
 
     # 5) REAL ESTATE (10%) — Mortgage 30y: >7% aprieta; combinar con housing starts.
     mtg = last("MORTGAGE30US")
@@ -2209,13 +2225,28 @@ async def refresh_environment():
         ("Hipotecas caras enfrían la vivienda" if (mtg is not None and mtg > 6.5)
          else "Financiación hipotecaria razonable" if mtg is not None else "Sin dato"), invert=True)
 
-    # 6) BASE ECONOMY (15%) — Desempleo: 3.5% sano, ≥6% débil (+ tendencia INDPRO).
-    ur = last("UNRATE")
+    # 6) BASE ECONOMY (15%) — compuesto laboral+actividad: DESEMPLEO (UNRATE), creación
+    #    de EMPLEO (nóminas PAYEMS YoY) y PRODUCCIÓN industrial (INDPRO YoY).
+    _ur = last("UNRATE")
+    _pay_yoy = _env_yoy(ser.get("PAYEMS"))
+    _ind_yoy = _env_yoy(ser.get("INDPRO"))
+    _eco_parts = []
+    if _ur is not None: _eco_parts.append(_envlin(_ur, 6.5, 3.3))
+    if _pay_yoy is not None: _eco_parts.append(_envlin(_pay_yoy, -1.0, 2.5))
+    if _ind_yoy is not None: _eco_parts.append(_envlin(_ind_yoy, -3.0, 4.0))
+    _eco_parts = [p for p in _eco_parts if p is not None]
+    _eco_score = round(sum(_eco_parts)/len(_eco_parts), 1) if _eco_parts else None
     add("economy", "Base Economy", 15,
-        _envlin(ur, 6.5, 3.3), ser["UNRATE"],
-        (f"{ur:.1f}% paro" if ur is not None else None),
-        ("Mercado laboral sólido" if (ur is not None and ur < 4.5)
-         else "Empleo debilitándose" if ur is not None else "Sin dato"), invert=True)
+        _eco_score, ser.get("UNRATE"),
+        (f"{len(_eco_parts)}/3 señales" if _eco_parts else None),
+        ("Economía debilitándose (empleo/producción)" if (_eco_score is not None and _eco_score < 45)
+         else "Economía sólida" if _eco_score is not None else "Sin dato"), invert=True)
+    if _eco_score is not None:
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"paro {_ur:.1f}%" if _ur is not None else None),
+            (f"nóminas {_pay_yoy:+.1f}%" if _pay_yoy is not None else None),
+            (f"producción {_ind_yoy:+.1f}%" if _ind_yoy is not None else None),
+        ] if x])
 
     # 7) SUPPLY SHOCK (5%) — WTI: subida brusca (>25% en ~3m) = shock.
     oil = ser["DCOILWTICO"]
@@ -2248,13 +2279,28 @@ async def refresh_environment():
          else "Oro estable — sin señal de pánico" if gold_chg is not None else "Sin dato"),
         invert=True)
 
-    # 9) FINANCIAL SYSTEM (10%) — HY OAS (spreads de crédito basura): anchos = estrés.
-    hy = last("BAMLH0A0HYM2")
+    # 9) FINANCIAL SYSTEM (10%) — compuesto de estrés de crédito y riesgo: spread HIGH
+    #    YIELD (BAMLH0A0HYM2), spread GRADO INVERSIÓN (BAMLC0A0CM) y VOLATILIDAD VIX (VIXCLS).
+    _hy = last("BAMLH0A0HYM2")
+    _ig = last("BAMLC0A0CM")
+    _vix = last("VIXCLS")
+    _fin_parts = []
+    if _hy is not None: _fin_parts.append(_envlin(_hy, 8.0, 3.0))
+    if _ig is not None: _fin_parts.append(_envlin(_ig, 2.2, 0.8))
+    if _vix is not None: _fin_parts.append(_envlin(_vix, 35.0, 12.0))
+    _fin_parts = [p for p in _fin_parts if p is not None]
+    _fin_score = round(sum(_fin_parts)/len(_fin_parts), 1) if _fin_parts else None
     add("financial", "Financial System", 10,
-        _envlin(hy, 8.0, 3.0), ser["BAMLH0A0HYM2"],
-        (f"HY OAS {hy:.2f}%" if hy is not None else None),
-        ("Spreads de crédito anchos — estrés financiero" if (hy is not None and hy > 5)
-         else "Condiciones de crédito calmadas" if hy is not None else "Sin dato"), invert=True)
+        _fin_score, ser.get("BAMLH0A0HYM2"),
+        (f"{len(_fin_parts)}/3 señales" if _fin_parts else None),
+        ("Estrés financiero — crédito/volatilidad tensos" if (_fin_score is not None and _fin_score < 45)
+         else "Sistema financiero calmado" if _fin_score is not None else "Sin dato"), invert=True)
+    if _fin_score is not None:
+        motors[-1]["tag_detail"] = " · ".join([x for x in [
+            (f"HY {_hy:.2f}%" if _hy is not None else None),
+            (f"IG {_ig:.2f}%" if _ig is not None else None),
+            (f"VIX {_vix:.0f}" if _vix is not None else None),
+        ] if x])
 
     # 10) INDICADORES ADELANTADOS (12%) — compuesto que ANTICIPA giros del ciclo:
     #     permisos de construcción (YoY), solicitudes de desempleo, confianza del

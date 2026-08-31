@@ -143,9 +143,10 @@ a{color:inherit;text-decoration:none;}
 .yc-svg{width:100%;}
 .yc-svg svg{width:100%;height:auto;display:block;}
 .yc-spread{font-weight:700;font-family:var(--mono);font-size:10.5px;}
-.yc-legend{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:8px;letter-spacing:0.03em;}
-.yc-legend .yc-next{color:var(--ink-3);} .yc-legend .yc-next b{color:var(--gold-2);font-weight:700;}
-.yc-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+.yc-legend{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:8px;letter-spacing:0.02em;}
+.yc-legend .yc-next{color:var(--ink-3);font-size:10.5px;} .yc-legend .yc-next b{color:var(--gold-2);font-weight:700;}
+.yc-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.yc-lbl{font-size:12.5px;font-weight:700;letter-spacing:0.02em;}   /* etiqueta de cada curva (nominal / inflación) grande y a color de su línea */
 /* ── ③ MARKET (chart + contexto) ── */
 .chart-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);border-bottom:1px solid var(--hair);}
 @media(max-width:700px){.chart-stats{grid-template-columns:repeat(2,1fr);}}
@@ -632,7 +633,9 @@ function renderEnv(d){
   if(rs){ rs.innerHTML= rsd ? ('<div class="env-rs-col risk"><span>⚠ Riesgos</span><b>'+rsd.risks.map(function(m){return m.name;}).join(' · ')+'</b></div>'
       +'<div class="env-rs-col sup"><span>✓ Soportes</span><b>'+rsd.sups.map(function(m){return m.name;}).join(' · ')+'</b></div>') : ''; }
   var host=document.getElementById('env-gg');
-  host.innerHTML=(d.motors||[]).map(function(m){
+  // yield_curve se OMITE de los velocímetros: la curva ya se muestra abajo como chart
+  // (evita duplicar). Sigue puntuando en el Environment Score (no se pierde la señal).
+  host.innerHTML=(d.motors||[]).filter(function(m){return m.key!=='yield_curve';}).map(function(m){
     var tr=m.trend==='improving'?'▲':m.trend==='deteriorating'?'▼':'';
     var trc=m.trend==='improving'?'var(--up)':m.trend==='deteriorating'?'var(--down)':'var(--ink-4)';
     // tinte por el PROPIO score del motor (consistente con el color del velocímetro)
@@ -691,7 +694,7 @@ function renderYieldCurve(curve, infl){
   var sp=document.getElementById('yc-spread');
   if(sp){ if(y2&&y10){ var dd=y10.yield-y2.yield; sp.textContent='10Y-2Y '+(dd>=0?'+':'')+dd.toFixed(2)+'%'+(inv?' · INVERTIDA':''); sp.style.color=inv?'var(--risk)':'var(--up)'; } else sp.textContent=''; }
   var lg=document.getElementById('yc-legend'); if(lg){ var slope=inv?'Curva invertida — antesala histórica de recesión':'Pendiente normal';
-    var leg='<span class="yc-slope"><span class="yc-dot" style="background:'+col+'"></span>Tasa nominal'+(infl.length?(' &nbsp;<span class="yc-dot" style="background:'+INF_COL+'"></span>Inflación esperada'):'')+' · '+slope+'</span>';
+    var leg='<span class="yc-slope"><span class="yc-dot" style="background:'+col+'"></span><b class="yc-lbl" style="color:'+col+'">Tasa nominal</b>'+(infl.length?(' &nbsp;&nbsp;<span class="yc-dot" style="background:'+INF_COL+'"></span><b class="yc-lbl" style="color:'+INF_COL+'">Inflación esperada</b>'):'')+' · '+slope+'</span>';
     lg.innerHTML=leg+'<span class="yc-next" id="yc-next"></span>'; loadNextRateEvent(); }
 }
 
