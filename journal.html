@@ -2803,7 +2803,7 @@ function perfScore(s,maxDD){
   var mean=pnls.reduce(function(a,b){return a+b;},0)/pnls.length;
   var std=Math.sqrt(pnls.reduce(function(a,p){return a+(p-mean)*(p-mean);},0)/pnls.length);
   var consistency=Math.min(Math.max(Math.round(100-(std/Math.abs(mean||1))*12),0),100);
-  var ddScore=s.total>0?Math.min(Math.max(Math.round(100-(Math.abs(maxDD)/s.total)*50),0),100):40;
+  var ddScore=s.total>0?Math.min(Math.max(Math.round(100-(Math.abs(maxDD)/s.total)*50),0),100):20;  // net negativo = control de DD pobre (metodología Zella): bajo, no relleno medio
   return{total:Math.round((profit+discipline+consistency+ddScore)/4),profit:profit,discipline:discipline,consistency:consistency,ddScore:ddScore};
 }
 function buildErrorProfile(){
@@ -3024,8 +3024,8 @@ function renderScoreHero(ps){
 function renderRadar(ps){
   var labels=['Win %','Profit Factor','Avg Win/Loss','Recovery','Drawdown','Consistencia'];
   var FT=getFilteredT(_dfShared),s=stats(FT),maxDD=calcMaxDD(FT);
-  var avgWL=s.avgL>0?Math.min((s.avgW/s.avgL)*33,100):60;
-  var recovery=maxDD>0?Math.min((s.total/maxDD)*20,100):70;
+  var avgWL=s.avgL>0?Math.min((s.avgW/s.avgL)*33,100):(s.avgW>0?100:0);   // sin pérdidas = mejor ratio posible → techo (metodología Zella)
+  var recovery=maxDD>0?Math.max(0,Math.min((s.total/maxDD)*20,100)):(s.total>0?100:0);   // sin drawdown y en verde = recuperación perfecta → techo
   var vals=[s.wr,Math.min(s.pf*33,100),avgWL,recovery,ps.ddScore,ps.consistency];
   var size=230,cx=115,cy=115,R=72,n=6;
   var angle=function(i){return(-90+i*60)*Math.PI/180;};

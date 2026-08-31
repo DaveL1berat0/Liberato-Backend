@@ -978,7 +978,7 @@ function loadScanner(){
     rows.forEach(function(x){ SCAN_ROWS[x.ticker]=x; });
     if(!rows.length){ var h0=document.getElementById('scan-body'); if(h0)h0.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
     scanFilter();
-    if(!USER_PICKED && !LC_PREFILLED && rows[0].price!=null){ LC_PREFILLED=true; prefillStructure(rows[0].ticker, rows[0].price); }
+    if(!USER_PICKED && !LC_PREFILLED && rows[0].price!=null){ LC_PREFILLED=true; LC_SYM=rows[0].ticker; LC_LABEL=rows[0].ticker; var _lci=document.getElementById('lc-tkr'); if(_lci)_lci.value=rows[0].ticker; loadChart(); prefillStructure(rows[0].ticker, rows[0].price); }   // default ALINEADO: chart + Structure al mismo ticker (antes chart=NDX, Structure=NVDA)
   }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
 }
 function selectTicker(tk){
