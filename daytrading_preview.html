@@ -167,6 +167,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .gf-timestamp.stale{color:var(--warn);border-color:rgba(255,194,71,0.2);}
   .gf-ts-warn{color:var(--warn);font-size:8px;}
 .g-live .bl{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pul 1.6s infinite;box-shadow:0 0 7px var(--up);}
+/* Estado APAGADO: fuera de RTH el badge no miente "Live" — dot gris sin pulso + hora de apertura. */
+.g-live.off{color:var(--ink-4);}
+.g-live.off .bl{background:var(--ink-4);box-shadow:none;animation:none;}
 /* ── PORTRAIT / VERTICAL: el header no debe desbordar (timestamp largo) ── */
 @media(max-width:760px){
   .g-hd{flex-wrap:wrap;gap:6px 10px;}
@@ -1558,7 +1561,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <section class="g summary" aria-label="Institutional Context">
       <div class="g-hd">
         <div class="g-hd-l"><div class="g-ic"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3l2 1.5" stroke-linecap="round"/></svg></div><div class="g-ttl">Institutional Context</div></div>
-        <span class="sm-ai" id="sm-ai-badge">◷ IA · cargando…</span>
+        <span class="sm-ai" id="sm-ai-badge">◷ Cargando…</span>
       </div>
       <div class="sm-inner">
         <p class="sm-brief" id="sm-brief"><span class="skel"></span></p>
@@ -1789,25 +1792,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     movers:{
       // Fallback de eventos de alto impacto — se muestra cuando el backend está vacío
       // (fin de semana, mercado cerrado). Son ejemplos representativos del formato.
-      ultraNews:[
-        {headline:'Fed señala posible recorte de tasas en próxima reunión',impact_score:9.2,scope:'Entire Market',sentiment:'Bullish',source:'Reuters',source_confidence:'High',alert_level:'CRITICAL',time_et:'14:00 ET'},
-        {headline:'Tensión geopolítica eleva volatilidad en índices globales',impact_score:9.0,scope:'Entire Market',sentiment:'Bearish',source:'WSJ',source_confidence:'High',alert_level:'CRITICAL',time_et:'09:45 ET'},
-        {headline:'Declaraciones de Powell sobre inflación mueven el mercado',impact_score:8.8,scope:'Entire Market',sentiment:'Bearish',source:'Bloomberg',source_confidence:'High',alert_level:'HIGH',time_et:'10:30 ET'}
-      ],
-      gainers:[
-        {sym:'NVDA', px:'891.40', chg:'+6.2%'},
-        {sym:'SMCI', px:'48.20',  chg:'+8.4%'},
-        {sym:'AMD',  px:'168.30', chg:'+3.8%'},
-        {sym:'AVGO', px:'1685.0', chg:'+2.9%'},
-        {sym:'PLTR', px:'42.15',  chg:'+5.1%'}
-      ],
-      losers:[
-        {sym:'INTC', px:'30.45',  chg:'-4.2%'},
-        {sym:'TSLA', px:'178.90', chg:'-3.1%'},
-        {sym:'PYPL', px:'62.80',  chg:'-1.9%'},
-        {sym:'MRNA', px:'112.60', chg:'-2.7%'},
-        {sym:'WBA',  px:'14.85',  chg:'-5.3%'}
-      ]
+      // Regla #1: vaciados. Antes tenían precios/porcentajes INVENTADOS (NVDA $891.40, etc.)
+      // que podían destellar ~1s en la carga inicial antes del primer fetch real de movers.
+      // Ahora el panel arranca vacío y solo se llena con datos reales de /api/movers.
+      ultraNews:[],
+      gainers:[],
+      losers:[]
     },
     // Macro Correlations Heatmap — 22 tiles matching 6×5 treemap layout
     // Instrumento: NQ (Nasdaq-100). AAPL/MSFT/NVDA/AMZN/META/GOOGL son los
@@ -1926,6 +1916,27 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       st.className='bar-st after'; tx.textContent='After Hours';
     } else {
       st.className='bar-st'; tx.textContent='Closed';
+    }
+    updateLiveBadges();
+  }
+  // Badges "Live" de las tarjetas (Gamma Chart y Macro Correlations): SOLO verde/pulsando
+  // en sesión regular (RTH). Fuera de RTH el dato es el del último cierre → badge apagado
+  // (gris, sin pulso) con la hora real de apertura, no un "Live" permanente que miente.
+  function updateLiveBadges(){
+    var els=document.querySelectorAll('.g-live'); if(!els.length)return;
+    var live=isRTH(), label, off;
+    if(live){ label='Live'; off=false; }
+    else{
+      off=true;
+      var et=etNow(), dow=et.getDay(), m=et.getHours()*60+et.getMinutes();
+      if(dow===0||dow===6)        label='Abre lun 9:30 ET';
+      else if(isHoliday(et))      label='Feriado · abre 9:30 ET';
+      else if(m<570)              label='Abre 9:30 ET';
+      else                        label='Cerrado · abre 9:30 ET';
+    }
+    for(var i=0;i<els.length;i++){
+      els[i].classList.toggle('off',off);
+      els[i].innerHTML='<span class="bl"></span>'+label;
     }
   }
   // Ratio ES/SPY. NUNCA hardcodeado: sale del backend, que lo deriva del spot real
@@ -4473,12 +4484,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')  // markdown negrita → <strong>
             .replace(/\n/g,'<br>');                              // 5 líneas separadas
           setHealth('summary','connected','real',null);
-          // Badge: indicar que es IA real (no plantilla)
-          if(badge){var _st=(d.status==='stale')?' · reciente':'';badge.textContent=(d.has_gamma?'⬡ IA · GEX':'⬡ IA · Macro')+_st;badge.style.color='var(--up)';}
+          // Resumen real cargado → ocultamos el badge (no aporta al trader; "IA · GEX" confundía).
+          if(badge){badge.style.display='none';}
         }
       } else if(d&&d.status==='generating'){
         // IA aún generando — el resumen local permanece visible
-        if(badge){badge.textContent='⬡ IA · generando…';badge.style.color='var(--gold)';}
+        if(badge){badge.style.display='';badge.textContent='◷ Actualizando…';badge.style.color='var(--gold)';}
       }
     }catch(e){/* resumen local permanece visible */}
   }

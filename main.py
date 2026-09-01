@@ -7975,6 +7975,43 @@ def _fmt_rev(v):
         return f"${v:,.0f}"
     except: return str(v)
 
+# ── Pesos REALES del Nasdaq-100 ────────────────────────────────────────────────
+# Fuente: holdings del ETF QQQ (Invesco), que replica el Nasdaq-100 — sus pesos
+# publicados SON los pesos del índice. CSV estructurado, cacheado 24h. Regla #1:
+# si la fuente no responde, se devuelve {} y el peso queda en "—" (nunca inventado
+# ni aproximado por market cap, que NO es el peso float-ajustado del índice).
+_NDX_WEIGHTS = {"data": {}, "ts": 0.0}
+async def _ndx_weights():
+    if _NDX_WEIGHTS["data"] and (time.time() - _NDX_WEIGHTS["ts"] < 86400):
+        return _NDX_WEIGHTS["data"]
+    out = {}
+    _ua = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
+           "(KHTML, like Gecko) Version/16.0 Safari/605.1.15")
+    try:
+        url = ("https://www.invesco.com/us/financial-products/etfs/holdings/main/"
+               "holdings/0?audienceType=Investor&action=download&ticker=QQQ")
+        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as c:
+            r = await c.get(url, headers={"User-Agent": _ua,
+                                          "Accept": "text/csv,application/csv,*/*"})
+        if r.status_code == 200 and r.text and "," in r.text:
+            import csv, io
+            for row in csv.DictReader(io.StringIO(r.text)):
+                rk = {(k or "").strip().lower(): (v or "") for k, v in row.items()}
+                tk = (rk.get("holding ticker") or rk.get("ticker") or "").strip().upper()
+                wv = (rk.get("weight") or rk.get("% of fund") or "").strip().replace("%", "").replace(",", "")
+                if tk and wv:
+                    try:
+                        out[tk] = round(float(wv), 2)
+                    except Exception:
+                        pass
+            cache["health"]["ndx_weights"] = f"online-invesco ({len(out)})"
+    except Exception as e:
+        print(f"[ndx-w] invesco falló: {e}")
+    if out:
+        _NDX_WEIGHTS["data"] = out
+        _NDX_WEIGHTS["ts"] = time.time()
+    return out
+
 @app.get("/api/company/{ticker}")
 async def get_company(ticker: str):
     sym = ticker.upper().strip()
