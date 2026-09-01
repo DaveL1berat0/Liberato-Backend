@@ -525,6 +525,56 @@ body{
   .panel,.panel::after,.chart-tf button,.lc-strat a{transition:none;}
   .panel:hover{transform:none;}
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   OPTIONS · LEVEL 3 — PASS 2 ("empújalo más"): material físico, jerarquía de ancla
+   y foco absoluto en el DATO. Sin gradiente-texto sobre valores (rompería los
+   colores semánticos verde/ámbar/rojo que el JS asigna inline). 100% estético.
+   ══════════════════════════════════════════════════════════════════════════════ */
+/* Grano de superficie muy sutil (overlay global, sin motion) — textura material,
+   no plástico. A ~2% con blend overlay el texto queda perfectamente legible. */
+body::before{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.022;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ANCLA VISUAL · el panel #1 (Environment · cockpit macro) lidera la jerarquía */
+.flow>.panel:first-of-type{border-top-color:rgba(201,168,76,0.24);}
+.flow>.panel:first-of-type::before{
+  height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.55) 28%,rgba(201,168,76,0.55) 72%,transparent);
+}
+
+/* EL DATO MANDA · glows que ADOPTAN el color semántico del propio valor (currentColor).
+   Así "CAUTELA" brilla ámbar, "SALUDABLE" verde, "DEFENSIVO" morado — sin pisar el color. */
+.env-hero-meta .cls{text-shadow:0 0 30px color-mix(in srgb, currentColor 24%, transparent);}
+.lc-hero .v{text-shadow:0 0 22px color-mix(in srgb, currentColor 20%, transparent), 0 1px 10px rgba(0,0,0,0.5);}
+.cstat-v,.ptile-v,.lc-cell:not(.lc-hero) .v{text-shadow:0 0 16px color-mix(in srgb, currentColor 14%, transparent), 0 1px 8px rgba(0,0,0,0.45);}
+
+/* MOTORES · reforzar la lectura de estado con un filo superior teñido por su score */
+.gcell.g-good{box-shadow:inset 0 2px 0 rgba(46,232,164,0.28),inset 0 1px 0 rgba(255,255,255,0.04);}
+.gcell.g-warn{box-shadow:inset 0 2px 0 rgba(245,166,35,0.30),inset 0 1px 0 rgba(255,255,255,0.04);}
+.gcell.g-risk{box-shadow:inset 0 2px 0 rgba(255,107,129,0.30),inset 0 1px 0 rgba(255,255,255,0.04);}
+
+/* ESTRUCTURA · las sub-secciones se separan con un filo de luz (rhythm vertical claro) */
+.sec-label{padding-bottom:8px;border-bottom:1px solid var(--hair);}
+
+/* TABLAS · sensación de rejilla de terminal (separadores de columna muy tenues) */
+.scan-tbl th:not(:last-child),.rot-table th:not(:last-child){box-shadow:inset 0 -1px 0 rgba(201,168,76,0.10),inset -1px 0 0 rgba(255,255,255,0.035);}
+
+/* PILLARES de dato (Recovery/Structure) · el hero respira con un halo interior mayor */
+.lc-hero{padding:15px 13px;}
+.lc-hero .k{color:var(--gold-2);opacity:0.85;letter-spacing:0.1em;}
+
+/* FOCO · el underlying/precio del chart y el score del scanner con más presencia */
+.scan-fs{letter-spacing:-0.01em;}
+.cstat-v{font-size:15.5px;}
+
+/* PROFUNDIDAD extra en hover de filas de dato (tiles interactivos) */
+.scan-tbl tbody tr:hover .scan-tk{color:var(--gold-2);transition:color .18s var(--ease);}
+
+@media(prefers-reduced-motion:reduce){
+  .scan-tbl tbody tr:hover .scan-tk{transition:none;}
+}
 </style>
 </head>
 <body>
