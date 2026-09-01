@@ -7623,15 +7623,28 @@ async def tradestation_fills(app_user_id: str = "dave", days: int = 90, raw: int
             raise HTTPException(502, f"TS accounts {ra.status_code}: {ra.text[:200]}")
         acct_ids = [a.get("AccountID") for a in (ra.json() or {}).get("Accounts", []) if a.get("AccountID")]
         raw_orders = []
+        seen_ids = set()
         for aid in acct_ids:
-            r = await c.get(f"{TS_API_BASE}/brokerage/accounts/{aid}/historicalorders",
-                            params={"since": since})
-            if r.status_code == 200:
-                for o in (r.json() or {}).get("Orders", []):
-                    o["_acct"] = aid
-                    raw_orders.append(o)
-            else:
-                print(f"[ts] orders {aid} {r.status_code}: {r.text[:120]}")
+            # BUG CORREGIDO: antes solo se pedía /historicalorders, que por diseño de la API
+            # de TradeStation NO incluye las órdenes del DÍA EN CURSO → un fill de hoy (p.ej.
+            # de hace 2h) no aparecía hasta el día siguiente. Ahora pedimos también /orders
+            # (órdenes de hoy, tiempo real) y las MERGEamos, deduplicando por OrderID.
+            for _path, _prm in (
+                (f"{TS_API_BASE}/brokerage/accounts/{aid}/orders", None),                      # HOY (tiempo real)
+                (f"{TS_API_BASE}/brokerage/accounts/{aid}/historicalorders", {"since": since}),  # días pasados
+            ):
+                r = await c.get(_path, params=_prm)
+                if r.status_code == 200:
+                    for o in (r.json() or {}).get("Orders", []):
+                        _oid = str(o.get("OrderID") or "")
+                        if _oid and _oid in seen_ids:      # ya visto en /orders (hoy) → no duplicar
+                            continue
+                        if _oid:
+                            seen_ids.add(_oid)
+                        o["_acct"] = aid
+                        raw_orders.append(o)
+                else:
+                    print(f"[ts] {_path.rsplit('/',1)[1]} {aid} {r.status_code}: {r.text[:120]}")
     if raw:
         return {"ok": True, "count": len(raw_orders), "orders": raw_orders[:40]}
     trades = []
