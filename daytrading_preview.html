@@ -1851,6 +1851,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     S.candles=null;   // el chart muestra su loader y solo pinta velas reales
     S.corr={};        // renderCorr con {} muestra '—'
     S.events=[];
+    S.cot=null;       // COT (CFTC) — se llena en fetchInstitutionalSummary; null → 'sin dato'
     // Exp Move / ATM IV / P/C Ratio: solo se llenan con dato real en fetchGEX.
   }
   // _buildMockCandles() ELIMINADA. Generaba 78 velas sintéticas con
@@ -1934,7 +1935,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       else if(m<570)              label='Abre 9:30 ET';
       else                        label='Cerrado · abre 9:30 ET';
     }
+    var key=(off?'0':'1')+label;
     for(var i=0;i<els.length;i++){
+      // Solo reescribir si CAMBIÓ el estado — si no, recrear el innerHTML cada segundo
+      // reinicia la animación CSS del punto (stutter). Comparando, el pulso queda suave.
+      if(els[i]._lstate===key) continue;
+      els[i]._lstate=key;
       els[i].classList.toggle('off',off);
       els[i].innerHTML='<span class="bl"></span>'+label;
     }
@@ -3481,7 +3487,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var tone=bear>=2?'<span class="hl-dn">Risk-Off</span>':bull>=2?'<span class="hl-up">Risk-On</span>':'mixta';
     parts.push('<strong>Macro:</strong> '+tone+(mb.length?' — '+mb.join(', '):' — sin señales macro cruzadas claras')+'.');
 
-    // ── CATALIZADOR / MOVERS (noticias de alto impacto en vivo) ──
+    // ── CATALIZADOR DEL DÍA (driver dominante: noticia de mayor impacto + dato
+    //    macro publicado hoy). S.movers ya combina ambos: el backend inyecta los
+    //    releases macro del calendario (con su actual vs esperado) en la misma
+    //    lista de high-impact vía _macro_news_from_calendar. ──
     var mv=(S.movers&&S.movers.length)?S.movers.slice().sort(function(a,b){return (b.impact_score||0)-(a.impact_score||0);}):[];
     if(mv.length){
       var m0=mv[0], sent=m0.sentiment||'Neutral';
@@ -3491,7 +3500,22 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     } else {
       var hev=(S.events||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high';});
       if(hev.length) parts.push('<strong>Catalizador:</strong> '+(hev[0].symbol||hev[0].name||'evento')+' de alto impacto hoy'+(hev[0].time?' ('+hev[0].time+' ET)':'')+'.');
-      else parts.push('<strong>Catalizador:</strong> sin noticias de alto impacto ahora mismo.');
+      else parts.push('<strong>Catalizador:</strong> Sin catalizador de alto impacto ahora mismo.');
+    }
+
+    // ── COT (posicionamiento REAL de especuladores Nasdaq-100, CFTC) — UNA sola
+    //    categoría consolidada. Dato oficial (S.cot, del backend) o 'sin dato';
+    //    Regla#1: nunca se inventa un número de posicionamiento. ──
+    if(S.cot&&S.cot.net!=null){
+      var cn=S.cot.net;
+      var cside=cn>0?'<span class="hl-up">netos largos</span>':cn<0?'<span class="hl-dn">netos cortos</span>':'neutrales';
+      var cnum='<span class="hl-num">'+(cn>0?'+':'')+cn.toLocaleString('en-US')+'</span>';
+      var cchg='';
+      if(S.cot.net_chg!=null){var dch=S.cot.net_chg;cchg=' · Δ semanal <span class="'+(dch>0?'hl-up':dch<0?'hl-dn':'')+'">'+(dch>0?'+':'')+dch.toLocaleString('en-US')+'</span>';}
+      var casof=S.cot.as_of?' (CFTC al '+S.cot.as_of+')':'';
+      parts.push('<strong>COT:</strong> especuladores Nasdaq-100 '+cside+' '+cnum+' contratos'+cchg+casof+'.');
+    } else {
+      parts.push('<strong>COT:</strong> sin dato de posicionamiento (fuente CFTC).');
     }
 
     // ── GEX (estructura dealer) ──
@@ -4463,6 +4487,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var r=await withTimeout(BACKEND_URL+'/api/context/institutional',12000);
       if(!r||!r.ok)return;
       var d=await r.json();
+      // COT real (o null) del backend → disponible para el resumen local de reserva.
+      if(d&&('cot' in d)){S.cot=d.cot||null;}
       var badge=$('sm-ai-badge');
       // Aceptamos el resumen de IA aunque esté 'stale' (sigue siendo mucho más rico
       // que el fallback local). Solo lo ignoramos si está 'generating' o vacío.
@@ -4488,7 +4514,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           if(badge){badge.style.display='none';}
         }
       } else if(d&&d.status==='generating'){
-        // IA aún generando — el resumen local permanece visible
+        // IA aún generando — el resumen local permanece visible; lo re-renderizamos
+        // para que incorpore el COT recién recibido del backend.
+        renderSummary();
         if(badge){badge.style.display='';badge.textContent='◷ Actualizando…';badge.style.color='var(--gold)';}
       }
     }catch(e){/* resumen local permanece visible */}

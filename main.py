@@ -352,6 +352,10 @@ cache = {
     "institutional": {"text": None, "last_update": None, "status": "offline"},
     "calendar":      {"data": [], "last_update": None, "status": "offline"},
     "movers":        {"data": [], "last_update": None, "status": "offline"},
+    # COT (Commitment of Traders, CFTC) — posicionamiento REAL de especuladores
+    # Nasdaq-100. data=None hasta que refresh_cot() traiga el dato oficial; si la
+    # CFTC no responde, se queda en None → el brief dice "COT: sin dato" (Regla#1).
+    "cot":           {"data": None, "last_update": None, "status": "offline"},
     "earnings":      {"data": [], "last_update": None, "status": "offline"},
     "company":       {},
     "health": {
@@ -393,6 +397,10 @@ def save_cache():
             "movers_seen": cache.get("_movers_seen", {}),
             "movers": {"data": cache["movers"]["data"],
                        "lu":   cache["movers"]["last_update"]},
+            # COT es semanal (CFTC publica los viernes): persistir para no quedar
+            # "sin dato" durante toda la semana tras un redeploy.
+            "cot": {"data": cache["cot"]["data"],
+                    "lu":   cache["cot"]["last_update"]},
             # Credenciales SnapTrade por usuario (user_secret intransferible).
             "snaptrade_users": _snaptrade_users,
             "ts_tokens": _ts_tokens,   # tokens OAuth de TradeStation (per-usuario)
@@ -467,6 +475,10 @@ def load_cache():
             cache["movers"]["data"]        = snap["movers"]["data"]
             cache["movers"]["last_update"] = snap["movers"].get("lu")
             cache["movers"]["status"]      = "stale"
+        if snap.get("cot", {}).get("data"):
+            cache["cot"]["data"]        = snap["cot"]["data"]
+            cache["cot"]["last_update"] = snap["cot"].get("lu")
+            cache["cot"]["status"]      = "stale"
         print(f"[persist] cache restaurado: {len(cache['earnings']['data'])} earnings, "
               f"{len(cache['calendar']['data'])} eventos calendario, "
               f"{len(cache.get('_rapidapi_cache', []))} actuals TE, "
@@ -2843,7 +2855,10 @@ async def _committee_facts():
             "rot": (_rotation_cache.get("data") or {}).get("sectors") or [],
             "scan": ((_scan_cache.get("data") or {}).get("rows") or []),
             "cal": [e for e in (cache.get("calendar", {}).get("data") or [])
-                    if e.get("impact") == "high"][:12]}
+                    if e.get("impact") == "high"][:12],
+            # Catalizadores en vivo (mismas fuentes reales que el motor de Daytrading):
+            "cot":  (cache.get("cot") or {}).get("data"),          # posicionamiento CFTC (o None)
+            "news": (cache.get("movers") or {}).get("data") or []}  # noticias ultra-impacto reales
 
 _REGIMEN = {"HEALTHY": "Expansivo", "CONSTRUCTIVE": "Constructivo", "CAUTION": "Cauteloso",
             "HIGH RISK": "Riesgo elevado", "DEFENSIVE": "Defensivo"}
@@ -2876,13 +2891,14 @@ def _committee_deterministic(facts):
              f"Fed funds {pct(dff)} ({pol}); spread high-yield {pct(hy)} ({cred}); M2 {pct(m2)} interanual.")
     L.append(f"Régimen macro: {regimen}")
 
-    # 02 CONSENSO 9 MOTORES
+    # 02 CONSENSO DE LOS MOTORES (conteo dinámico — ya son 12)
     scored = [m for m in motors if m.get("score") is not None]
+    _nmot = len(motors) or 12
     pos = [m for m in scored if m["score"] >= 55]
     sup = sorted(scored, key=lambda m: -m["score"])[:2]
     ris = sorted(scored, key=lambda m: m["score"])[:2]
-    L.append("[02 · CONSENSO DE LOS 9 MOTORES]")
-    L.append(f"Consenso: {len(pos)}/{len(motors) or 9} positivos · score global {round(score,1) if score is not None else '—'}/100 ({clsf}).")
+    L.append(f"[02 · CONSENSO DE LOS {_nmot} MOTORES]")
+    L.append(f"Consenso: {len(pos)}/{_nmot} positivos · score global {round(score,1) if score is not None else '—'}/100 ({clsf}).")
     L.append(f"- Soportes: {', '.join(m.get('name','') for m in sup) or '—'}")
     L.append(f"- Presionan: {', '.join(m.get('name','') for m in ris) or '—'}")
 
@@ -2909,25 +2925,51 @@ def _committee_deterministic(facts):
     L.append(f"Tramos: {ctxt}. Spread 10Y-2Y {pct(spread,2)} → curva {forma}.")
     L.append(f"Implicación: {impl}")
 
-    # 05 CATALIZADORES DE LA SEMANA
+    # 05 CATALIZADORES DE LA SEMANA — driver de HOY en vivo (noticia ultra-impacto real,
+    # mismas fuentes que el motor de Daytrading) + eventos del calendario. Regla #1: todo real.
+    news = facts.get("news") or []
     cal = facts["cal"][:5]
     L.append("[05 · CATALIZADORES DE LA SEMANA]")
+    _top = next((n for n in news if (n.get("impact_score") or 0) >= 7), None)
+    if _top:
+        L.append(f"- Driver de hoy: {_top.get('headline') or '(noticia)'} (impacto {_top.get('impact_score')}/10"
+                 + (f", {_top.get('source')}" if _top.get('source') else "") + "). "
+                 "Titular de última hora — riesgo direccional sobre la larga duración.")
     if cal:
         for e in cal:
             when = (e.get("time", "") or "")[:16].replace("T", " ")
             L.append(f"- {e.get('title','(evento)')} ({when}) · prev {e.get('previous') or '—'}, est {e.get('forecast') or '—'}, act {e.get('actual') or '—'}. "
                      f"Sorpresa al alza → presiona tasas y frena la larga duración; por debajo de lo estimado → alivio para LEAPS.")
-    else:
-        L.append("Sin eventos de alto impacto en la ventana del calendario ahora mismo.")
+    elif not _top:
+        L.append("Sin catalizador de alto impacto en la ventana ahora mismo.")
 
-    # 06 GEOPOLÍTICA
+    # 06 GEOPOLÍTICA — titular geopolítico REAL de mayor impacto (del feed de noticias) o proxy.
+    _GEO = ("Geopolitical", "Trade Policy", "Fiscal", "Political")
+    _geo = next((n for n in news if (n.get("category") in _GEO) and (n.get("impact_score") or 0) >= 8), None)
     L.append("[06 · GEOPOLÍTICA]")
-    L.append("Riesgo geopolítico: sin señal directa en los datos macro (fuente dedicada pendiente de integrar). "
-             "El proxy más cercano es el spread de crédito high-yield: " + pct(hy) + ".")
+    if _geo:
+        L.append(f"Titular de mayor impacto: {_geo.get('headline')} "
+                 f"(impacto {_geo.get('impact_score')}/10 · {_geo.get('category')}). Riesgo de gap por titular activo.")
+    else:
+        L.append("Sin titular geopolítico de alto impacto en el feed ahora mismo. "
+                 "Proxy de estrés de mercado — spread high-yield: " + pct(hy) + ".")
 
-    # 07 COT
+    # 07 COT — posicionamiento REAL de especuladores Nasdaq-100 (CFTC) o 'sin dato'. Nunca inventa.
+    _cot = facts.get("cot") or {}
+    _cnet = _cot.get("net")
     L.append("[07 · COT]")
-    L.append("COT: sin dato (fuente de posicionamiento pendiente de integrar). No se infiere posicionamiento.")
+    if _cnet is not None:
+        _side = "netos LARGOS" if _cnet > 0 else "netos CORTOS" if _cnet < 0 else "neutrales"
+        _cchg = _cot.get("net_chg")
+        _drift = ""
+        if _cchg is not None:
+            _drift = f", cambio semanal {_cchg:+,} ({'acumulando largos' if _cchg > 0 else 'acumulando cortos' if _cchg < 0 else 'sin cambio'})"
+        _lo, _sh = _cot.get("long"), _cot.get("short")
+        L.append(f"Especuladores Nasdaq-100 {_side} {_cnet:+,} contratos"
+                 + (f" [largos {_lo:,} / cortos {_sh:,}]" if (_lo is not None and _sh is not None) else "")
+                 + f"{_drift} (CFTC al {_cot.get('as_of') or '?'}).")
+    else:
+        L.append("COT: sin dato de posicionamiento (fuente CFTC no disponible ahora). No se infiere.")
 
     # 08 INFLACIÓN
     corecpi, cpi, ppi, be = yy("CPILFESL"), yy("CPIAUCSL"), yy("PPIACO"), v("T10YIE")
@@ -2998,15 +3040,31 @@ async def refresh_committee_brief():
     cal_txt = "\n".join(f"  · {e.get('time','')[:16]} {e.get('title')} "
                         f"(prev {e.get('previous') or '—'}, est {e.get('forecast') or '—'}, act {e.get('actual') or '—'})"
                         for e in cal) or "  (sin eventos de alto impacto en la ventana)"
+    # Noticias ultra-impacto reales (mismas fuentes que el motor de Daytrading) para [05]/[06]
+    _news = [n for n in (facts.get("news") or []) if (n.get("impact_score") or 0) >= 7]
+    news_txt = "\n".join(f"  · [{n.get('impact_score')}/10 · {n.get('category') or '—'}] {n.get('headline')} ({n.get('source') or '—'})"
+                         for n in _news[:6]) or "  (sin noticias de alto impacto ahora mismo)"
+    # COT real (CFTC) para [07]
+    _cot = facts.get("cot") or {}
+    if _cot.get("net") is not None:
+        _cs = "netos LARGOS" if _cot["net"] > 0 else "netos CORTOS" if _cot["net"] < 0 else "neutrales"
+        cot_txt = (f"  especuladores Nasdaq-100 {_cs} {_cot['net']:+,} contratos"
+                   + (f" [largos {_cot.get('long'):,} / cortos {_cot.get('short'):,}]" if (_cot.get('long') is not None and _cot.get('short') is not None) else "")
+                   + (f", cambio semanal {_cot.get('net_chg'):+,}" if _cot.get('net_chg') is not None else "")
+                   + f" (CFTC al {_cot.get('as_of') or '?'})")
+    else:
+        cot_txt = "  (sin dato de posicionamiento COT — declara 'sin dato' en la sección [07])"
+    _nmot = len(motors) or 12
 
     ctx = (f"═ MACRO (FRED, valores reales) ═\n" + "\n".join(macro_lines) +
-           f"\n\n═ 9 MOTORES DEL ENVIRONMENT (score {round(env.get('score'),1) if env.get('score') is not None else '—'}/100, "
+           f"\n\n═ {_nmot} MOTORES DEL ENVIRONMENT (score {round(env.get('score'),1) if env.get('score') is not None else '—'}/100, "
            f"{env.get('classification','—')}) ═\n" + "\n".join(eng_lines) +
            f"\n\n═ CURVA DE RENDIMIENTOS ═\n{curve_txt}" +
            f"\n\n═ ROTACIÓN SECTORIAL (vs SPY) ═\n{rot_txt}" +
            f"\n\n═ TOP DEL SCANNER (empresas calidad a descuento) ═\n{scan_txt}" +
            f"\n\n═ CALENDARIO ALTO IMPACTO (próximos catalizadores) ═\n{cal_txt}" +
-           f"\n\n═ COT ═\n  (fuente de posicionamiento COT pendiente de integrar — decláralo como 'sin dato' en su sección)")
+           f"\n\n═ NOTICIAS ULTRA-IMPACTO (últimas horas, reales) ═\n{news_txt}" +
+           f"\n\n═ COT (posicionamiento CFTC, real) ═\n{cot_txt}")
 
     sys_msg = (
         "Eres el estratega jefe del comité de inversión de una mesa que gestiona LEAPS (calls de 1-3 años) "
@@ -3018,15 +3076,22 @@ async def refresh_committee_brief():
         "ANALIZA y COMPRIME en conclusiones accionables.\n"
         "[01 · CONTEXTO MACRO] — 2-3 frases integrando crecimiento, inflación, empleo, tasas, dólar, crédito y liquidez. "
         "Termina con una línea 'Régimen macro: <p.ej. Cauteloso / Desinflacionario>'.\n"
-        "[02 · CONSENSO DE LOS 9 MOTORES] — qué dicen EN CONJUNTO. Línea 'Consenso: X/9 positivos' + 1-2 frases.\n"
+        "[02 · CONSENSO DE LOS MOTORES] — qué dicen EN CONJUNTO. Usa el nº de motores que te doy en el contexto "
+        "(no un número fijo). Línea 'Consenso: X/N positivos' (N = total de motores del contexto) + 1-2 frases.\n"
         "[03 · ROTACIÓN SECTORIAL] — hacia dónde rota el capital y por qué importa para LEAPS/swing.\n"
         "[04 · CURVA DE RENDIMIENTOS] — interpreta (empinamiento/aplanamiento/inversión, tramo corto vs largo) y su "
         "implicación para acciones de larga duración. Termina 'Implicación: Positiva/Neutral/Negativa'.\n"
-        "[05 · CATALIZADORES DE LA SEMANA] — a partir del calendario, para cada catalizador clave: Catalizador → "
-        "resultado esperado → transmisión al mercado → caso alcista → caso bajista. NO es una agenda; es interpretación.\n"
-        "[06 · GEOPOLÍTICA] — evento → impacto económico → sectores afectados → riesgo para equities. Línea "
-        "'Riesgo geopolítico: Bajo/Moderado/Alto'. Si no hay señal clara en los datos, dilo.\n"
-        "[07 · COT] — si no hay dato, escribe 'COT: sin dato (fuente pendiente)'. No inventes posicionamiento.\n"
+        "[05 · CATALIZADORES DE LA SEMANA] — EMPIEZA por el DRIVER DE HOY: si hay 'NOTICIAS ULTRA-IMPACTO' en el "
+        "contexto, toma la de mayor impacto como titular de última hora y explícala (transmisión al mercado, caso "
+        "alcista/bajista para LEAPS). Luego, del calendario, los catalizadores clave: resultado esperado → caso "
+        "alcista → caso bajista. Usa SOLO las cifras/titulares del contexto. Si no hay ninguno, dilo. NO es una agenda.\n"
+        "[06 · GEOPOLÍTICA] — si en 'NOTICIAS ULTRA-IMPACTO' hay un titular de categoría Geopolitical/Trade Policy/"
+        "Fiscal/Political, úsalo: evento → impacto económico → sectores → riesgo para equities. Si no lo hay, escribe "
+        "que no hay titular geopolítico de alto impacto y usa el spread high-yield como proxy. Línea 'Riesgo "
+        "geopolítico: Bajo/Moderado/Alto'. No inventes eventos.\n"
+        "[07 · COT] — usa las cifras EXACTAS de la sección 'COT' del contexto (netos largos/cortos, contratos, cambio "
+        "semanal, fecha) e interpreta en 1 frase si el smart money está inclinado largo/corto y si acumula o reduce. "
+        "Si el contexto dice 'sin dato', escribe 'COT: sin dato'. PROHIBIDO inventar cifras de posicionamiento.\n"
         "[08 · INFLACIÓN] — tendencia: 'Acelerando / Pegajosa / Desinflacionando' + implicación para tasas, Fed, "
         "valoraciones y LEAPS.\n"
         "[09 · MERCADO LABORAL] — 'Fuerte / Enfriándose / Debilitándose' con lectura de nóminas, paro, claims, salarios, "
@@ -3936,6 +4001,20 @@ async def refresh_calendar():
             has_data = "✓" if (e.get("forecast") or e.get("previous") or e.get("actual")) else "✗ SIN DATOS"
             print(f"[calendar] HOY: {e.get('title','')[:30]:<30} fc={e.get('forecast')} prev={e.get('previous')} act={e.get('actual')} [{has_data}]")
 
+    # ── ¿Salió un dato macro NUEVO de alto impacto hoy? → regenerar el brief ──
+    # Compara los releases US de alto impacto CON 'actual' de hoy entre el ciclo
+    # previo (stale_backup) y el nuevo (deduped). Si aparece uno que antes no
+    # estaba, dispara refresh_institutional() para que el "Catalizador del día"
+    # refleje el resultado real de inmediato (no esperar al cron de 5 min).
+    def _hi_released_sig(evs):
+        _today = datetime.now(NY).strftime("%Y-%m-%d")
+        return {(e.get("title", ""), str(e.get("actual") or "").strip())
+                for e in (evs or [])
+                if e.get("status") == "Released" and str(e.get("actual") or "").strip()
+                and str(e.get("impact", "")).lower() in ("high", "extreme")
+                and (e.get("time", "") or "").startswith(_today)}
+    _new_hi = _hi_released_sig(deduped) - _hi_released_sig(stale_backup)
+
     if deduped:
         cache["calendar"]["data"]        = deduped
         cache["calendar"]["last_update"] = datetime.now(NY).isoformat()
@@ -3943,6 +4022,10 @@ async def refresh_calendar():
         save_cache()  # persistir en Volume: los 'actual' del día sobreviven redeploys
         released = sum(1 for e in deduped if e.get("status")=="Released")
         print(f"[calendar] ok: {len(deduped)} eventos ({released} con resultado)")
+        if _new_hi:
+            print(f"[calendar] nuevo dato macro alto impacto → regenerando brief: "
+                  f"{[t for t, _ in _new_hi][:3]}")
+            asyncio.create_task(refresh_institutional())
     elif stale_backup:
         cache["calendar"]["status"] = "stale"
         print("[calendar] parsed empty — keeping stale")
@@ -4227,6 +4310,11 @@ async def refresh_movers():
 
         store = cache.setdefault("_movers_seen", {})
         now_ts = time.time()
+        # ¿Entró una noticia CRÍTICA nueva (no vista antes)? → regenerar el brief
+        # para que el "Catalizador del día" la refleje al instante. Se excluyen los
+        # ítems del puente de calendario (source 'Calendario macro'): esos ya los
+        # dispara refresh_calendar, evitando doble regeneración.
+        _new_critical = False
         for it in classified:
             # BUG HISTÓRICO: se leía "title" pero _classify_impact_news devuelve
             # "headline" → key vacío → todas las noticias se descartaban (panel
@@ -4242,6 +4330,8 @@ async def refresh_movers():
             else:
                 it["_first_seen"] = now_ts
                 store[key] = it
+                if (it.get("impact_score") or 0) >= 9.0 and it.get("source") != "Calendario macro":
+                    _new_critical = True
         # Poda por TTL: fuera noticias con timestamp (o primera vista) > 24h.
         # Dave: High Impact solo muestra noticias de MÁXIMO 24 horas de antigüedad.
         cutoff = now_ts - 24 * 3600
@@ -4281,6 +4371,9 @@ async def refresh_movers():
             cache["health"]["finnhub"]     = "online"
             save_cache()  # persistir en Volume: sobrevive redeploys
             print(f"[movers] ok: {len(out)} ultra-impact (store: {len(store)} en 12h)")
+            if _new_critical:
+                print("[movers] noticia CRÍTICA nueva → regenerando brief institucional")
+                asyncio.create_task(refresh_institutional())
         elif stale_backup:
             cache["movers"]["status"] = "stale"
             print("[movers] no new ultra-impact events — keeping stale")
@@ -4564,6 +4657,92 @@ async def _session_profile_ctx():
     return out
 
 
+# ══ COT — Commitment of Traders (CFTC, posicionamiento REAL) ═════════════════
+async def refresh_cot():
+    """COT (Commitment of Traders) de la CFTC — posicionamiento REAL de los
+    especuladores (non-commercial / large speculators) en el E-mini Nasdaq-100.
+
+    FUENTE OFICIAL Y GRATUITA (sin API key): Legacy Futures-Only report vía Socrata
+      https://publicreporting.cftc.gov/resource/6dca-aqww.json
+    Contrato: 'NASDAQ MINI - CHICAGO MERCANTILE EXCHANGE'. Se publica los viernes
+    ~15:30 ET con datos al martes anterior. Netos = largos non-comm − cortos
+    non-comm; el cambio semanal sale de change_in_noncomm_(long|short)_all.
+
+    Regla#1: si la CFTC no responde o falta un campo, cache['cot']['data'] se queda
+    en None → el brief muestra 'COT: sin dato' y NUNCA inventa un número."""
+    url = "https://publicreporting.cftc.gov/resource/6dca-aqww.json"
+    params = {
+        "$where": "upper(market_and_exchange_names) like '%NASDAQ MINI%'",
+        "$order": "report_date_as_yyyy_mm_dd DESC",
+        "$limit": "1",
+        "$select": ("market_and_exchange_names,report_date_as_yyyy_mm_dd,"
+                    "noncomm_positions_long_all,noncomm_positions_short_all,"
+                    "change_in_noncomm_long_all,change_in_noncomm_short_all,"
+                    "open_interest_all"),
+    }
+    try:
+        async with httpx.AsyncClient(timeout=12) as client:
+            r = await client.get(url, params=params)
+        if r.status_code != 200:
+            cache["cot"]["status"] = f"error-{r.status_code}"
+            print(f"[cot] CFTC {r.status_code} — se mantiene sin dato")
+            return
+        rows = r.json()
+        if not rows:
+            cache["cot"]["status"] = "empty"
+            print("[cot] CFTC sin filas para Nasdaq-100 — sin dato")
+            return
+        row = rows[0]
+        def _i(k):
+            try: return int(float(row.get(k)))
+            except Exception: return None
+        lo, sh = _i("noncomm_positions_long_all"), _i("noncomm_positions_short_all")
+        if lo is None or sh is None:
+            cache["cot"]["status"] = "empty"
+            print("[cot] CFTC sin posiciones non-commercial — sin dato")
+            return
+        dlo, dsh = _i("change_in_noncomm_long_all"), _i("change_in_noncomm_short_all")
+        net     = lo - sh
+        net_chg = (dlo - dsh) if (dlo is not None and dsh is not None) else None
+        as_of   = str(row.get("report_date_as_yyyy_mm_dd") or "")[:10]
+        cache["cot"]["data"] = {
+            "market":        "E-mini Nasdaq-100 (CME)",
+            "as_of":         as_of,
+            "long":          lo,
+            "short":         sh,
+            "net":           net,
+            "net_chg":       net_chg,
+            "open_interest": _i("open_interest_all"),
+            "source":        "CFTC Legacy Futures-Only",
+        }
+        cache["cot"]["last_update"] = datetime.now(NY).isoformat()
+        cache["cot"]["status"]      = "fresh"
+        save_cache()
+        print(f"[cot] ok: NQ-100 especuladores netos {net:+,} (Δ{net_chg:+,} sem) — as of {as_of}"
+              if net_chg is not None else f"[cot] ok: NQ-100 especuladores netos {net:+,} — as of {as_of}")
+    except Exception as e:
+        cache["cot"]["status"] = "error"
+        print(f"[cot] error: {e}")
+
+def _cot_context_line():
+    """Línea de contexto COT para el brief institucional. Dato REAL de la CFTC
+    (cache['cot']) o 'sin dato' — nunca inventado (Regla#1)."""
+    c = (cache.get("cot") or {}).get("data") or {}
+    net = c.get("net")
+    if net is None:
+        return "- COT (posicionamiento especuladores Nasdaq-100): sin dato (fuente CFTC no disponible ahora)"
+    side = "netos LARGOS" if net > 0 else "netos CORTOS" if net < 0 else "neutrales"
+    chg  = c.get("net_chg")
+    chg_txt = ""
+    if chg is not None:
+        drift = "más largos" if chg > 0 else "más cortos" if chg < 0 else "sin cambio"
+        chg_txt = f", cambio semanal {chg:+,} contratos ({drift})"
+    asof = c.get("as_of") or "?"
+    lo, sh = c.get("long"), c.get("short")
+    return (f"- COT (especuladores Nasdaq-100, CFTC al {asof}): {side} {net:+,} contratos"
+            + (f" [largos {lo:,} / cortos {sh:,}]" if (lo is not None and sh is not None) else "")
+            + chg_txt)
+
 async def refresh_institutional():
     """Motor de IA institucional — genera análisis desde CUALQUIER dato disponible.
     Funciona 24/7: con o sin GEX, mercado abierto o cerrado, fin de semana.
@@ -4703,6 +4882,10 @@ async def refresh_institutional():
     if macro_rel:
         ctx.append("- Datos macro recientes (actual vs esperado): " + " | ".join(list(macro_rel.values())[:6]))
 
+    # ── COT (posicionamiento REAL de especuladores Nasdaq-100, CFTC) ──
+    # Una sola línea consolidada. Dato oficial o 'sin dato' — nunca inventado.
+    ctx.append(_cot_context_line())
+
     # Rendimientos de bonos (dirección) — clave para múltiplos tech
     yields = []
     for k, lbl in [("US2Y", "2Y"), ("US10Y", "10Y"), ("US30Y", "30Y")]:
@@ -4770,14 +4953,23 @@ async def refresh_institutional():
     sys_msg = (f"Eres el analista jefe de mesa de Liberato Community para {FA_ASSET} Futures, "
                "razonando con Auction Market Theory (AMT) y posicionamiento dealer. "
                "Tu lector lo tiene que entender en 20 SEGUNDOS. Escribes SOLO en español, ULTRA-CONCISO, "
-               "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 7 líneas con este formato (una línea cada una, "
+               "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 8 líneas con este formato (una línea cada una, "
                "nada antes ni después, sin títulos de sección, sin listas con guiones):\n"
                "**Macro:** <1 oración: ciclo macro con los datos reales — GDP (crecimiento), inflación (CPI/PCE/PPI), "
                "empleo (NFP/desempleo/claims), bonos y rendimientos (2Y/10Y/30Y), tasa de interés y trayectoria (senda "
-               "de la Fed). Nombra la FASE del ciclo si se infiere (expansión/desaceleración/estanflación). Menciona COT SOLO si está>\n"
-               "**Hoy:** <1 oración: catalizadores de HOY de alto impacto (con su hora si la hay, ej. FOMC 14:00 ET) + "
-               "geopolítica relevante. Si en los datos hay 'Movers ultra-impacto (en vivo)', menciona el más fuerte "
-               "como titular de última hora que mueve el mercado ahora>\n"
+               "de la Fed). Nombra la FASE del ciclo si se infiere (expansión/desaceleración/estanflación)>\n"
+               "**Catalizador:** <1 oración: el DRIVER DOMINANTE de la sesión de HOY. Combina (a) la noticia macro/"
+               "geopolítica de MAYOR impacto de 'Movers ultra-impacto (en vivo)' como titular de última hora, y (b) el "
+               "RESULTADO real de los datos macro que YA salieron hoy (de 'Datos macro recientes' / 'Último dato "
+               "publicado', con su actual vs esperado usando SOLO las cifras del contexto, formato 'DATO <actual> vs cons. <esperado>'), y menciona los eventos de alto impacto "
+               "aún por publicar hoy con su hora (ej. FOMC 14:00 ET). Esta etiqueta SIEMPRE aparece: si NO hay ninguna "
+               "noticia de alto impacto ni dato macro publicado hoy, escribe EXACTAMENTE 'Sin catalizador de alto "
+               "impacto ahora mismo'>\n"
+               "**COT:** <1 oración con el posicionamiento de especuladores Nasdaq-100. Esta etiqueta SIEMPRE aparece: "
+               "si el contexto trae la línea 'COT (especuladores Nasdaq-100 ...)', usa SUS cifras EXACTAS (netos largos/"
+               "cortos, contratos y cambio semanal) e interpreta en 4-6 palabras si el smart money está inclinado a "
+               "largo o corto y si acumula o reduce. Si el contexto dice 'COT ... sin dato', escribe EXACTAMENTE 'sin "
+               "dato de posicionamiento (fuente CFTC)'. PROHIBIDO inventar cifras de posicionamiento>\n"
                "**Earnings:** <1 oración: earnings que impacten directamente el Nasdaq hoy; si no hay, di 'sin earnings "
                "relevantes para el NQ hoy'>\n"
                "**Técnico:** <1 oración: niveles GEX (Call/Put Wall, Flip, Max Pain) + Market Regime (precio vs Flip: γ+ rango / γ− tendencia) + "
@@ -4791,32 +4983,41 @@ async def refresh_institutional():
                "13:00 ET son los gatillos; régimen de expansión con dealers persiguiendo el precio'. PROHIBIDO 'reduce/añade "
                "tamaño', 'stops ajustados', 'evita apalancamiento' o cualquier orden operativa. NO inventes cifras de posicionamiento>\n"
                "**Claridad:** <n>/10 hacia <alza / baja / sin dirección clara> · Vol <alta/media/baja>\n"
-               "FORMATO: 5 a 7 oraciones en total (una por etiqueta que tenga datos), SIN EMOJIS. Usa las etiquetas en "
-               "negrita **Macro:**, **Hoy:**, **Earnings:**, **Técnico:**, **Volatilidad:**, **Gestión:**, **Claridad:** tal cual, y pon en **negrita** "
+               "FORMATO: 6 a 8 oraciones en total (una por etiqueta), SIN EMOJIS. Usa las etiquetas en "
+               "negrita **Macro:**, **Catalizador:**, **COT:**, **Earnings:**, **Técnico:**, **Volatilidad:**, **Gestión:**, **Claridad:** tal cual, y pon en **negrita** "
                "el dato/nivel más importante de cada oración. Nada de iconos ni símbolos decorativos.\n"
                "IMPORTANTE: NO marques un sesgo alcista/bajista duro. En su lugar, la línea **Claridad:** da un SCORE "
                "1-10 de qué tan claro/limpio está el día y hacia qué lado se inclina (alza/baja/sin dirección). "
                "REGLAS: usa números EXACTOS de los datos. El régimen lo define PRECIO vs Gamma Flip, NO el signo del "
                "Net GEX: precio BAJO el Flip = γ negativo = momentum/expansión (dealers persiguen); precio SOBRE el Flip "
                "= γ positivo = reversión/compresión (dealers absorben). El Net GEX es SOLO intensidad. NUNCA inventes un dato: si algo "
-               "no está en los datos, omite esa etiqueta (no la escribas). Cada oración es corta. Prohibida la prosa larga.")
+               "no está en los datos, omite esa etiqueta (no la escribas) — EXCEPTO **Catalizador:** y **COT:**, que "
+               "SIEMPRE se escriben (con su estado honesto 'Sin catalizador...' / 'sin dato de posicionamiento' cuando "
+               "falte la fuente). Cada oración es corta. Prohibida la prosa larga.")
 
     if has_gamma:
         usr_msg = (f"Datos de mesa ahora mismo:\n\n{ctx_str}\n\n"
-                   "Escribe el briefing en el formato exacto (4-6 oraciones, SIN emojis, etiquetas en negrita). "
-                   "Cubre Macro (GDP/inflación/empleo/bonos/tasas + fase del ciclo), catalizadores de HOY + geopolítica, "
-                   "earnings del Nasdaq, el técnico (GEX/regime/VAH-VAL/precio/tech%/gap), una línea propia de "
-                   "**Volatilidad:** (VIX nivel+dirección, movimiento esperado ±pts, régimen de vol, Fear&Greed), y una "
-                   "línea **Gestión:** que DESCRIBE el entorno de riesgo del día (catalizadores, volatilidad/expansión, posicionamiento) SIN ordenar tamaño, apalancamiento ni stops. "
+                   "Escribe el briefing en el formato exacto (6-8 oraciones, SIN emojis, etiquetas en negrita). "
+                   "Cubre Macro (GDP/inflación/empleo/bonos/tasas + fase del ciclo), **Catalizador:** (el driver "
+                   "dominante de HOY = noticia de mayor impacto + resultado real de los datos macro ya publicados hoy + "
+                   "eventos de alto impacto pendientes con su hora; si no hay ninguno, 'Sin catalizador de alto impacto "
+                   "ahora mismo'), **COT:** (usa la línea COT del contexto tal cual: sus cifras exactas o 'sin dato de "
+                   "posicionamiento (fuente CFTC)'), earnings del Nasdaq, el técnico (GEX/regime/VAH-VAL/precio/tech%/"
+                   "gap), una línea propia de **Volatilidad:** (VIX nivel+dirección, movimiento esperado ±pts, régimen "
+                   "de vol, Fear&Greed), y una línea **Gestión:** que DESCRIBE el entorno de riesgo del día "
+                   "(catalizadores, volatilidad/expansión, posicionamiento) SIN ordenar tamaño, apalancamiento ni stops. "
                    "Cierra con **Claridad:** score 1-10 hacia alza/baja/sin dirección — NO un sesgo duro. Usa los "
-                   "números exactos; omite la etiqueta de cualquier tema sin datos.")
+                   "números exactos; omite solo las etiquetas SIN datos, pero **Catalizador:** y **COT:** SIEMPRE van.")
     else:
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
-                   "Escribe el briefing en el formato exacto (3-5 oraciones, etiquetas en negrita) con lo disponible "
-                   "(macro, catalizadores de hoy, earnings, inventario/gap, sentimiento, sector tech). En **Técnico:** "
-                   "como aún no hay niveles GEX de RTH, di literalmente 'GEX: esperando niveles de la sesión RTH' y "
-                   "apóyate en inventario/gap/vol/sector tech. Cierra con **Claridad:** score 1-10 hacia alza/baja/sin "
-                   "dirección. No inventes datos.")
+                   "Escribe el briefing en el formato exacto (5-7 oraciones, etiquetas en negrita) con lo disponible. "
+                   "Incluye SIEMPRE **Catalizador:** (driver dominante de hoy = noticia de mayor impacto + resultado "
+                   "real de los datos macro ya publicados; si no hay ninguno, 'Sin catalizador de alto impacto ahora "
+                   "mismo') y **COT:** (la línea COT del contexto tal cual: sus cifras o 'sin dato de posicionamiento "
+                   "(fuente CFTC)'), además de macro, earnings, inventario/gap, sentimiento y sector tech. En "
+                   "**Técnico:** como aún no hay niveles GEX de RTH, di literalmente 'GEX: esperando niveles de la "
+                   "sesión RTH' y apóyate en inventario/gap/vol/sector tech. Cierra con **Claridad:** score 1-10 hacia "
+                   "alza/baja/sin dirección. No inventes datos.")
 
     try:
         async with httpx.AsyncClient(timeout=20) as client:
@@ -7982,7 +8183,10 @@ def _fmt_rev(v):
 # ni aproximado por market cap, que NO es el peso float-ajustado del índice).
 _NDX_WEIGHTS = {"data": {}, "ts": 0.0}
 async def _ndx_weights():
-    if _NDX_WEIGHTS["data"] and (time.time() - _NDX_WEIGHTS["ts"] < 86400):
+    # TTL: 24h si ya tenemos pesos; 1h para REINTENTAR si aún no (caché negativo → un
+    # fallo de Invesco no dispara una llamada lenta en CADA /api/company, solo 1×/hora).
+    _ttl = 86400 if _NDX_WEIGHTS["data"] else 3600
+    if _NDX_WEIGHTS["ts"] and (time.time() - _NDX_WEIGHTS["ts"] < _ttl):
         return _NDX_WEIGHTS["data"]
     out = {}
     _ua = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
@@ -7990,7 +8194,7 @@ async def _ndx_weights():
     try:
         url = ("https://www.invesco.com/us/financial-products/etfs/holdings/main/"
                "holdings/0?audienceType=Investor&action=download&ticker=QQQ")
-        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as c:
+        async with httpx.AsyncClient(timeout=8, follow_redirects=True) as c:
             r = await c.get(url, headers={"User-Agent": _ua,
                                           "Accept": "text/csv,application/csv,*/*"})
         if r.status_code == 200 and r.text and "," in r.text:
@@ -8007,10 +8211,10 @@ async def _ndx_weights():
             cache["health"]["ndx_weights"] = f"online-invesco ({len(out)})"
     except Exception as e:
         print(f"[ndx-w] invesco falló: {e}")
+    _NDX_WEIGHTS["ts"] = time.time()          # marca el intento SIEMPRE → caché negativo
     if out:
-        _NDX_WEIGHTS["data"] = out
-        _NDX_WEIGHTS["ts"] = time.time()
-    return out
+        _NDX_WEIGHTS["data"] = out            # solo pisa datos buenos si hubo éxito
+    return out or _NDX_WEIGHTS["data"]
 
 @app.get("/api/company/{ticker}")
 async def get_company(ticker: str):
@@ -8191,6 +8395,14 @@ async def get_company(ticker: str):
         except Exception:
             pass
 
+    # Peso REAL en el Nasdaq-100 (holdings de QQQ). Regla #1: si la fuente no responde,
+    # queda None → el drawer muestra "—". (Bug corregido: antes _ndx_weights se definía
+    # pero NUNCA se llamaba, así que ndx_weight jamás se asignaba y el peso salía "—".)
+    try:
+        data["ndx_weight"] = (await _ndx_weights()).get(sym)
+    except Exception:
+        data["ndx_weight"] = None
+
     result = {"symbol": sym, **data}
     cache["company"][sym] = {"data": result, "ts": time.time()}
     return result
@@ -8204,13 +8416,16 @@ async def get_institutional():
     if not last or (datetime.now(NY) - datetime.fromisoformat(last)).total_seconds() > 600:
         asyncio.create_task(refresh_institutional())
     text = cache["institutional"]["text"]
+    # COT real (o None) — el frontend lo usa en su resumen local de reserva.
+    cot = (cache.get("cot") or {}).get("data")
     if not text:
         # Aún generándose — el frontend muestra su resumen local mientras tanto
-        return {"summary": None, "status": "generating",
+        return {"summary": None, "status": "generating", "cot": cot,
                 "note": "IA generando análisis — frontend usa resumen local"}
     return {"summary":text, "last_update":cache["institutional"]["last_update"],
             "status":cache["institutional"]["status"],
-            "has_gamma":cache["institutional"].get("has_gamma", False)}
+            "has_gamma":cache["institutional"].get("has_gamma", False),
+            "cot": cot}
 
 
 # ══ WEBHOOK: Finnhub → actualización instantánea cuando una empresa reporta ═══
@@ -8352,6 +8567,7 @@ async def get_dashboard():
         "next_macro_event":    upcoming[0] if upcoming else None,
         "earnings":            cache["earnings"]["data"][:20],
         "institutional_summary": cache["institutional"]["text"],
+        "cot":                 cache["cot"]["data"],
         "health":              cache["health"],
         "last_update": {
             "heatmap":      cache["heatmap"]["last_update"],
@@ -8359,6 +8575,7 @@ async def get_dashboard():
             "movers":       cache["movers"]["last_update"],
             "earnings":     cache["earnings"]["last_update"],
             "institutional":cache["institutional"]["last_update"],
+            "cot":          cache["cot"]["last_update"],
         }
     }
 
@@ -8500,6 +8717,12 @@ async def startup():
     scheduler.add_job(refresh_institutional, CronTrigger(hour="17-23,0-6", minute=0, day_of_week="mon-fri"))  # after-hours/overnight: contexto macro 1/hora
     scheduler.add_job(refresh_institutional, CronTrigger(hour="*/3"))  # fines de semana: se mantiene vivo
 
+    # ── COT (CFTC) — dato SEMANAL: se publica los viernes ~15:30 ET. Refrescamos
+    # el viernes por la tarde (tras la publicación) y una vez al día por si el
+    # viernes hubo fallo de red. Gratis y sin key, así que el coste es nulo.
+    scheduler.add_job(refresh_cot, CronTrigger(hour=16, minute=5, day_of_week="fri"))
+    scheduler.add_job(refresh_cot, CronTrigger(hour=8, minute=20, day_of_week="mon-fri"))
+
     # ── Brief diario a Discord (free sin GEX / premium con GEX) ──
     # 8:45 ET lun-vie (antes de la apertura). No hace nada si no hay webhooks configurados.
     scheduler.add_job(send_daily_briefs, CronTrigger(hour=8, minute=45, day_of_week="mon-fri"))
@@ -8543,6 +8766,7 @@ async def startup():
         refresh_movers(),
         refresh_earnings(),
         refresh_heatmap_rest(),   # primera carga del batch REST
+        refresh_cot(),            # COT semanal (CFTC) — o desde disco si ya estaba
         return_exceptions=True
     )
 
