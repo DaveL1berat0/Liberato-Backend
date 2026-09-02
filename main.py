@@ -6907,19 +6907,28 @@ DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "").strip()
 # si algún día se pone un webhook premium/Whop-bridge, el brief con GEX se publica ahí.
 DISCORD_PREMIUM_WEBHOOK_URL = os.getenv("DISCORD_PREMIUM_WEBHOOK_URL", "").strip()
 
+# Planes CON acceso premium (incluye 'trial'). EXPIRABLE = planes temporales/de pago que
+# caducan por plan_expires ('admin' nunca caduca). 'trial' es su propia CATEGORÍA de usuario.
+PREMIUM_PLANS = ("premium", "pro", "admin", "trial")
+EXPIRABLE_PLANS = ("premium", "pro", "trial")
 def _is_premium(u):
-    return (u.get("plan") or "free") in ("premium", "pro", "admin")
+    return (u.get("plan") or "free") in PREMIUM_PLANS
+def _plan_bucket(u):
+    p = (u.get("plan") or "free")
+    return "trial" if p == "trial" else ("premium" if p in PREMIUM_PLANS else "free")
 
 @app.get("/api/admin/users")
 async def admin_users(key: str = "", authorization: str = Header("")):
-    """Lista de usuarios segmentada por plan (free vs premium)."""
+    """Lista de usuarios segmentada por categoría: free / premium / trial."""
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     users = await users_list("all")
-    free = [u for u in users if not _is_premium(u)]
-    premium = [u for u in users if _is_premium(u)]
-    return {"counts": {"total": len(users), "free": len(free), "premium": len(premium)},
-            "free": free, "premium": premium}
+    b = {"free": [], "premium": [], "trial": []}
+    for u in users:
+        b[_plan_bucket(u)].append(u)
+    return {"counts": {"total": len(users), "free": len(b["free"]),
+                       "premium": len(b["premium"]), "trial": len(b["trial"])},
+            "free": b["free"], "premium": b["premium"], "trial": b["trial"]}
 
 @app.post("/api/admin/email/broadcast")
 async def admin_email_broadcast(request: Request, key: str = "", authorization: str = Header("")):
@@ -7271,7 +7280,7 @@ async def auth_me(authorization: str = Header("")):
     # Expiración de plan (enforcement PEREZOSO, sin cron): si plan_expires ya pasó y el plan
     # es de pago, se degrada a free y se persiste. Así un premium temporal "vuelve solo" a free.
     _exp = u.get("plan_expires")
-    if _exp and plan in ("premium", "pro") and int(time.time()) >= int(_exp):
+    if _exp and plan in EXPIRABLE_PLANS and int(time.time()) >= int(_exp):
         plan = "free"
         u["plan"] = "free"; u["plan_expires"] = None
         try:
@@ -7280,7 +7289,7 @@ async def auth_me(authorization: str = Header("")):
         except Exception as e:
             print(f"[plan-expiry] no se pudo persistir downgrade de {email}: {e}")
     # Los correos admin (ADMIN_EMAILS) pasan como premium para no toparse con el paywall.
-    is_premium = plan in ("premium", "pro", "admin") or email in ADMIN_EMAILS
+    is_premium = plan in PREMIUM_PLANS or email in ADMIN_EMAILS
     avatar = await _avatar_get(email)
     # Devolvemos tanto la forma anidada (user{}) como campos planos, para que
     # tanto la homepage como auth.html (que leen distinto) funcionen igual.
@@ -7422,7 +7431,7 @@ async def community_access(authorization: str = Header("")):
     email = (p.get("email") or "").lower()
     u = await user_get(email) or {}
     plan = u.get("plan") or p.get("plan", "free")
-    if plan not in ("premium", "pro", "admin"):
+    if plan not in PREMIUM_PLANS:
         raise HTTPException(403, "Requiere acceso premium")
     return {"access": True, "plan": plan, "email": email,
             "name": u.get("name") or p.get("name")}
@@ -7459,9 +7468,13 @@ async def auth_set_plan(request: Request, key: str = ""):
     elif _exp is not None:
         try:    u["plan_expires"] = int(_exp)
         except Exception: pass
-    await user_put(email, u)
+    dropped = await user_put(email, u)
+    _note = ("OJO: 'plan_expires' no existe en app_users → la caducidad NO se guardó. "
+             "Añádela: alter table app_users add column if not exists plan_expires bigint;") \
+            if "plan_expires" in (dropped or []) else None
     return {"ok": True, "user": {"id": u.get("id"), "email": email, "name": u.get("name"),
-                                 "plan": plan, "plan_expires": u.get("plan_expires")}}
+                                 "plan": plan, "plan_expires": u.get("plan_expires")},
+            "dropped_columns": dropped, "note": _note}
 
 
 @app.post("/api/auth/create-trial")
@@ -7496,17 +7509,17 @@ async def auth_create_trial(request: Request, key: str = ""):
     rec = {"id": "u_" + secrets.token_hex(9),
            "name": (data.get("name") or "").strip()[:80] or "Trial",
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
-           "plan": "premium", "plan_expires": expires, "trial": True,
+           "plan": "trial", "plan_expires": expires, "trial": True,
            "created": int(time.time())}
     dropped = await user_put(email, rec)
-    print(f"[trial] creado {email} · premium {days}d · expira {expires} · dropped={dropped}")
+    print(f"[trial] creado {email} · trial {days}d · expira {expires} · dropped={dropped}")
     _note = None
     if "plan_expires" in (dropped or []):
         _note = ("OJO: la columna 'plan_expires' NO existe en app_users → el trial NO caduca solo. "
                  "Añádela en Supabase (SQL Editor): "
                  "alter table app_users add column if not exists plan_expires bigint;")
     return {"ok": True, "email": email, "password": pw, "name": rec["name"],
-            "plan": "premium", "days": days, "plan_expires": expires,
+            "plan": "trial", "days": days, "plan_expires": expires,
             "dropped_columns": dropped, "note": _note}
 
 
