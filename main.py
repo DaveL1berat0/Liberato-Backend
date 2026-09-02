@@ -6463,11 +6463,23 @@ async def _sb_get_user(email):
         print(f"[supabase] get_user: {e}")
     return None
 async def _sb_put_user(u):
+    """Escribe el usuario en Supabase. Auto-resiliente: si la tabla app_users no tiene
+    alguna columna (p.ej. plan_expires/trial nuevas), PostgREST responde 'Could not find
+    the X column' → la quitamos y reintentamos. Devuelve la lista de columnas descartadas
+    (vacía si todo persistió) para que el llamador sepa qué no se guardó."""
+    rec = dict(u)
+    dropped = []
     async with httpx.AsyncClient(timeout=10) as c:
-        r = await c.post(f"{SUPABASE_URL}/rest/v1/app_users", json=u,
-                         headers=_sb_h({"Prefer": "resolution=merge-duplicates"}))
-    if r.status_code >= 300:
-        raise Exception(f"supabase {r.status_code}: {r.text[:120]}")
+        for _ in range(6):
+            r = await c.post(f"{SUPABASE_URL}/rest/v1/app_users", json=rec,
+                             headers=_sb_h({"Prefer": "resolution=merge-duplicates"}))
+            if r.status_code < 300:
+                return dropped
+            m = re.search(r"Could not find the '([^']+)' column", r.text or "")
+            if m and m.group(1) in rec:
+                dropped.append(m.group(1)); rec.pop(m.group(1), None); continue
+            raise Exception(f"supabase {r.status_code}: {r.text[:160]}")
+    raise Exception("supabase: demasiadas columnas desconocidas: " + ",".join(dropped))
 async def _sb_get_config(k):
     try:
         async with httpx.AsyncClient(timeout=10) as c:
@@ -6493,11 +6505,12 @@ async def user_get(email):
 async def user_put(email, u):
     rec = {**u, "email": email}
     if _sb_on():
-        await _sb_put_user(rec)
+        return await _sb_put_user(rec)   # lista de columnas descartadas (vacía si todo OK)
     else:
         _users[email] = u
         try: save_cache()
         except Exception: pass
+        return []
 
 async def users_list(plan=None):
     """Lista usuarios (opcionalmente filtrados por plan). Supabase o memoria."""
@@ -7485,10 +7498,16 @@ async def auth_create_trial(request: Request, key: str = ""):
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
            "plan": "premium", "plan_expires": expires, "trial": True,
            "created": int(time.time())}
-    await user_put(email, rec)
-    print(f"[trial] creado {email} · premium {days}d · expira {expires}")
+    dropped = await user_put(email, rec)
+    print(f"[trial] creado {email} · premium {days}d · expira {expires} · dropped={dropped}")
+    _note = None
+    if "plan_expires" in (dropped or []):
+        _note = ("OJO: la columna 'plan_expires' NO existe en app_users → el trial NO caduca solo. "
+                 "Añádela en Supabase (SQL Editor): "
+                 "alter table app_users add column if not exists plan_expires bigint;")
     return {"ok": True, "email": email, "password": pw, "name": rec["name"],
-            "plan": "premium", "days": days, "plan_expires": expires}
+            "plan": "premium", "days": days, "plan_expires": expires,
+            "dropped_columns": dropped, "note": _note}
 
 
 # ── Whop: webhook de pagos ──────────────────────────────────────────────────
