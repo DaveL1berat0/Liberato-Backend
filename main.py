@@ -7076,10 +7076,19 @@ async def auth_register(request: Request):
     salt = secrets.token_bytes(16)
     uid = "u_" + secrets.token_hex(9)
     plan0 = await _plan_from_whop_pending(email)
+    # Trial por LINK de evento: si viene un código válido y NO hay premium ya pagado (Whop),
+    # la cuenta nace como 'trial' con caducidad automática. Consume 1 uso del código.
+    _texp = None
+    if plan0 == "free":
+        _texp = await _trial_grant(data.get("trial_code") or data.get("trial"))
+        if _texp:
+            plan0 = "trial"
     lang = (data.get("language") or "").strip().lower()
     rec = {"id": uid, "name": name or email.split("@")[0],
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
            "plan": plan0, "created": int(time.time())}
+    if _texp:
+        rec["plan_expires"] = _texp
     if lang in ("es", "en"):
         rec["language"] = lang
 
@@ -7127,7 +7136,7 @@ async def auth_verify(request: Request):
         raise HTTPException(400, "Código incorrecto")
     # crear la cuenta real (verificada por construcción)
     plan0 = pend.get("plan", "free")
-    rec = {k: pend[k] for k in ("id", "name", "salt", "pass_hash", "plan", "created") if k in pend}
+    rec = {k: pend[k] for k in ("id", "name", "salt", "pass_hash", "plan", "plan_expires", "created") if k in pend}
     if pend.get("language"):
         rec["language"] = pend["language"]
     await user_put(email, rec)
@@ -7521,6 +7530,71 @@ async def auth_create_trial(request: Request, key: str = ""):
     return {"ok": True, "email": email, "password": pw, "name": rec["name"],
             "plan": "trial", "days": days, "plan_expires": expires,
             "dropped_columns": dropped, "note": _note}
+
+
+# ── CÓDIGOS DE TRIAL (self-serve por link, p.ej. eventos) ───────────────────────
+# Un código vive en app_config con clave 'trialcode:<CODE>' → {days,max_uses,uses,active}.
+# El link del evento es homepage.html?trial=<CODE>; al registrarse por ahí, la cuenta
+# nace como plan='trial' con caducidad. Se consume 1 uso por registro (tope max_uses).
+async def _trial_code_get(code):
+    raw = await _sb_get_config("trialcode:" + code)
+    if raw is None:
+        return None
+    if isinstance(raw, str):
+        try: return json.loads(raw)
+        except Exception: return None
+    return raw
+
+async def _trial_grant(trial_code):
+    """Valida y CONSUME un uso del código. Devuelve el epoch de expiración si es válido
+    (activo + con cupo), o None. No otorga nada si el código no existe/está inactivo/agotado."""
+    code = (trial_code or "").strip().upper()
+    if not code:
+        return None
+    cfg = await _trial_code_get(code)
+    if not cfg or not cfg.get("active"):
+        return None
+    uses = int(cfg.get("uses", 0)); mx = int(cfg.get("max_uses", 0))
+    if mx and uses >= mx:
+        return None
+    days = int(cfg.get("days", 3))
+    cfg["uses"] = uses + 1
+    await _sb_set_config("trialcode:" + code, json.dumps(cfg))
+    return int(time.time()) + days * 86400
+
+@app.get("/api/auth/trial-code")
+@app.post("/api/auth/trial-code")
+async def auth_trial_code(request: Request, key: str = ""):
+    """ADMIN: crea/actualiza/consulta un código de trial y devuelve su LINK.
+    POST body: {code?, days=3, max_uses=50, active=true}. GET ?code=X → estado.
+    Sin 'code' en POST se autogenera uno. Requiere ADMIN_KEY."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    data = {}
+    if request.method == "POST":
+        try: data = await request.json()
+        except Exception: data = {}
+    code = (data.get("code") or request.query_params.get("code") or "").strip().upper()
+    if request.method == "GET":
+        if not code:
+            raise HTTPException(400, "Falta 'code'")
+        cfg = await _trial_code_get(code)
+        if not cfg:
+            raise HTTPException(404, "código no encontrado")
+        return {"ok": True, "code": code, "link": f"https://liberatocommunity.com/homepage.html?trial={code}", **cfg}
+    if not code:
+        code = "EVENTO-" + secrets.token_hex(3).upper()
+    existing = await _trial_code_get(code)
+    def _i(v, d):
+        try: return int(v)
+        except Exception: return d
+    cfg = {"days": _i(data.get("days"), (existing or {}).get("days", 3)),
+           "max_uses": _i(data.get("max_uses"), (existing or {}).get("max_uses", 50)),
+           "uses": _i(data.get("uses"), (existing or {}).get("uses", 0)),
+           "active": bool(data.get("active", (existing or {}).get("active", True)))}
+    await _sb_set_config("trialcode:" + code, json.dumps(cfg))
+    return {"ok": True, "code": code,
+            "link": f"https://liberatocommunity.com/homepage.html?trial={code}", **cfg}
 
 
 # ── Whop: webhook de pagos ──────────────────────────────────────────────────

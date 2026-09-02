@@ -1998,9 +1998,10 @@ async function handleSubmit(){
   }
   if(errEl)errEl.textContent='Creando tu cuenta…';
   try{
+    var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
     var r=await fetch(LBC_AUTH+'/api/auth/register',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:name,email:email,password:pass})});
+      body:JSON.stringify({name:name,email:email,password:pass,trial_code:_trial})});
     var d=await r.json().catch(function(){return {};});
     if(!r.ok){
       if(errEl)errEl.textContent=d.detail||'No se pudo crear la cuenta.';

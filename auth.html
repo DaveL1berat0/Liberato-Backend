@@ -389,7 +389,8 @@ async function doRegister(){
   }
   setLoading('btn-register', true);
   try{
-    var data = await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang});
+    var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
+    var data = await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang, trial_code:_trial});
     state.email = email; state.name = name;
     // Verificación por correo: no viene token; hay que ingresar el código.
     if(data && data.needs_verification){
