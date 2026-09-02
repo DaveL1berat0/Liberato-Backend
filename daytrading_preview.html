@@ -2816,7 +2816,22 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       wickUpColor:'rgba(46,232,164,0.85)',wickDownColor:'rgba(177,151,252,0.85)',
       priceFormat:{type:'price',precision:2,minMove:0.25},
       lastValueVisible:true,priceLineVisible:false,
-      priceLineColor:'rgba(239,236,227,0.3)',priceLineWidth:1,priceLineStyle:LS.Dotted
+      priceLineColor:'rgba(239,236,227,0.3)',priceLineWidth:1,priceLineStyle:LS.Dotted,
+      // La escala se ajusta a las VELAS (+ muros CERCANOS), no a los muros lejanos:
+      // antes un Max Pain a ~200pts comprimía las velas hasta verse planas/sin datos.
+      autoscaleInfoProvider:function(orig){
+        var arr=window._cxData;
+        if(!arr||!arr.length) return orig();
+        var mn=Infinity,mx=-Infinity;
+        for(var i=0;i<arr.length;i++){var b=arr[i]; if(b.low<mn)mn=b.low; if(b.high>mx)mx=b.high;}
+        if(!isFinite(mn)||!isFinite(mx)) return orig();
+        var span=(mx-mn)||1, lo=mn-span*0.6, hi=mx+span*0.6;
+        // incluye solo los muros dentro de ±60% del rango de velas (los cercanos siguen visibles)
+        [S.callWall,S.putWall,S.gammaFlip,S.maxPain].forEach(function(w){
+          if(w!=null&&w>=lo&&w<=hi){ if(w<mn)mn=w; if(w>mx)mx=w; }
+        });
+        return {priceRange:{minValue:mn,maxValue:mx}};
+      }
     });
     try{
       var ro=new ResizeObserver(function(){if(chart)chart.applyOptions({width:el.clientWidth,height:el.clientHeight||380});});
@@ -3386,7 +3401,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var ck='c'+tf,cached=candleCache[ck];
     var switching=(_cxPaintedTf!==tf);
     if(switching&&cached&&cached.d&&cached.d.length&&series){
-      series.setData(beautifyCandles(cached.d));
+      var _cd=beautifyCandles(cached.d);
+      window._cxData=_cd;   // autoscale a velas
+      series.setData(_cd);
       cxInitialView(cached.d.length);
       _cxPaintedTf=tf;drawLines();cxPriceRender();
     }
@@ -3397,6 +3414,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         var out=beautifyCandles(d.candles);
         var prev=candleCache[ck]&&candleCache[ck].d;
         candleCache[ck]={ts:Date.now(),d:out};
+        window._cxData=out;   // para el autoscaleInfoProvider (ajuste a velas, no a muros lejanos)
         if(window._activeTf===tf&&series){
           if(prev&&prev.length&&_cxPaintedTf===tf){
             // Incremental: solo barras nuevas o la última modificada.
