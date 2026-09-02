@@ -593,6 +593,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .jch-hud{position:absolute;top:8px;right:10px;z-index:5;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.02em;color:var(--text2);background:rgba(6,7,13,0.82);border:0.5px solid var(--border2);border-radius:7px;padding:5px 9px;line-height:1.55;text-align:right;pointer-events:none;max-width:62%;}
 .jch-hud b{color:var(--text);font-weight:700;}
 .jch-src{position:absolute;bottom:8px;left:10px;z-index:5;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);background:rgba(6,7,13,0.74);border-radius:6px;padding:3px 7px;pointer-events:none;}
+/* Pills arrastrables de STOP / TARGET: se agarran y se mueven en vertical para fijar el nivel */
+.jch-dh{position:absolute;z-index:6;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.02em;padding:3px 8px;border-radius:6px 0 0 6px;cursor:ns-resize;pointer-events:auto;white-space:nowrap;user-select:none;-webkit-user-select:none;touch-action:none;box-shadow:0 2px 9px -2px rgba(0,0,0,0.7);border:0.5px solid rgba(255,255,255,0.16);}
+.jch-dh::before{content:'⋮⋮';margin-right:5px;opacity:0.6;letter-spacing:-2px;}
+.jch-dh.stop{background:rgba(255,90,110,0.92);color:#fff;}
+.jch-dh.tgt{background:rgba(201,168,76,0.94);color:#0a0a0a;}
+.jch-dh.dragging{filter:brightness(1.12);box-shadow:0 0 0 2px rgba(255,255,255,0.28),0 2px 9px -2px rgba(0,0,0,0.7);}
+.jch-dh:hover{filter:brightness(1.08);}
 .jch-load{position:absolute;inset:0;z-index:6;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--text3);background:rgba(4,5,11,0.62);}
 .jch-load .chart-ring{width:22px;height:22px;border:2.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;}
 .jch-fallback{position:absolute;inset:0;z-index:4;overflow:auto;background:var(--tile);padding:6px;}
@@ -3916,6 +3923,7 @@ function twsRealChartSVG(t,bars,ratio){
    ══════════════════════════════════════════════════════════════════════════ */
 var JCH_GOLD='#C9A84C',JCH_LONG='#2EE8A4',JCH_LOSS='#ef4444',JCH_CYAN='#4FD6E0',JCH_PURP='#B197FC';
 var jchart=null,jseries=null,_jchT=null,_jchRaw=null,_jchInterval='1m',_jchNativeMin=1,_jchTf=1;
+var _jchStopLine=null,_jchTgtLine=null,_jchDrag=null;  // líneas y estado del drag de stop/target
 var _jchRO=null,_jchRAF=null,_jchScriptLoading=false,_jchPriceLines=[],_jchMarkers=[];
 var _jchBarsCache={},_jchMfeLines=[],_jchProjLine=null,_jchTradeMarks=[];
 var _jchMfe=false,_jchProj=false;
@@ -3959,6 +3967,8 @@ function jchStageHTML(t){
     +toolbar
     +'<div class="jch-tv" id="jch-tv"></div>'
     +'<canvas class="jch-ov" id="jch-ov"></canvas>'
+    +'<div class="jch-dh stop" id="jch-dh-stop" style="display:none;"></div>'
+    +'<div class="jch-dh tgt" id="jch-dh-tgt" style="display:none;"></div>'
     +'<div class="jch-hud" id="jch-hud"></div>'
     +'<div class="jch-src" id="jch-src">cargando…</div>'
     +'<div class="jch-fallback" id="jch-fallback" style="display:none;"></div>'
@@ -4061,11 +4071,12 @@ function jchDrawAll(reframe){
   var LS=LightweightCharts.LineStyle;
   var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0),hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0),hasExit=(t.exit!=null&&t.exit!=='');
   var riskU=hasStop?Math.abs(+t.entry-+t.stop):0;
-  function pl(price,color,style,title){try{_jchPriceLines.push(jseries.createPriceLine({price:+price,color:color,lineWidth:1,lineStyle:style,axisLabelVisible:true,title:title}));}catch(e){}}
+  function pl(price,color,style,title){try{var _l=jseries.createPriceLine({price:+price,color:color,lineWidth:1,lineStyle:style,axisLabelVisible:true,title:title});_jchPriceLines.push(_l);return _l;}catch(e){return null;}}
   // Solo líneas de PLAN (no cruzan lo realizado): STOP y TARGET PLANEADO (manual del trader).
   // ENTRY y SALIDA ya NO se dibujan como líneas — su precio exacto va en BLANCO junto al marker.
-  if(hasStop)pl(t.stop,JCH_LOSS,LS.Dashed,'STOP '+t.stop);
-  if(hasTgt){var tgR=riskU>0?('+'+(Math.round(Math.abs(+t.target-+t.entry)/riskU*10)/10)+'R'):'';pl(t.target,JCH_GOLD,LS.Dashed,'TGT PLAN '+t.target+(tgR?' '+tgR:''));}
+  _jchStopLine=hasStop?pl(t.stop,JCH_LOSS,LS.Dashed,'STOP '+t.stop):null;
+  _jchTgtLine=null;
+  if(hasTgt){var tgR=riskU>0?('+'+(Math.round(Math.abs(+t.target-+t.entry)/riskU*10)/10)+'R'):'';_jchTgtLine=pl(t.target,JCH_GOLD,LS.Dashed,'TGT PLAN '+t.target+(tgR?' '+tgR:''));}
   // markers ENT / SAL (snapping a la barra real más cercana)
   var eHM=jchHM(t.time),xHM=hasExit?jchHM(t.exitTime):'';
   var eIdx=jchNearestIdx(bars,eHM); if(eIdx<0)eIdx=0;
@@ -4220,12 +4231,78 @@ function jchBuild(){
   }catch(e){jchart=null;jseries=null;return false;}
   try{_jchRO=new ResizeObserver(function(){jchResize();});_jchRO.observe(el);}catch(e){_jchRO=null;}
   jchWireDrawing();
+  jchWireDrag();
   jchStartLoop();
   return true;
 }
+// ── Drag de STOP / TARGET: pills que se agarran y se mueven en vertical ────────
+// Coloca primero el nivel (o ya viene del broker) y luego lo AJUSTAS arrastrando en el
+// chart, sin volver a escribir. Al soltar: guarda en el trade, recalcula R y redibuja.
+function jchSyncDrag(){
+  if(!jseries||!_jchT)return;
+  var st=document.getElementById('jch-stage'); if(!st)return;
+  var sw=56; try{sw=jchart.priceScale('right').width()||56;}catch(e){}
+  [['stop','jch-dh-stop','STOP'],['target','jch-dh-tgt','TGT']].forEach(function(row){
+    var el=document.getElementById(row[1]); if(!el)return;
+    var dragging=(_jchDrag&&_jchDrag.k===row[0]);
+    var v=dragging?_jchDrag.p:_jchT[row[0]];
+    var has=(v!=null&&v!==''&&+v!==0);
+    if(!has){el.style.display='none';return;}
+    var y=null; try{y=jseries.priceToCoordinate(+v);}catch(e){}
+    if(y==null){el.style.display='none';return;}
+    el.style.display='block'; el.style.top=y+'px'; el.style.right=sw+'px';
+    el.textContent=row[2]+' '+(Math.round(+v*100)/100);
+  });
+}
+function jchDragStart(e,k){
+  if(!jseries||!_jchT)return;
+  e.preventDefault(); e.stopPropagation();
+  _jchDrag={k:k, line:(k==='stop'?_jchStopLine:_jchTgtLine), p:+_jchT[k]};
+  var el=document.getElementById(k==='stop'?'jch-dh-stop':'jch-dh-tgt'); if(el)el.classList.add('dragging');
+  try{e.target.setPointerCapture&&e.target.setPointerCapture(e.pointerId);}catch(_){}
+  window.addEventListener('pointermove',jchDragMove,{passive:false});
+  window.addEventListener('pointerup',jchDragEnd,{passive:false});
+  window.addEventListener('pointercancel',jchDragEnd,{passive:false});
+}
+function jchDragMove(e){
+  if(!_jchDrag)return;
+  e.preventDefault();
+  var st=document.getElementById('jch-stage'); if(!st)return;
+  var r=st.getBoundingClientRect(), y=e.clientY-r.top;
+  var p=null; try{p=jseries.coordinateToPrice(y);}catch(_){}
+  if(p==null||!isFinite(p))return;
+  p=Math.round(p*100)/100; _jchDrag.p=p;
+  if(_jchDrag.line){try{_jchDrag.line.applyOptions({price:p,title:(_jchDrag.k==='stop'?'STOP ':'TGT PLAN ')+p});}catch(_){}}
+  jchSyncDrag();
+}
+function jchDragEnd(){
+  window.removeEventListener('pointermove',jchDragMove);
+  window.removeEventListener('pointerup',jchDragEnd);
+  window.removeEventListener('pointercancel',jchDragEnd);
+  if(!_jchDrag)return;
+  var k=_jchDrag.k, p=_jchDrag.p;
+  var el=document.getElementById(k==='stop'?'jch-dh-stop':'jch-dh-tgt'); if(el)el.classList.remove('dragging');
+  _jchDrag=null;
+  if(p==null||!isFinite(p)){jchSyncDrag();return;}
+  try{
+    _jchT[k]=p;
+    var i=T.indexOf(_jchT);
+    if(i>=0){ T[i]=calcTrade(_jchT); _jchT=T[i]; }
+    saveTrades(T);
+  }catch(_){}
+  var inp=document.getElementById(k==='stop'?'f-st':'f-tg');
+  if(inp){ inp.value=p; try{ if(typeof calc==='function')calc(); }catch(_){} }
+  jchDrawAll(false);   // redibuja línea + R + HUD con el nuevo nivel
+}
+function jchWireDrag(){
+  ['stop','target'].forEach(function(k){
+    var el=document.getElementById(k==='stop'?'jch-dh-stop':'jch-dh-tgt');
+    if(el&&!el._wired){ el._wired=1; el.addEventListener('pointerdown',function(e){jchDragStart(e,k);}); }
+  });
+}
 function jchStartLoop(){
   if(_jchRAF)return;var last=0;
-  (function tick(ts){_jchRAF=requestAnimationFrame(tick);if(ts-last<33)return;last=ts;try{jchDrawRender();}catch(e){}})(0);
+  (function tick(ts){_jchRAF=requestAnimationFrame(tick);if(ts-last<33)return;last=ts;try{jchDrawRender();jchSyncDrag();}catch(e){}})(0);
 }
 function jchDestroy(){
   if(_jchRAF){cancelAnimationFrame(_jchRAF);_jchRAF=null;}
