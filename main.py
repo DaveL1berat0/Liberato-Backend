@@ -7451,6 +7451,46 @@ async def auth_set_plan(request: Request, key: str = ""):
                                  "plan": plan, "plan_expires": u.get("plan_expires")}}
 
 
+@app.post("/api/auth/create-trial")
+async def auth_create_trial(request: Request, key: str = ""):
+    """ADMIN: crea una cuenta de TRIAL premium con expiración automática y devuelve
+    email + contraseña EN CLARO (una sola vez) para entregar al prospecto. La expiración
+    la hace cumplir auth_me (al pasar la fecha, la cuenta baja sola a 'free'). Requiere ADMIN_KEY.
+    Body opcional: {email, name, password, days (def. 3)}. Sin email → se autogenera uno."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    try:
+        days = int(round(float(data.get("days")))) if data.get("days") is not None else 3
+    except Exception:
+        days = 3
+    days = max(1, min(days, 90))
+    email = (data.get("email") or "").strip().lower() or f"trial-{secrets.token_hex(4)}@liberatocommunity.com"
+    if "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(400, "Email inválido")
+    if await user_get(email):
+        raise HTTPException(409, "Ya existe una cuenta con ese email")
+    # Contraseña legible (sin caracteres ambiguos I l 1 O 0), 12 chars.
+    import string
+    _alpha = (string.ascii_uppercase + string.ascii_lowercase + string.digits).translate(
+        str.maketrans("", "", "Il1O0"))
+    pw = (data.get("password") or "").strip() or "".join(secrets.choice(_alpha) for _ in range(12))
+    salt = secrets.token_bytes(16)
+    expires = int(time.time()) + days * 86400
+    rec = {"id": "u_" + secrets.token_hex(9),
+           "name": (data.get("name") or "").strip()[:80] or "Trial",
+           "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
+           "plan": "premium", "plan_expires": expires, "trial": True,
+           "created": int(time.time())}
+    await user_put(email, rec)
+    print(f"[trial] creado {email} · premium {days}d · expira {expires}")
+    return {"ok": True, "email": email, "password": pw, "name": rec["name"],
+            "plan": "premium", "days": days, "plan_expires": expires}
+
+
 # ── Whop: webhook de pagos ──────────────────────────────────────────────────
 WHOP_WEBHOOK_SECRET = os.getenv("WHOP_WEBHOOK_SECRET", "").strip()
 
