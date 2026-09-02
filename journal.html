@@ -2579,6 +2579,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <script>
 // ── CONSTANTS ──
 var CV={NQ:20,MNQ:2,ES:50,MES:5};
+// Raíz de un símbolo de futuros: quita '@'/'#' inicial y el código de mes+año del contrato
+// ('NQU25'→'NQ', 'MESZ25'→'MES', '@ES'→'ES'; deja 'NQ'/'ES'/equities intactos). Necesario
+// porque CV se indexa por raíz pero el broker manda el contrato completo → si no, mult=1.
+function rootSym(s){ s=String(s||'').toUpperCase().replace(/^[@#]/,''); var m=s.match(/^([A-Z]{1,4})[FGHJKMNQUVXZ]\d{1,2}$/); return m?m[1]:s; }
 var MNAMES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 var DNAMES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 var KEY='lbc_jrn_v3';
@@ -4812,7 +4816,15 @@ function fill_wavg(legs){var n=0,d=0;legs.forEach(function(f){n+=(+f.price)*(+f.
 // Agrupa por instrumento+cuenta; cierra un round-trip cuando la posición vuelve a 0.
 function groupFills(fills){
   var seen={},clean=[];
-  (fills||[]).forEach(function(f){var k=f.broker_order_id;if(k==null||!seen[k]){if(k!=null)seen[k]=1;clean.push(f);}});
+  // Dedup por FILL ÚNICO (orden + índice de leg), NO por orden: antes se deduplicaba solo por
+  // broker_order_id, así que una orden de 2 contratos reportada en 2 legs perdía un leg →
+  // se contaba 1 contrato → P&L a la mitad. Ahora se conservan todos los legs de la orden.
+  (fills||[]).forEach(function(f){
+    var k=(f.broker_order_id!=null)
+      ? f.broker_order_id+'|'+(f.leg==null?0:f.leg)
+      : ['h',f.symbol,f.side,f.qty,f.price,f.time].join('|');
+    if(!seen[k]){seen[k]=1;clean.push(f);}
+  });
   var byKey={};
   clean.forEach(function(f){var k=fill_instrKey(f);(byKey[k]=byKey[k]||[]).push(f);});
   var trades=[];
@@ -4829,7 +4841,10 @@ function groupFills(fills){
   return trades;
 }
 function fill_buildRT(fills,open){
-  var first=fills[0], isOpt=first.instrument==='option', mult=isOpt?100:(CV[first.symbol]||1);
+  var first=fills[0], isOpt=first.instrument==='option', mult=isOpt?100:(CV[rootSym(first.symbol)]||1);
+  // Comisión REAL sumada de todos los fills (TradeStation la manda por orden; el backend la
+  // reparte por leg). Antes fees=0 → el P&L no restaba comisión.
+  var feesTot=Math.round(fills.reduce(function(s,f){return s+(Math.abs(+f.commission)||0);},0)*100)/100;
   var dir=(String(first.side).toUpperCase()==='BUY')?'long':'short';
   // P&L por FLUJO DE CAJA FIRMADO (crítica #1): BUY paga(−), SELL cobra(+).
   // contracts = pico de |posición|. Robusto a scaling in/out y cruces de signo.
@@ -4841,7 +4856,11 @@ function fill_buildRT(fills,open){
   });
   var inLegs=dir==='long'?buyLegs:sellLegs, outLegs=dir==='long'?sellLegs:buyLegs;
   var et=toET(first.time), lastOut=outLegs.length?outLegs[outLegs.length-1]:null, etOut=lastOut?toET(lastOut.time):null;
-  var ids=fills.map(function(f){return f.broker_order_id;}).filter(function(x){return x!=null;}).sort();
+  // ids ÚNICOS de orden (varios legs comparten OrderID): clave de dedup ESTABLE con o sin
+  // el fix de legs, para que al re-sincronizar se REFRESQUE el mismo trade y no se duplique.
+  var _idset={},ids=[];
+  fills.forEach(function(f){var x=f.broker_order_id;if(x!=null&&!_idset[x]){_idset[x]=1;ids.push(x);}});
+  ids.sort();
   // Expiración inferida (crítica #2): opción SIN cierre cuya expiry ya pasó = expiró.
   // El flujo de caja ya da el resultado real: long compró (cash −)=pérdida de prima;
   // short vendió (cash +)=se queda la prima. exit=0 (asumida OTM). Se manda a revisión
@@ -4859,14 +4878,14 @@ function fill_buildRT(fills,open){
     exitTime: etOut?(etOut.date+'T'+etOut.time):(expired?(first.option.expiry+'T16:00'):null),
     instrument:first.instrument, option:first.option||null,
     account: first.account||null,
-    asset: (isOpt&&first.option)?((first.option.underlying||'')+' '+(first.option.type||'')).trim():first.symbol,
+    asset: (isOpt&&first.option)?((first.option.underlying||'')+' '+(first.option.type||'')).trim():rootSym(first.symbol),
     direction:dir,
     entry:Math.round(fill_wavg(inLegs)*100)/100,
     exit: (!open)?Math.round(fill_wavg(outLegs)*100)/100:(expired?0:null),
     expired: !!expired,
     isOpen: !!(open && !expired),                   // ABIERTA de verdad (sin cierre y sin expirar)
     realizedPnl: closed?(cash*mult):null,          // usado por calcTrade tal cual
-    stop:null, target:null, contracts:peak||inLegs.length, mult:mult, fees:0,
+    stop:null, target:null, contracts:peak||inLegs.length, mult:mult, fees:feesTot,
     setup:'Importado (broker)', playbookId:null,
     checklist:[], vwap:null, gamma:null, t4h:null, exitType:'full', note:'',
     status:'pending',
@@ -4876,11 +4895,28 @@ function fill_buildRT(fills,open){
 // ── Deduplicación (crítica #5: clave natural con contratos) ──
 function tradeHash(t){return [t.date,t.time,t.asset,t.direction,t.entry,t.exit,t.contracts].join('|');}
 function dedupKeyOf(t){return t.dedupKey||(t.broker_order_id?'bo|'+t.broker_order_id:'h|'+tradeHash(t));}
+// Campos CALCULADOS que se refrescan desde el re-cálculo del broker al re-sincronizar
+// (así los trades YA importados con el P&L viejo —mitad, sin comisión, mult mal— quedan
+// corregidos). Se PRESERVA todo lo que edita el usuario: note, checklist, setup, playbookId,
+// stop, target, status, chartDrawings, etc.
+var _BROKER_CALC_FIELDS=['realizedPnl','pnl','mult','fees','contracts','entry','exit','asset',
+  'points','risk','rr','result','direction','instrument','exitTime','isOpen','expired','flags'];
 function mergeTrades(existing,incoming){
-  var seen={};existing.forEach(function(t){seen[dedupKeyOf(t)]=1;});
-  var added=[],dup=0;
-  incoming.forEach(function(t){var k=dedupKeyOf(t);if(seen[k]){dup++;}else{seen[k]=1;added.push(t);}});
-  return {trades:existing.concat(added),added:added.length,dup:dup};
+  var byKey={};existing.forEach(function(t){byKey[dedupKeyOf(t)]=t;});
+  var added=[],dup=0,updated=0;
+  incoming.forEach(function(t){
+    var k=dedupKeyOf(t), ex=byKey[k];
+    if(ex){
+      if(ex.source==='tradestation'||ex.source==='snaptrade'){
+        _BROKER_CALC_FIELDS.forEach(function(fld){ if(t[fld]!=null) ex[fld]=t[fld]; });
+        // si al recuperar legs pasó de "abierto" a cerrado, corrige el estado
+        if(t.isOpen===false && ex.status==='open')
+          ex.status=(t.flags&&t.flags.some(function(x){return x.severity==='red';}))?'pending':'verified';
+        updated++;                       // refrescado in-place (preserva ediciones del usuario)
+      } else { dup++; }
+    } else { byKey[k]=t; added.push(t); }
+  });
+  return {trades:existing.concat(added),added:added.length,dup:dup,updated:updated};
 }
 // ── Detección de anomalías (calidad de datos) ──
 function DQF(code,sev,msg){return {code:code,severity:sev,msg:msg};}
@@ -4913,8 +4949,8 @@ function importFromBroker(fills){
   var open=cand.filter(function(x){return x.status==='open';}).length;
   var pend=cand.filter(function(x){return x.status==='pending';}).length;
   var ver =cand.filter(function(x){return x.status==='verified';}).length;
-  logImport('snaptrade',{read:(fills||[]).length,trades:cand.length,accepted:res.added,dup:res.dup,pending:pend,verified:ver,open:open});
-  return {trades:cand.length,added:res.added,dup:res.dup,pending:pend,verified:ver,open:open};
+  logImport('snaptrade',{read:(fills||[]).length,trades:cand.length,accepted:res.added,dup:res.dup,updated:res.updated,pending:pend,verified:ver,open:open});
+  return {trades:cand.length,added:res.added,dup:res.dup,updated:res.updated,pending:pend,verified:ver,open:open};
 }
 
 // Guarda el mapa de cuentas conectadas (nombre/institución) para etiquetas legibles.

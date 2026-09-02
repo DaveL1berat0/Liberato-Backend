@@ -2399,23 +2399,8 @@ function _fetchDrawerLive(sym){
       var sec=data.sector||data.industry||data.finnhubIndustry||null;
       var secEl=document.getElementById('d-sec-val');
       if(secEl)secEl.textContent=sec||'—';
-      // Peso REAL en el Nasdaq-100 (holdings de QQQ vía backend). Regla #1: solo si viene el dato.
-      try{
-        var w=(typeof data.ndx_weight==='number')?data.ndx_weight:null;
-        var wEl=document.getElementById('d-ndx-weight');
-        var xEl=document.getElementById('d-ndx-explain');
-        if(wEl){ wEl.textContent = (w!=null) ? (w.toFixed(2)+'%') : '—'; }
-        if(xEl){
-          if(w!=null){
-            var arr = w>=5 ? 'Su movimiento <span class="r">arrastra fuerte</span> al índice.'
-                    : w>=1.5 ? 'Su movimiento tiene <span class="g">impacto notable</span> en el índice.'
-                    : 'Su peso es <span class="g">menor</span>: mueve poco al índice por sí sola.';
-            xEl.innerHTML = sym+' representa <strong>'+w.toFixed(2)+'%</strong> del Nasdaq-100. '+arr;
-          } else {
-            xEl.innerHTML = '<span style="opacity:0.5;">Peso no disponible ahora mismo.</span>';
-          }
-        }
-      }catch(e){}
+      // (Peso NDX retirado: no hay fuente gratis alcanzable desde el servidor; Dave pidió
+      //  no mostrar un dato en blanco si no podemos proveerlo.)
       // Noticias REALES por empresa (Finnhub company-news) desde el backend
       try{ _renderCompanyNews(data.news); }catch(e){}
       // Nombre real (mejora también el tooltip en próximos hovers) — Regla #1: solo si viene del backend
@@ -2582,7 +2567,7 @@ function _renderDrawerBody(sym, c){
     '<div class="exp-row"><span class="exp-lbl">Revenue est.</span><span class="exp-val" id="d-rev-val">—</span></div>'+
     '<div class="exp-row"><span class="exp-lbl">Crec. YoY</span><span class="exp-val" id="d-yoy-val">—</span></div>'+
     '</div>'
-    +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span><span class="nq-weight">Peso: <strong id="d-ndx-weight">—</strong></span></div><div class="nq-explain" id="d-ndx-explain">—</div></div></div>'
+    +'<div class="dsec"><div class="dsec-title">Impacto en NASDAQ</div><div class="nq-impact-box"><div class="nq-level"><span class="nq-level-badge '+c.impact+'">'+IMPACT_LABEL[c.impact].toUpperCase()+'</span></div></div></div>'
     +'<div class="dsec"><div class="dsec-title">Últimas Noticias</div><div id="d-news-list">'+newsHtml+'</div></div>'
     +'<div class="dsec" id="d-hist-section">'+''+'</div>';
 }

@@ -7576,19 +7576,28 @@ async def tradestation_accounts(app_user_id: str = "dave"):
                           "detail": a.get("AccountDetail")} for a in accts]}
 
 
+def _ts_num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
 def _ts_map_order(o, acct):
     """Mapea una orden ejecutada de TradeStation a fills del journal (por leg)."""
     status = str(o.get("StatusDescription") or o.get("Status") or "").upper()
     if status not in ("FILLED", "FLL", "PARTIALLY FILLED", "FPR"):
         return []
     opened = o.get("OpenedDateTime") or o.get("ClosedDateTime") or ""
+    legs = o.get("Legs") or []
+    # Comisión REAL de la orden (TradeStation la da a nivel orden). Se reparte entre los
+    # legs para que el journal la sume y la reste del P&L (antes fees=0 → P&L sin comisión).
+    comm = _ts_num(o.get("CommissionFee"))
+    if comm is None:
+        comm = _ts_num(o.get("Commission"))
+    comm_per_leg = (abs(comm) / len(legs)) if (comm is not None and legs) else None
     out = []
-    for leg in (o.get("Legs") or []):
-        exq = leg.get("ExecQuantity") or leg.get("QuantityOrdered")
-        try:
-            q = float(exq)
-        except (TypeError, ValueError):
-            q = None
+    for i, leg in enumerate(legs):
+        q = _ts_num(leg.get("ExecQuantity") or leg.get("QuantityOrdered"))
         if not q:
             continue
         sym = leg.get("Symbol", "")
@@ -7598,10 +7607,12 @@ def _ts_map_order(o, acct):
                       "option" if asset_type in ("STOCKOPTION", "OPTION", "INDEXOPTION") else "equity")
         out.append({
             "broker_order_id": str(o.get("OrderID") or ""),
+            "leg": i,                                  # índice de leg → dedup por FILL único (no por orden)
             "symbol": sym, "instrument": instrument, "option": None,
             "side": str(leg.get("BuyOrSell") or "").upper(),
             "qty": q,
-            "price": (lambda v: float(v) if v not in (None, "") else None)(leg.get("ExecutionPrice") or o.get("FilledPrice")),
+            "price": _ts_num(leg.get("ExecutionPrice") or o.get("FilledPrice")),
+            "commission": comm_per_leg,               # comisión real repartida por leg (o None)
             "order_type": o.get("OrderType"),
             "time": opened, "status": "EXECUTED",
             "account": acct, "source": "tradestation",
