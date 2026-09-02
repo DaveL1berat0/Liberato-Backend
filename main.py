@@ -7255,6 +7255,17 @@ async def auth_me(authorization: str = Header("")):
     uid = u.get("id") or p.get("sub")
     name = u.get("name") or p.get("name")
     plan = u.get("plan") or p.get("plan", "free")
+    # Expiración de plan (enforcement PEREZOSO, sin cron): si plan_expires ya pasó y el plan
+    # es de pago, se degrada a free y se persiste. Así un premium temporal "vuelve solo" a free.
+    _exp = u.get("plan_expires")
+    if _exp and plan in ("premium", "pro") and int(time.time()) >= int(_exp):
+        plan = "free"
+        u["plan"] = "free"; u["plan_expires"] = None
+        try:
+            await user_put(email, u)
+            print(f"[plan-expiry] {email}: premium expirado → free")
+        except Exception as e:
+            print(f"[plan-expiry] no se pudo persistir downgrade de {email}: {e}")
     # Los correos admin (ADMIN_EMAILS) pasan como premium para no toparse con el paywall.
     is_premium = plan in ("premium", "pro", "admin") or email in ADMIN_EMAILS
     avatar = await _avatar_get(email)
@@ -7423,8 +7434,21 @@ async def auth_set_plan(request: Request, key: str = ""):
     if not u:
         raise HTTPException(404, "usuario no encontrado")
     u["plan"] = plan
+    # Expiración opcional: 'days' (nº de días desde ahora) o 'plan_expires' (epoch). Con plan
+    # 'free' se limpia. auth_me hace cumplir la expiración (degrada a free cuando pasa la fecha).
+    _days = data.get("days")
+    _exp  = data.get("plan_expires")
+    if plan == "free":
+        u["plan_expires"] = None
+    elif _days is not None:
+        try:    u["plan_expires"] = int(time.time()) + int(round(float(_days) * 86400))
+        except Exception: pass
+    elif _exp is not None:
+        try:    u["plan_expires"] = int(_exp)
+        except Exception: pass
     await user_put(email, u)
-    return {"ok": True, "user": {"id": u.get("id"), "email": email, "name": u.get("name"), "plan": plan}}
+    return {"ok": True, "user": {"id": u.get("id"), "email": email, "name": u.get("name"),
+                                 "plan": plan, "plan_expires": u.get("plan_expires")}}
 
 
 # ── Whop: webhook de pagos ──────────────────────────────────────────────────
