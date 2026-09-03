@@ -2790,6 +2790,29 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       if(ded.length&&ded[ded.length-1].time===out[j].time)ded[ded.length-1]=out[j];
       else ded.push(out[j]);
     }
+    // ── Limpieza de TICKS MALOS del feed: barras con OHLC imposibles (ej. low 27468 con
+    //    precio ~29500, rango 2000pts) estiran la escala y APLANAN el resto del chart.
+    //    Se recorta cada valor a una banda alrededor de la mediana LOCAL de cierres
+    //    (±cap, cap = 6× la mediana del rango). Preserva movimientos reales; mata la basura. ──
+    if(ded.length>=5){
+      var rr=[];for(var a=0;a<ded.length;a++){var _r=ded[a].high-ded[a].low;if(isFinite(_r)&&_r>0)rr.push(_r);}
+      rr.sort(function(x,y){return x-y;});
+      var medR=rr.length?rr[rr.length>>1]:0;
+      if(medR>0){
+        var cap=medR*6;
+        for(var k=0;k<ded.length;k++){
+          var b=ded[k],win=[];
+          for(var w=(k-2<0?0:k-2);w<=(k+2>ded.length-1?ded.length-1:k+2);w++)win.push(ded[w].close);
+          win.sort(function(x,y){return x-y;});
+          var ref=win[win.length>>1],lo=ref-cap,hi=ref+cap;
+          if(b.open<lo)b.open=lo;else if(b.open>hi)b.open=hi;
+          if(b.close<lo)b.close=lo;else if(b.close>hi)b.close=hi;
+          var bHi=(b.open>b.close?b.open:b.close),bLo=(b.open<b.close?b.open:b.close);
+          if(b.high>hi)b.high=hi; if(b.high<bHi)b.high=bHi;
+          if(b.low<lo)b.low=lo;   if(b.low>bLo)b.low=bLo;
+        }
+      }
+    }
     return ded;
   }
 
