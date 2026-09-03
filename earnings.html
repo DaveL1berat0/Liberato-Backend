@@ -2334,7 +2334,10 @@ function openDrawer(sym){
   document.getElementById('d-name').textContent=c.name;
   var ne=document.getElementById('d-next-earnings');
   if(ne){
-    if(c.nextEarnings){
+    // Solo si hay fecha FUTURA real (c._nextObj lo setea el calendario). Antes se mostraba la
+    // fecha hardcodeada de los megacaps (Ago 27, Jul 22…) que ya está en el pasado. _fetchDrawerLive
+    // la completa/actualiza con /api/company si el backend trae una fecha real.
+    if(c.nextEarnings && c._nextObj){
       ne.style.display='block';
       ne.innerHTML='<div class="dne-label">Próximo Reporte</div><div class="dne-val">'+c.nextEarnings+'</div><div class="dne-sub">'+sym+' · '+c.sector+'</div>';
     }else{ne.style.display='none';}
