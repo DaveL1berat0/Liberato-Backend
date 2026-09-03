@@ -5,8 +5,8 @@
 <meta name="description" content="Liberato Community — Plataforma profesional de trading NQ Futures. Order Flow, Gamma, Live Sessions y Journal con IA.">
 <meta property="og:title" content="Liberato Community">
 <meta property="og:type" content="website">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Liberato Community — Home Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Liberato Community — Trading NQ en vivo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <!-- icons replaced with unicode -->
@@ -2489,7 +2489,24 @@ document.querySelectorAll('.block').forEach(function(b){
 
 
 // COUNTDOWN
-function updateCD(){var target=new Date('2026-08-31T00:00:00'),now=new Date(),diff=target-now;if(diff<=0){['cdd','cdh','cdm','cds'].forEach(function(id){document.getElementById(id).textContent='00';});return;}document.getElementById('cdd').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');document.getElementById('cdh').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');}
+function updateCD(){
+  // Ciclo de acceso mensual: cuenta atrás al ÚLTIMO día del mes en curso; si ya pasó, rueda
+  // al fin del próximo mes. Nunca se congela en 00 (antes tenía fecha fija 31-ago-2026, ya vencida).
+  var MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var now=new Date();
+  var target=new Date(now.getFullYear(),now.getMonth()+1,0,0,0,0);           // fin de este mes
+  if(target-now<=0)target=new Date(now.getFullYear(),now.getMonth()+2,0,0,0,0); // ya pasó → fin del próximo
+  var diff=target-now;
+  document.getElementById('cdd').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cdh').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  try{
+    var d=target.getDate(),mn=MES[target.getMonth()],yr=target.getFullYear();
+    var tEl=document.querySelector('.cd-title'); if(tEl)tEl.innerHTML='El acceso abre el <em>'+d+' de '+mn+'</em>';
+    var dEl=document.querySelector('.cd-date'); if(dEl)dEl.innerHTML='Apertura oficial · '+d+' '+mn+' '+yr+' · 12:00 AM ET';
+  }catch(e){}
+}
 updateCD();setInterval(updateCD,1000);
 </script>
 

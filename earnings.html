@@ -262,9 +262,9 @@ body::before{
     min-width:unset;
     scroll-snap-align:unset;
   }
-  /* 3 tiles per row on mobile */
+  /* 3 tiles per row on mobile (!important: la regla base .cards de 4-col va después en el CSS y la pisaba) */
   .cards{
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(3,1fr)!important;
     gap:6px;
   }
   .ec{padding:10px 6px 9px;}
@@ -2388,7 +2388,7 @@ function _fetchDrawerLive(sym){
         else { revEl.innerHTML='<span style="font-size:9px;opacity:0.35;letter-spacing:0.06em;">No disponible</span>'; }
       }
       if(yoyEl){
-        if(yoy){yoyEl.textContent=yoy;yoyEl.style.color=yoy.startsWith('+')?'var(--up)':'var(--down)';}
+        if(yoy){yoyEl.textContent=yoy;yoyEl.style.color=yoy.startsWith('+')?'var(--green)':'var(--red)';}
         else yoyEl.innerHTML='—<span class="d-pending-tag">Pendiente</span>';
       }
       if(epsEl&&!eps)epsEl.innerHTML='—<span class="d-pending-tag">Pendiente</span>';

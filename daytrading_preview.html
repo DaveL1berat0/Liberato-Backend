@@ -4551,8 +4551,16 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
             .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')  // markdown negrita → <strong>
             .replace(/\n/g,'<br>');                              // 5 líneas separadas
           setHealth('summary','connected','real',null);
-          // Resumen real cargado → ocultamos el badge (no aporta al trader; "IA · GEX" confundía).
-          if(badge){badge.style.display='none';}
+          // Fresco → ocultamos el badge. STALE → sello "actualizado HH:MM ET" para que sus
+          // niveles gamma incrustados NO se confundan con los del Gamma Chart en vivo (antes se
+          // pintaba stale como vigente y ocultaba el badge → dos juegos de niveles contradictorios).
+          if(badge){
+            if(d.status==='fresh'||!d.status){ badge.style.display='none'; }
+            else {
+              var _hhmm=''; try{ if(d.last_update){_hhmm=new Date(d.last_update).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'});} }catch(e){}
+              badge.style.display=''; badge.textContent='◷ actualizado'+(_hhmm?' '+_hhmm+' ET':''); badge.style.color='var(--ink-4)';
+            }
+          }
         }
       } else if(d&&d.status==='generating'){
         // IA aún generando — el resumen local permanece visible; lo re-renderizamos
@@ -4752,17 +4760,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       needle.style.transform='rotate('+clamp(baseAng+breath,-79,79)+'deg)';
     },50);
 
-    // CREACIÓN DE VELAS — time-based, cada 15s (decoupled del precio)
-    // Cada vela representa un intervalo; open=close anterior, mechas crecen con ticks.
-    setInterval(function(){
-      if(!S.candles||!S.candles.length||!series||!(S.price>0))return;
-      var lc=S.candles[S.candles.length-1];
-      var nc={time:lc.time+300,open:lc.close,high:S.price,low:S.price,close:S.price};
-      S.candles.push(nc);
-      // Mantener máximo 120 velas (evita acumulación infinita)
-      if(S.candles.length>120)S.candles.shift();
-      try{series.update(nc);}catch(e){}
-    },15000); // nueva vela cada 15 segundos
+    // ELIMINADO (Regla #1 + bug): antes cada 15s se FABRICABA una vela nueva con timestamp
+    // FUTURO (lc.time+300) a partir de S.price. Eso (a) inventaba velas que no existen en el
+    // mercado, (b) avanzaba el eje a 20× el tiempo real, y (c) al chocar con los timestamps
+    // reales (ascendentes) hacía fallar series.update() y CONGELABA el chart en velas futuras.
+    // Las velas nuevas ahora vienen SOLO del backend (fetchCandles), y el tick en vivo
+    // actualiza únicamente la vela en formación (applyRealPrice). Nada fabricado.
 
     // ── HEATMAP drift — every 2 seconds (feels more alive than correlations) ──
     _initHmapState(); renderHeatmap(); // initial render (muestra "—" hasta data real)

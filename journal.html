@@ -2367,6 +2367,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         <div class="fgroup"><div class="flbl">Entrada</div><input class="finput" type="number" id="f-en" placeholder="21750" oninput="calc()"></div>
         <div class="fgroup"><div class="flbl">Salida</div><input class="finput" type="number" id="f-ex" placeholder="21810" oninput="calc()"></div>
         <div class="fgroup"><div class="flbl">Stop</div><input class="finput" type="number" id="f-st" placeholder="21730" oninput="calc()"></div>
+        <div class="fgroup"><div class="flbl">Contratos</div><input class="finput" type="number" id="f-qty" placeholder="1" value="1" min="1" step="1" inputmode="numeric" oninput="calc()"></div>
       </div>
     </div>
     <div class="fsec"><div class="fsec-lbl">Calculado</div>
@@ -2727,7 +2728,7 @@ function calcTrade(t){
   // Multiplicador: opción=100, futuro=CV[asset] (NQ/ES…), acción/ETF=1. NUNCA 20 por
   // defecto (bug: inflaba acciones como SPCX/SQQQ ×20). `t.mult` lo sobreescribe.
   var isOpt=t.instrument==='option';
-  var mult=t.mult||(isOpt?100:(CV[t.asset]||1)),c=t.contracts||1;
+  var mult=t.mult||(isOpt?100:(CV[rootSym(t.asset)]||1)),c=t.contracts||1;   // rootSym: "NQH6"→"NQ" (antes CV[t.asset] daba mult=1 → P&L ÷20)
   var dir=t.direction==='short'?'short':'long';
   var hasExit=(t.exit!=null&&t.exit!=='');
   var pts=hasExit?(dir==='long'?(t.exit-t.entry):(t.entry-t.exit)):0;
@@ -4980,18 +4981,37 @@ var _BROKER_CALC_FIELDS=['realizedPnl','pnl','mult','fees','contracts','entry','
   'points','risk','rr','result','direction','instrument','exitTime','isOpen','expired','flags'];
 function mergeTrades(existing,incoming){
   var byKey={};existing.forEach(function(t){byKey[dedupKeyOf(t)]=t;});
+  // Índice order-id → trade de broker. Casa ABIERTO↔CERRADO aunque cambie la dedupKey:
+  // un ciclo abierto (bo|A) que luego cierra pasa a bo|A,B → sin este índice quedaba un
+  // "abierto fantasma" permanente + id duplicado. Ahora se actualiza el MISMO trade.
+  var byOid={};
+  existing.forEach(function(t){
+    if(t.source==='tradestation'||t.source==='snaptrade')
+      (t.sourceFills||[]).forEach(function(oid){ if(oid!=null) byOid[String(oid)]=t; });
+  });
   var added=[],dup=0,updated=0;
   incoming.forEach(function(t){
     var k=dedupKeyOf(t), ex=byKey[k];
+    if(!ex && (t.source==='tradestation'||t.source==='snaptrade')){
+      var oids=t.sourceFills||[];
+      for(var q=0;q<oids.length;q++){ if(oids[q]!=null && byOid[String(oids[q])]){ ex=byOid[String(oids[q])]; break; } }
+    }
     if(ex){
       if(ex.source==='tradestation'||ex.source==='snaptrade'){
         _BROKER_CALC_FIELDS.forEach(function(fld){ if(t[fld]!=null) ex[fld]=t[fld]; });
-        // si al recuperar legs pasó de "abierto" a cerrado, corrige el estado
+        // el fresco puede traer MÁS fills (abierto→cerrado): adopta su identidad de ciclo
+        if(t.sourceFills) ex.sourceFills=t.sourceFills;
+        if(t.dedupKey) ex.dedupKey=t.dedupKey;
+        if(t.exitTime!=null) ex.exitTime=t.exitTime;
         if(t.isOpen===false && ex.status==='open')
           ex.status=(t.flags&&t.flags.some(function(x){return x.severity==='red';}))?'pending':'verified';
+        (t.sourceFills||[]).forEach(function(oid){ if(oid!=null) byOid[String(oid)]=ex; });  // reindexa
         updated++;                       // refrescado in-place (preserva ediciones del usuario)
       } else { dup++; }
-    } else { byKey[k]=t; added.push(t); }
+    } else {
+      byKey[k]=t; added.push(t);
+      (t.sourceFills||[]).forEach(function(oid){ if(oid!=null) byOid[String(oid)]=t; });
+    }
   });
   return {trades:existing.concat(added),added:added.length,dup:dup,updated:updated};
 }
@@ -5403,9 +5423,10 @@ function confirmCsvImport(){
   alert(imported+' trades importados correctamente');
 }
 function calc(){
-  var en=parseFloat(document.getElementById('f-en').value)||0,ex=parseFloat(document.getElementById('f-ex').value)||0,st=parseFloat(document.getElementById('f-st').value)||0,ast=document.getElementById('f-ast').value||'NQ',cv=CV[ast]||20;
+  var en=parseFloat(document.getElementById('f-en').value)||0,ex=parseFloat(document.getElementById('f-ex').value)||0,st=parseFloat(document.getElementById('f-st').value)||0,ast=document.getElementById('f-ast').value||'NQ',cv=CV[rootSym(ast)]||1;
+  var qEl=document.getElementById('f-qty'),qty=qEl?(Math.max(1,parseInt(qEl.value,10)||1)):1;
   if(!en||!ex){['cp-p','cp-pnl','cp-rr'].forEach(function(id){document.getElementById(id).textContent='--';document.getElementById(id).className='cp-val';});return;}
-  var pts=fDir==='long'?(ex-en):(en-ex),pnl=pts*cv,rsk=st>0?(fDir==='long'?(en-st):(st-en)):0,rr=rsk>0?Math.round((Math.abs(pts)/rsk)*10)/10:0;
+  var pts=fDir==='long'?(ex-en):(en-ex),pnl=pts*cv*qty,rsk=st>0?(fDir==='long'?(en-st):(st-en)):0,rr=rsk>0?Math.round((Math.abs(pts)/rsk)*10)/10:0;
   var pEl=document.getElementById('cp-p'),plEl=document.getElementById('cp-pnl'),rrEl=document.getElementById('cp-rr');
   pEl.textContent=(pts>=0?'+':'')+pts.toFixed(1);pEl.className='cp-val '+(pts>=0?'pos':'neg');
   plEl.textContent=(pnl>=0?'+$':'-$')+Math.abs(Math.round(pnl)).toLocaleString();plEl.className='cp-val '+(pnl>=0?'pos':'neg');
@@ -5414,7 +5435,7 @@ function calc(){
 function saveTrade(){
   var en=parseFloat(document.getElementById('f-en').value),ex=parseFloat(document.getElementById('f-ex').value),st=parseFloat(document.getElementById('f-st').value);
   if(!en||!ex||!st){alert('Entrada, salida y stop son obligatorios.');return;}
-  var t={id:genId(),date:document.getElementById('f-dt').value,time:document.getElementById('f-tm').value,asset:document.getElementById('f-ast').value,direction:fDir,entry:en,exit:ex,stop:st,contracts:1,setup:document.getElementById('f-stp').value||'Sin setup',playbookId:fPlaybook,vwap:fCtx.vwap,gamma:fCtx.gamma,t4h:fCtx.t4h,exitType:fCtx.exitType,checklist:fChk.slice(),note:document.getElementById('f-nt').value.trim(),account:(activeAccount&&activeAccount!=='all'?activeAccount:null)};
+  var t={id:genId(),date:document.getElementById('f-dt').value,time:document.getElementById('f-tm').value,asset:document.getElementById('f-ast').value,direction:fDir,entry:en,exit:ex,stop:st,contracts:Math.max(1,parseInt(document.getElementById('f-qty').value,10)||1),setup:document.getElementById('f-stp').value||'Sin setup',playbookId:fPlaybook,vwap:fCtx.vwap,gamma:fCtx.gamma,t4h:fCtx.t4h,exitType:fCtx.exitType,checklist:fChk.slice(),note:document.getElementById('f-nt').value.trim(),account:(activeAccount&&activeAccount!=='all'?activeAccount:null)};
   T.push(calcTrade(t));saveTrades(T);closeForm();coachLoaded=false;
   if(curView==='dashboard')renderDash();else if(curView==='trades')renderTrades();else if(curView==='calendar')renderCal();else if(curView==='genius')renderGenius();
 }

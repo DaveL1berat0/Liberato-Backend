@@ -1126,6 +1126,8 @@ async def _refresh_gex_gexbot(asset=FA_ASSET):
     except Exception as _e0:
         print(f"[gexbot] 0DTE (zero) falló: {_e0}")
     cache["gex"][asset] = g
+    try: append_gex_history(asset, g)   # archiva el snapshot (antes NO se llamaba con GexBot → /api/gex/history salía vacío)
+    except Exception as _eh: print(f"[gex-history] no archivado: {_eh}")
     if isinstance(spot, (int, float)) and spot > 0:
         _set_px_ratio_from_spot(spot)
     cache["health"]["gexbot"] = "online"
@@ -2604,15 +2606,19 @@ async def refresh_scanner():
                 m = (rm.json().get("metric") if rm.status_code == 200 else {}) or {}
                 price = await _yahoo_spot_c(client, sym)
                 hi52 = m.get("52WeekHigh")
+                # Regla #1: dato ausente → None (se excluye del promedio), NUNCA 0 (que _pillar
+                # mapeaba a ~100 = score perfecto fabricado). PE≤0 (pérdidas) → None, no la mejor valoración.
+                _de = m.get("totalDebt/totalEquityQuarterly")
+                _pe = m.get("peTTM")
                 pillars = {
                     "revenue":   _pillar(m.get("revenueGrowthTTMYoy"), -5, 25),
                     "eps":       _pillar(m.get("epsGrowthTTMYoy"), -10, 40),
                     "margin":    _pillar(m.get("netProfitMarginTTM"), 0, 30),
                     "gross":     _pillar(m.get("grossMarginTTM"), 20, 70),
                     "roe":       _pillar(m.get("roeTTM"), 5, 40),
-                    "balance":   _pillar(-(m.get("totalDebt/totalEquityQuarterly") or 0), -2.0, 0),
+                    "balance":   (_pillar(-_de, -2.0, 0) if _de is not None else None),
                     "fcf":       _pillar(m.get("currentRatioQuarterly"), 0.8, 3.0),
-                    "valuation": _pillar(-(m.get("peTTM") or 0), -60, -10),
+                    "valuation": (_pillar(-_pe, -60, -10) if (_pe is not None and _pe > 0) else None),
                 }
                 have = [v for v in pillars.values() if v is not None]
                 fscore = round(sum(have) / len(have), 0) if have else None
@@ -5568,9 +5574,46 @@ async def _fetch_td_5m_base():
         print(f"[candles] TwelveData error: {e}")
         return None
 
+def _sanitize_candles(candles):
+    """Recorta TICKS MALOS del feed (OHLC imposibles, ej. low 27468 con precio ~29500)
+    ANTES de cachear/servir, para que TODOS los charts (daytrading/journal/options) y las
+    velas 15m/30m derivadas reciban datos limpios. Regla #1: NO inventa velas — solo recorta
+    valores absurdos a una banda alrededor de la mediana LOCAL de cierres. Idempotente."""
+    try:
+        if not candles or len(candles) < 5:
+            return candles
+        rngs = sorted((c["high"] - c["low"]) for c in candles
+                      if isinstance(c.get("high"), (int, float)) and isinstance(c.get("low"), (int, float)) and c["high"] >= c["low"])
+        if not rngs:
+            return candles
+        med = rngs[len(rngs) // 2]
+        if med <= 0:
+            return candles
+        cap = med * 6.0
+        closes = [c.get("close") for c in candles]
+        n = len(candles)
+        out = []
+        for i, c in enumerate(candles):
+            o, h, l, cl = c.get("open"), c.get("high"), c.get("low"), c.get("close")
+            if not all(isinstance(x, (int, float)) for x in (o, h, l, cl)):
+                out.append(c); continue
+            win = sorted(x for x in closes[max(0, i - 2):min(n, i + 3)] if isinstance(x, (int, float)))
+            ref = win[len(win) // 2] if win else cl
+            lo, hi = ref - cap, ref + cap
+            o2 = min(max(o, lo), hi)
+            cl2 = min(max(cl, lo), hi)
+            bhi, blo = max(o2, cl2), min(o2, cl2)
+            h2 = max(bhi, min(h, hi))   # techo ≤ banda, pero ≥ cuerpo
+            l2 = min(blo, max(l, lo))   # suelo ≥ banda, pero ≤ cuerpo
+            out.append({**c, "open": round(o2, 2), "high": round(h2, 2),
+                        "low": round(l2, 2), "close": round(cl2, 2)})
+        return out
+    except Exception:
+        return candles
+
 async def _market_candles_impl(tf: str = "5"):
     # (Sin key de TwelveData NO abortamos: Yahoo cubre las velas sin key alguna.)
-    # Cache de 90s por timeframe
+    # Cache de 5 min por timeframe
     cached = _candles_cache.get(tf)
     if cached and (time.time() - cached["ts"]) < 300:
         return cached["data"]
@@ -5588,12 +5631,15 @@ async def _market_candles_impl(tf: str = "5"):
         if not (base and base.get("candles")):
             base = await _fetch_yahoo_5m_base()   # 3) Yahoo (último recurso)
         if base and base.get("candles"):
+            base["candles"] = _sanitize_candles(base["candles"])  # limpia ticks malos ANTES de cachear/persistir → todos los charts y los 15m/30m derivados quedan limpios
             _candles_cache["5"] = {"ts": time.time(), "data": base}
             _persist_candles(base)                # guardar en Volume (sobrevive redeploy)
         elif c5 and c5["data"].get("candles"):
             base = {**c5["data"], "note": "base-5m-desde-cache"}  # 4) último real en RAM
         elif _load_persisted_candles():
             base = _load_persisted_candles()      # 5) último real del Volume
+            if base and base.get("candles"):
+                base["candles"] = _sanitize_candles(base["candles"])  # persistido viejo pudo quedar sucio
     if not base or not base.get("candles"):
         cached = _candles_cache.get(tf)
         if cached:
