@@ -4001,7 +4001,7 @@ function jchLoad(t){
   if(_jchScriptLoading)return;
   _jchScriptLoading=true;
   var s=document.createElement('script');
-  s.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';
+  s.src='lightweight-charts.js';
   var done=false;
   var to=setTimeout(function(){if(done)return;done=true;_jchScriptLoading=false;jchFallback('timeout de CDN');},7000);
   s.onload=function(){if(done)return;done=true;clearTimeout(to);_jchScriptLoading=false;if(typeof LightweightCharts==='undefined'){jchFallback('CDN no expuso la librería');return;}jchAfterLib();};

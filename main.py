@@ -2724,7 +2724,9 @@ async def refresh_leaps_brief():
     budget_charge("groq", 1)
     # Intenta el modelo LIGERO primero; si falla (p.ej. no está en el tier gratuito), cae al
     # modelo del committee (qwen, probado). Así el brief SIEMPRE narra si Groq está arriba.
-    models = [GROQ_BRIEF_MODEL] + ([GROQ_COMMITTEE_MODEL] if GROQ_COMMITTEE_MODEL != GROQ_BRIEF_MODEL else [])
+    # Prueba PRIMERO el modelo del committee (probado y funcionando); el ligero como respaldo.
+    # Antes iba llama-8b-instant primero, que fallaba/estaba decomisionado → brief quedaba null.
+    models = [GROQ_COMMITTEE_MODEL] + ([GROQ_BRIEF_MODEL] if GROQ_BRIEF_MODEL != GROQ_COMMITTEE_MODEL else [])
     last_status = None
     try:
         async with httpx.AsyncClient(timeout=20) as client:

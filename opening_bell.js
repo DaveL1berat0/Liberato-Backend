@@ -143,3 +143,34 @@
   setInterval(check, 5000);                           // chequeo cada 5s → captura el minuto 9:30
   window.lbcTestOpeningBell = function () { playBell(); popup(); }; // prueba manual desde consola
 })();
+
+// ── IDIOMA ES/EN compartido ──────────────────────────────────────────────────
+// profileSetLang() llama a window.toggleLang(). Antes NO existía en las subpáginas de
+// plataforma → el toggle "English" decía "Language updated" pero no traducía (éxito falso).
+// Ahora traduce todos los elementos con data-es/data-en de la página, persiste la elección
+// y la aplica al cargar. (El contenido dinámico —charts/datos— permanece en ES por diseño.)
+(function () {
+  function applyLang(lang) {
+    try {
+      var els = document.querySelectorAll('[data-es][data-en]');
+      for (var i = 0; i < els.length; i++) {
+        var v = els[i].getAttribute(lang === 'en' ? 'data-en' : 'data-es');
+        if (v != null) els[i].textContent = v;
+      }
+      document.documentElement.setAttribute('lang', lang);
+    } catch (e) {}
+  }
+  window.lbcApplyLang = applyLang;
+  if (typeof window.toggleLang !== 'function') {   // no pisar el de la homepage
+    window.toggleLang = function () {
+      var cur = 'es'; try { cur = localStorage.getItem('lbc_lang') || 'es'; } catch (e) {}
+      var next = cur === 'en' ? 'es' : 'en';
+      try { localStorage.setItem('lbc_lang', next); } catch (e) {}
+      applyLang(next);
+      return next;
+    };
+  }
+  function initLang() { var l = 'es'; try { l = localStorage.getItem('lbc_lang') || 'es'; } catch (e) {} if (l === 'en') applyLang('en'); }
+  if (document.readyState !== 'loading') initLang();
+  else document.addEventListener('DOMContentLoaded', initLang);
+})();
