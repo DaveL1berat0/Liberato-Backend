@@ -38,6 +38,8 @@ function adminUnlock(){lbcToggleAdmin();}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#06080D">
 <title>Liberato Community — Earnings Calendar</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -96,6 +98,19 @@ button,a,[role="button"]{transition:transform var(--t-fast) var(--ease-spring),b
   --r:14px;--r-sm:8px;--r-xs:5px;
   --safe-top:env(safe-area-inset-top,0px);
 }
+/* ── Tema claro (paleta canónica Liberato) ── */
+[data-theme="light"]{
+  --gold:#a8842f;--gold-dim:rgba(168,132,47,0.75);--gold-soft:rgba(168,132,47,0.14);--gold-faint:rgba(168,132,47,0.05);
+  --bg:#f4f3ef;--bg2:#ffffff;--bg3:rgba(255,255,255,0.92);
+  --text:#1a1d24;--text2:rgba(26,29,36,0.62);--text3:rgba(26,29,36,0.40);
+  --green:#16a34a;--green-soft:rgba(22,163,74,0.10);
+  --red:#dc2626;--red-soft:rgba(220,38,38,0.08);
+  --blue:#2563eb;--amber:#d97706;
+  --border:rgba(168,132,47,0.22);--border2:rgba(26,29,36,0.10);
+}
+[data-theme="light"] body::before,[data-theme="light"] body::after{opacity:0.5;}
+[data-theme="light"] .view-toggle{background:rgba(26,29,36,0.06);}
+[data-theme="light"] .view-opt:not(.on):not(.active){color:rgba(26,29,36,0.60);}
 html{font-size:15px;}
 html,body{
   background:var(--bg);color:var(--text);

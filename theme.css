@@ -1,0 +1,24 @@
+/* Liberato Community — componente del toggle de tema (compartido).
+   El botón (.theme-fab) es idéntico en toda la web; las paletas claras van por página. */
+.theme-fab{ position:fixed; top:16px; right:16px; z-index:9000; display:flex; align-items:center; gap:8px; padding:7px 9px 7px 12px; border-radius:999px; border:0.5px solid rgba(201,168,76,0.3); background:rgba(10,13,20,0.82); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); cursor:pointer; box-shadow:0 8px 28px -10px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(201,168,76,0.08); transition:transform .25s cubic-bezier(.34,1.3,.64,1), box-shadow .3s ease, border-color .25s; }
+.theme-fab:hover{ transform:translateY(-2px); border-color:#C9A84C; box-shadow:0 12px 32px -10px rgba(0,0,0,0.6), 0 0 16px -4px rgba(201,168,76,0.25); }
+.theme-fab:active{ transform:scale(0.96); }
+.theme-fab-track{ width:34px; height:18px; border-radius:999px; background:rgba(201,168,76,0.25); position:relative; flex-shrink:0; transition:background .3s; }
+.theme-fab-knob{ position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:linear-gradient(135deg,#E8D9A8,#C9A84C); transition:transform .32s cubic-bezier(.34,1.3,.64,1); box-shadow:0 1px 3px rgba(0,0,0,0.3); }
+.theme-fab-icons{ display:flex; align-items:center; font-size:13px; line-height:1; }
+.theme-fab .tfi-sun{ display:none; }
+.theme-fab .tfi-moon{ display:inline; }
+/* variante montada dentro de la member nav */
+.theme-fab.theme-fab-innav{ position:static !important; top:auto !important; right:auto !important; bottom:auto !important; left:auto !important; padding:6px 8px 6px 10px !important; box-shadow:none !important; }
+.theme-fab.theme-fab-innav:hover{ border-color:#C9A84C; }
+/* estado claro */
+[data-theme="light"] .theme-fab{ background:rgba(255,255,255,0.9); border-color:rgba(201,168,76,0.35); box-shadow:0 8px 28px -10px rgba(0,0,0,0.15); }
+[data-theme="light"] .theme-fab-knob{ transform:translateX(16px); }
+[data-theme="light"] .theme-fab .tfi-moon{ display:none; }
+[data-theme="light"] .theme-fab .tfi-sun{ display:inline; }
+@media(max-width:640px){
+  .theme-fab{ top:12px; right:12px; padding:6px 8px 6px 10px; }
+  .theme-fab-track{ width:30px; height:16px; }
+  .theme-fab-knob{ width:12px; height:12px; }
+  [data-theme="light"] .theme-fab-knob{ transform:translateX(14px); }
+}
