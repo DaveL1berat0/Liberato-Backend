@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liberato · Comunidad Premium</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -15,6 +17,14 @@
     --serif:Georgia,'Times New Roman',serif;
     --sans:'Space Grotesk',-apple-system,sans-serif;
     --mono:'JetBrains Mono',monospace;
+  }
+  /* ── Tema claro (paleta canónica Liberato) ── */
+  [data-theme="light"]{
+    --bg:#f4f3ef; --bg-2:#ffffff; --bg-3:#fafaf8;
+    --gold:#a8842f; --gold-2:#8a6d26; --gold-dim:rgba(168,132,47,0.12);
+    --up:#16a34a; --down:#7c5ce6; --cyan:#0e7490;
+    --ink:#1a1d24; --ink-2:rgba(26,29,36,0.62); --ink-3:rgba(26,29,36,0.42); --ink-4:rgba(26,29,36,0.30);
+    --brd:rgba(26,29,36,0.10); --brd-gold:rgba(168,132,47,0.30);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;}

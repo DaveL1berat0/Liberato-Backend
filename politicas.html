@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#06080D">
 <title>Liberato Community — Políticas y Avisos Legales</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,6 +17,13 @@
   --ink:#EFECE3; --ink-2:rgba(239,236,227,0.74); --ink-3:rgba(239,236,227,0.46); --ink-4:rgba(239,236,227,0.28);
   --warn:#F5A623; --risk:#FF6B81;
   --mono:'DM Mono',ui-monospace,Menlo,monospace; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
+}
+/* ── Tema claro (paleta canónica Liberato) ── */
+[data-theme="light"]{
+  --bg:#f4f3ef; --panel:#ffffff; --panel-2:#fafaf8; --hair:rgba(26,29,36,0.09);
+  --brd:rgba(26,29,36,0.12); --gold:#a8842f; --gold-2:#8a6d26;
+  --ink:#1a1d24; --ink-2:rgba(26,29,36,0.70); --ink-3:rgba(26,29,36,0.48); --ink-4:rgba(26,29,36,0.30);
+  --warn:#b45309; --risk:#dc2626;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
