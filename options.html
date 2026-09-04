@@ -157,6 +157,13 @@ a{color:inherit;text-decoration:none;}
 .chart-tf button{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.04em;color:var(--ink-3);background:rgba(255,255,255,0.03);border:0.5px solid var(--hair);border-radius:999px;padding:5px 11px;cursor:pointer;transition:all 0.15s;}
 .chart-tf button.on{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);}
 .chart-tf button:hover{color:var(--ink);}
+.chart-pick{display:inline-flex;align-items:center;gap:0;margin-top:2px;}
+.chart-pick input{font-family:var(--mono);font-size:11px;color:var(--ink);background:rgba(255,255,255,0.04);border:0.5px solid var(--hair);border-right:0;border-radius:999px 0 0 999px;padding:5px 11px;width:118px;outline:none;text-transform:uppercase;transition:border-color .15s;}
+.chart-pick input::placeholder{text-transform:none;color:var(--ink-3);letter-spacing:0;}
+.chart-pick input:focus{border-color:var(--gold);}
+.chart-pick button{font-family:var(--mono);font-size:13px;font-weight:700;line-height:1;color:var(--gold);background:rgba(201,168,76,0.12);border:0.5px solid var(--hair);border-left:0;border-radius:0 999px 999px 0;padding:5px 12px;cursor:pointer;transition:background .15s;}
+.chart-pick button:hover{background:rgba(201,168,76,0.24);}
+@media(max-width:700px){.chart-pick{width:100%;}.chart-pick input{width:100%;font-size:16px;padding:9px 13px;}.chart-pick button{padding:9px 15px;font-size:15px;}}
 .lchart-wrap{position:relative;height:580px;width:100%;background:var(--panel-2);}
 /* Escritorio: Market y Structure a la MISMA altura; el chart crece para llenar → sin espacio muerto bajo el chart */
 @media(min-width:901px){
@@ -807,8 +814,13 @@ body::before{
       <section class="panel step">
         <div class="p-hd">
           <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
-            <span class="p-ttl"><span class="stepn">2</span> Market <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span> <span class="info-i" title="¿Dónde está el underlying dentro de su estructura? Velas diarias/semanales/mensuales REALES (Yahoo). Contexto: máximo del periodo, pullback y % para recuperar el ATH. Herramientas de dibujo a la izquierda. Verde=alcista, morado=bajista.">&#9432;</span></span>
+            <span class="p-ttl"><span class="stepn">2</span> Market <span style="color:var(--ink-2);font-family:var(--mono);font-size:11px;letter-spacing:0.04em;" id="chart-sym">NDX</span> <span class="info-i" title="¿Dónde está el underlying dentro de su estructura? Velas diarias/semanales/mensuales REALES (Yahoo). Contexto: máximo del periodo, pullback y % para recuperar el ATH. Escribe cualquier ticker para cambiar el gráfico. Herramientas de dibujo a la izquierda. Verde=alcista, morado=bajista.">&#9432;</span></span>
             <span id="chart-price" style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink-3);"></span>
+            <form class="chart-pick" onsubmit="return chartPick(event)" autocomplete="off">
+              <input id="chart-pick-inp" type="text" placeholder="Cambiar ticker…" spellcheck="false" list="chart-pick-list" aria-label="Cambiar ticker del gráfico" maxlength="8">
+              <button type="submit" aria-label="Cargar ticker">&rarr;</button>
+            </form>
+            <datalist id="chart-pick-list"></datalist>
           </div>
           <div class="chart-tf" id="chart-tf"></div>
         </div>
@@ -1302,7 +1314,7 @@ function loadScanner(){
     var rows=(d&&d.rows)||[]; SCAN_ROWS={}; SCAN_ALL=rows;
     rows.forEach(function(x){ SCAN_ROWS[x.ticker]=x; });
     if(!rows.length){ var h0=document.getElementById('scan-body'); if(h0)h0.innerHTML='<div class="stub"><b>Scanner</b>Sin datos de fundamentals ahora mismo. Reintenta en unos minutos.</div>'; return; }
-    scanFilter();
+    scanFilter(); fillPickList();
     if(!USER_PICKED && !LC_PREFILLED && rows[0].price!=null){ LC_PREFILLED=true; LC_SYM=rows[0].ticker; LC_LABEL=rows[0].ticker; var _lci=document.getElementById('lc-tkr'); if(_lci)_lci.value=rows[0].ticker; loadChart(); prefillStructure(rows[0].ticker, rows[0].price); }   // default ALINEADO: chart + Structure al mismo ticker (antes chart=NDX, Structure=NVDA)
   }).catch(function(){ var h=document.getElementById('scan-body'); if(h)h.innerHTML='<div class="stub">Scanner no disponible ahora.</div>'; });
 }
@@ -1314,6 +1326,20 @@ function selectTicker(tk){
   if(px!=null) prefillStructure(tk, px); else lcStrat();
   [].forEach.call(document.querySelectorAll('#scan-body tr'),function(tr){ tr.className=(tr.getAttribute('data-tk')===tk)?'sel':''; });
   try{ document.getElementById('lchart-wrap').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+}
+// Cambiar el ticker del gráfico DIRECTAMENTE desde el panel Market (#2), sin bajar al Scanner (#4).
+function chartPick(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  var i=document.getElementById('chart-pick-inp'); if(!i)return false;
+  var tk=(i.value||'').trim().toUpperCase().replace(/[^A-Z0-9.\-]/g,'');
+  if(!tk)return false;
+  selectTicker(tk); i.value=''; try{i.blur();}catch(_){}
+  return false;
+}
+// Autocompletado: alimenta el datalist con los tickers del scanner ya cargados.
+function fillPickList(){
+  var dl=document.getElementById('chart-pick-list'); if(!dl||!window.SCAN_ALL||!SCAN_ALL.length)return;
+  dl.innerHTML=SCAN_ALL.map(function(x){ return '<option value="'+x.ticker+'">'+(x.sector||'')+'</option>'; }).join('');
 }
 
 /* ── ⑦ SECTOR ROTATION (RRG) ── */
