@@ -58,28 +58,31 @@ button,a,[role="button"]{transition:transform var(--t-fast) var(--ease-spring),b
 html{scroll-behavior:smooth;}
 body{background:#080A0F;color:#E8E4D9;font-family:'DM Sans',sans-serif;overflow-x:hidden;}
 /* ── Tema claro ── */
-[data-theme="light"] body{background:#f4f3ef;color:#1a1d24;}
-[data-theme="light"] .card-name,[data-theme="light"] .card-name-2,[data-theme="light"] .cd-title,[data-theme="light"] .funded-pill span:last-child,[data-theme="light"] .hero-title,[data-theme="light"] .price,[data-theme="light"] .price-2,[data-theme="light"] .sec-title,[data-theme="light"] .topstep-label strong{color:#1a1d24;}
-[data-theme="light"] .icon-no{color:rgba(26,29,36,0.12);}
-[data-theme="light"] .fi-no{color:rgba(26,29,36,0.2);}
-[data-theme="light"] .fi2-no{color:rgba(26,29,36,0.22);}
-[data-theme="light"] .footer-links a,[data-theme="light"] .metric-lbl,[data-theme="light"] .price-period-2,[data-theme="light"] .total-lbl{color:rgba(26,29,36,0.25);}
-[data-theme="light"] .disclaimer strong{color:rgba(26,29,36,0.26);}
-[data-theme="light"] .cd-sub{color:rgba(26,29,36,0.28);}
-[data-theme="light"] .btn-free-2:active,[data-theme="light"] .btn-free:active,[data-theme="light"] .card-desc-2{color:rgba(26,29,36,0.3);}
-[data-theme="light"] .reg-text,[data-theme="light"] .sec-sub,[data-theme="light"] .tag-edu,[data-theme="light"] .tag-free{color:rgba(26,29,36,0.35);}
-[data-theme="light"] .btn-free:hover,[data-theme="light"] .card-desc-hero-2{color:rgba(26,29,36,0.4);}
-[data-theme="light"] .btn-free,[data-theme="light"] .no-signals-text{color:rgba(26,29,36,0.45);}
-[data-theme="light"] .btn-free-2,[data-theme="light"] .btn-hint,[data-theme="light"] .cd-lbl,[data-theme="light"] .disclaimer p,[data-theme="light"] .footer-copy,[data-theme="light"] .hero-sub,[data-theme="light"] .price-period,[data-theme="light"] .stat-label,[data-theme="light"] .topstep-label{color:rgba(26,29,36,0.5);}
-[data-theme="light"] .fi,[data-theme="light"] .fi2,[data-theme="light"] .hw-text,[data-theme="light"] .library-text{color:rgba(26,29,36,0.6);}
-[data-theme="light"] .bridge-text{color:rgba(26,29,36,0.65);}
-[data-theme="light"] .btn-free:hover,[data-theme="light"] .fih,[data-theme="light"] .sticky-cta-text{color:rgba(26,29,36,0.7);}
-[data-theme="light"] .hero-sub strong{color:rgba(26,29,36,0.85);}
-[data-theme="light"] .block,[data-theme="light"] .card,[data-theme="light"] .card-free-2,[data-theme="light"] .card-ft,[data-theme="light"] .card-hero-2,[data-theme="light"] .metric,[data-theme="light"] .payout,[data-theme="light"] .payout-foot{background:#ffffff !important;border-color:rgba(26,29,36,0.10);}
+[data-theme="light"] body{background:#eae6dc;color:#211d16;}
+/* superficies gris-oscuro hardcodeadas -> claras (excluye nav/video/lienzo) */
+[data-theme="light"] #lc-splash,[data-theme="light"] .contact-input,[data-theme="light"] .countdown,[data-theme="light"] .sticky-cta{background:#ffffff !important;}
+[data-theme="light"] .countdown{border:1px solid rgba(33,29,22,0.12);box-shadow:0 1px 2px rgba(28,22,14,0.05),0 8px 20px -8px rgba(28,22,14,0.12);}
+[data-theme="light"] .card-name,[data-theme="light"] .card-name-2,[data-theme="light"] .cd-title,[data-theme="light"] .funded-pill span:last-child,[data-theme="light"] .hero-title,[data-theme="light"] .price,[data-theme="light"] .price-2,[data-theme="light"] .sec-title,[data-theme="light"] .topstep-label strong{color:#211d16;}
+[data-theme="light"] .icon-no{color:rgba(33,29,22,0.12);}
+[data-theme="light"] .fi-no{color:rgba(33,29,22,0.2);}
+[data-theme="light"] .fi2-no{color:rgba(33,29,22,0.22);}
+[data-theme="light"] .footer-links a,[data-theme="light"] .metric-lbl,[data-theme="light"] .price-period-2,[data-theme="light"] .total-lbl{color:rgba(33,29,22,0.25);}
+[data-theme="light"] .disclaimer strong{color:rgba(33,29,22,0.26);}
+[data-theme="light"] .cd-sub{color:rgba(33,29,22,0.28);}
+[data-theme="light"] .btn-free-2:active,[data-theme="light"] .btn-free:active,[data-theme="light"] .card-desc-2{color:rgba(33,29,22,0.3);}
+[data-theme="light"] .reg-text,[data-theme="light"] .sec-sub,[data-theme="light"] .tag-edu,[data-theme="light"] .tag-free{color:rgba(33,29,22,0.35);}
+[data-theme="light"] .btn-free:hover,[data-theme="light"] .card-desc-hero-2{color:rgba(33,29,22,0.4);}
+[data-theme="light"] .btn-free,[data-theme="light"] .no-signals-text{color:rgba(33,29,22,0.45);}
+[data-theme="light"] .btn-free-2,[data-theme="light"] .btn-hint,[data-theme="light"] .cd-lbl,[data-theme="light"] .disclaimer p,[data-theme="light"] .footer-copy,[data-theme="light"] .hero-sub,[data-theme="light"] .price-period,[data-theme="light"] .stat-label,[data-theme="light"] .topstep-label{color:rgba(33,29,22,0.5);}
+[data-theme="light"] .fi,[data-theme="light"] .fi2,[data-theme="light"] .hw-text,[data-theme="light"] .library-text{color:rgba(33,29,22,0.6);}
+[data-theme="light"] .bridge-text{color:rgba(33,29,22,0.65);}
+[data-theme="light"] .btn-free:hover,[data-theme="light"] .fih,[data-theme="light"] .sticky-cta-text{color:rgba(33,29,22,0.7);}
+[data-theme="light"] .hero-sub strong{color:rgba(33,29,22,0.85);}
+[data-theme="light"] .block,[data-theme="light"] .card,[data-theme="light"] .card-free-2,[data-theme="light"] .card-ft,[data-theme="light"] .card-hero-2,[data-theme="light"] .metric,[data-theme="light"] .payout,[data-theme="light"] .payout-foot{background:#ffffff !important;border-color:rgba(33,29,22,0.10);}
 [data-theme="light"] .countdown{background:#ffffff !important;border-color:rgba(168,132,47,0.30);}
 /* Remap de colores de texto INLINE claros dentro del contenido (<section>). No toca modales/menú (fuera de section) ni el gold inline. */
-[data-theme="light"] section [style*="232,228,217"],[data-theme="light"] section [style*="232, 228, 217"]{color:rgba(26,29,36,0.72) !important;}
-[data-theme="light"] section [style*="#E8E4D9"]{color:#1a1d24 !important;}
+[data-theme="light"] section [style*="232,228,217"],[data-theme="light"] section [style*="232, 228, 217"]{color:rgba(33,29,22,0.72) !important;}
+[data-theme="light"] section [style*="#E8E4D9"]{color:#211d16 !important;}
 img{max-width:100%;display:block;}
 #particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.6;}
 nav,section,.bridge,footer,.modal-overlay,.menu-drawer{position:relative;z-index:1;}

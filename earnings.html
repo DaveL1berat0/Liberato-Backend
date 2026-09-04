@@ -100,17 +100,46 @@ button,a,[role="button"]{transition:transform var(--t-fast) var(--ease-spring),b
 }
 /* ── Tema claro (paleta canónica Liberato) ── */
 [data-theme="light"]{
-  --gold:#a8842f;--gold-dim:rgba(168,132,47,0.75);--gold-soft:rgba(168,132,47,0.14);--gold-faint:rgba(168,132,47,0.05);
-  --bg:#f4f3ef;--bg2:#ffffff;--bg3:rgba(255,255,255,0.92);
-  --text:#1a1d24;--text2:rgba(26,29,36,0.62);--text3:rgba(26,29,36,0.40);
-  --green:#16a34a;--green-soft:rgba(22,163,74,0.10);
-  --red:#dc2626;--red-soft:rgba(220,38,38,0.08);
-  --blue:#2563eb;--amber:#d97706;
-  --border:rgba(168,132,47,0.22);--border2:rgba(26,29,36,0.10);
+  --gold:#9c7c2c;--gold-dim:rgba(168,132,47,0.75);--gold-soft:rgba(168,132,47,0.14);--gold-faint:rgba(168,132,47,0.05);
+  --bg:#eae6dc;--bg2:#ffffff;--bg3:rgba(255,255,255,0.92);
+  --text:#211d16;--text2:rgba(33,29,22,0.62);--text3:rgba(33,29,22,0.40);
+  --green:#15913f;--green-soft:rgba(22,163,74,0.10);
+  --red:#d42e2e;--red-soft:rgba(220,38,38,0.08);
+  --blue:#2358d8;--amber:#a85a0a;
+  --border:rgba(168,132,47,0.22);--border2:rgba(33,29,22,0.10);
 }
 [data-theme="light"] body::before,[data-theme="light"] body::after{opacity:0.5;}
-[data-theme="light"] .view-toggle{background:rgba(26,29,36,0.06);}
-[data-theme="light"] .view-opt:not(.on):not(.active){color:rgba(26,29,36,0.60);}
+[data-theme="light"] .view-toggle{background:rgba(33,29,22,0.06);}
+[data-theme="light"] .view-opt:not(.on):not(.active){color:rgba(33,29,22,0.60);}
+[data-theme="light"] .controls,
+[data-theme="light"] .day-col,
+[data-theme="light"] .day-col.today,
+[data-theme="light"] .day-header,
+[data-theme="light"] .day-header-extreme,
+[data-theme="light"] .day-header-high,
+[data-theme="light"] .day-header-today,
+[data-theme="light"] .ec,
+[data-theme="light"] .hero-search-field,
+[data-theme="light"] .hero-search-results,
+[data-theme="light"] .hist-row,
+[data-theme="light"] .hist2,
+[data-theme="light"] .ic-narrative,
+[data-theme="light"] .intel-card,
+[data-theme="light"] .intel-card.gold,
+[data-theme="light"] .month-cell,
+[data-theme="light"] .news-item,
+[data-theme="light"] .nq-impact-box,
+[data-theme="light"] .pdc-stage,
+[data-theme="light"] .search-input,
+[data-theme="light"] .search-results,
+[data-theme="light"] .sum-item,
+[data-theme="light"] .tape-wrap,
+[data-theme="light"] .trend-summary{background:#ffffff !important;}
+[data-theme="light"] .hist2-head,
+[data-theme="light"] .hist2-moves{background:rgba(33,29,22,0.05) !important;}
+/* Elevación de las cards de earnings en claro */
+[data-theme="light"] .ec,[data-theme="light"] .intel-card,[data-theme="light"] .nq-impact-box,[data-theme="light"] .hist2,[data-theme="light"] .news-item{box-shadow:0 1px 2px rgba(28,22,14,0.05),0 6px 16px -6px rgba(28,22,14,0.11);}
+[data-theme="light"] .hero-search-field,[data-theme="light"] .search-input{box-shadow:inset 0 1px 2px rgba(28,22,14,0.05);}
 html{font-size:15px;}
 html,body{
   background:var(--bg);color:var(--text);

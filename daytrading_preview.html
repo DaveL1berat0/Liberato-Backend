@@ -91,15 +91,44 @@
 }
 /* ── Tema claro (paleta canónica Liberato) ── */
 [data-theme="light"]{
-  --bg:#f4f3ef; --bg-1:#ffffff; --bg-2:#fafaf8; --panel:rgba(255,255,255,0.86);
-  --ink:#1a1d24; --ink-2:rgba(26,29,36,0.74); --ink-3:rgba(26,29,36,0.50); --ink-4:rgba(26,29,36,0.30); --ink-5:rgba(26,29,36,0.16);
-  --hair:rgba(26,29,36,0.09); --hair-2:rgba(26,29,36,0.05); --glass-brd:rgba(26,29,36,0.10);
-  --gold:#a8842f; --gold-2:#8a6d26; --gold-bright:#8a6d26; --gold-faint:rgba(168,132,47,0.06); --gold-line:rgba(168,132,47,0.20);
-  --up:#16a34a; --down:#7c5ce6; --warn:#b45309; --info:#2563eb; --cyan:#0e7490; --violet:#7c5ce6;
+  --bg:#eae6dc; --bg-1:#ffffff; --bg-2:#f6f3ed; --panel:rgba(255,255,255,0.86);
+  --ink:#211d16; --ink-2:rgba(33,29,22,0.74); --ink-3:rgba(33,29,22,0.50); --ink-4:rgba(33,29,22,0.30); --ink-5:rgba(33,29,22,0.16);
+  --hair:rgba(33,29,22,0.09); --hair-2:rgba(33,29,22,0.05); --glass-brd:rgba(33,29,22,0.10);
+  --gold:#9c7c2c; --gold-2:#7e6323; --gold-bright:#7e6323; --gold-faint:rgba(168,132,47,0.06); --gold-line:rgba(168,132,47,0.20);
+  --up:#15913f; --down:#6d4bd8; --warn:#a85a0a; --info:#2358d8; --cyan:#0e7490; --violet:#6d4bd8;
 }
 [data-theme="light"] body{background:var(--bg);color:var(--ink);}
-[data-theme="light"] .lg-wk-tx{color:rgba(26,29,36,0.60);}
-[data-theme="light"] .hmap-name{color:rgba(26,29,36,0.75);}
+[data-theme="light"] .ave-panel,
+[data-theme="light"] .ave-stage,
+[data-theme="light"] .bar,
+[data-theme="light"] .cr-interp,
+[data-theme="light"] .cx-del,
+[data-theme="light"] .cx-draw,
+[data-theme="light"] .cx-tag,
+[data-theme="light"] .cx-xtip,
+[data-theme="light"] .diag,
+[data-theme="light"] .diag-hd,
+[data-theme="light"] .gf-timestamp,
+[data-theme="light"] .imap,
+[data-theme="light"] .imap-pf-lab,
+[data-theme="light"] .imap-pf-val,
+[data-theme="light"] .imap-ptag,
+[data-theme="light"] .imap-tag,
+[data-theme="light"] .imap-val,
+[data-theme="light"] .lg-ev,
+[data-theme="light"] .lg-ev.high,
+[data-theme="light"] .lg-ev.holiday,
+[data-theme="light"] .lg-ev.med,
+[data-theme="light"] .lg-mv,
+[data-theme="light"] .mom-bar,
+[data-theme="light"] .mom-wait,
+[data-theme="light"] .mover-alert,
+[data-theme="light"] .rg-price{background:#ffffff !important;}
+[data-theme="light"] .diag-row.head,
+[data-theme="light"] .g-hd{background:rgba(33,29,22,0.05) !important;}
+[data-theme="light"] .ave-panel,[data-theme="light"] .diag,[data-theme="light"] .imap,[data-theme="light"] .mover-alert{box-shadow:0 1px 2px rgba(28,22,14,0.05),0 6px 16px -6px rgba(28,22,14,0.11);}
+[data-theme="light"] .lg-wk-tx{color:rgba(33,29,22,0.60);}
+[data-theme="light"] .hmap-name{color:rgba(33,29,22,0.75);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 *,*::before,*::after{font-variant-numeric:tabular-nums;}
 html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;letter-spacing:-0.012em;font-size:15px;line-height:1.5;}
@@ -2837,12 +2866,12 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     if(!chart)return;
     var light=document.documentElement.getAttribute('data-theme')==='light';
     try{ chart.applyOptions({
-      layout:{textColor: light?'rgba(26,29,36,0.55)':'rgba(239,236,227,0.42)'},
-      grid:{vertLines:{color: light?'rgba(26,29,36,0.05)':'rgba(239,236,227,0.03)'},horzLines:{color: light?'rgba(26,29,36,0.05)':'rgba(239,236,227,0.03)'}},
-      crosshair:{vertLine:{color: light?'rgba(26,29,36,0.30)':'rgba(201,168,76,0.32)',labelBackgroundColor: light?'#a8842f':'#2a2416'},
-                 horzLine:{color: light?'rgba(26,29,36,0.30)':'rgba(201,168,76,0.32)',labelBackgroundColor: light?'#a8842f':'#2a2416'}},
-      rightPriceScale:{borderColor: light?'rgba(26,29,36,0.12)':'rgba(239,236,227,0.07)'},
-      timeScale:{borderColor: light?'rgba(26,29,36,0.12)':'rgba(239,236,227,0.07)'}
+      layout:{textColor: light?'rgba(33,29,22,0.55)':'rgba(239,236,227,0.42)'},
+      grid:{vertLines:{color: light?'rgba(33,29,22,0.05)':'rgba(239,236,227,0.03)'},horzLines:{color: light?'rgba(33,29,22,0.05)':'rgba(239,236,227,0.03)'}},
+      crosshair:{vertLine:{color: light?'rgba(33,29,22,0.30)':'rgba(201,168,76,0.32)',labelBackgroundColor: light?'#9c7c2c':'#2a2416'},
+                 horzLine:{color: light?'rgba(33,29,22,0.30)':'rgba(201,168,76,0.32)',labelBackgroundColor: light?'#9c7c2c':'#2a2416'}},
+      rightPriceScale:{borderColor: light?'rgba(33,29,22,0.12)':'rgba(239,236,227,0.07)'},
+      timeScale:{borderColor: light?'rgba(33,29,22,0.12)':'rgba(239,236,227,0.07)'}
     }); }catch(e){}
   }
   window.addEventListener('lbc:theme', function(){ themeGammaChart(); });

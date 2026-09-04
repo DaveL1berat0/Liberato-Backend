@@ -22,3 +22,44 @@
   .theme-fab-knob{ width:12px; height:12px; }
   [data-theme="light"] .theme-fab-knob{ transform:translateX(14px); }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   ELEVACIÓN TEMA CLARO (compartida)
+   El remap de tokens deja las tarjetas casi del color del lienzo.
+   Estas sombras las separan del fondo y dan profundidad/jerarquía
+   sin tocar el tema oscuro ni ninguna función. Los nombres son las
+   clases de tarjeta/panel comunes a las páginas del producto.
+   ───────────────────────────────────────────────────────────── */
+[data-theme="light"] .card,
+[data-theme="light"] .card-2,
+[data-theme="light"] .card-hero-2,
+[data-theme="light"] .card-free-2,
+[data-theme="light"] .card-ft,
+[data-theme="light"] .panel,
+[data-theme="light"] .tile,
+[data-theme="light"] .kpi,
+[data-theme="light"] .kpi-card,
+[data-theme="light"] .block,
+[data-theme="light"] .metric,
+[data-theme="light"] .payout,
+[data-theme="light"] .lead,
+[data-theme="light"] .tz-kpi,
+[data-theme="light"] .tz-panel,
+[data-theme="light"] .donut-card,
+[data-theme="light"] .pnl-card,
+[data-theme="light"] .tbl-panel,
+[data-theme="light"] .drawer,
+[data-theme="light"] .ic-card{
+  box-shadow:0 1px 2px rgba(28,22,14,0.05), 0 8px 20px -8px rgba(28,22,14,0.12);
+}
+/* Hover un poco más elevado donde ya había interacción */
+[data-theme="light"] .tile:hover,
+[data-theme="light"] .kpi:hover,
+[data-theme="light"] .card:hover{
+  box-shadow:0 2px 4px rgba(28,22,14,0.06), 0 14px 30px -10px rgba(28,22,14,0.18);
+}
+
+/* El fondo de partículas se dibuja en JS con colores oscuros (para el tema
+   oscuro). En claro produce un velo sucio -> se oculta. Es puramente
+   decorativo, no toca ninguna función. */
+[data-theme="light"] #particle-canvas{ opacity:0 !important; }
