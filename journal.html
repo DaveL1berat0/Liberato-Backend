@@ -193,6 +193,9 @@ html{font-size:15px;}
 /* Elevación v2 en el resto de tarjetas del journal (igualar a las otras páginas) */
 [data-theme="light"] .ai-coach-card,[data-theme="light"] .trio-card,[data-theme="light"] .pattern-card,[data-theme="light"] .pb-card,[data-theme="light"] .ci-card,[data-theme="light"] .acm-card,[data-theme="light"] .tdm-card,[data-theme="light"] .cal-week-card,[data-theme="light"] .cal-stat{box-shadow:0 1px 2px rgba(28,22,14,0.05),0 8px 20px -8px rgba(28,22,14,0.12)!important;}
 [data-theme="light"] .sidebar{border-right:1px solid rgba(33,29,22,0.08);box-shadow:1px 0 12px -6px rgba(28,22,14,0.10);}
+/* botones del sidebar (AI Coach / broker): texto claro inline -> oscuro en claro */
+[data-theme="light"] .sb-ai-chat-btn{color:rgba(33,29,22,0.80)!important;background:#ffffff!important;border-color:rgba(33,29,22,0.12)!important;box-shadow:0 1px 2px rgba(28,22,14,0.05);}
+[data-theme="light"] .sb-ai-chat-btn .brk-ico{color:var(--gold)!important;}
 [data-theme="light"] .titem,[data-theme="light"] .chk-item,[data-theme="light"] .trio-card{border:1px solid rgba(33,29,22,0.10)!important;}
 /* superficies oscuras del journal que su tema claro no cubría */
 [data-theme="light"] .cal-week-card,
@@ -4871,6 +4874,7 @@ var _csvParsedTrades=null;
 // Conectar broker vía SnapTrade (solo lectura). Abre el portal real en otra
 // pestaña; 'tradestation' pre-selecciona TradeStation, 'snaptrade' deja elegir.
 function connectBroker(broker){
+  try{localStorage.setItem(userKey('lbc_broker_type'),broker);}catch(e){}   // recuerda el broker para mostrar su logo
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
   // TradeStation DIRECTO (OAuth propio) — trae FUTUROS que SnapTrade no expone.
@@ -5197,12 +5201,22 @@ function _hasLocalBroker(){
   }catch(e){}
   return false;
 }
+// Logo del broker conectado (junto a "Desconectar broker"). Se ve pro y deja claro
+// A QUÉ broker estás conectado. TradeStation directo = default; vía SnapTrade = badge
+// neutro dorado (no inventamos un broker específico que no sabemos con certeza).
+function _brokerLogo(){
+  var t=''; try{t=localStorage.getItem(userKey('lbc_broker_type'))||'';}catch(e){}
+  if(t==='snaptrade'){
+    return '<svg width="16" height="16" viewBox="0 0 24 24" style="vertical-align:middle;flex:0 0 auto;"><rect width="24" height="24" rx="5" fill="#C9A84C"/><path d="M8.5 9.5h7M8.5 14.5h7" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/><circle cx="8.5" cy="9.5" r="1.6" fill="#0a0a0a"/><circle cx="15.5" cy="14.5" r="1.6" fill="#0a0a0a"/></svg>';
+  }
+  return '<svg width="16" height="16" viewBox="0 0 24 24" style="vertical-align:middle;flex:0 0 auto;" aria-label="TradeStation"><rect width="24" height="24" rx="5" fill="#0B3D91"/><path d="M6 8.2h12v2.4h-4.6V18h-2.8v-7.4H6z" fill="#fff"/></svg>';
+}
 function _applyBrokerBtn(connected){
   _brokerConnected=!!connected;
   ['sb-broker-btn','hdr-broker-btn'].forEach(function(id){
     var b=document.getElementById(id);if(!b)return;
     var lbl=b.querySelector('.brk-lbl'),ico=b.querySelector('.brk-ico');
-    if(_brokerConnected){ b.setAttribute('onclick','brokerBtnDisconnect()'); if(lbl)lbl.textContent='Desconectar broker'; if(ico)ico.textContent='⏻'; }
+    if(_brokerConnected){ b.setAttribute('onclick','brokerBtnDisconnect()'); if(lbl)lbl.textContent='Desconectar broker'; if(ico){ico.innerHTML=_brokerLogo();ico.style.display='inline-flex';ico.style.alignItems='center';} }
     else { b.setAttribute('onclick','openCsvImport()'); if(lbl)lbl.textContent='Conectar broker'; if(ico)ico.textContent='🔗'; }
   });
 }
