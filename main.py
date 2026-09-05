@@ -8070,12 +8070,10 @@ async def journal_coach(request: Request):
     if not _coach_quota_ok(uid):
         return {"ok": True, "answer": f"Llegaste a tu límite diario de {COACH_DAILY_PER_USER} consultas al Coach. "
                 "Vuelve mañana — mientras tanto, tus estadísticas y patrones ya están en el dashboard."}
-    if not budget_ok("groq", 1):
-        # Presupuesto GLOBAL de Groq agotado (compartido con los refrescos automáticos).
-        # NO es el límite del usuario. Devolvemos ok:False para que el frontend muestre
-        # su análisis LOCAL real (stats/patrones) en vez de un "vuelve luego".
-        return {"ok": False, "degraded": "groq_budget",
-                "answer": "El Coach está muy solicitado ahora mismo. Inténtalo en unos minutos."}
+    # Groq global agotado NO corta el Coach: si el presupuesto está topado (muchos
+    # traders a la vez) saltamos Groq y vamos directo al respaldo Gemini (cuota propia).
+    # Solo si NINGUNA IA responde caemos al análisis local del frontend.
+    groq_ok = budget_ok("groq", 1)
     question = str(data.get("question") or "").strip()[:600]
     # Contexto compacto que manda el frontend (ya agregado, sin PII).
     ctx = data.get("context") or {}
@@ -8099,32 +8097,36 @@ async def journal_coach(request: Request):
         "Responde en 2-4 frases, concreto y basado en sus números."
     )
     answer = None
-    try:
-        async with httpx.AsyncClient(timeout=25) as client:
-            r = await client.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json={"model": "qwen/qwen3.6-27b", "max_tokens": 350, "temperature": 0.5,
-                      "reasoning_effort": "none",
-                      "messages": [{"role": "system", "content": sys_msg},
-                                   {"role": "user", "content": usr_msg}]}
-            )
-        if r.status_code == 200:
-            j = r.json()
-            answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
-        else:
-            print(f"[coach] groq {r.status_code}: {r.text[:160]}")
-    except Exception as e:
-        print(f"[coach] groq error: {type(e).__name__}: {str(e)[:160]}")
+    if groq_ok:
+        try:
+            async with httpx.AsyncClient(timeout=25) as client:
+                r = await client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                    json={"model": "qwen/qwen3.6-27b", "max_tokens": 350, "temperature": 0.5,
+                          "reasoning_effort": "none",
+                          "messages": [{"role": "system", "content": sys_msg},
+                                       {"role": "user", "content": usr_msg}]}
+                )
+            if r.status_code == 200:
+                j = r.json()
+                answer = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+            else:
+                print(f"[coach] groq {r.status_code}: {r.text[:160]}")
+        except Exception as e:
+            print(f"[coach] groq error: {type(e).__name__}: {str(e)[:160]}")
     if answer:
         budget_charge("groq", 1); _coach_charge(uid)   # contabiliza tras respuesta OK
-        return {"ok": True, "answer": answer}
-    # Groq falló → fallback DORMIDO a Gemini (solo si hay GEMINI_API_KEY)
+        return {"ok": True, "answer": answer, "provider": "groq"}
+    # Groq topado o falló → respaldo REAL con Gemini (cuota propia; no toca la de Groq).
+    # Cubre el caso "entran todos los traders y se agota Groq": el Coach sigue con IA.
     g = await _gemini_chat(sys_msg, usr_msg, max_tokens=350, temperature=0.5)
     if g:
-        _coach_charge(uid)   # respeta el tope por usuario; no toca la cuota de Groq
-        return {"ok": True, "answer": g}
-    raise HTTPException(502, "Coach no disponible ahora mismo, inténtalo en unos minutos")
+        _coach_charge(uid)
+        return {"ok": True, "answer": g, "provider": "gemini"}
+    # Ni Groq ni Gemini disponibles → el frontend muestra su análisis local (stats reales).
+    return {"ok": False, "degraded": "no_ai",
+            "answer": "El Coach está muy solicitado ahora mismo. Inténtalo en unos minutos."}
 
 
 @app.get("/api/admin/diag-ai")
