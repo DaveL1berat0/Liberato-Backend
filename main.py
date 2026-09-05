@@ -8168,6 +8168,37 @@ async def test_gemini(key: str = ""):
             "respuesta": ans or "(sin respuesta — revisa la key o el modelo)"}
 
 
+@app.get("/api/admin/gemini-models")
+async def gemini_models(key: str = ""):
+    """Lista los modelos Gemini disponibles en la cuenta de Dave (los que soportan
+    generateContent), para elegir el más nuevo/capaz como respaldo del Coach.
+    Uso: ?key=<ADMIN_KEY>"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    if not GEMINI_API_KEY:
+        return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
+    try:
+        async with httpx.AsyncClient(timeout=20) as c:
+            r = await c.get(f"https://generativelanguage.googleapis.com/v1beta/models?key={GEMINI_API_KEY}&pageSize=200")
+        if r.status_code != 200:
+            return {"ok": False, "status": r.status_code, "detalle": r.text[:300]}
+        models = r.json().get("models", [])
+        gen = [
+            {"name": m.get("name", "").replace("models/", ""),
+             "display": m.get("displayName", ""),
+             "in_tok": m.get("inputTokenLimit"), "out_tok": m.get("outputTokenLimit")}
+            for m in models
+            if "generateContent" in (m.get("supportedGenerationMethods") or [])
+        ]
+        # ordena poniendo primero los flash/pro más nuevos por nombre
+        gen.sort(key=lambda x: x["name"], reverse=True)
+        return {"ok": True, "modelo_actual": GEMINI_MODEL,
+                "actual_disponible": any(g["name"] == GEMINI_MODEL for g in gen),
+                "total": len(gen), "modelos": gen}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
+
+
 @app.post("/api/journal/parse-csv")
 async def journal_parse_csv(request: Request):
     """Parsea un CSV de broker con IA (Groq) → trades del journal.
