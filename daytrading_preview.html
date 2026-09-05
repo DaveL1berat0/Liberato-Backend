@@ -2902,13 +2902,15 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       // La escala se ajusta a las VELAS (+ muros CERCANOS), no a los muros lejanos:
       // antes un Max Pain a ~200pts comprimía las velas hasta verse planas/sin datos.
       autoscaleInfoProvider:function(orig){
-        var arr=window._cxData;
-        if(!arr||!arr.length) return orig();
-        var mn=Infinity,mx=-Infinity;
-        for(var i=0;i<arr.length;i++){var b=arr[i]; if(b.low<mn)mn=b.low; if(b.high>mx)mx=b.high;}
-        if(!isFinite(mn)||!isFinite(mx)) return orig();
+        // FIT a la resolución del trader: usar orig() (el rango de las velas VISIBLES),
+        // NO todo el dataset. Antes iterábamos window._cxData completo -> incluía barras
+        // viejas fuera de pantalla (p.ej. mínimos de sesiones previas ~700pts abajo) y
+        // las velas visibles salían aplastadas arriba. orig() ya ajusta a lo visible.
+        var res=orig(); if(!res||!res.priceRange) return res;
+        var mn=res.priceRange.minValue, mx=res.priceRange.maxValue;
+        if(!isFinite(mn)||!isFinite(mx)) return res;
         var span=(mx-mn)||1, lo=mn-span*0.6, hi=mx+span*0.6;
-        // incluye solo los muros dentro de ±60% del rango de velas (los cercanos siguen visibles)
+        // incluye solo los muros dentro de ±60% del rango visible (los cercanos siguen visibles)
         [S.callWall,S.putWall,S.gammaFlip,S.maxPain].forEach(function(w){
           if(w!=null&&w>=lo&&w<=hi){ if(w<mn)mn=w; if(w>mx)mx=w; }
         });
@@ -2935,11 +2937,22 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     Object.keys(lines).forEach(function(k){try{series.removePriceLine(lines[k]);}catch(e){}});lines={};
     var _z=(S.show0dte&&S.zero); var _st=_z?LS.Dotted:LS.Solid; // 0DTE punteado para distinguir
     var _cw=_actCW(),_pw=_actPW(),_gf=_actGF();
+    // FIT a la resolución del trader: una priceLine SIEMPRE entra al autoscale de
+    // Lightweight Charts, así que un nivel lejano (p.ej. Max Pain a −700pts) estiraba
+    // la escala y las velas salían comprimidas/planas. Solución: solo dibujamos la
+    // línea si el nivel cae dentro del rango de las VELAS (± 60% del span, igual que
+    // autoscaleInfoProvider). Los niveles lejanos NO se dibujan como línea: siguen
+    // visibles como tag de borde con flecha (cxTags), sin aplastar el gráfico.
+    var _lo=null,_hi=null,_cd=window._cxData;
+    if(_cd&&_cd.length){var _rec=_cd.slice(-90);var _mn=Infinity,_mx=-Infinity;for(var _i=0;_i<_rec.length;_i++){var _b=_rec[_i];if(_b.low<_mn)_mn=_b.low;if(_b.high>_mx)_mx=_b.high;}
+      if(isFinite(_mn)&&isFinite(_mx)){var _sp=(_mx-_mn)||1;_lo=_mn-_sp*0.6;_hi=_mx+_sp*0.6;}}
+    if(_lo==null&&typeof S.price==='number'&&S.price>0){_lo=S.price*0.985;_hi=S.price*1.015;}
+    function _inView(p){return _lo==null||(p>=_lo&&p<=_hi);}
     // PRIMARIOS + flip + maxpain: línea nítida + PRECIO en el eje (axisLabelVisible).
-    if(_cw!=null)lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
-    if(_gf!=null)lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
-    if(_pw!=null)lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
-    if(S.maxPain!=null)lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
+    if(_cw!=null&&_inView(_cw))lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(_gf!=null&&_inView(_gf))lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
+    if(_pw!=null&&_inView(_pw))lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(S.maxPain!=null&&_inView(S.maxPain))lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
     try{_updateVwapLine();}catch(e){}   // VWAP como LÍNEA (estilo EMA) que sigue la sesión, no una priceLine horizontal
     // MUROS SECUNDARIOS de gamma por volumen (Dave): también con PRECIO en el eje para que el
     // trader identifique el nivel exacto, no solo el perfil. Línea sparse tenue (color atenuado).
@@ -2948,6 +2961,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var sn=0;
     [{arr:gw.pos,c:'#1f7d5c'},{arr:gw.neg,c:'#6f5cae'}].forEach(function(side){
       side.arr.slice(1,2).forEach(function(wl){  // solo el 2º muro de cada lado ([0] ya es Call/Put Wall)
+        if(!_inView(wl.strike)) return;   // no dibujar muros lejanos: comprimirían las velas
         if(used.some(function(u){return Math.abs(u-wl.strike)<12;})) return;  // no saturar el eje con niveles pegados
         used.push(wl.strike);
         lines['sec'+(sn++)]=series.createPriceLine({price:wl.strike,color:side.c,lineWidth:1,lineStyle:LS.SparseDotted,axisLabelVisible:true,title:''});

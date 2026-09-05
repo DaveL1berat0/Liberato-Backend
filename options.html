@@ -258,6 +258,10 @@ a{color:inherit;text-decoration:none;}
 .scan-tbl{width:100%;border-collapse:collapse;font-size:12px;}
 .scan-tbl th{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:10px 16px;border-bottom:1px solid var(--hair);font-weight:700;position:sticky;top:0;background:var(--panel);z-index:2;}
 .scan-tbl th.r,.scan-tbl td.r{text-align:right;}
+.scan-tbl th.sortable{cursor:pointer;user-select:none;transition:color .15s;}
+.scan-tbl th.sortable:hover{color:var(--gold);}
+.scan-tbl th .sort-ind{margin-left:5px;font-size:9px;opacity:0.4;}
+.scan-tbl th .sort-ind.on{opacity:1;color:var(--gold);}
 .scan-tbl td{padding:10px 16px;border-bottom:0.5px solid var(--hair);color:var(--ink-2);vertical-align:top;}
 .scan-tbl tbody tr{cursor:pointer;transition:background 0.15s;}
 .scan-tbl tbody tr:hover{background:rgba(201,168,76,0.05);}
@@ -1314,6 +1318,21 @@ function whyChips(x){
     +'<span class="why" style="color:'+locC+'">Precio '+locMk+'</span>';
 }
 var SCAN_ALL=[];
+// ── Ordenamiento del scanner: clic en el header ordena mayor→menor y alterna ──
+var SCAN_SORT={key:null,dir:-1};   // key: fscore|distHigh|estado · dir: -1 desc, 1 asc
+function _scanEstadoRank(c){c=c||'';if(/DISLOCATION/.test(c))return 4;if(/PULLBACK/.test(c))return 3;if(/WEAK/.test(c))return 2;return 1;}
+function scanSortBy(key){ if(SCAN_SORT.key===key){SCAN_SORT.dir=-SCAN_SORT.dir;} else {SCAN_SORT.key=key;SCAN_SORT.dir=-1;} scanFilter(); }
+function _scanSorted(rows){
+  if(!SCAN_SORT.key) return rows;
+  var k=SCAN_SORT.key, dir=SCAN_SORT.dir;
+  function val(x){ return k==='fscore'?x.fscore : k==='distHigh'?x.distHigh : k==='estado'?_scanEstadoRank(x['class']) : null; }
+  return rows.slice().sort(function(a,b){
+    var va=val(a),vb=val(b), na=(va==null||!isFinite(va)), nb=(vb==null||!isFinite(vb));
+    if(na&&nb)return 0; if(na)return 1; if(nb)return -1;   // sin dato → siempre al final
+    return (va-vb)*dir;
+  });
+}
+function _sortCaret(key){ return SCAN_SORT.key!==key ? '<span class="sort-ind">↕</span>' : '<span class="sort-ind on">'+(SCAN_SORT.dir<0?'▼':'▲')+'</span>'; }
 // Score de elección (0-100) → 5 estrellas. Cada estrella = 20 puntos.
 function starRating(fscore){
   if(fscore==null||!isFinite(fscore)) return '<span class="st-off">☆☆☆☆☆</span>';
@@ -1344,12 +1363,16 @@ function renderScanRows(rows){
       +'<td class="r" style="color:'+dhc+';font-family:var(--mono);">'+dh+'</td>'
       +'<td class="r"><span class="scan-cls '+cm[0]+'">'+cm[1]+'</span></td></tr>';
   }).join('');
-  host.innerHTML='<table class="scan-tbl"><thead><tr><th>Empresa · por qué está aquí</th><th class="r">Score elección</th><th class="r">Δ 52w Hi</th><th class="r">Estado</th></tr></thead><tbody>'+body+'</tbody></table>';
+  host.innerHTML='<table class="scan-tbl"><thead><tr><th>Empresa · por qué está aquí</th>'
+    +'<th class="r sortable" onclick="scanSortBy(\'fscore\')" title="Ordenar por score">Score elección'+_sortCaret('fscore')+'</th>'
+    +'<th class="r sortable" onclick="scanSortBy(\'distHigh\')" title="Ordenar por distancia al máximo 52s">Δ 52w Hi'+_sortCaret('distHigh')+'</th>'
+    +'<th class="r sortable" onclick="scanSortBy(\'estado\')" title="Ordenar por estado">Estado'+_sortCaret('estado')+'</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table>';
 }
 function scanFilter(){
   var i=document.getElementById('scan-search'); var q=i?(i.value||'').trim().toUpperCase():'';
   var rows=q?SCAN_ALL.filter(function(x){return x.ticker.indexOf(q)>=0||(x.sector||'').toUpperCase().indexOf(q)>=0;}):SCAN_ALL;
-  renderScanRows(rows);
+  renderScanRows(_scanSorted(rows));
   var disl=SCAN_ALL.filter(function(x){return /DISLOCATION/.test(x['class']||'');}).length;
   var sub=document.getElementById('scan-sub'); if(sub)sub.textContent=q?(rows.length+' de '+SCAN_ALL.length+' · "'+q+'"'):(SCAN_ALL.length+' activos · '+disl+' dislocación');
 }
