@@ -3285,6 +3285,12 @@ function calWeekVal(w){
   if(calMode==='pct'){var a=acctSize();if(a<=0)return '—';var q=(w.pnl/a)*100;return(q>=0?'+':'')+q.toFixed(2)+'%';}
   return f$(w.pnl);
 }
+// P&L del Mes en la unidad activa del calendario (igual que celdas y semanas).
+function calMonthVal(pnl,pts){
+  if(calMode==='pts')return(pts>=0?'+':'')+(Math.round((pts||0)*10)/10)+'p';
+  if(calMode==='pct'){var a=acctSize();if(a<=0)return '—';var q=(pnl/a)*100;return(q>=0?'+':'')+q.toFixed(2)+'%';}
+  return f$(pnl);
+}
 function renderCal(){
   try{renderTrAccounts();}catch(e){}  // botón Cuentas también en Calendario
   var FT=getFilteredT(_dfShared);
@@ -3299,7 +3305,7 @@ function renderCal(){
   var dowPnl=[0,0,0,0,0,0,0],dowN=[0,0,0,0,0,0,0],DOW_ES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   monthTrades.forEach(function(t){var wd=new Date(t.date+'T12:00:00').getDay();dowPnl[wd]+=t.pnl;dowN[wd]++;});
   var bestDow=-1,worstDow=-1;for(var wi=0;wi<7;wi++){if(dowN[wi]){if(bestDow<0||dowPnl[wi]>dowPnl[bestDow])bestDow=wi;if(worstDow<0||dowPnl[wi]<dowPnl[worstDow])worstDow=wi;}}
-  document.getElementById('cal-stats').innerHTML=[{l:'P&L del Mes',v:f$(ms.total),c:ms.total>=0?'var(--green)':'var(--red)'},{l:'Win Rate',v:ms.wr+'%',c:ms.wr>=50?'var(--green)':'var(--red)'},{l:'Días Verdes',v:winD+'/'+(winD+lossD),c:'var(--green)'},{l:'Mejor Racha',v:maxStreak+' días',c:'var(--gold)'},{l:'Mejor día',v:bestDow>=0?DOW_ES[bestDow]:'—',c:'var(--green)'},{l:'Peor día',v:worstDow>=0&&worstDow!==bestDow?DOW_ES[worstDow]:'—',c:'var(--red)'},{l:'Trades',v:ms.n,c:'var(--text)'}].map(function(c){return '<div class="cal-stat"><div class="cal-stat-lbl">'+c.l+'</div><div class="cal-stat-val" style="color:'+c.c+'">'+c.v+'</div></div>';}).join('');
+  document.getElementById('cal-stats').innerHTML=[{l:'P&L del Mes',v:calMonthVal(ms.total,monthTrades.reduce(function(s,t){return s+(t.points||0);},0)),c:ms.total>=0?'var(--green)':'var(--red)'},{l:'Win Rate',v:ms.wr+'%',c:ms.wr>=50?'var(--green)':'var(--red)'},{l:'Días Verdes',v:winD+'/'+(winD+lossD),c:'var(--green)'},{l:'Mejor Racha',v:maxStreak+' días',c:'var(--gold)'},{l:'Mejor día',v:bestDow>=0?DOW_ES[bestDow]:'—',c:'var(--green)'},{l:'Peor día',v:worstDow>=0&&worstDow!==bestDow?DOW_ES[worstDow]:'—',c:'var(--red)'},{l:'Trades',v:ms.n,c:'var(--text)'}].map(function(c){return '<div class="cal-stat"><div class="cal-stat-lbl">'+c.l+'</div><div class="cal-stat-val" style="color:'+c.c+'">'+c.v+'</div></div>';}).join('');
   var html='';for(var i=0;i<off;i++)html+='<div class="cal-day empty"></div>';
   var weekPnls=[],curWeekPnl=0,curWeekPts=0,curWeekDays=0,cellCount=off;
   for(var d=1;d<=dim;d++){var ds=calYr+'-'+pad(calMo+1)+'-'+pad(d),dt=byDate[ds]||[],dp=dt.reduce(function(s,t){return s+t.pnl;},0),dpt=dt.reduce(function(s,t){return s+(t.points||0);},0),cls='notr',dW=dt.filter(function(x){return x.result==='win';}).length,dL=dt.filter(function(x){return x.result==='loss';}).length;if(dt.length){cls=dp>600?'great':dp>0?'good':dp>-500?'sloss':'bloss';}var onclick=dt.length?' onclick="openDayDetail(this.dataset.date)" data-date="'+ds+'"':'';html+='<div class="cal-day '+cls+'"'+onclick+'><div class="cd-num">'+d+'</div>'+(dt.length?'<div class="cd-pnl">'+calVal(dt)+'</div><div class="cd-n">'+dt.length+'T'+((dW+dL)?' · '+Math.round(dW/(dW+dL)*100)+'%':'')+'</div>':'')+'</div>';if(dt.length){curWeekPnl+=dp;curWeekPts+=dpt;curWeekDays+=dt.length;}cellCount++;if(cellCount%7===0){weekPnls.push({pnl:curWeekPnl,pts:curWeekPts,days:curWeekDays});curWeekPnl=0;curWeekPts=0;curWeekDays=0;}}

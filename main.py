@@ -8071,7 +8071,11 @@ async def journal_coach(request: Request):
         return {"ok": True, "answer": f"Llegaste a tu límite diario de {COACH_DAILY_PER_USER} consultas al Coach. "
                 "Vuelve mañana — mientras tanto, tus estadísticas y patrones ya están en el dashboard."}
     if not budget_ok("groq", 1):
-        return {"ok": True, "answer": "El Coach está muy solicitado ahora mismo. Inténtalo en unos minutos."}
+        # Presupuesto GLOBAL de Groq agotado (compartido con los refrescos automáticos).
+        # NO es el límite del usuario. Devolvemos ok:False para que el frontend muestre
+        # su análisis LOCAL real (stats/patrones) en vez de un "vuelve luego".
+        return {"ok": False, "degraded": "groq_budget",
+                "answer": "El Coach está muy solicitado ahora mismo. Inténtalo en unos minutos."}
     question = str(data.get("question") or "").strip()[:600]
     # Contexto compacto que manda el frontend (ya agregado, sin PII).
     ctx = data.get("context") or {}
