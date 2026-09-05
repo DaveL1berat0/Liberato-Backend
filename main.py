@@ -152,9 +152,14 @@ def _coach_charge(uid):
 # totalmente inerte (devuelve None y el flujo se comporta igual que hoy). Pensado
 # para el día que Groq jubile un modelo: pegas la key y el coach sigue vivo.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-# gemini-3.6-flash: verificado en la cuenta de Dave (gemini-2.5/2.0-flash ya no están
-# para cuentas nuevas). Gemini 3.x RAZONA (~700 tok de thought) → se le da margen extra.
-GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
+# gemini-flash-latest: ALIAS que Google mantiene apuntando al Flash estable MÁS NUEVO
+# (hoy 3.8; la cuenta de Dave tiene 3.5→3.8 + los alias -latest). Se usa el alias a
+# propósito para que el respaldo del Coach NUNCA se quede atrás — se auto-actualiza al
+# salir un flash nuevo, sin tocar código. Es superior al qwen-3.6-27b de Groq (modelo
+# abierto de 27B que además corre con reasoning OFF por velocidad); Gemini 3.x RAZONA,
+# por eso se le da +900 tok de colchón de "thought". Para fijar una versión concreta,
+# poné GEMINI_MODEL=gemini-3.8-flash (o el que sea) en Railway.
+GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-flash-latest").strip()
 async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     if not GEMINI_API_KEY:
         return None
