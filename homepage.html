@@ -1770,9 +1770,9 @@ nav { max-width: 100%; }
 
 <script>
 /* HERO VIDEO — infraestructura lista. PARA ACTIVAR: sube 'hero.mp4' a esta carpeta
-   y cambia HERO_VIDEO_SRC a 'hero.mp4'. Aparece un botón de play sobre el poster;
-   al reproducir se oculta el placeholder y al terminar el video el botón
-   "Inicia aquí" hace glow. Con HERO_VIDEO_SRC vacío queda el poster actual. */
+   y cambia HERO_VIDEO_SRC a 'hero.mp4'. Modo: autoplay silenciado en loop (video
+   ambiente). Al poder reproducir se oculta el poster. Con HERO_VIDEO_SRC vacío
+   queda el poster actual, sin romperse. */
 (function(){
   var HERO_VIDEO_SRC=''; /* ← poner 'hero.mp4' cuando el video esté subido */
   if(!HERO_VIDEO_SRC)return;
@@ -1781,21 +1781,14 @@ nav { max-width: 100%; }
   if(!box||!thumb)return;
   var v=document.createElement('video');
   v.id='hero-video'; v.className='hero-video';
-  v.setAttribute('playsinline',''); v.preload='metadata'; v.src=HERO_VIDEO_SRC;
-  v.style.display='none';
+  v.muted=true; v.loop=true; v.autoplay=true; v.preload='auto';
+  v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('loop','');
+  v.src=HERO_VIDEO_SRC;
   box.insertBefore(v, box.firstChild);
-  var btn=document.createElement('button');
-  btn.className='hero-play-btn'; btn.type='button'; btn.setAttribute('aria-label','Reproducir video');
-  btn.innerHTML='<span class="hero-play-tri"></span>';
-  thumb.appendChild(btn);
-  btn.addEventListener('click',function(){
-    thumb.style.display='none';
-    v.style.display='block';
-    v.controls=true; v.muted=false; v.play();
-  });
-  v.addEventListener('ended',function(){
-    var cta=document.getElementById('hero-cta'); if(cta)cta.classList.add('pulse');
-  });
+  v.addEventListener('canplay',function(){ thumb.style.display='none'; });
+  function tryPlay(){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+  tryPlay();
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible')tryPlay(); });
 })();
 </script>
 
