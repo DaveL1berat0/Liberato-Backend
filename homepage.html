@@ -240,7 +240,7 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
   to{opacity:1;transform:translateY(0);}
 }
 .hero{display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem 0;text-align:center;}
-.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;font-weight:500;margin-bottom:1.5rem;padding:5px 14px;border:0.5px solid rgba(201,168,76,0.2);border-radius:20px;background:rgba(201,168,76,0.05);}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#C9A84C;font-weight:500;margin-bottom:1.5rem;padding:6px 18px;border:0.5px solid rgba(201,168,76,0.2);border-radius:20px;background:rgba(201,168,76,0.05);line-height:1.4;}
 .eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#C9A84C;flex-shrink:0;}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;line-height:1.1;color:#E8E4D9;margin-bottom:1rem;}
 .hero-title em{font-style:italic;color:#C9A84C;}
@@ -1288,7 +1288,8 @@ nav { max-width: 100%; }
     margin: 0 auto !important;
     padding: 2.5rem var(--page-gutter) !important;
   }
-  .stat { padding: 0 clamp(1.5rem, 3vw, 4rem) !important; }
+  .stats { justify-content: space-between !important; }
+  .stat { flex: 1 1 0 !important; padding: 0 clamp(0.75rem, 2vw, 2rem) !important; }
 }
 
 /* ─── BRIDGE ─────────────────────────────────────────────── */
@@ -1848,8 +1849,8 @@ nav { max-width: 100%; }
 <section class="tr">
   <div class="tr-header">
     <div class="eyebrow" style="margin-bottom:1rem;"><div class="eyebrow-dot"></div>Resultados verificados &middot; Broker regulado SEC</div>
-    <h2 class="sec-title">No hables de trading.<br><em>Demuéstralo.</em></h2>
-    <p class="sec-sub" style="font-size:12px;color:rgba(232,228,217,0.35);">Retiros reales, certificaciones y track record completo. Sin filtros.</p>
+    <h2 class="sec-title">Sin filtros. Sin humo.<br><em>Solo ejecuciones reales.</em></h2>
+    <p class="sec-sub" style="font-size:12px;color:rgba(232,228,217,0.35);">Track record verificable, cuentas reales y operaciones en un broker regulado por la SEC.</p>
   </div>
 
   <div class="block">
@@ -3009,9 +3010,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Sin señales': 'No signals',
     'Solo educación': 'Education only',
     'Resultados verificados · Broker regulado SEC': 'Verified results · SEC-regulated broker',
-    'No hables de trading.': 'Don\'t talk about trading.',
-    'Demuéstralo.': 'Prove it.',
-    'Retiros reales, certificaciones y track record completo. Sin filtros.': 'Real withdrawals, certifications and complete track record. No filters.',
+    'Sin filtros. Sin humo.': 'No filters. No hype.',
+    'Solo ejecuciones reales.': 'Only real executions.',
+    'Track record verificable, cuentas reales y operaciones en un broker regulado por la SEC.': 'Verifiable track record, real accounts and trades on an SEC-regulated broker.',
     'Broker regulado · SEC · FINRA · SIPC': 'Regulated broker · SEC · FINRA · SIPC',
     'Track record anual · TradeStation Securities': 'Annual track record · TradeStation Securities',
     'Crecimiento 12 meses': '12-month growth',
