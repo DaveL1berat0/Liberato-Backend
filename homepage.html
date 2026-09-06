@@ -255,40 +255,6 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 .hero-cta.pulse{animation:heroCtaPulse 1.9s ease-in-out infinite;}
 @keyframes heroCtaPulse{0%,100%{box-shadow:0 10px 30px rgba(201,168,76,0.28);}50%{box-shadow:0 0 0 7px rgba(201,168,76,0.12),0 14px 44px rgba(201,168,76,0.55);}}
 @media(max-width:600px){.hero-cta{width:100%;max-width:340px;justify-content:center;padding:15px 24px;font-size:13px;}}
-/* ── ¿ESTO ES PARA TI? (who is this for) ── */
-.wf{padding:4rem 1.25rem 3rem;max-width:1080px;margin:0 auto;}
-.wf-header{text-align:center;margin-bottom:2.6rem;}
-.wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-.wf-card{background:rgba(255,255,255,0.02);border:0.5px solid rgba(232,228,217,0.09);border-radius:14px;padding:28px 24px;transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;}
-.wf-card:hover{transform:translateY(-4px);border-color:rgba(201,168,76,0.32);box-shadow:0 14px 34px rgba(0,0,0,0.28);}
-.wf-icon{width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:24px;border-radius:13px;background:rgba(201,168,76,0.09);border:0.5px solid rgba(201,168,76,0.24);margin-bottom:18px;}
-.wf-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:500;color:#E8E4D9;margin-bottom:11px;line-height:1.2;}
-.wf-desc{font-size:13px;font-weight:300;color:rgba(232,228,217,0.55);line-height:1.65;}
-@media(max-width:820px){.wf-grid{grid-template-columns:1fr;gap:14px;}.wf{padding:3rem 1.25rem 2rem;}}
-/* light theme para lo nuevo */
-[data-theme="light"] .wf-card{background:#ffffff !important;border-color:rgba(33,29,22,0.10);}
-[data-theme="light"] .wf-card:hover{border-color:rgba(156,124,44,0.4);box-shadow:0 14px 34px rgba(33,29,22,0.08);}
-[data-theme="light"] .wf-title{color:#211d16;}
-[data-theme="light"] .wf-desc{color:rgba(33,29,22,0.55);}
-[data-theme="light"] .wf-icon{background:rgba(156,124,44,0.10);border-color:rgba(156,124,44,0.32);}
-/* ── HISTORIA / FUNDADOR ── */
-.founder{max-width:820px;margin:0 auto;padding:4rem 1.25rem 3rem;text-align:center;}
-.founder-header{margin-bottom:1.8rem;}
-.founder-lead{font-size:17px;font-weight:300;color:rgba(232,228,217,0.82);line-height:1.7;margin:0 auto 1.1rem;max-width:700px;}
-.founder-text{font-size:14px;font-weight:300;color:rgba(232,228,217,0.55);line-height:1.75;margin:0 auto 2rem;max-width:680px;}
-.founder-stats{display:flex;justify-content:center;gap:0;margin:0 auto 1.7rem;border:0.5px solid rgba(201,168,76,0.18);border-radius:14px;overflow:hidden;max-width:640px;}
-.fstat{flex:1;padding:20px 16px;border-right:0.5px solid rgba(201,168,76,0.14);}
-.fstat:last-child{border-right:none;}
-.fstat-num{display:block;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:500;color:#C9A84C;line-height:1;margin-bottom:6px;}
-.fstat-lbl{display:block;font-size:11px;font-weight:300;color:rgba(232,228,217,0.5);letter-spacing:0.02em;line-height:1.3;}
-.founder-sign{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(232,228,217,0.7);}
-@media(max-width:600px){.founder{padding:3rem 1.25rem 2rem;}.founder-lead{font-size:15px;}.fstat{padding:15px 8px;}.fstat-num{font-size:23px;}.fstat-lbl{font-size:10px;}}
-[data-theme="light"] .founder-lead{color:rgba(33,29,22,0.85);}
-[data-theme="light"] .founder-text{color:rgba(33,29,22,0.55);}
-[data-theme="light"] .founder-stats{border-color:rgba(156,124,44,0.28);}
-[data-theme="light"] .fstat{border-color:rgba(156,124,44,0.16);}
-[data-theme="light"] .fstat-lbl{color:rgba(33,29,22,0.5);}
-[data-theme="light"] .founder-sign{color:rgba(33,29,22,0.7);}
 .video-wrap{width:100%;}
 .video-box{border:0.5px solid rgba(201,168,76,0.25);border-radius:12px;background:rgba(13,17,23,0.9);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color 0.4s,box-shadow 0.4s;}
 .video-box::before{content:'';position:absolute;inset:-60px;background:radial-gradient(ellipse at 50% 110%,rgba(201,168,76,0.28) 0%,rgba(201,168,76,0.08) 35%,transparent 70%);opacity:0;transition:opacity 0.5s;pointer-events:none;}
@@ -1796,48 +1762,6 @@ nav { max-width: 100%; }
   </button>
 </section>
 
-<!-- HISTORIA / FUNDADOR -->
-<section class="founder">
-  <div class="founder-header">
-    <span class="sec-eyebrow">Quién está detrás</span>
-    <h2 class="sec-title">Yo ya recorrí <em>el camino largo.</em></h2>
-  </div>
-  <p class="founder-lead">Cuando empecé, hace 7 años, no tenía idea de lo que hacía. En YouTube solo veía promesas, y fui de curso en curso buscando una respuesta que nunca llegaba.</p>
-  <p class="founder-text">Tuve que viajar a otros países y pagar mentorías personales con traders reales &mdash; de los que de verdad operan en el trading floor &mdash; para acortar mi curva. Y me dije: ningún latino debería pagar tanto para aprender esto. De ahí nace Liberato Community.</p>
-  <div class="founder-stats">
-    <div class="fstat"><span class="fstat-num">7 años</span><span class="fstat-lbl">Operando el stock market</span></div>
-    <div class="fstat"><span class="fstat-num">3 años</span><span class="fstat-lbl">Siendo rentable</span></div>
-    <div class="fstat"><span class="fstat-num">SEC</span><span class="fstat-lbl">Track record regulado</span></div>
-  </div>
-  <p class="founder-sign">&mdash; Dave, fundador de Liberato Community</p>
-</section>
-
-<!-- ¿ESTO ES PARA TI? -->
-<section class="wf">
-  <div class="wf-header">
-    <span class="sec-eyebrow">Antes de entrar</span>
-    <h2 class="sec-title">¿Esto es <em>para ti?</em></h2>
-    <p class="sec-sub">Si te identificas con esto, estás en el lugar correcto.</p>
-  </div>
-  <div class="wf-grid">
-    <div class="wf-card">
-      <div class="wf-icon">&#129517;</div>
-      <h3 class="wf-title">Cansado de cursos que no sirven</h3>
-      <p class="wf-desc">Viste los videos de YouTube, quizá compraste un curso, pero nada hizo clic. Quieres un sistema real, no otra lista de señales.</p>
-    </div>
-    <div class="wf-card">
-      <div class="wf-icon">&#127919;</div>
-      <h3 class="wf-title">Quieres dominar tus entradas y salidas</h3>
-      <p class="wf-desc">Sin hype. Sin dar picks. Una metodología repetible que funciona con el mercado en tendencia, lateral o cayendo.</p>
-    </div>
-    <div class="wf-card">
-      <div class="wf-icon">&#128200;</div>
-      <h3 class="wf-title">Quieres acortar tu curva</h3>
-      <p class="wf-desc">Aprende con data real y viéndome operar en vivo &mdash; para llegar a la consistencia sin gastar años y miles de dólares como yo.</p>
-    </div>
-  </div>
-</section>
-
 <!-- PLANS -->
 <section class="plans">
   <div class="plans-header" id="planes">
@@ -2664,9 +2588,8 @@ updateCD();setInterval(updateCD,1000);
 var _lcOpen=false, _lcMsgs=[], _lcTyping=false, _lcWaShown=false;
 
 var LC_CHIPS=[
-  '¿Qué incluye la membresía?','¿Cuánto cuesta?','¿Sirve si nunca he operado?',
-  '¿Puedo con trabajo de tiempo completo?','¿Necesito mucho capital?','¿Cuándo son los lives?',
-  '¿Cómo empiezo?','¿Hay prueba gratis?'
+  '¿Qué incluye la membresía?','¿Cuánto cuesta?','¿Cuándo son los lives?',
+  '¿Cómo empiezo?','¿Qué es el Bias Engine?','¿Tienen prueba gratis?'
 ];
 
 // NOTE: El bot responde SOLO con contenido predefinido de Liberato Community.
@@ -2675,18 +2598,6 @@ var LC_CHIPS=[
 
 function getFAQReply(q){
   var Q=q.toLowerCase();
-
-  // Capital para operar (antes de precio para rutear bien "¿con cuánto empiezo?")
-  if(/capital|mucho dinero|poco dinero|cuánto.*dinero|cuanto.*dinero|dinero.*(empez|necesit|operar|trad)|con cuánto.*(empez|operar)|con cuanto.*(empez|operar)|cuenta.*(mínima|minima|pequeñ|chica)|tamaño.*cuenta|fondear|fondeo/i.test(Q))
-    return 'No necesitas una cuenta grande para empezar. Trabajamos <strong>NQ y MNQ (micro futuros)</strong>, así puedes arrancar con una cuenta pequeña y escalar cuando demuestres consistencia. Lo primero es la <strong>habilidad y la gestión de riesgo</strong> — el capital viene después.';
-
-  // Tiempo / trabajo de tiempo completo
-  if(/tiempo completo|full.?time|full time|trabajo|trabaj|a mi ritmo|mi propio ritmo|medio tiempo|part.?time|tengo empleo|empleo|mientras.*trabaj|estudiar de noche|por la noche|fines de semana/i.test(Q))
-    return 'Sí, sin problema. Los lives se <strong>graban</strong> y el contenido es <strong>on-demand</strong>, así que aprendes a tu propio ritmo aunque trabajes tiempo completo — puedes estudiar las sesiones por la noche o los fines de semana.';
-
-  // Nunca ha operado / desde cero (acoge al principiante absoluto)
-  if(/nunca he oper|nunca.*oper|nunca.*trad|jamás.*oper|jamas.*oper|no he operado|desde cero|de cero|primera vez|soy nuevo|recién empiezo|recien empiezo|principiante absoluto|sin experiencia|no sé nada|no se nada/i.test(Q))
-    return 'Estás en el lugar correcto. 👌 Empieza por la <strong>Comunidad Libre (gratis)</strong> para aprender las bases, y cuando quieras dar el salto, el acceso completo te lleva paso a paso con educación estructurada y viéndome operar en vivo — no necesitas saber nada antes.';
 
   // Precio / costo
   if(/precio|costo|cuesta|cuánto|cuanto|valor|pagar|inversión|inversion|cuánto.*mes|mes.*cuánto/i.test(Q))
@@ -3056,27 +2967,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Order Flow y Volume Profile para traders que buscan consistencia real —': 'Order Flow and Volume Profile for traders seeking real consistency —',
     'Tradea con Data Real del Mercado.': 'Trade with Real Market Data.',
     'Inicia aquí': 'Start here',
-    'Antes de entrar': 'Before you join',
-    '¿Esto es': 'Is this',
-    'para ti?': 'for you?',
-    'Si te identificas con esto, estás en el lugar correcto.': 'If this sounds like you, you\'re in the right place.',
-    'Cansado de cursos que no sirven': 'Tired of courses that don\'t work',
-    'Viste los videos de YouTube, quizá compraste un curso, pero nada hizo clic. Quieres un sistema real, no otra lista de señales.': 'You watched the YouTube videos, maybe bought a course, but nothing clicked. You want a real system, not another list of signals.',
-    'Quieres dominar tus entradas y salidas': 'You want to master your entries and exits',
-    'Sin hype. Sin dar picks. Una metodología repetible que funciona con el mercado en tendencia, lateral o cayendo.': 'No hype. No stock picks. A repeatable methodology that works whether the market is trending, choppy, or selling off.',
-    'Quieres acortar tu curva': 'You want to shorten your curve',
-    'Aprende con data real y viéndome operar en vivo — para llegar a la consistencia sin gastar años y miles de dólares como yo.': 'Learn with real data and by watching me trade live — to reach consistency without spending years and thousands of dollars like I did.',
-    'Quién está detrás': 'Who\'s behind it',
-    'Yo ya recorrí': 'I already walked',
-    'el camino largo.': 'the long road.',
-    'Cuando empecé, hace 7 años, no tenía idea de lo que hacía. En YouTube solo veía promesas, y fui de curso en curso buscando una respuesta que nunca llegaba.': 'When I started, 7 years ago, I had no idea what I was doing. On YouTube all I saw were promises, and I went from course to course chasing an answer that never came.',
-    'Tuve que viajar a otros países y pagar mentorías personales con traders reales — de los que de verdad operan en el trading floor — para acortar mi curva. Y me dije: ningún latino debería pagar tanto para aprender esto. De ahí nace Liberato Community.': 'I had to travel to other countries and pay for private mentorships with real traders — the kind who actually trade on the trading floor — to shorten my curve. And I told myself: no Latino should have to pay that much to learn this. That\'s how Liberato Community was born.',
-    '7 años': '7 years',
-    'Operando el stock market': 'Trading the stock market',
-    '3 años': '3 years',
-    'Siendo rentable': 'Profitable',
-    'Track record regulado': 'Regulated track record',
-    '— Dave, fundador de Liberato Community': '— Dave, founder of Liberato Community',
     'No sabes por donde empezar? Este video explica cada opcion.': 'Don\'t know where to start? This video explains each option.',
     'Elige tu nivel de acceso': 'Choose your access level',
     'Planes para': 'Plans for',
