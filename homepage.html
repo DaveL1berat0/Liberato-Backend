@@ -255,6 +255,12 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 .hero-cta.pulse{animation:heroCtaPulse 1.9s ease-in-out infinite;}
 @keyframes heroCtaPulse{0%,100%{box-shadow:0 10px 30px rgba(201,168,76,0.28);}50%{box-shadow:0 0 0 7px rgba(201,168,76,0.12),0 14px 44px rgba(201,168,76,0.55);}}
 @media(max-width:600px){.hero-cta{width:100%;max-width:340px;justify-content:center;padding:15px 24px;font-size:13px;}}
+/* ── HERO VIDEO (se activa cuando existe hero.mp4) ── */
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px;background:#000;z-index:2;}
+.hero-play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:rgba(201,168,76,0.94);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(201,168,76,0.4);transition:transform .2s ease,box-shadow .2s ease;z-index:5;}
+.hero-play-btn:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 12px 40px rgba(201,168,76,0.55);}
+.hero-play-tri{width:0;height:0;border-left:22px solid #080A0F;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:5px;}
+@media(max-width:600px){.hero-play-btn{width:60px;height:60px;}.hero-play-tri{border-left-width:18px;border-top-width:11px;border-bottom-width:11px;}}
 .video-wrap{width:100%;}
 .video-box{border:0.5px solid rgba(201,168,76,0.25);border-radius:12px;background:rgba(13,17,23,0.9);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color 0.4s,box-shadow 0.4s;}
 .video-box::before{content:'';position:absolute;inset:-60px;background:radial-gradient(ellipse at 50% 110%,rgba(201,168,76,0.28) 0%,rgba(201,168,76,0.08) 35%,transparent 70%);opacity:0;transition:opacity 0.5s;pointer-events:none;}
@@ -1748,8 +1754,8 @@ nav { max-width: 100%; }
   <p class="hero-sub">Herramientas avanzadas y trading en vivo para traders que buscan <strong>consistencia real y un edge en el mercado.</strong></p>
   <div class="video-wrap">
     <div class="video-box" id="video-box">
-      <!-- Trading thumbnail with real photo -->
-      <div class="video-thumb">
+      <!-- Placeholder/poster. Cuando exista hero.mp4 en esta carpeta, un <video> se inserta aquí y este thumb se oculta al reproducir. -->
+      <div class="video-thumb" id="video-thumb">
         <div id="vthumb"></div>
         <div class="vthumb-redbar"></div>
         
@@ -1761,6 +1767,37 @@ nav { max-width: 100%; }
     <span>Inicia aquí</span><span class="hc-arrow">&#8594;</span>
   </button>
 </section>
+
+<script>
+/* HERO VIDEO — infraestructura lista. PARA ACTIVAR: sube 'hero.mp4' a esta carpeta
+   y cambia HERO_VIDEO_SRC a 'hero.mp4'. Aparece un botón de play sobre el poster;
+   al reproducir se oculta el placeholder y al terminar el video el botón
+   "Inicia aquí" hace glow. Con HERO_VIDEO_SRC vacío queda el poster actual. */
+(function(){
+  var HERO_VIDEO_SRC=''; /* ← poner 'hero.mp4' cuando el video esté subido */
+  if(!HERO_VIDEO_SRC)return;
+  var box=document.getElementById('video-box');
+  var thumb=document.getElementById('video-thumb');
+  if(!box||!thumb)return;
+  var v=document.createElement('video');
+  v.id='hero-video'; v.className='hero-video';
+  v.setAttribute('playsinline',''); v.preload='metadata'; v.src=HERO_VIDEO_SRC;
+  v.style.display='none';
+  box.insertBefore(v, box.firstChild);
+  var btn=document.createElement('button');
+  btn.className='hero-play-btn'; btn.type='button'; btn.setAttribute('aria-label','Reproducir video');
+  btn.innerHTML='<span class="hero-play-tri"></span>';
+  thumb.appendChild(btn);
+  btn.addEventListener('click',function(){
+    thumb.style.display='none';
+    v.style.display='block';
+    v.controls=true; v.muted=false; v.play();
+  });
+  v.addEventListener('ended',function(){
+    var cta=document.getElementById('hero-cta'); if(cta)cta.classList.add('pulse');
+  });
+})();
+</script>
 
 <!-- PLANS -->
 <section class="plans">
