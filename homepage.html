@@ -349,7 +349,7 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 /* ── TRACK RECORD ── */
 .sec-divider{height:0.5px;background:rgba(201,168,76,0.07);}
 .tr{padding:3rem 1.25rem;}
-.tr-header{text-align:center;margin-top:1rem;margin-bottom:3.25rem;}
+.tr-header{text-align:center;margin-bottom:3.25rem;}
 .block{background:rgba(13,17,23,0.9);border:0.5px solid rgba(201,168,76,0.18);border-radius:14px;padding:1.375rem 1.25rem;margin-bottom:1rem;transition:border-color 0.4s,box-shadow 0.4s,transform 0.3s;position:relative;overflow:hidden;}
 .block::before{content:'';position:absolute;inset:-80px;background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,0.1) 0%,transparent 65%);opacity:0;transition:opacity 0.5s;pointer-events:none;}
 .block.glow::before,.block:hover::before{opacity:1;}
@@ -1266,14 +1266,14 @@ nav { max-width: 100%; }
 
 /* ─── PLANS ─────────────────────────────────────────────── */
 @media (min-width: 768px) {
-  .plans { padding: 3.5rem var(--page-gutter) 5rem !important; }
+  .plans { padding: 3.5rem var(--page-gutter) 3rem !important; }
   .plans-grid-2 {
     max-width: var(--page-inner) !important;
     gap: 28px !important;
   }
 }
 @media (min-width: 1280px) {
-  .plans { padding: 4rem var(--page-gutter) 5.5rem !important; }
+  .plans { padding: 4rem var(--page-gutter) 3rem !important; }
   .plans-grid-2 { max-width: var(--page-inner) !important; gap: 32px !important; }
   .card-hero-2 { padding: 2.75rem 2.5rem !important; }
   .card-free-2 { padding: 2.25rem 2rem !important; }
@@ -1304,7 +1304,7 @@ nav { max-width: 100%; }
 
 /* ─── TRACK RECORD / BLOCKS ─────────────────────────────── */
 @media (min-width: 768px) {
-  .tr { padding: 5rem var(--page-gutter) !important; }
+  .tr { padding: 3rem var(--page-gutter) 5rem !important; }
   .block {
     max-width: var(--page-inner) !important;
     margin-left: auto !important; margin-right: auto !important;
@@ -1316,7 +1316,7 @@ nav { max-width: 100%; }
   }
 }
 @media (min-width: 1280px) {
-  .tr { padding: 6rem var(--page-gutter) !important; }
+  .tr { padding: 3.5rem var(--page-gutter) 6rem !important; }
   .block { padding: 2.75rem 3rem !important; }
   .countdown { padding: 3.5rem var(--page-gutter) !important; }
 }
@@ -1812,8 +1812,8 @@ nav { max-width: 100%; }
             <strong style="color:#C9A84C;font-size:13px;font-weight:600;line-height:1.3;">Acceso completo a Liberato Community Web</strong>
           </div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
-            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Journal de trading con Inteligencia Artificial <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Exclusivo</span></span></li>
-            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Niveles de Gamma Exposure institucionales <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Exclusivo</span></span></li>
+            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Journal de trading con Inteligencia Artificial <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Nuevo</span></span></li>
+            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Niveles de Gamma Exposure institucionales Intraday <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Nuevo</span></span></li>
             <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Order Flow y lecturas de mercado en tiempo real</li>
             <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Earnings Calendar con noticias de alto impacto</li>
           </ul>
@@ -2993,8 +2993,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'por mes · cancela cuando quieras': 'per month · cancel anytime',
     'Acceso completo a Liberato Community Web': 'Full access to Liberato Community Web',
     'Journal de trading con Inteligencia Artificial': 'AI-powered trading journal',
-    'Exclusivo': 'Exclusive',
-    'Niveles de Gamma Exposure institucionales': 'Institutional Gamma Exposure levels',
+    'Nuevo': 'New',
+    'Niveles de Gamma Exposure institucionales Intraday': 'Intraday institutional Gamma Exposure levels',
     'Order Flow y lecturas de mercado en tiempo real': 'Real-time Order Flow and market reads',
     'Earnings Calendar con noticias de alto impacto': 'Earnings Calendar with high-impact news',
     'Day Trading en vivo': 'Live Day Trading',
