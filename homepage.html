@@ -349,7 +349,7 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 /* ── TRACK RECORD ── */
 .sec-divider{height:0.5px;background:rgba(201,168,76,0.07);}
 .tr{padding:3rem 1.25rem;}
-.tr-header{text-align:center;margin-bottom:2rem;}
+.tr-header{text-align:center;margin-top:1rem;margin-bottom:3.25rem;}
 .block{background:rgba(13,17,23,0.9);border:0.5px solid rgba(201,168,76,0.18);border-radius:14px;padding:1.375rem 1.25rem;margin-bottom:1rem;transition:border-color 0.4s,box-shadow 0.4s,transform 0.3s;position:relative;overflow:hidden;}
 .block::before{content:'';position:absolute;inset:-80px;background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,0.1) 0%,transparent 65%);opacity:0;transition:opacity 0.5s;pointer-events:none;}
 .block.glow::before,.block:hover::before{opacity:1;}
@@ -429,7 +429,7 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 .cd-title em{color:#C9A84C;font-style:italic;}
 .cd-sub{font-size:12px;color:rgba(232,228,217,0.28);margin-bottom:1.5rem;font-weight:300;line-height:1.5;}
 .cd-timer{display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-bottom:1.25rem;}
-.cd-unit{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.2vw,16px);}
 .cd-num{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:#C9A84C;line-height:1;min-width:52px;text-align:center;}
 .cd-lbl{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(232,228,217,0.5);font-family:'DM Mono',monospace;}
 .cd-sep{font-family:'Cormorant Garamond',serif;font-size:32px;color:rgba(201,168,76,0.2);padding-bottom:14px;}
@@ -535,8 +535,8 @@ footer{text-align:center;padding:2rem 1.25rem;border-top:0.5px solid rgba(201,16
   min-width:0;
 }
 .card-hero-2::before{
-  content:'';position:absolute;inset:-60px;
-  background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,0.12) 0%,transparent 65%);
+  content:'';position:absolute;inset:-50px -40px 8px -40px;
+  background:radial-gradient(ellipse at 50% 40%,rgba(201,168,76,0.11) 0%,transparent 62%);
   pointer-events:none;
   border-radius:14px;
 }
@@ -1400,7 +1400,7 @@ nav { max-width: 100%; }
   .stat-label { font-size: 8px !important; }
 
   .block      { padding: 1.375rem var(--page-gutter) !important; margin-bottom: 1rem !important; }
-  .tr-header  { margin-bottom: 1.75rem !important; }
+  .tr-header  { margin-bottom: 2.5rem !important; }
   .sec-title  { font-size: clamp(26px, 7vw, 34px) !important; }
 
   .payouts-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 7px !important; }
@@ -1738,7 +1738,6 @@ nav { max-width: 100%; }
 
 <!-- HERO -->
 <section class="hero">
-  <div class="eyebrow"><div class="eyebrow-dot"></div>Order Flow &middot; Volume Profile &middot; Futuros NQ</div>
 
   <!-- PERSONALIZED WELCOME -->
   <div class="hero-welcome" id="hero-welcome" style="display:none;">
@@ -1798,7 +1797,7 @@ nav { max-width: 100%; }
       <div class="hero-badge-2">Acceso Completo</div>
       <span class="card-tag tag-gold">Membresía mensual</span>
       <h3 class="card-name-hero-2">Trading en Vivo</h3>
-      <p class="card-desc-hero-2">Todo lo que necesitas para operar como un profesional. Sin excusas.</p>
+      <p class="card-desc-hero-2">Todo mi proceso de trading, reunido en un solo lugar.</p>
       <div class="price-block-hero-2">
         <span class="price-hero-2">$199</span>
         <span class="price-period-hero-2">por mes &middot; cancela cuando quieras</span>
@@ -1813,8 +1812,8 @@ nav { max-width: 100%; }
             <strong style="color:#C9A84C;font-size:13px;font-weight:600;line-height:1.3;">Acceso completo a Liberato Community Web</strong>
           </div>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
-            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Journal de trading con Inteligencia Artificial</li>
-            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Niveles de Gamma Exposure institucionales</li>
+            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Journal de trading con Inteligencia Artificial <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Exclusivo</span></span></li>
+            <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span><span>Niveles de Gamma Exposure institucionales <span style="font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#C9A84C;background:rgba(201,168,76,0.16);border:0.5px solid rgba(201,168,76,0.35);padding:2px 6px;border-radius:5px;white-space:nowrap;">Exclusivo</span></span></li>
             <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Order Flow y lecturas de mercado en tiempo real</li>
             <li style="display:flex;align-items:flex-start;gap:7px;font-size:12px;color:rgba(232,228,217,0.7);font-weight:300;"><span style="color:#C9A84C;font-size:10px;margin-top:2px;">&#8226;</span>Earnings Calendar con noticias de alto impacto</li>
           </ul>
@@ -1848,9 +1847,8 @@ nav { max-width: 100%; }
 <!-- TRACK RECORD -->
 <section class="tr">
   <div class="tr-header">
-    <div class="eyebrow" style="margin-bottom:1rem;"><div class="eyebrow-dot"></div>Resultados verificados &middot; Broker regulado SEC</div>
     <h2 class="sec-title">Sin filtros. Sin humo.<br><em>Solo ejecuciones reales.</em></h2>
-    <p class="sec-sub" style="font-size:12px;color:rgba(232,228,217,0.35);">Track record verificable, cuentas reales y operaciones en un broker regulado por la SEC.</p>
+    <p class="sec-sub" style="font-size:13px;color:rgba(232,228,217,0.62);">Track record verificable, cuentas reales y operaciones en un broker regulado por la SEC.</p>
   </div>
 
   <div class="block">
@@ -1873,7 +1871,7 @@ nav { max-width: 100%; }
   
 
   <div class="countdown">
-    <div class="cd-eyebrow"><div class="cd-dot"></div>Próximo ciclo Q3</div>
+    <div class="cd-eyebrow"><div class="cd-dot"></div>Próximo ciclo Q4</div>
     <h3 class="cd-title">El acceso abre el <em>1 de Noviembre</em></h3>
     <p class="cd-sub">Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.</p>
     <div class="cd-timer">
@@ -1885,7 +1883,6 @@ nav { max-width: 100%; }
       <span class="cd-sep">:</span>
       <div class="cd-unit"><span class="cd-num" id="cds">00</span><span class="cd-lbl">Segundos</span></div>
     </div>
-    <p class="cd-date">Apertura oficial &middot; 1 Noviembre 2026 &middot; 12:00 AM ET</p>
     <p class="cd-spots">&mdash; <span id="spots-count">20</span> spots disponibles &mdash;</p>
     <button class="cd-btn" onclick="openNewsletter()">Notificarme cuando abra &#8594;</button>
   </div>
@@ -1906,7 +1903,7 @@ nav { max-width: 100%; }
   <div class="sticky-cta-inner">
     <div class="sticky-cta-text">
       <span class="sticky-cta-dot"></span>
-      <span><strong id="sticky-spots">20</strong> spots para el ciclo de Agosto</span>
+      <span><strong id="sticky-spots">20</strong> spots para el ciclo de Noviembre</span>
     </div>
     <button class="sticky-cta-btn" onclick="window.open('https://whop.com/dave-liberato-group/live-day-trading-52/','_blank')">Reservar mi lugar &#8594;</button>
   </div>
@@ -2547,7 +2544,6 @@ function updateCD(){
   try{
     var d=target.getDate(),mn=MES[target.getMonth()],yr=target.getFullYear();
     var tEl=document.querySelector('.cd-title'); if(tEl)tEl.innerHTML='El acceso abre el <em>'+d+' de '+mn+'</em>';
-    var dEl=document.querySelector('.cd-date'); if(dEl)dEl.innerHTML='Apertura oficial · '+d+' '+mn+' '+yr+' · 12:00 AM ET';
   }catch(e){}
 }
 updateCD();setInterval(updateCD,1000);
@@ -2993,10 +2989,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Acceso Completo': 'Full Access',
     'Membresía mensual': 'Monthly membership',
     'Trading en Vivo': 'Live Trading',
-    'Todo lo que necesitas para operar como un profesional. Sin excusas.': 'Everything you need to trade like a professional. No excuses.',
+    'Todo mi proceso de trading, reunido en un solo lugar.': 'My entire trading process, all in one place.',
     'por mes · cancela cuando quieras': 'per month · cancel anytime',
     'Acceso completo a Liberato Community Web': 'Full access to Liberato Community Web',
     'Journal de trading con Inteligencia Artificial': 'AI-powered trading journal',
+    'Exclusivo': 'Exclusive',
     'Niveles de Gamma Exposure institucionales': 'Institutional Gamma Exposure levels',
     'Order Flow y lecturas de mercado en tiempo real': 'Real-time Order Flow and market reads',
     'Earnings Calendar con noticias de alto impacto': 'Earnings Calendar with high-impact news',
@@ -3019,7 +3016,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Rendimiento anual': 'Annual return',
     'TradeStation — Regulado SEC': 'TradeStation — SEC Regulated',
     'Broker regulado por SEC, FINRA y SIPC. Cuenta real. No simulada.': 'Broker regulated by SEC, FINRA and SIPC. Real account. Not simulated.',
-    'Próximo ciclo Q3': 'Next cycle Q3',
+    'Próximo ciclo Q4': 'Next cycle Q4',
     'El acceso abre el': 'Access opens on',
     '31 de Agosto': 'August 31st',
     'Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.': 'Limited spots. Once full, access closes until the next cycle.',
