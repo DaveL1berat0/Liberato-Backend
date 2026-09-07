@@ -358,35 +358,47 @@ _PUBLIC_API_EXACT = {
     "/api/whop/webhook", "/api/broker/tradestation/callback",
 }
 _PUBLIC_API_PREFIX = ("/api/auth/", "/api/admin/", "/api/webhooks/")
-_prem_gate_cache = {}   # email -> (is_premium:bool, expires_at:float)  · evita hit a Supabase por cada poll
+_gate_cache = {}   # email -> (is_premium:bool, jtis:set|None, expires_at:float) · evita hit a Supabase por poll
 
-async def _gate_premium_ok(payload):
-    """¿El dueño del JWT tiene premium AHORA? Cacheado 120s. Admin siempre pasa.
-    Verifica contra DB (plan + caducidad); si la DB falla, FAIL-OPEN al plan firmado
-    en el token para NO bloquear a quien paga por un hipo de red."""
+async def _gate_check(payload):
+    """Devuelve (ok, reason). reason ∈ {'ok','premium','session'}. Cacheado 120s por email.
+    Valida premium (plan + caducidad) Y que el jti del token siga vivo (límite de
+    dispositivos). Admins: premium siempre, SIN límite de dispositivos. Si la DB falla:
+    FAIL-OPEN al plan firmado y NO se enforcan sesiones (evita lockout por hipo de red)."""
     email = (payload.get("email") or "").lower()
     if not email:
-        return False
-    if email in ADMIN_EMAILS:
-        return True
+        return (False, "session")
+    is_admin = email in ADMIN_EMAILS
     now = time.time()
-    c = _prem_gate_cache.get(email)
-    if c and c[1] > now:
-        return c[0]
-    ok = False
-    try:
-        u = await user_get(email) or {}
-        plan = u.get("plan") or payload.get("plan", "free")
-        exp = u.get("plan_expires")
-        if exp and plan in EXPIRABLE_PLANS and int(now) >= int(exp):
-            plan = "free"
-        ok = plan in PREMIUM_PLANS
-    except Exception as e:
-        # Fail-open al plan firmado (el token no se puede falsificar) para evitar lockout total.
-        print(f"[gate] user_get falló para {email}: {e} → fail-open al plan del token")
-        ok = (payload.get("plan", "free") in PREMIUM_PLANS)
-    _prem_gate_cache[email] = (ok, now + 120)
-    return ok
+    c = _gate_cache.get(email)
+    if not (c and c[2] > now):
+        is_prem = is_admin; jtis = set()
+        try:
+            u = await user_get(email) or {}
+            plan = u.get("plan") or payload.get("plan", "free")
+            exp = u.get("plan_expires")
+            if exp and plan in EXPIRABLE_PLANS and int(now) >= int(exp):
+                plan = "free"
+            is_prem = is_admin or (plan in PREMIUM_PLANS)
+            for s in (await _sessions_get(email)):
+                if isinstance(s, dict) and s.get("jti"):
+                    jtis.add(s["jti"])
+        except Exception as e:
+            print(f"[gate] refresh falló {email}: {e} → fail-open plan token, sin enforcement de sesión")
+            is_prem = is_admin or (payload.get("plan", "free") in PREMIUM_PLANS)
+            jtis = None   # None = no pudimos leer sesiones → no bloquear por dispositivo
+        c = (is_prem, jtis, now + 120); _gate_cache[email] = c
+    is_prem, jtis, _ = c
+    if not is_prem:
+        return (False, "premium")
+    if is_admin:
+        return (True, "ok")            # admins sin límite de dispositivos
+    if jtis is None:
+        return (True, "ok")            # store de sesiones ilegible → no bloquear
+    jti = payload.get("jti")
+    if not jti or jti not in jtis:
+        return (False, "session")      # token viejo/sin jti o expulsado por otro dispositivo
+    return (True, "ok")
 
 @app.middleware("http")
 async def _premium_gate(request, call_next):
@@ -397,15 +409,19 @@ async def _premium_gate(request, call_next):
             return await call_next(request)
         if path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
             return await call_next(request)
-        # Endpoint de datos → exige token + premium.
+        # Endpoint de datos → exige token + premium + sesión viva.
         tok = (request.headers.get("authorization", "") or "").replace("Bearer ", "").strip()
         p = _verify_jwt(tok) if tok else None
         if not p:
             r = JSONResponse({"detail": "auth_required", "code": "auth_required"}, status_code=401)
             r.headers["Access-Control-Allow-Origin"] = "*"
             return r
-        if not await _gate_premium_ok(p):
-            r = JSONResponse({"detail": "premium_required", "code": "premium_required"}, status_code=402)
+        ok, reason = await _gate_check(p)
+        if not ok:
+            if reason == "premium":
+                r = JSONResponse({"detail": "premium_required", "code": "premium_required"}, status_code=402)
+            else:
+                r = JSONResponse({"detail": "session_invalid", "code": "session_invalid"}, status_code=401)
             r.headers["Access-Control-Allow-Origin"] = "*"
             return r
         return await call_next(request)
@@ -6680,6 +6696,90 @@ def _make_jwt(payload, days=30):
     sig = _b64u(hmac.new(AUTH_SECRET.encode(), seg.encode(), hashlib.sha256).digest())
     return seg + "." + sig
 
+# ── SESIONES / LÍMITE DE DISPOSITIVOS (Fase 2, Dave: 2 dispositivos, expulsa el más viejo) ──
+# Las sesiones activas de cada cuenta viven en app_config bajo 'sessions:<email>' (sin
+# migración de tabla). Cada login/verify emite un token con 'jti' y registra la sesión;
+# si ya hay 2, se descarta la MÁS ANTIGUA. El gate valida que el jti del token siga vivo.
+LBC_MAX_DEVICES = 2
+async def _sessions_get(email):
+    try:
+        raw = await _sb_get_config("sessions:" + (email or "").lower())
+    except Exception:
+        return []
+    if not raw:
+        return []
+    if isinstance(raw, str):
+        try: raw = json.loads(raw)
+        except Exception: return []
+    return raw if isinstance(raw, list) else []
+
+async def _sessions_add(email, jti, ua="", ip=""):
+    email = (email or "").lower()
+    lst = await _sessions_get(email)
+    now = int(time.time())
+    lst = [s for s in lst if isinstance(s, dict) and s.get("jti") and s.get("jti") != jti]
+    lst.append({"jti": jti, "ua": (ua or "")[:120], "ip": (ip or "")[:64], "ts": now})
+    lst.sort(key=lambda s: s.get("ts", 0))
+    if len(lst) > LBC_MAX_DEVICES:
+        lst = lst[-LBC_MAX_DEVICES:]          # conserva las MÁS NUEVAS → expulsa la más vieja
+    await _sb_set_config("sessions:" + email, json.dumps(lst))
+    _gate_cache.pop(email, None)              # invalida cache para que el kick surta efecto ya
+    return lst
+
+async def _sessions_remove(email, jti):
+    email = (email or "").lower()
+    lst = await _sessions_get(email)
+    lst = [s for s in lst if isinstance(s, dict) and s.get("jti") != jti]
+    await _sb_set_config("sessions:" + email, json.dumps(lst))
+    _gate_cache.pop(email, None)
+
+async def _issue_token(payload, request=None, days=30):
+    """Emite un JWT con jti y registra la sesión (kick-oldest). Los admins NO cuentan
+    para el límite de dispositivos (es Dave; no debe autobloquearse)."""
+    p = dict(payload)
+    jti = secrets.token_hex(8)
+    p["jti"] = jti
+    tok = _make_jwt(p, days=days)
+    email = (p.get("email") or "").lower()
+    if email and email not in ADMIN_EMAILS:
+        ua = ""; ip = ""
+        try:
+            if request is not None:
+                ua = request.headers.get("user-agent", "") or ""
+                ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+                      or (request.client.host if request.client else ""))
+        except Exception:
+            pass
+        try:
+            await _sessions_add(email, jti, ua, ip)
+        except Exception as e:
+            print(f"[sessions] no se pudo registrar sesión de {email}: {e}")
+    return tok
+
+# ── RATE LIMIT (Fase 3, anti fuerza bruta) — en memoria por instancia ──────────
+_rl_hits = {}
+def _client_ip(request):
+    try:
+        xff = request.headers.get("x-forwarded-for", "")
+        if xff:
+            return xff.split(",")[0].strip()
+        return request.client.host if request.client else "?"
+    except Exception:
+        return "?"
+def _rate_limit(request, bucket, limit, window, email=""):
+    """Lanza 429 si se superan `limit` intentos en `window` seg para (bucket, ip[, email])."""
+    now = time.time()
+    key = f"{bucket}:{_client_ip(request)}:{(email or '').lower()}"
+    arr = [t for t in _rl_hits.get(key, []) if now - t < window]
+    if len(arr) >= limit:
+        _rl_hits[key] = arr
+        raise HTTPException(429, "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.")
+    arr.append(now); _rl_hits[key] = arr
+    if len(_rl_hits) > 5000:   # limpieza ocasional
+        for k in list(_rl_hits.keys()):
+            if all(now - t > 3600 for t in _rl_hits.get(k, [])):
+                _rl_hits.pop(k, None)
+
 def _verify_jwt(token):
     try:
         parts = (token or "").split(".")
@@ -7234,7 +7334,7 @@ async def auth_register(request: Request):
             asyncio.create_task(send_welcome_free(email, rec["name"]))
     except Exception:
         pass
-    token = _make_jwt({"sub": uid, "email": email, "plan": plan0, "name": rec["name"]})
+    token = await _issue_token({"sub": uid, "email": email, "plan": plan0, "name": rec["name"]}, request)
     return {"ok": True, "token": token, "user": {"id": uid, "email": email, "name": rec["name"], "plan": plan0}}
 
 @app.post("/api/auth/verify")
@@ -7245,6 +7345,7 @@ async def auth_verify(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    _rate_limit(request, "verify", 12, 600, email)   # anti fuerza bruta del código: 12 / 10 min
     code = (str(data.get("code") or "")).strip()
     if await user_get(email):
         raise HTTPException(409, "Esta cuenta ya está verificada. Inicia sesión.")
@@ -7269,7 +7370,7 @@ async def auth_verify(request: Request):
             asyncio.create_task(send_welcome_free(email, rec.get("name")))
     except Exception:
         pass
-    token = _make_jwt({"sub": rec["id"], "email": email, "plan": plan0, "name": rec.get("name")})
+    token = await _issue_token({"sub": rec["id"], "email": email, "plan": plan0, "name": rec.get("name")}, request)
     return {"ok": True, "token": token,
             "user": {"id": rec["id"], "email": email, "name": rec.get("name"), "plan": plan0}}
 
@@ -7280,6 +7381,7 @@ async def auth_resend_code(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    _rate_limit(request, "email", 5, 600, email)   # anti spam de correos: 5 / 10 min
     pend = await _pending_get(email)
     if not pend or not isinstance(pend, dict) or pend.get("used"):
         raise HTTPException(400, "No hay un registro pendiente para ese correo.")
@@ -7312,6 +7414,7 @@ async def auth_forgot(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    _rate_limit(request, "email", 5, 600, email)   # anti spam de correos: 5 / 10 min
     u = await user_get(email)
     if u and EMAIL_READY:
         code = _gen_code()
@@ -7378,6 +7481,7 @@ async def auth_login(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    _rate_limit(request, "login", 8, 300, email)   # anti fuerza bruta: 8 intentos / 5 min por IP+email
     pw = data.get("password") or ""
     u = await user_get(email)
     if not u:
@@ -7392,7 +7496,7 @@ async def auth_login(request: Request):
         raise HTTPException(500, "cuenta corrupta")
     if not hmac.compare_digest(_hash_pw(pw, salt), u.get("pass_hash", "")):
         raise HTTPException(401, "Email o contraseña incorrectos")
-    token = _make_jwt({"sub": u["id"], "email": email, "plan": u.get("plan", "free"), "name": u.get("name")})
+    token = await _issue_token({"sub": u["id"], "email": email, "plan": u.get("plan", "free"), "name": u.get("name")}, request)
     return {"ok": True, "token": token,
             "user": {"id": u["id"], "email": email, "name": u.get("name"), "plan": u.get("plan", "free")}}
 
@@ -7547,8 +7651,8 @@ async def auth_change_email(request: Request, authorization: str = Header("")):
     except Exception as _e:
         print(f"[change-email] avatar migrate: {_e}")
     await _del_user(email)
-    token = _make_jwt({"sub": u.get("id"), "email": new_email,
-                       "plan": u.get("plan", "free"), "name": u.get("name")})
+    token = await _issue_token({"sub": u.get("id"), "email": new_email,
+                       "plan": u.get("plan", "free"), "name": u.get("name")}, request)
     return {"ok": True, "token": token, "email": new_email}
 
 @app.get("/api/community/access")
@@ -7567,8 +7671,25 @@ async def community_access(authorization: str = Header("")):
             "name": u.get("name") or p.get("name")}
 
 @app.post("/api/auth/logout")
-async def auth_logout():
-    """Logout: el JWT es sin estado; el cliente simplemente descarta el token."""
+async def auth_logout(request: Request, authorization: str = Header("")):
+    """Logout: quita ESTA sesión (jti) del registro → libera el slot de dispositivo.
+    Body opcional {everywhere:true} cierra TODAS las sesiones de la cuenta."""
+    tok = (authorization or "").replace("Bearer ", "").strip()
+    p = _verify_jwt(tok)
+    if p:
+        email = (p.get("email") or "").lower()
+        everywhere = False
+        try:
+            body = await request.json(); everywhere = bool(body.get("everywhere"))
+        except Exception:
+            pass
+        try:
+            if everywhere:
+                await _sb_set_config("sessions:" + email, json.dumps([])); _gate_cache.pop(email, None)
+            elif p.get("jti"):
+                await _sessions_remove(email, p.get("jti"))
+        except Exception as e:
+            print(f"[logout] {email}: {e}")
     return {"ok": True}
 
 @app.post("/api/auth/set-plan")
