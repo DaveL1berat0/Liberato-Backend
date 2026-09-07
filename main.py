@@ -408,6 +408,16 @@ async def _premium_gate(request, call_next):
         if request.method == "OPTIONS" or not path.startswith("/api/"):
             return await call_next(request)
         if path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
+            # Rate-limit extra para /api/admin/* (fuerza bruta de ADMIN_KEY): 30/5min por IP.
+            if path.startswith("/api/admin/"):
+                _now = time.time(); _k = "admin:" + _client_ip(request)
+                _arr = [t for t in _rl_hits.get(_k, []) if _now - t < 300]
+                if len(_arr) >= 30:
+                    _rl_hits[_k] = _arr
+                    _rr = JSONResponse({"detail": "rate_limited", "code": "rate_limited"}, status_code=429)
+                    _rr.headers["Access-Control-Allow-Origin"] = "*"
+                    return _rr
+                _arr.append(_now); _rl_hits[_k] = _arr
             return await call_next(request)
         # Endpoint de datos → exige token + premium + sesión viva.
         tok = (request.headers.get("authorization", "") or "").replace("Bearer ", "").strip()
@@ -4487,7 +4497,7 @@ async def refresh_movers():
 @app.get("/api/admin/diag-news")
 async def diag_news(key: str = ""):
     """Sondea Finnhub /news crudo: cuántas noticias trae y cuántas pasan el
-    clasificador (y con qué score). Uso: ?key=liberato2026"""
+    clasificador (y con qué score). Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     out = {"finnhub_key": bool(FINNHUB_KEY), "movers_status": cache["movers"].get("status"),
@@ -5288,7 +5298,7 @@ _candles_cache = {}   # {tf: {"ts": epoch, "data": {...}}}
 @app.get("/api/admin/budget")
 async def budget_status(key: str = ""):
     """Monitor de presupuesto de APIs en tiempo real.
-    Uso: /api/admin/budget?key=liberato2026"""
+    Uso: /api/admin/budget?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     real_limits = {"twelvedata":800,"finnhub":60,"flashalpha":100,
@@ -5312,7 +5322,7 @@ async def budget_status(key: str = ""):
 async def diag_candles_iv(key: str = ""):
     """Diagnóstico: muestra qué responde TwelveData (velas) y FlashAlpha
     (summary/atm_iv) en CRUDO, para ver por qué fallan.
-    Uso: /api/admin/diag-candles-iv?key=liberato2026"""
+    Uso: /api/admin/diag-candles-iv?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     out = {}
@@ -5909,7 +5919,7 @@ async def diag_yahoo(key: str = ""):
 @app.get("/api/admin/diag-sentiment")
 async def diag_sentiment(key: str = ""):
     """Verifica las fuentes que reemplazan a FlashAlpha: VIX (TwelveData) y
-    Fear&Greed (CNN). Uso: ?key=liberato2026"""
+    Fear&Greed (CNN). Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     res = await _refresh_market_sentiment()
@@ -5928,7 +5938,7 @@ async def diag_sentiment(key: str = ""):
 async def diag_gexbot(key: str = ""):
     """Sondea la API de GexBot con la key REAL (de Railway) y muestra la forma
     exacta del JSON, SIN exponer la key. Prueba varias combinaciones state/tipo
-    para saber qué habilita tu tier. Uso: /api/admin/diag-gexbot?key=liberato2026"""
+    para saber qué habilita tu tier. Uso: /api/admin/diag-gexbot?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     out = {
@@ -5995,7 +6005,7 @@ async def diag_gexbot(key: str = ""):
 async def api_audit(key: str = ""):
     """CONTABILIDAD de todas las APIs: límite, uso real, presupuesto teórico del
     cron y estado. No gasta NI UN crédito: solo lee contadores y cache.
-    Uso: /api/admin/api-audit?key=liberato2026"""
+    Uso: /api/admin/api-audit?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     hm = cache["heatmap"]["data"]
@@ -6351,7 +6361,7 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0, r
 @app.get("/api/admin/snaptrade-refresh")
 async def snaptrade_refresh(key: str = ""):
     """Fuerza a SnapTrade a re-sincronizar todas las conexiones (por si una cuenta
-    recién conectada —futuros 210EKW34— no apareció). Uso: ?key=liberato2026"""
+    recién conectada —futuros 210EKW34— no apareció). Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     ukw = await _st_user_kwargs("", register=False)
@@ -6377,7 +6387,7 @@ async def snaptrade_refresh(key: str = ""):
 async def diag_snaptrade_connections(key: str = ""):
     """Lista las CONEXIONES (brokerage authorizations) de SnapTrade con su estado y
     las cuentas de cada una. Sirve para ver si una cuenta recién conectada (ej. la de
-    futuros 210EKW34) quedó enganchada o pendiente. Uso: ?key=liberato2026"""
+    futuros 210EKW34) quedó enganchada o pendiente. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     ukw = await _st_user_kwargs("", register=False)
@@ -6421,7 +6431,7 @@ async def diag_snaptrade_connections(key: str = ""):
 async def diag_snaptrade_activities(key: str = "", days: int = 150):
     """Sondea las 'activities' de SnapTrade para ver la forma de los eventos de
     EXPIRACIÓN/ASIGNACIÓN de opciones (que las órdenes no traen). Resumen de tipos
-    + muestras. Uso: /api/admin/diag-snaptrade-activities?key=liberato2026"""
+    + muestras. Uso: /api/admin/diag-snaptrade-activities?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     from datetime import date, timedelta
@@ -6766,10 +6776,12 @@ def _client_ip(request):
         return request.client.host if request.client else "?"
     except Exception:
         return "?"
-def _rate_limit(request, bucket, limit, window, email=""):
-    """Lanza 429 si se superan `limit` intentos en `window` seg para (bucket, ip[, email])."""
+def _rate_limit(request, bucket, limit, window, email="", use_ip=True):
+    """Lanza 429 si se superan `limit` intentos en `window` seg para (bucket, ip[, email]).
+    use_ip=False → cuenta SOLO por email (defensa anti rotación de IP / spoof de XFF)."""
     now = time.time()
-    key = f"{bucket}:{_client_ip(request)}:{(email or '').lower()}"
+    ipseg = _client_ip(request) if use_ip else "*"
+    key = f"{bucket}:{ipseg}:{(email or '').lower()}"
     arr = [t for t in _rl_hits.get(key, []) if now - t < window]
     if len(arr) >= limit:
         _rl_hits[key] = arr
@@ -7286,6 +7298,7 @@ async def auth_register(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    _rate_limit(request, "register", 5, 600, email)   # anti email-bomb + enumeración: 5 / 10 min
     name = (data.get("name") or "").strip()[:80]
     pw = data.get("password") or ""
     if not email or "@" not in email or "." not in email.split("@")[-1]:
@@ -7346,6 +7359,7 @@ async def auth_verify(request: Request):
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
     _rate_limit(request, "verify", 12, 600, email)   # anti fuerza bruta del código: 12 / 10 min
+    _rate_limit(request, "verify", 25, 600, email, use_ip=False)   # tope por email: 25 / 10 min
     code = (str(data.get("code") or "")).strip()
     if await user_get(email):
         raise HTTPException(409, "Esta cuenta ya está verificada. Inicia sesión.")
@@ -7482,6 +7496,7 @@ async def auth_login(request: Request):
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
     _rate_limit(request, "login", 8, 300, email)   # anti fuerza bruta: 8 intentos / 5 min por IP+email
+    _rate_limit(request, "login", 20, 600, email, use_ip=False)   # tope por email (anti rotación de IP): 20 / 10 min
     pw = data.get("password") or ""
     u = await user_get(email)
     if not u:
@@ -8326,7 +8341,7 @@ async def journal_coach(request: Request):
 @app.get("/api/admin/diag-ai")
 async def diag_ai(key: str = ""):
     """Monitoreo de consumo de IA (Groq): cuota global del día + uso del AI Coach por
-    estudiante. Uso: ?key=liberato2026"""
+    estudiante. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "clave incorrecta")
     from datetime import date
@@ -8346,7 +8361,7 @@ async def diag_ai(key: str = ""):
 @app.get("/api/admin/test-gemini")
 async def test_gemini(key: str = ""):
     """Prueba el fallback de Gemini con la MISMA personalidad del AI Coach, sin esperar
-    a que Groq falle. Uso: ?key=liberato2026"""
+    a que Groq falle. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "clave incorrecta")
     if not GEMINI_API_KEY:
@@ -8647,7 +8662,7 @@ def _fmt_rev(v):
         if v >= 1e9:  return f"${v/1e9:.1f}B"
         if v >= 1e6:  return f"${v/1e6:.0f}M"
         return f"${v:,.0f}"
-    except: return str(v)
+    except Exception: return str(v)
 
 # ── Pesos REALES del Nasdaq-100 ────────────────────────────────────────────────
 # Fuente: holdings del ETF QQQ (Invesco), que replica el Nasdaq-100 — sus pesos
@@ -8769,7 +8784,7 @@ async def get_company(ticker: str):
                             if a0 and a1 and a1 != 0:
                                 g = (a0 - a1) / abs(a1) * 100
                                 data["epsGrowthYoY"] = f"{'+' if g>=0 else ''}{g:.1f}%"
-                        except: pass
+                        except Exception: pass
 
             # ── Métricas: EPS growth YoY (si no calculado del historial) ────
             if not data.get("epsGrowthYoY"):
@@ -8922,11 +8937,13 @@ async def finnhub_webhook(request: Request):
     Cuando una empresa reporta earnings, actualiza el cache inmediatamente.
     Latencia real: <60 segundos desde el reporte hasta el dashboard."""
     try:
-        # Verificar secreto si está configurado
-        if FINNHUB_WH_SECRET:
-            token = request.headers.get("X-Finnhub-Secret", "")
-            if token != FINNHUB_WH_SECRET:
-                return {"status": "unauthorized"}
+        # FAIL-CLOSED: sin secreto NO se acepta nada (evita que un tercero inyecte
+        # datos de mercado fabricados que luego se sirven como reales). Como Whop.
+        if not FINNHUB_WH_SECRET:
+            return JSONResponse({"status": "unauthorized", "reason": "webhook no configurado"}, status_code=403)
+        token = request.headers.get("X-Finnhub-Secret", "")
+        if not hmac.compare_digest(token, FINNHUB_WH_SECRET):
+            return JSONResponse({"status": "unauthorized"}, status_code=403)
 
         payload = await request.json()
         event_type = payload.get("type","")
@@ -9299,16 +9316,18 @@ async def contact_form(request: Request):
         print(f"[contact] ⚠️ correo no configurado — mensaje de {name} <{sender_email}> solo en logs")
         return {"success": True, "note": "logged"}
 
+    import html as _html   # escapa entradas del usuario → evita inyección HTML en el correo de soporte
+    _n = _html.escape(name); _e = _html.escape(sender_email); _s = _html.escape(subject); _d = _html.escape(description)
     html_body = f"""
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
       <h2 style="color:#C9A84C;">Nuevo mensaje de contacto · Liberato Community</h2>
-      <p><strong>Nombre:</strong> {name}</p>
-      <p><strong>Correo:</strong> <a href="mailto:{sender_email}">{sender_email}</a></p>
-      <p><strong>Asunto:</strong> {subject}</p>
+      <p><strong>Nombre:</strong> {_n}</p>
+      <p><strong>Correo:</strong> <a href="mailto:{_e}">{_e}</a></p>
+      <p><strong>Asunto:</strong> {_s}</p>
       <p><strong>Descripción:</strong></p>
-      <p style="background:#f5f5f5;padding:14px;border-radius:8px;white-space:pre-wrap;">{description}</p>
+      <p style="background:#f5f5f5;padding:14px;border-radius:8px;white-space:pre-wrap;">{_d}</p>
       <hr>
-      <p style="color:#888;font-size:12px;">Responde este correo para contestarle directamente a {sender_email} · IP: {ip}</p>
+      <p style="color:#888;font-size:12px;">Responde este correo para contestarle directamente a {_e} · IP: {ip}</p>
     </div>
     """
 
@@ -9415,7 +9434,7 @@ async def manual_refresh_institutional(key: str = ""):
 #  DIAGNÓSTICO DE SÍMBOLO — ¿el plan de FlashAlpha cubre este símbolo?
 #  Prueba un símbolo ARBITRARIO sin tocar la config de producción, para poder
 #  responder "¿nos da ES=F?" antes de migrar nada.
-#  Uso: /api/admin/diag-symbol?sym=ES%3DF&key=liberato2026
+#  Uso: /api/admin/diag-symbol?sym=ES%3DF&key=<ADMIN_KEY>
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-symbol")
 async def diag_symbol(sym: str = "NDX", key: str = ""):
@@ -9494,7 +9513,7 @@ async def diag_symbol(sym: str = "NDX", key: str = ""):
 async def diag_ndx(key: str = ""):
     """Prueba el futuro DIRECTO del instrumento (plan Basic): confirma que los
     niveles reales llegan sin conversión.
-    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=liberato2026"""
+    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
@@ -9584,7 +9603,7 @@ async def diag_ndx(key: str = ""):
 @app.get("/api/admin/diag-flashalpha")
 async def diag_flashalpha(key: str = ""):
     """Diagnóstico completo de FlashAlpha: plan, quota, y qué devuelve.
-    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=liberato2026"""
+    ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
@@ -9659,7 +9678,7 @@ async def diag_flashalpha(key: str = ""):
 @app.get("/api/admin/diag-calendar")
 async def diag_calendar(key: str = ""):
     """Diagnóstico: muestra qué trae cada fuente del calendario (FF, Finnhub, RapidAPI).
-    Uso: /api/admin/diag-calendar?key=liberato2026"""
+    Uso: /api/admin/diag-calendar?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     out = {"sources": {}}
@@ -9800,7 +9819,7 @@ async def diag_calendar(key: str = ""):
 async def diag_env(key: str = ""):
     """Muestra qué variables de entorno detecta el sistema (sin exponer las keys
     completas, solo si están presentes y sus primeros caracteres).
-    Uso: /api/admin/diag-env?key=liberato2026"""
+    Uso: /api/admin/diag-env?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     def mask(v):
@@ -9850,7 +9869,7 @@ async def diag_env(key: str = ""):
 @app.get("/api/admin/diag-rapidapi")
 async def diag_rapidapi(key: str = ""):
     """Prueba los endpoints de la Ultimate Economic Calendar para ver cuál responde.
-    Uso: /api/admin/diag-rapidapi?key=liberato2026"""
+    Uso: /api/admin/diag-rapidapi?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     if not RAPIDAPI_KEY:
