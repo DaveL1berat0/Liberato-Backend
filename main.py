@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import httpx
 from fastapi import FastAPI, HTTPException, Request, Response, Header
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -345,6 +345,74 @@ NY      = ZoneInfo("America/New_York")
 # ══ APP ══════════════════════════════════════════════════════════════════════
 app = FastAPI(title="Liberato Backend v3.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+# ══ GATE PREMIUM (server-side paywall) ═══════════════════════════════════════
+# Regla (Dave, 7-sep): un NO-pagador solo ve el home + elegir/pagar plan. TODA la
+# data del dashboard exige token válido + plan premium. Antes TODO era abierto por
+# curl. Este middleware es el único punto de control (no hay que tocar 25 endpoints).
+# Público = home, health, /api/auth/*, /api/admin/* (se auto-validan con ADMIN_KEY),
+# webhooks, callback OAuth, contacto y community/access (self-gate por plan).
+_PUBLIC_API_EXACT = {
+    "/", "/health", "/api/version", "/api/health/feeds", "/api/auth/health",
+    "/api/email/health", "/api/contact", "/api/community/access",
+    "/api/whop/webhook", "/api/broker/tradestation/callback",
+}
+_PUBLIC_API_PREFIX = ("/api/auth/", "/api/admin/", "/api/webhooks/")
+_prem_gate_cache = {}   # email -> (is_premium:bool, expires_at:float)  · evita hit a Supabase por cada poll
+
+async def _gate_premium_ok(payload):
+    """¿El dueño del JWT tiene premium AHORA? Cacheado 120s. Admin siempre pasa.
+    Verifica contra DB (plan + caducidad); si la DB falla, FAIL-OPEN al plan firmado
+    en el token para NO bloquear a quien paga por un hipo de red."""
+    email = (payload.get("email") or "").lower()
+    if not email:
+        return False
+    if email in ADMIN_EMAILS:
+        return True
+    now = time.time()
+    c = _prem_gate_cache.get(email)
+    if c and c[1] > now:
+        return c[0]
+    ok = False
+    try:
+        u = await user_get(email) or {}
+        plan = u.get("plan") or payload.get("plan", "free")
+        exp = u.get("plan_expires")
+        if exp and plan in EXPIRABLE_PLANS and int(now) >= int(exp):
+            plan = "free"
+        ok = plan in PREMIUM_PLANS
+    except Exception as e:
+        # Fail-open al plan firmado (el token no se puede falsificar) para evitar lockout total.
+        print(f"[gate] user_get falló para {email}: {e} → fail-open al plan del token")
+        ok = (payload.get("plan", "free") in PREMIUM_PLANS)
+    _prem_gate_cache[email] = (ok, now + 120)
+    return ok
+
+@app.middleware("http")
+async def _premium_gate(request, call_next):
+    try:
+        path = request.url.path
+        # No-API (home/estáticos) y preflight CORS pasan siempre.
+        if request.method == "OPTIONS" or not path.startswith("/api/"):
+            return await call_next(request)
+        if path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
+            return await call_next(request)
+        # Endpoint de datos → exige token + premium.
+        tok = (request.headers.get("authorization", "") or "").replace("Bearer ", "").strip()
+        p = _verify_jwt(tok) if tok else None
+        if not p:
+            r = JSONResponse({"detail": "auth_required", "code": "auth_required"}, status_code=401)
+            r.headers["Access-Control-Allow-Origin"] = "*"
+            return r
+        if not await _gate_premium_ok(p):
+            r = JSONResponse({"detail": "premium_required", "code": "premium_required"}, status_code=402)
+            r.headers["Access-Control-Allow-Origin"] = "*"
+            return r
+        return await call_next(request)
+    except Exception as e:
+        # Nunca tumbar toda la API por un bug del gate: registrar y dejar pasar.
+        print(f"[gate] error inesperado, fail-open: {e}")
+        return await call_next(request)
 
 # ══ CACHÉ UNIFICADA ══════════════════════════════════════════════════════════
 cache = {
