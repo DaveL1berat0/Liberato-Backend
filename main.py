@@ -9073,24 +9073,24 @@ async def get_dashboard():
 scheduler = AsyncIOScheduler(timezone=NY)
 
 async def _seed_auditor():
-    """Cuenta de AUDITOR con acceso PREMIUM sin pago (supervisión de la web),
-    pre-creada y pre-verificada. Solo el HASH de la contraseña vive en el código
-    (el texto plano se entrega aparte). No es admin: solo premium (ve todo, sin
-    poderes de administración)."""
-    email = "auditor@liberatocommunity.com"
+    """Cuenta de AUDITOR premium OPCIONAL, sembrada SOLO desde variables de entorno
+    (AUDITOR_EMAIL / AUDITOR_SALT / AUDITOR_PASS_HASH). Sin esas envs NO se crea nada
+    → ya no hay credencial hardcodeada en el código/git. Para rotar la vieja: borra la
+    fila auditor@ en Supabase y (si la necesitas) define las envs con un hash nuevo."""
+    email = (os.getenv("AUDITOR_EMAIL", "") or "").strip().lower()
+    salt = (os.getenv("AUDITOR_SALT", "") or "").strip()
+    ph = (os.getenv("AUDITOR_PASS_HASH", "") or "").strip()
+    if not (email and salt and ph):
+        return
     try:
         if await user_get(email):
             return   # ya existe → no sobrescribir
         await user_put(email, {
-            "id": "aud_1096260d7bf1",
-            "name": "Auditor",
-            "salt": "Ji0DFYMA3JV5k2nFQgIcdA==",
-            "pass_hash": "fhn4R2xGMIgZh5oaD0I1X52wQO0LMjRVL14880kr6Zo",
-            "plan": "premium",
-            "created": int(time.time()),
-            "language": "es",
+            "id": "aud_" + secrets.token_hex(6), "name": "Auditor",
+            "salt": salt, "pass_hash": ph, "plan": "premium",
+            "created": int(time.time()), "language": "es",
         })
-        print("[seed] cuenta auditor creada (premium)")
+        print("[seed] cuenta auditor creada (premium, desde env)")
     except Exception as e:
         print(f"[seed] auditor: {e}")
 
