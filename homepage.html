@@ -2592,7 +2592,7 @@ updateCD();setInterval(updateCD,1000);
   <div class="lc-header">
     <div class="lc-avatar">🧠</div>
     <div class="lc-hinfo">
-      <h4>Liberato AI</h4>
+      <h4>Asistente</h4>
       <p>Siempre disponible</p>
     </div>
     <button class="lc-close" onclick="toggleChat()">×</button>
@@ -2640,11 +2640,11 @@ function getFAQReply(q){
 
   // Cómo empezar
   if(/empez|start|unir|entrar|inscrib|registr|cómo|como|proceso|pasos/i.test(Q))
-    return 'Muy simple: <strong>1)</strong> Haz clic en "Reservar mi Spot" arriba · <strong>2)</strong> Completa el pago de $199 en Stripe (seguro, tarjeta o PayPal) · <strong>3)</strong> En minutos recibes acceso completo al dashboard, Discord Pro y los lives.';
+    return 'Muy simple: <strong>1)</strong> Haz clic en "Reservar mi Spot" arriba · <strong>2)</strong> Completa el pago de $199 de forma segura · <strong>3)</strong> En minutos recibes acceso completo al dashboard, Discord Pro y los lives.';
 
   // Bias Engine
   if(/bias|engine|sesgo|algorit|calcul|cómo.*analiz|indicador/i.test(Q))
-    return 'El <strong>Bias Engine institucional</strong> es el corazón de la plataforma. Analiza estructura de Gamma, Price Action, correlaciones macro y datos históricos de 1,491 sesiones reales de NQ para darte un sesgo direccional antes de cada sesión. Incluye Regime Engine y Confidence Score.';
+    return 'El <strong>Bias Engine institucional</strong> es el corazón de la plataforma. Analiza estructura de Gamma, Price Action, correlaciones macro y datos históricos de sesiones reales de NQ para darte un sesgo direccional antes de cada sesión. Incluye Regime Engine y Confidence Score.';
 
   // Discord
   if(/discord|comunidad|grupo|chat|server/i.test(Q))
@@ -2652,7 +2652,7 @@ function getFAQReply(q){
 
   // Garantía / reembolso
   if(/garantía|garantia|devolucion|reembolso|riesgo|prueba|probar|gratis/i.test(Q))
-    return 'Ofrecemos <strong>7 días de prueba</strong>. Si en los primeros 7 días no estás satisfecho, te devolvemos el pago sin preguntas. Sin riesgo.';
+    return 'Puedes empezar por la <strong>Comunidad Libre (gratis)</strong> para conocernos, y subir a Pro cuando estés listo. Sin contratos: cancelas cuando quieras.';
 
   // NQ / Nasdaq / futuros
   if(/nq|nasdaq|futuros|futures|contrato|emini|mnq/i.test(Q))
@@ -2676,7 +2676,7 @@ function getFAQReply(q){
 
   // Pago / Stripe
   if(/pago|stripe|tarjeta|paypal|cobro|factura|cancelar/i.test(Q))
-    return 'El pago se procesa de forma <strong>100% segura a través de Stripe</strong> (la misma tecnología que usa Amazon y Shopify). Aceptamos tarjeta de crédito/débito. Puedes cancelar tu suscripción cuando quieras desde tu portal de Stripe.';
+    return 'El pago se procesa de forma <strong>100% segura</strong> con nuestro proveedor de checkout. Aceptamos tarjeta de crédito/débito. Puedes gestionar o cancelar tu suscripción cuando quieras.';
 
   // Diferencia con otras comunidades
   if(/diferenci|mejor|otros|compet|plataforma.*otra|vale.*pena/i.test(Q))
@@ -2712,7 +2712,7 @@ function toggleChat(){
   if(tip)tip.style.opacity='0';
   if(_lcOpen&&_lcMsgs.length===0){
     // Mensaje de bienvenida
-    var welcome='¡Hola! 👋 Soy el AI Coach de Liberato Community. ¿En qué puedo ayudarte hoy?';
+    var welcome='¡Hola! 👋 Soy el asistente de Liberato Community. ¿En qué puedo ayudarte hoy?';
     _lcMsgs.push({role:'assistant',content:welcome});
     addMsg('bot',welcome);
     // Mostrar chips
@@ -3059,7 +3059,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Aviso legal:': 'Legal notice:',
     'Contacto': 'Contact',
     '¿Tienes preguntas? ¡Pregúntame!': 'Have questions? Ask me!',
-    'Liberato AI': 'Liberato AI',
+    'Asistente': 'Assistant',
     'Siempre disponible': 'Always available',
     'Hablar con un humano en WhatsApp': 'Talk to a human on WhatsApp',
     'Acceso de miembros': 'Member access',
