@@ -8378,22 +8378,31 @@ async def diag_ai(key: str = ""):
 
 
 @app.get("/api/admin/test-gemini")
-async def test_gemini(key: str = ""):
+async def test_gemini(key: str = "", model: str = ""):
     """Prueba el fallback de Gemini con la MISMA personalidad del AI Coach, sin esperar
     a que Groq falle. Uso: ?key=<ADMIN_KEY>"""
     if key != ADMIN_KEY:
         raise HTTPException(403, "clave incorrecta")
     if not GEMINI_API_KEY:
         return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
-    sys_msg = (
-        "Eres el AI Coach de Liberato Community: un mentor de daytrading de NQ/Nasdaq "
-        "y opciones 0DTE, experto en Auction Market Theory, order flow, gestión de "
-        "riesgo y disciplina de playbooks. Hablas en español, directo y cercano. "
-        "Responde CONCISO, 2 a 4 frases."
-    )
-    ans = await _gemini_chat(sys_msg, "Preséntate en una frase como mi coach de trading.", max_tokens=120)
-    return {"ok": bool(ans), "modelo": GEMINI_MODEL,
-            "respuesta": ans or "(sin respuesta — revisa la key o el modelo)"}
+    mdl = (model or GEMINI_MODEL).strip()
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={GEMINI_API_KEY}"
+    body = {"contents": [{"role": "user", "parts": [{"text": "Di 'hola coach' en una frase corta."}]}],
+            "generationConfig": {"maxOutputTokens": 800, "temperature": 0.4, "thinkingConfig": {"thinkingBudget": 0}}}
+    try:
+        async with httpx.AsyncClient(timeout=25) as c:
+            r = await c.post(url, json=body)
+        j = None
+        try: j = r.json()
+        except Exception: pass
+        cand = (((j or {}).get("candidates") or [{}]) or [{}])[0]
+        parts = ((cand.get("content") or {}).get("parts") or [])
+        txt = "".join(p.get("text", "") for p in parts).strip()
+        return {"ok": bool(txt), "modelo": mdl, "http": r.status_code,
+                "finishReason": cand.get("finishReason"), "texto": txt[:200],
+                "raw": (r.text[:600] if not txt else "")}
+    except Exception as e:
+        return {"ok": False, "modelo": mdl, "error": str(e)[:200]}
 
 
 @app.get("/api/admin/gemini-models")
