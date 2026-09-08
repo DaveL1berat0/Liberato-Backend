@@ -1821,7 +1821,55 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
   // ── MOCK DATA — used ONLY when a real source is unavailable ──
   // Gamma/Catalysts/Correlations try real first; mock is the fallback for preview.
-  var MOCK={enabled:false}; // datos de respaldo fabricados ELIMINADOS (Regla #1); enabled SIEMPRE false
+  var MOCK={
+    enabled:false,  // PRODUCCIÓN: solo datos reales (Regla #1)
+    gex:{call_wall:31000,put_wall:27000,gamma_flip:29877,net_gex:-701e6,regime:'short gamma',nq_price:29850,vwap:30520,atr:280,ratio:null,expected_move:474.6,atm_iv:24.9,p_c_ratio:1.07},
+    price:{price:29850,open:30480,high:30780,low:29750,prev:30480},
+    corr:{
+      vxn:{val:18.4,chg:-3.2,dir:'down'}, dxy:{val:104.2,chg:-0.4,dir:'down'},
+      us10y:{val:4.28,chg:-0.6,dir:'down'}, gold:{val:2348,chg:0.8,dir:'up'},
+      wti:{val:78.5,chg:1.2,dir:'up'}, spx:{val:5430,chg:0.5,dir:'up'}
+    },
+    events:[],
+    macro:{next:{name:'Cargando eventos…',time:''},days:[]},
+    movers:{
+      // Fallback de eventos de alto impacto — se muestra cuando el backend está vacío
+      // (fin de semana, mercado cerrado). Son ejemplos representativos del formato.
+      // Regla #1: vaciados. Antes tenían precios/porcentajes INVENTADOS (NVDA $891.40, etc.)
+      // que podían destellar ~1s en la carga inicial antes del primer fetch real de movers.
+      // Ahora el panel arranca vacío y solo se llena con datos reales de /api/movers.
+      ultraNews:[],
+      gainers:[],
+      losers:[]
+    },
+    // Macro Correlations Heatmap — 22 tiles matching 6×5 treemap layout
+    // Instrumento: NQ (Nasdaq-100). AAPL/MSFT/NVDA/AMZN/META/GOOGL son los
+    // mayores pesos del Nasdaq-100 — su casa natural.
+    hmap:[
+      // Tier 1: mayores pesos del Nasdaq-100 (2×2 tiles)
+      {sym:'AAPL', name:'Apple Inc',            chg:-0.32, area:'aapl', tier:1},
+      {sym:'MSFT', name:'Microsoft Corp',       chg: 0.45, area:'msft', tier:1},
+      // Tier 2: High-weight stocks & macro proxies (2×1 or key 1×1)
+      {sym:'NVDA', name:'NVIDIA Corp',          chg: 6.20, area:'nvda', tier:2},
+      {sym:'GOOGL',name:'Alphabet',             chg: 0.56, area:'goog', tier:2},
+      {sym:'AMZN', name:'Amazon',               chg: 0.78, area:'amzn', tier:2},
+      {sym:'META', name:'Meta Platforms',       chg: 1.12, area:'meta', tier:2},
+      {sym:'AVGO', name:'Broadcom',             chg: 2.90, area:'avgo', tier:2},
+      {sym:'TSLA', name:'Tesla',                chg:-3.10, area:'tsla', tier:2},
+      {sym:'COST', name:'Costco',               chg: 0.38, area:'cost', tier:2},
+      {sym:'NFLX', name:'Netflix',              chg: 1.45, area:'nflx', tier:2},
+      // Tier 3: factores macro (NQ/QQQ/VIX quitados: redundantes con el header)
+      {sym:'ES',   name:'S&P 500 Futures',      chg: 0.55, area:'es',   tier:2},  // importante: el ES-trader vigila divergencias con el NQ
+      {sym:'US10Y',name:'10Y Treasury',         chg:-0.60, area:'us10', tier:2},
+      {sym:'Gold', name:'Gold Spot',            chg: 0.80, area:'gold', tier:2},
+      {sym:'DXY',  name:'US Dollar Index',      chg:-0.40, area:'dxy',  tier:3},
+      {sym:'US2Y', name:'2Y Treasury',          chg:-0.50, area:'us2y', tier:3},
+      {sym:'US30Y',name:'30Y Treasury',         chg:-0.45, area:'us30', tier:3},
+      {sym:'WTI',  name:'Oil WTI',              chg: 1.20, area:'wti',  tier:3},
+      {sym:'BTC',  name:'Bitcoin',              chg: 2.10, area:'btc',  tier:3},
+      {sym:'INFL', name:'10Y Breakeven Infl.',  chg: 0.15, area:'infl', tier:3}
+    ]
+  };
 
   /* ── applyAllMock() — carga todos los datos ficticios de una vez ── */
   function applyAllMock(){
