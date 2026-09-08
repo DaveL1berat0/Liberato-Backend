@@ -4854,12 +4854,13 @@ async def refresh_institutional():
     """Motor de IA institucional — genera análisis desde CUALQUIER dato disponible.
     Funciona 24/7: con o sin GEX, mercado abierto o cerrado, fin de semana.
     Construye contexto rico desde gamma, precio, correlaciones, calendario y earnings."""
+    # No cortar si Groq no está disponible: se intenta Groq y, si no da texto (sin key,
+    # sin presupuesto, caído), se cae a Gemini para MANTENER el brief actualizado.
+    groq_ok = bool(GROQ_KEY) and budget_ok("groq", 1)
     if not GROQ_KEY:
-        cache["health"]["groq"] = "offline-no-key"; return
-    if not budget_ok("groq", 1):
-        print("[institutional] presupuesto Groq agotado — se mantiene último resumen")
-        return
-    budget_charge("groq", 1)
+        cache["health"]["groq"] = "offline-no-key"
+    if groq_ok:
+        budget_charge("groq", 1)
 
     gex = cache["gex"].get(FA_ASSET, {}) or {}
     hm  = cache["heatmap"]["data"]
@@ -5126,32 +5127,48 @@ async def refresh_institutional():
                    "sesión RTH' y apóyate en inventario/gap/vol/sector tech. Cierra con **Claridad:** score 1-10 hacia "
                    "alza/baja/sin dirección. No inventes datos.")
 
-    try:
-        async with httpx.AsyncClient(timeout=20) as client:
-            r = await client.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                json={"model":"qwen/qwen3.6-27b","max_tokens":460,"temperature":0.55,
-                      "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
-                      "messages":[{"role":"system","content":sys_msg},
-                                  {"role":"user","content":usr_msg}]}
-            )
-        if r.status_code == 200:
-            text = r.json()["choices"][0]["message"]["content"].strip()
-            cache["institutional"]["text"]        = text
-            cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
-            cache["institutional"]["status"]      = "fresh"
-            cache["institutional"]["has_gamma"]   = has_gamma
-            cache["health"]["groq"]               = "online"
-            save_cache()
-            print(f"[institutional] ok ({'con gamma' if has_gamma else 'sin gamma — contexto macro'})")
-        else:
-            cache["health"]["groq"] = f"error-{r.status_code}"
-            print(f"[institutional] groq {r.status_code}")
-    except Exception as e:
-        cache["health"]["groq"] = "error"
-        cache["institutional"]["status"] = "error"
-        print(f"[institutional] error: {e}")
+    text = None
+    if groq_ok:
+        try:
+            async with httpx.AsyncClient(timeout=20) as client:
+                r = await client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
+                    json={"model":"qwen/qwen3.6-27b","max_tokens":460,"temperature":0.55,
+                          "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
+                          "messages":[{"role":"system","content":sys_msg},
+                                      {"role":"user","content":usr_msg}]}
+                )
+            if r.status_code == 200:
+                text = r.json()["choices"][0]["message"]["content"].strip()
+                cache["health"]["groq"] = "online"
+            else:
+                cache["health"]["groq"] = f"error-{r.status_code}"
+                print(f"[institutional] groq {r.status_code}")
+        except Exception as e:
+            cache["health"]["groq"] = "error"
+            print(f"[institutional] groq error: {e}")
+    # FALLBACK a Gemini si Groq no dio texto (sin key, sin presupuesto o caído) —
+    # mantiene el brief ACTUALIZADO. Cuota propia de Gemini; no descuenta de Groq.
+    if not text:
+        try:
+            g = await _gemini_chat(sys_msg, usr_msg, max_tokens=520, temperature=0.55)
+            if g and len(g.strip()) > 40:
+                text = g.strip()
+                cache["health"]["gemini_institutional"] = "online"
+                print("[institutional] fallback Gemini OK")
+        except Exception as e:
+            print(f"[institutional] fallback Gemini falló: {e}")
+    if text:
+        cache["institutional"]["text"]        = text
+        cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
+        cache["institutional"]["status"]      = "fresh"
+        cache["institutional"]["has_gamma"]   = has_gamma
+        save_cache()
+        print(f"[institutional] ok ({'con gamma' if has_gamma else 'sin gamma — contexto macro'})")
+    else:
+        cache["institutional"]["status"] = "stale"
+        print("[institutional] ni Groq ni Gemini generaron — se mantiene el último resumen")
 
 # ══ ALPHA VANTAGE — Company details (on-demand, max 3x/día) ══════════════════
 async def get_company_av(sym):
