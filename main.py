@@ -160,33 +160,45 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 # por eso se le da +900 tok de colchón de "thought". Para fijar una versión concreta,
 # poné GEMINI_MODEL=gemini-3.8-flash (o el que sea) en Railway.
 GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-flash-latest").strip()
+def _gemini_model_chain():
+    # El límite gratis de Gemini es POR MODELO; ante 429 (cuota) o 400/404 (deprecado)
+    # se prueba el siguiente. gemini-3.1-flash-lite verificado funcionando 8-sep.
+    chain = []
+    for m in [GEMINI_MODEL, "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-flash-latest"]:
+        if m and m not in chain:
+            chain.append(m)
+    return chain
+
 async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     if not GEMINI_API_KEY:
         return None
-    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
-           f"{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}")
     body = {
         "systemInstruction": {"parts": [{"text": sys_msg}]},
         "contents": [{"role": "user", "parts": [{"text": usr_msg}]}],
-        # thinkingBudget:0 desactiva el "thinking" (Gemini 2.5+/3.x lo gastaba TODO
-        # en thoughts y devolvía texto VACÍO). +400 de colchón por si acaso.
+        # thinkingBudget:0 evita que el modelo gaste TODO el presupuesto en "thought"
+        # y devuelva texto vacío. +400 de colchón.
         "generationConfig": {"maxOutputTokens": max_tokens + 400, "temperature": temperature,
                              "thinkingConfig": {"thinkingBudget": 0}},
     }
-    try:
-        async with httpx.AsyncClient(timeout=25) as c:
-            r = await c.post(url, json=body)
-        if r.status_code != 200:
-            print(f"[gemini] {r.status_code}: {r.text[:160]}")
-            return None
-        j = r.json()
-        cand = (j.get("candidates") or [{}])[0]
-        parts = ((cand.get("content") or {}).get("parts") or [])
-        txt = "".join(p.get("text", "") for p in parts).strip()
-        return txt or None
-    except Exception as e:
-        print(f"[gemini] error: {e}")
-        return None
+    for mdl in _gemini_model_chain():
+        url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+               f"{mdl}:generateContent?key={GEMINI_API_KEY}")
+        try:
+            async with httpx.AsyncClient(timeout=25) as c:
+                r = await c.post(url, json=body)
+            if r.status_code != 200:
+                print(f"[gemini] {mdl} {r.status_code}: {r.text[:120]}")
+                continue   # cuota/deprecado/arg → probar el siguiente modelo
+            j = r.json()
+            cand = ((j.get("candidates") or [{}]) or [{}])[0]
+            parts = ((cand.get("content") or {}).get("parts") or [])
+            txt = "".join(p.get("text", "") for p in parts).strip()
+            if txt:
+                return txt
+            print(f"[gemini] {mdl} 200 pero texto vacío (finish={cand.get('finishReason')})")
+        except Exception as e:
+            print(f"[gemini] {mdl} error: {e}")
+    return None
 
 def _window_key(window):
     """Clave de la ventana actual: por día (UTC) o por minuto (UTC)."""
