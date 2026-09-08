@@ -168,8 +168,10 @@ async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     body = {
         "systemInstruction": {"parts": [{"text": sys_msg}]},
         "contents": [{"role": "user", "parts": [{"text": usr_msg}]}],
-        # +900 de colchón: Gemini 3.x gasta tokens de "thought" antes del texto.
-        "generationConfig": {"maxOutputTokens": max_tokens + 900, "temperature": temperature},
+        # thinkingBudget:0 desactiva el "thinking" (Gemini 2.5+/3.x lo gastaba TODO
+        # en thoughts y devolvía texto VACÍO). +400 de colchón por si acaso.
+        "generationConfig": {"maxOutputTokens": max_tokens + 400, "temperature": temperature,
+                             "thinkingConfig": {"thinkingBudget": 0}},
     }
     try:
         async with httpx.AsyncClient(timeout=25) as c:
