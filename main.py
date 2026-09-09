@@ -8225,6 +8225,32 @@ async def tradestation_status(app_user_id: str = "dave"):
             "configured": bool(TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET)}
 
 
+@app.get("/api/broker/tradestation/claim")
+async def tradestation_claim(app_user_id: str = "", from_uid: str = ""):
+    """Reasigna el token OAuth de TradeStation de un uid ORIGEN (típicamente un id
+    anónimo por-navegador) al uid DESTINO estable de la cuenta. Auto-sanador: lo llama
+    el frontend al detectar que el usuario logueado tenía su token bajo un id anónimo
+    (bug histórico: currentUserId leía la clave equivocada). Solo copia si el destino
+    aún NO tiene token, para no pisar una conexión buena. Va tras el paywall
+    (/api/broker/ está gated), así que el llamante está autenticado."""
+    dst = (app_user_id or "").strip()
+    src = (from_uid or "").strip()
+    if not dst or not src or dst == src:
+        return {"claimed": False, "reason": "uids inválidos"}
+    rec = _ts_tokens.get(src)
+    if not rec or not (rec.get("refresh_token") or rec.get("access_token")):
+        return {"claimed": False, "reason": "origen sin token"}
+    if _ts_tokens.get(dst) and (_ts_tokens[dst].get("refresh_token") or _ts_tokens[dst].get("access_token")):
+        return {"claimed": False, "reason": "destino ya conectado"}
+    _ts_tokens[dst] = dict(rec)
+    try:
+        save_cache()
+    except Exception:
+        pass
+    print(f"[ts] token reclamado {src} → {dst}")
+    return {"claimed": True}
+
+
 @app.post("/api/broker/tradestation/disconnect")
 async def tradestation_disconnect(app_user_id: str = "dave"):
     """Borra los tokens OAuth de este usuario — deslogueo del broker. El próximo

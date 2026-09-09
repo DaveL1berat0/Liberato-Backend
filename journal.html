@@ -2734,12 +2734,38 @@ function selectFormPb(id){
 
 // ── IDENTIDAD / NAMESPACE (multiusuario: cada estudiante ve solo lo suyo) ──
 function currentUserId(){
-  try{var t=localStorage.getItem('lbc_jwt');
+  // BUG CORREGIDO: antes leía 'lbc_jwt', pero el login guarda el token en 'lbc_token'
+  // → nunca se usaba la identidad de la cuenta y TODO caía al id anónimo por-navegador.
+  // Efecto: al cambiar de navegador/limpiar storage, el id cambiaba y el broker quedaba
+  // huérfano (el resync pegaba a un id sin token → no traía nada). Ahora usa el sub del
+  // JWT real → id ESTABLE por cuenta, compartido entre dispositivos.
+  try{var t=localStorage.getItem('lbc_token')||localStorage.getItem('lbc_jwt');
     if(t){var sub=JSON.parse(atob(t.split('.')[1])).sub;if(sub)return 'u:'+sub;}}catch(e){}
-  // Sin JWT: id anónimo POR NAVEGADOR (no un '::local' compartido entre alumnos).
+  // Sin sesión: id anónimo POR NAVEGADOR (no un '::local' compartido entre alumnos).
   var a;try{a=localStorage.getItem('lbc_anon_id');}catch(e){}
   if(!a){a='anon-'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem('lbc_anon_id',a);}catch(e){}}
   return a;
+}
+// Migración anon → cuenta: cuando el usuario está logueado (id estable u:sub) pero antes
+// operó bajo un id anónimo, mueve su data local (trades/playbooks/checklists) al espacio
+// estable SIN pisar lo que ya haya, y RECLAMA en el backend el token de broker que quedó
+// bajo el id anónimo. One-shot por cuenta. Auto-sanador del bug histórico de identidad.
+function migrateAnonToUser(){
+  try{
+    var t=localStorage.getItem('lbc_token'); if(!t)return;
+    var sub; try{sub=JSON.parse(atob(t.split('.')[1])).sub;}catch(e){return;} if(!sub)return;
+    var stable='u:'+sub;
+    var anon=''; try{anon=localStorage.getItem('lbc_anon_id')||'';}catch(e){}
+    if(!anon||anon===stable)return;
+    var flag='lbc_anon_mig::'+stable;
+    try{if(localStorage.getItem(flag))return;}catch(e){}
+    ['lbc_jrn_v3','lbc_playbooks_v1','lbc_checklists','lbc_broker_fills','lbc_ctx_fields_v1'].forEach(function(b){
+      try{var src=localStorage.getItem(b+'::'+anon);
+        if(src!=null && localStorage.getItem(b+'::'+stable)==null)localStorage.setItem(b+'::'+stable,src);}catch(e){}
+    });
+    try{fetch(JOURNAL_BACKEND+'/api/broker/tradestation/claim?from_uid='+encodeURIComponent(anon)+'&app_user_id='+encodeURIComponent(stable)).catch(function(){});}catch(e){}
+    try{localStorage.setItem(flag,'1');}catch(e){}
+  }catch(e){}
 }
 function userKey(base){return base+'::'+currentUserId();}
 // Migración one-shot: mueve la data global vieja (de Dave) a SU espacio actual.
@@ -5940,6 +5966,7 @@ function applyTheme(theme){if(theme==='light')document.documentElement.setAttrib
 // Everything runs after DOM + all scripts are ready
 document.addEventListener('DOMContentLoaded', function(){
   try{
+    try{migrateAnonToUser();}catch(e){}   // anon → cuenta ANTES de cargar trades / sync
     dfpRenderBars();       // render pickers first
     try{syncUnitSeg();}catch(e){}   // refleja la unidad guardada ($/Puntos/% cuenta)
     renderCtxForm();       // render dynamic context buttons
