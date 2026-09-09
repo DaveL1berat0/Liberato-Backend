@@ -4146,7 +4146,7 @@ async def refresh_calendar():
         if _new_hi:
             print(f"[calendar] nuevo dato macro alto impacto → regenerando brief: "
                   f"{[t for t, _ in _new_hi][:3]}")
-            asyncio.create_task(refresh_institutional())
+            asyncio.create_task(refresh_institutional(force=True))
     elif stale_backup:
         cache["calendar"]["status"] = "stale"
         print("[calendar] parsed empty — keeping stale")
@@ -4494,7 +4494,7 @@ async def refresh_movers():
             print(f"[movers] ok: {len(out)} ultra-impact (store: {len(store)} en 12h)")
             if _new_critical:
                 print("[movers] noticia CRÍTICA nueva → regenerando brief institucional")
-                asyncio.create_task(refresh_institutional())
+                asyncio.create_task(refresh_institutional(force=True))
         elif stale_backup:
             cache["movers"]["status"] = "stale"
             print("[movers] no new ultra-impact events — keeping stale")
@@ -4864,10 +4864,27 @@ def _cot_context_line():
             + (f" [largos {lo:,} / cortos {sh:,}]" if (lo is not None and sh is not None) else "")
             + chg_txt)
 
-async def refresh_institutional():
+INSTITUTIONAL_MIN_INTERVAL = int(os.getenv("INSTITUTIONAL_MIN_INTERVAL", "840"))  # seg (14 min)
+
+async def refresh_institutional(force=False):
     """Motor de IA institucional — genera análisis desde CUALQUIER dato disponible.
     Funciona 24/7: con o sin GEX, mercado abierto o cerrado, fin de semana.
     Construye contexto rico desde gamma, precio, correlaciones, calendario y earnings."""
+    # Throttle de frescura: el cron dispara cada 5 min, pero el contexto macro NO
+    # cambia tan rápido. Si el brief se regeneró hace < INSTITUTIONAL_MIN_INTERVAL,
+    # saltar y AHORRAR el crédito de Groq (antes: ~120 llamadas/día vs las ~4 que
+    # documentaba el sistema — 30× de sobreconsumo del presupuesto compartido).
+    # Los triggers por evento (dato macro/noticia crítica nuevos) pasan force=True
+    # y regeneran siempre; el cron corre sin force y respeta el throttle.
+    if not force:
+        _last = cache.get("institutional", {}).get("last_update")
+        if _last:
+            try:
+                _age = (datetime.now(NY) - datetime.fromisoformat(_last)).total_seconds()
+                if _age < INSTITUTIONAL_MIN_INTERVAL:
+                    return
+            except Exception:
+                pass
     # No cortar si Groq no está disponible: se intenta Groq y, si no da texto (sin key,
     # sin presupuesto, caído), se cae a Gemini para MANTENER el brief actualizado.
     groq_ok = bool(GROQ_KEY) and budget_ok("groq", 1)
@@ -9041,7 +9058,7 @@ async def finnhub_webhook(request: Request):
 
             # 5. Si es empresa de alto impacto (NQ), regenerar resumen IA
             if _earn_impact(sym) in ("extreme","high") and cache["gex"].get(FA_ASSET):
-                asyncio.create_task(refresh_institutional())
+                asyncio.create_task(refresh_institutional(force=True))
                 print(f"[webhook] regenerando resumen IA por earnings de {sym}")
 
             return {
@@ -9306,7 +9323,7 @@ async def startup():
     else:
         print("[startup] Sin GEX en disco — cargará a las 9:00 AM ET (ahorra créditos)")
     # Generar resumen IA inmediatamente con los datos disponibles (con o sin GEX)
-    asyncio.create_task(refresh_institutional())
+    asyncio.create_task(refresh_institutional(force=True))
 
     print("[startup] Liberato Backend v3.0 listo ✓")
 
@@ -9462,7 +9479,7 @@ async def manual_refresh_institutional(key: str = ""):
     if key != ADMIN_KEY:
         raise HTTPException(403, "Clave incorrecta")
     try:
-        await refresh_institutional()
+        await refresh_institutional(force=True)
         return {"success": True, "message": "Groq llamado manualmente ✓",
                 "summary": cache.get("institutional", {}).get("text", "sin datos"),
                 "status": cache.get("institutional", {}).get("status", "?")}
