@@ -2411,7 +2411,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <div class="frow3">
         <div class="fgroup"><div class="flbl">Entrada</div><input class="finput" type="number" id="f-en" placeholder="21750" oninput="calc()"></div>
         <div class="fgroup"><div class="flbl">Salida</div><input class="finput" type="number" id="f-ex" placeholder="21810" oninput="calc()"></div>
-        <div class="fgroup"><div class="flbl">Stop</div><input class="finput" type="number" id="f-st" placeholder="21730" oninput="calc()"></div>
+        <div class="fgroup"><div class="flbl">Stop <span style="color:var(--gold);">· obligatorio (define tu R)</span></div><input class="finput" type="number" id="f-st" placeholder="21730" oninput="calc()" required></div>
         <div class="fgroup"><div class="flbl">Contratos</div><input class="finput" type="number" id="f-qty" placeholder="1" value="1" min="1" step="1" inputmode="numeric" oninput="calc()"></div>
       </div>
     </div>
@@ -2955,12 +2955,43 @@ function renderLast30Trades(){
 }
 // ── SELECTOR DE UNIDAD GLOBAL: Puntos · $ · % sobre la cuenta ──
 var JUNIT='money'; try{var _ju=localStorage.getItem('lbc_junit');if(['money','points','pct'].indexOf(_ju)>=0)JUNIT=_ju;}catch(e){}
-// El modo "% cuenta" NO se puede mostrar sin tamaño de cuenta → dejaría TODO en blanco.
-// Si quedó seleccionado sin tamaño, caemos a "$" en esta sesión (los números se ven);
-// el usuario recupera % en cuanto defina su tamaño de cuenta con ⚙.
-try{ if(JUNIT==='pct' && (function(){try{var v=parseFloat(localStorage.getItem(userKey('lbc_acct_size'))||'');return !(isFinite(v)&&v>0);}catch(e){return true;}})()) JUNIT='money'; }catch(e){}
-function acctSize(){try{var v=parseFloat(localStorage.getItem(userKey('lbc_acct_size'))||'');return (isFinite(v)&&v>0)?v:0;}catch(e){return 0;}}
+// Balances REALES por cuenta traídos del broker (TradeStation) → auto-rellenan el
+// tamaño de cuenta sin que el usuario lo escriba. {accountId: equity}.
+function brokerBalances(){try{return JSON.parse(localStorage.getItem(userKey('lbc_broker_balances'))||'null')||null;}catch(e){return null;}}
+function acctSize(){
+  // 1) override manual del usuario (⚙) manda.
+  try{var v=parseFloat(localStorage.getItem(userKey('lbc_acct_size'))||'');if(isFinite(v)&&v>0)return v;}catch(e){}
+  // 2) auto: equity real del broker para la cuenta activa (o la suma si es 'all').
+  try{var bal=brokerBalances();
+    if(bal){
+      if(typeof activeAccount!=='undefined'&&activeAccount&&activeAccount!=='all'){var b=+bal[activeAccount];if(b>0)return b;}
+      else{var s=0;for(var k in bal){if(+bal[k]>0)s+=+bal[k];}if(s>0)return s;}
+    }
+  }catch(e){}
+  return 0;
+}
 function setAcctSize(v){try{if(v>0)localStorage.setItem(userKey('lbc_acct_size'),String(v));else localStorage.removeItem(userKey('lbc_acct_size'));}catch(e){}}
+// Trae los balances reales del broker y, si el usuario tenía la unidad en '%' pero se
+// había caído a '$' por falta de tamaño, la restaura ahora que ya hay equity real.
+function syncBalances(){
+  try{
+    fetch(JOURNAL_BACKEND+'/api/broker/tradestation/balances?app_user_id='+encodeURIComponent(currentUserId()))
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d&&d.ok&&d.balances&&Object.keys(d.balances).length){
+          try{localStorage.setItem(userKey('lbc_broker_balances'),JSON.stringify(d.balances));}catch(e){}
+          try{var pref=localStorage.getItem('lbc_junit');
+            if(pref==='pct'&&JUNIT!=='pct'&&acctSize()>0){JUNIT='pct';try{syncUnitSeg();}catch(e){}}
+          }catch(e){}
+          if(typeof curView!=='undefined'&&curView){try{go(curView);}catch(e){}}
+        }
+      }).catch(function(){});
+  }catch(e){}
+}
+// El modo "% cuenta" NO se puede mostrar sin tamaño de cuenta → dejaría TODO en blanco.
+// Si quedó seleccionado sin tamaño (ni manual ni del broker), caemos a "$" esta sesión;
+// se recupera % en cuanto llega el equity del broker (syncBalances) o se define con ⚙.
+try{ if(JUNIT==='pct' && acctSize()<=0) JUNIT='money'; }catch(e){}
 // Valor de UN trade en la unidad activa (null si % sin tamaño de cuenta).
 function tUnitVal(t){
   if(JUNIT==='points')return (t.points!=null?t.points:0);
@@ -5249,7 +5280,7 @@ function submitTradestationCode(){
 }
 // Sincroniza TODAS las fuentes conectadas (portal SnapTrade + TradeStation directo).
 // importFromBroker deduplica por fill, así que solaparlas es seguro.
-function syncAllBrokers(force){ try{syncTradestation();}catch(e){} setTimeout(function(){try{syncFills(force);}catch(e){}},900); }
+function syncAllBrokers(force){ try{syncTradestation();}catch(e){} try{syncBalances();}catch(e){} setTimeout(function(){try{syncFills(force);}catch(e){}},900); }
 // Refleja en el modal si TradeStation ya está conectado: si lo está, el botón pasa a
 // "✓ Conectado · Desconectar" en vez de ofrecer conectar de nuevo.
 function refreshTsState(){

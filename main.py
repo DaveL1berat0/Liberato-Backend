@@ -8051,6 +8051,37 @@ async def tradestation_accounts(app_user_id: str = "dave"):
                           "detail": a.get("AccountDetail")} for a in accts]}
 
 
+@app.get("/api/broker/tradestation/balances")
+async def tradestation_balances(app_user_id: str = "dave"):
+    """Equity REAL por cuenta de TradeStation → el journal auto-rellena el 'tamaño de
+    cuenta' sin que el usuario lo escriba (Regla#1: dato real del broker). Devuelve
+    {account_id: equity} para todas las cuentas conectadas."""
+    uid = (app_user_id or "dave").strip() or "dave"
+    tokn = await _ts_access(uid)
+    async with httpx.AsyncClient(timeout=12, headers={"Authorization": f"Bearer {tokn}"}) as c:
+        ra = await c.get(f"{TS_API_BASE}/brokerage/accounts")
+        if ra.status_code != 200:
+            raise HTTPException(502, f"TS accounts {ra.status_code}: {ra.text[:200]}")
+        acct_ids = [a.get("AccountID") for a in (ra.json() or {}).get("Accounts", []) if a.get("AccountID")]
+        if not acct_ids:
+            return {"ok": True, "balances": {}}
+        rb = await c.get(f"{TS_API_BASE}/brokerage/accounts/{','.join(acct_ids)}/balances")
+        if rb.status_code != 200:
+            raise HTTPException(502, f"TS balances {rb.status_code}: {rb.text[:200]}")
+    balances = {}
+    for b in (rb.json() or {}).get("Balances", []):
+        aid = b.get("AccountID")
+        if not aid:
+            continue
+        # Equity = valor neto de la cuenta (cash + posiciones). Si falta, usa CashBalance.
+        eq = _ts_num(b.get("Equity"))
+        if eq is None:
+            eq = _ts_num(b.get("CashBalance"))
+        if eq is not None and eq > 0:
+            balances[str(aid)] = round(eq, 2)
+    return {"ok": True, "balances": balances}
+
+
 def _ts_num(v):
     try:
         return float(v)
