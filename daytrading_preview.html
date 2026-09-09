@@ -3744,6 +3744,71 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }catch(e){return -4;}
   }
 
+  // ══════ MOTOR "NQ IMPACT" — impacto por la REACCIÓN REAL del precio ══════
+  // El impacto de un evento NO lo decide la etiqueta de la fuente sino cuánto MOVIÓ el
+  // NQ alrededor del release, medido de las velas 1-min REALES (Regla #1: si no hay
+  // velas o no salió el dato, se DECLARA el estado, nunca se inventa un número).
+  var _nqBars={}, _nqFetching={};   // cache {dateKey:{ok,interval,bars}} y set de fetching
+  function _nqMedian(a){ if(!a.length)return 0; var s=a.slice().sort(function(x,y){return x-y;}); var m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+  function nqFetchDay(dk){
+    if(!dk||_nqBars[dk]||_nqFetching[dk])return;
+    _nqFetching[dk]=1;
+    fetch(BACKEND_URL+'/api/ohlc/NQ?date='+encodeURIComponent(dk))
+      .then(function(r){return r.ok?r.json():{ok:false};})
+      .then(function(d){ _nqBars[dk]=(d&&d.ok&&d.bars&&d.bars.length)?{ok:true,interval:d.interval||'1m',bars:d.bars}:{ok:false,interval:(d&&d.interval)||''}; delete _nqFetching[dk]; try{renderLegacy();}catch(e){} })
+      .catch(function(){ _nqBars[dk]={ok:false,interval:''}; delete _nqFetching[dk]; try{renderLegacy();}catch(e){} });
+  }
+  // Fórmula EXACTA (diseñada por workflow multi-agente): ventana W10 desde la barra de
+  // release, ancla P0 causal (cierre previo), baseline = mediana del rango de las 30
+  // velas previas con piso anti-tape-muerto, doble puerta pts∧R para clasificar.
+  function nqMeasure(bars,T){
+    if(!bars||!bars.length)return {note:'novelas'};
+    var r=-1; for(var i=0;i<bars.length;i++){ if(String(bars[i].hhmm)>=T){r=i;break;} }
+    if(r<0)return {note:'nobars'};
+    var P0; if(r===0)P0=+bars[0].o; else {var pi=r-1,tr=0; while(pi>=0&&tr<3&&(bars[pi].c==null)){pi--;tr++;} P0=(pi>=0)?+bars[pi].c:+bars[r].o;}
+    var pre=bars.slice(Math.max(0,r-30),r).map(function(b){return +b.h-+b.l;}).filter(function(x){return isFinite(x)&&x>=0;});
+    var overnight=!(T>='08:00'&&T<='17:00'); var floor=overnight?2.5:2.0;
+    var base=Math.max(_nqMedian(pre),floor);
+    var post=bars.slice(r,r+10); if(!post.length)return {note:'nowindow'};
+    var hi=-1e9,lo=1e9,maxbar=0; post.forEach(function(b){ if(+b.h>hi)hi=+b.h; if(+b.l<lo)lo=+b.l; var rb=+b.h-+b.l; if(rb>maxbar)maxbar=rb; });
+    var net10=+post[post.length-1].c-P0, up10=Math.max(0,hi-P0), dn10=Math.max(0,P0-lo), exc10=Math.max(up10,dn10);
+    var pct10=P0?100*net10/P0:0, R=base>0?exc10/base:0;
+    function tP(x){return x>=30?3:x>=12?2:x>=5?1:0;} function tR(x){return x>=4?3:x>=2.5?2:x>=1.8?1:0;}
+    var tier=(pre.length>=5)?Math.min(tP(exc10),tR(R)):tP(exc10);
+    var tol=Math.max(3,0.5*base), dir=net10>=tol?1:net10<=-tol?-1:0;
+    var whip=(exc10>=12&&Math.min(up10,dn10)>=10&&Math.abs(net10)<=Math.max(4,0.4*exc10));
+    var brusco=(maxbar>=12||maxbar>=2.5*base);
+    return {net10:Math.round(net10),pct10:pct10,exc10:Math.round(exc10),R:R,dir:dir,tier:tier,whip:whip,brusco:brusco,
+            win:post.length>=10?10:post.length,up10:Math.round(up10),dn10:Math.round(dn10),
+            partial:post.length<5,noBase:pre.length<5,refThin:(pre.length>=5&&pre.length<10),overnight:overnight};
+  }
+  // Devuelve {v:texto, cls:'up'|'down'|'pending', tier:0-3|null} para la celda NQ Impact.
+  function nqCell(e,dk){
+    var now=Date.now();
+    if(e.impact==='holiday'||e.type==='holiday')return {v:'— Feriado (sin sesión)',cls:'pending',tier:null};
+    if(!e.time||e.time==='All Day'||e.time==='TODO EL DÍA')return {v:'— No aplica (todo el día)',cls:'pending',tier:null};
+    if(String(e.time).indexOf(':')<0)return {v:'— Sin hora exacta',cls:'pending',tier:null};
+    var ts=e._ts||0;
+    if(ts&&ts>now){ var fut=(dk&&dk>_nqTodayKey()); return {v:fut?'⏳ Programado':('⏳ Al publicarse ('+e.time+' ET)'),cls:'pending',tier:null}; }
+    var db=_nqBars[dk];
+    if(!db)return {v:'⏱️ Midiendo reacción…',cls:'pending',tier:null};   // velas en camino
+    if(!db.ok){ return {v:(db.interval&&db.interval!=='1m')?'— Sin velas 1-min (>7 días)':'— Velas no disponibles',cls:'pending',tier:null}; }
+    if(db.interval!=='1m')return {v:'— Sin velas 1-min (>7 días)',cls:'pending',tier:null};
+    var m=nqMeasure(db.bars,e.time);
+    if(m.note)return {v:(m.note==='nowindow'?'⏱️ Midiendo reacción…':'— Sin velas para esa fecha'),cls:'pending',tier:null};
+    if(m.partial&&m.win<3)return {v:(dk===_nqTodayKey()?'⏱️ Midiendo reacción…':'— Tape incompleto'),cls:'pending',tier:null};
+    var winLbl=m.win+'min'+(m.partial?' (parcial)':'')+(m.overnight?' · overnight':'');
+    var src=(e.impact==='high')?'high':(e.impact==='med'?'med':'low');
+    var mism=''; if(src==='high'&&m.tier<=1)mism=' · ⚠ fuente Alto no confirmada'; else if(src!=='high'&&m.tier>=2)mism=' · ⚡ fuente '+(src==='med'?'Med':'Baja')+' — movió fuerte';
+    if(m.whip)return {v:'⚡ Latigazo ±'+Math.max(m.up10,m.dn10)+' pts (cierra '+(m.net10>=0?'+':'')+m.net10+') · '+winLbl,cls:'pending',tier:m.tier};
+    if(m.tier===0)return {v:'• Sin reacción (±'+m.exc10+' pts) · '+winLbl+mism,cls:'pending',tier:0};
+    var tierLbl=['SIN','BAJO','MEDIO','ALTO'][m.tier];
+    var gl=m.dir>0?'▲':m.dir<0?'▼':'•', sign=(m.net10>=0?'+':''), pref=m.noBase?'~ ':(m.refThin?'~ ':'');
+    var brLbl=(m.tier>=2&&!m.brusco)?' · gradual':'';
+    return {v:pref+gl+' '+sign+m.net10+' pts · '+(m.pct10>=0?'+':'')+m.pct10.toFixed(2)+'% · '+winLbl+' · '+tierLbl+brLbl+mism,
+            cls:(m.dir>0?'up':m.dir<0?'down':'pending'),tier:m.tier};
+  }
+  function _nqTodayKey(){ var e=etNow(); return e.getFullYear()+'-'+String(e.getMonth()+1).padStart(2,'0')+'-'+String(e.getDate()).padStart(2,'0'); }
   // ── Navegación por semana del calendario macro (0 = semana actual) ──
   var MACRO_WEEK_OFFSET=0;
   var MACRO_DAY=null;   // clave 'YYYY-MM-DD' del día seleccionado (null = auto)
@@ -3884,6 +3949,13 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           var isToday2=day&&day.label&&day.label.indexOf('Hoy')>=0;
           if(isToday2&&evMins<=nowM&&!e.result&&!isDone){isPastNoData=true;actualPlaceholder='Esperando dato…';}
         }
+        // Día PASADO (no hoy), evento numérico que NUNCA se publicó → 'No publicado'
+        // (antes caía en 'Pendiente', que sugiere que aún puede salir — engañoso).
+        var _dk=day&&day.date;
+        if(!isDone&&!e.noNumericData&&!isPastNoData&&_dk&&_dk<_nqTodayKey()&&!e.result)actualPlaceholder='No publicado';
+        // Dispara la carga de velas del día para medir la reacción (solo eventos pasados con hora).
+        if(_dk&&e._ts&&e._ts<=Date.now()&&e.time&&String(e.time).indexOf(':')>=0)nqFetchDay(_dk);
+        var _nq=nqCell(e,_dk);   // celda NQ Impact por reacción real (nunca vacía)
         var clsColor=e.classification==='Bullish'?'up':e.classification==='Bearish'?'down':'';
         var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+({Bullish:'Alcista',Bearish:'Bajista'}[e.classification]||e.classification)+'</span>'):'';
         var nextBadge=isNext?'<span class="lg-ev-next-badge">◆ PRÓXIMO</span>':'';
@@ -3899,7 +3971,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Previo</div><div class="lg-ev-cell-v">'+e.prev+'</div></div>'
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Estimado</div><div class="lg-ev-cell-v">'+e.exp+'</div></div>'
           +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">Actual</div><div class="lg-ev-cell-v '+(e.result?clsColor:'pending')+'">'+(e.result||actualPlaceholder)+(e.diff?'<span class="lg-ev-diff '+clsColor+'"> ('+e.diff+')</span>':'')+'</div></div>'
-          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+(e.nqImpact?clsColor:'pending')+'">'+(e.nqImpact||(e.status==='Released'?'—':'Al publicarse'))+'</div></div>'
+          +'<div class="lg-ev-cell"><div class="lg-ev-cell-k">NQ Impact</div><div class="lg-ev-cell-v '+_nq.cls+'">'+_nq.v+'</div></div>'
           +'</div>'
           +'</div></div>';
       }
