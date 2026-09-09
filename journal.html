@@ -2896,7 +2896,13 @@ function calcTrade(t){
   var rr=(hasStop&&rsk>0)?Math.round((Math.abs(pts)/rsk)*10)/10:0;
   var chkItems=t.checklist?t.checklist.filter(Boolean).length:0;
   var chkTotal=t.checklist?t.checklist.length:4;
-  return Object.assign({},t,{mult:mult,points:Math.round(pts*10)/10,pnl:pnl,fees:fees,risk:rsk,rr:rr,result:pnl>0?'win':pnl<0?'loss':'be',chkAll:t.checklist&&chkItems===chkTotal&&chkTotal>0});
+  // Resultado con BANDA de break-even/scratch: un trade que salió PLANO (|R| ≤ 0.1 con
+  // stop real, o pnl exacto 0 sin stop) es 'be', no un win/loss diminuto. Hace que los
+  // break-evens sean reales y contables (antes 'be' solo era pnl===0, casi nunca).
+  var _result;
+  if(hasExit&&hasStop&&rsk>0){var _rm=pts/rsk; _result=_rm>0.1?'win':_rm<-0.1?'loss':'be';}
+  else _result=pnl>0?'win':pnl<0?'loss':'be';
+  return Object.assign({},t,{mult:mult,points:Math.round(pts*10)/10,pnl:pnl,fees:fees,risk:rsk,rr:rr,result:_result,chkAll:t.checklist&&chkItems===chkTotal&&chkTotal>0});
 }
 var T=loadTrades();
 // Migración one-shot: reclasifica trades ya guardados con el nuevo criterio del motor.
@@ -2923,13 +2929,14 @@ function exitDemo(){DEMO_MODE=false;T=loadTrades();go(curView);}
 
 // ── STATS ──
 function stats(arr){
-  if(!arr||!arr.length)return{n:0,wins:0,losses:0,wr:0,pf:0,avgW:0,avgL:0,exp:0,total:0};
+  if(!arr||!arr.length)return{n:0,wins:0,losses:0,be:0,beRate:0,wr:0,pf:0,avgW:0,avgL:0,exp:0,total:0};
   var w=arr.filter(function(t){return t.result==='win';}),l=arr.filter(function(t){return t.result==='loss';});
+  var be=arr.length-w.length-l.length;
   var gw=w.reduce(function(s,t){return s+t.pnl;},0),gl=Math.abs(l.reduce(function(s,t){return s+t.pnl;},0));
   var pf=gl>0?Math.round((gw/gl)*100)/100:gw>0?9.9:0;
   var aw=w.length?Math.round(gw/w.length):0,al=l.length?Math.round(gl/l.length):0;
   var wr=Math.round((w.length/arr.length)*100);
-  return{n:arr.length,wins:w.length,losses:l.length,wr:wr,pf:pf,avgW:aw,avgL:al,exp:Math.round((wr/100)*aw-((100-wr)/100)*al),total:Math.round(arr.reduce(function(s,t){return s+t.pnl;},0))};
+  return{n:arr.length,wins:w.length,losses:l.length,be:be,beRate:Math.round(be/arr.length*100),wr:wr,pf:pf,avgW:aw,avgL:al,exp:Math.round((wr/100)*aw-((100-wr)/100)*al),total:Math.round(arr.reduce(function(s,t){return s+t.pnl;},0))};
 }
 function bySetup(arr){
   var m={};arr.forEach(function(t){if(!m[t.setup])m[t.setup]={name:t.setup,tr:[],pnl:0,w:0};m[t.setup].tr.push(t);m[t.setup].pnl+=t.pnl;if(t.result==='win')m[t.setup].w++;});
@@ -3170,7 +3177,7 @@ function renderDash(){
   var openN=T.filter(function(t){return !t.__demo && t.status==='open' && (activeAccount==='all'||String(t.account)===activeAccount);}).length;
   document.getElementById('tz-kpi-row').innerHTML=
     '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">P&L Cerrado ('+unitLabel()+')'+hlp(TIPS.netpnl)+'</span><span class="tz-kpi-badge">'+s.n+' cerradas'+(openN?' · '+openN+' abiertas fuera':'')+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+((sU.total==null?s.total:sU.total)>=0?'pos':'neg')+'">'+fUnit(sU.total)+'</div></div></div>'
-    +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Trade Win %'+hlp(TIPS.winrate)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.wr+'%</div>'+gaugeSemi(s.wr)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+s.wins+'</span><span style="color:var(--text3)">'+(s.n-s.wins-s.losses)+'</span><span style="color:var(--red)">'+s.losses+'</span></div></div>'
+    +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Trade Win %'+hlp(TIPS.winrate)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.wr+'%</div>'+gaugeSemi(s.wr)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)" title="Ganadas">'+s.wins+' G</span><span style="color:var(--text3)" title="Break-even (salió plano)">'+s.be+' BE</span><span style="color:var(--red)" title="Perdidas">'+s.losses+' P</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Profit Factor'+hlp(TIPS.pf)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+s.pf.toFixed(2)+'</div>'+ringMini(Math.min(s.pf*33,100),s.pf>=2?'#22c55e':s.pf>=1?'#C9A84C':'#ef4444')+'</div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Day Win %'+hlp(TIPS.daywin)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+dayWin+'%</div>'+gaugeSemi(dayWin)+'</div><div class="tz-gauge-nums"><span style="color:var(--green)">'+winDays+'</span><span style="color:var(--red)">'+lossDays+'</span></div></div>'
     +'<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">Avg Win/Loss'+hlp(TIPS.avgwl)+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value white">'+avgWL.toFixed(2)+'</div><div class="tz-winloss-bar"><div class="tz-wl-track"><div class="tz-wl-pos" style="width:'+(s.avgW+s.avgL>0?(s.avgW/(s.avgW+s.avgL))*100:50)+'%"></div><div class="tz-wl-neg" style="width:'+(s.avgW+s.avgL>0?(s.avgL/(s.avgW+s.avgL))*100:50)+'%"></div></div><div class="tz-wl-labels"><span style="color:var(--green)">'+fUnit(sU.avgW)+'</span><span style="color:var(--red)">'+(sU.avgL==null?'—':fUnit(-sU.avgL))+'</span></div></div></div></div>';
@@ -3192,7 +3199,7 @@ function renderDash(){
   var avgR=rMults.length?Math.round(rMults.reduce(function(a,b){return a+b;},0)/rMults.length*100)/100:null;
   function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
   var _ar=document.getElementById('dash-activity-row');
-  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy ('+unitLabel()+')',fUnit(sU.exp),(sU.exp==null?0:sU.exp)>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
+  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Break-even',s.beRate+'% ('+s.be+')','white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy ('+unitLabel()+')',fUnit(sU.exp),(sU.exp==null?0:sU.exp)>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
   var _ps=perfScore(s,maxDD);renderScoreHero(s.n?_ps:null);renderRadar(_ps);renderLast30Trades();
   renderEquity();renderDailyBars();renderDonuts(s,su);renderDashAI();
   var recent=FT.slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);}).slice(0,5);
@@ -3626,12 +3633,14 @@ function renderTrades(){
   var closed=filtered.filter(function(t){return t.status!=='open'&&!t.isOpen&&t.status!=='pending';});
   var wins=closed.filter(function(t){return t.result==='win';}).length;
   var losses=closed.filter(function(t){return t.result==='loss';}).length;
+  var bevn=closed.filter(function(t){return t.result==='be';}).length;
   var openN=filtered.filter(function(t){return t.status==='open'||t.isOpen;}).length;
   var wr=(wins+losses)?Math.round(wins/(wins+losses)*100):0;
   var sU=statsU(closed);   // total en la UNIDAD seleccionada ($/puntos/%): antes el resumen no traía total → al pasar a % se quedaba sin el % total
   var summ='<div class="tr-summary">'
     +'<div class="tr-sum-chip"><span class="n '+(sU.total==null?'':(sU.total>=0?'pos':'neg'))+'">'+fUnit(sU.total)+'</span><span class="l">Total ('+unitLabel()+')</span></div>'
     +'<div class="tr-sum-chip"><span class="n pos">'+wins+'</span><span class="l">Wins</span></div>'
+    +(bevn?'<div class="tr-sum-chip"><span class="n" style="color:var(--text3);">'+bevn+'</span><span class="l">Break-even</span></div>':'')
     +'<div class="tr-sum-chip"><span class="n neg">'+losses+'</span><span class="l">Losses</span></div>'
     +'<div class="tr-sum-chip"><span class="n" style="color:var(--gold);">'+wr+'%</span><span class="l">Win Rate</span></div>'
     +(openN?'<div class="tr-sum-chip"><span class="n" style="color:var(--text3);">'+openN+'</span><span class="l">Abiertas</span></div>':'')
@@ -3715,7 +3724,7 @@ function renderReports(){
     function kpi(l,v,c){return '<div style="background:rgba(255,255,255,0.015);border:0.5px solid var(--border2);border-radius:10px;padding:13px 15px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">'+l+'</div><div style="font-size:20px;font-weight:700;font-family:\'DM Mono\',monospace;" class="'+(c||'')+'">'+v+'</div></div>';}
     body.innerHTML=repSection('Resumen del periodo',
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">'
-      +kpi('Net P&L',f$(s.total),fc(s.total))+kpi('Trades',s.n,'')+kpi('Win Rate',s.wr+'%','')+kpi('Profit Factor',s.pf.toFixed(2),'')
+      +kpi('Net P&L',f$(s.total),fc(s.total))+kpi('Trades',s.n,'')+kpi('Win Rate',s.wr+'%','')+kpi('Break-even',s.beRate+'% ('+s.be+')','')+kpi('Profit Factor',s.pf.toFixed(2),'')
       +kpi('Expectancy',f$(s.exp),fc(s.exp))+kpi('Avg Win',f$(s.avgW),'pos')+kpi('Avg Loss',f$(-s.avgL),'neg')+kpi('Max Drawdown',f$(-dd),'neg')+'</div>')
       +(bestD?repSection('Mejor y peor día',
         '<div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="flex:1;min-width:180px;"><div style="font-size:11px;color:var(--text3);">Mejor día</div><div style="font-size:16px;font-weight:700;" class="pos">'+f$(byDate[bestD])+'</div><div style="font-size:11px;color:var(--text2);">'+bestD+'</div></div>'
