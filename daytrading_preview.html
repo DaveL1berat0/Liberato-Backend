@@ -763,6 +763,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-ev-body{flex:1;min-width:0;}
 .lg-ev-name{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.3;}
 .lg-ev-status{font-family:var(--mono);font-size:9px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;}
+.lg-ev-status.waiting{color:var(--gold);animation:evWait 1.8s ease-in-out infinite;}
+@keyframes evWait{0%,100%{opacity:0.55;}50%{opacity:1;}}
 .lg-ev-soon{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:700;color:#ff5064;padding:5px 12px;border-radius:var(--r-pill);background:rgba(255,70,90,0.12);border:1px solid rgba(255,70,90,0.3);letter-spacing:0.02em;}
 .lg-ev-soon .d{width:6px;height:6px;border-radius:50%;background:#ff5064;animation:pul 1.2s infinite;box-shadow:0 0 6px #ff5064;}
 .lg-ev-badge{flex-shrink:0;font-family:var(--mono);font-size:8px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:var(--r-sm);}
@@ -3868,6 +3870,10 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         var isDone=e.status==='Released'||e.result;
         var isNext=(e===nextEv); // ¿es el próximo evento pendiente?
         var actualPlaceholder='Pendiente';
+        // ¿el evento YA pasó su hora HOY pero la fuente aún no publicó el dato? En ese caso
+        // NO es "Upcoming" (contradice a la hora pasada y hace desconfiar): es "Esperando
+        // publicación…". El dato real llega cuando la fuente lo reporte (Regla #1: no se inventa).
+        var isPastNoData=false;
         if(e.noNumericData){
           actualPlaceholder='No aplica';
         } else if(e.time&&e.time.indexOf(':')>0){
@@ -3876,7 +3882,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           var _etn={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).forEach(function(x){_etn[x.type]=x.value;});
           var nowM=parseInt(_etn.hour==='24'?'0':_etn.hour)*60+parseInt(_etn.minute);
           var isToday2=day&&day.label&&day.label.indexOf('Hoy')>=0;
-          if(isToday2&&evMins<=nowM&&!e.result)actualPlaceholder='Esperando dato…';
+          if(isToday2&&evMins<=nowM&&!e.result&&!isDone){isPastNoData=true;actualPlaceholder='Esperando dato…';}
         }
         var clsColor=e.classification==='Bullish'?'up':e.classification==='Bearish'?'down':'';
         var clsLabel=e.classification?('<span class="lg-ev-cls '+clsColor+'">'+({Bullish:'Alcista',Bearish:'Bajista'}[e.classification]||e.classification)+'</span>'):'';
@@ -3884,7 +3890,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
           +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'TODO EL DÍA':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
-          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status">'+(isDone?'✓ Publicado':e.status)+'</div>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status'+(isPastNoData?' waiting':'')+'">'+(isDone?'✓ Publicado':(isPastNoData?'◷ Esperando publicación…':e.status))+'</div>'
           +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
           +'</div>'
           +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'

@@ -8774,6 +8774,27 @@ async def get_version():
         "build": "session-2026-07-09",
     }
 
+@app.get("/api/admin/calendar-diag")
+async def calendar_diag(key: str = "", day: str = ""):
+    """DIAGNÓSTICO admin del calendario macro: eventos del día con su actual/forecast/
+    status/fuente, para verificar si el pipeline rellena los 'actual' (y por qué un
+    evento niche como 'ADP Weekly' se queda sin dato). Gated por ADMIN_KEY."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    data = cache["calendar"]["data"] or []
+    today = day or datetime.now(NY).strftime("%Y-%m-%d")
+    def _d(e): return (str(e.get("time") or e.get("date") or ""))[:10]
+    todays = [e for e in data if _d(e) == today]
+    out = [{"title": e.get("title") or e.get("name"), "time": e.get("time"),
+            "impact": e.get("impact"), "actual": e.get("actual"),
+            "forecast": e.get("forecast"), "previous": e.get("previous"),
+            "status": e.get("status"), "from": e.get("_actual_from")} for e in todays]
+    return {"today": today, "last_update": cache["calendar"]["last_update"],
+            "total_hoy": len(out), "con_actual": sum(1 for e in out if e.get("actual")),
+            "rapidapi_actuals_cache": len(cache.get("_rapidapi_cache", []) or []),
+            "rapidapi_key_set": bool(RAPIDAPI_KEY), "eventos": out}
+
+
 @app.get("/api/calendar")
 async def get_calendar():
     """Devuelve caché INMEDIATAMENTE. Refresco en segundo plano (no bloquea).
