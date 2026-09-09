@@ -370,6 +370,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tz-kpi-badge{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);background:rgba(255,255,255,0.04);padding:1px 6px;border-radius:3px;}
 .tz-kpi-body{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:6px;}
 .tz-kpi-value{font-family:'DM Mono',monospace;font-size:24px;font-weight:700;line-height:1;}
+.tz-kpi-cta{cursor:pointer;border-color:rgba(201,168,76,0.28)!important;background:linear-gradient(180deg,rgba(201,168,76,0.06),rgba(6,8,13,0.4))!important;}
+.tz-kpi-cta:hover{border-color:rgba(201,168,76,0.5)!important;}
+.tz-kpi-cta-body{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;line-height:1.4;color:var(--text2);}
+.tz-kpi-cta-ic{font-size:15px;line-height:1.1;flex:0 0 auto;}
 .tz-kpi-value.pos{color:var(--green);}.tz-kpi-value.neg{color:var(--red);}.tz-kpi-value.gold{color:var(--gold);}.tz-kpi-value.white{color:var(--text);}
 .tz-gauge{width:64px;height:38px;flex-shrink:0;}
 .tz-ring{width:50px;height:50px;flex-shrink:0;}
@@ -3199,7 +3203,15 @@ function renderDash(){
   var avgR=rMults.length?Math.round(rMults.reduce(function(a,b){return a+b;},0)/rMults.length*100)/100:null;
   function akCard(l,v,cls){return '<div class="tz-kpi"><div class="tz-kpi-head"><span class="tz-kpi-label">'+l+'</span></div><div class="tz-kpi-body"><div class="tz-kpi-value '+(cls||'white')+'">'+v+'</div></div></div>';}
   var _ar=document.getElementById('dash-activity-row');
-  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Break-even',s.beRate+'% ('+s.be+')','white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy ('+unitLabel()+')',fUnit(sU.exp),(sU.exp==null?0:sU.exp)>=0?'pos':'neg')+akCard('R medio',avgR!=null?((avgR>=0?'+':'')+avgR+'R'):'—',avgR!=null?(avgR>=0?'pos':'neg'):'white');
+  // R medio: si NO hay stops en los trades no se puede calcular la R (Regla #1). En vez
+  // de un "—" muerto, un CTA de DESBLOQUEO — el stop es un upgrade opcional que abre la R
+  // y el coaching del Genio, no un requisito para journalizar.
+  var rMedioTile=(avgR!=null)
+    ? akCard('R medio',(avgR>=0?'+':'')+avgR+'R',avgR>=0?'pos':'neg')
+    : '<div class="tz-kpi tz-kpi-cta" onclick="go(\'trades\')" title="La R necesita un stop por trade (tu riesgo). Añádelo en el detalle del trade: arrástralo en el chart o escríbelo en STATS. Desbloquea R medio, la curva de drawdown y el coaching del Genio.">'
+      +'<div class="tz-kpi-head"><span class="tz-kpi-label">R medio</span></div>'
+      +'<div class="tz-kpi-body"><div class="tz-kpi-cta-body"><span class="tz-kpi-cta-ic">🔒</span><span>Añade <strong>stops</strong> a tus trades para desbloquear tu <strong>R</strong> y el coaching del Genio <span style="color:var(--gold);">→</span></span></div></div></div>';
+  if(_ar)_ar.innerHTML=akCard('Trades',s.n,'white')+akCard('Long / Short',longs+' / '+shorts,'white')+akCard('Break-even',s.beRate+'% ('+s.be+')','white')+akCard('Duración media',avgDur?(avgDur<60?avgDur+'m':Math.floor(avgDur/60)+'h '+(avgDur%60)+'m'):'—','white')+akCard('Expectancy ('+unitLabel()+')',fUnit(sU.exp),(sU.exp==null?0:sU.exp)>=0?'pos':'neg')+rMedioTile;
   var _ps=perfScore(s,maxDD);renderScoreHero(s.n?_ps:null);renderRadar(_ps);renderLast30Trades();
   renderEquity();renderDailyBars();renderDonuts(s,su);renderDashAI();
   var recent=FT.slice().sort(function(a,b){return b.date.localeCompare(a.date)||b.time.localeCompare(a.time);}).slice(0,5);
