@@ -8210,6 +8210,16 @@ async def ts_sync_diag(key: str = "", app_user_id: str = ""):
                 out["accounts_error"] = ra.text[:200]; return out
             acct_ids = [a.get("AccountID") for a in (ra.json() or {}).get("Accounts", []) if a.get("AccountID")]
             out["cuentas"] = acct_ids
+            # balances/equity reales (para verificar el auto-tamaño de cuenta)
+            try:
+                rbal = await c.get(f"{TS_API_BASE}/brokerage/accounts/{','.join(acct_ids)}/balances")
+                if rbal.status_code == 200:
+                    out["balances"] = {str(b.get("AccountID")): (_ts_num(b.get("Equity")) or _ts_num(b.get("CashBalance")))
+                                       for b in (rbal.json() or {}).get("Balances", []) if b.get("AccountID")}
+                else:
+                    out["balances_http"] = f"{rbal.status_code}: {rbal.text[:100]}"
+            except Exception as e:
+                out["balances_err"] = str(e)[:120]
             raw_orders, seen = [], set()
             per_acct = {}
             for aid in acct_ids:
