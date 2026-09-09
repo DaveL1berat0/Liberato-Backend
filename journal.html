@@ -596,6 +596,30 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-chk-lbl{flex:1;}
 .tws-tag-add{border-style:dashed!important;color:var(--gold)!important;border-color:rgba(201,168,76,0.4)!important;background:transparent!important;}
 .tws-tag-add:hover{background:rgba(201,168,76,0.08)!important;}
+/* Triggers de order-flow (checklist) — grid de 2 columnas, seleccionables */
+.tws-oftrg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+.tws-oftrg-item{display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:10px;border:0.5px solid var(--border2);background:rgba(255,255,255,0.008);cursor:pointer;font-size:12px;color:var(--text3);transition:all .15s;position:relative;}
+.tws-oftrg-item:hover{border-color:rgba(201,168,76,0.35);color:var(--text2);}
+.tws-oftrg-item.on{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.1);color:var(--gold);font-weight:600;}
+.tws-oftrg-item .oftrg-ic{font-size:14px;line-height:1;flex:0 0 auto;}
+.tws-oftrg-item .oftrg-l{flex:1;line-height:1.2;}
+.tws-oftrg-item .oftrg-ck{flex:0 0 auto;color:var(--gold);font-weight:700;width:12px;text-align:center;}
+/* Columna izquierda del detalle: panel + tarjeta que llena el espacio bajo él */
+.tws-colL{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.tws-sidecard{border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,0.008);padding:16px;}
+.tws-sidecard-h{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.tws-sidegrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.tws-sidekpi{background:var(--tile);border:0.5px solid var(--border2);border-radius:11px;padding:11px 12px;}
+.tws-sidekpi .k{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.tws-sidekpi .v{font-family:'DM Mono',monospace;font-size:17px;font-weight:700;color:var(--text);}
+.tws-sidekpi .v.pos{color:var(--green);}.tws-sidekpi .v.neg{color:#ef4444;}.tws-sidekpi .v.neu{color:var(--text3);}
+/* Controles flotantes SOBRE el chart (timeframe + acciones) */
+.jch-ctrls{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:8;display:flex;align-items:center;gap:6px;
+  padding:0 10px;background:rgba(8,10,15,0.82);backdrop-filter:blur(8px);border-top:0.5px solid var(--border2);overflow-x:auto;}
+.jch-ctrls .jch-tf{display:inline-flex;gap:4px;align-items:center;}
+.jch-ctrls .jch-spacer{flex:1;min-width:8px;}
+.jch-ctrls .jch-chip{flex:0 0 auto;}
+@media(max-width:860px){.jch-ctrls{height:44px;gap:5px;padding:0 7px;}}
 .tws-panel-right{position:sticky;top:60px;align-self:start;}
 @media(max-width:860px){.tws-cols{grid-template-columns:1fr;}.tws-panel-right{position:static;}}
 .tws-panel{border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,0.008);overflow:hidden;}
@@ -635,9 +659,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-chart-wrap svg{width:100%;height:auto;display:block;}
 /* ── JCH · mini-TradingView del detalle de trade (Lightweight Charts 4.x + velas reales NQ) ── */
 .jch-frame{display:flex;flex-direction:column;}
-.jch-stage{position:relative;width:100%;height:min(76vh,760px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
-@media(max-width:860px){.jch-stage{height:min(60vh,460px);}}
-.jch-tv{position:absolute;inset:0;width:100%;height:100%;}
+.jch-stage{position:relative;width:100%;height:min(82vh,880px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
+@media(max-width:860px){.jch-stage{height:min(64vh,520px);}}
+/* Reserva una franja inferior de 46px para los controles → el eje de tiempo del
+   chart NO queda tapado por la barra de timeframe/acciones. */
+.jch-tv{position:absolute;left:0;right:0;top:0;bottom:46px;width:auto;height:auto;}
+@media(max-width:860px){.jch-tv{bottom:44px;}}
 .jch-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
 .jch-ov.armed{pointer-events:auto;cursor:crosshair;}
 .jch-toolbar{position:absolute;top:8px;left:8px;z-index:5;display:flex;flex-direction:column;gap:3px;padding:4px;border:0.5px solid var(--border2);border-radius:9px;background:rgba(6,7,13,0.86);backdrop-filter:blur(7px);}
@@ -3771,7 +3798,40 @@ var TWS_TAGS=['A+','Confluencia','Ejecución limpia','Entrada temprana','Target 
 function twsToggleTag(tag){var t=T.find(function(x){return x.id===_twsId;});var tags=(t.tags||[]).slice();var i=tags.indexOf(tag);if(i>=0)tags.splice(i,1);else tags.push(tag);twsSave({tags:tags});renderTws();}
 // Añadir un tag PERSONALIZADO (el que el trader quiera). Se guarda en t.tags y se
 // muestra junto a los predefinidos; volver a clicarlo lo quita.
-function twsAddTag(){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;var v=prompt('Nuevo tag personalizado:');if(v==null)return;v=v.trim();if(!v)return;var tags=(t.tags||[]).slice();if(tags.indexOf(v)<0)tags.push(v);twsSave({tags:tags});renderTws();}
+function twsAddTag(){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;
+  lbcPrompt({icon:'🏷️',title:'Nuevo tag personalizado',placeholder:'Ej. Late entry, Revenge, News…',okText:'Añadir',onOk:function(v){
+    v=(v||'').trim();if(!v)return;var cur=T.find(function(x){return x.id===_twsId;});if(!cur)return;var tags=(cur.tags||[]).slice();if(tags.indexOf(v)<0)tags.push(v);twsSave({tags:tags});renderTws();
+  }});
+}
+// Triggers de order-flow: una vez identificado el régimen y la ubicación, ¿cuál
+// gatilló la entrada? (multi-selección: puede haber confluencia de varios).
+var OF_TRIGGERS=[
+  {k:'big_trades',l:'Big Trades',ic:'🐋'},
+  {k:'footprint',l:'Footprint Imbalance',ic:'🧱'},
+  {k:'heatmap',l:'Heatmap Liquidity',ic:'🔥'},
+  {k:'delta',l:'Delta Outlier',ic:'📈'}
+];
+function twsToggleLocation(){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;twsSave({locationOk:!t.locationOk});renderTws();}
+function twsToggleTrigger(k){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;var a=(t.ofTriggers||[]).slice();var i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);twsSave({ofTriggers:a});renderTws();}
+// Modal de entrada de texto estilizado (reemplaza el prompt() nativo, acorde a la web).
+function lbcPrompt(o){
+  o=o||{};
+  var ov=document.getElementById('lbc-prompt');
+  if(!ov){ov=document.createElement('div');ov.id='lbc-prompt';ov.className='lbc-cfm';document.body.appendChild(ov);}
+  ov.innerHTML='<div class="lbc-cfm-bg" onclick="lbcPromptClose()"></div>'
+    +'<div class="lbc-cfm-card">'
+    +(o.icon?'<div class="lbc-cfm-ic">'+o.icon+'</div>':'')
+    +'<div class="lbc-cfm-title">'+_esc(o.title||'')+'</div>'
+    +'<input id="lbc-prompt-input" class="tws-input" style="margin:6px 0 20px;text-align:left;" placeholder="'+_esc(o.placeholder||'')+'" value="'+_esc(o.value||'')+'">'
+    +'<div class="lbc-cfm-actions"><button class="lbc-cfm-btn cancel" onclick="lbcPromptClose()">'+_esc(o.cancelText||'Cancelar')+'</button>'
+    +'<button class="lbc-cfm-btn ok" onclick="lbcPromptOk()">'+_esc(o.okText||'OK')+'</button></div></div>';
+  ov.classList.add('open'); _lbcPromptCb=o.onOk||null;
+  var inp=document.getElementById('lbc-prompt-input');
+  if(inp){inp.focus();inp.onkeydown=function(e){if(e.key==='Enter')lbcPromptOk();else if(e.key==='Escape')lbcPromptClose();};}
+}
+var _lbcPromptCb=null;
+function lbcPromptOk(){var inp=document.getElementById('lbc-prompt-input');var v=inp?inp.value:'';var cb=_lbcPromptCb;lbcPromptClose();if(cb)cb(v);}
+function lbcPromptClose(){var ov=document.getElementById('lbc-prompt');if(ov)ov.classList.remove('open');_lbcPromptCb=null;}
 function twsPickShots(){document.getElementById('tws-shot-input').click();}
 function twsAddFiles(files){
   files=Array.prototype.slice.call(files||[]).filter(function(f){return /image\//.test(f.type);});
@@ -3882,7 +3942,11 @@ function renderTws(){
       +row('Dirección',dir==='long'?'LONG':'SHORT')
       +'<div class="tws-field"><span class="tws-field-l">Market Regime</span><span class="tws-reg">'+_regBtn('pos','📈 Positivo')+_regBtn('neg','📉 Negativo')+'</span></div>'
       +'<div class="tws-field"><span class="tws-field-l">Grade</span><span class="tws-gstars" title="Califica la decisión, no el resultado">'+_gStars()+'</span></div>'
-      +'<div style="margin-top:16px;"><div class="tws-lbl">Checklist del proceso'+(pbSel?' · '+_esc(pbSel.name):'')+'</div><div class="tws-chk">'+chkLabels.slice(0,8).map(function(l,i){var ok=t.checklist&&t.checklist[i];return '<div class="tws-chk-item'+(ok?' ok':'')+'" onclick="twsToggleChk('+i+')"><span class="tws-chk-box">'+(ok?'✓':'')+'</span><span class="tws-chk-lbl">'+_esc(l)+'</span></div>';}).join('')+'</div></div>'
+      +'<div style="margin-top:16px;"><div class="tws-lbl">Proceso · order-flow</div>'
+        +'<div class="tws-chk"><div class="tws-chk-item'+(t.locationOk?' ok':'')+'" onclick="twsToggleLocation()"><span class="tws-chk-box">'+(t.locationOk?'✓':'')+'</span><span class="tws-chk-lbl">Entré en la <strong>ubicación</strong> (LOCATION)</span></div></div>'
+        +'<div class="tws-lbl" style="margin-top:14px;font-size:10px;opacity:.85;">¿Qué trigger gatilló tu entrada?</div>'
+        +'<div class="tws-oftrg">'+OF_TRIGGERS.map(function(tg){var on=(t.ofTriggers||[]).indexOf(tg.k)>=0;return '<div class="tws-oftrg-item'+(on?' on':'')+'" onclick="twsToggleTrigger(\''+tg.k+'\')"><span class="oftrg-ic">'+tg.ic+'</span><span class="oftrg-l">'+tg.l+'</span><span class="oftrg-ck">'+(on?'✓':'')+'</span></div>';}).join('')+'</div>'
+      +'</div>'
       +'<div style="margin-top:18px;"><div class="tws-lbl">Tags</div><div style="display:flex;flex-wrap:wrap;gap:8px;">'
         +TWS_TAGS.map(function(tg){var on=(t.tags||[]).indexOf(tg)>=0;return '<span class="tws-tag'+(on?' on':'')+'" onclick="twsToggleTag(\''+_tj(tg)+'\')">'+(on?'✓ ':'')+_esc(tg)+'</span>';}).join('')
         +_customTags.map(function(tg){return '<span class="tws-tag on" onclick="twsToggleTag(\''+_tj(tg)+'\')" title="Tag personalizado — clic para quitar">✓ '+_esc(tg)+'</span>';}).join('')
@@ -3923,6 +3987,22 @@ function renderTws(){
   }
   function chTab(id,lbl){return '<button class="tws-tab'+(_twsChTab===id?' on':'')+'" onclick="twsChTab(\''+id+'\')">'+lbl+'</button>';}
   function lTab(id,lbl){return '<button class="tws-tab'+(_twsTab===id?' on':'')+'" onclick="twsTab(\''+id+'\')">'+lbl+'</button>';}
+  // ── Tarjeta Riesgo & R:R (llena el espacio bajo el panel izquierdo, siempre visible) ──
+  function _sk(k,v,cls){return '<div class="tws-sidekpi"><div class="k">'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div></div>';}
+  var riskCard;
+  if(hasStop){
+    riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
+      +(rrViz||'')
+      +'<div class="tws-sidegrid" style="margin-top:14px;">'
+      +_sk('R:R planeado',plannedRR!=null?plannedRR+'R':'—','')
+      +_sk('R realizado',realR!=null?((realR>=0?'+':'')+realR+'R'):(isOpenTr?'abierta':'—'),realR!=null?(realR>=0?'pos':'neg'):'neu')
+      +_sk('Riesgo inicial',riskUSD?f$(-riskUSD):'—','neg')
+      +_sk('MFE / MAE',(mfe!=null?('+'+mfe+'R'):'—')+' / '+(mae!=null?(mae+'R'):'—'),'')
+      +'</div></div>';
+  } else {
+    riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
+      +'<div style="font-size:12px;color:var(--text3);line-height:1.6;">Este trade no tiene <strong style="color:var(--text2);">stop</strong>, así que no se puede calcular la R. Arrástralo en el chart o escríbelo en <strong style="color:var(--text2);">STATS</strong> y aquí verás tu riesgo, R:R planeado y realizado.</div></div>';
+  }
 
   host.innerHTML=
     '<div class="tws-topbar"><button class="tws-back" onclick="twsClose()">← Mis Trades</button>'
@@ -3936,7 +4016,7 @@ function renderTws(){
     +'<div class="tws-metaline"><span><b>'+t.date+'</b></span><span>Entrada <b>'+t.time+'</b></span>'+(t.exitTime?'<span>Salida <b>'+(String(t.exitTime).split('T')[1]||'').slice(0,5)+'</b></span>':'')+'<span>Duración <b>'+_fmtDur(t)+'</b></span><span>Cantidad <b>'+c+'</b></span>'+(t.account?'<span>Cuenta <b>'+_esc(shortAcct(String(t.account)))+'</b></span>':'')+'</div></div>'
     // dos columnas
     +'<div class="tws-cols">'
-    +'<div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'
+    +'<div class="tws-colL"><div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'+riskCard+'</div>'
     +'<div class="tws-panel tws-panel-right"><div class="tws-tabbar">'+chTab('chart','CHART')+chTab('notes','NOTAS')+chTab('genio','✦ GENIO')+'</div>'+right+'</div>'
     +'</div>'
     // daily context
@@ -4099,6 +4179,16 @@ function jchStageHTML(t){
     +tb('fib','Fibonacci retroceso',I.fib)
     +'<button class="jchd jchd-trash" onclick="jchClear()"><span class="jtip">Borrar mis dibujos</span>'+I.clear+'</button>'
     +'</div>';
+  // Controles flotantes SOBRE el chart (lo valioso: timeframe + acciones). Sin pie.
+  var overlay='<div class="jch-ctrls">'
+    +'<span id="jch-tfchips" class="jch-tf"></span>'
+    +'<span class="jch-spacer"></span>'
+    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()"><span class="jtip">Máximo a favor / en contra</span>MFE/MAE</button>'
+    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()"><span class="jtip">Proyecta si aguantabas</span>¿Y si aguanto?</button>'
+    +'<button class="jch-chip" onclick="jchFit()"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
+    +'<button class="jch-chip" onclick="jchOpenTV()"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
+    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
+    +'</div>';
   var stage='<div class="jch-stage" id="jch-stage">'
     +toolbar
     +'<div class="jch-tv" id="jch-tv"></div>'
@@ -4109,21 +4199,9 @@ function jchStageHTML(t){
     +'<div class="jch-src" id="jch-src">cargando…</div>'
     +'<div class="jch-fallback" id="jch-fallback" style="display:none;"></div>'
     +'<div class="jch-load" id="jch-load"><span class="chart-ring"></span> Cargando velas · '+_esc(String(t.asset||'NQ'))+'</div>'
+    +overlay
     +'</div>';
-  // bottombar: intervalos + toggles + fit + fullscreen + TradingView
-  var chips='<button class="jch-chip dis" disabled><span class="jtip">Requiere feed de ticks (no disponible)</span>15s</button>'
-    +'<span id="jch-tfchips"></span>'
-    +'<button class="jch-chip dis" disabled><span class="jtip">Próximamente · requiere ticks</span>Rango</button>';
-  var bottom='<div class="jch-bottombar">'+chips
-    +'<span class="jch-sep"></span>'
-    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()">MFE/MAE</button>'
-    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()">¿Y si aguanto?</button>'
-    +'<span class="jch-spacer"></span>'
-    +'<button class="jch-chip" onclick="jchFit()"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
-    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
-    +'<button class="jch-chip" onclick="jchOpenTV()"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
-    +'</div>';
-  return '<div class="jch-frame" id="jch-frame">'+stage+bottom+'</div>'
+  return '<div class="jch-frame" id="jch-frame">'+stage+'</div>'
     +'<div class="jch-proj" id="jch-projrow" style="display:none;"></div>'
     +'<div class="jch-read" id="jch-read"></div>';
 }
