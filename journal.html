@@ -654,6 +654,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .eq-lg--mfe{color:var(--green);}.eq-lg--mae{color:#ef4444;}.eq-lg--post{color:var(--text3);}.eq-lg--exit{color:var(--gold);}
 .tv-eq-final{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;}
 .tv-eq-final.pos{color:var(--green);}.tv-eq-final.neg{color:#ef4444;}
+/* Tabla Order Flow (analítica por trigger) */
+.oft-hero{background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.25);border-radius:11px;padding:12px 14px;font-size:12.5px;color:var(--text2);line-height:1.5;margin-bottom:14px;}
+.oft-table{width:100%;overflow-x:auto;}
+.oft-row{display:grid;grid-template-columns:minmax(120px,1.6fr) 0.5fr 0.6fr 0.6fr 0.8fr 0.8fr 0.9fr;gap:8px;align-items:center;padding:9px 6px;border-bottom:0.5px solid var(--border2);font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);}
+.oft-row span:not(.oft-l):not(.oft-hint):not(.oft-bar){text-align:right;}
+.oft-head{font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);border-bottom:0.5px solid var(--border2);}
+.oft-l{position:relative;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.oft-hint{color:var(--text3);font-size:10px;}
+.oft-bar{position:absolute;left:0;bottom:-4px;height:2px;border-radius:1px;opacity:.7;}
+.oft-bar.pos{background:var(--green);}.oft-bar.neg{background:#ef4444;}
+.oft-row .pos{color:var(--green);}.oft-row .neg{color:#ef4444;}
 /* Controles flotantes SOBRE el chart (timeframe + acciones) */
 .jch-ctrls{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:8;display:flex;align-items:center;gap:6px;
   padding:0 10px;background:rgba(8,10,15,0.82);backdrop-filter:blur(8px);border-top:0.5px solid var(--border2);overflow-x:auto;}
@@ -2413,6 +2424,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       <button class="fchip" data-rt="diahora" onclick="setReportTab('diahora')">Día &amp; Hora</button>
       <button class="fchip" data-rt="simbolo" onclick="setReportTab('simbolo')">Símbolo</button>
       <button class="fchip" data-rt="playbook" onclick="setReportTab('playbook')">Playbook</button>
+      <button class="fchip" data-rt="orderflow" onclick="setReportTab('orderflow')">Order Flow</button>
       <button class="fchip" data-rt="calidad" onclick="setReportTab('calidad')">Calidad de datos</button>
     </div>
     <div id="rep-body"></div>
@@ -3721,6 +3733,53 @@ function renderReports(){
   } else if(repTab==='playbook'){
     var byPb=repAgg(arr,function(t){return t.playbookId||t.setup||'—';}).sort(function(a,b){return b.pnl-a.pnl;});
     body.innerHTML=repSection('Rendimiento por playbook / setup',repVBars(byPb,function(k){return pbName(k);}));
+  } else if(repTab==='orderflow'){
+    // Analítica por trigger de order-flow: convierte el checklist en diagnóstico —
+    // qué trigger/ubicación/régimen te hace ganar. Un trade cuenta en CADA trigger que marcó.
+    var tagged=arr.filter(function(t){return t.locationOk===true||t.locationOk===false||(Array.isArray(t.ofTriggers)&&t.ofTriggers.length)||t.marketRegime;});
+    if(!tagged.length){
+      body.innerHTML=repSection('Order Flow','<div style="font-size:12.5px;color:var(--text3);line-height:1.7;padding:6px 2px;">Aún no has etiquetado trades con order-flow. Abre un trade (pestaña <strong style="color:var(--text2);">STRATEGY</strong>) y marca la <strong style="color:var(--text2);">ubicación</strong>, el/los <strong style="color:var(--text2);">triggers</strong> (Big Trades · Footprint · Heatmap · Delta) y el <strong style="color:var(--text2);">Market Regime</strong>. En cuanto tengas unos cuantos, aquí verás qué te hace ganar y qué te sangra.</div>');
+    } else {
+      var _closed=function(a){return a.filter(function(t){return t.status!=='open'&&t.status!=='pending';});};
+      var _avgR=function(a){var rs=a.filter(function(t){return t.stop!=null&&+t.stop!==0&&t.status!=='open'&&Math.abs(t.entry-t.stop)>0;}).map(function(t){return t.points/Math.abs(t.entry-t.stop);}); return rs.length?rs.reduce(function(s,x){return s+x;},0)/rs.length:null;};
+      var _row=function(lbl,sub,hint){var cl=_closed(sub);var s=stats(cl);var ar=_avgR(sub);return {lbl:lbl,hint:hint||'',n:sub.length,wr:s.wr,pf:s.pf,avgR:ar,exp:s.exp,total:s.total};};
+      function ofTable(rows,note){
+        if(!rows.length)return '<div style="font-size:12px;color:var(--text3);padding:6px 2px;">'+(note||'Sin datos.')+'</div>';
+        var maxAbs=Math.max.apply(null,rows.map(function(r){return Math.abs(r.avgR||0);}))||1;
+        var head='<div class="oft-row oft-head"><span class="oft-l"></span><span>n</span><span>WR</span><span>PF</span><span>R medio</span><span>Expect.</span><span>Net</span></div>';
+        var body=rows.map(function(r){
+          var barW=Math.min(100,Math.abs(r.avgR||0)/maxAbs*100), barCls=(r.avgR||0)>=0?'pos':'neg';
+          return '<div class="oft-row"><span class="oft-l">'+r.lbl+(r.hint?'<span class="oft-hint"> '+r.hint+'</span>':'')+'<span class="oft-bar '+barCls+'" style="width:'+barW+'%;"></span></span>'
+            +'<span>'+r.n+'</span><span>'+(r.wr!=null?r.wr+'%':'—')+'</span><span>'+(isFinite(r.pf)?r.pf.toFixed(2):'∞')+'</span>'
+            +'<span class="'+((r.avgR||0)>=0?'pos':'neg')+'">'+(r.avgR!=null?((r.avgR>=0?'+':'')+r.avgR.toFixed(2)+'R'):'—')+'</span>'
+            +'<span class="'+(r.exp>=0?'pos':'neg')+'">'+f$(r.exp)+'</span>'
+            +'<span class="'+(r.total>=0?'pos':'neg')+'">'+f$(r.total)+'</span></div>';
+        }).join('');
+        return '<div class="oft-table">'+head+body+'</div>';
+      }
+      // 1) por trigger (ordenado por R medio desc)
+      var trigRows=[];
+      OF_TRIGGERS.forEach(function(tg){var sub=arr.filter(function(t){return Array.isArray(t.ofTriggers)&&t.ofTriggers.indexOf(tg.k)>=0;}); if(sub.length)trigRows.push(_row(tg.ic+' '+tg.l,sub));});
+      trigRows.sort(function(a,b){return (b.avgR==null?-99:b.avgR)-(a.avgR==null?-99:a.avgR);});
+      var noTrig=arr.filter(function(t){return !(Array.isArray(t.ofTriggers)&&t.ofTriggers.length);});
+      if(noTrig.length)trigRows.push(_row('— sin trigger marcado',noTrig,''));
+      // 2) ubicación
+      var locRows=[];var locOn=arr.filter(function(t){return t.locationOk===true;}),locOff=arr.filter(function(t){return t.locationOk===false;});
+      if(locOn.length)locRows.push(_row('📍 Con ubicación',locOn));
+      if(locOff.length)locRows.push(_row('✗ Sin ubicación',locOff));
+      // 3) régimen a favor / en contra
+      var regRows=[];
+      var favor=arr.filter(function(t){return (t.marketRegime==='pos'&&t.direction==='long')||(t.marketRegime==='neg'&&t.direction==='short');});
+      var contra=arr.filter(function(t){return (t.marketRegime==='pos'&&t.direction==='short')||(t.marketRegime==='neg'&&t.direction==='long');});
+      if(favor.length)regRows.push(_row('🧭 A favor del régimen',favor));
+      if(contra.length)regRows.push(_row('⚠️ Contra el régimen',contra));
+      var best=trigRows.filter(function(r){return r.avgR!=null&&r.lbl.indexOf('sin trigger')<0;})[0];
+      body.innerHTML=(best&&best.avgR>0?'<div class="oft-hero">Tu mejor lectura de order-flow es <strong>'+best.lbl+'</strong> — '+best.n+' trades, WR '+best.wr+'%, <strong class="pos">'+(best.avgR>=0?'+':'')+best.avgR.toFixed(2)+'R</strong> de media. Es tu setup A.</div>':'')
+        +repSection('Por trigger de order-flow',ofTable(trigRows))
+        +repSection('Ubicación (LOCATION)',ofTable(locRows,'Marca la ubicación en tus trades para comparar.'))
+        +repSection('Market Regime',ofTable(regRows,'Marca el régimen (positivo/negativo) en tus trades para comparar.'))
+        +'<div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding:2px;">R medio y expectancy solo sobre trades con stop real (Regla #1). Un trade con varios triggers cuenta en cada uno.</div>';
+    }
   } else if(repTab==='calidad'){
     var n=arr.length;
     var withStop=arr.filter(function(t){return t.stop!=null&&+t.stop!==0;}).length;
