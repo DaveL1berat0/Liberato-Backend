@@ -613,6 +613,47 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-sidekpi .k{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
 .tws-sidekpi .v{font-family:'DM Mono',monospace;font-size:17px;font-weight:700;color:var(--text);}
 .tws-sidekpi .v.pos{color:var(--green);}.tws-sidekpi .v.neg{color:#ef4444;}.tws-sidekpi .v.neu{color:var(--text3);}
+/* Rail de riesgo/recompensa proporcional */
+.rr-rail{position:relative;height:52px;margin:8px 2px 2px;}
+.rr-track{position:absolute;top:20px;left:0;right:0;height:4px;border-radius:2px;background:rgba(255,255,255,0.06);}
+.rr-seg{position:absolute;top:20px;height:4px;border-radius:2px;}
+.rr-seg--risk{background:linear-gradient(90deg,rgba(239,68,68,0.15),rgba(239,68,68,0.55));}
+.rr-seg--reward{background:linear-gradient(90deg,rgba(46,232,164,0.25),rgba(46,232,164,0.6));}
+.rr-mk{position:absolute;transform:translateX(-50%);}
+.rr-mk--entry{top:14px;width:9px;height:9px;background:var(--gold);transform:translateX(-50%) rotate(45deg);border-radius:1px;}
+.rr-mk--stop{top:15px;width:2px;height:14px;background:#ef4444;}
+.rr-mk--target{top:15px;width:2px;height:14px;background:var(--green);}
+.rr-mk--exit{top:16px;width:11px;height:11px;border-radius:50%;border:2px solid var(--surface,#0e1016);}
+.rr-mk--exit.is-win{background:var(--green);}.rr-mk--exit.is-loss{background:#ef4444;}.rr-mk--exit.is-be{background:var(--gold);}
+.rr-tick{position:absolute;transform:translateX(-50%);width:1.5px;height:8px;opacity:.8;}
+.rr-tick--mfe{top:8px;background:var(--green);}
+.rr-tick--mae{top:32px;background:#ef4444;}
+.rr-axis{position:absolute;top:34px;left:0;right:0;height:14px;}
+.rr-lab{position:absolute;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:9.5px;color:var(--text3);white-space:nowrap;}
+.rr-lab--entry{color:var(--gold);top:0;}
+.rr-note{font-size:11px;color:var(--text3);margin:10px 0 0;line-height:1.5;}
+/* Curva de equity intra-trade */
+.eq-svg{width:100%;height:auto;display:block;}
+.eq-line{fill:none;stroke:var(--gold);stroke-width:2;stroke-linejoin:round;}
+.eq-area{stroke:none;}
+.eq-base{stroke:var(--text3);stroke-dasharray:2 3;opacity:.6;}
+.eq-ax{fill:var(--text3);font-family:'DM Mono',monospace;font-size:9px;}
+.eq-tri-mfe,.eq-lab-mfe{fill:var(--green);}
+.eq-tri-mae,.eq-lab-mae{fill:#ef4444;}
+.eq-entry{fill:var(--gold);}
+.eq-exit{stroke:var(--surface,#0e1016);stroke-width:1.5;}
+.eq-exit.is-win{fill:var(--green);}.eq-exit.is-loss{fill:#ef4444;}.eq-exit.is-be{fill:var(--gold);}
+.eq-exit-lab{fill:var(--text2);}
+.eq-post{stroke:var(--gold);stroke-dasharray:3 3;opacity:.42;fill:none;}
+.eq-post-dot{fill:none;stroke:var(--gold);stroke-width:1.4;opacity:.55;}
+.eq-post-lab{fill:var(--text3);opacity:.85;}
+.eq-empty,.eq-degen{font-size:12px;color:var(--text3);line-height:1.6;padding:14px 2px;text-align:center;}
+.eq-degen strong{color:var(--text2);}
+.eq-badge-nostop{font-size:10.5px;color:var(--gold);margin-top:6px;display:inline-block;}
+.eq-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-family:'DM Mono',monospace;font-size:9.5px;}
+.eq-lg--mfe{color:var(--green);}.eq-lg--mae{color:#ef4444;}.eq-lg--post{color:var(--text3);}.eq-lg--exit{color:var(--gold);}
+.tv-eq-final{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;}
+.tv-eq-final.pos{color:var(--green);}.tv-eq-final.neg{color:#ef4444;}
 /* Controles flotantes SOBRE el chart (timeframe + acciones) */
 .jch-ctrls{position:absolute;left:0;right:0;bottom:0;height:46px;z-index:8;display:flex;align-items:center;gap:6px;
   padding:0 10px;background:rgba(8,10,15,0.82);backdrop-filter:blur(8px);border-top:0.5px solid var(--border2);overflow-x:auto;}
@@ -3979,7 +4020,7 @@ function renderTws(){
   if(_twsChTab==='chart'){
     right=(t.entry!=null)
       ? '<div class="tws-chart-wrap" id="tws-chart-host">'+jchStageHTML(t)+'</div>'
-        +'<div class="tws-chart-genio"><div class="tws-cg-h">✦ Genio · análisis de este trade</div>'+genTradeAI(t)+'</div>'
+        +'<div class="tws-chart-genio"><div class="tws-cg-h">✦ Genio · análisis de este trade</div><div id="tws-genio-body">'+genTradeAI(t)+'</div></div>'
       : '<div class="tws-panel-body"><div style="font-size:11.5px;color:var(--text3);line-height:1.6;">Añade la <strong style="color:var(--text2);">entrada</strong> del trade para ver el chart de ejecución con velas reales.</div></div>';
   } else if(_twsChTab==='notes'){
     right='<div class="tws-panel-body"><div class="tws-lbl">Notas del trade</div>'
@@ -3991,22 +4032,25 @@ function renderTws(){
   }
   function chTab(id,lbl){return '<button class="tws-tab'+(_twsChTab===id?' on':'')+'" onclick="twsChTab(\''+id+'\')">'+lbl+'</button>';}
   function lTab(id,lbl){return '<button class="tws-tab'+(_twsTab===id?' on':'')+'" onclick="twsTab(\''+id+'\')">'+lbl+'</button>';}
-  // ── Tarjeta Riesgo & R:R (llena el espacio bajo el panel izquierdo, siempre visible) ──
-  function _sk(k,v,cls){return '<div class="tws-sidekpi"><div class="k">'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div></div>';}
-  var riskCard;
-  if(hasStop){
-    riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
-      +(rrViz||'')
-      +'<div class="tws-sidegrid" style="margin-top:14px;">'
-      +_sk('R:R planeado',plannedRR!=null?plannedRR+'R':'—','')
-      +_sk('R realizado',realR!=null?((realR>=0?'+':'')+realR+'R'):(isOpenTr?'abierta':'—'),realR!=null?(realR>=0?'pos':'neg'):'neu')
-      +_sk('Riesgo inicial',riskUSD?f$(-riskUSD):'—','neg')
-      +_sk('MFE / MAE',(mfe!=null?('+'+mfe+'R'):'—')+' / '+(mae!=null?(mae+'R'):'—'),'')
-      +'</div></div>';
-  } else {
-    riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
-      +'<div style="font-size:12px;color:var(--text3);line-height:1.6;">Este trade no tiene <strong style="color:var(--text2);">stop</strong>, así que no se puede calcular la R. Arrástralo en el chart o escríbelo en <strong style="color:var(--text2);">STATS</strong> y aquí verás tu riesgo, R:R planeado y realizado.</div></div>';
-  }
+  // ── Tarjeta Riesgo & R:R + Curva de equity intra-trade (columna izq, siempre visibles) ──
+  // Render síncrono (sin velas todavía): rail + KPIs desde campos del trade; MFE/MAE y la
+  // curva se hidratan cuando llegan las velas (genioHydrate). Fuente única: computeTradeViz.
+  function _sk(k,v,cls,id){return '<div class="tws-sidekpi"><div class="k">'+k+'</div><div class="v '+(cls||'')+'"'+(id?' id="'+id+'"':'')+'>'+v+'</div></div>';}
+  var _m0=computeTradeViz(t, null);
+  var _rr0=(_m0.plannedRR!=null)?fmtR(_m0.plannedRR)+'R':'—';
+  var _re0=(_m0.realized!=null)?fmtR(_m0.realized)+_m0.unit:(isOpenTr?'abierta':'—');
+  var riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
+    +'<div id="tv-rail">'+renderRiskRail(_m0)+'</div>'
+    +(!hasStop?'<p class="rr-note">Sin stop registrado — R no disponible. Arrástralo en el chart o escríbelo en STATS.</p>':'')
+    +'<div class="tws-sidegrid" style="margin-top:14px;">'
+    +_sk('R:R planeado',_rr0,'')
+    +_sk('R realizado',_re0,(_m0.realized!=null?((_m0.realized>=0)?'pos':'neg'):'neu'))
+    +_sk('Riesgo inicial',_m0.riskCash!=null?f$(-Math.round(_m0.riskCash)):'—','neg')
+    +_sk('MFE / MAE','—','','tv-kpi-mfemae')
+    +'</div></div>';
+  var eqCard='<div class="tws-sidecard"><div class="tws-sidecard-h" style="display:flex;justify-content:space-between;align-items:center;"><span>Curva de equity intra-trade</span><span id="tv-eq-final" class="tv-eq-final"></span></div>'
+    +'<div id="tv-eq-body"><div class="eq-empty">Cargando velas…</div></div>'
+    +'<div class="eq-legend"><span class="eq-lg eq-lg--mfe">▲ MFE</span><span class="eq-lg eq-lg--mae">▼ MAE</span><span class="eq-lg eq-lg--post">··· siguió sin ti</span><span class="eq-lg eq-lg--exit">● salida</span></div></div>';
 
   host.innerHTML=
     '<div class="tws-topbar"><button class="tws-back" onclick="twsClose()">← Mis Trades</button>'
@@ -4020,7 +4064,7 @@ function renderTws(){
     +'<div class="tws-metaline"><span><b>'+t.date+'</b></span><span>Entrada <b>'+t.time+'</b></span>'+(t.exitTime?'<span>Salida <b>'+(String(t.exitTime).split('T')[1]||'').slice(0,5)+'</b></span>':'')+'<span>Duración <b>'+_fmtDur(t)+'</b></span><span>Cantidad <b>'+c+'</b></span>'+(t.account?'<span>Cuenta <b>'+_esc(shortAcct(String(t.account)))+'</b></span>':'')+'</div></div>'
     // dos columnas
     +'<div class="tws-cols">'
-    +'<div class="tws-colL"><div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'+riskCard+'</div>'
+    +'<div class="tws-colL"><div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'+riskCard+eqCard+'</div>'
     +'<div class="tws-panel tws-panel-right"><div class="tws-tabbar">'+chTab('chart','CHART')+chTab('notes','NOTAS')+chTab('genio','✦ GENIO')+'</div>'+right+'</div>'
     +'</div>'
     // daily context
@@ -4031,6 +4075,8 @@ function renderTws(){
     +'<input type="file" id="tws-shot-input" accept="image/*" multiple style="display:none" onchange="twsAddFiles(this.files);this.value=\'\';">';
   if(_twsTab==='attachments')twsRenderShots();
   if(_twsChTab==='chart')jchLoad(t); else jchDestroy();
+  // Hidrata riesgo/equity/Genio con las velas reales (aunque no estés en la pestaña CHART).
+  try{genioHydrate(t);}catch(e){}
 }
 // Chart de ejecución nativo: niveles STOP/ENTRY/TARGET + marcadores etiquetados de
 // ENTRADA y SALIDA en el tiempo, con el movimiento sombreado. Deja ver DÓNDE ejecutaste.
@@ -4320,10 +4366,186 @@ function jchDrawAll(reframe){
   if(reframe){jchFit();}
   // recarga los dibujos del usuario de ESTE trade
   jchLoadDrawings(t);
+  // Al cambiar timeframe o ARRASTRAR stop/target (cambia riskU→R), recalcula en vivo la
+  // tarjeta de riesgo, la curva de equity y el Genio.
+  try{genioHydrate(t);}catch(e){}
 }
 // MFE/MAE reales sobre las barras posteriores a la entrada, ACOTADO al cierre RTH
 // (16:00 ET, incluido): la excursión máxima a favor/contra se mide solo DENTRO de
 // la sesión regular, no en el overnight/Globex posterior (decisión de Dave).
+// ── Helpers de formato para las tarjetas de riesgo/equity ──
+function round1(x){return x==null?null:Math.round(x*10)/10;}
+function fmtR(v){return (v==null||!isFinite(v))?'—':((v>=0?'+':'')+(Math.round(v*100)/100).toFixed(2));}
+function fmtPx(v){return (v==null||!isFinite(v))?'—':(Math.abs(v)>=100?(Math.round(v*100)/100).toFixed(v%1?2:0):(Math.round(v*100)/100).toFixed(2));}
+// Adaptador ÚNICO (fuente de verdad para la tarjeta Riesgo&R:R y la curva de equity).
+// raw = velas crudas del trade (de jchFetch/_jchRaw). Si no hay velas → barsOk:false y
+// las piezas que dependen del path (MFE/MAE/curva) se declaran no disponibles (Regla #1).
+function computeTradeViz(t, raw){
+  var bars=(raw&&raw.length)?jchResample(raw,1):null, barsOk=!!(bars&&bars.length);
+  var S=barsOk?tradeSeries(t,bars):null;
+  var sgn=t.direction==='short'?-1:1;
+  var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0), hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0), hasExit=(t.exit!=null&&t.exit!=='');
+  var riskU=hasStop?Math.abs(+t.entry-+t.stop):null, unit=hasStop?'R':'pts';
+  var toVal=function(px){return hasStop?sgn*(px-+t.entry)/riskU:sgn*(px-+t.entry);};
+  var realized=hasExit?toVal(+t.exit):(S&&S.series.length?S.series[S.series.length-1].r:null);
+  var plannedRR=(hasStop&&hasTgt&&riskU>0)?Math.abs(+t.target-+t.entry)/riskU:null;
+  var seg=null,mfe=null,mae=null,post=null,degenerate=false;
+  if(S){
+    seg=S.series.map(function(p,idx){return {k:idx,val:hasStop?p.r:toVal(p.c),hhmm:p.hhmm};});
+    degenerate=seg.length<2;
+    if(hasExit&&seg.length)seg[seg.length-1].val=realized;
+    var kOf=function(hh){for(var i=0;i<S.series.length;i++)if(S.series[i].hhmm===hh)return i;return 0;};
+    mfe={val:hasStop?S.mfeR:toVal(S.mfeP),price:S.mfeP,k:kOf(S.mfeHHMM),hhmm:S.mfeHHMM};
+    mae={val:hasStop?S.maeR:toVal(S.maeP),price:S.maeP,k:kOf(S.maeHHMM),hhmm:S.maeHHMM};
+    if(S.postExitMaxR!=null)post={val:S.postExitMaxR,hhmm:S.postExitMaxHHMM};
+  }
+  return {t:t,S:S,bars:bars,barsOk:barsOk,degenerate:degenerate,hasStop:hasStop,hasTgt:hasTgt,hasExit:hasExit,
+    riskU:riskU,unit:unit,seg:seg,mfe:mfe,mae:mae,post:post,realized:realized,plannedRR:plannedRR,
+    riskPts:riskU,riskCash:(hasStop&&isFinite(+t.contracts)&&isFinite(+t.mult))?riskU*(+t.contracts)*(+t.mult):null};
+}
+// Curva de equity intra-trade (running P&L en R) con drawdown sombreado — SVG inline.
+function buildEquitySVG(m){
+  if(!m.barsOk)return '<div class="eq-empty">Sin velas intradía para este día — curva no disponible.</div>';
+  var unit=m.unit;
+  if(m.degenerate){
+    return '<div class="eq-degen">Resuelto en la vela de entrada · <strong>'+fmtR(m.realized)+unit+'</strong></div>';
+  }
+  var W=320,H=170,plotL=38,plotR=308,plotT=16,plotB=148,plotW=plotR-plotL,plotH=plotB-plotT;
+  var n=m.seg.length-1;
+  var X=function(k){return plotL+(n>0?k/n:0.5)*plotW;};
+  var rMax=Math.max(0,m.mfe?m.mfe.val:0,m.realized,m.post?m.post.val:-Infinity);
+  var rMin=Math.min(0,m.mae?m.mae.val:0,m.realized);
+  if(rMax===rMin){rMax+=0.5;rMin-=0.5;}
+  var rng=rMax-rMin; rMax+=rng*0.12; rMin-=rng*0.10;
+  var Y=function(v){return plotT+(rMax-v)/(rMax-rMin)*plotH;};
+  var y0=Y(0), zf=Math.max(0,Math.min(1,(y0-plotT)/plotH))*100;
+  var line='M'+m.seg.map(function(p){return X(p.k).toFixed(1)+','+Y(p.val).toFixed(1);}).join(' L');
+  var area='M'+X(0).toFixed(1)+','+y0.toFixed(1)+' L'+m.seg.map(function(p){return X(p.k).toFixed(1)+','+Y(p.val).toFixed(1);}).join(' L')+' L'+X(n).toFixed(1)+','+y0.toFixed(1)+' Z';
+  var gid='eqg'+String(m.t.id).replace(/[^a-z0-9]/gi,'');
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" class="eq-svg" preserveAspectRatio="xMidYMid meet">';
+  svg+='<defs><linearGradient id="'+gid+'" gradientUnits="userSpaceOnUse" x1="0" y1="'+plotT+'" x2="0" y2="'+plotB+'">'
+    +'<stop offset="0%" stop-color="rgba(46,232,164,0.38)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(46,232,164,0.04)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(239,68,68,0.04)"/>'
+    +'<stop offset="100%" stop-color="rgba(239,68,68,0.38)"/></linearGradient></defs>';
+  // baseline 0
+  svg+='<line class="eq-base" x1="'+plotL+'" y1="'+y0.toFixed(1)+'" x2="'+plotR+'" y2="'+y0.toFixed(1)+'"/>';
+  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(y0+3).toFixed(1)+'" text-anchor="end">0'+unit+'</text>';
+  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(plotT+8)+'" text-anchor="end">'+fmtR(rMax)+'</text>';
+  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(plotB)+'" text-anchor="end">'+fmtR(rMin)+'</text>';
+  // área + línea
+  svg+='<path class="eq-area" d="'+area+'" fill="url(#'+gid+')"/>';
+  svg+='<path class="eq-line" d="'+line+'"/>';
+  // continuación post-salida (fuga: saliste antes)
+  if(m.post){
+    var yp=Y(m.post.val);
+    svg+='<path class="eq-post" d="M'+X(n).toFixed(1)+','+Y(m.realized).toFixed(1)+' L'+plotR+','+yp.toFixed(1)+'"/>';
+    svg+='<circle class="eq-post-dot" cx="'+plotR+'" cy="'+yp.toFixed(1)+'" r="3"/>';
+    svg+='<text class="eq-post-lab" x="'+(plotR-2)+'" y="'+Math.max(plotT+8,Math.min(plotB-2,yp-5)).toFixed(1)+'" text-anchor="end">'+fmtR(m.post.val)+unit+' '+m.post.hhmm+'</text>';
+  }
+  // MFE ▲ / MAE ▼
+  if(m.mfe){var xm=X(m.mfe.k),ym=Y(m.mfe.val);svg+='<path class="eq-tri-mfe" d="M'+xm.toFixed(1)+','+(ym-7).toFixed(1)+' l4,7 l-8,0 Z"/><text class="eq-ax eq-lab-mfe" x="'+xm.toFixed(1)+'" y="'+Math.max(plotT+8,ym-9).toFixed(1)+'" text-anchor="middle">MFE '+fmtR(m.mfe.val)+'</text>';}
+  if(m.mae){var xa=X(m.mae.k),ya=Y(m.mae.val);svg+='<path class="eq-tri-mae" d="M'+xa.toFixed(1)+','+(ya+7).toFixed(1)+' l4,-7 l-8,0 Z"/><text class="eq-ax eq-lab-mae" x="'+xa.toFixed(1)+'" y="'+Math.min(plotB-2,ya+16).toFixed(1)+'" text-anchor="middle">MAE '+fmtR(m.mae.val)+'</text>';}
+  // entrada (rombo) + salida (círculo por resultado)
+  svg+='<path class="eq-entry" d="M'+plotL+','+(y0-4).toFixed(1)+' l4,4 l-4,4 l-4,-4 Z"/>';
+  var exCls=m.t.result==='win'?'is-win':m.t.result==='loss'?'is-loss':'is-be';
+  var xe=X(n),ye=Y(m.realized);
+  svg+='<circle class="eq-exit '+exCls+'" cx="'+xe.toFixed(1)+'" cy="'+ye.toFixed(1)+'" r="3.5"/>';
+  svg+='<text class="eq-ax eq-exit-lab" x="'+Math.min(plotR-2,xe+6).toFixed(1)+'" y="'+Math.max(plotT+8,Math.min(plotB-2,ye-6)).toFixed(1)+'" text-anchor="'+(xe>plotL+plotW*0.7?'end':'start')+'">'+(m.hasExit?fmtR(m.realized)+unit:'abierta')+'</text>';
+  // eje tiempo
+  svg+='<text class="eq-ax" x="'+plotL+'" y="'+(H-6)+'" text-anchor="start">'+m.seg[0].hhmm+'</text>';
+  svg+='<text class="eq-ax" x="'+plotR+'" y="'+(H-6)+'" text-anchor="end">'+m.seg[n].hhmm+'</text>';
+  svg+='</svg>';
+  if(!m.hasStop)svg+='<div class="eq-badge-nostop">Sin stop · escala en puntos (R no disponible)</div>';
+  return svg;
+}
+// Rail de riesgo/recompensa proporcional al precio (rojo=riesgo, verde=recompensa).
+function renderRiskRail(m){
+  var pts=[]; if(m.hasStop)pts.push(+m.t.stop); pts.push(+m.t.entry); if(m.hasTgt)pts.push(+m.t.target);
+  if(m.hasExit)pts.push(+m.t.exit); if(m.mfe)pts.push(m.mfe.price); if(m.mae)pts.push(m.mae.price);
+  var dmin=Math.min.apply(null,pts),dmax=Math.max.apply(null,pts),span=(dmax-dmin)||1;
+  var pos=function(px){return ((px-dmin)/span*100);};
+  var e=pos(+m.t.entry);
+  var html='<div class="rr-rail"><div class="rr-track"></div>';
+  if(m.hasStop){var s=pos(+m.t.stop);html+='<div class="rr-seg rr-seg--risk" style="left:'+Math.min(e,s)+'%;width:'+Math.abs(e-s)+'%;"></div>';}
+  if(m.hasTgt){var g=pos(+m.t.target);html+='<div class="rr-seg rr-seg--reward" style="left:'+Math.min(e,g)+'%;width:'+Math.abs(e-g)+'%;"></div>';}
+  if(m.hasStop)html+='<div class="rr-mk rr-mk--stop" style="left:'+pos(+m.t.stop)+'%;"></div>';
+  if(m.hasTgt)html+='<div class="rr-mk rr-mk--target" style="left:'+pos(+m.t.target)+'%;"></div>';
+  if(m.mfe)html+='<div class="rr-tick rr-tick--mfe" style="left:'+pos(m.mfe.price)+'%;"></div>';
+  if(m.mae)html+='<div class="rr-tick rr-tick--mae" style="left:'+pos(m.mae.price)+'%;"></div>';
+  if(m.hasExit){var ex=m.t.result==='win'?'is-win':m.t.result==='loss'?'is-loss':'is-be';html+='<div class="rr-mk rr-mk--exit '+ex+'" style="left:'+pos(+m.t.exit)+'%;"></div>';}
+  html+='<div class="rr-mk rr-mk--entry" style="left:'+e+'%;"></div>';
+  // eje precios
+  html+='<div class="rr-axis">';
+  if(m.hasStop)html+='<span class="rr-lab" style="left:'+pos(+m.t.stop)+'%;color:#ef4444;">'+fmtPx(+m.t.stop)+'</span>';
+  html+='<span class="rr-lab rr-lab--entry" style="left:'+e+'%;">'+fmtPx(+m.t.entry)+'</span>';
+  if(m.hasTgt)html+='<span class="rr-lab" style="left:'+pos(+m.t.target)+'%;color:var(--green);">'+fmtPx(+m.t.target)+'</span>';
+  html+='</div></div>';
+  return html;
+}
+// Hidrata (tras traer velas) la tarjeta de riesgo, la curva de equity y el Genio con el
+// path real; persiste MFE/MAE/exitR/maxDD/postMaxR en el trade para los agregados de historial.
+function genioHydrate(t){
+  if(!t)return;
+  jchFetch(t).then(function(d){
+    if(typeof _twsId==='undefined'||_twsId!==t.id)return;   // el usuario cambió de trade
+    var raw=(d&&d.ok&&d.bars&&d.bars.length)?d.bars:null;
+    var m=computeTradeViz(t, raw);
+    var eb=document.getElementById('tv-eq-body'); if(eb)eb.innerHTML=buildEquitySVG(m);
+    var ef=document.getElementById('tv-eq-final'); if(ef){ef.textContent=(m.realized!=null?fmtR(m.realized)+m.unit:(m.hasExit?'—':'abierta'));ef.className='tv-eq-final '+((m.realized||0)>=0?'pos':'neg');}
+    var rr=document.getElementById('tv-rail'); if(rr)rr.innerHTML=renderRiskRail(m);
+    var km=document.getElementById('tv-kpi-mfemae'); if(km){km.textContent=(m.mfe?fmtR(m.mfe.val):'—')+' / '+(m.mae?fmtR(m.mae.val):'—');}
+    var gc=document.getElementById('tws-genio-body'); if(gc)gc.innerHTML=genioRender(genioEval(t,m));
+    genioPersist(t,m.S);
+  });
+}
+function genioPersist(t,S){
+  if(!S||!S.intraday)return;
+  var changed=false, set=function(k,v){if(v==null)return; if(t[k]!==v){t[k]=v;changed=true;}};
+  set('mfe',S.mfeR); set('mae',S.maeR); set('exitR',S.exitR); set('maxDD',S.maxDD); set('postMaxR',S.postExitMaxR);
+  if(changed){try{if(typeof T!=='undefined'&&T.indexOf(t)>=0)saveTrades(T);}catch(e){}}
+}
+// Serie de equity INTRA-TRADE en R a partir de las velas reales: para el trade t y sus
+// velas `bars`, devuelve el path de R (cierre de cada vela desde la entrada), MFE/MAE (en
+// R y precio, con su hora), el máximo drawdown durante el hold, el R en la salida, y la
+// continuación POST-salida (cuánto siguió a favor tras cerrar). Base de la curva de equity,
+// del drawdown y del coaching del Genio. Regla #1: si falta stop → R null; si no hay serie
+// intradía (solo velas diarias en trades viejos) → series corta/atómica, se declara.
+function tradeSeries(t,bars){
+  if(!t||!bars||!bars.length)return null;
+  var dir=t.direction==='short'?'short':'long',sgn=dir==='long'?1:-1;
+  var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0),riskU=hasStop?Math.abs(+t.entry-+t.stop):0;
+  var mMax=960; // 16:00 ET (fin RTH) — no medir excursión fuera de sesión
+  var eIdx=jchNearestIdx(bars,jchHM(t.time)); if(eIdx<0)eIdx=0;
+  var hasExit=(t.exit!=null&&t.exit!=='');
+  var xIdx=hasExit?jchNearestIdx(bars,jchHM(t.exitTime||t.time)):-1; if(xIdx<eIdx)xIdx=hasExit?eIdx:-1;
+  var Rof=function(px){return riskU>0?(sgn*(px-+t.entry)/riskU):null;};
+  // Path durante el HOLD (entrada→salida, o hasta fin de sesión si sigue abierta)
+  var holdEnd=(xIdx>=0?xIdx:bars.length-1);
+  var series=[],mfeR=null,maeR=null,mfeP=+t.entry,maeP=+t.entry,mfeHHMM='',maeHHMM='',maxDD=0;
+  for(var i=eIdx;i<=holdEnd&&i<bars.length;i++){
+    var b=bars[i];var p=String(b.hhmm).split(':');var mn=(+p[0])*60+(+p[1]);if(mn>mMax)break;
+    // excursión intrabar: para long MFE=high, MAE=low; short al revés
+    var favP=dir==='long'?b.h:b.l, advP=dir==='long'?b.l:b.h;
+    if(mfeR==null||Rof(favP)>mfeR){mfeR=Rof(favP);mfeP=favP;mfeHHMM=b.hhmm;}
+    if(maeR==null||Rof(advP)<maeR){maeR=Rof(advP);maeP=advP;maeHHMM=b.hhmm;}
+    var rc=Rof(b.c);
+    if(rc!=null&&rc<maxDD)maxDD=rc; // drawdown = R más bajo en cierres durante el hold
+    series.push({i:i,hhmm:b.hhmm,r:(rc!=null?rc:0),c:b.c,fav:favP,adv:advP});
+  }
+  // Continuación POST-salida (¿el precio siguió a tu favor tras cerrar?)
+  var postMaxR=null,postMaxHHMM='';
+  if(xIdx>=0){
+    for(var j=xIdx+1;j<bars.length;j++){var bj=bars[j];var pj=String(bj.hhmm).split(':');var mj=(+pj[0])*60+(+pj[1]);if(mj>mMax)break;
+      var fr=Rof(dir==='long'?bj.h:bj.l);if(fr!=null&&(postMaxR==null||fr>postMaxR)){postMaxR=fr;postMaxHHMM=bj.hhmm;}}
+  }
+  var exitR=(hasExit&&riskU>0)?Rof(+t.exit):null;
+  var rr=function(x){return x==null?null:Math.round(x*100)/100;};
+  return {series:series, entryIdx:eIdx, exitIdx:xIdx, riskU:riskU, dir:dir, hasStop:hasStop, hasExit:hasExit,
+    mfeR:rr(mfeR), maeR:rr(maeR), mfeP:mfeP, maeP:maeP, mfeHHMM:mfeHHMM, maeHHMM:maeHHMM,
+    maxDD:rr(maxDD), exitR:rr(exitR), postExitMaxR:rr(postMaxR), postExitMaxHHMM:postMaxHHMM,
+    intraday:series.length>1};
+}
 function jchComputeExcursion(bars,eIdx){
   var t=_jchT;var dir=t.direction==='short'?'short':'long';
   var post=bars.slice(eIdx).filter(function(b){var p=String(b.hhmm).split(':');return ((+p[0])*60+(+p[1]))<=960;}); // 960 = 16:00 ET
@@ -4720,45 +4942,115 @@ document.addEventListener('keydown',function(e){
 // de order-flow, grade, R:R, eficiencia vs MFE, resultado) y devuelve recomendaciones
 // concretas — qué hiciste bien, qué mejorar y qué pudiste hacer. Nada inventado: solo
 // se pronuncia sobre los campos que están llenos.
-function genTradeAI(t){
-  var dir=t.direction==='short'?'short':'long';
+// ── MOTOR DEL GENIO por trade (14 heurísticas, diseño multi-coach) ──────────────
+// Cada heurística compara la EJECUCIÓN real contra lo que el path de velas / historial
+// muestran que era posible, y da consejo prescriptivo. Regla #1: las que dependen del
+// path exigen S (serie intradía con stop); los agregados exigen n mínimo de peers con el
+// campo presente — si no, NO disparan (se declara el límite, no se inventa).
+function _trgNames(arr){return (arr||[]).map(function(k){var f=OF_TRIGGERS.filter(function(x){return x.k===k;})[0];return f?f.l:k;});}
+function genioEval(t, m){
+  var S=m?m.S:null, barsA=m?m.bars:null;
+  var TT=(typeof T!=='undefined'&&T)?T.filter(function(x){return x&&!x.__demo;}):[];
+  var out=[]; var push=function(cat,prio,html){out.push({cat:cat,prio:prio,html:html});};
   var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0), hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0);
   var riskU=hasStop?Math.abs(+t.entry-+t.stop):0;
-  var isOpen=(t.status==='open'||t.isOpen||(t.exit==null));
-  var realR=(hasStop&&riskU>0&&!isOpen)?Math.round((t.points/riskU)*100)/100:null;
-  var plannedRR=(hasStop&&hasTgt&&riskU>0)?Math.round(Math.abs(+t.target-+t.entry)/riskU*100)/100:null;
-  var mfe=(t.mfe!=null&&t.mfe!=='')?+t.mfe:null, mae=(t.mae!=null&&t.mae!=='')?+t.mae:null;
   var win=t.result==='win', loss=t.result==='loss';
-  var trg=(t.ofTriggers||[]);
-  var good=[], improve=[], couldve=[];
-  // Ubicación (LOCATION) — primer filtro del edge
-  if(t.locationOk) good.push('Entraste en la <strong>ubicación</strong> — el primer filtro de tu edge de order-flow.');
-  else improve.push('No marcaste <strong>ubicación (LOCATION)</strong>: sin una ubicación válida la probabilidad cae; es el primer filtro antes de cualquier trigger.');
-  // Trigger de order-flow
-  if(trg.length){var names=trg.map(function(k){var f=OF_TRIGGERS.filter(function(x){return x.k===k;})[0];return f?f.l:k;});good.push('Trigger de entrada: <strong>'+names.join(' + ')+'</strong>'+(trg.length>1?' — confluencia de varios, entrada de mayor convicción.':'.'));}
-  else improve.push('No marcaste <strong>qué trigger</strong> gatilló la entrada (Big Trades / Footprint / Heatmap / Delta). Sin un trigger claro es una entrada a ciegas.');
-  // Market Regime
-  if(!t.marketRegime) improve.push('No definiste el <strong>Market Regime</strong> (positivo/negativo): sin régimen no sabes si operaste a favor o en contra del contexto.');
-  // Riesgo / R:R
-  if(!hasStop) improve.push('<strong>Sin stop</strong> registrado: no hay R ni gestión de riesgo medible. Define el riesgo ANTES de entrar.');
-  else if(plannedRR!=null && plannedRR<1.5) improve.push('R:R planeado <strong>'+plannedRR+':1</strong> — por debajo de 1.5:1; a la larga el edge se erosiona con ese ratio.');
-  else if(plannedRR!=null) good.push('R:R planeado <strong>'+plannedRR+':1</strong> — ratio sano.');
-  // Eficiencia: R capturado vs disponible (MFE) — idea "Zella Scale"
-  if(realR!=null && mfe!=null && mfe>0.2){
-    var capt=Math.round(realR/mfe*100);
-    if(capt<60 && realR>0) couldve.push('Capturaste solo <strong>'+capt+'%</strong> del movimiento a favor (saliste en +'+realR+'R, el MFE llegó a +'+mfe+'R). Dejar un runner o alejar el target habría capturado más.');
-    else if(capt>=85 && win) good.push('Eficiencia alta: capturaste <strong>'+capt+'%</strong> del recorrido disponible.');
+  var path=!!(S&&S.hasStop&&S.intraday);
+  var tm=function(x){var p=String(x.time||'').split(':');return (+p[0])*60+(+p[1]);};
+  var realRof=function(x){return x.points/Math.abs(x.entry-x.stop);};
+  var hasRof=function(x){return x.stop!=null&&+x.stop!==0&&x.entry!=null&&x.exit!=null&&x.result!=='be'&&Math.abs(x.entry-x.stop)>0;};
+
+  // 1. Revenge trade (mismo día, tras pérdida <10min, más tamaño)
+  (function(){var day=TT.filter(function(x){return x.date===t.date;}).sort(function(a,b){return tm(a)-tm(b);});
+    var i=day.findIndex(function(x){return x.id===t.id;}); if(i<=0)return; var pr=day[i-1]; if(pr.result!=='loss')return;
+    var gap=tm(t)-tm(pr); if(gap>=0&&gap<=10&&(+t.contracts||1)>(+pr.contracts||1))
+      push('mejorar',100,'Revenge trade: entraste <strong>'+gap+' min</strong> después de una pérdida y con MÁS tamaño ('+(t.contracts||1)+'c vs '+(pr.contracts||1)+'c). El mercado no te debe la revancha; el tamaño extra tras perder es donde se revientan las cuentas. Tras una pérdida: mismo tamaño o menor y espera TU setup.');})();
+
+  // 2. Break-even lo salvaba (round-trip a +1R → stop)
+  if(path&&S.hasExit&&loss&&S.mfeR!=null&&S.mfeR>=1.0&&S.exitR!=null&&S.exitR<=-0.9){
+    var peers=TT.filter(function(x){return x.result==='loss'&&x.mfe!=null&&+x.mfe>=1.0&&x.exitR!=null&&+x.exitR<=-0.9;});
+    var hist=peers.length>1?(' Ya van <strong>'+peers.length+'</strong> trades así — '+fmtR(peers.reduce(function(s,x){return s+Math.abs(+x.exitR);},0))+'R que un BE habría rescatado.'):'';
+    push('pudiste',92,'Llegaste a +'+round1(S.mfeR)+'R y el precio se devolvió hasta tu stop (−'+round1(Math.abs(S.exitR))+'R): un round-trip completo. Mover el stop a <strong>break-even</strong> al tocar +1R convertía esta pérdida en 0.'+hist);
   }
-  // MAE: cuánto aguantó en contra
-  if(mae!=null && mae<=-1) couldve.push('El trade fue <strong>'+mae+'R</strong> en contra antes de resolver: revisa si el stop fue demasiado amplio o si entraste anticipado a la ubicación.');
-  // Resultado vs proceso (resultado ≠ edge)
-  var procScore=(t.locationOk?1:0)+(trg.length?1:0)+((typeof t.grade==='number'&&t.grade>=4)?1:0);
-  if(win && procScore<=1) improve.push('<strong>Ganaste, pero el proceso fue flojo</strong> (poca ubicación / trigger / grade). Ojo: el resultado no valida el trade — pudo ser suerte, no edge.');
-  if(loss && procScore>=2) good.push('Perdiste pero <strong>ejecutaste bien el proceso</strong> — probablemente varianza, no un error. Sigue el plan.');
+  // 3. Stop demasiado ajustado y luego se dio la vuelta
+  if(path&&S.hasExit&&loss&&(S.mfeR==null||S.mfeR<1.0)&&S.postExitMaxR!=null&&S.postExitMaxR>=1.5){
+    var tn=(hasTgt&&riskU>0)?('Alcanzó tu objetivo de +'+round1(Math.abs(+t.target-+t.entry)/riskU)+'R. '):'';
+    push('pudiste',86,'Te sacó el stop en −'+round1(Math.abs(S.exitR))+'R y luego, sin ti, el precio hizo <strong>+'+round1(S.postExitMaxR)+'R</strong> en tu dirección (pico '+S.postExitMaxHHMM+'). '+tn+'La dirección era correcta: falló la DISTANCIA del stop (pegado al ruido) o entraste antes de la ubicación — ancla el stop a estructura.');
+  }
+  // 4. Saliste pronto: runner dejado en la mesa
+  if(path&&S.hasExit&&win&&S.exitR!=null&&S.postExitMaxR!=null&&(S.postExitMaxR-S.exitR)>=1.0){
+    var extraR=S.postExitMaxR-S.exitR, extraPts=Math.round(extraR*S.riskU*100)/100;
+    var pe=TT.filter(function(x){return x.result==='win'&&x.postMaxR!=null&&x.exitR!=null&&(+x.postMaxR-+x.exitR)>=1.0;});
+    var hh=pe.length>1?(' En tu historial son <strong>'+pe.length+'</strong> veces, +'+fmtR(pe.reduce(function(s,x){return s+(+x.postMaxR-+x.exitR);},0))+'R sin capturar.'):'';
+    push('pudiste',80,'Saliste en +'+round1(S.exitR)+'R y el precio siguió hasta <strong>+'+round1(S.postExitMaxR)+'R</strong> ('+S.postExitMaxHHMM+') sin ti: +'+round1(extraR)+'R ('+extraPts+' pts) sobre la mesa. Cuando la estructura acompaña, deja correr un runner (⅓) con trailing bajo el máximo.'+hh);
+  }
+  // 5. Devolviste una ganancia grande (giveback)
+  if(path&&S.hasExit&&!(loss&&S.exitR<=-0.9)&&S.mfeR!=null&&S.exitR!=null&&S.mfeR>=1.5&&(S.mfeR-S.exitR)>=1.0){
+    push('mejorar',74,'Durante el hold llegó a +'+round1(S.mfeR)+'R y cerraste en +'+round1(S.exitR)+'R: devolviste <strong>'+round1(S.mfeR-S.exitR)+'R</strong> antes de salir. Regla dura de protección: parcial en el impulso y stop a break-even/trailing tras superar +1R.');
+  }
+  // 6. Sin LOCATION tu winrate se desploma (contextual: este trade sin ubicación)
+  if(t.locationOk===false){
+    var done=function(x){return x.result==='win'||x.result==='loss';};
+    var ON=TT.filter(function(x){return done(x)&&x.locationOk===true;}), OFF=TT.filter(function(x){return done(x)&&x.locationOk===false;});
+    if(ON.length>=6&&OFF.length>=6){var wr=function(a){return Math.round(100*a.filter(function(x){return x.result==='win';}).length/a.length);};
+      if(wr(ON)-wr(OFF)>=8){var offR=OFF.filter(function(x){return hasRof(x);}); var avg=offR.length?offR.reduce(function(s,x){return s+realRof(x);},0)/offR.length:null;
+        push('mejorar',70,'📍 Este trade no marcó ubicación. Cuando NO la marcas tu WR cae a <strong>'+wr(OFF)+'%</strong> vs '+wr(ON)+'% con ubicación ('+(wr(ON)-wr(OFF))+' pts menos); tu expectancy sin ella es '+(avg==null?'—':((avg>=0?'+':'')+avg.toFixed(1)+'R'))+'. La LOCATION es tu primer filtro: si no la ves clara, no es tu trade.');}}
+  }
+  // 7. R:R planeado pobre (<1.5)
+  if(hasStop&&hasTgt&&riskU>0){var rr=Math.abs(+t.target-+t.entry)/riskU; if(rr<1.5)
+    push('mejorar',64,'Planeaste un R:R de <strong>'+(Math.round(rr*100)/100)+':1</strong> (objetivo '+(Math.round(Math.abs(t.target-t.entry)*100)/100)+' pts vs riesgo '+(Math.round(riskU*100)/100)+' pts). Con ese ratio necesitas ganar más del '+Math.round(100/(1+rr))+'% solo para no perder. Aleja el objetivo o acerca el stop ANTES de entrar.');}
+  // 8. Contra el Market Regime te sangra
+  (function(){var counter=(t.marketRegime==='pos'&&t.direction==='short')||(t.marketRegime==='neg'&&t.direction==='long'); if(!counter)return;
+    var ok=function(x){return (x.marketRegime==='pos'||x.marketRegime==='neg')&&hasRof(x);};
+    var A=TT.filter(function(x){return ok(x)&&((x.direction==='long'&&x.marketRegime==='pos')||(x.direction==='short'&&x.marketRegime==='neg'));});
+    var C=TT.filter(function(x){return ok(x)&&((x.direction==='long'&&x.marketRegime==='neg')||(x.direction==='short'&&x.marketRegime==='pos'));});
+    if(A.length<6||C.length<6)return; var avg=function(a){return a.reduce(function(s,x){return s+realRof(x);},0)/a.length;}; var eA=avg(A),eC=avg(C);
+    if(eC<0&&(eA-eC)>=0.4) push('mejorar',60,'🧭 Este trade va CONTRA el régimen. A favor del Market Regime tu expectancy es <strong>'+(eA>=0?'+':'')+eA.toFixed(1)+'R</strong>; en contra cae a '+(eC>=0?'+':'')+eC.toFixed(1)+'R en '+C.length+' trades. Con régimen negativo deja de buscar largos y con positivo, cortos.');})();
+  // 9. Perseguiste la entrada (había mejor precio antes)
+  if(path&&riskU>0&&S.entryIdx>=3&&barsA){
+    var sgn=S.dir==='long'?1:-1, L=Math.min(15,S.entryIdx), best=null;
+    if(barsA){for(var bi=S.entryIdx-L;bi<S.entryIdx;bi++){var px=sgn>0?barsA[bi].l:barsA[bi].h; if(best==null||sgn*(+t.entry-px)>sgn*(+t.entry-best))best=px;}
+      if(best!=null){var impPts=sgn>0?(+t.entry-best):(best-+t.entry), impR=impPts/riskU, worked=(win)||(S.exitR!=null&&S.exitR>0);
+        if(impR>=0.4&&worked) push('pudiste',56,'En los '+L+' min previos a tu fill el precio estuvo <strong>'+(Math.round(impPts*100)/100)+' pts mejor</strong> ('+fmtPx(best)+') — hasta +'+round1(impR)+'R de colchón, MISMO setup. Perseguiste el precio: espera el retroceso a tu zona y tendrás el mismo trade con el stop más cerca y mejor R:R.');}}
+  }
+  // 10. Hubo retest a tu zona para escalar (scale-in)
+  if(path&&S.series.length>=4){var peakI=0; for(var k=1;k<S.series.length;k++)if(S.series[k].r>S.series[peakI].r)peakI=k;
+    if(S.series[peakI].r>=1.5){var dip=0; for(var k2=0;k2<=peakI;k2++)if(S.series[k2].r<dip)dip=S.series[k2].r;
+      var held=(dip<=-0.25&&dip>-0.9), wk=(win)||(S.exitR!=null&&S.exitR>0);
+      if(held&&wk) push('pudiste',50,'➕ Tras entrar, el precio hizo un retest a <strong>'+round1(dip)+'R</strong> (sin tocar tu stop) y luego corrió a +'+round1(S.mfeR)+'R. Ese retest en tu zona era una segunda entrada de alta probabilidad: un <strong>scale-in</strong> ahí baja tu entrada media y multiplica el R — úsalo cuando el setup lo respalde, como aquí.');}}
+  // 11. Ganaste con proceso flojo = suerte
+  if(win&&!t.locationOk&&(t.ofTriggers||[]).length===0&&(+t.grade||0)<=2)
+    push('mejorar',46,'Ganaste, pero sin ubicación, sin trigger y con '+(+t.grade||0)+'★ de tu propia mano: el resultado NO valida el proceso — esto fue <strong>suerte, no edge</strong>. Anótalo como ganancia de varianza y no lo repitas esperando el mismo final.');
+  // 12. Perdiste con proceso perfecto = varianza
+  if(path&&loss){var trg=(t.ofTriggers||[]); var respected=(S.maeR==null||S.maeR>=-1.15);
+    if(t.locationOk&&trg.length>=1&&(+t.grade||0)>=4&&respected)
+      push('bien',42,'Perdiste ejecutando el plan COMPLETO: ubicación válida, '+_trgNames(trg).join(' + ')+', '+(+t.grade||0)+'★ y respetaste el stop (máx '+round1(S.maeR)+'R en contra, sin moverlo). Esto es <strong>varianza pura, no un error</strong>. NO cambies nada — tu rentabilidad vive en repetir buenos procesos aunque este salga cruz.');}
+  // 13. Este trade usó tu mejor trigger de order-flow
+  (function(){var all=TT.filter(hasRof); if(!all.length)return; var avg=function(a){return a.reduce(function(s,v){return s+v;},0)/a.length;};
+    var mAll=avg(all.map(realRof)), best=null;
+    ['big_trades','footprint','heatmap','delta'].forEach(function(kk){var Sx=all.filter(function(x){return Array.isArray(x.ofTriggers)&&x.ofTriggers.indexOf(kk)>=0;});
+      if(Sx.length>=8){var mm=avg(Sx.map(realRof)); if(!best||mm>best.m)best={k:kk,n:Sx.length,m:mm,wr:100*Sx.filter(function(x){return x.result==='win';}).length/Sx.length};}});
+    if(best&&best.m>=0.3&&(best.m-mAll)>=0.15&&(t.ofTriggers||[]).indexOf(best.k)>=0)
+      push('bien',38,'🐋 Este trade usó tu mejor lectura de order-flow: <strong>'+_trgNames([best.k])[0]+'</strong> — '+best.n+' trades, WR '+Math.round(best.wr)+'%, '+(best.m>=0?'+':'')+best.m.toFixed(1)+'R de media (tu media global es '+(mAll>=0?'+':'')+mAll.toFixed(1)+'R). Es tu setup A: súbele tamaño y frecuencia.');})();
+  // 14. Salida de libro (capturaste casi todo el pico)
+  if(path&&S.hasExit&&win&&S.exitR!=null&&S.mfeR!=null&&S.mfeR>0&&S.exitR>=1.0){var cap=S.exitR/S.mfeR, little=(S.postExitMaxR==null||S.postExitMaxR<=S.exitR+0.5);
+    if(cap>=0.8&&little) push('bien',34,'Salida de libro: capturaste el <strong>'+Math.round(cap*100)+'%</strong> del máximo favorable (+'+round1(S.exitR)+'R de +'+round1(S.mfeR)+'R) y el precio apenas siguió sin ti. Este es el timing de salida que quieres — identifica qué te hizo salir aquí y replícalo.');}
+
+  return out;
+}
+function genioRender(fired){
+  fired=fired.slice().sort(function(a,b){return b.prio-a.prio;});
+  var perCat={bien:0,mejorar:0,pudiste:0}, picked=[];
+  fired.forEach(function(h){if(picked.length>=5)return; if(perCat[h.cat]>=2)return; perCat[h.cat]++; picked.push(h);});
+  var byCat=function(c){return picked.filter(function(h){return h.cat===c;}).map(function(h){return h.html;});};
   function sec(title,color,items){ if(!items.length)return ''; return '<div style="margin-bottom:12px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;color:'+color+';margin-bottom:6px;">'+title+'</div>'+items.map(function(x){return '<div style="font-size:12.5px;color:var(--text2);line-height:1.55;margin-bottom:6px;">'+x+'</div>';}).join('')+'</div>'; }
-  var html=sec('✅ Lo que hiciste bien','var(--green)',good)+sec('⚠️ A mejorar','var(--gold)',improve)+sec('💡 Qué pudiste hacer','#a78bfa',couldve);
-  if(!html) html='<div style="font-size:12px;color:var(--text3);line-height:1.6;">Completa el <strong>Market Regime</strong>, la <strong>ubicación</strong>, el <strong>trigger</strong> y el <strong>stop</strong> del trade y el Genio te dará recomendaciones concretas de qué hiciste bien y qué mejorar.</div>';
+  var html=sec('⚠️ A mejorar','var(--gold)',byCat('mejorar'))+sec('💡 Qué pudiste hacer','#a78bfa',byCat('pudiste'))+sec('✅ Lo que hiciste bien','var(--green)',byCat('bien'));
+  if(!html) html='<div style="font-size:12px;color:var(--text3);line-height:1.6;">Completa el <strong>Market Regime</strong>, la <strong>ubicación</strong>, el <strong>trigger</strong> y el <strong>stop</strong>, y abre el chart para que el Genio analice el recorrido y te diga qué pudiste hacer mejor.</div>';
   return html;
+}
+function genTradeAI(t, raw){
+  var m=computeTradeViz(t, raw!==undefined?raw:null);
+  return genioRender(genioEval(t, m));
 }
 
 // ── ZONA DE GENIO (renderGenius + renderPatterns) ──
