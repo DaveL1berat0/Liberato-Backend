@@ -509,7 +509,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 /* ── TRADE DETAIL WORKSPACE (Review 2.0) ── */
 .tws{position:fixed;inset:0;z-index:100001;background:var(--bg,#080a0f);overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .25s ease,transform .3s cubic-bezier(.22,1,.36,1);-webkit-overflow-scrolling:touch;}
 .tws.open{opacity:1;pointer-events:auto;transform:none;}
-.tws-inner{max-width:1000px;margin:0 auto;padding:0 20px calc(60px + var(--safe-bottom));}
+.tws-inner{max-width:1180px;margin:0 auto;padding:0 20px calc(60px + var(--safe-bottom));}
 .tws-topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 12px;margin-bottom:4px;background:linear-gradient(180deg,var(--bg,#080a0f) 72%,transparent);backdrop-filter:blur(6px);}
 .tws-back{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);border:0.5px solid var(--border2);border-radius:9px;padding:9px 14px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Mono',monospace;transition:all .2s;}
 .tws-back:hover{border-color:rgba(201,168,76,0.4);color:var(--gold);}
@@ -574,7 +574,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-navfoot button:hover:not(:disabled){border-color:rgba(201,168,76,0.4);color:var(--gold);}
 .tws-navfoot button:disabled{opacity:0.3;cursor:default;}
 /* Layout de dos columnas + pestañas */
-.tws-cols{display:grid;grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr);gap:16px;margin-bottom:16px;align-items:start;}
+.tws-cols{display:grid;grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);gap:16px;margin-bottom:16px;align-items:start;}
+/* Controles del tab STRATEGY (Market Regime, Grade estrellas, checklist, +tag) */
+.tws-field{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border2);}
+.tws-field-l{font-size:12.5px;color:var(--text2);}
+.tws-reg{display:inline-flex;gap:6px;}
+.tws-reg-btn{padding:6px 12px;border-radius:8px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);font-size:11.5px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .15s;}
+.tws-reg-btn:hover{border-color:rgba(201,168,76,0.35);color:var(--text2);}
+.tws-reg-btn.sel.pos{background:rgba(46,232,164,0.12);border-color:rgba(46,232,164,0.45);color:var(--green);font-weight:600;}
+.tws-reg-btn.sel.neg{background:rgba(167,139,250,0.14);border-color:rgba(167,139,250,0.5);color:var(--purple,#a78bfa);font-weight:600;}
+.tws-gstars{display:inline-flex;gap:3px;}
+.tws-gstar{cursor:pointer;font-size:20px;line-height:1;color:rgba(232,228,217,0.2);transition:color .12s,transform .12s;}
+.tws-gstar:hover{transform:scale(1.15);}
+.tws-gstar.on{color:var(--gold);}
+.tws-chk{display:flex;flex-direction:column;gap:7px;margin-top:6px;}
+.tws-chk-item{display:flex;align-items:center;gap:10px;font-size:12.5px;cursor:pointer;color:var(--text3);padding:8px 11px;border-radius:9px;border:0.5px solid var(--border2);background:rgba(255,255,255,0.008);transition:all .15s;}
+.tws-chk-item:hover{border-color:rgba(201,168,76,0.3);color:var(--text2);}
+.tws-chk-item.ok{color:var(--green);border-color:rgba(46,232,164,0.3);background:rgba(46,232,164,0.05);}
+.tws-chk-box{flex:0 0 auto;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.tws-chk-item.ok .tws-chk-box{border-color:var(--green);background:rgba(46,232,164,0.15);color:var(--green);}
+.tws-chk-lbl{flex:1;}
+.tws-tag-add{border-style:dashed!important;color:var(--gold)!important;border-color:rgba(201,168,76,0.4)!important;background:transparent!important;}
+.tws-tag-add:hover{background:rgba(201,168,76,0.08)!important;}
 .tws-panel-right{position:sticky;top:60px;align-self:start;}
 @media(max-width:860px){.tws-cols{grid-template-columns:1fr;}.tws-panel-right{position:static;}}
 .tws-panel{border:0.5px solid var(--border2);border-radius:16px;background:rgba(255,255,255,0.008);overflow:hidden;}
@@ -614,8 +635,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-chart-wrap svg{width:100%;height:auto;display:block;}
 /* ── JCH · mini-TradingView del detalle de trade (Lightweight Charts 4.x + velas reales NQ) ── */
 .jch-frame{display:flex;flex-direction:column;}
-.jch-stage{position:relative;width:100%;height:min(68vh,640px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
-@media(max-width:860px){.jch-stage{height:min(58vh,440px);}}
+.jch-stage{position:relative;width:100%;height:min(76vh,760px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
+@media(max-width:860px){.jch-stage{height:min(60vh,460px);}}
 .jch-tv{position:absolute;inset:0;width:100%;height:100%;}
 .jch-ov{position:absolute;inset:0;z-index:2;pointer-events:none;}
 .jch-ov.armed{pointer-events:auto;cursor:crosshair;}
@@ -3658,8 +3679,10 @@ function twsNav(d){var i=_twsIdx+d;if(i<0||i>=_twsList.length)return;_twsIdx=i;_
 function twsSave(patch){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;Object.assign(t,patch);var i=T.indexOf(t);T[i]=calcTrade(t);saveTrades(T);}
 function twsField(el,field){var v=el.value.trim();var num=parseFloat(v);twsSave(field==='note'||field==='lesson'?_defObj(field,v):_defObj(field,isNaN(num)?null:num));if(field==='stop'||field==='target'||field==='exit')renderTws();}
 function _defObj(k,v){var o={};o[k]=v;return o;}
-function twsRate(cat,val){var t=T.find(function(x){return x.id===_twsId;});var r=Object.assign({},t.rating||{});r[cat]=val;twsSave({rating:r});renderTws();}
-function twsGrade(g){twsSave({grade:g});renderTws();}
+// Grade del trade = 1..5 estrellas (califica la DECISIÓN, no el resultado).
+function twsGradeStars(n){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;twsSave({grade:(t.grade===n?0:n)});renderTws();}
+// Market Regime explícito del trade: positivo / negativo (toggle: re-clic lo limpia).
+function twsSetRegime(v){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;twsSave({marketRegime:(t.marketRegime===v?'':v)});renderTws();}
 // Elegir playbook = elegir estrategia (playbook y setup son lo mismo). Rellena setup y
 // régimen desde el playbook; NO toca la dirección (es un hecho del trade, del fill).
 function twsSetPlaybook(id){
@@ -3670,8 +3693,11 @@ function twsSetPlaybook(id){
   twsSave(patch);renderTws();
 }
 function twsToggleChk(i){var t=T.find(function(x){return x.id===_twsId;});var ch=(t.checklist||[]).slice();while(ch.length<=i)ch.push(false);ch[i]=!ch[i];twsSave({checklist:ch});renderTws();}
-var TWS_TAGS=['A+','Ejecución limpia','Entrada temprana','Target perdido','Error','Buen manejo','FOMO','Plan seguido','Revancha'];
+var TWS_TAGS=['A+','Confluencia','Ejecución limpia','Entrada temprana','Target perdido','Error','Buen manejo','FOMO','Plan seguido','Revancha'];
 function twsToggleTag(tag){var t=T.find(function(x){return x.id===_twsId;});var tags=(t.tags||[]).slice();var i=tags.indexOf(tag);if(i>=0)tags.splice(i,1);else tags.push(tag);twsSave({tags:tags});renderTws();}
+// Añadir un tag PERSONALIZADO (el que el trader quiera). Se guarda en t.tags y se
+// muestra junto a los predefinidos; volver a clicarlo lo quita.
+function twsAddTag(){var t=T.find(function(x){return x.id===_twsId;});if(!t)return;var v=prompt('Nuevo tag personalizado:');if(v==null)return;v=v.trim();if(!v)return;var tags=(t.tags||[]).slice();if(tags.indexOf(v)<0)tags.push(v);twsSave({tags:tags});renderTws();}
 function twsPickShots(){document.getElementById('tws-shot-input').click();}
 function twsAddFiles(files){
   files=Array.prototype.slice.call(files||[]).filter(function(f){return /image\//.test(f.type);});
@@ -3713,8 +3739,6 @@ function renderTws(){
   var tgtU=hasTgt?Math.abs(t.target-t.entry):0;
   var plannedRR=(hasStop&&hasTgt&&riskU>0)?Math.round((tgtU/riskU)*100)/100:null;
   var realR=(hasStop&&riskU>0&&!isOpenTr)?Math.round((t.points/riskU)*100)/100:null;
-  var rating=t.rating||{};
-  function starRow(cat,lbl){var v=rating[cat]||0;var s='';for(var i=1;i<=5;i++)s+='<span class="tws-star'+(i<=v?' on':'')+'" onclick="twsRate(\''+cat+'\','+i+')">★</span>';return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;"><span style="font-size:12.5px;color:var(--text2);">'+lbl+'</span><span>'+s+'</span></div>';}
   function stat(l,v,cls){return '<div class="tws-stat"><div class="tws-stat-l">'+l+'</div><div class="tws-stat-v '+(cls||'')+'">'+v+'</div></div>';}
   // ── Risk/Reward viz ──
   var rrViz='';
@@ -3773,12 +3797,23 @@ function renderTws(){
     var pbSel=t.playbookId?_pbs.filter(function(p){return p.id===t.playbookId;})[0]:null;
     var chkLabels=pbSel?((pbSel.confirmations||[]).concat(pbSel.contexts||[]).concat(pbSel.customConfirmations||[])) : [];
     if(!chkLabels.length)chkLabels=['Régimen','Ubicación','Confluencia','Trigger','Ejecución'];
+    var _gN=(typeof t.grade==='number'&&t.grade>0)?t.grade:0;
+    var _mr=t.marketRegime||'';
+    var _tj=function(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");};
+    function _gStars(){var s='';for(var i=1;i<=5;i++)s+='<span class="tws-gstar'+(i<=_gN?' on':'')+'" onclick="twsGradeStars('+i+')" title="'+i+'/5">★</span>';return s;}
+    function _regBtn(v,lbl){return '<button type="button" class="tws-reg-btn'+(_mr===v?' sel '+v:'')+'" onclick="twsSetRegime(\''+v+'\')">'+lbl+'</button>';}
+    var _customTags=(t.tags||[]).filter(function(x){return TWS_TAGS.indexOf(x)<0;});
     left='<div class="tws-panel-body">'
       +'<div class="tws-lbl">Playbook / Estrategia</div><select class="tws-input" onchange="twsSetPlaybook(this.value)" style="cursor:pointer;margin-bottom:6px;">'+pbOpts+'</select>'
       +row('Dirección',dir==='long'?'LONG':'SHORT')
-      +row('Market Regime',regime)+row('Grade',t.grade?('<span style="color:var(--gold);">'+t.grade+'</span>'):'—')
-      +'<div style="margin-top:16px;"><div class="tws-lbl">Checklist del proceso'+(pbSel?' · '+_esc(pbSel.name):'')+'</div><div style="display:flex;flex-direction:column;gap:9px;margin-top:4px;">'+chkLabels.slice(0,8).map(function(l,i){var ok=t.checklist&&t.checklist[i];return '<div onclick="twsToggleChk('+i+')" style="display:flex;align-items:center;gap:9px;font-size:12.5px;cursor:pointer;color:'+(ok?'var(--green)':'var(--text3)')+';">'+(ok?'✓':'○')+' '+_esc(l)+'</div>';}).join('')+'</div></div>'
-      +'<div style="margin-top:18px;"><div class="tws-lbl">Tags</div><div style="display:flex;flex-wrap:wrap;gap:8px;">'+TWS_TAGS.map(function(tg){var on=(t.tags||[]).indexOf(tg)>=0;return '<span class="tws-tag'+(on?' on':'')+'" onclick="twsToggleTag(\''+tg+'\')">'+(on?'✓ ':'')+_esc(tg)+'</span>';}).join('')+'</div></div>'
+      +'<div class="tws-field"><span class="tws-field-l">Market Regime</span><span class="tws-reg">'+_regBtn('pos','📈 Positivo')+_regBtn('neg','📉 Negativo')+'</span></div>'
+      +'<div class="tws-field"><span class="tws-field-l">Grade</span><span class="tws-gstars" title="Califica la decisión, no el resultado">'+_gStars()+'</span></div>'
+      +'<div style="margin-top:16px;"><div class="tws-lbl">Checklist del proceso'+(pbSel?' · '+_esc(pbSel.name):'')+'</div><div class="tws-chk">'+chkLabels.slice(0,8).map(function(l,i){var ok=t.checklist&&t.checklist[i];return '<div class="tws-chk-item'+(ok?' ok':'')+'" onclick="twsToggleChk('+i+')"><span class="tws-chk-box">'+(ok?'✓':'')+'</span><span class="tws-chk-lbl">'+_esc(l)+'</span></div>';}).join('')+'</div></div>'
+      +'<div style="margin-top:18px;"><div class="tws-lbl">Tags</div><div style="display:flex;flex-wrap:wrap;gap:8px;">'
+        +TWS_TAGS.map(function(tg){var on=(t.tags||[]).indexOf(tg)>=0;return '<span class="tws-tag'+(on?' on':'')+'" onclick="twsToggleTag(\''+_tj(tg)+'\')">'+(on?'✓ ':'')+_esc(tg)+'</span>';}).join('')
+        +_customTags.map(function(tg){return '<span class="tws-tag on" onclick="twsToggleTag(\''+_tj(tg)+'\')" title="Tag personalizado — clic para quitar">✓ '+_esc(tg)+'</span>';}).join('')
+        +'<span class="tws-tag tws-tag-add" onclick="twsAddTag()" title="Añadir un tag personalizado">＋ Añadir</span>'
+      +'</div></div>'
       +'<div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap;">'
       +(t.vwap?'<span class="ctx-tag '+(t.vwap==='above'?'vwap-above':'vwap-below')+'">VWAP '+(t.vwap==='above'?'↑':'↓')+'</span>':'')
       +(t.gamma?'<span class="ctx-tag '+(t.gamma==='exp_up'?'gamma-up':t.gamma==='exp_dn'?'gamma-down':'gamma-contract')+'">γ '+(t.gamma==='exp_up'?'↑':t.gamma==='exp_dn'?'↓':'≈')+'</span>':'')
@@ -3830,10 +3865,6 @@ function renderTws(){
     +'<div class="tws-panel"><div class="tws-tabbar">'+lTab('stats','STATS')+lTab('strategy','STRATEGY')+lTab('execution','EXECUTION')+lTab('attachments','ATTACHMENTS')+'</div>'+left+'</div>'
     +'<div class="tws-panel tws-panel-right"><div class="tws-tabbar">'+chTab('chart','CHART')+chTab('notes','NOTAS')+chTab('genio','✦ GENIO')+'</div>'+right+'</div>'
     +'</div>'
-    // trade review (full width)
-    +'<div class="tws-sec"><div class="tws-sec-h">◆ Evaluación del trade — califica la DECISIÓN, no el resultado</div>'
-    +starRow('setup','Calidad del setup')+starRow('execution','Ejecución')+starRow('management','Gestión')+starRow('discipline','Disciplina')
-    +'<div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;"><span style="font-size:12.5px;color:var(--text2);">Nota general del trade</span><span style="display:inline-flex;gap:6px;">'+['A','B','C','D'].map(function(g){var on=t.grade===g;return '<button onclick="twsGrade(\''+g+'\')" style="width:36px;height:36px;border-radius:9px;border:0.5px solid '+(on?'var(--gold)':'var(--border2)')+';background:'+(on?'rgba(201,168,76,0.15)':'transparent')+';color:'+(on?'var(--gold)':'var(--text3)')+';font-weight:700;font-family:\'DM Mono\',monospace;cursor:pointer;">'+g+'</button>';}).join('')+'</span></div></div>'
     // daily context
     +'<div class="tws-sec"><div class="tws-sec-h">◆ Contexto del día · '+t.date+'</div>'
     +'<div class="tws-grid" style="margin-bottom:14px;">'+stat('P&L del día',f$(dayPnl),dayPnl>=0?'pos':'neg')+stat('Trades',String(dayTr.length),'')+stat('Win Rate',dayWR+'%','')+'</div>'
@@ -4305,6 +4336,33 @@ function jchDragMove(e){
   p=Math.round(p*100)/100; _jchDrag.p=p;
   if(_jchDrag.line){try{_jchDrag.line.applyOptions({price:p,title:(_jchDrag.k==='stop'?'STOP ':'TGT PLAN ')+p});}catch(_){}}
   jchSyncDrag();
+  // R:R EN VIVO: al arrastrar el stop cambia el riesgo → recalcula y refresca el HUD
+  // (Resultado ±R) sin esperar a soltar. Usa el nivel arrastrado para stop/target.
+  try{
+    var liveStop=(_jchDrag.k==='stop')?p:_jchT.stop;
+    var liveTgt=(_jchDrag.k==='target')?p:_jchT.target;
+    _jchLiveHudR(liveStop,liveTgt);
+  }catch(_){}
+}
+// Recalcula el R (realizado si el trade está cerrado, planeado si abierto) con un
+// stop/target candidatos y lo pinta en el HUD del chart en tiempo real.
+function _jchLiveHudR(stopV,tgtV){
+  var t=_jchT; if(!t)return;
+  var hud=document.getElementById('jch-hud'); if(!hud)return;
+  var entry=+t.entry;
+  var riskU=(stopV!=null&&stopV!==''&&+stopV!==0)?Math.abs(entry-(+stopV)):0;
+  var statusOpen=(t.status==='open'||t.isOpen||(t.exit==null));
+  var dir=t.direction==='short'?'short':'long';
+  var rTxt;
+  if(riskU<=0){ rTxt='—'; }
+  else if(statusOpen){
+    var planR=(tgtV!=null&&tgtV!==''&&+tgtV!==0)?Math.round(Math.abs((+tgtV)-entry)/riskU*10)/10:null;
+    rTxt=(planR!=null)?('plan '+(planR>=0?'+':'')+planR+'R'):'Planeado';
+  } else {
+    var realR=Math.round((t.points/riskU)*100)/100;
+    rTxt=(realR>=0?'+':'')+realR+'R';
+  }
+  hud.innerHTML=(dir==='long'?'▲ LONG':'▼ SHORT')+' · '+(t.contracts||1)+'c<br>Resultado <b>'+rTxt+'</b>'+((riskU>0)?'':'<br><span style="color:'+JCH_GOLD+'">sin stop → R = —</span>');
 }
 function jchDragEnd(){
   window.removeEventListener('pointermove',jchDragMove);
@@ -5901,6 +5959,23 @@ document.addEventListener('DOMContentLoaded', function(){
       var bt=document.getElementById('csv-overlay'); if(bt){openCsvImport();}
       setTimeout(function(){try{syncTradestation();}catch(e){}},400);
     }
+    // ── AUTO-SYNC durable ────────────────────────────────────────────────
+    // Si ya hay un broker conectado, sincronizar SOLO (sin que el usuario tenga
+    // que abrir el modal y pulsar RESYNC): al cargar la página y luego cada 5 min
+    // mientras esté abierta. Silencioso — las funciones de sync escriben en
+    // #broker-status (que solo existe con el modal abierto) y están guardadas con
+    // if(st), así que no molestan. Cubre SnapTrade (acciones) + TradeStation (futuros).
+    try{
+      var _autoConnected=false; try{_autoConnected=_hasLocalBroker();}catch(e){}
+      if(_autoConnected){
+        setTimeout(function(){try{syncAllBrokers(true);}catch(e){}},1500);  // primer sync al abrir
+        if(!window._lbcAutoSyncTimer){
+          window._lbcAutoSyncTimer=setInterval(function(){
+            try{ if(document.visibilityState==='visible' && _hasLocalBroker()) syncAllBrokers(true); }catch(e){}
+          }, 5*60*1000);
+        }
+      }
+    }catch(e){}
   }catch(e){console.error('init',e);}
 });
 document.addEventListener('keydown',function(e){
