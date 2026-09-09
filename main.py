@@ -8139,6 +8139,82 @@ async def tradestation_fills(app_user_id: str = "dave", days: int = 90, raw: int
     return {"ok": True, "count": len(trades), "trades": trades}
 
 
+@app.get("/api/admin/ts-sync-diag")
+async def ts_sync_diag(key: str = "", app_user_id: str = ""):
+    """DIAGNÓSTICO admin del sync de TradeStation end-to-end. Reporta cada eslabón:
+    qué uids tienen token, estado del token (válido/expirado/refresh), cuentas, cuántas
+    órdenes crudas trae y cuántos trades mapea — para saber DÓNDE se rompe el resync.
+    Gated por ADMIN_KEY (prefijo /api/admin/ salta el paywall). NO expone tokens."""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    out = {"configured": bool(TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET),
+           "uids_con_token": list(_ts_tokens.keys())}
+    uid = (app_user_id or "").strip()
+    if not uid:
+        # sin uid: solo lista quién tiene token para que Dave sepa con cuál probar
+        out["nota"] = "Pasa &app_user_id=<uid> (uno de uids_con_token) para el diagnóstico completo."
+        return out
+    rec = _ts_tokens.get(uid) or {}
+    out["uid"] = uid
+    out["tiene_refresh"] = bool(rec.get("refresh_token"))
+    out["access_expira_en_seg"] = round((rec.get("expires_at", 0) or 0) - time.time(), 1) if rec else None
+    # 1) token
+    try:
+        tokn = await _ts_access(uid)
+        out["token"] = "ok"
+    except HTTPException as he:
+        out["token"] = f"FALLO {he.status_code}: {he.detail}"
+        return out
+    except Exception as e:
+        out["token"] = f"FALLO: {str(e)[:160]}"
+        return out
+    # 2) cuentas + 3) órdenes crudas + 4) mapeo
+    from datetime import date, timedelta
+    since = (date.today() - timedelta(days=120)).isoformat()
+    try:
+        async with httpx.AsyncClient(timeout=15, headers={"Authorization": f"Bearer {tokn}"}) as c:
+            ra = await c.get(f"{TS_API_BASE}/brokerage/accounts")
+            out["accounts_http"] = ra.status_code
+            if ra.status_code != 200:
+                out["accounts_error"] = ra.text[:200]; return out
+            acct_ids = [a.get("AccountID") for a in (ra.json() or {}).get("Accounts", []) if a.get("AccountID")]
+            out["cuentas"] = acct_ids
+            raw_orders, seen = [], set()
+            per_acct = {}
+            for aid in acct_ids:
+                cnt = 0
+                for _path, _prm in ((f"{TS_API_BASE}/brokerage/accounts/{aid}/orders", None),
+                                    (f"{TS_API_BASE}/brokerage/accounts/{aid}/historicalorders", {"since": since})):
+                    r = await c.get(_path, params=_prm)
+                    tag = _path.rsplit('/', 1)[1]
+                    if r.status_code == 200:
+                        os_ = (r.json() or {}).get("Orders", [])
+                        per_acct[f"{aid}:{tag}"] = len(os_)
+                        for o in os_:
+                            _oid = str(o.get("OrderID") or "")
+                            if _oid and _oid in seen: continue
+                            if _oid: seen.add(_oid)
+                            o["_acct"] = aid; raw_orders.append(o); cnt += 1
+                    else:
+                        per_acct[f"{aid}:{tag}"] = f"HTTP {r.status_code}: {r.text[:80]}"
+            out["ordenes_por_cuenta"] = per_acct
+            out["ordenes_crudas_total"] = len(raw_orders)
+            trades = []
+            for o in raw_orders:
+                trades.extend(_ts_map_order(o, o.get("_acct")))
+            out["trades_mapeados"] = len(trades)
+            # muestra los estados de las órdenes crudas (para ver si son Filled/Open/Rejected)
+            out["estados_ordenes"] = {}
+            for o in raw_orders[:200]:
+                sstat = str(o.get("Status") or o.get("StatusDescription") or "?")
+                out["estados_ordenes"][sstat] = out["estados_ordenes"].get(sstat, 0) + 1
+            if trades:
+                out["ejemplo_trade"] = trades[0]
+    except Exception as e:
+        out["error"] = str(e)[:200]
+    return out
+
+
 @app.get("/api/broker/tradestation/status")
 async def tradestation_status(app_user_id: str = "dave"):
     """Dice si este usuario ya tiene TradeStation conectado (para que el frontend
