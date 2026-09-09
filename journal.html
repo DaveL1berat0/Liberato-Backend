@@ -659,8 +659,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-chart-wrap svg{width:100%;height:auto;display:block;}
 /* ── JCH · mini-TradingView del detalle de trade (Lightweight Charts 4.x + velas reales NQ) ── */
 .jch-frame{display:flex;flex-direction:column;}
-.jch-stage{position:relative;width:100%;height:min(82vh,880px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
-@media(max-width:860px){.jch-stage{height:min(64vh,520px);}}
+.jch-stage{position:relative;width:100%;height:min(68vh,700px);border-radius:12px;overflow:hidden;background:rgba(4,5,11,0.55);border:0.5px solid var(--border2);}
+@media(max-width:860px){.jch-stage{height:min(60vh,480px);}}
+/* Genio al pie del chart: recomendaciones del trade siempre visibles bajo las velas */
+.tws-chart-genio{margin-top:14px;border:0.5px solid var(--border2);border-radius:14px;background:rgba(255,255,255,0.008);padding:15px 16px;}
+.tws-cg-h{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
 /* Reserva una franja inferior de 46px para los controles → el eje de tiempo del
    chart NO queda tapado por la barra de timeframe/acciones. */
 .jch-tv{position:absolute;left:0;right:0;top:0;bottom:46px;width:auto;height:auto;}
@@ -3976,6 +3979,7 @@ function renderTws(){
   if(_twsChTab==='chart'){
     right=(t.entry!=null)
       ? '<div class="tws-chart-wrap" id="tws-chart-host">'+jchStageHTML(t)+'</div>'
+        +'<div class="tws-chart-genio"><div class="tws-cg-h">✦ Genio · análisis de este trade</div>'+genTradeAI(t)+'</div>'
       : '<div class="tws-panel-body"><div style="font-size:11.5px;color:var(--text3);line-height:1.6;">Añade la <strong style="color:var(--text2);">entrada</strong> del trade para ver el chart de ejecución con velas reales.</div></div>';
   } else if(_twsChTab==='notes'){
     right='<div class="tws-panel-body"><div class="tws-lbl">Notas del trade</div>'
@@ -4712,13 +4716,49 @@ document.addEventListener('keydown',function(e){
   }
 });
 
+// Genio por trade: analiza los datos REALES del trade (régimen, ubicación, triggers
+// de order-flow, grade, R:R, eficiencia vs MFE, resultado) y devuelve recomendaciones
+// concretas — qué hiciste bien, qué mejorar y qué pudiste hacer. Nada inventado: solo
+// se pronuncia sobre los campos que están llenos.
 function genTradeAI(t){
-  var ins=[];
-  if(t.vwap&&t.direction){var al=(t.vwap==='above'&&t.direction==='long')||(t.vwap==='below'&&t.direction==='short');if(al)ins.push('Precio '+(t.vwap==='above'?'sobre':'bajo')+' VWAP alineado con tu dirección <strong>'+t.direction+'</strong> — buena confluencia.');else ins.push('<strong>Conflicto:</strong> operaste '+t.direction+' con precio '+(t.vwap==='above'?'sobre':'bajo')+' VWAP. Reduce probabilidades.');}
-  if(t.gamma&&t.exitType){if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='win')ins.push('Gamma en <strong>contracción</strong> — salida completa correcta. Sin energía para extenderse.');else if(t.gamma==='contract'&&t.exitType==='full'&&t.result==='loss')ins.push('Gamma en <strong>contracción</strong> + salida completa = pérdida. Considera no operar en contracción.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='full')ins.push('Gamma en <strong>expansión</strong> — saliste completo. En tu histórico, en expansión la salida parcial con runner capturó más recorrido.');else if((t.gamma==='exp_up'||t.gamma==='exp_dn')&&t.exitType==='partial')ins.push('Gamma en <strong>expansión</strong> + salida parcial — <strong>correcto.</strong> Maximizas el ganador.');}
-  if(t.t4h&&t.direction){var a4=(t.t4h==='bull'&&t.direction==='long')||(t.t4h==='bear'&&t.direction==='short');if(a4)ins.push('Tendencia 4H alineada — mejor Win Rate estadístico.');else if(t.t4h!=='neut'&&t.t4h!=='mixed')ins.push('Operaste <strong>contra la tendencia 4H</strong>. Requiere confirmación extra.');}
-  if(t.checklist){var comp=t.checklist.filter(Boolean).length;if(comp===4)ins.push('Checklist <strong>completo (4/4)</strong>. Mejor resultado esperado.');else ins.push('Checklist <strong>'+comp+'/4</strong>. '+(comp<2?'Múltiples señales de alerta.':'Criterios faltantes reducen probabilidad.'));}
-  return ins.length?ins.join(' '):(t.note||'Agrega contexto al registrar para recibir análisis.');
+  var dir=t.direction==='short'?'short':'long';
+  var hasStop=(t.stop!=null&&t.stop!==''&&+t.stop!==0), hasTgt=(t.target!=null&&t.target!==''&&+t.target!==0);
+  var riskU=hasStop?Math.abs(+t.entry-+t.stop):0;
+  var isOpen=(t.status==='open'||t.isOpen||(t.exit==null));
+  var realR=(hasStop&&riskU>0&&!isOpen)?Math.round((t.points/riskU)*100)/100:null;
+  var plannedRR=(hasStop&&hasTgt&&riskU>0)?Math.round(Math.abs(+t.target-+t.entry)/riskU*100)/100:null;
+  var mfe=(t.mfe!=null&&t.mfe!=='')?+t.mfe:null, mae=(t.mae!=null&&t.mae!=='')?+t.mae:null;
+  var win=t.result==='win', loss=t.result==='loss';
+  var trg=(t.ofTriggers||[]);
+  var good=[], improve=[], couldve=[];
+  // Ubicación (LOCATION) — primer filtro del edge
+  if(t.locationOk) good.push('Entraste en la <strong>ubicación</strong> — el primer filtro de tu edge de order-flow.');
+  else improve.push('No marcaste <strong>ubicación (LOCATION)</strong>: sin una ubicación válida la probabilidad cae; es el primer filtro antes de cualquier trigger.');
+  // Trigger de order-flow
+  if(trg.length){var names=trg.map(function(k){var f=OF_TRIGGERS.filter(function(x){return x.k===k;})[0];return f?f.l:k;});good.push('Trigger de entrada: <strong>'+names.join(' + ')+'</strong>'+(trg.length>1?' — confluencia de varios, entrada de mayor convicción.':'.'));}
+  else improve.push('No marcaste <strong>qué trigger</strong> gatilló la entrada (Big Trades / Footprint / Heatmap / Delta). Sin un trigger claro es una entrada a ciegas.');
+  // Market Regime
+  if(!t.marketRegime) improve.push('No definiste el <strong>Market Regime</strong> (positivo/negativo): sin régimen no sabes si operaste a favor o en contra del contexto.');
+  // Riesgo / R:R
+  if(!hasStop) improve.push('<strong>Sin stop</strong> registrado: no hay R ni gestión de riesgo medible. Define el riesgo ANTES de entrar.');
+  else if(plannedRR!=null && plannedRR<1.5) improve.push('R:R planeado <strong>'+plannedRR+':1</strong> — por debajo de 1.5:1; a la larga el edge se erosiona con ese ratio.');
+  else if(plannedRR!=null) good.push('R:R planeado <strong>'+plannedRR+':1</strong> — ratio sano.');
+  // Eficiencia: R capturado vs disponible (MFE) — idea "Zella Scale"
+  if(realR!=null && mfe!=null && mfe>0.2){
+    var capt=Math.round(realR/mfe*100);
+    if(capt<60 && realR>0) couldve.push('Capturaste solo <strong>'+capt+'%</strong> del movimiento a favor (saliste en +'+realR+'R, el MFE llegó a +'+mfe+'R). Dejar un runner o alejar el target habría capturado más.');
+    else if(capt>=85 && win) good.push('Eficiencia alta: capturaste <strong>'+capt+'%</strong> del recorrido disponible.');
+  }
+  // MAE: cuánto aguantó en contra
+  if(mae!=null && mae<=-1) couldve.push('El trade fue <strong>'+mae+'R</strong> en contra antes de resolver: revisa si el stop fue demasiado amplio o si entraste anticipado a la ubicación.');
+  // Resultado vs proceso (resultado ≠ edge)
+  var procScore=(t.locationOk?1:0)+(trg.length?1:0)+((typeof t.grade==='number'&&t.grade>=4)?1:0);
+  if(win && procScore<=1) improve.push('<strong>Ganaste, pero el proceso fue flojo</strong> (poca ubicación / trigger / grade). Ojo: el resultado no valida el trade — pudo ser suerte, no edge.');
+  if(loss && procScore>=2) good.push('Perdiste pero <strong>ejecutaste bien el proceso</strong> — probablemente varianza, no un error. Sigue el plan.');
+  function sec(title,color,items){ if(!items.length)return ''; return '<div style="margin-bottom:12px;"><div style="font-size:10px;font-family:\'DM Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;color:'+color+';margin-bottom:6px;">'+title+'</div>'+items.map(function(x){return '<div style="font-size:12.5px;color:var(--text2);line-height:1.55;margin-bottom:6px;">'+x+'</div>';}).join('')+'</div>'; }
+  var html=sec('✅ Lo que hiciste bien','var(--green)',good)+sec('⚠️ A mejorar','var(--gold)',improve)+sec('💡 Qué pudiste hacer','#a78bfa',couldve);
+  if(!html) html='<div style="font-size:12px;color:var(--text3);line-height:1.6;">Completa el <strong>Market Regime</strong>, la <strong>ubicación</strong>, el <strong>trigger</strong> y el <strong>stop</strong> del trade y el Genio te dará recomendaciones concretas de qué hiciste bien y qué mejorar.</div>';
+  return html;
 }
 
 // ── ZONA DE GENIO (renderGenius + renderPatterns) ──
