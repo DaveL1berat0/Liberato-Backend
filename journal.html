@@ -6431,19 +6431,18 @@ document.addEventListener('DOMContentLoaded', function(){
     renderFormChecklist(); // render editable checklist
     go('dashboard');       // then render dashboard (needs pickers in DOM)
     try{updateBrokerButtons();}catch(e){}  // "Conectar" vs "Desconectar" según estado real
-    // Auto-sync al volver del portal de SnapTrade (?snaptrade=ok): trae los fills
-    // sin que el usuario tenga que pulsar "Sincronizar" a mano.
-    if(new URLSearchParams(window.location.search).get('snaptrade')==='ok'){
+    // Vuelta del OAuth del broker (?tradestation=ok / ?snaptrade=ok): sincroniza en
+    // SILENCIO (sin abrir el modal — eso se veía como "conéctate otra vez") y LIMPIA el
+    // query param para que un refresh NO vuelva a disparar nada. Feedback vía toast.
+    (function(){
+      var _qs=new URLSearchParams(window.location.search);
+      var _ts=_qs.get('tradestation')==='ok', _st=_qs.get('snaptrade')==='ok';
+      if(!_ts&&!_st)return;
+      try{history.replaceState(null,'',window.location.pathname);}catch(e){}  // quita ?..=ok
+      try{notif('Broker conectado','Sincronizando tus trades…','✓');}catch(e){}
       go('trades');
-      var b=document.getElementById('csv-overlay'); if(b){openCsvImport();}
-      setTimeout(function(){try{syncFills();}catch(e){}},400);
-    }
-    // Auto-sync al volver del OAuth directo de TradeStation (?tradestation=ok): trae futuros.
-    if(new URLSearchParams(window.location.search).get('tradestation')==='ok'){
-      go('trades');
-      var bt=document.getElementById('csv-overlay'); if(bt){openCsvImport();}
-      setTimeout(function(){try{syncTradestation();}catch(e){}},400);
-    }
+      setTimeout(function(){try{ if(_ts)syncTradestation(); else syncFills(); }catch(e){}},400);
+    })();
     // ── AUTO-SYNC durable ────────────────────────────────────────────────
     // Si ya hay un broker conectado, sincronizar SOLO (sin que el usuario tenga
     // que abrir el modal y pulsar RESYNC): al cargar la página y luego cada 5 min
