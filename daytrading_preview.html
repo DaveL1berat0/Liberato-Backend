@@ -4229,8 +4229,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           nqImpact:(ev.nq_reaction_pts!=null)?((ev.nq_reaction_pts>=0?'+':'')+ev.nq_reaction_pts+' pts'):(nqQual||(actual?'midiendo\u2026':null)),
           noNumericData:hasNoNumericData,
           diff:diff,
-          classification:classification,
-          nqImpact:nqImpact
+          classification:classification
         });
         // Si es un evento de HOY, guardarlo en el store (con su resultado si lo tiene)
         if(dateKey===_todayKey){
