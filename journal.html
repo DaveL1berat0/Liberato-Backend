@@ -3284,7 +3284,20 @@ function renderEquity(){
   var lines=[{v:mx,y:padT},{v:0,y:zY}]; if(mn<0)lines.push({v:mn,y:padT+plotH});
   var grid='',ylab='';
   lines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-7)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.45)" font-family="DM Mono,monospace" font-size="10" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';});
-  document.getElementById('equity-curve').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:190px;"><defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba('+c+',0.22)"/><stop offset="100%" stop-color="rgba('+c+',0.02)"/></linearGradient></defs>'+grid+'<path d="'+aD+'" fill="url(#eqg)"/><path d="'+pathD+'" fill="none" stroke="rgba('+c+',0.9)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="rgba('+c+',1)" stroke="var(--bg)" stroke-width="2.5"/>'+ylab+'</svg>';
+  // Gradiente partido en la línea 0: VERDE arriba (en ganancia), ROJO abajo (drawdown).
+  // Tanto el relleno como la línea se colorean por su posición vs el 0.
+  var zf=Math.max(0,Math.min(100,(plotH>0?((zY-padT)/plotH):1)*100));
+  var grad='<linearGradient id="eqg" gradientUnits="userSpaceOnUse" x1="0" y1="'+padT+'" x2="0" y2="'+(padT+plotH)+'">'
+    +'<stop offset="0%" stop-color="rgba(34,197,94,0.30)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(34,197,94,0.04)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(239,68,68,0.04)"/>'
+    +'<stop offset="100%" stop-color="rgba(239,68,68,0.30)"/></linearGradient>'
+    +'<linearGradient id="eqgl" gradientUnits="userSpaceOnUse" x1="0" y1="'+padT+'" x2="0" y2="'+(padT+plotH)+'">'
+    +'<stop offset="0%" stop-color="rgba(34,197,94,0.95)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(34,197,94,0.95)"/>'
+    +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(239,68,68,0.95)"/>'
+    +'<stop offset="100%" stop-color="rgba(239,68,68,0.95)"/></linearGradient>';
+  document.getElementById('equity-curve').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:190px;"><defs>'+grad+'</defs>'+grid+'<path d="'+aD+'" fill="url(#eqg)"/><path d="'+pathD+'" fill="none" stroke="url(#eqgl)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="rgba('+c+',1)" stroke="var(--bg)" stroke-width="2.5"/>'+ylab+'</svg>';
 }
 function renderDailyBars(){
   var _db=document.getElementById('daily-bars');
