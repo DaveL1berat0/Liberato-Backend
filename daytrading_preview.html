@@ -597,6 +597,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
    para aprovechar TODO el ancho del panel y quedar simétrico (sin hueco
    negro a la derecha). No cambia el texto ni la lógica, solo el layout. */
 @media(min-width:1040px){.sm-brief{column-count:2;column-gap:40px;column-rule:1px solid var(--hair);}}
+/* Cada línea del briefing es un bloque que NO se parte entre columnas (antes una
+   frase empezaba en la izquierda y terminaba en la derecha). Rompe solo ENTRE líneas. */
+.sm-line{break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;margin-bottom:7px;}
+.sm-line:last-child{margin-bottom:0;}
 .sm-ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);padding:4px 10px;border:1px solid rgba(204,169,79,0.25);border-radius:var(--r-pill);background:var(--gold-faint);}
 .skel{display:inline-block;height:1em;width:60%;border-radius:4px;background:linear-gradient(90deg,rgba(239,236,227,0.04),rgba(239,236,227,0.1),rgba(239,236,227,0.04));background-size:200% 100%;animation:shim 1.6s infinite;}
 @keyframes shim{to{background-position:-200% 0;}}
@@ -3683,7 +3687,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     }
     parts.push('<strong>Gestión:</strong> '+gestion);
 
-    var el=$('sm-brief'); if(el)el.innerHTML=parts.join('<br>');
+    var el=$('sm-brief'); if(el)el.innerHTML=parts.map(function(p){return '<div class="sm-line">'+p+'</div>';}).join('');
   }
 
   /* ════ LEGACY · Catalizadores (macro calendar) + Movers ════
@@ -4621,15 +4625,18 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           var UP=/^(long gamma|gamma positivo|alcista|continuaci\u00f3n|risk-on|bullish|codicia|greed|soporte|aceptaci\u00f3n)$/i;
           var DN=/^(short gamma|gamma negativo|bajista|correcci\u00f3n de inventario|risk-off|bearish|miedo|fear|resistencia|invalidar\u00eda|invalidaci\u00f3n|rechazo)$/i;
           var ONE=/(correcci\u00f3n de inventario|inventario overnight|inventario nocturno|long gamma|short gamma|gamma positivo|gamma negativo|Initial Balance|Call Wall|Put Wall|Gamma Flip|Max Pain|Risk-On|Risk-Off|continuaci\u00f3n|invalidar\u00eda|invalidaci\u00f3n|aceptaci\u00f3n|resistencia|inventario|alcista|bajista|bullish|bearish|codicia|soporte|rechazo|miedo|greed|fear|VWAP|VAH|VAL|POC|IBH|IBL|Flip|\d{2},\d{3}|\b\d{5}(?:\.\d+)?\b)/gi;
-          el.innerHTML=d.summary
+          var _brief=d.summary
             .replace(ONE,function(m){
               if(/^[\d,\.]+$/.test(m))return '<span class="hl-num">'+m+'</span>';
               if(UP.test(m))return '<span class="hl-up">'+m+'</span>';
               if(DN.test(m))return '<span class="hl-dn">'+m+'</span>';
               return '<span class="hl-gold">'+m+'</span>';
             })
-            .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')  // markdown negrita → <strong>
-            .replace(/\n/g,'<br>');                              // 5 líneas separadas
+            .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');  // markdown negrita → <strong>
+          // Cada línea = un BLOQUE (.sm-line) para que la multi-columna NUNCA parta una
+          // frase entre la columna izquierda y la derecha (rompe solo ENTRE líneas).
+          el.innerHTML=_brief.split(/\n+/).map(function(s){return s.trim();}).filter(Boolean)
+            .map(function(ln){return '<div class="sm-line">'+ln+'</div>';}).join('');
           setHealth('summary','connected','real',null);
           // Fresco → ocultamos el badge. STALE → sello "actualizado HH:MM ET" para que sus
           // niveles gamma incrustados NO se confundan con los del Gamma Chart en vivo (antes se

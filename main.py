@@ -5092,18 +5092,25 @@ async def refresh_institutional(force=False):
     sys_msg = (f"Eres el analista jefe de mesa de Liberato Community para {FA_ASSET} Futures, "
                "razonando con Auction Market Theory (AMT) y posicionamiento dealer. "
                "Tu lector lo tiene que entender en 20 SEGUNDOS. Escribes SOLO en español, ULTRA-CONCISO, "
-               "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 8 líneas con este formato (una línea cada una, "
-               "nada antes ni después, sin títulos de sección, sin listas con guiones):\n"
+               "TELEGRÁFICO, cero relleno. Devuelves EXACTAMENTE 9 líneas con este formato (una línea cada una, "
+               "nada antes ni después, sin títulos de sección, sin listas con guiones). "
+               "PRIORIDAD INTRADÍA: el foco son los CATALIZADORES/eventos de HOY, la GEOPOLÍTICA y lo TÉCNICO/VOLATILIDAD; "
+               "Macro (ciclo) y COT son CONTEXTO DE FONDO — mantenlos en MEDIA línea, concisos, nunca protagonistas.\n"
                "**Macro:** <1 oración: ciclo macro con los datos reales — GDP (crecimiento), inflación (CPI/PCE/PPI), "
                "empleo (NFP/desempleo/claims), bonos y rendimientos (2Y/10Y/30Y), tasa de interés y trayectoria (senda "
                "de la Fed). Nombra la FASE del ciclo si se infiere (expansión/desaceleración/estanflación)>\n"
                "**Catalizador:** <1 oración: el DRIVER DOMINANTE de la sesión de HOY. Combina (a) la noticia macro/"
                "geopolítica de MAYOR impacto de 'Movers ultra-impacto (en vivo)' como titular de última hora, y (b) el "
                "RESULTADO real de los datos macro que YA salieron hoy (de 'Datos macro recientes' / 'Último dato "
-               "publicado', con su actual vs esperado usando SOLO las cifras del contexto, formato 'DATO <actual> vs cons. <esperado>'), y menciona los eventos de alto impacto "
-               "aún por publicar hoy con su hora (ej. FOMC 14:00 ET). Esta etiqueta SIEMPRE aparece: si NO hay ninguna "
+               "publicado', con su actual vs esperado usando SOLO las cifras del contexto, formato 'DATO <actual> vs cons. <esperado>'), y enumera los eventos "
+               "aún por publicar hoy con su HORA ET y un tag de impacto (alto / secundario), ej. 'Subasta 3Y 13:00 ET (secundario) · CPI vie 11-sep (alto)'. Esta etiqueta SIEMPRE aparece: si NO hay ninguna "
                "noticia de alto impacto ni dato macro publicado hoy, escribe EXACTAMENTE 'Sin catalizador de alto "
                "impacto ahora mismo'>\n"
+               "**Geopolítica:** <1 oración: el foco geopolítico / macro-riesgo relevante para el NQ HOY, desde 'Movers "
+               "ultra-impacto' y noticias reales — guerra/sanciones (ej. Irán), petróleo (Brent/WTI, sobre todo si en máximos → presiona "
+               "inflación/tasas y castiga múltiplos tech), aranceles/guerra comercial. Encuádralo SIEMPRE por su efecto en el NQ "
+               "intradía (riesgo de gaps/titulares súbitos). Si no hay foco geopolítico en los datos, escribe EXACTAMENTE 'sin foco "
+               "geopolítico relevante hoy'>\n"
                "**COT:** <1 oración con el posicionamiento de especuladores Nasdaq-100. Esta etiqueta SIEMPRE aparece: "
                "si el contexto trae la línea 'COT (especuladores Nasdaq-100 ...)', usa SUS cifras EXACTAS (netos largos/"
                "cortos, contratos y cambio semanal) e interpreta en 4-6 palabras si el smart money está inclinado a "
@@ -5122,31 +5129,29 @@ async def refresh_institutional(force=False):
                "13:00 ET son los gatillos; régimen de expansión con dealers persiguiendo el precio'. PROHIBIDO 'reduce/añade "
                "tamaño', 'stops ajustados', 'evita apalancamiento' o cualquier orden operativa. NO inventes cifras de posicionamiento>\n"
                "**Claridad:** <n>/10 hacia <alza / baja / sin dirección clara> · Vol <alta/media/baja>\n"
-               "FORMATO: 6 a 8 oraciones en total (una por etiqueta), SIN EMOJIS. Usa las etiquetas en "
-               "negrita **Macro:**, **Catalizador:**, **COT:**, **Earnings:**, **Técnico:**, **Volatilidad:**, **Gestión:**, **Claridad:** tal cual, y pon en **negrita** "
+               "FORMATO: 7 a 9 oraciones en total (una por etiqueta), SIN EMOJIS. Usa las etiquetas en "
+               "negrita **Macro:**, **Catalizador:**, **Geopolítica:**, **COT:**, **Earnings:**, **Técnico:**, **Volatilidad:**, **Gestión:**, **Claridad:** tal cual, y pon en **negrita** "
                "el dato/nivel más importante de cada oración. Nada de iconos ni símbolos decorativos.\n"
                "IMPORTANTE: NO marques un sesgo alcista/bajista duro. En su lugar, la línea **Claridad:** da un SCORE "
                "1-10 de qué tan claro/limpio está el día y hacia qué lado se inclina (alza/baja/sin dirección). "
                "REGLAS: usa números EXACTOS de los datos. El régimen lo define PRECIO vs Gamma Flip, NO el signo del "
                "Net GEX: precio BAJO el Flip = γ negativo = momentum/expansión (dealers persiguen); precio SOBRE el Flip "
                "= γ positivo = reversión/compresión (dealers absorben). El Net GEX es SOLO intensidad. NUNCA inventes un dato: si algo "
-               "no está en los datos, omite esa etiqueta (no la escribas) — EXCEPTO **Catalizador:** y **COT:**, que "
-               "SIEMPRE se escriben (con su estado honesto 'Sin catalizador...' / 'sin dato de posicionamiento' cuando "
+               "no está en los datos, omite esa etiqueta (no la escribas) — EXCEPTO **Catalizador:**, **Geopolítica:** y **COT:**, que "
+               "SIEMPRE se escriben (con su estado honesto 'Sin catalizador...' / 'sin foco geopolítico relevante hoy' / 'sin dato de posicionamiento' cuando "
                "falte la fuente). Cada oración es corta. Prohibida la prosa larga.")
 
     if has_gamma:
         usr_msg = (f"Datos de mesa ahora mismo:\n\n{ctx_str}\n\n"
-                   "Escribe el briefing en el formato exacto (6-8 oraciones, SIN emojis, etiquetas en negrita). "
-                   "Cubre Macro (GDP/inflación/empleo/bonos/tasas + fase del ciclo), **Catalizador:** (el driver "
-                   "dominante de HOY = noticia de mayor impacto + resultado real de los datos macro ya publicados hoy + "
-                   "eventos de alto impacto pendientes con su hora; si no hay ninguno, 'Sin catalizador de alto impacto "
-                   "ahora mismo'), **COT:** (usa la línea COT del contexto tal cual: sus cifras exactas o 'sin dato de "
-                   "posicionamiento (fuente CFTC)'), earnings del Nasdaq, el técnico (GEX/regime/VAH-VAL/precio/tech%/"
-                   "gap), una línea propia de **Volatilidad:** (VIX nivel+dirección, movimiento esperado ±pts, régimen "
-                   "de vol, Fear&Greed), y una línea **Gestión:** que DESCRIBE el entorno de riesgo del día "
-                   "(catalizadores, volatilidad/expansión, posicionamiento) SIN ordenar tamaño, apalancamiento ni stops. "
+                   "Escribe el briefing en el formato exacto (7-9 oraciones, SIN emojis, etiquetas en negrita). "
+                   "FOCO INTRADÍA: **Catalizador:** (eventos de HOY con su hora ET y tag de impacto alto/secundario) y "
+                   "**Geopolítica:** (guerra/sanciones, petróleo Brent/WTI si en máximos, aranceles — por su efecto en el NQ "
+                   "intradía; si no hay, 'sin foco geopolítico relevante hoy') son PROTAGONISTAS. Macro (ciclo) y **COT:** son "
+                   "CONTEXTO DE FONDO, en media línea. Cubre además earnings del Nasdaq, el técnico (GEX/regime/VAH-VAL/precio/"
+                   "tech%/gap), **Volatilidad:** (VIX nivel+dirección, movimiento esperado ±pts, régimen de vol, Fear&Greed), y "
+                   "**Gestión:** que DESCRIBE el entorno de riesgo del día SIN ordenar tamaño/apalancamiento/stops. "
                    "Cierra con **Claridad:** score 1-10 hacia alza/baja/sin dirección — NO un sesgo duro. Usa los "
-                   "números exactos; omite solo las etiquetas SIN datos, pero **Catalizador:** y **COT:** SIEMPRE van.")
+                   "números exactos; omite solo las etiquetas SIN datos, pero **Catalizador:**, **Geopolítica:** y **COT:** SIEMPRE van.")
     else:
         usr_msg = (f"Datos de mesa ahora mismo (sin GEX disponible aún):\n\n{ctx_str}\n\n"
                    "Escribe el briefing en el formato exacto (5-7 oraciones, etiquetas en negrita) con lo disponible. "
@@ -5165,7 +5170,7 @@ async def refresh_institutional(force=False):
                 r = await client.post(
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                    json={"model":"qwen/qwen3.6-27b","max_tokens":460,"temperature":0.55,
+                    json={"model":"qwen/qwen3.6-27b","max_tokens":560,"temperature":0.55,
                           "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
                           "messages":[{"role":"system","content":sys_msg},
                                       {"role":"user","content":usr_msg}]}
@@ -5183,7 +5188,7 @@ async def refresh_institutional(force=False):
     # mantiene el brief ACTUALIZADO. Cuota propia de Gemini; no descuenta de Groq.
     if not text:
         try:
-            g = await _gemini_chat(sys_msg, usr_msg, max_tokens=520, temperature=0.55)
+            g = await _gemini_chat(sys_msg, usr_msg, max_tokens=560, temperature=0.55)
             if g and len(g.strip()) > 40:
                 text = g.strip()
                 cache["health"]["gemini_institutional"] = "online"
