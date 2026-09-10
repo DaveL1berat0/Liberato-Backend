@@ -200,6 +200,41 @@ async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
             print(f"[gemini] {mdl} error: {e}")
     return None
 
+async def _gemini_vision(img_b64, mime, sys_msg, usr_msg, max_tokens=400, temperature=0.1):
+    """Como _gemini_chat pero con una IMAGEN adjunta (inlineData). Para leer niveles
+    (entry/stop/target) del cuadro de Risk/Reward de un screenshot del chart. Gemini
+    flash soporta visión; usa la misma cadena de modelos con fallback."""
+    if not GEMINI_API_KEY:
+        return None
+    body = {
+        "systemInstruction": {"parts": [{"text": sys_msg}]},
+        "contents": [{"role": "user", "parts": [
+            {"inlineData": {"mimeType": mime or "image/png", "data": img_b64}},
+            {"text": usr_msg},
+        ]}],
+        "generationConfig": {"maxOutputTokens": max_tokens + 400, "temperature": temperature,
+                             "thinkingConfig": {"thinkingBudget": 0}},
+    }
+    for mdl in _gemini_model_chain():
+        url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
+               f"{mdl}:generateContent?key={GEMINI_API_KEY}")
+        try:
+            async with httpx.AsyncClient(timeout=35) as c:
+                r = await c.post(url, json=body)
+            if r.status_code != 200:
+                print(f"[gemini-vision] {mdl} {r.status_code}: {r.text[:120]}")
+                continue
+            j = r.json()
+            cand = ((j.get("candidates") or [{}]) or [{}])[0]
+            parts = ((cand.get("content") or {}).get("parts") or [])
+            txt = "".join(p.get("text", "") for p in parts).strip()
+            if txt:
+                return txt
+            print(f"[gemini-vision] {mdl} 200 texto vacío (finish={cand.get('finishReason')})")
+        except Exception as e:
+            print(f"[gemini-vision] {mdl} error: {e}")
+    return None
+
 def _window_key(window):
     """Clave de la ventana actual: por día (UTC) o por minuto (UTC)."""
     try:
@@ -8633,6 +8668,70 @@ async def gemini_models(key: str = ""):
                 "total": len(gen), "modelos": gen}
     except Exception as e:
         return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
+
+
+@app.post("/api/journal/extract-levels")
+async def journal_extract_levels(request: Request):
+    """Lee entry/stop/target del CUADRO de Risk/Reward de un screenshot del chart (visión
+    Gemini). El trader sube la foto y el journal rellena los niveles solos (con opción de
+    editar a mano). Regla #1: si la IA no ve un nivel con confianza, devuelve null (no lo
+    inventa). Body: {image:'data:image/png;base64,...' o base64 crudo, mime?, direction?}."""
+    try:
+        b = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    img = (b.get("image") or "").strip()
+    mime = b.get("mime") or "image/png"
+    if not img:
+        raise HTTPException(400, "falta 'image'")
+    if img.startswith("data:"):
+        try:
+            head, img = img.split(",", 1)
+            if "image/" in head:
+                mime = head.split(":", 1)[1].split(";", 1)[0]
+        except Exception:
+            pass
+    if not GEMINI_API_KEY:
+        return {"ok": False, "reason": "visión IA no configurada (falta GEMINI_API_KEY)"}
+    sys_msg = (
+        "Eres un extractor de niveles de una CAPTURA de un chart de trading (MotiveWave/"
+        "TradingView) con la herramienta de RIESGO/RECOMPENSA dibujada (un rectángulo con "
+        "una zona VERDE = recompensa/target y una zona ROJA o morada = riesgo/stop, y una "
+        "línea de ENTRADA entre ambas). Devuelves SOLO un objeto JSON válido, sin texto "
+        "extra, con las claves: entry, stop, target (números de precio o null si NO se ven "
+        "con claridad), direction ('long' si la zona verde está ARRIBA de la entrada, "
+        "'short' si está ABAJO, o null), rr (ratio riesgo:recompensa si aparece, o null). "
+        "REGLAS: usa SOLO los precios visibles en las etiquetas del cuadro/ejes; NO "
+        "inventes. Si un nivel no es legible, ponlo en null. Los precios del NQ suelen ser "
+        "~15000-30000 con 2 decimales. No incluyas comas de miles en los números.")
+    usr_msg = ("Extrae entry, stop, target, direction y rr del cuadro de riesgo/recompensa "
+               "de esta imagen. Responde SOLO el JSON.")
+    txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=200, temperature=0.0)
+    if not txt:
+        return {"ok": False, "reason": "la IA no pudo leer la imagen (reintenta o edita a mano)"}
+    # Extraer el primer objeto JSON del texto (por si viene con ``` o prosa).
+    m = re.search(r"\{.*\}", txt, re.DOTALL)
+    if not m:
+        return {"ok": False, "reason": "respuesta IA sin JSON", "raw": txt[:200]}
+    try:
+        data = json.loads(m.group(0))
+    except Exception:
+        return {"ok": False, "reason": "JSON IA inválido", "raw": txt[:200]}
+    def _num(v):
+        if v is None:
+            return None
+        try:
+            return round(float(str(v).replace(",", "")), 2)
+        except (TypeError, ValueError):
+            return None
+    out = {"entry": _num(data.get("entry")), "stop": _num(data.get("stop")),
+           "target": _num(data.get("target")),
+           "direction": (data.get("direction") if data.get("direction") in ("long", "short") else None),
+           "rr": _num(data.get("rr"))}
+    out["ok"] = any(out[k] is not None for k in ("entry", "stop", "target"))
+    if not out["ok"]:
+        out["reason"] = "no se detectaron niveles legibles en el cuadro R:R"
+    return out
 
 
 @app.post("/api/journal/parse-csv")

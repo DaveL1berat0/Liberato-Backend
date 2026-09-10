@@ -559,6 +559,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .tws-shot{position:relative;border-radius:11px;overflow:hidden;border:0.5px solid var(--border2);aspect-ratio:16/10;background:rgba(0,0,0,0.25);cursor:pointer;}
 .tws-shot img{width:100%;height:100%;object-fit:cover;display:block;}
 .tws-shot-del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:7px;border:0;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.tws-shot-ai{position:absolute;bottom:6px;left:6px;padding:4px 9px;border-radius:7px;border:0.5px solid rgba(201,168,76,0.5);background:rgba(0,0,0,0.65);color:var(--gold);cursor:pointer;font-size:10px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:0.03em;}
+.tws-shot-ai:hover{background:rgba(201,168,76,0.2);}
 .tws-drop{border:1px dashed rgba(201,168,76,0.35);border-radius:12px;padding:22px;text-align:center;cursor:pointer;background:rgba(201,168,76,0.03);transition:all .2s;}
 .tws-drop.over{background:rgba(201,168,76,0.1);border-color:var(--gold);}
 .tws-lightbox{position:fixed;inset:0;z-index:100010;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
@@ -3979,16 +3981,51 @@ function twsAddFiles(files){
   var id=_twsId;
   Promise.all(files.map(twsCompress)).then(function(imgs){
     imgs=imgs.filter(Boolean);
-    idbShots(id).then(function(cur){var arr=(cur||[]).concat(imgs).slice(0,12);idbSaveShots(id,arr).then(function(){if(_twsId===id)twsRenderShots();});});
+    idbShots(id).then(function(cur){var arr=(cur||[]).concat(imgs).slice(0,12);idbSaveShots(id,arr).then(function(){
+      if(_twsId===id)twsRenderShots();
+      // AUTO: leer stop/target del cuadro de R:R de la primera imagen subida (IA visión).
+      if(imgs[0])twsExtractLevels(imgs[0],false);
+    });});
   });
 }
+// Lee entry/stop/target del cuadro de Risk/Reward de la imagen con IA de visión y los
+// aplica (manual: botón por captura). Regla #1: si la IA no ve un nivel, no lo inventa.
+function twsExtractLevels(dataUrl, manual){
+  var id=_twsId;
+  try{notif('Leyendo la imagen…','Detectando stop/target del cuadro R:R','✨');}catch(e){}
+  return fetch(JOURNAL_BACKEND+'/api/journal/extract-levels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(_twsId!==id)return;
+      if(d&&d.ok){
+        var p=twsApplyLevels(d);
+        if(p&&Object.keys(p).length)try{notif('Niveles detectados ✓','Stop '+(d.stop!=null?d.stop:'—')+' · Target '+(d.target!=null?d.target:'—')+' — aplicados. Edítalos abajo si hace falta.','✓');}catch(e){}
+        else try{notif('Sin cambios','La imagen coincide con tus niveles actuales','○');}catch(e){}
+      } else {
+        try{notif('No pude leer los niveles','Colócalos a mano en la tarjeta Riesgo & R:R'+(d&&d.reason?' ('+d.reason+')':''),'○');}catch(e){}
+      }
+    })
+    .catch(function(){try{notif('Error de red','No se pudo analizar la imagen','○');}catch(e){}});
+}
+function twsApplyLevels(lv){
+  var t=T.find(function(x){return x.id===_twsId;}); if(!t||!lv)return null;
+  var patch={};
+  if(lv.stop!=null)patch.stop=lv.stop;
+  if(lv.target!=null)patch.target=lv.target;
+  if(lv.entry!=null&&(t.entry==null||t.entry===''||+t.entry===0))patch.entry=lv.entry;
+  if(lv.direction&&!t.direction)patch.direction=lv.direction;
+  if(!Object.keys(patch).length)return {};
+  twsSave(patch); renderTws();
+  return patch;
+}
+function twsExtractLevelsIdx(i){idbShots(_twsId).then(function(arr){if(arr&&arr[i])twsExtractLevels(arr[i],true);});}
 function twsDelShot(i){var id=_twsId;idbShots(id).then(function(arr){arr.splice(i,1);idbSaveShots(id,arr).then(function(){if(_twsId===id)twsRenderShots();});});}
 function twsFull(src){var lb=document.getElementById('tws-lb');document.getElementById('tws-lb-img').src=src;lb.classList.add('open');}
 function twsCloseLb(){document.getElementById('tws-lb').classList.remove('open');}
 function twsRenderShots(){
   var host=document.getElementById('tws-shots-host');if(!host)return;
   idbShots(_twsId).then(function(arr){
-    var grid=arr.map(function(src,i){return '<div class="tws-shot"><img src="'+src+'" onclick="twsFull(this.src)"><button class="tws-shot-del" onclick="event.stopPropagation();twsDelShot('+i+')">✕</button></div>';}).join('');
+    var grid=arr.map(function(src,i){return '<div class="tws-shot"><img src="'+src+'" onclick="twsFull(this.src)"><button class="tws-shot-del" onclick="event.stopPropagation();twsDelShot('+i+')">✕</button><button class="tws-shot-ai" title="Leer stop/target del cuadro Risk/Reward con IA" onclick="event.stopPropagation();twsExtractLevelsIdx('+i+')">✨ Niveles</button></div>';}).join('');
     host.innerHTML=(arr.length?'<div class="tws-shots" style="margin-bottom:14px;">'+grid+'</div>':'')
       +'<div class="tws-drop" id="tws-drop" onclick="twsPickShots()"><div style="font-size:22px;margin-bottom:6px;opacity:0.7;">📸</div><div style="font-size:12px;color:var(--text2);font-weight:600;">Sube capturas del trade</div><div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:3px;">Arrastra o toca · entrada · gestión · salida · máx 12</div></div>';
     var dz=document.getElementById('tws-drop');
