@@ -3907,7 +3907,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var _sel=null;
       var _weAll=weekdays.filter(function(w){return w.hasEv;});
       if(MACRO_DAY&&weekdays.some(function(w){return w.key===MACRO_DAY&&(w.hasEv||!_weAll.length);}))_sel=MACRO_DAY;
-      if(!_sel&&MACRO_WEEK_OFFSET===0&&weekdays.some(function(w){return w.key===_todayK&&w.hasEv;}))_sel=_todayK;
+      if(!_sel&&MACRO_WEEK_OFFSET===0&&weekdays.some(function(w){return w.key===_todayK;}))_sel=_todayK;
       if(!_sel){_sel=_weAll.length?_weAll[0].key:weekdays[0].key;}
       MACRO_DAY=_sel;
       // ── Controles de navegación de semana + rango ──
