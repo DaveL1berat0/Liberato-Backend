@@ -3933,7 +3933,7 @@ function twsSetPlaybook(id){
   twsSave(patch);renderTws();
 }
 function twsToggleChk(i){var t=T.find(function(x){return x.id===_twsId;});var ch=(t.checklist||[]).slice();while(ch.length<=i)ch.push(false);ch[i]=!ch[i];twsSave({checklist:ch});renderTws();}
-var TWS_TAGS=['A+','Confluencia','Ejecución limpia','Entrada temprana','Target perdido','Error','Buen manejo','FOMO','Plan seguido','Revancha'];
+var TWS_TAGS=['A+','Confluencia','Ejecución limpia','Entrada temprana','Entrada tarde','Stop muy ajustado','Target perdido','Error','Buen manejo','FOMO','Plan seguido','Revancha'];
 function twsToggleTag(tag){var t=T.find(function(x){return x.id===_twsId;});var tags=(t.tags||[]).slice();var i=tags.indexOf(tag);if(i>=0)tags.splice(i,1);else tags.push(tag);twsSave({tags:tags});renderTws();}
 // Añadir un tag PERSONALIZADO (el que el trader quiera). Se guarda en t.tags y se
 // muestra junto a los predefinidos; volver a clicarlo lo quita.
@@ -3957,6 +3957,7 @@ function lbcPrompt(o){
   o=o||{};
   var ov=document.getElementById('lbc-prompt');
   if(!ov){ov=document.createElement('div');ov.id='lbc-prompt';ov.className='lbc-cfm';document.body.appendChild(ov);}
+  ov.style.zIndex='100005';   // POR ENCIMA del detalle de trade (.tws z-index 100001) — si no, el modal salía DETRÁS y no se veía/usaba
   ov.innerHTML='<div class="lbc-cfm-bg" onclick="lbcPromptClose()"></div>'
     +'<div class="lbc-cfm-card">'
     +(o.icon?'<div class="lbc-cfm-ic">'+o.icon+'</div>':'')
@@ -4059,7 +4060,7 @@ function renderTws(){
       +row('R:R realizado',realR!=null?((realR>=0?'+':'')+realR+'R'):'—',realR!=null?(realR>=0?'pos':'neg'):'')
       +row('MFE (máx a favor)',mfe!=null?('+'+mfe+'R'):'—','pos')+row('MAE (máx en contra)',mae!=null?(mae+'R'):'—','neg')
       +'<div style="margin-top:14px;">'+rrViz+'</div>'
-      +'<div class="tws-two" style="margin-top:18px;"><div><div class="tws-lbl">Stop (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasStop?t.stop:'')+'" placeholder="ej. 19250" onchange="twsField(this,\'stop\')"></div><div><div class="tws-lbl">Target (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasTgt?t.target:'')+'" placeholder="ej. 19400" onchange="twsField(this,\'target\')"></div></div>'
+      +'<div style="font-size:11px;color:var(--text3);margin-top:14px;">Stop y target se editan en la tarjeta <strong style="color:var(--text2);">Riesgo &amp; R:R</strong> (siempre visible, izquierda).</div>'
       +(plannedRR!=null&&realR!=null?'<div style="margin-top:14px;padding:11px 13px;border-radius:10px;background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.25);font-size:12px;color:var(--text2);line-height:1.5;">Plan <strong style="color:var(--gold);">'+plannedRR+'R</strong> · Realizado <strong class="'+(realR>=0?'pos':'neg')+'">'+(realR>=0?'+':'')+realR+'R</strong> — '+(realR>=plannedRR?'ejecutaste tu plan completo.':(realR>0?'saliste antes de tu target.':'el trade fue en contra.'))+'</div>':'')
       +'</div>';
   } else if(_twsTab==='strategy'){
@@ -4134,15 +4135,18 @@ function renderTws(){
   var _m0=computeTradeViz(t, null);
   var _rr0=(_m0.plannedRR!=null)?fmtR(_m0.plannedRR)+'R':'—';
   var _re0=(_m0.realized!=null)?fmtR(_m0.realized)+_m0.unit:(isOpenTr?'abierta':'—');
+  var _reLbl=_m0.hasStop?'R realizado':'Resultado';   // sin stop no es R → 'Resultado' en pts
   var riskCard='<div class="tws-sidecard"><div class="tws-sidecard-h">Riesgo & R:R</div>'
     +'<div id="tv-rail">'+renderRiskRail(_m0)+'</div>'
-    +(!hasStop?'<p class="rr-note">Sin stop registrado — R no disponible. Arrástralo en el chart o escríbelo en STATS.</p>':'')
+    +(!hasStop?'<p class="rr-note">Sin stop → R no disponible. Coloca stop y target abajo (o arrástralos en el chart) para ver tu R:R.</p>':(!hasTgt?'<p class="rr-note">Coloca el target abajo para ver tu R:R planeado.</p>':''))
     +'<div class="tws-sidegrid" style="margin-top:14px;">'
     +_sk('R:R planeado',_rr0,'')
-    +_sk('R realizado',_re0,(_m0.realized!=null?((_m0.realized>=0)?'pos':'neg'):'neu'))
+    +_sk(_reLbl,_re0,(_m0.realized!=null?((_m0.realized>=0)?'pos':'neg'):'neu'))
     +_sk('Riesgo inicial',_m0.riskCash!=null?f$(-Math.round(_m0.riskCash)):'—','neg')
     +_sk('MFE / MAE','—','','tv-kpi-mfemae')
-    +'</div></div>';
+    +'</div>'
+    +'<div class="tws-two" style="margin-top:14px;"><div><div class="tws-lbl">Stop (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasStop?t.stop:'')+'" placeholder="ej. 29610" onchange="twsField(this,\'stop\')"></div><div><div class="tws-lbl">Target (precio)</div><input class="tws-input" type="number" step="any" value="'+(hasTgt?t.target:'')+'" placeholder="ej. 29500" onchange="twsField(this,\'target\')"></div></div>'
+    +'</div>';
   var eqCard='<div class="tws-sidecard"><div class="tws-sidecard-h" style="display:flex;justify-content:space-between;align-items:center;"><span>Curva de equity intra-trade</span><span id="tv-eq-final" class="tv-eq-final"></span></div>'
     +'<div id="tv-eq-body"><div class="eq-empty">Cargando velas…</div></div>'
     +'<div class="eq-legend"><span class="eq-lg eq-lg--mfe">▲ MFE</span><span class="eq-lg eq-lg--mae">▼ MAE</span><span class="eq-lg eq-lg--post">··· siguió sin ti</span><span class="eq-lg eq-lg--exit">● salida</span></div></div>';
@@ -4490,9 +4494,12 @@ function computeTradeViz(t, raw){
     degenerate=seg.length<2;
     if(hasExit&&seg.length)seg[seg.length-1].val=realized;
     var kOf=function(hh){for(var i=0;i<S.series.length;i++)if(S.series[i].hhmm===hh)return i;return 0;};
-    mfe={val:hasStop?S.mfeR:toVal(S.mfeP),price:S.mfeP,k:kOf(S.mfeHHMM),hhmm:S.mfeHHMM};
-    mae={val:hasStop?S.maeR:toVal(S.maeP),price:S.maeP,k:kOf(S.maeHHMM),hhmm:S.maeHHMM};
-    if(S.postExitMaxR!=null)post={val:S.postExitMaxR,hhmm:S.postExitMaxHHMM};
+    // MFE = excursión FAVORABLE (siempre ≥0); MAE = excursión ADVERSA (siempre ≤0).
+    // Si el trade nunca fue en contra, MAE=0 (no 'heat'); antes salía positivo (bug de signo).
+    var _mfeV=hasStop?S.mfeR:toVal(S.mfeP), _maeV=hasStop?S.maeR:toVal(S.maeP);
+    mfe={val:Math.max(0,_mfeV),price:S.mfeP,k:kOf(S.mfeHHMM),hhmm:S.mfeHHMM};
+    mae={val:Math.min(0,_maeV),price:S.maeP,k:kOf(S.maeHHMM),hhmm:S.maeHHMM};
+    if(S.postMaxP!=null)post={val:hasStop?S.postExitMaxR:toVal(S.postMaxP),hhmm:S.postExitMaxHHMM};
   }
   return {t:t,S:S,bars:bars,barsOk:barsOk,degenerate:degenerate,hasStop:hasStop,hasTgt:hasTgt,hasExit:hasExit,
     riskU:riskU,unit:unit,seg:seg,mfe:mfe,mae:mae,post:post,realized:realized,plannedRR:plannedRR,
@@ -4539,8 +4546,11 @@ function buildEquitySVG(m){
     svg+='<text class="eq-post-lab" x="'+(plotR-2)+'" y="'+Math.max(plotT+8,Math.min(plotB-2,yp-5)).toFixed(1)+'" text-anchor="end">'+fmtR(m.post.val)+unit+' '+m.post.hhmm+'</text>';
   }
   // MFE ▲ / MAE ▼
-  if(m.mfe){var xm=X(m.mfe.k),ym=Y(m.mfe.val);svg+='<path class="eq-tri-mfe" d="M'+xm.toFixed(1)+','+(ym-7).toFixed(1)+' l4,7 l-8,0 Z"/><text class="eq-ax eq-lab-mfe" x="'+xm.toFixed(1)+'" y="'+Math.max(plotT+8,ym-9).toFixed(1)+'" text-anchor="middle">MFE '+fmtR(m.mfe.val)+'</text>';}
-  if(m.mae){var xa=X(m.mae.k),ya=Y(m.mae.val);svg+='<path class="eq-tri-mae" d="M'+xa.toFixed(1)+','+(ya+7).toFixed(1)+' l4,-7 l-8,0 Z"/><text class="eq-ax eq-lab-mae" x="'+xa.toFixed(1)+'" y="'+Math.min(plotB-2,ya+16).toFixed(1)+'" text-anchor="middle">MAE '+fmtR(m.mae.val)+'</text>';}
+  // MFE solo si hubo favorable (>0); etiqueta OMITIDA si el pico coincide con la salida
+  // (la salida ya muestra ese valor → evita el solape de labels).
+  if(m.mfe&&m.mfe.val>0){var xm=X(m.mfe.k),ym=Y(m.mfe.val);svg+='<path class="eq-tri-mfe" d="M'+xm.toFixed(1)+','+(ym-7).toFixed(1)+' l4,7 l-8,0 Z"/>'+(m.mfe.k<n-1?'<text class="eq-ax eq-lab-mfe" x="'+xm.toFixed(1)+'" y="'+Math.max(plotT+8,ym-9).toFixed(1)+'" text-anchor="middle">MFE '+fmtR(m.mfe.val)+'</text>':'');}
+  // MAE solo si realmente fue en contra (<0)
+  if(m.mae&&m.mae.val<0){var xa=X(m.mae.k),ya=Y(m.mae.val);svg+='<path class="eq-tri-mae" d="M'+xa.toFixed(1)+','+(ya+7).toFixed(1)+' l4,-7 l-8,0 Z"/><text class="eq-ax eq-lab-mae" x="'+xa.toFixed(1)+'" y="'+Math.min(plotB-2,ya+16).toFixed(1)+'" text-anchor="middle">MAE '+fmtR(m.mae.val)+'</text>';}
   // entrada (rombo) + salida (círculo por resultado)
   svg+='<path class="eq-entry" d="M'+plotL+','+(y0-4).toFixed(1)+' l4,4 l-4,4 l-4,-4 Z"/>';
   var exCls=m.t.result==='win'?'is-win':m.t.result==='loss'?'is-loss':'is-be';
@@ -4617,28 +4627,35 @@ function tradeSeries(t,bars){
   var Rof=function(px){return riskU>0?(sgn*(px-+t.entry)/riskU):null;};
   // Path durante el HOLD (entrada→salida, o hasta fin de sesión si sigue abierta)
   var holdEnd=(xIdx>=0?xIdx:bars.length-1);
-  var series=[],mfeR=null,maeR=null,mfeP=+t.entry,maeP=+t.entry,mfeHHMM='',maeHHMM='',maxDD=0;
+  // MFE/MAE rastreados por PRECIO (funciona CON o SIN stop). mfeP/maeP arrancan en la
+  // entrada → MFE es siempre la mejor excursión FAVORABLE (≥ entrada) y MAE la peor
+  // ADVERSA (≤ entrada). Antes se rastreaba con R (=null sin stop) → tomaba la última
+  // vela y el MAE salía con signo equivocado (bug del "+29" reportado).
+  var series=[],mfeP=+t.entry,maeP=+t.entry,mfeHHMM='',maeHHMM='',maxDD=0;
   for(var i=eIdx;i<=holdEnd&&i<bars.length;i++){
     var b=bars[i];var p=String(b.hhmm).split(':');var mn=(+p[0])*60+(+p[1]);if(mn>mMax)break;
-    // excursión intrabar: para long MFE=high, MAE=low; short al revés
-    var favP=dir==='long'?b.h:b.l, advP=dir==='long'?b.l:b.h;
-    if(mfeR==null||Rof(favP)>mfeR){mfeR=Rof(favP);mfeP=favP;mfeHHMM=b.hhmm;}
-    if(maeR==null||Rof(advP)<maeR){maeR=Rof(advP);maeP=advP;maeHHMM=b.hhmm;}
-    var rc=Rof(b.c);
+    var favP=dir==='long'?+b.h:+b.l, advP=dir==='long'?+b.l:+b.h;
+    if(dir==='long'){ if(favP>mfeP){mfeP=favP;mfeHHMM=b.hhmm;} if(advP<maeP){maeP=advP;maeHHMM=b.hhmm;} }
+    else            { if(favP<mfeP){mfeP=favP;mfeHHMM=b.hhmm;} if(advP>maeP){maeP=advP;maeHHMM=b.hhmm;} }
+    var rc=Rof(+b.c);
     if(rc!=null&&rc<maxDD)maxDD=rc; // drawdown = R más bajo en cierres durante el hold
-    series.push({i:i,hhmm:b.hhmm,r:(rc!=null?rc:0),c:b.c,fav:favP,adv:advP});
+    series.push({i:i,hhmm:b.hhmm,r:(rc!=null?rc:0),c:+b.c,fav:favP,adv:advP});
   }
-  // Continuación POST-salida (¿el precio siguió a tu favor tras cerrar?)
-  var postMaxR=null,postMaxHHMM='';
+  var mfeR=(riskU>0)?sgn*(mfeP-+t.entry)/riskU:null;
+  var maeR=(riskU>0)?sgn*(maeP-+t.entry)/riskU:null;
+  // Continuación POST-salida (¿el precio siguió a tu favor tras cerrar?) — por PRECIO.
+  var postMaxP=null,postMaxHHMM='';
   if(xIdx>=0){
     for(var j=xIdx+1;j<bars.length;j++){var bj=bars[j];var pj=String(bj.hhmm).split(':');var mj=(+pj[0])*60+(+pj[1]);if(mj>mMax)break;
-      var fr=Rof(dir==='long'?bj.h:bj.l);if(fr!=null&&(postMaxR==null||fr>postMaxR)){postMaxR=fr;postMaxHHMM=bj.hhmm;}}
+      var fp=dir==='long'?+bj.h:+bj.l;
+      if(postMaxP==null||(dir==='long'?fp>postMaxP:fp<postMaxP)){postMaxP=fp;postMaxHHMM=bj.hhmm;}}
   }
+  var postMaxR=(postMaxP!=null&&riskU>0)?sgn*(postMaxP-+t.entry)/riskU:null;
   var exitR=(hasExit&&riskU>0)?Rof(+t.exit):null;
   var rr=function(x){return x==null?null:Math.round(x*100)/100;};
   return {series:series, entryIdx:eIdx, exitIdx:xIdx, riskU:riskU, dir:dir, hasStop:hasStop, hasExit:hasExit,
     mfeR:rr(mfeR), maeR:rr(maeR), mfeP:mfeP, maeP:maeP, mfeHHMM:mfeHHMM, maeHHMM:maeHHMM,
-    maxDD:rr(maxDD), exitR:rr(exitR), postExitMaxR:rr(postMaxR), postExitMaxHHMM:postMaxHHMM,
+    maxDD:rr(maxDD), exitR:rr(exitR), postExitMaxR:rr(postMaxR), postMaxP:postMaxP, postExitMaxHHMM:postMaxHHMM,
     intraday:series.length>1};
 }
 function jchComputeExcursion(bars,eIdx){

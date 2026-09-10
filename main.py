@@ -2100,6 +2100,24 @@ def _canon_event(name):
     # como tokens distintos, así dos variantes del mismo evento NO colisionan).
     return n
 
+# Clave de DEDUP entre fuentes: normaliza el título a su MÉTRICA + período conservando
+# los modificadores (core / ex food / initial vs continuing / nivel vs MoM), de modo que
+# "PPI m/m" (ForexFactory) ≡ "Producer Price Index MoM (Aug)" (TradingEconomics) SIN
+# fusionar sub-componentes distintos. Probado contra un día real (PPI heavy): 18→14,
+# fusiona solo los 4 duplicados de fuente y deja intactos ex-food/YoY/continuing/etc.
+def _dedup_metric_key(title):
+    n = (title or "").lower()
+    n = re.sub(r"\([^)]*\)", "", n)              # quita (Aug), (Sep/05)
+    n = re.sub(r"[^a-z0-9/ ]", " ", n)           # puntuación → espacio (conserva /)
+    per = ""
+    if re.search(r"\b(yoy|y/y)\b", n): per = "yoy"
+    elif re.search(r"\b(mom|m/m)\b", n): per = "mom"
+    elif re.search(r"\b(qoq|q/q)\b", n): per = "qoq"
+    n = re.sub(r"\b(yoy|y/y|mom|m/m|qoq|q/q)\b", " ", n).replace("/", " ")
+    n = n.replace("producer price index", "ppi").replace("unemployment claims", "initial jobless claims")
+    n = re.sub(r"\s+", " ", n).strip()
+    return n + ("|" + per if per else "")
+
 def _merge_rapidapi(ff_events, rt_actuals):
     """Fusiona TradingEconomics con ForexFactory:
     1) Rellena el 'actual'/forecast/previous que a FF le falta (match por nombre
@@ -4063,7 +4081,11 @@ async def refresh_calendar():
 
     groups, order = {}, []
     for e in out:
-        k = ((e.get("title","") or "").lower().strip(), (e.get("time","") or "")[:16])
+        # Clave por MÉTRICA canónica + FECHA (no título+hora exactos): fusiona el mismo
+        # release cuando dos fuentes lo nombran distinto ("PPI m/m" ≡ "Producer Price
+        # Index MoM") o lo fechan en formatos distintos (UTC 12:30 vs ET 08:30, misma
+        # sesión). Antes se colaban duplicados en días con muchos datos (PPI/Claims 2×).
+        k = (_dedup_metric_key(e.get("title","") or ""), (e.get("time","") or "")[:10])
         if k not in groups:
             groups[k] = []; order.append(k)
         groups[k].append(e)
@@ -4072,8 +4094,8 @@ async def refresh_calendar():
     deduped = []
     for k in order:
         grp = groups[k]
-        base = grp[0]                      # preserva metadata/orden del primer evento
         cands = sorted(grp, key=_src_rank)  # mejor fuente primero
+        base = cands[0]                     # base = MEJOR fuente (título/metadata más fiables)
         for f in _FILL_FIELDS:
             if _is_empty(base.get(f)):
                 for c in cands:
