@@ -8670,27 +8670,9 @@ async def gemini_models(key: str = ""):
         return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
 
 
-@app.post("/api/journal/extract-levels")
-async def journal_extract_levels(request: Request):
-    """Lee entry/stop/target del CUADRO de Risk/Reward de un screenshot del chart (visión
-    Gemini). El trader sube la foto y el journal rellena los niveles solos (con opción de
-    editar a mano). Regla #1: si la IA no ve un nivel con confianza, devuelve null (no lo
-    inventa). Body: {image:'data:image/png;base64,...' o base64 crudo, mime?, direction?}."""
-    try:
-        b = await request.json()
-    except Exception:
-        raise HTTPException(400, "JSON inválido")
-    img = (b.get("image") or "").strip()
-    mime = b.get("mime") or "image/png"
-    if not img:
-        raise HTTPException(400, "falta 'image'")
-    if img.startswith("data:"):
-        try:
-            head, img = img.split(",", 1)
-            if "image/" in head:
-                mime = head.split(":", 1)[1].split(";", 1)[0]
-        except Exception:
-            pass
+async def _extract_levels_core(img, mime, debug=False):
+    """Motor compartido: manda la imagen a Gemini visión y parsea entry/stop/target/
+    direction/rr del cuadro de Risk/Reward. Regla #1: nivel no legible → null."""
     if not GEMINI_API_KEY:
         return {"ok": False, "reason": "visión IA no configurada (falta GEMINI_API_KEY)"}
     sys_msg = (
@@ -8709,7 +8691,6 @@ async def journal_extract_levels(request: Request):
     txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=200, temperature=0.0)
     if not txt:
         return {"ok": False, "reason": "la IA no pudo leer la imagen (reintenta o edita a mano)"}
-    # Extraer el primer objeto JSON del texto (por si viene con ``` o prosa).
     m = re.search(r"\{.*\}", txt, re.DOTALL)
     if not m:
         return {"ok": False, "reason": "respuesta IA sin JSON", "raw": txt[:200]}
@@ -8731,7 +8712,57 @@ async def journal_extract_levels(request: Request):
     out["ok"] = any(out[k] is not None for k in ("entry", "stop", "target"))
     if not out["ok"]:
         out["reason"] = "no se detectaron niveles legibles en el cuadro R:R"
+    if debug:
+        out["raw"] = txt[:300]
     return out
+
+
+@app.post("/api/journal/extract-levels")
+async def journal_extract_levels(request: Request):
+    """Lee entry/stop/target del CUADRO de Risk/Reward de un screenshot del chart (visión
+    Gemini). El trader sube la foto y el journal rellena los niveles solos (con opción de
+    editar a mano). Regla #1: si la IA no ve un nivel con confianza, devuelve null (no lo
+    inventa). Body: {image:'data:image/png;base64,...' o base64 crudo, mime?, direction?}."""
+    try:
+        b = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    img = (b.get("image") or "").strip()
+    mime = b.get("mime") or "image/png"
+    if not img:
+        raise HTTPException(400, "falta 'image'")
+    if img.startswith("data:"):
+        try:
+            head, img = img.split(",", 1)
+            if "image/" in head:
+                mime = head.split(":", 1)[1].split(";", 1)[0]
+        except Exception:
+            pass
+    return await _extract_levels_core(img, mime)
+
+
+@app.post("/api/admin/extract-levels-test")
+async def extract_levels_test(request: Request):
+    """DIAGNÓSTICO admin de la lectura de niveles por visión (mismo motor que el endpoint
+    del journal, pero gated por ADMIN_KEY para poder probarlo sin sesión). Body: {key, image}."""
+    try:
+        b = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    if (b.get("key") or "") != ADMIN_KEY:
+        raise HTTPException(403, "Clave incorrecta")
+    img = (b.get("image") or "").strip()
+    mime = b.get("mime") or "image/png"
+    if not img:
+        raise HTTPException(400, "falta 'image'")
+    if img.startswith("data:"):
+        try:
+            head, img = img.split(",", 1)
+            if "image/" in head:
+                mime = head.split(":", 1)[1].split(";", 1)[0]
+        except Exception:
+            pass
+    return await _extract_levels_core(img, mime, debug=True)
 
 
 @app.post("/api/journal/parse-csv")
