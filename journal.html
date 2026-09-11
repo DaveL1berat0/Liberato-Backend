@@ -654,7 +654,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .eq-exit-lab{fill:var(--text2);}
 .eq-post{stroke:var(--gold);stroke-dasharray:3 3;opacity:.42;fill:none;}
 .eq-post-dot{fill:none;stroke:var(--gold);stroke-width:1.4;opacity:.55;}
-.eq-post-lab{fill:var(--text3);opacity:.85;}
+.eq-post-lab{fill:var(--text3);opacity:.85;font-size:9px;}
 .eq-empty,.eq-degen{font-size:12px;color:var(--text3);line-height:1.6;padding:14px 2px;text-align:center;}
 .eq-degen strong{color:var(--text2);}
 .eq-badge-nostop{font-size:10.5px;color:var(--gold);margin-top:6px;display:inline-block;}
@@ -4558,17 +4558,28 @@ function buildEquitySVG(m){
   if(m.degenerate){
     return '<div class="eq-degen">Resuelto en la vela de entrada · <strong>'+fmtR(m.realized)+unit+'</strong></div>';
   }
-  var W=320,H=170,plotL=38,plotR=308,plotT=16,plotB=148,plotW=plotR-plotL,plotH=plotB-plotT;
+  var W=320,H=176,plotL=40,plotR=308,plotT=18,plotB=146;
   var n=m.seg.length-1;
+  // Si el precio siguió tras la salida, reservamos una banda derecha para dibujar la
+  // continuación "siguió sin ti" con espacio temporal real (antes salía aplastada en el borde).
+  var postBand=(m.post?52:0);
+  var plotXe=plotR-postBand;                 // la curva intra-trade ocupa hasta aquí
+  var plotW=plotXe-plotL, plotH=plotB-plotT;
   var X=function(k){return plotL+(n>0?k/n:0.5)*plotW;};
   var rMax=Math.max(0,m.mfe?m.mfe.val:0,m.realized,m.post?m.post.val:-Infinity);
   var rMin=Math.min(0,m.mae?m.mae.val:0,m.realized);
   if(rMax===rMin){rMax+=0.5;rMin-=0.5;}
-  var rng=rMax-rMin; rMax+=rng*0.12; rMin-=rng*0.10;
+  var rng=rMax-rMin; rMax+=rng*0.14; rMin-=rng*0.12;
   var Y=function(v){return plotT+(rMax-v)/(rMax-rMin)*plotH;};
   var y0=Y(0), zf=Math.max(0,Math.min(1,(y0-plotT)/plotH))*100;
   var line='M'+m.seg.map(function(p){return X(p.k).toFixed(1)+','+Y(p.val).toFixed(1);}).join(' L');
   var area='M'+X(0).toFixed(1)+','+y0.toFixed(1)+' L'+m.seg.map(function(p){return X(p.k).toFixed(1)+','+Y(p.val).toFixed(1);}).join(' L')+' L'+X(n).toFixed(1)+','+y0.toFixed(1)+' Z';
+  // Colocación anti-solape: ancla según zona horizontal, voltea cerca de los bordes y
+  // mantiene TODA etiqueta de dato dentro del plot (nunca pisa las cunetas de los ejes).
+  var lblAnchor=function(x){return x<plotL+plotW*0.30?'start':(x>plotXe-plotW*0.22?'end':'middle');};
+  var lblDX=function(x){return x<plotL+plotW*0.30?4:(x>plotXe-plotW*0.22?-4:0);};
+  var clampX=function(x){return Math.max(plotL+2,Math.min(plotR-2,x));};
+  var clampY=function(y){return Math.max(plotT+9,Math.min(plotB-4,y));};
   var gid='eqg'+String(m.t.id).replace(/[^a-z0-9]/gi,'');
   var svg='<svg viewBox="0 0 '+W+' '+H+'" class="eq-svg" preserveAspectRatio="xMidYMid meet">';
   svg+='<defs><linearGradient id="'+gid+'" gradientUnits="userSpaceOnUse" x1="0" y1="'+plotT+'" x2="0" y2="'+plotB+'">'
@@ -4576,36 +4587,52 @@ function buildEquitySVG(m){
     +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(46,232,164,0.04)"/>'
     +'<stop offset="'+zf.toFixed(1)+'%" stop-color="rgba(239,68,68,0.04)"/>'
     +'<stop offset="100%" stop-color="rgba(239,68,68,0.38)"/></linearGradient></defs>';
-  // baseline 0
+  // baseline 0 (ancho completo, para que el post-salida se apoye en la misma rejilla)
   svg+='<line class="eq-base" x1="'+plotL+'" y1="'+y0.toFixed(1)+'" x2="'+plotR+'" y2="'+y0.toFixed(1)+'"/>';
-  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(y0+3).toFixed(1)+'" text-anchor="end">0'+unit+'</text>';
-  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(plotT+8)+'" text-anchor="end">'+fmtR(rMax)+'</text>';
-  svg+='<text class="eq-ax" x="'+(plotL-4)+'" y="'+(plotB)+'" text-anchor="end">'+fmtR(rMin)+'</text>';
+  // etiquetas de eje Y (en la cuneta izquierda)
+  svg+='<text class="eq-ax" x="'+(plotL-5)+'" y="'+(y0+3).toFixed(1)+'" text-anchor="end">0'+unit+'</text>';
+  svg+='<text class="eq-ax" x="'+(plotL-5)+'" y="'+(plotT+7)+'" text-anchor="end">'+fmtR(rMax)+'</text>';
+  svg+='<text class="eq-ax" x="'+(plotL-5)+'" y="'+(plotB+1)+'" text-anchor="end">'+fmtR(rMin)+'</text>';
   // área + línea
   svg+='<path class="eq-area" d="'+area+'" fill="url(#'+gid+')"/>';
   svg+='<path class="eq-line" d="'+line+'"/>';
-  // continuación post-salida (fuga: saliste antes)
+  // continuación post-salida (fuga: saliste antes) — en su propia banda derecha
   if(m.post){
     var yp=Y(m.post.val);
-    svg+='<path class="eq-post" d="M'+X(n).toFixed(1)+','+Y(m.realized).toFixed(1)+' L'+plotR+','+yp.toFixed(1)+'"/>';
-    svg+='<circle class="eq-post-dot" cx="'+plotR+'" cy="'+yp.toFixed(1)+'" r="3"/>';
-    svg+='<text class="eq-post-lab" x="'+(plotR-2)+'" y="'+Math.max(plotT+8,Math.min(plotB-2,yp-5)).toFixed(1)+'" text-anchor="end">'+fmtR(m.post.val)+unit+' '+m.post.hhmm+'</text>';
+    svg+='<path class="eq-post" d="M'+X(n).toFixed(1)+','+Y(m.realized).toFixed(1)+' L'+plotR.toFixed(1)+','+yp.toFixed(1)+'"/>';
+    svg+='<circle class="eq-post-dot" cx="'+plotR.toFixed(1)+'" cy="'+yp.toFixed(1)+'" r="3"/>';
+    svg+='<text class="eq-ax eq-post-lab" x="'+plotR.toFixed(1)+'" y="'+clampY(yp<plotT+22?yp+13:yp-6).toFixed(1)+'" text-anchor="end">'+fmtR(m.post.val)+unit+'</text>';
   }
   // MFE ▲ / MAE ▼
   // MFE solo si hubo favorable (>0); etiqueta OMITIDA si el pico coincide con la salida
   // (la salida ya muestra ese valor → evita el solape de labels).
-  if(m.mfe&&m.mfe.val>0){var xm=X(m.mfe.k),ym=Y(m.mfe.val);svg+='<path class="eq-tri-mfe" d="M'+xm.toFixed(1)+','+(ym-7).toFixed(1)+' l4,7 l-8,0 Z"/>'+(m.mfe.k<n-1?'<text class="eq-ax eq-lab-mfe" x="'+xm.toFixed(1)+'" y="'+Math.max(plotT+8,ym-9).toFixed(1)+'" text-anchor="middle">MFE '+fmtR(m.mfe.val)+'</text>':'');}
-  // MAE solo si realmente fue en contra (<0)
-  if(m.mae&&m.mae.val<0){var xa=X(m.mae.k),ya=Y(m.mae.val);svg+='<path class="eq-tri-mae" d="M'+xa.toFixed(1)+','+(ya+7).toFixed(1)+' l4,-7 l-8,0 Z"/><text class="eq-ax eq-lab-mae" x="'+xa.toFixed(1)+'" y="'+Math.min(plotB-2,ya+16).toFixed(1)+'" text-anchor="middle">MAE '+fmtR(m.mae.val)+'</text>';}
+  if(m.mfe&&m.mfe.val>0){
+    var xm=X(m.mfe.k),ym=Y(m.mfe.val);
+    svg+='<path class="eq-tri-mfe" d="M'+xm.toFixed(1)+','+(ym-7).toFixed(1)+' l4,7 l-8,0 Z"/>';
+    if(m.mfe.k<n-1)svg+='<text class="eq-ax eq-lab-mfe" x="'+clampX(xm+lblDX(xm)).toFixed(1)+'" y="'+clampY(ym<plotT+22?ym+15:ym-9).toFixed(1)+'" text-anchor="'+lblAnchor(xm)+'">MFE '+fmtR(m.mfe.val)+'</text>';
+  }
+  // MAE solo si realmente fue en contra (<0); voltea ARRIBA del triángulo si está muy abajo
+  if(m.mae&&m.mae.val<0){
+    var xa=X(m.mae.k),ya=Y(m.mae.val);
+    svg+='<path class="eq-tri-mae" d="M'+xa.toFixed(1)+','+(ya+7).toFixed(1)+' l4,-7 l-8,0 Z"/>';
+    svg+='<text class="eq-ax eq-lab-mae" x="'+clampX(xa+lblDX(xa)).toFixed(1)+'" y="'+clampY(ya>plotB-26?ya-10:ya+16).toFixed(1)+'" text-anchor="'+lblAnchor(xa)+'">MAE '+fmtR(m.mae.val)+'</text>';
+  }
   // entrada (rombo) + salida (círculo por resultado)
   svg+='<path class="eq-entry" d="M'+plotL+','+(y0-4).toFixed(1)+' l4,4 l-4,4 l-4,-4 Z"/>';
   var exCls=m.t.result==='win'?'is-win':m.t.result==='loss'?'is-loss':'is-be';
   var xe=X(n),ye=Y(m.realized);
   svg+='<circle class="eq-exit '+exCls+'" cx="'+xe.toFixed(1)+'" cy="'+ye.toFixed(1)+'" r="3.5"/>';
-  svg+='<text class="eq-ax eq-exit-lab" x="'+Math.min(plotR-2,xe+6).toFixed(1)+'" y="'+Math.max(plotT+8,Math.min(plotB-2,ye-6)).toFixed(1)+'" text-anchor="'+(xe>plotL+plotW*0.7?'end':'start')+'">'+(m.hasExit?fmtR(m.realized)+unit:'abierta')+'</text>';
-  // eje tiempo
-  svg+='<text class="eq-ax" x="'+plotL+'" y="'+(H-6)+'" text-anchor="start">'+m.seg[0].hhmm+'</text>';
-  svg+='<text class="eq-ax" x="'+plotR+'" y="'+(H-6)+'" text-anchor="end">'+m.seg[n].hhmm+'</text>';
+  var exRight=(xe>plotL+plotW*0.55);
+  // si hay post-salida, la etiqueta de salida va DEBAJO del punto (el post ocupa arriba)
+  svg+='<text class="eq-ax eq-exit-lab" x="'+clampX(xe+(exRight?-6:6)).toFixed(1)+'" y="'+clampY(m.post?ye+15:(ye<plotT+22?ye+15:ye-7)).toFixed(1)+'" text-anchor="'+(exRight?'end':'start')+'">'+(m.hasExit?fmtR(m.realized)+unit:'abierta')+'</text>';
+  // eje tiempo: inicio · (salida) · post
+  svg+='<text class="eq-ax" x="'+plotL+'" y="'+(H-5)+'" text-anchor="start">'+m.seg[0].hhmm+'</text>';
+  if(m.post){
+    svg+='<text class="eq-ax" x="'+plotXe.toFixed(1)+'" y="'+(H-5)+'" text-anchor="middle">'+m.seg[n].hhmm+'</text>';
+    svg+='<text class="eq-ax" x="'+plotR+'" y="'+(H-5)+'" text-anchor="end">'+m.post.hhmm+'</text>';
+  }else{
+    svg+='<text class="eq-ax" x="'+plotR+'" y="'+(H-5)+'" text-anchor="end">'+m.seg[n].hhmm+'</text>';
+  }
   svg+='</svg>';
   if(!m.hasStop)svg+='<div class="eq-badge-nostop">Sin stop · escala en puntos (R no disponible)</div>';
   return svg;
