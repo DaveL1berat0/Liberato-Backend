@@ -156,9 +156,10 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 # (hoy 3.8; la cuenta de Dave tiene 3.5→3.8 + los alias -latest). Se usa el alias a
 # propósito para que el respaldo del Coach NUNCA se quede atrás — se auto-actualiza al
 # salir un flash nuevo, sin tocar código. Es superior al qwen-3.6-27b de Groq (modelo
-# abierto de 27B que además corre con reasoning OFF por velocidad); Gemini 3.x RAZONA,
-# por eso se le da +900 tok de colchón de "thought". Para fijar una versión concreta,
-# poné GEMINI_MODEL=gemini-3.8-flash (o el que sea) en Railway.
+# abierto de 27B que además corre con reasoning OFF por velocidad); Gemini 3.x SIEMPRE
+# RAZONA y no se puede apagar (thinkingBudget:0 → 400/ignorado desde 3.x), por eso se le
+# da un colchón AMPLIO de maxOutputTokens (thought+respuesta), sin thinkingConfig. Para
+# fijar una versión concreta, poné GEMINI_MODEL=gemini-3.8-flash (o el que sea) en Railway.
 GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-flash-latest").strip()
 def _gemini_model_chain():
     # El límite gratis de Gemini es POR MODELO; ante 429 (cuota) o 400/404 (deprecado)
@@ -175,10 +176,10 @@ async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
     body = {
         "systemInstruction": {"parts": [{"text": sys_msg}]},
         "contents": [{"role": "user", "parts": [{"text": usr_msg}]}],
-        # thinkingBudget:0 evita que el modelo gaste TODO el presupuesto en "thought"
-        # y devuelva texto vacío. +400 de colchón.
-        "generationConfig": {"maxOutputTokens": max_tokens + 400, "temperature": temperature,
-                             "thinkingConfig": {"thinkingBudget": 0}},
+        # Gemini 3.x SIEMPRE piensa (no se puede apagar; thinkingBudget:0 daba 400 o se
+        # ignoraba desde que -latest apunta a 3.x). Sin thinkingConfig y con colchón AMPLIO
+        # (+2048) para que el "thought" obligatorio no agote el output y el texto no salga vacío.
+        "generationConfig": {"maxOutputTokens": max_tokens + 2048, "temperature": temperature},
     }
     for mdl in _gemini_model_chain():
         url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
@@ -200,39 +201,87 @@ async def _gemini_chat(sys_msg, usr_msg, max_tokens=400, temperature=0.5):
             print(f"[gemini] {mdl} error: {e}")
     return None
 
-async def _gemini_vision(img_b64, mime, sys_msg, usr_msg, max_tokens=400, temperature=0.1):
+async def _gemini_vision(img_b64, mime, sys_msg, usr_msg, max_tokens=400, temperature=0.1,
+                         force_json=True, diag=None):
     """Como _gemini_chat pero con una IMAGEN adjunta (inlineData). Para leer niveles
-    (entry/stop/target) del cuadro de Risk/Reward de un screenshot del chart. Gemini
-    flash soporta visión; usa la misma cadena de modelos con fallback."""
+    (entry/stop/target) del cuadro de Risk/Reward de un screenshot del chart.
+
+    Robustez (sep-2026, línea Gemini 3.x — verificado contra docs de Google):
+      · Gemini 3.x SIEMPRE piensa; NO se puede apagar (thinkingBudget:0 daba 400 /
+        se ignoraba → el motivo real de "la IA no pudo leer la imagen" desde que
+        gemini-flash-latest pasó a apuntar a gemini-3.x). Por eso NO se manda
+        thinkingConfig y se deja un tope de tokens MUY holgado, para que el "thought"
+        obligatorio no agote el output y el texto no salga vacío.
+      · Se pide salida JSON estricta (responseMimeType) — válido y limpio en 3.x.
+      · Si un modelo da 400 (arg inválido, p.ej. no acepta responseMimeType) se
+        reintenta ESE modelo una vez SIN JSON (respuesta instantánea). NO se reintenta
+        en 429/404 (no dobla el gasto de cuota) ni se recorre la cadena dos veces.
+    'diag' (lista opcional) recibe el detalle de cada intento (modelo/http/finishReason)
+    para diagnóstico. 'detail' guarda el cuerpo de error crudo → el llamador debe
+    ocultarlo al cliente (solo debug). Regla #1: si no hay texto, devuelve None."""
     if not GEMINI_API_KEY:
+        if diag is not None: diag.append({"stage": "config", "error": "sin GEMINI_API_KEY"})
         return None
-    body = {
-        "systemInstruction": {"parts": [{"text": sys_msg}]},
-        "contents": [{"role": "user", "parts": [
-            {"inlineData": {"mimeType": mime or "image/png", "data": img_b64}},
-            {"text": usr_msg},
-        ]}],
-        "generationConfig": {"maxOutputTokens": max_tokens + 400, "temperature": temperature,
-                             "thinkingConfig": {"thinkingBudget": 0}},
-    }
-    for mdl in _gemini_model_chain():
+    parts = [{"inlineData": {"mimeType": mime or "image/png", "data": img_b64}},
+             {"text": usr_msg}]
+    # Tope holgado: el JSON útil son ~50 tokens, pero el thinking obligatorio de 3.x
+    # cuenta contra maxOutputTokens; sin colchón salía texto vacío (MAX_TOKENS).
+    cap = max(max_tokens + 2048, 6144)
+
+    async def _try(mdl, force_json_flag, tag):
+        gen_cfg = {"maxOutputTokens": cap, "temperature": temperature}
+        if force_json_flag:
+            gen_cfg["responseMimeType"] = "application/json"
         url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
                f"{mdl}:generateContent?key={GEMINI_API_KEY}")
+        body = {"systemInstruction": {"parts": [{"text": sys_msg}]},
+                "contents": [{"role": "user", "parts": parts}],
+                "generationConfig": gen_cfg}
         try:
-            async with httpx.AsyncClient(timeout=35) as c:
+            async with httpx.AsyncClient(timeout=30) as c:
                 r = await c.post(url, json=body)
             if r.status_code != 200:
-                print(f"[gemini-vision] {mdl} {r.status_code}: {r.text[:120]}")
-                continue
+                if diag is not None:
+                    diag.append({"model": mdl, "pass": tag, "http": r.status_code, "detail": r.text[:180]})
+                print(f"[gemini-vision] {mdl}/{tag} {r.status_code}: {r.text[:120]}")
+                return None, r.status_code
             j = r.json()
             cand = ((j.get("candidates") or [{}]) or [{}])[0]
-            parts = ((cand.get("content") or {}).get("parts") or [])
-            txt = "".join(p.get("text", "") for p in parts).strip()
+            ps = ((cand.get("content") or {}).get("parts") or [])
+            txt = "".join(p.get("text", "") for p in ps).strip()
+            fin = cand.get("finishReason")
+            if txt:
+                # Texto parcial truncado (MAX_TOKENS): se devuelve, pero se deja rastro
+                # para que el llamador pueda avisar "respuesta cortada" si no parsea.
+                if fin == "MAX_TOKENS" and diag is not None:
+                    diag.append({"model": mdl, "pass": tag, "http": 200, "finish": fin, "partial": True})
+                return txt, 200
+            if diag is not None:
+                diag.append({"model": mdl, "pass": tag, "http": 200, "finish": fin, "empty": True})
+            print(f"[gemini-vision] {mdl}/{tag} 200 texto vacío (finish={fin})")
+            return None, 200
+        except Exception as e:
+            if diag is not None:
+                diag.append({"model": mdl, "pass": tag, "error": type(e).__name__,
+                             "detail": str(e)[:120]})
+            print(f"[gemini-vision] {mdl}/{tag} error: {e}")
+            return None, None
+
+    # Deadline global: el frontend aborta a los 95s. No arrancar un modelo nuevo pasado
+    # este tope → nunca gastamos cuota de fallback después de que el cliente se rindió.
+    deadline = time.monotonic() + 85.0
+    for mdl in _gemini_model_chain():
+        if time.monotonic() > deadline:
+            if diag is not None: diag.append({"stage": "deadline", "note": "corte por tiempo (>85s)"})
+            break
+        txt, st = await _try(mdl, force_json, "json")
+        if txt:
+            return txt
+        # Solo ante 400 (arg inválido en ESE modelo) reintenta sin JSON, mismo modelo.
+        if force_json and st == 400:
+            txt, _ = await _try(mdl, False, "plain")
             if txt:
                 return txt
-            print(f"[gemini-vision] {mdl} 200 texto vacío (finish={cand.get('finishReason')})")
-        except Exception as e:
-            print(f"[gemini-vision] {mdl} error: {e}")
     return None
 
 def _window_key(window):
@@ -8622,7 +8671,7 @@ async def test_gemini(key: str = "", model: str = ""):
     mdl = (model or GEMINI_MODEL).strip()
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={GEMINI_API_KEY}"
     body = {"contents": [{"role": "user", "parts": [{"text": "Di 'hola coach' en una frase corta."}]}],
-            "generationConfig": {"maxOutputTokens": 800, "temperature": 0.4, "thinkingConfig": {"thinkingBudget": 0}}}
+            "generationConfig": {"maxOutputTokens": 2048, "temperature": 0.4}}
     try:
         async with httpx.AsyncClient(timeout=25) as c:
             r = await c.post(url, json=body)
@@ -8675,6 +8724,11 @@ async def _extract_levels_core(img, mime, debug=False):
     direction/rr del cuadro de Risk/Reward. Regla #1: nivel no legible → null."""
     if not GEMINI_API_KEY:
         return {"ok": False, "reason": "visión IA no configurada (falta GEMINI_API_KEY)"}
+    # Solo formatos que Gemini visión acepta (evita mandar HEIC sin decodificar/GIF/etc.
+    # que darían 400 en toda la cadena y un error confuso).
+    _MIME_OK = ("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
+    if mime and mime.lower() not in _MIME_OK:
+        return {"ok": False, "reason": f"formato de imagen no soportado ({mime}) — sube PNG o JPEG"}
     sys_msg = (
         "Eres un extractor de niveles de una CAPTURA de un chart de trading (MotiveWave/"
         "TradingView) con la herramienta de RIESGO/RECOMPENSA dibujada (un rectángulo con "
@@ -8687,17 +8741,49 @@ async def _extract_levels_core(img, mime, debug=False):
         "inventes. Si un nivel no es legible, ponlo en null. Los precios del NQ suelen ser "
         "~15000-30000 con 2 decimales. No incluyas comas de miles en los números.")
     usr_msg = ("Extrae entry, stop, target, direction y rr del cuadro de riesgo/recompensa "
-               "de esta imagen. Responde SOLO el JSON.")
-    txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=200, temperature=0.0)
+               "de esta imagen. Devuelve EXCLUSIVAMENTE el objeto JSON, sin ``` ni texto.")
+    diag = []
+    txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0,
+                               diag=diag)
+    # diag compacto para el cliente (sin cuerpos de error crudos de Google); completo solo en debug.
+    def _diag_out():
+        if debug:
+            return diag
+        return [{k: v for k, v in e.items() if k != "detail"} for e in diag[-8:]]
+    _fins = {e.get("finish") for e in diag if e.get("finish")}
+    _SAFE = {"SAFETY", "PROHIBITED_CONTENT", "RECITATION", "IMAGE_SAFETY", "BLOCKLIST", "SPII"}
     if not txt:
-        return {"ok": False, "reason": "la IA no pudo leer la imagen (reintenta o edita a mano)"}
-    m = re.search(r"\{.*\}", txt, re.DOTALL)
-    if not m:
-        return {"ok": False, "reason": "respuesta IA sin JSON", "raw": txt[:200]}
+        if _fins & _SAFE:
+            reason = "la IA rechazó la imagen por seguridad — recorta solo el cuadro de Risk/Reward y reintenta"
+        elif any(e.get("http") == 429 for e in diag):
+            reason = "IA saturada ahora mismo (límite de cuota) — reintenta en un momento o coloca los niveles a mano"
+        elif "MAX_TOKENS" in _fins:
+            reason = "respuesta IA cortada (imagen muy compleja) — reintenta"
+        else:
+            reason = "la IA no pudo leer la imagen (reintenta o edita a mano)"
+        return {"ok": False, "reason": reason, "diag": _diag_out()}
+    # Parseo robusto: salida estructurada = JSON puro; texto libre = puede traer ```json o preámbulo.
+    raw = txt.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```[a-zA-Z]*\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw).strip()
+    data = None
     try:
-        data = json.loads(m.group(0))
+        data = json.loads(raw)
     except Exception:
-        return {"ok": False, "reason": "JSON IA inválido", "raw": txt[:200]}
+        m = re.search(r"\{.*\}", raw, re.DOTALL)
+        if m:
+            try:
+                data = json.loads(m.group(0))
+            except Exception:
+                data = None
+    if not isinstance(data, dict):
+        reason = ("respuesta IA cortada (imagen muy compleja) — reintenta"
+                  if "MAX_TOKENS" in _fins else "respuesta IA sin JSON")
+        out = {"ok": False, "reason": reason, "diag": _diag_out()}
+        if debug:
+            out["raw"] = txt[:200]
+        return out
     def _num(v):
         if v is None:
             return None
@@ -8712,8 +8798,10 @@ async def _extract_levels_core(img, mime, debug=False):
     out["ok"] = any(out[k] is not None for k in ("entry", "stop", "target"))
     if not out["ok"]:
         out["reason"] = "no se detectaron niveles legibles en el cuadro R:R"
+        out["diag"] = _diag_out()
     if debug:
         out["raw"] = txt[:300]
+        out["diag"] = diag
     return out
 
 

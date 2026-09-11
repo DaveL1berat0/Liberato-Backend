@@ -3993,19 +3993,28 @@ function twsAddFiles(files){
 function twsExtractLevels(dataUrl, manual){
   var id=_twsId;
   try{notif('Leyendo la imagen…','Detectando stop/target del cuadro R:R','✨');}catch(e){}
-  return fetch(JOURNAL_BACKEND+'/api/journal/extract-levels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl})})
+  // AbortController: la IA (Gemini 3.x) piensa; peor caso ~90s. No dejamos al usuario colgado.
+  var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+  var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},95000):null;
+  return fetch(JOURNAL_BACKEND+'/api/journal/extract-levels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl}),signal:ctrl?ctrl.signal:undefined})
     .then(function(r){return r.json();})
     .then(function(d){
+      if(to){clearTimeout(to);to=null;}
       if(_twsId!==id)return;
       if(d&&d.ok){
         var p=twsApplyLevels(d);
         if(p&&Object.keys(p).length)try{notif('Niveles detectados ✓','Stop '+(d.stop!=null?d.stop:'—')+' · Target '+(d.target!=null?d.target:'—')+' — aplicados. Edítalos abajo si hace falta.','✓');}catch(e){}
         else try{notif('Sin cambios','La imagen coincide con tus niveles actuales','○');}catch(e){}
       } else {
+        try{console.warn('[extract-levels] la IA no devolvió niveles:',d);}catch(e){}
         try{notif('No pude leer los niveles','Colócalos a mano en la tarjeta Riesgo & R:R'+(d&&d.reason?' ('+d.reason+')':''),'○');}catch(e){}
       }
     })
-    .catch(function(){try{notif('Error de red','No se pudo analizar la imagen','○');}catch(e){}});
+    .catch(function(err){
+      if(to){clearTimeout(to);to=null;}
+      var aborted=err&&err.name==='AbortError';
+      try{notif(aborted?'La IA tardó demasiado':'Error de red',aborted?'Reintenta o coloca los niveles a mano en la tarjeta Riesgo & R:R':'No se pudo analizar la imagen','○');}catch(e){}
+    });
 }
 function twsApplyLevels(lv){
   var t=T.find(function(x){return x.id===_twsId;}); if(!t||!lv)return null;
