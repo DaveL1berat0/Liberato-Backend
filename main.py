@@ -786,7 +786,7 @@ REST_SYMBOLS = {
 async def refresh_heatmap_finnhub():
     """Heatmap vía Finnhub /quote — 60 llamadas/min permite refresco rápido.
     Campo 'dp' = percent change DIARIO real (vs cierre previo). 'c' = precio.
-    Finnhub es 1 símbolo por llamada; 20 símbolos = 20 llamadas (<60/min OK).
+    Finnhub es 1 símbolo por llamada; 21 símbolos = 21 llamadas (<55/min OK).
     Fuente PRIMARIA del heatmap. Si Finnhub falla (429/error), cae a TwelveData."""
     # Índices reales (VIX/DXY/yields/Gold/WTI/BTC) vía Yahoo — Finnhub NO los tiene.
     # Se dispara aquí porque este ciclo SÍ corre cada minuto en RTH (throttle 4min).
@@ -794,10 +794,10 @@ async def refresh_heatmap_finnhub():
     if not FINNHUB_KEY:
         await refresh_heatmap_rest()   # sin key Finnhub → usar TwelveData
         return
-    all_syms = list(REST_SYMBOLS.keys())   # símbolos del heatmap (20)
-    # GUARDIÁN: ¿caben las 20 llamadas en este minuto? Si no, usar TwelveData.
+    all_syms = list(REST_SYMBOLS.keys())   # símbolos del heatmap (21)
+    # GUARDIÁN: ¿caben las 21 llamadas en este minuto? Si no, usar TwelveData.
     if not fh_budget_ok(len(all_syms)):
-        print(f"[heatmap-fh] sin presupuesto Finnhub este minuto ({_fh_calls['count']}/{FH_MINUTE_LIMIT}) — fallback TwelveData")
+        print(f"[heatmap-fh] sin presupuesto Finnhub este minuto ({_fh_calls.get('used', 0)}/{FH_MINUTE_LIMIT}) — fallback TwelveData")
         await refresh_heatmap_rest()
         return
     loaded = 0; rate_limited = False
@@ -4042,8 +4042,13 @@ async def refresh_calendar():
         # base) → RapidAPI (reserva, 10/mes solo eventos enormes).
         global _fmp_last_fetch, _fmp_cache, _ff_last_fetch, _ff_cache, _rapidapi_last_call
         h, m = nowet.hour, nowet.minute
-        # Ventana de releases macro US (ET): 8:00-10:30am y 1:45-2:30pm
-        in_release_window = ((8 <= h < 11) or (h == 13 and m >= 45) or (h == 14 and m <= 30))
+        # Ventana ESTRECHA alrededor de los prints reales (ET): 8:25-8:45 (8:30 = CPI/NFP/PPI/
+        # claims), 9:55-10:05 (10:00 = ISM/sentimiento), 13:55-14:05 (2:00pm = FOMC). Solo aquí
+        # se acelera FMP para que el 'actual' salga en ≤60s; el resto va lento para respetar el
+        # presupuesto FMP (230/día). Antes esto se calculaba pero NUNCA se usaba → el print
+        # tardaba hasta 3 min en aparecer (el trader desconfía del calendario).
+        in_release_window = ((h == 8 and 25 <= m <= 45) or (h == 9 and m >= 55) or
+                             (h == 10 and m <= 5) or (h == 13 and m >= 55) or (h == 14 and m <= 5))
 
         # ── ForexFactory: cada 3 min (límite 2/5min) ──
         fetch_ff_now = (nowts - _ff_last_fetch >= 180)
@@ -4054,12 +4059,13 @@ async def refresh_calendar():
             ff_tasks = []
 
         # ── FMP: fuente PRINCIPAL del actual (RapidAPI cayó por 402).
-        # Presupuesto: 250/día. Usamos ~190/día con margen:
-        #   sesión (8am-4pm ET): cada 3 min → ~160 llamadas
-        #   fuera de sesión: cada 10 min → ~30 llamadas
+        # Presupuesto: 230/día. Cadencia adaptativa (verificado ≈192/día < 230):
+        #   ventana de print (≈40 min/día): cada 60s  → el 'actual' sale en ≤60s
+        #   sesión fuera de ventana (8-16 ET):   cada 300s
+        #   fuera de sesión:                     cada 900s
         h_now = nowet.hour
         fmp_in_session = (8 <= h_now < 16)
-        fmp_interval = 180 if fmp_in_session else 600  # 3 min vs 10 min
+        fmp_interval = 60 if in_release_window else (300 if fmp_in_session else 900)
         fetch_fmp_now = bool(FMP_KEY) and (nowts - _fmp_last_fetch >= fmp_interval)
         if fetch_fmp_now:
             _fmp_last_fetch = nowts
@@ -4542,15 +4548,21 @@ def _macro_news_from_calendar():
         })
     return out
 
+_movers_inflight = False   # candado: evita ráfagas concurrentes (spawn on-read por usuario)
 async def refresh_movers():
     """Ultra High Impact News — market-moving events only. No stock gainers/losers."""
+    global _movers_inflight
     if not FINNHUB_KEY:
         cache["movers"]["status"] = "offline-no-key"; return
-
-    stale_backup = list(cache["movers"]["data"])
-    calendar_titles = [e.get("title","") for e in cache["calendar"]["data"]]
-
+    if _movers_inflight:
+        return   # ya hay una actualización en curso → sin estampida de llamadas
+    if not fh_budget_ok(2):
+        return   # sin presupuesto Finnhub este minuto → conserva lo último real (Regla #1)
+    _movers_inflight = True
+    stale_backup = []   # definido antes del try → el except puede leerlo con seguridad
     try:
+        stale_backup = list(cache["movers"]["data"])
+        calendar_titles = [e.get("title","") for e in cache["calendar"]["data"]]
         async with httpx.AsyncClient(timeout=8) as client:
             # Fetch from multiple Finnhub categories in parallel
             fh_charge(2)  # 2 llamadas /news — registrar para contabilidad exacta
@@ -4668,6 +4680,8 @@ async def refresh_movers():
         print(f"[movers] error: {e}")
         if stale_backup:
             cache["movers"]["status"] = "stale"
+    finally:
+        _movers_inflight = False
 
 @app.get("/api/admin/diag-news")
 async def diag_news(key: str = ""):
@@ -5490,22 +5504,22 @@ def health():
 
 # Calcula la próxima ventana programada de FlashAlpha (19:00, 9:00, 9:15, 9:45 ET)
 def _next_gex_window():
-    """Devuelve la próxima hora ET en que se actualizará el GEX."""
-    windows = [(9,0),(9,15),(9,45),(19,0)]  # 4 ventanas estratégicas
+    """Frescura del GEX. Fuente = GexBot, que recalcula ~cada 1 min durante la sesión de
+    opciones (07:00-16:59 ET L-V) y el backend lo sondea cada minuto. Dentro de esa ventana
+    los niveles están EN VIVO; fuera, se indica la próxima apertura. (Antes devolvía ventanas
+    FlashAlpha fijas [9:00/9:15/9:45/19:00] YA muertas → la UI mostraba 'próx. 19:00 ET' con
+    datos vivos y parecía congelado; roza Regla #1.)"""
     now = datetime.now(NY)
-    now_min = now.hour*60 + now.minute
-    today_windows = sorted([h*60+m for h,m in windows])
-    # Buscar la próxima ventana hoy
-    for wm in today_windows:
-        if wm > now_min:
-            wh, wmin = wm//60, wm%60
-            return {"time": f"{wh:02d}:{wmin:02d} ET", "is_today": True}
-    # No quedan hoy → primera de mañana (9:00 si es día hábil)
+    wd, h = now.weekday(), now.hour
+    if wd < 5 and 7 <= h < 17:
+        return {"time": "actualiza c/~1 min", "is_today": True, "live": True}
+    if wd < 5 and h < 7:
+        return {"time": "07:00 ET", "is_today": True}   # día hábil, antes de apertura
+    # Después de las 17:00 o fin de semana → próxima apertura hábil (07:00 ET)
     nxt = now + timedelta(days=1)
-    # Saltar fin de semana
     while nxt.weekday() >= 5:
         nxt = nxt + timedelta(days=1)
-    return {"time": "09:00 ET", "is_today": False, "date": nxt.strftime("%d-%b")}
+    return {"time": "07:00 ET", "is_today": False, "date": nxt.strftime("%d-%b")}
 
 _candles_cache = {}   # {tf: {"ts": epoch, "data": {...}}}
 

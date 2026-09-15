@@ -2078,7 +2078,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         }
         // Timestamp de última llamada a FlashAlpha (para label de frescura)
         if(d.last_call_ts){S.gexLastCall=d.last_call_ts;S.gexIsToday=d.last_call_is_today;S.gexIsMock=false;}
-        if(d.next_update&&d.next_update.time)S.gexNextUpdate=d.next_update.time;
+        if(d.next_update&&d.next_update.time){S.gexNextUpdate=d.next_update.time;S.gexNextLive=!!d.next_update.live;}
         if(typeof d.age_seconds==='number')S.gexAgeSeconds=d.age_seconds;
         S.gexCacheTime=new Date().toISOString();
         saveCache();
@@ -2612,17 +2612,21 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     var el=$('gf-timestamp');
     if(!el)return;
     var ts=S.gexLastCall||S.gexCacheTime||null;
+    // "En vivo" honesto: solo si el backend dice live Y el dato es realmente fresco (<3 min).
+    // Si GexBot se estanca, no se afirma "actualiza c/~1 min" (la edad real ya se muestra).
+    var _liveOK=S.gexNextLive&&(S.gexAgeSeconds==null||S.gexAgeSeconds<180);
+    var _gexSuffix=function(){return S.gexNextUpdate?(S.gexNextLive?(_liveOK?(' · '+S.gexNextUpdate):''):(' · próx. '+S.gexNextUpdate)):'';};
     var ME=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     // Sin timestamp pero con datos GEX
     if(!ts){
       if(S.callWall||S.putWall||S.gammaFlip){
         el.style.display='inline-flex';
-        var nu=S.gexNextUpdate?(' · próx. '+S.gexNextUpdate):'';
+        var nu=_gexSuffix();
         // Si los datos vienen del MODO DEMO, etiquetarlo CLARAMENTE (Regla #1: no data falsa sin avisar)
         if(S.gexIsMock){
-          el.innerHTML='<span class="gf-ts-warn">●</span> <strong style="color:var(--warn);">DATOS DEMO</strong> · esperando FlashAlpha'+nu;
+          el.innerHTML='<span class="gf-ts-warn">●</span> <strong style="color:var(--warn);">DATOS DEMO</strong> · esperando GexBot'+nu;
           el.className='gf-timestamp stale';
-          el.title='Mostrando niveles de demostración. Los niveles reales aparecerán cuando FlashAlpha cargue.';
+          el.title='Mostrando niveles de demostración. Los niveles reales aparecerán cuando GexBot cargue.';
         }else{
           el.innerHTML='<span class="gf-ts-dot" style="background:var(--warn);box-shadow:0 0 6px rgba(255,194,71,0.6);"></span> Niveles en caché'+nu;
           el.className='gf-timestamp';
@@ -2649,13 +2653,13 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       var dateStr=day+'-'+ME[mon-1]+'-'+yr;
       var label='Últ. actualización: '+dateStr+' '+timeStr;
       // Próxima actualización programada
-      var nextStr=S.gexNextUpdate?(' · próx. '+S.gexNextUpdate):'';
+      var nextStr=_gexSuffix();
       el.style.display='inline-flex';
       if(S.gexIsToday===false){
         // Niveles de un día anterior — ADVERTENCIA prominente
         el.innerHTML='<span class="gf-ts-warn">●</span> '+label+' <strong style="color:var(--warn);">(DÍA ANTERIOR)</strong>'+nextStr;
         el.className='gf-timestamp stale';
-        el.title='⚠️ Los niveles GEX son de un día anterior. Próxima actualización: '+(S.gexNextUpdate||'9:00 AM ET');
+        el.title='⚠️ Los niveles GEX son de un día anterior. Próxima actualización: '+(S.gexNextUpdate||'07:00 ET');
       }else{
         el.innerHTML='<span class="gf-ts-dot"></span> '+label+' <span style="color:var(--ink-4);">· '+ageStr+'</span>'+nextStr;
         el.className='gf-timestamp';
@@ -4883,7 +4887,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         }).catch(function(){});
     }
     setInterval(fetchPrice,2000);  // 2s (antes 1s): una llamada/seg era carga de red innecesaria; el precio se interpola suave entre fetches
-    setInterval(renderMarketStatus,30000); // actualizar estado de mercado cada 30s
+    setInterval(renderMarketStatus,1000); // estado de mercado cada 1s → la sesión abre/cierra al instante (reloj local, 0 llamadas)
     renderMarketStatus(); // estado inicial inmediato
     // Re-renderiza el label de GEX cada 30s para actualizar 'hace X min'
     setInterval(function(){if(typeof renderGexTimestamp==='function')renderGexTimestamp();},30000);
@@ -4947,7 +4951,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
       }, 800);
 
       // ── Refresh periódico para mantener datos frescos ─────────────────────
-      setInterval(fetchHeatmap,              15000);   // heatmap cada 30s
+      setInterval(fetchHeatmap,              15000);   // heatmap cada 15s (lee caché backend, sin costo)
       setInterval(function(){
       // Poll adaptativo: si hay un evento macro a ±20 min, refrescar cada ciclo
       // (15s efectivos); si no, respetar cadencia de 30s (ciclo alterno).
@@ -4966,7 +4970,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
         window._calSkip=!window._calSkip&&!hot;
       }catch(e){fetchCalendar();}
     },             15000);   // calendar cada 60s (resultados rápidos)
-      setInterval(fetchMovers,               30000);
+      setInterval(fetchMovers,               45000);   // alineado al backend (refresh 45s): evita 1/3 de polls redundantes
   // ── AUTO-REFRESH DE VELAS: recarga cada 60s para que el motor (session
   //    momentum) arranque solo a las 9:30 ET sin necesidad de refrescar la página.
   setInterval(function(){
