@@ -1061,47 +1061,102 @@ async def refresh_cash_index_yahoo():
 _indices_last_ts = 0
 _heatmap_ondemand_ts = 0   # throttle del refresh Finnhub on-demand del heatmap (findes/after-hours)
 async def refresh_real_indices():
-    """Niveles reales vía Finnhub (throttle 4 min). Verificable, sin cookie/crumb."""
+    """Índices macro del heatmap (DXY/yields/Gold/WTI/BTC).
+
+    Presupuesto: los 6 proxies ETF (UUP/IEF/SHY/TLT/GLD/USO) YA los trae el batch de
+    acciones (refresh_heatmap_finnhub, REST_SYMBOLS) → aquí se DERIVAN de la caché con
+    0 llamadas Finnhub. Antes se repetían esos 6 símbolos cada 10s (~36 llamadas/min
+    desperdiciadas): con el batch (21/min) + movers superaban las 55/min y el guardián
+    descartaba precios (incl. el QQQ que alimenta el NQ). Solo BTC (Binance) es único y
+    se pide en vivo. Regla #1: sin dato real del ETF/quote, no se publica el tile."""
     global _indices_last_ts
     now = time.time()
-    if now - _indices_last_ts < 10:   # precio más fresco: 20s→10s (feed gratis, self-guarded por presupuesto)
-        return
-    if not FINNHUB_KEY:
+    if now - _indices_last_ts < 10:
         return
     _indices_last_ts = now
     loaded = 0
-    try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            async def _one(disp, ysym, sign, is_proxy):
-                nonlocal loaded
-                try:
-                    if not fh_budget_ok(1):
-                        return
-                    fh_charge(1)
+    for disp, (sym, sign, is_proxy) in _FH_INDICES.items():
+        try:
+            if is_proxy:
+                # Derivar del tile del ETF ya cacheado por el batch de acciones (0 llamadas).
+                tile = cache["heatmap"]["data"].get(sym)
+                dp = (tile or {}).get("chg_pct")
+                if dp is None:
+                    continue   # aún sin dato real del ETF → se mantiene "—"
+                chg = float(dp) * sign
+                cache["heatmap"]["data"][disp] = {
+                    "symbol": disp, "price": None, "chg_pct": round(chg, 3),
+                    "direction": "up" if chg > 0.03 else ("down" if chg < -0.03 else "flat"),
+                    "source": f"derived:{sym}",
+                }
+                loaded += 1
+            else:
+                # Símbolo único (BTC/Binance) → Finnhub en vivo, con guardián de cuota.
+                if not FINNHUB_KEY or not fh_budget_ok(1):
+                    continue
+                fh_charge(1)
+                async with httpx.AsyncClient(timeout=10) as client:
                     r = await client.get(f"{FH_BASE}/quote",
-                                         params={"symbol": ysym, "token": FINNHUB_KEY})
-                    if r.status_code != 200:
-                        return
-                    q = r.json() or {}
-                    price, dp = q.get("c"), q.get("dp")
-                    if price in (None, 0) or dp is None:
-                        return
-                    chg = float(dp) * sign
-                    cache["heatmap"]["data"][disp] = {
-                        "symbol": disp,
-                        "price": (None if is_proxy else round(float(price), 4)),
-                        "chg_pct": round(chg, 3),
-                        "direction": "up" if chg > 0.03 else ("down" if chg < -0.03 else "flat"),
-                        "source": "finnhub-index" + ("-proxy" if is_proxy else ""),
-                    }
-                    loaded += 1
-                except Exception:
-                    return
-            await asyncio.gather(*[_one(d, s, sg, p) for d, (s, sg, p) in _FH_INDICES.items()])
-        if loaded:
-            print(f"[indices] {loaded} índices reales (Finnhub)")
+                                         params={"symbol": sym, "token": FINNHUB_KEY})
+                if r.status_code != 200:
+                    continue
+                q = r.json() or {}
+                price, dp = q.get("c"), q.get("dp")
+                if price in (None, 0) or dp is None:
+                    continue
+                chg = float(dp) * sign
+                cache["heatmap"]["data"][disp] = {
+                    "symbol": disp, "price": round(float(price), 2), "chg_pct": round(chg, 3),
+                    "direction": "up" if chg > 0.03 else ("down" if chg < -0.03 else "flat"),
+                    "source": "finnhub-crypto",
+                }
+                loaded += 1
+        except Exception:
+            continue
+    if loaded:
+        print(f"[indices] {loaded} índices (derivados + BTC live)")
+    return
+
+
+async def refresh_nq_spot_fast():
+    """Precio NQ EN VIVO (~cada 4s): quote real-time de QQQ (Finnhub) × ratio real →
+    cache['px_ratio']['spot']. Desacopla el precio del cierre de vela de 5 min (antes
+    px_ratio.spot solo se refrescaba cada ~5 min desde el último candle → el NQ iba
+    ~5 min atrasado y el chart heredaba el atraso). QQQ (ETF) cotiza ~4:00-20:00 ET; fuera
+    de esa ventana no hay tick real y NO se toca nada. Regla #1: sin quote o sin ratio
+    real, no se escribe (se mantiene el último dato real; nunca se inventa)."""
+    if not FINNHUB_KEY:
+        return
+    nowny = datetime.now(NY)
+    if nowny.weekday() >= 5 or not (4 <= nowny.hour < 20):
+        return
+    if not fh_budget_ok(1):
+        return
+    fh_charge(1)
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            r = await client.get(f"{FH_BASE}/quote",
+                                 params={"symbol": FA_PROXY_ETF, "token": FINNHUB_KEY})
+        if r.status_code != 200:
+            return
+        q = r.json() or {}
+        qqq, dp = q.get("c"), q.get("dp")
+        if not qqq:
+            return
+        ratio = get_px_ratio()
+        if not ratio:
+            return   # sin ratio real → la UI muestra "—", nunca un número inventado
+        cache["px_ratio"]["etf_price"] = float(qqq)
+        cache["px_ratio"]["spot"] = round(float(qqq) * ratio, 2)
+        cache["px_ratio"]["ts"] = datetime.now(NY).isoformat()
+        # Consistencia: refrescar el tile QQQ (precio + % diario real) que alimenta el ratio.
+        t = cache["heatmap"]["data"].get(FA_PROXY_ETF)
+        if isinstance(t, dict):
+            t["price"] = round(float(qqq), 4)
+            if dp is not None:
+                t["chg_pct"] = round(float(dp), 3)
     except Exception as e:
-        print(f"[indices] error: {e}")
+        print(f"[nq-fast] {e}")
     return
 async def _refresh_real_indices_OLD_yahoo():
     global _indices_last_ts
@@ -9589,7 +9644,8 @@ async def startup():
     # ── Índices reales (Yahoo): SIEMPRE, incluso fuera de RTH y fines de semana ──
     # Cubre VIX/DXY/yields/Gold/WTI/BTC/SPX que Finnhub no tiene. Sin créditos.
     # Throttle interno de 4 min protege aunque el job corra cada 3.
-    scheduler.add_job(refresh_real_indices, IntervalTrigger(seconds=10))  # precio del índice ~10s (throttle interno 10s)
+    scheduler.add_job(refresh_real_indices, IntervalTrigger(seconds=10))  # índices macro: 6 derivados de caché (0 llamadas) + BTC live
+    scheduler.add_job(refresh_nq_spot_fast, IntervalTrigger(seconds=4))   # PRECIO NQ EN VIVO ~4s (QQQ real-time × ratio; RTH-gate interno)
     # SPX vía Yahoo (gratis): Finnhub free no da ^GSPC. Sin SPX el ratio ES/SPY se
     # queda sin respaldo y el chart depende SOLO de FlashAlpha.
     scheduler.add_job(refresh_cash_index_yahoo, IntervalTrigger(minutes=3))
