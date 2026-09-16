@@ -8799,18 +8799,29 @@ async def _extract_levels_core(img, mime, debug=False):
     if mime and mime.lower() not in _MIME_OK:
         return {"ok": False, "reason": f"formato de imagen no soportado ({mime}) — sube PNG o JPEG"}
     sys_msg = (
-        "Eres un extractor de niveles de una CAPTURA de un chart de trading (MotiveWave/"
-        "TradingView) con la herramienta de RIESGO/RECOMPENSA dibujada (un rectángulo con "
-        "una zona VERDE = recompensa/target y una zona ROJA o morada = riesgo/stop, y una "
-        "línea de ENTRADA entre ambas). Devuelves SOLO un objeto JSON válido, sin texto "
-        "extra, con las claves: entry, stop, target (números de precio o null si NO se ven "
-        "con claridad), direction ('long' si la zona verde está ARRIBA de la entrada, "
-        "'short' si está ABAJO, o null), rr (ratio riesgo:recompensa si aparece, o null). "
-        "REGLAS: usa SOLO los precios visibles en las etiquetas del cuadro/ejes; NO "
-        "inventes. Si un nivel no es legible, ponlo en null. Los precios del NQ suelen ser "
-        "~15000-30000 con 2 decimales. No incluyas comas de miles en los números.")
-    usr_msg = ("Extrae entry, stop, target, direction y rr del cuadro de riesgo/recompensa "
-               "de esta imagen. Devuelve EXCLUSIVAMENTE el objeto JSON, sin ``` ni texto.")
+        "Eres un extractor de niveles del cuadro de RIESGO/RECOMPENSA de una captura de un "
+        "chart de trading (normalmente MotiveWave o TradingView). La captura suele ser la "
+        "PANTALLA COMPLETA y muy cargada (eje de precios a la derecha, órdenes 'BOT/SLD', "
+        "volumen/order-flow, muchos números). Tu ÚNICA tarea es localizar el RECTÁNGULO de "
+        "Riesgo/Recompensa dibujado sobre las velas —una caja con una zona VERDE "
+        "(recompensa/target) y una zona ROJA o MORADA (riesgo/stop), separadas por la línea "
+        "de ENTRADA— y leer SUS TRES niveles de precio horizontales:\n"
+        "  • stop   = borde de la zona de riesgo (roja/morada)\n"
+        "  • target = borde de la zona de recompensa (verde)\n"
+        "  • entry  = la línea que separa ambas zonas\n"
+        "IGNORA por completo el eje de precios del borde derecho, los marcadores de órdenes "
+        "ejecutadas (BOT STP / SLD MKT / fills), el volumen y cualquier otro texto del chart: "
+        "usa SOLO las etiquetas de precio del propio rectángulo. Ojo: etiquetas como "
+        "'13.50 (0.05%)' o un 'R: ...' son DISTANCIAS/ratios, NO niveles de precio.\n"
+        "Devuelves SOLO un objeto JSON válido (sin texto extra) con: entry, stop, target "
+        "(precios, o null si el nivel no se ve con claridad), direction ('long' si la zona "
+        "verde está ARRIBA de la entrada, 'short' si está ABAJO, o null), rr (ratio R:R si "
+        "aparece, o null). NO inventes: si no logras identificar el rectángulo R:R con "
+        "confianza, pon los niveles en null (NUNCA uses precios del eje ni de los fills como "
+        "sustituto). Precios NQ típicos ~15000-40000 con 2 decimales; sin comas de miles.")
+    usr_msg = ("Localiza el rectángulo de Riesgo/Recompensa en esta captura (ignora eje, "
+               "órdenes y order-flow) y extrae entry, stop, target, direction y rr de ESE "
+               "cuadro. Devuelve EXCLUSIVAMENTE el objeto JSON, sin ``` ni texto.")
     diag = []
     txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0,
                                diag=diag)
