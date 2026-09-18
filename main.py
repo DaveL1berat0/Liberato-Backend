@@ -8840,6 +8840,30 @@ async def gemini_models(key: str = ""):
         return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
 
 
+@app.get("/api/admin/groq-models")
+async def groq_models(key: str = ""):
+    """Lista los modelos Groq disponibles en la cuenta de Dave, para elegir el de VISIÓN
+    correcto (los Llama 4 con acceso real). Uso: ?key=<ADMIN_KEY>"""
+    if key != ADMIN_KEY:
+        raise HTTPException(403, "clave incorrecta")
+    if not GROQ_KEY:
+        return {"ok": False, "estado": "dormido", "detalle": "falta GROQ_KEY en Railway"}
+    try:
+        async with httpx.AsyncClient(timeout=20) as c:
+            r = await c.get("https://api.groq.com/openai/v1/models",
+                            headers={"Authorization": f"Bearer {GROQ_KEY}"})
+        if r.status_code != 200:
+            return {"ok": False, "status": r.status_code, "detalle": r.text[:300]}
+        data = r.json().get("data", []) or []
+        ids = sorted([m.get("id", "") for m in data])
+        vision = [i for i in ids if any(k in i.lower() for k in
+                  ("llama-4", "llama4", "scout", "maverick", "vision", "-vl", "qwen3-vl", "qwen-vl"))]
+        return {"ok": True, "vision_candidates": vision, "vision_configurada": GROQ_VISION_MODELS,
+                "total": len(ids), "modelos": ids}
+    except Exception as e:
+        return {"ok": False, "error": f"{type(e).__name__}: {str(e)[:200]}"}
+
+
 async def _extract_levels_core(img, mime, debug=False):
     """Motor compartido: manda la imagen a visión (Groq PRIMARIA → Gemini respaldo) y parsea
     entry/stop/target/direction/rr del cuadro de Risk/Reward. Regla #1: nivel no legible → null."""
