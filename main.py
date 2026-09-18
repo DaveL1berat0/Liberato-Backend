@@ -79,6 +79,12 @@ GROQ_KEY         = os.getenv("GROQ_KEY",         "").strip()
 # Configurables por env sin redeploy si Groq cambia el catálogo de modelos.
 GROQ_BRIEF_MODEL     = os.getenv("GROQ_BRIEF_MODEL",     "llama-3.1-8b-instant").strip()
 GROQ_COMMITTEE_MODEL = os.getenv("GROQ_COMMITTEE_MODEL", "qwen/qwen3.6-27b").strip()
+# Visión (leer niveles del cuadro R:R de un screenshot): Llama 4 multimodal en Groq.
+# Cadena Maverick(400B, más preciso)→Scout(109B, más ligero). Groq es la IA PRIMARIA y
+# tiene cuota; Gemini free se agota (429). Configurable por env sin redeploy.
+GROQ_VISION_MODELS = [m.strip() for m in os.getenv("GROQ_VISION_MODELS",
+    "meta-llama/llama-4-maverick-17b-128e-instruct,meta-llama/llama-4-scout-17b-16e-instruct"
+    ).split(",") if m.strip()]
 # ── TradeStation (journal automático, SOLO LECTURA) ──────────────────────────
 # Se obtienen por email a ClientExperience@tradestation.com (no hay self-service).
 # El scope pedido NO incluye "Trade": el sistema puede VER trades, nunca operar.
@@ -282,6 +288,52 @@ async def _gemini_vision(img_b64, mime, sys_msg, usr_msg, max_tokens=400, temper
             txt, _ = await _try(mdl, False, "plain")
             if txt:
                 return txt
+    return None
+
+async def _groq_vision(img_b64, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0, diag=None):
+    """Lee una IMAGEN con Groq (Llama 4 multimodal) — PRIMARIA de la extracción de niveles.
+    Groq es la IA principal de la web y tiene cuota; Gemini free se agota (429). Formato
+    OpenAI-compat: content del user = [texto, image_url con data URI]. Cadena de modelos
+    (Maverick→Scout) con fallback. Presupuesto 'groq' (cobra por intento real, sin fuga).
+    Regla #1: si no hay texto, devuelve None (el llamador mostrará '—' o probará Gemini)."""
+    if not GROQ_KEY:
+        if diag is not None: diag.append({"prov": "groq", "error": "sin GROQ_KEY"})
+        return None
+    data_uri = f"data:{mime or 'image/png'};base64,{img_b64}"
+    messages = [
+        {"role": "system", "content": sys_msg},
+        {"role": "user", "content": [
+            {"type": "text", "text": usr_msg},
+            {"type": "image_url", "image_url": {"url": data_uri}},
+        ]},
+    ]
+    for mdl in GROQ_VISION_MODELS:
+        if not budget_ok("groq", 1):
+            if diag is not None: diag.append({"prov": "groq", "error": "sin presupuesto groq (día)"})
+            break
+        budget_charge("groq", 1)   # cobra por intento real (una llamada consume cuota aunque falle)
+        try:
+            async with httpx.AsyncClient(timeout=45) as client:
+                r = await client.post("https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                    json={"model": mdl, "max_tokens": max(max_tokens, 512), "temperature": temperature,
+                          "messages": messages})
+            if r.status_code != 200:
+                if diag is not None:
+                    diag.append({"prov": "groq", "model": mdl, "http": r.status_code, "detail": r.text[:180]})
+                print(f"[groq-vision] {mdl} {r.status_code}: {r.text[:120]}")
+                continue
+            j = r.json()
+            txt = (((j.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+            if txt:
+                return txt
+            if diag is not None:
+                diag.append({"prov": "groq", "model": mdl, "http": 200, "empty": True})
+            print(f"[groq-vision] {mdl} 200 texto vacío")
+        except Exception as e:
+            if diag is not None:
+                diag.append({"prov": "groq", "model": mdl, "error": type(e).__name__, "detail": str(e)[:120]})
+            print(f"[groq-vision] {mdl} error: {e}")
     return None
 
 def _window_key(window):
@@ -8789,10 +8841,10 @@ async def gemini_models(key: str = ""):
 
 
 async def _extract_levels_core(img, mime, debug=False):
-    """Motor compartido: manda la imagen a Gemini visión y parsea entry/stop/target/
-    direction/rr del cuadro de Risk/Reward. Regla #1: nivel no legible → null."""
-    if not GEMINI_API_KEY:
-        return {"ok": False, "reason": "visión IA no configurada (falta GEMINI_API_KEY)"}
+    """Motor compartido: manda la imagen a visión (Groq PRIMARIA → Gemini respaldo) y parsea
+    entry/stop/target/direction/rr del cuadro de Risk/Reward. Regla #1: nivel no legible → null."""
+    if not GROQ_KEY and not GEMINI_API_KEY:
+        return {"ok": False, "reason": "visión IA no configurada (falta GROQ_KEY/GEMINI_API_KEY)"}
     # Solo formatos que Gemini visión acepta (evita mandar HEIC sin decodificar/GIF/etc.
     # que darían 400 en toda la cadena y un error confuso).
     _MIME_OK = ("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
@@ -8823,8 +8875,11 @@ async def _extract_levels_core(img, mime, debug=False):
                "órdenes y order-flow) y extrae entry, stop, target, direction y rr de ESE "
                "cuadro. Devuelve EXCLUSIVAMENTE el objeto JSON, sin ``` ni texto.")
     diag = []
-    txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0,
-                               diag=diag)
+    # PRIMARIA: Groq (Llama 4 multimodal) — tiene cuota. RESPALDO: Gemini (free se agota → 429).
+    txt = await _groq_vision(img, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0, diag=diag)
+    if not txt:
+        txt = await _gemini_vision(img, mime, sys_msg, usr_msg, max_tokens=512, temperature=0.0,
+                                   diag=diag)
     # diag compacto para el cliente (sin cuerpos de error crudos de Google); completo solo en debug.
     def _diag_out():
         if debug:
