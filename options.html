@@ -1094,11 +1094,23 @@ function detHtml(d){
   if(re.status==='Risky') p2.push('Inmobiliario ('+(re.value||'—')+') es punto de fricción.');
   return '<div class="bl">Entorno</div><p>'+p1.join(' ')+'</p>'+(p2.length?('<div class="bl">Tensión</div><p>'+p2.join(' ')+'</p>'):'');
 }
+// Render de las líneas INTRADÍA de la rutina (mismo formato .bl/<p> que groqToHtml, sin footer).
+function groqIntraday(lines){
+  return lines.map(function(line){
+    var m=line.match(/^\*\*(.+?):\*\*\s*(.*)$/);
+    if(m)return '<div class="bl">'+m[1]+'</div><p>'+fmtInline(m[2])+'</p>';
+    return '<p>'+fmtInline(line)+'</p>';
+  }).join('');
+}
 function loadBrief(){
   fetch(API+'/api/leaps/brief').then(function(r){return r.json();}).then(function(d){
     var sub=document.getElementById('brief-sub');
     if(sub)sub.textContent=(d&&d.brief)?'narrado por IA · Groq':'resumen determinista';
-    renderBrief(ENV, (d&&d.brief)?groqToHtml(d.brief):detHtml(ENV), !!(d&&d.brief));
+    // REFUERZO (17-sep): antepone Catalizador/Geopolítica/Volatilidad/Claridad de la rutina
+    // institucional (lo que Dave ama) ANTES del brief LEAPS, en el mismo contenedor.
+    var intra=(d&&d.intraday&&d.intraday.length)?groqIntraday(d.intraday):'';
+    var leaps=(d&&d.brief)?groqToHtml(d.brief):detHtml(ENV);
+    renderBrief(ENV, intra+leaps, !!(d&&d.brief));
   }).catch(function(){ renderBrief(ENV, detHtml(ENV), false); });
 }
 function renderBrief(d, fullHtml, isAI){

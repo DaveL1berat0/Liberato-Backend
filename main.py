@@ -3098,10 +3098,20 @@ async def get_leaps_brief():
         try: await refresh_leaps_brief()
         except Exception as e: print(f"[leaps-brief] gen: {e}")
     env = _env_cache.get("data") or {}
+    # REFUERZO (17-sep): antepone las líneas INTRADÍA de la rutina institucional que Dave ama
+    # (Catalizador/Geopolítica/Volatilidad/Claridad) — texto YA cacheado, 0 llamadas Groq extra.
+    # Así el brief de Options deja de ser solo macro-LEAPS y también dice "qué mueve el NQ hoy".
+    inst = cache.get("institutional", {}) or {}
+    itext = inst.get("text") or ""
+    _want = ("catalizador", "geopol", "volatil", "claridad")
+    intraday = [l.strip() for l in itext.split("\n")
+                if l.strip() and l.strip().lower().lstrip("*").startswith(_want)]
     return {"brief": _brief_cache["text"], "model": f"{_brief_cache.get('model') or GROQ_BRIEF_MODEL} (Groq)",
             "generated_at": (datetime.fromtimestamp(_brief_cache["ts"], NY).isoformat()
                              if _brief_cache["ts"] else None),
-            "score": env.get("score"), "classification": env.get("classification")}
+            "score": env.get("score"), "classification": env.get("classification"),
+            "intraday": intraday, "intraday_updated": inst.get("last_update"),
+            "intraday_status": inst.get("status")}
 
 # ═══════════ AI MARKET BRIEF — INVESTMENT COMMITTEE (10 secciones, Groq narra el dato real) ═══════════
 _committee_cache = {"text": None, "ts": 0.0, "cooldown": 0.0}
