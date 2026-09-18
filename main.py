@@ -77,14 +77,13 @@ GROQ_KEY         = os.getenv("GROQ_KEY",         "").strip()
 # Modelos Groq: el brief rápido (1 línea, se pide seguido) usa uno LIGERO para no quemar la
 # cuota diaria; el Investment Committee (10 secciones, se cachea 6h) usa el grande.
 # Configurables por env sin redeploy si Groq cambia el catálogo de modelos.
-GROQ_BRIEF_MODEL     = os.getenv("GROQ_BRIEF_MODEL",     "llama-3.1-8b-instant").strip()
-GROQ_COMMITTEE_MODEL = os.getenv("GROQ_COMMITTEE_MODEL", "qwen/qwen3.6-27b").strip()
-# Visión (leer niveles del cuadro R:R de un screenshot): Llama 4 multimodal en Groq.
-# Cadena Maverick(400B, más preciso)→Scout(109B, más ligero). Groq es la IA PRIMARIA y
-# tiene cuota; Gemini free se agota (429). Configurable por env sin redeploy.
-GROQ_VISION_MODELS = [m.strip() for m in os.getenv("GROQ_VISION_MODELS",
-    "meta-llama/llama-4-maverick-17b-128e-instruct,meta-llama/llama-4-scout-17b-16e-instruct"
-    ).split(",") if m.strip()]
+GROQ_BRIEF_MODEL     = os.getenv("GROQ_BRIEF_MODEL",     "qwen/qwen3.8-27b").strip()   # llama-3.1-8b-instant deprecado en Groq (17-sep)
+GROQ_COMMITTEE_MODEL = os.getenv("GROQ_COMMITTEE_MODEL", "qwen/qwen3.8-27b").strip()
+# Visión (leer niveles del cuadro R:R de un screenshot). NOTA (17-sep, verificado con
+# /api/admin/groq-models): la cuenta Groq de Dave NO tiene modelos multimodales (ni Llama 4
+# ni VL) → default VACÍO: la visión salta directo a Gemini (que sí funciona con 3.7/3.6/3.5-
+# flash). Si Groq habilita visión, poné GROQ_VISION_MODELS=<id> en Railway (sin redeploy).
+GROQ_VISION_MODELS = [m.strip() for m in os.getenv("GROQ_VISION_MODELS", "").split(",") if m.strip()]
 # ── TradeStation (journal automático, SOLO LECTURA) ──────────────────────────
 # Se obtienen por email a ClientExperience@tradestation.com (no hay self-service).
 # El scope pedido NO incluye "Trade": el sistema puede VER trades, nunca operar.
@@ -165,13 +164,16 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 # abierto de 27B que además corre con reasoning OFF por velocidad); Gemini 3.x SIEMPRE
 # RAZONA y no se puede apagar (thinkingBudget:0 → 400/ignorado desde 3.x), por eso se le
 # da un colchón AMPLIO de maxOutputTokens (thought+respuesta), sin thinkingConfig. Para
-# fijar una versión concreta, poné GEMINI_MODEL=gemini-3.8-flash (o el que sea) en Railway.
-GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-flash-latest").strip()
+# fijar una versión concreta, poné GEMINI_MODEL=gemini-3.7-flash (o el que sea) en Railway.
+# 17-sep-2026 (verificado en vivo): gemini-flash-latest (=3.8) y los -lite dan 429 SIN
+# CUOTA en free tier (el modelo MÁS nuevo casi no trae free tier). Los 3.5/3.6/3.7-flash SÍ
+# tienen cuota y soportan visión → se fija 3.7-flash y se encadenan 3.6/3.5 de respaldo.
+GEMINI_MODEL   = os.getenv("GEMINI_MODEL", "gemini-3.7-flash").strip()
 def _gemini_model_chain():
     # El límite gratis de Gemini es POR MODELO; ante 429 (cuota) o 400/404 (deprecado)
-    # se prueba el siguiente. gemini-3.1-flash-lite verificado funcionando 8-sep.
+    # se prueba el siguiente. Cadena a modelos CON cuota real (17-sep): 3.7→3.6→3.5-flash.
     chain = []
-    for m in [GEMINI_MODEL, "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-flash-latest"]:
+    for m in [GEMINI_MODEL, "gemini-3.6-flash", "gemini-3.5-flash"]:
         if m and m not in chain:
             chain.append(m)
     return chain
@@ -5397,7 +5399,7 @@ async def refresh_institutional(force=False):
                 r = await client.post(
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers={"Authorization":f"Bearer {GROQ_KEY}","Content-Type":"application/json"},
-                    json={"model":"qwen/qwen3.6-27b","max_tokens":560,"temperature":0.55,
+                    json={"model":GROQ_COMMITTEE_MODEL,"max_tokens":560,"temperature":0.55,
                           "reasoning_effort":"none",   # texto: sin razonamiento -> respuesta directa y corta (verificado app fitness)
                           "messages":[{"role":"system","content":sys_msg},
                                       {"role":"user","content":usr_msg}]}
@@ -5526,7 +5528,7 @@ def health():
                        if not gex_data else
                        "Resumen pendiente — próxima generación: 9:05 AM o 12:00 PM ET"),
             extra   = {
-                "model":            "qwen/qwen3.6-27b (Groq)",
+                "model":            GROQ_COMMITTEE_MODEL + " (Groq)",
                 "schedule":         "9:05 AM + 12:00 PM ET lun-vie",
                 "requires":         "Datos reales de GEX (FlashAlpha) para contexto institucional",
                 "credits":          "Gratis — sin límite relevante para 2 llamadas/día",
@@ -8735,7 +8737,7 @@ async def journal_coach(request: Request):
                 r = await client.post(
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                    json={"model": "qwen/qwen3.6-27b", "max_tokens": 350, "temperature": 0.5,
+                    json={"model": GROQ_COMMITTEE_MODEL, "max_tokens": 350, "temperature": 0.5,
                           "reasoning_effort": "none",
                           "messages": [{"role": "system", "content": sys_msg},
                                        {"role": "user", "content": usr_msg}]}
@@ -9064,7 +9066,7 @@ async def journal_parse_csv(request: Request):
             r = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-                json={"model": "qwen/qwen3.6-27b", "max_tokens": 6000,
+                json={"model": GROQ_COMMITTEE_MODEL, "max_tokens": 6000,
                       "temperature": 0.1, "response_format": {"type": "json_object"},
                       "reasoning_effort": "none",   # llama-3.3 decomisionado; qwen es el modelo vivo (ver institutional)
                       "messages": [{"role": "system", "content": sys_msg},
