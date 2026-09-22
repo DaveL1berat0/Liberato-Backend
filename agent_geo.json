@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Trump dijo ante la Asamblea General de la ONU que espera un acuerdo con Iran recien tras las elecciones de medio termino de noviembre (la alternativa que planteo es 'aniquilar' al regimen), mientras Iran senalizo que podria reabrir el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar; en paralelo Xi Jinping llega a Washington para la cumbre del 24-sep con la tregua arancelaria por vencer el 10-nov y la IA/semiconductores como tema central, lo que mantiene la cautela en las tecnologicas del NQ.",
-  "petroleo": "Brent y WTI cotizan practicamente sin cambios (Brent -0.38 USD a 99.96 USD/barril, WTI -0.17 USD a 95.61 USD/barril) tras los comentarios de Trump en la ONU que posponen un posible acuerdo con Iran hasta despues de las elecciones; el crudo estable, lejos de escaladas bruscas, deja un trasfondo neutral para el apetito de riesgo en el NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos cae por debajo del 5% mientras el mercado espera declaraciones de la Fed: el vicepresidente Philip Jefferson habla hoy en la Conferencia del Mercado de Tesoros de la Fed de Nueva York, en el contexto de la reciente suba de tasas de 25pb (16-sep) y el tono hawkish sobre inflacion del presidente Kevin Warsh, factor que el NQ sigue de cerca por su sensibilidad a tasas.",
+  "geopolitica": "Trump advirtio en su discurso ante la ONU que enfrenta una 'gran decision' sobre Iran: cerrar un acuerdo tras las elecciones de mitad de mandato o 'aniquilar' al pais, lo que mantiene elevada la prima de riesgo geopolitico y puede presionar al NQ via apetito por riesgo.",
+  "petroleo": "El Brent (~100 USD) y el WTI (~96 USD) llegaron a caer hasta 3.5% tras el discurso de Trump en la ONU sobre un posible acuerdo con Iran, recortando luego parte de la baja; la caida del crudo alivia presion inflacionaria y es marginalmente positiva para el NQ.",
+  "catalizador": "El indice manufacturero de la Fed de Richmond de septiembre sorprendio a la baja al caer a -2 (vs -1 esperado), publicado a las 10:00 ET, un dato debil que refuerza las apuestas de una Fed mas dovish y podria favorecer al NQ.",
   "sources": [
-    "CNBC 22-sep-2026 - oil-iran-us-bessent-un-crude",
-    "CNBC 22-sep-2026 - treasury-yield-us-bond-market-trump",
-    "CNBC 22-sep-2026 - 5-things-to-know-before-the-stock-market-opens",
-    "CNBC 21-sep-2026 - trump-xi-china-summit-trade-tariffs",
-    "CNBC 16-sep-2026 - fed-rate-decision-september-2026"
+    "Axios 10:59 ET",
+    "CNBC 22/09 ET",
+    "NBC News 22/09 ET",
+    "Richmond Fed 10:00 ET"
   ],
-  "as_of": "2026-09-22T16:06:23Z"
+  "as_of": "2026-09-22T17:06:16Z"
 }
