@@ -5114,6 +5114,9 @@ def _cot_context_line():
 
 INSTITUTIONAL_MIN_INTERVAL = int(os.getenv("INSTITUTIONAL_MIN_INTERVAL", "840"))  # seg (14 min)
 
+# Snapshot del último prompt del brief (sys+usr+ctx), para publicarlo a la rutina Claude.
+_BRIEF_PROMPT_SNAPSHOT = None
+
 async def refresh_institutional(force=False):
     """Motor de IA institucional — genera análisis desde CUALQUIER dato disponible.
     Funciona 24/7: con o sin GEX, mercado abierto o cerrado, fin de semana.
@@ -5448,6 +5451,32 @@ async def refresh_institutional(force=False):
                    "**Técnico:** como aún no hay niveles GEX de RTH, di literalmente 'GEX: esperando niveles de la "
                    "sesión RTH' y apóyate en inventario/gap/vol/sector tech. Cierra con **Claridad:** score 1-10 hacia "
                    "alza/baja/sin dirección. No inventes datos.")
+
+    # ── Snapshot del prompt EXACTO (para el relay a Claude en la nube) ──────────
+    # El agente Claude (rutina cloud) genera el brief con ESTE mismo prompt+contexto, así
+    # todos los modelos (Claude/Groq/Gemini) responden consistente y como lo configuramos.
+    global _BRIEF_PROMPT_SNAPSHOT
+    _BRIEF_PROMPT_SNAPSHOT = {"sys": sys_msg, "usr": usr_msg, "has_gamma": has_gamma,
+                              "as_of": datetime.now(NY).isoformat()}
+
+    # ── PRIORIDAD: si hay un brief de CLAUDE (relay GitHub) fresco, ese MANDA ────
+    # Claude (tu membresía) es más capaz que qwen/gemini-flash; y así NO gastamos la cuota
+    # de Groq/Gemini en cada refresco. Se conserva su texto y solo re-aplicamos los splices
+    # en vivo (geo/catalizador). Groq/Gemini quedan de respaldo si Claude se queda stale.
+    _cl_as_of = cache["institutional"].get("claude_as_of")
+    if _cl_as_of and cache["institutional"].get("text"):
+        try:
+            if (datetime.now(NY) - datetime.fromisoformat(_cl_as_of)).total_seconds() < 7200:
+                try:
+                    _splice_agent_geo_into_brief()
+                except Exception:
+                    pass
+                if groq_ok:   # devolvemos el crédito reservado: no se usó
+                    try: budget_charge("groq", -1)
+                    except Exception: pass
+                return
+        except Exception:
+            pass
 
     text = None
     if groq_ok:
@@ -9770,6 +9799,136 @@ async def refresh_agent_context_from_github():
     print(f"[agent-gh] contexto actualizado desde GitHub (had_real={had})")
 
 
+# ══ RELAY DEL BRIEF COMPLETO CON CLAUDE (tu membresía refuerza la página) ═══════
+# El backend NO puede hacer WebSearch ni razonar como Claude; y Groq(950/día)+Gemini(free)
+# se agotan a media sesión. Solución: el backend PUBLICA su prompt+contexto EXACTOS a GitHub
+# (rama geo-feed, brief_context.json); la rutina Claude (tu plan) los lee, genera el brief con
+# EL MISMO prompt y lo devuelve (brief_out.json); el backend lo usa como PRIMARIO y así no
+# gasta Groq/Gemini. Todos los modelos usan el mismo prompt → respuestas consistentes.
+GITHUB_REPO  = os.getenv("GITHUB_REPO", "DaveL1berat0/Liberato-Backend").strip()
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "").strip()   # PAT fine-grained: Contents R/W en el repo
+BRIEF_FEED_BRANCH = os.getenv("BRIEF_FEED_BRANCH", "geo-feed").strip()
+
+async def _github_put_file(path, content_str, message):
+    """Crea/actualiza un archivo en la rama BRIEF_FEED_BRANCH vía la API de contenidos de
+    GitHub (necesita GITHUB_TOKEN). Devuelve True si quedó guardado."""
+    if not GITHUB_TOKEN:
+        return False
+    api = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+    hdr = {"Authorization": f"Bearer {GITHUB_TOKEN}", "Accept": "application/vnd.github+json",
+           "X-GitHub-Api-Version": "2022-11-28"}
+    try:
+        async with httpx.AsyncClient(timeout=15) as cl:
+            g = await cl.get(api, headers=hdr, params={"ref": BRIEF_FEED_BRANCH})
+            sha = g.json().get("sha") if g.status_code == 200 else None
+            body = {"message": message, "branch": BRIEF_FEED_BRANCH,
+                    "content": base64.b64encode(content_str.encode()).decode()}
+            if sha:
+                body["sha"] = sha
+            p = await cl.put(api, headers=hdr, json=body)
+        if p.status_code in (200, 201):
+            return True
+        print(f"[brief-relay] PUT {path} {p.status_code}: {p.text[:160]}")
+        return False
+    except Exception as e:
+        print(f"[brief-relay] PUT {path} error: {e}")
+        return False
+
+_brief_ctx_sig = None
+async def publish_brief_context_to_github():
+    """Publica el prompt+contexto EXACTOS del brief a GitHub para que la rutina Claude genere
+    el brief con lo mismo que usan Groq/Gemini. No-op si falta GITHUB_TOKEN o el snapshot."""
+    global _brief_ctx_sig
+    if not GITHUB_TOKEN:
+        return
+    snap = _BRIEF_PROMPT_SNAPSHOT
+    if not snap or not snap.get("usr"):
+        # aún no se ha construido un prompt; forzamos una construcción (sin gastar IA si Claude fresco)
+        try:
+            await refresh_institutional(force=True)
+            snap = _BRIEF_PROMPT_SNAPSHOT
+        except Exception:
+            return
+    if not snap or not snap.get("usr"):
+        return
+    sig = hashlib.sha256((snap.get("sys", "") + "\n" + snap.get("usr", "")).encode()).hexdigest()
+    if sig == _brief_ctx_sig:
+        return   # sin cambios → no reescribir
+    payload = {"instruccion": ("Eres el generador del brief institucional de Liberato Community. "
+                               "Usa EXACTAMENTE el mensaje de sistema (campo 'sys') y el de usuario "
+                               "(campo 'usr') de este archivo para redactar el brief, respetando su "
+                               "formato al pie de la letra. NO inventes datos que no estén en 'usr'."),
+               "sys": snap["sys"], "usr": snap["usr"], "has_gamma": snap.get("has_gamma"),
+               "as_of": snap.get("as_of")}
+    ok = await _github_put_file("brief_context.json",
+                                json.dumps(payload, ensure_ascii=False, indent=1),
+                                "brief-context: contexto+prompt del brief para el agente Claude")
+    if ok:
+        _brief_ctx_sig = sig
+        print("[brief-relay] contexto del brief publicado a GitHub")
+
+def _looks_like_brief(txt):
+    """Valida que el texto parezca un brief real (varias etiquetas del formato) para no aplicar
+    basura. Regla#1: si no cumple, se ignora."""
+    if not txt or len(txt) < 80:
+        return False
+    t = txt.lower()
+    hits = sum(1 for lbl in ("**macro", "**catalizador", "**geopol", "**volatil",
+                             "**gestión", "**gestion", "**claridad") if lbl in t)
+    return hits >= 4
+
+_brief_out_sig = None
+async def refresh_brief_from_github():
+    """Lee el brief que generó la rutina Claude (raw geo-feed/brief_out.json) y lo usa como
+    PRIMARIO. Solo si es de HOY (ET) y parece un brief real. Repo público → sin token para leer."""
+    global _brief_out_sig
+    url = (f"https://raw.githubusercontent.com/{GITHUB_REPO}/{BRIEF_FEED_BRANCH}/brief_out.json")
+    try:
+        async with httpx.AsyncClient(timeout=12) as cl:
+            r = await cl.get(url, params={"t": int(time.time() // 300)})
+        if r.status_code != 200:
+            return
+        d = r.json()
+    except Exception as e:
+        print(f"[brief-out] {type(e).__name__}: {str(e)[:80]}")
+        return
+    if not isinstance(d, dict):
+        return
+    brief = (d.get("brief") or "").strip()
+    as_of = d.get("as_of")
+    if not _looks_like_brief(brief):
+        return
+    # ¿es de hoy (ET)? mismo criterio robusto que el agente.
+    try:
+        _dt = datetime.fromisoformat(str(as_of).replace("Z", "+00:00")) if as_of else None
+        if _dt is not None:
+            if _dt.tzinfo is None:
+                _dt = _dt.replace(tzinfo=NY)
+            if _dt.astimezone(NY).strftime("%Y-%m-%d") != datetime.now(NY).strftime("%Y-%m-%d"):
+                return   # brief de otro día → no lo aplicamos (evita rancio)
+    except Exception:
+        pass
+    sig = hashlib.sha256(brief.encode()).hexdigest()
+    if sig == _brief_out_sig:
+        return
+    _brief_out_sig = sig
+    cache["institutional"]["text"]        = brief
+    cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
+    cache["institutional"]["claude_as_of"] = datetime.now(NY).isoformat()
+    cache["institutional"]["status"]      = "fresh-claude"
+    cache["institutional"]["source"]      = "claude-relay"
+    try:
+        save_cache()
+    except Exception:
+        pass
+    # Fija geo/catalizador en vivo por si el agente los actualizó después del brief.
+    try:
+        _splice_agent_geo_into_brief()
+    except Exception:
+        pass
+    print("[brief-out] brief de Claude aplicado como primario")
+
+
 @app.post("/api/admin/agent-brief")
 async def ingest_agent_brief(request: Request, key: str = "", authorization: str = Header("")):
     """INGESTA del agente de geopolítica en vivo (rutina Claude con WebSearch: Reuters/
@@ -9813,6 +9972,29 @@ async def diag_agent_context(key: str = "", authorization: str = Header("")):
     return {"agent_context": ag, "as_of": as_of, "as_of_fecha_ET": ag_date,
             "hoy_ET": hoy_et, "es_de_hoy": is_today, "entra_al_brief": entra_al_brief,
             "sig_ultimo_github": (_agent_gh_sig[:120] + "…") if _agent_gh_sig else None}
+
+
+@app.get("/api/admin/brief-relay")
+async def diag_brief_relay(key: str = "", authorization: str = Header(""), publish: int = 0):
+    """DIAGNÓSTICO/CONTROL del relay del brief con Claude. ?publish=1 publica el contexto AHORA.
+    Muestra si hay GITHUB_TOKEN, si se publicó el contexto y si ya llegó un brief de Claude."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    published = None
+    if publish:
+        await publish_brief_context_to_github()
+        published = bool(_brief_ctx_sig)
+    inst = cache.get("institutional", {}) or {}
+    return {
+        "github_token_configurado": bool(GITHUB_TOKEN),
+        "repo": GITHUB_REPO, "rama": BRIEF_FEED_BRANCH,
+        "contexto_publicado_ahora": published,
+        "prompt_snapshot_listo": bool(_BRIEF_PROMPT_SNAPSHOT and _BRIEF_PROMPT_SNAPSHOT.get("usr")),
+        "brief_source": inst.get("source"), "brief_status": inst.get("status"),
+        "claude_as_of": inst.get("claude_as_of"),
+        "context_raw_url": f"https://raw.githubusercontent.com/{GITHUB_REPO}/{BRIEF_FEED_BRANCH}/brief_context.json",
+        "brief_out_raw_url": f"https://raw.githubusercontent.com/{GITHUB_REPO}/{BRIEF_FEED_BRANCH}/brief_out.json",
+    }
 
 
 @app.get("/api/context/institutional")
@@ -10131,6 +10313,12 @@ async def startup():
     # en la ventana de las rutinas (6am-6pm ET L-V). Lee un raw público, coste ~0.
     scheduler.add_job(refresh_agent_context_from_github,
                       CronTrigger(hour="6-18", minute="*/5", day_of_week="mon-fri"))
+    # Relay del BRIEF COMPLETO con Claude: (1) publica el prompt+contexto a GitHub cada 20 min
+    # (no-op sin GITHUB_TOKEN); (2) lee el brief que devolvió la rutina Claude cada 5 min.
+    scheduler.add_job(publish_brief_context_to_github,
+                      CronTrigger(hour="6-18", minute="1,21,41", day_of_week="mon-fri"))
+    scheduler.add_job(refresh_brief_from_github,
+                      CronTrigger(hour="6-19", minute="*/5", day_of_week="mon-fri"))
 
     # ── COT (CFTC) — dato SEMANAL: se publica los viernes ~15:30 ET. Refrescamos
     # el viernes por la tarde (tras la publicación) y una vez al día por si el
