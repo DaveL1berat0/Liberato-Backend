@@ -9561,20 +9561,21 @@ async def get_company(ticker: str):
     cache["company"][sym] = {"data": result, "ts": time.time()}
     return result
 
-@app.post("/api/context/agent-brief")
+@app.post("/api/admin/agent-brief")
 async def ingest_agent_brief(request: Request, key: str = "", authorization: str = Header("")):
     """INGESTA del agente de geopolítica en vivo (rutina Claude con WebSearch: Reuters/
     Bloomberg/CNBC). El backend no puede hacer WebSearch; el agente le pasa aquí los
     titulares REALES de última hora (geopolítica/petróleo/catalizador) que muevan el NQ.
     Guarda en cache['agent_context'] y regenera el brief institucional (y el de options).
-    Regla #1: descarta vacíos/placeholders → None (NUNCA guarda inventos). Body JSON:
-    {geopolitica?, petroleo?, catalizador?, sources?:[...]}. Protegido por ADMIN_KEY."""
-    if not _is_admin(key, authorization):
-        raise HTTPException(403, "clave incorrecta")
+    Regla #1: descarta vacíos/placeholders → None (NUNCA guarda inventos). Va bajo /api/admin/
+    (salta el paywall) y valida ADMIN_KEY (por query ?key= o en el body). Body JSON:
+    {key, geopolitica?, petroleo?, catalizador?, sources?:[...]}."""
     try:
         b = await request.json()
     except Exception:
         raise HTTPException(400, "JSON inválido")
+    if not _is_admin(key or b.get("key", ""), authorization):
+        raise HTTPException(403, "clave incorrecta")
     def _clean(v):
         s = str(v or "").strip()
         if len(s) < 5 or s.lower() in ("none", "null", "n/a", "na", "sin datos", "-", "—", "ninguno", "nada"):
