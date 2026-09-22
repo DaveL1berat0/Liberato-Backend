@@ -5491,6 +5491,13 @@ async def refresh_institutional(force=False):
     else:
         cache["institutional"]["status"] = "stale"
         print("[institutional] ni Groq ni Gemini generaron — se mantiene el último resumen")
+    # Ancla DETERMINISTA de la geopolítica en vivo del agente (quota-proof): tras generar (o
+    # mantener) el brief, fija la línea **Geopolítica:** al titular real del agente si es de hoy.
+    try:
+        if _splice_agent_geo_into_brief():
+            print("[institutional] geopolítica del agente fijada (splice determinista)")
+    except Exception:
+        pass
 
 # ══ ALPHA VANTAGE — Company details (on-demand, max 3x/día) ══════════════════
 async def get_company_av(sym):
@@ -9643,6 +9650,51 @@ async def get_company(ticker: str):
     cache["company"][sym] = {"data": result, "ts": time.time()}
     return result
 
+def _agent_is_today():
+    """True si el contexto del agente en cache es de HOY (ET). Parseo tz-robusto."""
+    ag = cache.get("agent_context") or {}
+    _aso = ag.get("as_of")
+    if not _aso:
+        return False
+    try:
+        _d = datetime.fromisoformat(str(_aso).replace("Z", "+00:00"))
+        if _d.tzinfo is None:
+            _d = _d.replace(tzinfo=NY)
+        return _d.astimezone(NY).strftime("%Y-%m-%d") == datetime.now(NY).strftime("%Y-%m-%d")
+    except Exception:
+        return str(_aso)[:10] == datetime.now(NY).strftime("%Y-%m-%d")
+
+def _splice_agent_geo_into_brief():
+    """Inserta de forma DETERMINISTA la geopolítica (+petróleo) EN VIVO del agente en la línea
+    **Geopolítica:** del brief cacheado. QUOTA-PROOF: garantiza que el titular fresco del agente
+    aparezca aunque Groq y Gemini estén sin cupo y no puedan regenerar el brief. El agente ya
+    entrega una frase limpia en español encuadrada por su efecto en el NQ → no se inventa nada
+    (Regla#1). Solo con dato real del agente y solo si es de HOY (ET). Devuelve True si cambió."""
+    if not _agent_is_today():
+        return False
+    ag = cache.get("agent_context") or {}
+    geo = ag.get("geopolitica")
+    oil = ag.get("petroleo")
+    if not geo and not oil:
+        return False
+    txt = (cache.get("institutional", {}) or {}).get("text") or ""
+    if not txt:
+        return False
+    nueva = "**Geopolítica:** " + " ".join([s for s in (geo, oil) if s])
+    lines = txt.split("\n")
+    for i, l in enumerate(lines):
+        if l.strip().lower().startswith("**geopol"):
+            if lines[i].strip() == nueva.strip():
+                return False   # ya estaba
+            lines[i] = nueva
+            cache["institutional"]["text"] = "\n".join(lines)
+            try:
+                save_cache()
+            except Exception:
+                pass
+            return True
+    return False
+
 def _store_agent_context(geo, oil, cat, srcs, as_of=None):
     """Guarda el contexto del agente de geopolítica (compartido por el endpoint POST y el
     poller de GitHub). Regla #1: descarta vacíos/placeholders → None. Si hay algún dato real,
@@ -9662,6 +9714,13 @@ def _store_agent_context(geo, oil, cat, srcs, as_of=None):
     except Exception:
         pass
     if g or o or c:
+        # 1) Splice DETERMINISTA inmediato → la geopolítica fresca aparece YA, aunque las IAs
+        #    estén sin cupo (Groq 950/día + Gemini free 429 se agotan a media sesión).
+        try:
+            _splice_agent_geo_into_brief()
+        except Exception:
+            pass
+        # 2) Regeneración por IA (mejor calidad si hay cupo); si no, el splice ya cubrió la geo.
         asyncio.create_task(refresh_institutional(force=True))
         for _cn in ("_brief_cache", "_committee_cache"):
             try:
