@@ -9665,35 +9665,45 @@ def _agent_is_today():
         return str(_aso)[:10] == datetime.now(NY).strftime("%Y-%m-%d")
 
 def _splice_agent_geo_into_brief():
-    """Inserta de forma DETERMINISTA la geopolítica (+petróleo) EN VIVO del agente en la línea
-    **Geopolítica:** del brief cacheado. QUOTA-PROOF: garantiza que el titular fresco del agente
-    aparezca aunque Groq y Gemini estén sin cupo y no puedan regenerar el brief. El agente ya
-    entrega una frase limpia en español encuadrada por su efecto en el NQ → no se inventa nada
+    """Inserta de forma DETERMINISTA las líneas EN VIVO del agente (Claude: WebSearch
+    Reuters/Bloomberg/CNBC) en el brief cacheado — hoy **Geopolítica:** (+petróleo) y
+    **Catalizador:**. QUOTA-PROOF: garantiza que los titulares frescos del agente aparezcan
+    aunque Groq y Gemini estén sin cupo y no puedan regenerar el brief. El agente ya entrega
+    frases limpias en español encuadradas por su efecto en el NQ → no se inventa nada
     (Regla#1). Solo con dato real del agente y solo si es de HOY (ET). Devuelve True si cambió."""
     if not _agent_is_today():
         return False
     ag = cache.get("agent_context") or {}
-    geo = ag.get("geopolitica")
-    oil = ag.get("petroleo")
-    if not geo and not oil:
+    geo = ag.get("geopolitica"); oil = ag.get("petroleo"); cat = ag.get("catalizador")
+    # Mapa etiqueta_del_brief -> texto en vivo (solo las que el agente trae). El petróleo se
+    # funde en la línea de Geopolítica (el formato del brief no tiene línea de Petróleo aparte).
+    reempl = {}
+    if geo or oil:
+        reempl["**geopol"] = "**Geopolítica:** " + " ".join([s for s in (geo, oil) if s])
+    if cat:
+        reempl["**cataliz"] = "**Catalizador:** " + cat
+    if not reempl:
         return False
     txt = (cache.get("institutional", {}) or {}).get("text") or ""
     if not txt:
         return False
-    nueva = "**Geopolítica:** " + " ".join([s for s in (geo, oil) if s])
     lines = txt.split("\n")
+    changed = False
     for i, l in enumerate(lines):
-        if l.strip().lower().startswith("**geopol"):
-            if lines[i].strip() == nueva.strip():
-                return False   # ya estaba
-            lines[i] = nueva
-            cache["institutional"]["text"] = "\n".join(lines)
-            try:
-                save_cache()
-            except Exception:
-                pass
-            return True
-    return False
+        low = l.strip().lower()
+        for pref, nueva in reempl.items():
+            if low.startswith(pref) and lines[i].strip() != nueva.strip():
+                lines[i] = nueva
+                changed = True
+                break
+    if not changed:
+        return False
+    cache["institutional"]["text"] = "\n".join(lines)
+    try:
+        save_cache()
+    except Exception:
+        pass
+    return True
 
 def _store_agent_context(geo, oil, cat, srcs, as_of=None):
     """Guarda el contexto del agente de geopolítica (compartido por el endpoint POST y el
