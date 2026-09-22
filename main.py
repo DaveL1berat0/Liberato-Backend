@@ -508,6 +508,7 @@ _PUBLIC_API_EXACT = {
     "/", "/health", "/api/version", "/api/health/feeds", "/api/auth/health",
     "/api/email/health", "/api/contact", "/api/community/access",
     "/api/whop/webhook", "/api/broker/tradestation/callback",
+    "/api/email/unsubscribe",   # baja pública desde el pie del correo (token firmado)
 }
 _PUBLIC_API_PREFIX = ("/api/auth/", "/api/admin/", "/api/webhooks/")
 _gate_cache = {}   # email -> (is_premium:bool, jtis:set|None, expires_at:float) · evita hit a Supabase por poll
@@ -7342,6 +7343,8 @@ WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/l
 # Base de la web (para links en correos). Cambiar a https://liberatocommunity.com
 # cuando el dominio quede apuntando a GitHub Pages.
 SITE_URL = os.getenv("SITE_URL", "https://davel1berat0.github.io/Liberato-Backend").strip().rstrip("/")
+# URL del BACKEND (Railway) — para links que apuntan a endpoints /api/ (ej. baja de correo).
+BACKEND_URL = os.getenv("BACKEND_URL", "https://web-production-33671.up.railway.app").strip().rstrip("/")
 # Railway BLOQUEA los puertos SMTP salientes (465/587) → "Network is unreachable".
 # Por eso el correo se envía por la API HTTP de Brevo (puerto 443). SMTP queda de
 # fallback (funciona en local u otros hosts que lo permitan).
@@ -7554,9 +7557,63 @@ async def admin_users(key: str = "", authorization: str = Header("")):
             "free": b["free"], "premium": b["premium"], "trial": b["trial"]}
 
 @app.post("/api/admin/email/broadcast")
+# ── Baja de correos de marketing (unsubscribe) ───────────────────────────────
+def _unsub_token(email):
+    """Token firmado (HMAC con AUTH_SECRET) para el link de baja — evita que alguien
+    dé de baja a otro con solo su correo."""
+    return _b64u(hmac.new(AUTH_SECRET.encode(), ("unsub:" + (email or "").lower()).encode(),
+                          hashlib.sha256).digest())[:22]
+async def _is_unsubscribed(email):
+    if not email:
+        return False
+    try:
+        return bool(await _sb_get_config("unsub::" + email.lower()))
+    except Exception:
+        return False
+def _unsub_footer(email):
+    """Pie con link de baja para correos de marketing (NO en transaccionales)."""
+    link = f"{BACKEND_URL}/api/email/unsubscribe?e={email.lower()}&t={_unsub_token(email)}"
+    return (f"<p style='margin-top:22px;font-size:12px;color:#7A7870;'>¿No quieres recibir estos "
+            f"correos? <a href='{link}' style='color:#7A7870;text-decoration:underline;'>Cancela tu "
+            f"suscripción aquí</a>.</p>")
+
+@app.get("/api/email/unsubscribe")
+async def email_unsubscribe(e: str = "", t: str = ""):
+    """Baja pública (link del pie). Valida el token firmado. Marca al usuario como desuscrito
+    en Supabase (config unsub::email). Devuelve una página simple de confirmación."""
+    email = (e or "").strip().lower()
+    html_ok = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
+               "<h2 style='color:#12121C;'>Suscripción cancelada</h2>"
+               "<p style='color:#555;'>Ya no recibirás correos de marketing de Liberato Community. "
+               "Seguirás recibiendo correos importantes de tu cuenta.</p></div>")
+    html_bad = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
+                "<h2 style='color:#12121C;'>Link inválido</h2><p style='color:#555;'>No pudimos "
+                "procesar la baja. Escríbenos y lo hacemos manualmente.</p></div>")
+    if not email or not t or not hmac.compare_digest(t, _unsub_token(email)):
+        return HTMLResponse(html_bad, status_code=400)
+    try:
+        await _sb_set_config("unsub::" + email, "1")
+    except Exception as e2:
+        print(f"[unsub] {e2}")
+    return HTMLResponse(html_ok)
+
+@app.post("/api/admin/email/resubscribe")
+async def admin_resubscribe(request: Request, key: str = "", authorization: str = Header("")):
+    """Re-suscribe a un usuario (borra su baja) — por si pide volver a recibir correos."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    try:
+        d = await request.json(); email = (d.get("email") or "").strip().lower()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    if not email:
+        raise HTTPException(400, "Falta 'email'")
+    await _sb_set_config("unsub::" + email, "")
+    return {"ok": True, "email": email, "resubscribed": True}
+
 async def admin_email_broadcast(request: Request, key: str = "", authorization: str = Header("")):
-    """Envía un correo a un grupo (free | premium | all). Throttle anti-spam.
-    OJO: Gmail limita ~500/día; para listas grandes usar un ESP (MailerLite/Brevo)."""
+    """Envía un correo a un grupo (free | trial | paid | premium | all). Throttle anti-spam.
+    Respeta la baja (unsubscribe). OJO: Gmail ~500/día; para listas grandes usar un ESP."""
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     if not EMAIL_READY:
@@ -7585,14 +7642,21 @@ async def admin_email_broadcast(request: Request, key: str = "", authorization: 
         users = [u for u in users if (u.get("plan") or "free") in ("premium", "pro", "admin")]
     elif segment in ("premium", "pro"):
         users = [u for u in users if _is_premium(u)]
-    wrapped = _email_shell(subject, html)
-    sent, failed = 0, 0
+    sent, failed, unsub_skip = 0, 0, 0
     for u in users[:500]:
-        ok = await _send_email(u.get("email"), subject, wrapped)
+        em = u.get("email")
+        # Respeta la baja: quien canceló NO recibe correos de marketing (transaccionales sí).
+        if await _is_unsubscribed(em):
+            unsub_skip += 1
+            continue
+        # Link de baja por-usuario (firmado) en el pie de CADA correo masivo.
+        wrapped = _email_shell(subject, html + _unsub_footer(em))
+        ok = await _send_email(em, subject, wrapped)
         sent += 1 if ok else 0
         failed += 0 if ok else 1
         await asyncio.sleep(1.1)   # throttle
-    return {"segment": segment, "recipients": len(users), "sent": sent, "failed": failed}
+    return {"segment": segment, "recipients": len(users), "sent": sent,
+            "failed": failed, "unsubscribed_skipped": unsub_skip}
 
 # ── Brief diario a Discord ──────────────────────────────────────────────────
 async def _discord_post(url, content):
@@ -7681,6 +7745,68 @@ async def admin_daily_send(key: str = "", authorization: str = Header("")):
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     return await send_daily_briefs()
+
+# ── AJUSTES EDITABLES DESDE EL ADMIN (Supabase, sin tocar Railway) ────────────
+# Los links/webhooks de Discord se pueden pegar en el panel admin y viven en Supabase
+# (app_config). Así Dave NO necesita variables de entorno de Railway. La env var, si
+# existe, es solo el valor inicial; el guardado en Supabase manda.
+_SETTING_KEYS = ("discord_free_invite", "discord_free_webhook", "discord_premium_webhook")
+async def _load_settings_overrides():
+    """Al arrancar, si hay valores guardados en Supabase, sobrescriben los de entorno."""
+    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL
+    try:
+        v = await _sb_get_config("cfg::discord_free_invite")
+        if v: DISCORD_FREE_INVITE = v.strip()
+        v = await _sb_get_config("cfg::discord_free_webhook")
+        if v: DISCORD_WEBHOOK_URL = v.strip()
+        v = await _sb_get_config("cfg::discord_premium_webhook")
+        if v: DISCORD_PREMIUM_WEBHOOK_URL = v.strip()
+    except Exception as e:
+        print(f"[settings] load: {e}")
+
+def _mask_url(u):
+    if not u: return ""
+    return (u[:38] + "…") if len(u) > 40 else u
+
+@app.get("/api/admin/settings")
+async def admin_get_settings(key: str = "", authorization: str = Header("")):
+    """Lee los ajustes editables (webhooks enmascarados; el invite se muestra completo)."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    return {"discord_free_invite": DISCORD_FREE_INVITE,
+            "discord_free_webhook": _mask_url(DISCORD_WEBHOOK_URL),
+            "discord_premium_webhook": _mask_url(DISCORD_PREMIUM_WEBHOOK_URL),
+            "discord_free_webhook_set": bool(DISCORD_WEBHOOK_URL),
+            "discord_premium_webhook_set": bool(DISCORD_PREMIUM_WEBHOOK_URL)}
+
+@app.post("/api/admin/settings")
+async def admin_set_settings(request: Request, key: str = "", authorization: str = Header("")):
+    """Guarda ajustes editables en Supabase y los aplica EN VIVO (sin redeploy). Body:
+    {discord_free_invite?, discord_free_webhook?, discord_premium_webhook?}. Envía solo los
+    que quieras cambiar. Cadena vacía = borrar. Valida un mínimo de forma para no romper."""
+    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    try:
+        d = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    changed = {}
+    if "discord_free_invite" in d:
+        val = (d.get("discord_free_invite") or "").strip()
+        if val and "discord.gg/" not in val and "discord.com/invite/" not in val:
+            raise HTTPException(400, "El invite debe ser un link de Discord (discord.gg/… o discord.com/invite/…)")
+        DISCORD_FREE_INVITE = val
+        await _sb_set_config("cfg::discord_free_invite", val); changed["discord_free_invite"] = bool(val)
+    for _k, _g in (("discord_free_webhook", "DISCORD_WEBHOOK_URL"),
+                   ("discord_premium_webhook", "DISCORD_PREMIUM_WEBHOOK_URL")):
+        if _k in d:
+            val = (d.get(_k) or "").strip()
+            if val and "discord.com/api/webhooks/" not in val:
+                raise HTTPException(400, f"{_k}: debe ser un webhook de Discord (discord.com/api/webhooks/…)")
+            globals()[_g] = val
+            await _sb_set_config(f"cfg::{_k}", val); changed[_k] = bool(val)
+    return {"ok": True, "changed": changed}
 
 # ── Verificación de correo por código (evita cuentas falsas/bots) ────────────
 # Activa cuando podemos enviar correo (EMAIL_READY). El registro NO crea la
@@ -9693,38 +9819,76 @@ def _agent_is_today():
     except Exception:
         return str(_aso)[:10] == datetime.now(NY).strftime("%Y-%m-%d")
 
+def _deterministic_data_lines():
+    """Líneas de DATOS del brief construidas desde la CACHÉ (0 IA): Técnico (GEX), Volatilidad
+    (VIX/movimiento/Fear&Greed) y COT (CFTC). Garantiza NÚMEROS REALES aunque el texto base lo
+    escriba Claude (que no conoce GEX/COT). Regla#1: solo con dato real; si falta, no se añade."""
+    out = {}
+    gex = (cache.get("gex") or {}).get(FA_ASSET, {}) or {}
+    hm  = (cache.get("heatmap") or {}).get("data") or {}
+    cw = gex.get("call_wall_vol") or gex.get("call_wall")
+    pw = gex.get("put_wall_vol") or gex.get("put_wall")
+    gf = gex.get("gamma_flip")
+    if cw and pw and gf:
+        _t = f"**Técnico:** Flip {gf:.0f} define régimen; Call Wall {cw:.0f}, Put Wall {pw:.0f}"
+        tech = (hm.get(FA_ASSET, {}) or {}).get("chg_pct")
+        if tech is not None:
+            _t += f"; Tech {tech:+.2f}%"
+        out["**técnico"] = _t + "."
+    vix = gex.get("vix"); em = gex.get("expected_move")
+    fs = gex.get("fear_score"); fr = gex.get("fear_rating")
+    vp = []
+    if vix is not None: vp.append(f"VIX {vix}")
+    if em: vp.append(f"movimiento ±{em:.0f}pts")
+    if fs is not None: vp.append(f"Fear&Greed {fs} ({fr or '—'})")
+    if vp:
+        out["**volatil"] = "**Volatilidad:** " + ", ".join(vp) + "."
+    c = (cache.get("cot") or {}).get("data") or {}
+    net = c.get("net")
+    if net is not None:
+        side = "netos largos" if net > 0 else "netos cortos" if net < 0 else "neutrales"
+        chg = c.get("net_chg"); extra = ""
+        if chg:
+            extra = f", {'acumulando' if chg > 0 else 'reduciendo'} {abs(chg):,} contratos semanales"
+        out["**cot"] = f"**COT:** Especuladores {side} {net:+,}{extra}."
+    return out
+
+_PLACEHOLDER_MARKERS = ("esperando", "sin dato", "sin niveles", "sin cálculo", "sin calculo",
+                        "no determinado", "rth", "sin foco", "pendiente")
 def _splice_agent_geo_into_brief():
-    """Inserta de forma DETERMINISTA las líneas EN VIVO del agente (Claude: WebSearch
-    Reuters/Bloomberg/CNBC) en el brief cacheado — hoy **Geopolítica:** (+petróleo) y
-    **Catalizador:**. QUOTA-PROOF: garantiza que los titulares frescos del agente aparezcan
-    aunque Groq y Gemini estén sin cupo y no puedan regenerar el brief. El agente ya entrega
-    frases limpias en español encuadradas por su efecto en el NQ → no se inventa nada
-    (Regla#1). Solo con dato real del agente y solo si es de HOY (ET). Devuelve True si cambió."""
-    if not _agent_is_today():
-        return False
-    ag = cache.get("agent_context") or {}
-    geo = ag.get("geopolitica"); oil = ag.get("petroleo"); cat = ag.get("catalizador")
-    # Mapa etiqueta_del_brief -> texto en vivo (solo las que el agente trae). El petróleo se
-    # funde en la línea de Geopolítica (el formato del brief no tiene línea de Petróleo aparte).
-    reempl = {}
-    if geo or oil:
-        reempl["**geopol"] = "**Geopolítica:** " + " ".join([s for s in (geo, oil) if s])
-    if cat:
-        reempl["**cataliz"] = "**Catalizador:** " + cat
-    if not reempl:
-        return False
+    """Inserta de forma DETERMINISTA en el brief cacheado (a) las líneas EN VIVO del agente
+    (Claude WebSearch: **Geopolítica:**+petróleo y **Catalizador:**) — siempre que sean de HOY;
+    y (b) rellena las líneas de DATOS (**Técnico:**/**Volatilidad:**/**COT:**) desde la caché
+    SOLO cuando están en placeholder/stale (nunca pisa una buena línea del LLM). QUOTA-PROOF:
+    el brief se mantiene con datos reales aunque Groq y Gemini estén sin cupo. Regla#1: solo
+    dato real; nunca inventa. Devuelve True si cambió algo."""
     txt = (cache.get("institutional", {}) or {}).get("text") or ""
     if not txt:
         return False
+    # (a) Líneas del agente (override si es de hoy)
+    override = {}
+    if _agent_is_today():
+        ag = cache.get("agent_context") or {}
+        geo = ag.get("geopolitica"); oil = ag.get("petroleo"); cat = ag.get("catalizador")
+        if geo or oil:
+            override["**geopol"] = "**Geopolítica:** " + " ".join([s for s in (geo, oil) if s])
+        if cat:
+            override["**cataliz"] = "**Catalizador:** " + cat
+    # (b) Líneas de datos (solo rellenan placeholders)
+    data_lines = _deterministic_data_lines()
     lines = txt.split("\n")
     changed = False
     for i, l in enumerate(lines):
         low = l.strip().lower()
-        for pref, nueva in reempl.items():
+        # override del agente
+        for pref, nueva in override.items():
             if low.startswith(pref) and lines[i].strip() != nueva.strip():
-                lines[i] = nueva
-                changed = True
-                break
+                lines[i] = nueva; changed = True; low = nueva.strip().lower(); break
+        # relleno de datos SOLO si la línea actual parece placeholder/stale
+        for pref, nueva in data_lines.items():
+            if low.startswith(pref) and any(m in low for m in _PLACEHOLDER_MARKERS) \
+               and lines[i].strip() != nueva.strip():
+                lines[i] = nueva; changed = True; break
     if not changed:
         return False
     cache["institutional"]["text"] = "\n".join(lines)
@@ -10204,6 +10368,10 @@ async def startup():
         print(f"[auth] store: {'Supabase' if _sb_on() else 'snapshot (efímero)'}")
     except Exception as e:
         print(f"[auth] _load_auth_secret: {e}")
+    try:
+        await _load_settings_overrides()   # links/webhooks de Discord editables desde el admin
+    except Exception as e:
+        print(f"[settings] overrides: {e}")
     try:
         await _seed_auditor()
     except Exception as e:
