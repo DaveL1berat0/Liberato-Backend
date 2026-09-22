@@ -5256,9 +5256,20 @@ async def refresh_institutional(force=False):
     ag = cache.get("agent_context") or {}
     _ag_today = False
     try:
-        _ag_today = bool(ag.get("as_of")) and ag["as_of"][:10] == datetime.now(NY).strftime("%Y-%m-%d")
+        _aso = ag.get("as_of")
+        if _aso:
+            # Parseo robusto a fecha ET (acepta 'Z', offset o naïve). Fallback: si no parsea
+            # pero hay marca, se considera de hoy (el poller solo guarda datos frescos).
+            try:
+                _agdt = datetime.fromisoformat(str(_aso).replace("Z", "+00:00"))
+                if _agdt.tzinfo is None:
+                    _agdt = _agdt.replace(tzinfo=NY)
+                _ag_today = _agdt.astimezone(NY).strftime("%Y-%m-%d") == datetime.now(NY).strftime("%Y-%m-%d")
+            except Exception:
+                _ag_today = str(_aso)[:10] == datetime.now(NY).strftime("%Y-%m-%d")
     except Exception:
         _ag_today = False
+    _ag_geo = (ag.get("geopolitica") if _ag_today else None)
     if _ag_today:
         _src = (ag.get("sources") or [])
         _srctag = (" · " + ", ".join(_src[:2])) if _src else ""
@@ -5354,6 +5365,13 @@ async def refresh_institutional(force=False):
     except Exception:
         pass
     ctx_str = "\n".join(ctx)
+    # DIRECTIVA de alta prioridad: si el agente en vivo trae un titular geopolítico fresco,
+    # la línea **Geopolítica:** DEBE basarse en él (es lo más reciente y verificado). Se coloca
+    # al FRENTE para que un modelo pequeño no lo pierda entre las ~20 líneas de contexto.
+    if _ag_geo:
+        ctx_str = ("‼️ OBLIGATORIO para la línea **Geopolítica:** — usa TEXTUALMENTE este titular "
+                   "geopolítico EN VIVO (lo más fresco, Reuters/Bloomberg/CNBC), NO otro tema: «"
+                   + _ag_geo + "»\n" + ctx_str)
 
     # ── Prompt adaptado a si hay gamma o no ───────────────────────────────────
     sys_msg = (f"Eres el analista jefe de mesa de Liberato Community para {FA_ASSET} Futures, "
@@ -7410,6 +7428,21 @@ async def send_welcome_premium(email, name):
                              _email_shell("Tu acceso premium está activo", body,
                                           "Entrar al Dashboard →", f"{SITE_URL}/auth.html"))
 
+async def send_purchase_pending(email):
+    """Compra en Whop SIN cuenta todavía: le pedimos crear la cuenta con ESTE
+    mismo correo para activar el acceso premium que ya pagó (cierra el hueco de
+    clientes que pagan y nunca activan)."""
+    body = (f"<p>¡Gracias por tu compra! 🎉</p>"
+            f"<p>Recibimos tu pago y tu <b>acceso completo</b> a Liberato Community está "
+            f"listo para activarse. Solo falta un paso: <b>crea tu cuenta con este mismo "
+            f"correo</b> (<b>{email}</b>) y tu membresía premium se aplicará automáticamente.</p>"
+            f"<p>Tendrás el <b>Dashboard Institucional</b>, niveles de <b>GEX</b>, Earnings, "
+            f"noticias de alto impacto en vivo y todo el contenido premium.</p>"
+            f"<p>Si ya intentaste registrarte, asegúrate de usar exactamente este correo.</p>")
+    return await _send_email(email, "Activa tu acceso premium — Liberato Community ⭐",
+                             _email_shell("Un paso más para activar tu acceso", body,
+                                          "Crear mi cuenta →", f"{SITE_URL}/auth.html"))
+
 async def send_verify_code(email, name, code):
     body = (f"<p>Hola, {name or ''}.</p>"
             f"<p>Para activar tu cuenta en <b>Liberato Community</b>, ingresa este código de verificación:</p>"
@@ -7491,7 +7524,7 @@ async def admin_email_broadcast(request: Request, key: str = "", authorization: 
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     if not EMAIL_READY:
-        raise HTTPException(400, "Correo no configurado (pon BREVO_API_KEY + MAIL_FROM)")
+        raise HTTPException(400, "Correo no configurado (configura RESEND_API_KEY o BREVO_API_KEY + MAIL_FROM)")
     try:
         data = await request.json()
     except Exception:
@@ -7502,8 +7535,18 @@ async def admin_email_broadcast(request: Request, key: str = "", authorization: 
     if not subject or not html:
         raise HTTPException(400, "Faltan 'subject' y 'html'")
     users = await users_list("all")
+    # Segmentos:
+    #  free    → solo gratuitos (excluye trial)
+    #  trial   → solo usuarios en prueba
+    #  paid    → solo pagados de verdad (premium/pro/admin), SIN trials
+    #  premium → todos con acceso premium (pagados + trials)  [compat]
+    #  all     → todos
     if segment == "free":
-        users = [u for u in users if not _is_premium(u)]
+        users = [u for u in users if _plan_bucket(u) == "free"]
+    elif segment == "trial":
+        users = [u for u in users if _plan_bucket(u) == "trial"]
+    elif segment == "paid":
+        users = [u for u in users if (u.get("plan") or "free") in ("premium", "pro", "admin")]
     elif segment in ("premium", "pro"):
         users = [u for u in users if _is_premium(u)]
     wrapped = _email_shell(subject, html)
@@ -7555,6 +7598,37 @@ async def send_daily_briefs():
         out["premium"] = await _discord_post(DISCORD_PREMIUM_WEBHOOK_URL, prem_txt)
     print(f"[daily-brief] {out}")
     return out
+
+# Guardián de idempotencia: cada slot (fecha+etiqueta) se envía UNA sola vez, aunque
+# el scheduler recupere un disparo perdido tras un redeploy. Y solo si el brief está
+# "completo" (la IA ya generó el texto) — así los usuarios NO reciben un brief a medias.
+_brief_sent_slots = {}
+async def send_daily_brief_slot(slot):
+    """Envía el brief del día a Discord para un 'slot' (ej. '08:00', 'open-09:30').
+    Idempotente por (fecha ET + slot). No envía si el brief aún no está generado."""
+    key = datetime.now(NY).strftime("%Y-%m-%d") + ":" + slot
+    if _brief_sent_slots.get(key):
+        print(f"[daily-brief] slot {key} ya enviado; omito")
+        return {"skipped": "already_sent"}
+    # ¿El brief está completo? Si aún no, reintenta a los 60s (una vez) antes de rendirse.
+    if not _daily_brief_text(False):
+        print(f"[daily-brief] slot {slot}: brief aún sin generar; forzando refresh y reintento en 60s")
+        try:
+            await refresh_institutional(force=True)
+        except Exception:
+            pass
+        await asyncio.sleep(60)
+        if not _daily_brief_text(False):
+            print(f"[daily-brief] slot {slot}: brief sigue vacío; NO envío (evito brief a medias)")
+            return {"skipped": "brief_not_ready"}
+    _brief_sent_slots[key] = True
+    # Limpia claves de días previos para no crecer sin límite.
+    _hoy = datetime.now(NY).strftime("%Y-%m-%d")
+    for k in [k for k in _brief_sent_slots if not k.startswith(_hoy)]:
+        _brief_sent_slots.pop(k, None)
+    res = await send_daily_briefs()
+    print(f"[daily-brief] slot {key} enviado :: {res}")
+    return res
 
 @app.get("/api/admin/daily-brief/preview")
 async def admin_daily_preview(key: str = "", authorization: str = Header("")):
@@ -8248,8 +8322,16 @@ async def whop_webhook(request: Request):
                 pass
     else:
         # aún no tiene cuenta: guardamos la titularidad para aplicarla al registrarse
+        prev_pending = await _sb_get_config(f"whop_plan::{email}")
         await _sb_set_config(f"whop_plan::{email}", plan)
         print(f"[whop] {email} sin cuenta; plan {plan} guardado como pendiente")
+        # Concesión FRESCA (no lo teníamos ya como premium) → correo pidiendo crear
+        # la cuenta para activar. Idempotente: no reenvía en webhooks repetidos.
+        if plan == "premium" and prev_pending not in ("premium", "pro"):
+            try:
+                asyncio.create_task(send_purchase_pending(email))
+            except Exception:
+                pass
     return {"ok": True, "email": email, "plan": plan, "event": evt}
 
 
@@ -9641,6 +9723,29 @@ async def ingest_agent_brief(request: Request, key: str = "", authorization: str
             "catalizador": bool(ac["catalizador"])}, "as_of": ac["as_of"], "status": ac["status"]}
 
 
+@app.get("/api/admin/agent-context")
+async def diag_agent_context(key: str = "", authorization: str = Header("")):
+    """DIAGNÓSTICO del relay de geopolítica: qué hay guardado en cache['agent_context'],
+    si el backend lo considera de HOY (ET) — condición para que entre al brief — y si la
+    línea llegaría al prompt. Permite verificar de un vistazo que el agente cloud alimenta
+    el brief. Regla#1: refleja el estado real, sin inventar."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    ag = cache.get("agent_context") or {}
+    as_of = ag.get("as_of")
+    hoy_et = datetime.now(NY).strftime("%Y-%m-%d")
+    ag_date = None
+    try:
+        ag_date = datetime.fromisoformat(str(as_of).replace("Z", "+00:00")).astimezone(NY).strftime("%Y-%m-%d") if as_of else None
+    except Exception:
+        ag_date = (str(as_of)[:10] if as_of else None)
+    is_today = bool(as_of) and (ag_date == hoy_et)
+    entra_al_brief = bool(is_today and (ag.get("geopolitica") or ag.get("petroleo") or ag.get("catalizador")))
+    return {"agent_context": ag, "as_of": as_of, "as_of_fecha_ET": ag_date,
+            "hoy_ET": hoy_et, "es_de_hoy": is_today, "entra_al_brief": entra_al_brief,
+            "sig_ultimo_github": (_agent_gh_sig[:120] + "…") if _agent_gh_sig else None}
+
+
 @app.get("/api/context/institutional")
 async def get_institutional():
     """Resumen IA de Groq. Refresco en segundo plano (no bloquea).
@@ -9965,8 +10070,13 @@ async def startup():
     scheduler.add_job(refresh_cot, CronTrigger(hour=8, minute=20, day_of_week="mon-fri"))
 
     # ── Brief diario a Discord (free sin GEX / premium con GEX) ──
-    # 8:45 ET lun-vie (antes de la apertura). No hace nada si no hay webhooks configurados.
-    scheduler.add_job(send_daily_briefs, CronTrigger(hour=8, minute=45, day_of_week="mon-fri"))
+    # DOS envíos lun-vie (hora ET): 8:00 (pre-apertura) y 9:30 (apertura del mercado).
+    # Cada slot es idempotente (envía 1 vez/día) y solo si el brief ya está generado.
+    # No hace nada si no hay webhooks configurados.
+    scheduler.add_job(send_daily_brief_slot, CronTrigger(hour=8, minute=0, day_of_week="mon-fri"),
+                      args=["pre-08:00"], misfire_grace_time=1800, coalesce=True)
+    scheduler.add_job(send_daily_brief_slot, CronTrigger(hour=9, minute=30, day_of_week="mon-fri"),
+                      args=["open-09:30"], misfire_grace_time=1800, coalesce=True)
 
     scheduler.start()
 
