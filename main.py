@@ -7338,7 +7338,9 @@ async def auth_health():
 
 # ── Correos transaccionales (segmentados por plan free/premium) ──────────────
 EMAIL_ON = bool(GMAIL_USER and GMAIL_APP_PASSWORD)
-DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "https://discord.gg/rBDXT5uDH").strip()   # Discord gratis
+# Se configura desde el panel admin (Supabase) o env var. Vacío por defecto para NUNCA
+# enviar un invite roto/caducado en la bienvenida (el correo omite el botón si está vacío).
+DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "").strip()   # Discord gratis (editable en admin)
 WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
 # Base de la web (para links en correos). Cambiar a https://liberatocommunity.com
 # cuando el dominio quede apuntando a GitHub Pages.
