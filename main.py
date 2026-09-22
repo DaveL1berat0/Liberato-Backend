@@ -9561,6 +9561,64 @@ async def get_company(ticker: str):
     cache["company"][sym] = {"data": result, "ts": time.time()}
     return result
 
+def _store_agent_context(geo, oil, cat, srcs, as_of=None):
+    """Guarda el contexto del agente de geopolítica (compartido por el endpoint POST y el
+    poller de GitHub). Regla #1: descarta vacíos/placeholders → None. Si hay algún dato real,
+    regenera el brief institucional y el de options. Devuelve True si guardó algo real."""
+    def _clean(v):
+        s = str(v or "").strip()
+        if len(s) < 5 or s.lower() in ("none", "null", "n/a", "na", "sin datos", "-", "—", "ninguno", "nada"):
+            return None
+        return s[:400]
+    g, o, c = _clean(geo), _clean(oil), _clean(cat)
+    srcs = [str(s)[:60].strip() for s in (srcs or []) if str(s or "").strip()][:5]
+    cache["agent_context"] = {"geopolitica": g, "petroleo": o, "catalizador": c, "sources": srcs,
+                              "as_of": (as_of or datetime.now(NY).isoformat()),
+                              "status": "live" if (g or o or c) else "sin-foco"}
+    try:
+        save_cache()
+    except Exception:
+        pass
+    if g or o or c:
+        asyncio.create_task(refresh_institutional(force=True))
+        for _cn in ("_brief_cache", "_committee_cache"):
+            try:
+                globals()[_cn]["ts"] = 0
+            except Exception:
+                pass
+    return bool(g or o or c)
+
+
+_agent_gh_sig = None
+async def refresh_agent_context_from_github():
+    """RELAY GitHub→backend (opción robusta cuando el egress del entorno cloud NO llega a
+    Railway): el agente de geopolítica escribe agent_geo.json en la rama 'geo-feed' del repo
+    (su egress SÍ alcanza GitHub); el backend lee el raw (repo PÚBLICO, sin token) cada 5 min
+    y lo aplica. Solo si el contenido cambió (firma) para no regenerar el brief en vano."""
+    global _agent_gh_sig
+    url = os.getenv("AGENT_GEO_RAW_URL",
+                    "https://raw.githubusercontent.com/DaveL1berat0/Liberato-Backend/geo-feed/agent_geo.json")
+    try:
+        async with httpx.AsyncClient(timeout=12) as cl:
+            r = await cl.get(url, params={"t": int(time.time() // 300)})  # cache-bust ventana 5min
+        if r.status_code != 200:
+            return
+        d = r.json()
+    except Exception as e:
+        print(f"[agent-gh] {type(e).__name__}: {str(e)[:100]}")
+        return
+    if not isinstance(d, dict):
+        return
+    sig = json.dumps({k: d.get(k) for k in ("geopolitica", "petroleo", "catalizador", "as_of")},
+                     sort_keys=True, ensure_ascii=False)
+    if sig == _agent_gh_sig:
+        return
+    _agent_gh_sig = sig
+    had = _store_agent_context(d.get("geopolitica"), d.get("petroleo"), d.get("catalizador"),
+                               d.get("sources"), as_of=(d.get("as_of") or None))
+    print(f"[agent-gh] contexto actualizado desde GitHub (had_real={had})")
+
+
 @app.post("/api/admin/agent-brief")
 async def ingest_agent_brief(request: Request, key: str = "", authorization: str = Header("")):
     """INGESTA del agente de geopolítica en vivo (rutina Claude con WebSearch: Reuters/
@@ -9576,34 +9634,11 @@ async def ingest_agent_brief(request: Request, key: str = "", authorization: str
         raise HTTPException(400, "JSON inválido")
     if not _is_admin(key or b.get("key", ""), authorization):
         raise HTTPException(403, "clave incorrecta")
-    def _clean(v):
-        s = str(v or "").strip()
-        if len(s) < 5 or s.lower() in ("none", "null", "n/a", "na", "sin datos", "-", "—", "ninguno", "nada"):
-            return None
-        return s[:400]
-    geo = _clean(b.get("geopolitica"))
-    oil = _clean(b.get("petroleo"))
-    cat = _clean(b.get("catalizador"))
-    srcs = [str(s)[:60].strip() for s in (b.get("sources") or []) if str(s or "").strip()][:5]
-    cache["agent_context"] = {
-        "geopolitica": geo, "petroleo": oil, "catalizador": cat, "sources": srcs,
-        "as_of": datetime.now(NY).isoformat(),
-        "status": "live" if (geo or oil or cat) else "sin-foco",
-    }
-    try:
-        save_cache()
-    except Exception:
-        pass
-    if geo or oil or cat:
-        asyncio.create_task(refresh_institutional(force=True))   # el brief toma el nuevo contexto
-        for _cn in ("_brief_cache", "_committee_cache"):         # invalida options → regenera
-            try:
-                globals()[_cn]["ts"] = 0
-            except Exception:
-                pass
-    print(f"[agent-brief] geo={bool(geo)} oil={bool(oil)} cat={bool(cat)} src={srcs}")
-    return {"ok": True, "stored": {"geopolitica": bool(geo), "petroleo": bool(oil), "catalizador": bool(cat)},
-            "as_of": cache["agent_context"]["as_of"], "status": cache["agent_context"]["status"]}
+    _store_agent_context(b.get("geopolitica"), b.get("petroleo"), b.get("catalizador"), b.get("sources"))
+    ac = cache["agent_context"]
+    print(f"[agent-brief] geo={bool(ac['geopolitica'])} oil={bool(ac['petroleo'])} cat={bool(ac['catalizador'])}")
+    return {"ok": True, "stored": {"geopolitica": bool(ac["geopolitica"]), "petroleo": bool(ac["petroleo"]),
+            "catalizador": bool(ac["catalizador"])}, "as_of": ac["as_of"], "status": ac["status"]}
 
 
 @app.get("/api/context/institutional")
@@ -9918,6 +9953,10 @@ async def startup():
     scheduler.add_job(refresh_institutional, CronTrigger(hour="7-16", minute="*/5", day_of_week="mon-fri"))
     scheduler.add_job(refresh_institutional, CronTrigger(hour="17-23,0-6", minute=0, day_of_week="mon-fri"))  # after-hours/overnight: contexto macro 1/hora
     scheduler.add_job(refresh_institutional, CronTrigger(hour="*/3"))  # fines de semana: se mantiene vivo
+    # Poller del relay de geopolítica (agente cloud → rama geo-feed en GitHub → aquí). Cada 5 min
+    # en la ventana de las rutinas (6am-6pm ET L-V). Lee un raw público, coste ~0.
+    scheduler.add_job(refresh_agent_context_from_github,
+                      CronTrigger(hour="6-18", minute="*/5", day_of_week="mon-fri"))
 
     # ── COT (CFTC) — dato SEMANAL: se publica los viernes ~15:30 ET. Refrescamos
     # el viernes por la tarde (tras la publicación) y una vez al día por si el
