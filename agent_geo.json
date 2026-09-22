@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump y Xi Jinping avanzan esta semana en la cumbre comercial EE.UU.-China (tregua arancelaria vigente hasta el 10-nov, IA y semiconductores como ejes de la negociacion), lo que sostiene el optimismo en tecnologicas y chipmakers del NQ (CNBC, 22/09).",
-  "petroleo": "El Brent cae cerca de 1% hasta ~98 USD/barril y el WTI ronda 96 USD tras reportes no confirmados (y negados por un funcionario irani) de que Iran ofrecio reabrir el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar, lo que reduce la prima de riesgo geopolitico (CNBC, 22/09).",
-  "catalizador": "El vicepresidente de la Fed, Philip Jefferson, habla hoy 10:20 ET en la conferencia sobre el mercado de Tesoros de la Fed de Nueva York, evento vigilado por pistas sobre el ritmo de subidas de tasas tras el alza del 16/09 (CNBC, 22/09).",
+  "geopolitica": "Trump dijo en su discurso ante la ONU que tiene una 'gran decision' sobre Iran -acuerdo o 'aniquilar' al pais- y espera un pacto recien tras las elecciones de medio termino; ademas Xi Jinping ya esta en Washington para la cumbre del jueves con la tregua arancelaria por vencer y la IA/semiconductores en la mesa, lo que mantiene la cautela en tecnologicas del NQ.",
+  "petroleo": "WTI y Brent recortaron caidas tras el discurso de Trump en la ONU, luego de bajar por senales de que el suministro de Oriente Medio se normaliza (flujos por el Estrecho de Ormuz en maximos de 6 meses y sin escolta militar a petroleros); el respiro del crudo (Brent cerca de 100 USD, WTI cerca de 96 USD) favorece el apetito por riesgo en el NQ.",
+  "catalizador": "El vicepresidente de la Fed, Philip Jefferson, hablo hoy a las 9:30 ET en la Conferencia del Mercado de Tesoros de la Fed de Nueva York sobre funcionamiento del mercado de bonos, evento vigilado por el mercado tras la subida de tasas de 25pb y el tono hawkish de Warsh del 16-sep.",
   "sources": [
-    "CNBC 22/09 - us-china-trump-xi-summit-trade-tariffs-ai",
-    "CNBC 22/09 - us-iran-war-trump-hormuz",
-    "CNBC 10:20 ET - treasury-yield-us-bond-market-trump (Jefferson)"
+    "Yahoo Finance 22-sep-2026 - stock-market-today-tuesday-september-22",
+    "CNBC 21-sep-2026 - trump-xi-china-summit-trade-tariffs",
+    "Federal Reserve Bank of New York - 2026 Treasury Market Conference, 22-sep-2026 09:30 ET",
+    "CNBC 16-sep-2026 - fed-meeting-today-live-updates (Warsh rate hike)"
   ],
-  "as_of": "2026-09-22T15:07:16Z"
+  "as_of": "2026-09-22T15:40:04Z"
 }
