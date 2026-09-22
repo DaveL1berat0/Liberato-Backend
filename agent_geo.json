@@ -1,14 +1,13 @@
 {
-  "geopolitica": "El secretario del Tesoro Bessent calificó de 'muy exitosas' las conversaciones con el viceprimer ministro chino He Lifeng (Nueva York, 20 sep) sobre IA, aranceles y tierras raras, de cara a la cumbre Trump-Xi del jueves 24 en Washington, lo que sostiene el sesgo alcista del NQ en premarket.",
-  "petroleo": "El Brent cae cerca de 1% hasta unos 98.92 USD/barril (WTI cerca de 96 USD) tras la oferta de Irán de reabrir el Estrecho de Ormuz en siete días si EEUU reduce la presión militar, aliviando el temor a disrupción de suministro y favoreciendo a las tecnológicas del NQ.",
-  "catalizador": "Hoy se publica el reporte semanal de empleo ADP a las 8:15 ET, y la Fed tiene tres oradores clave: Williams (10:05 ET) y Jefferson (10:20 ET) en la Treasury Market Conference de la Fed de NY, y Barkin (13:00 ET) en CFA Society Baltimore, con potencial de mover la volatilidad intradía del NQ.",
+  "geopolitica": "El secretario del Tesoro Bessent calificó de 'muy exitosas' las conversaciones con el viceprimer ministro chino He Lifeng (Nueva York, 20-21 sep) sobre IA, aranceles y tierras raras, de cara a la cumbre Trump-Xi del jueves 24 en Washington, lo que sostiene el sesgo alcista del NQ en premarket.",
+  "petroleo": "El Brent cae por debajo de 100 USD/barril (WTI cerca de 96 USD) tras que un alto funcionario iraní dijera a Reuters que Irán reabriría el Estrecho de Ormuz en siete días si EEUU reduce la presión militar, aliviando el temor a disrupción de suministro y favoreciendo a las tecnológicas del NQ.",
+  "catalizador": "El calendario económico de hoy incluye el ADP Employment Change Weekly (8:15 ET) y tres oradores de la Fed -Williams (10:05 ET), Jefferson (10:20 ET) y Barkin (13:00 ET)- con potencial de mover la volatilidad intradía del NQ tras la apertura.",
   "sources": [
-    "CNBC 20 sep - Bessent/He Lifeng ahead of Trump-Xi summit",
-    "Bloomberg 21 sep - Bessent hails 'very successful' China talks",
-    "CNBC 22 sep premercado - Brent -1% a 98.92 USD tras oferta de reapertura de Ormuz",
-    "OilPrice.com 22 sep - Oil Tumbles 3% as Iran Floats Hormuz Reopening Within a Week",
-    "Investing.com 22 sep - ADP employment data and Fed speakers highlight Tuesday's calendar (ADP 8:15 ET)",
-    "FinancialJuice 22 sep - Morning Juice US Session Prep (Williams 10:05 ET, Jefferson 10:20 ET, Barkin 13:00 ET)"
+    "CNBC 20 sep - Bessent calls meeting with He Lifeng 'successful' ahead of Trump-Xi summit",
+    "Bloomberg 21 sep - Bessent hails 'very successful' China talks on AI threats, trade",
+    "The National 22 sep - Oil falls below $100 on Hormuz reopening hopes and Saudi pipeline restarting",
+    "Reuters (via The National) 22 sep - senior Iranian official: Hormuz reopening within a week if US eases pressure",
+    "Investing.com 22 sep - ADP employment data and Fed speakers highlight Tuesday's calendar (ADP 8:15 ET; Williams 10:05 ET; Jefferson 10:20 ET; Barkin 13:00 ET)"
   ],
-  "as_of": "2026-09-22T13:05:47Z"
+  "as_of": "2026-09-22T13:40:05Z"
 }
