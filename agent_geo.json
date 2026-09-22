@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Iran ofrecio reabrir el estrecho de Ormuz en 7 dias si EEUU reduce la presion militar y levanta el bloqueo a puertos iranies (Reuters/Kyodo via CNBC, 22/09, un funcionario del gobierno lo nego ante un medio afin a CNBC), lo que reduce la prima de riesgo geopolitico y respalda el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cayo a un minimo de dos semanas, -2.1% a 98.23 USD/barril hacia las 07:51 ET (WTI -2.59% a 93.30 USD), por expectativas de reapertura de Ormuz y el reinicio del oleoducto saudi Este-Oeste hacia Yanbu, lo que alivia el temor inflacionario y favorece a las tecnologicas del NQ.",
-  "catalizador": "",
+  "geopolitica": "Iran ofrecio via mediadores reabrir el estrecho de Ormuz en 7 dias si EEUU reduce la presion militar y levanta el bloqueo a sus puertos (Reuters/Kyodo via CNBC), oferta que un funcionario nego ante un medio afin, lo que introduce un titular de riesgo mixto que puede mover el apetito de riesgo del NQ en el dia.",
+  "petroleo": "El Brent cayo a un minimo de dos semanas (-2.1% a 98.23 USD/barril hacia las 07:51 ET) por la oferta irani sobre Ormuz y la reanudacion del oleoducto saudi a Yanbu, pero recorto perdidas hasta 99.65 USD (-0.7%) hacia la 1:52 pm ET, lo que reduce la presion inflacionaria sobre las tecnologicas del NQ.",
+  "catalizador": "Trump advirtio en vivo ante la Asamblea General de la ONU que podria 'aniquilar' a Iran si no hay acuerdo, aunque espera un pacto recien tras las elecciones de medio termino de noviembre, un titular de ultima hora que anadio volatilidad al petroleo y al riesgo geopolitico que vigila el NQ.",
   "sources": [
-    "CNBC (citando Reuters/Kyodo) 22/09, us-iran-war-trump-hormuz",
-    "Business Recorder/Reuters ~07:51 ET, oil-rises-slightly-ahead-of-potential-us-iran-talks",
-    "TheStreet 22/09, stock-market-today-sept-22-2026"
+    "Reuters/Kyodo via CNBC 22-sep-2026, us-iran-war-trump-hormuz",
+    "Business Recorder/Reuters ~07:51 ET 22-sep-2026, oil two-week low",
+    "CNBC ~13:52 ET 22-sep-2026, oil-iran-us-bessent-un-crude",
+    "NBC News 22-sep-2026, Trump UN speech Iran annihilate deal after midterms"
   ],
-  "as_of": "2026-09-22T18:06:35Z"
+  "as_of": "2026-09-22T19:07:31Z"
 }
