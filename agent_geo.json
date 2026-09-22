@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Iran senalo que reabriria el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar y Arabia Saudita prepara reiniciar su oleoducto Este-Oeste, lo que reduce el riesgo geopolitico de suministro y favorece el apetito por riesgo en el NQ (Reuters, ~07:51 ET).",
-  "petroleo": "El Brent cae 2.1% a 98.23 USD/barril y el WTI 2.59% a 93.30 USD/barril tras las senales de reapertura de Ormuz, lo que alivia la angustia inflacionaria y apoya a las tecnologicas del NQ cerca de maximos historicos (Reuters, 07:51 ET).",
-  "catalizador": "",
+  "geopolitica": "Trump y Xi Jinping avanzan esta semana en la cumbre comercial EE.UU.-China (tregua arancelaria vigente hasta el 10-nov, IA y semiconductores como ejes de la negociacion), lo que sostiene el optimismo en tecnologicas y chipmakers del NQ (CNBC, 22/09).",
+  "petroleo": "El Brent cae cerca de 1% hasta ~98 USD/barril y el WTI ronda 96 USD tras reportes no confirmados (y negados por un funcionario irani) de que Iran ofrecio reabrir el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar, lo que reduce la prima de riesgo geopolitico (CNBC, 22/09).",
+  "catalizador": "El vicepresidente de la Fed, Philip Jefferson, habla hoy 10:20 ET en la conferencia sobre el mercado de Tesoros de la Fed de Nueva York, evento vigilado por pistas sobre el ritmo de subidas de tasas tras el alza del 16/09 (CNBC, 22/09).",
   "sources": [
-    "Reuters 07:51 ET (oil wrap: Brent -2.1% a 98.23 USD, WTI -2.59% a 93.30 USD)",
-    "CNBC hoy (premarket: Nasdaq 100 futures +0.94%, semiconductores en racha de 6 dias)",
-    "NBC News / Al Jazeera hoy (Iran ofrece reabrir Ormuz en 7 dias, Arabia Saudita reinicia oleoducto)"
+    "CNBC 22/09 - us-china-trump-xi-summit-trade-tariffs-ai",
+    "CNBC 22/09 - us-iran-war-trump-hormuz",
+    "CNBC 10:20 ET - treasury-yield-us-bond-market-trump (Jefferson)"
   ],
-  "as_of": "2026-09-22T14:39:49Z"
+  "as_of": "2026-09-22T15:07:16Z"
 }
