@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Iran ofrecio via mediadores reabrir el estrecho de Ormuz en 7 dias si EEUU reduce la presion militar y levanta el bloqueo a sus puertos (Reuters/Kyodo via CNBC), oferta que un funcionario nego ante un medio afin, lo que introduce un titular de riesgo mixto que puede mover el apetito de riesgo del NQ en el dia.",
-  "petroleo": "El Brent cayo a un minimo de dos semanas (-2.1% a 98.23 USD/barril hacia las 07:51 ET) por la oferta irani sobre Ormuz y la reanudacion del oleoducto saudi a Yanbu, pero recorto perdidas hasta 99.65 USD (-0.7%) hacia la 1:52 pm ET, lo que reduce la presion inflacionaria sobre las tecnologicas del NQ.",
-  "catalizador": "Trump advirtio en vivo ante la Asamblea General de la ONU que podria 'aniquilar' a Iran si no hay acuerdo, aunque espera un pacto recien tras las elecciones de medio termino de noviembre, un titular de ultima hora que anadio volatilidad al petroleo y al riesgo geopolitico que vigila el NQ.",
+  "geopolitica": "Trump advirtio en su discurso ante la ONU que podria 'aniquilar' a Iran pero espera un acuerdo tras las elecciones de mitad de mandato de noviembre, mientras Bessent anuncio que todas las aerolineas iranies quedaran excluidas del sistema financiero en dolares desde el miercoles 23/9; el tono conciliador de fondo limita el riesgo de escalada inmediata para el NQ.",
+  "petroleo": "El Brent cae ~3.4% en su cuarta sesion consecutiva a minimos de 11 dias y el WTI baja ~4.5% (contrato octubre, vencimiento hoy), tras una reunion de 3 horas entre EEUU e Iran y la oferta irani de reabrir el Estrecho de Ormuz en 7 dias mas recuperacion de exportaciones saudies; la caida del crudo alivia presion inflacionaria y es constructiva para el NQ intradia.",
+  "catalizador": "Agenda Fed de baja intensidad: Barkin (Richmond Fed) en fireside chat a las 08:00 ET y Williams (NY Fed) con discurso en la Conferencia de Mercados del Tesoro a las 10:05 ET, sin sorpresas de datos macro reportadas; impacto esperado bajo salvo comentarios inesperadamente hawkish/dovish.",
   "sources": [
-    "Reuters/Kyodo via CNBC 22-sep-2026, us-iran-war-trump-hormuz",
-    "Business Recorder/Reuters ~07:51 ET 22-sep-2026, oil two-week low",
-    "CNBC ~13:52 ET 22-sep-2026, oil-iran-us-bessent-un-crude",
-    "NBC News 22-sep-2026, Trump UN speech Iran annihilate deal after midterms"
+    "NBC News 22/09: discurso de Trump en la Asamblea General de la ONU sobre Iran",
+    "CNBC 22/09: petroleo cae por quinta sesion tras reunion EEUU-Iran de 3 horas",
+    "CNBC 22/09: Iran senala reapertura del Estrecho de Ormuz en 7 dias",
+    "Benzinga 21/09: Bessent anuncia cierre mundial de aerolineas iranies desde el miercoles",
+    "Investing.com 22/09: Barkin (Fed) 08:00 ET, Williams (Fed) 10:05 ET"
   ],
-  "as_of": "2026-09-22T19:07:31Z"
+  "as_of": "2026-09-22T20:05:37Z"
 }
