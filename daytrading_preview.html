@@ -1768,6 +1768,8 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 </script>
 
 <script>
+// Escapa texto de origen remoto antes de meterlo en innerHTML (anti DOM-XSS). Global.
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 /* ════════════════════════════════════════════════════════════════
    LIBERATO · INSTITUTIONAL TERMINAL — LIVING ENGINE
    Market Regime (CHOP/RANGE/TREND + Expected Volatility)
@@ -3591,7 +3593,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     ev.sort(function(a,b){return(ord[a.impact]||3)-(ord[b.impact]||3);});ev=ev.slice(0,2); // TOP 2 only
     if(!ev.length){list.innerHTML='<div class="cat-empty"><span class="cat-empty-t">Sin catalizadores de alto impacto hoy</span></div>';return;}
     var sn={extreme:5,high:4,medium:3,low:2},lbl={extreme:'Very High',high:'High',medium:'Medium',low:'Low'},bcl={extreme:'vhigh',high:'high',medium:'med',low:'low'};
-    list.innerHTML=ev.map(function(e){var n=sn[e.impact]||3,st='';for(var i=1;i<=5;i++)st+='<span class="cat-star'+(i<=n?'':' dim')+'">★</span>';var sector=e.sector||'',hour=e.hour==='bmo'?'Before Open':e.hour==='amc'?'After Close':(e.time||'—');return '<div class="cat-item"><div class="cat-top"><div class="cat-stars">'+st+'</div><span class="cat-badge '+(bcl[e.impact]||'med')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-tick">'+(e.symbol||e.ticker||'')+'</div><div class="cat-nm">'+(e.name||'')+'</div><div class="cat-meta">'+(sector?'<div class="cat-mrow"><span class="cat-mk">Sector</span><span class="cat-mv">'+sector+'</span></div>':'')+'<div class="cat-mrow"><span class="cat-mk">Sensitivity</span><span class="cat-mv '+(e.impact==='extreme'||e.impact==='high'?'hot':'')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-mrow"><span class="cat-mk">Time</span><span class="cat-mv">'+hour+'</span></div></div></div>';}).join('');
+    list.innerHTML=ev.map(function(e){var n=sn[e.impact]||3,st='';for(var i=1;i<=5;i++)st+='<span class="cat-star'+(i<=n?'':' dim')+'">★</span>';var sector=esc(e.sector||''),hour=e.hour==='bmo'?'Before Open':e.hour==='amc'?'After Close':esc(e.time||'—');return '<div class="cat-item"><div class="cat-top"><div class="cat-stars">'+st+'</div><span class="cat-badge '+(bcl[e.impact]||'med')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-tick">'+esc(e.symbol||e.ticker||'')+'</div><div class="cat-nm">'+esc(e.name||'')+'</div><div class="cat-meta">'+(sector?'<div class="cat-mrow"><span class="cat-mk">Sector</span><span class="cat-mv">'+sector+'</span></div>':'')+'<div class="cat-mrow"><span class="cat-mk">Sensitivity</span><span class="cat-mv '+(e.impact==='extreme'||e.impact==='high'?'hot':'')+'">'+(lbl[e.impact]||'Med')+'</span></div><div class="cat-mrow"><span class="cat-mk">Time</span><span class="cat-mv">'+hour+'</span></div></div></div>';}).join('');
   }
 
   /* ════ BLOCK 5 · INSTITUTIONAL CONTEXT (briefing paragraph, NO playbook) ════ */
@@ -4706,7 +4708,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           var UP=/^(long gamma|gamma positivo|alcista|continuaci\u00f3n|risk-on|bullish|codicia|greed|soporte|aceptaci\u00f3n)$/i;
           var DN=/^(short gamma|gamma negativo|bajista|correcci\u00f3n de inventario|risk-off|bearish|miedo|fear|resistencia|invalidar\u00eda|invalidaci\u00f3n|rechazo)$/i;
           var ONE=/(correcci\u00f3n de inventario|inventario overnight|inventario nocturno|long gamma|short gamma|gamma positivo|gamma negativo|Initial Balance|Call Wall|Put Wall|Gamma Flip|Max Pain|Risk-On|Risk-Off|continuaci\u00f3n|invalidar\u00eda|invalidaci\u00f3n|aceptaci\u00f3n|resistencia|inventario|alcista|bajista|bullish|bearish|codicia|soporte|rechazo|miedo|greed|fear|VWAP|VAH|VAL|POC|IBH|IBL|Flip|\d{2},\d{3}|\b\d{5}(?:\.\d+)?\b)/gi;
-          var _brief=d.summary
+          var _brief=esc(d.summary)   // escapar ANTES de resaltar → HTML del origen queda inerte
             .replace(ONE,function(m){
               if(/^[\d,\.]+$/.test(m))return '<span class="hl-num">'+m+'</span>';
               if(UP.test(m))return '<span class="hl-up">'+m+'</span>';
@@ -4723,10 +4725,15 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
           // niveles gamma incrustados NO se confundan con los del Gamma Chart en vivo (antes se
           // pintaba stale como vigente y ocultaba el badge → dos juegos de niveles contradictorios).
           if(badge){
-            if(d.status==='fresh'||!d.status){ badge.style.display='none'; }
+            var _prevDay=(d.is_today===false)||d.status==='stale-prev-day';
+            if(!_prevDay && (d.status==='fresh'||d.status==='fresh-claude'||!d.status)){ badge.style.display='none'; }
             else {
-              var _hhmm=''; try{ if(d.last_update){_hhmm=new Date(d.last_update).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'});} }catch(e){}
-              badge.style.display=''; badge.textContent='◷ actualizado'+(_hhmm?' '+_hhmm+' ET':''); badge.style.color='var(--ink-4)';
+              // Día previo → mostrar la FECHA (no solo la hora) para que una narrativa de ayer
+              // NUNCA se lea como de hoy. Fresco → solo la hora.
+              var _op=_prevDay?{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'}
+                              :{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/New_York'};
+              var _sello=''; try{ if(d.last_update){_sello=new Date(d.last_update).toLocaleString('en-US',_op);} }catch(e){}
+              badge.style.display=''; badge.textContent='◷ '+(_prevDay?'de ':'actualizado ')+_sello+' ET'+(_prevDay?' (día previo)':''); badge.style.color=_prevDay?'#E7A54F':'var(--ink-4)';
             }
           }
         }

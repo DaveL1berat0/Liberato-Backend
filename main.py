@@ -427,6 +427,26 @@ def _set_px_ratio_from_spot(spot):
         print(f"[ratio] no se pudo derivar del spot: {e}")
     return None
 
+def _live_nq_price():
+    """Precio NQ EN VIVO — EL MISMO origen que usa el Gamma Chart (cache['px_ratio']['spot'],
+    refrescado ~4s en RTH). Devuelve (precio, fresco) con fresco=True si el ts tiene < 5 min.
+    Cae al tile del heatmap solo si px_ratio no tiene spot. Evita que el brief y el motor de
+    reacción citen un precio/régimen RANCIO divergente del chart (Regla#1: consistencia)."""
+    pr = cache.get("px_ratio") or {}
+    spot = pr.get("spot")
+    if spot:
+        fresco = True
+        try:
+            _ts = pr.get("ts")
+            if _ts:
+                fresco = (datetime.now(NY) - datetime.fromisoformat(_ts)).total_seconds() < 300
+        except Exception:
+            fresco = True
+        return float(spot), fresco
+    tile = ((cache.get("heatmap", {}) or {}).get("data", {}) or {}).get(FA_ASSET, {}) or {}
+    p = tile.get("price")
+    return (float(p) if p else None), False
+
 def get_px_ratio():
     """Ratio actual. Deriva de SPX/SPY real si no hay spot de FlashAlpha.
     Devuelve None si no hay dato real — el llamador debe mostrar '—'."""
@@ -592,6 +612,25 @@ async def _premium_gate(request, call_next):
         # Nunca tumbar toda la API por un bug del gate: registrar y dejar pasar.
         print(f"[gate] error inesperado, fail-open: {e}")
         return await call_next(request)
+
+# Tope de tamaño de cuerpo: rechaza (413) peticiones enormes ANTES de bufferizarlas en RAM,
+# para que un POST anónimo de cientos de MB no agote la memoria del proceso (DoS). Se registra
+# DESPUÉS del gate → corre como middleware MÁS EXTERNO (ve la petición primero). 8 MB cubre
+# imágenes del journal/avatar; el JSON normal es de KB.
+MAX_BODY_BYTES = int(os.getenv("MAX_BODY_BYTES", str(8 * 1024 * 1024)))
+@app.middleware("http")
+async def _limit_body_size(request, call_next):
+    cl = request.headers.get("content-length")
+    if cl:
+        try:
+            if int(cl) > MAX_BODY_BYTES:
+                r = JSONResponse({"detail": "payload_too_large", "code": "payload_too_large"},
+                                 status_code=413)
+                r.headers["Access-Control-Allow-Origin"] = "*"
+                return r
+        except Exception:
+            pass
+    return await call_next(request)
 
 # ══ CACHÉ UNIFICADA ══════════════════════════════════════════════════════════
 cache = {
@@ -5165,12 +5204,13 @@ async def refresh_institutional(force=False):
         session = "sesión regular"
     ctx.append(f"- Sesión: {session} ({now_et.strftime('%H:%M')} ET)")
 
-    # Precio del instrumento operado (vía heatmap)
+    # Precio del instrumento operado — MISMO origen que el chart (px_ratio.spot), no el tile
+    # del heatmap (que en RTH queda rancio). Así el brief y el Gamma Chart nunca divergen.
     nq_data = hm.get(FA_ASSET, {})
-    nq_price = nq_data.get("price")
+    nq_price, _nq_fresh = _live_nq_price()
     qqq = gex.get("underlying_price") or (hm.get(FA_PROXY_ETF, {}) or {}).get("price")
     if nq_price:
-        ctx.append(f"- {FA_ASSET} Futures: {nq_price:.0f}")
+        ctx.append(f"- {FA_ASSET} Futures: {nq_price:.0f}" + ("" if _nq_fresh else " (precio con retraso)"))
 
     # Gamma (si está disponible)
     # TODO a Gamma por VOLUMEN (decisión de Dave: "son los niveles que vamos a
@@ -5583,7 +5623,10 @@ def health():
                 "weekend_behavior": "Sin llamadas en fin de semana — datos persisten en disco si hubo sesión previa",
                 "gex_on_disk":      bool(gex_data),
                 "gex_age_hours":    gex_age_h,
-                "data": {k: gex_data.get(k) for k in ("call_wall","put_wall","gamma_flip","net_gex","regime")} if gex_data else None,
+                # NUNCA exponer los niveles GEX reales aquí: /health es PÚBLICO (sin token) y
+                # call_wall/put_wall/gamma_flip son el producto PREMIUM (fuga de paywall). Solo
+                # un booleano de presencia para diagnóstico.
+                "gex_present":      bool(gex_data),
             }
         ),
         # ── TwelveData WebSocket ────────────────────────────────────────────────
@@ -7543,7 +7586,12 @@ async def email_health():
             "discord_webhook_set": bool(_g.get("DISCORD_WEBHOOK_URL")),
             "discord_premium_webhook_set": bool(_g.get("DISCORD_PREMIUM_WEBHOOK_URL")),
             "whop_secret_set": bool(_g.get("WHOP_WEBHOOK_SECRET")),
-            "admin_key_set": not str(_g.get("ADMIN_KEY", "")).startswith("disabled-")}
+            "admin_key_set": not str(_g.get("ADMIN_KEY", "")).startswith("disabled-"),
+            # AVISO crítico: el sandbox de Resend SOLO entrega al dueño de la cuenta → verify/
+            # welcome/reset NO llegarían a usuarios reales. Configura un dominio verificado.
+            "warning": ("⚠️ RESEND en modo SANDBOX (onboarding@resend.dev): los correos NO se "
+                        "entregan a usuarios reales. Configura MAIL_FROM con un dominio verificado "
+                        "(SPF+DKIM).") if (RESEND_API_KEY and _resend_from() == "onboarding@resend.dev") else None}
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  CRM: usuarios segmentados (free/premium) + correos por grupo + brief diario
@@ -7871,6 +7919,15 @@ async def _plan_from_whop_pending(email):
             plan0 = pend
     return plan0
 
+async def _consume_whop_pending(email):
+    """Limpia el plan Whop pendiente tras aplicarlo a una cuenta recién creada — así NO queda
+    reclamable de nuevo (evita premium duplicado/reclamable al re-registrar el email)."""
+    if _sb_on():
+        try:
+            await _sb_set_config(f"whop_plan::{(email or '').lower()}", "")
+        except Exception:
+            pass
+
 @app.post("/api/auth/register")
 async def auth_register(request: Request):
     try:
@@ -7879,6 +7936,7 @@ async def auth_register(request: Request):
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
     _rate_limit(request, "register", 5, 600, email)   # anti email-bomb + enumeración: 5 / 10 min
+    _rate_limit(request, "reg_ip", 20, 600)           # tope GLOBAL por IP (anti sondeo de muchos emails): 20 / 10 min
     name = (data.get("name") or "").strip()[:80]
     pw = data.get("password") or ""
     if not email or "@" not in email or "." not in email.split("@")[-1]:
@@ -7920,6 +7978,7 @@ async def auth_register(request: Request):
 
     # ── Sin correo configurado: auto-verifica (comportamiento anterior) ──
     await user_put(email, rec)
+    await _consume_whop_pending(email)   # el plan pendiente ya se aplicó → limpiarlo
     try:
         if plan0 in ("premium", "pro"):
             asyncio.create_task(send_welcome_premium(email, rec["name"]))
@@ -7957,6 +8016,7 @@ async def auth_verify(request: Request):
         rec["language"] = pend["language"]
     await user_put(email, rec)
     await _pending_set(email, {"used": True})   # invalida el pendiente
+    await _consume_whop_pending(email)          # el plan Whop pendiente ya se aplicó → limpiarlo
     try:
         if plan0 in ("premium", "pro"):
             asyncio.create_task(send_welcome_premium(email, rec.get("name")))
@@ -8053,9 +8113,11 @@ async def auth_reset(request: Request):
     return {"ok": True}
 
 @app.post("/api/admin/preview-email")
-async def admin_preview_email(request: Request):
+async def admin_preview_email(request: Request, key: str = "", authorization: str = Header("")):
     """Envía un template de EJEMPLO — SOLO a un correo de ADMIN_EMAILS (no se puede
-    usar para spam a terceros). tpl: free | premium | verify."""
+    usar para spam a terceros). tpl: free | premium | verify. Requiere clave admin."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
     try:
         data = await request.json()
     except Exception:
@@ -8081,6 +8143,7 @@ async def auth_login(request: Request):
     email = (data.get("email") or "").strip().lower()
     _rate_limit(request, "login", 8, 300, email)   # anti fuerza bruta: 8 intentos / 5 min por IP+email
     _rate_limit(request, "login", 20, 600, email, use_ip=False)   # tope por email (anti rotación de IP): 20 / 10 min
+    _rate_limit(request, "login_ip", 40, 600)      # tope GLOBAL por IP (anti sondeo de muchos emails): 40 / 10 min
     pw = data.get("password") or ""
     u = await user_get(email)
     if not u:
@@ -8088,6 +8151,7 @@ async def auth_login(request: Request):
         pend = await _pending_get(email)
         if pend and isinstance(pend, dict) and pend.get("code") and not pend.get("used"):
             raise HTTPException(403, "Verifica tu correo: te enviamos un código para activar la cuenta.")
+        _hash_pw(pw, b"dummysalt16bytes")   # iguala el tiempo de respuesta (evita oráculo de timing PBKDF2)
         raise HTTPException(401, "Email o contraseña incorrectos")
     try:
         salt = base64.b64decode(u["salt"])
@@ -9536,8 +9600,11 @@ async def get_calendar():
             return True
     upcoming = [e for e in cache["calendar"]["data"]
                 if e.get("status")=="Upcoming" and _ev_is_future(e)]
-    # Precio NQ actual — para cálculo de reacción del mercado post-publicación
-    nq_now = (cache["heatmap"]["data"].get(FA_ASSET, {}) or {}).get("price")
+    # Precio NQ actual — MISMO origen vivo que el chart (px_ratio.spot). Con el tile del heatmap
+    # (rancio en RTH) p0==p5 daba una reacción falsa de +0.00 pts. Solo se mide con precio fresco.
+    nq_now, _nq_fresh_r = _live_nq_price()
+    if not _nq_fresh_r:
+        nq_now = None   # sin precio vivo → no fabricamos reacción (Regla#1)
     # ── MOTOR DE REACCIÓN NQ (1 vela de 5 min tras la noticia) ──
     # Al detectar un evento recién Released: registra el precio NQ (p0).
     # Pasados ≥5 min: registra p5 y calcula la digestión = p5 - p0 en puntos.
@@ -10209,8 +10276,20 @@ async def get_institutional():
         # Aún generándose — el frontend muestra su resumen local mientras tanto
         return {"summary": None, "status": "generating", "cot": cot,
                 "note": "IA generando análisis — frontend usa resumen local"}
+    # Sello de fecha (Regla#1): si el texto no se regeneró HOY (ET) — p.ej. Groq+Gemini sin
+    # cupo al cruzar el día — se marca stale-prev-day para que el frontend muestre el DÍA, no
+    # solo la hora, y no se lea una narrativa de ayer como de hoy.
+    _status = cache["institutional"]["status"]
+    _is_today = True
+    try:
+        if last:
+            _is_today = datetime.fromisoformat(last).astimezone(NY).strftime("%Y-%m-%d") == datetime.now(NY).strftime("%Y-%m-%d")
+    except Exception:
+        _is_today = True
+    if not _is_today:
+        _status = "stale-prev-day"
     return {"summary":text, "last_update":cache["institutional"]["last_update"],
-            "status":cache["institutional"]["status"],
+            "status":_status, "is_today": _is_today,
             "has_gamma":cache["institutional"].get("has_gamma", False),
             "cot": cot}
 
