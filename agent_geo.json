@@ -1,13 +1,10 @@
 {
-  "geopolitica": "Trump advirtio en su discurso ante la ONU que podria 'aniquilar' a Iran pero espera un acuerdo tras las elecciones de mitad de mandato de noviembre, mientras Bessent anuncio que todas las aerolineas iranies quedaran excluidas del sistema financiero en dolares desde el miercoles 23/9; el tono conciliador de fondo limita el riesgo de escalada inmediata para el NQ.",
-  "petroleo": "El Brent cae ~3.4% en su cuarta sesion consecutiva a minimos de 11 dias y el WTI baja ~4.5% (contrato octubre, vencimiento hoy), tras una reunion de 3 horas entre EEUU e Iran y la oferta irani de reabrir el Estrecho de Ormuz en 7 dias mas recuperacion de exportaciones saudies; la caida del crudo alivia presion inflacionaria y es constructiva para el NQ intradia.",
-  "catalizador": "Agenda Fed de baja intensidad: Barkin (Richmond Fed) en fireside chat a las 08:00 ET y Williams (NY Fed) con discurso en la Conferencia de Mercados del Tesoro a las 10:05 ET, sin sorpresas de datos macro reportadas; impacto esperado bajo salvo comentarios inesperadamente hawkish/dovish.",
+  "geopolitica": "Trump afirmo que EE.UU. mantuvo una reunion de tres horas con la delegacion de Iran en la Asamblea General de la ONU en Nueva York, alimentando expectativas de desescalada que respaldan el apetito por riesgo y presionan al alza al NQ intradiario.",
+  "petroleo": "El Brent cae cerca de 1% a 99.25 USD/barril y el WTI baja 1.2% a 94.59 USD, quinta caida diaria consecutiva tras las conversaciones EE.UU.-Iran, lo que reduce la prima de riesgo geopolitico y favorece a las tecnologicas del NQ.",
+  "catalizador": "",
   "sources": [
-    "NBC News 22/09: discurso de Trump en la Asamblea General de la ONU sobre Iran",
-    "CNBC 22/09: petroleo cae por quinta sesion tras reunion EEUU-Iran de 3 horas",
-    "CNBC 22/09: Iran senala reapertura del Estrecho de Ormuz en 7 dias",
-    "Benzinga 21/09: Bessent anuncia cierre mundial de aerolineas iranies desde el miercoles",
-    "Investing.com 22/09: Barkin (Fed) 08:00 ET, Williams (Fed) 10:05 ET"
+    "CNBC 22-09-2026 - cierre petroleo (~14:30 ET)",
+    "Axios 22-09-2026 - reunion EEUU-Iran en la ONU"
   ],
-  "as_of": "2026-09-22T20:05:37Z"
+  "as_of": "2026-09-22T21:07:03Z"
 }
