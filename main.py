@@ -603,6 +603,11 @@ cache = {
     "institutional": {"text": None, "last_update": None, "status": "offline"},
     "calendar":      {"data": [], "last_update": None, "status": "offline"},
     "movers":        {"data": [], "last_update": None, "status": "offline"},
+    # AGENTE de geopolítica en vivo (rutina Claude con WebSearch: Reuters/Bloomberg/CNBC).
+    # Alimenta la línea **Geopolítica:** del brief con titulares reales de última hora que el
+    # backend NO puede buscar solo. Regla#1: None si el agente no corrió o no halló nada real.
+    "agent_context": {"geopolitica": None, "petroleo": None, "catalizador": None,
+                      "sources": [], "as_of": None, "status": "offline"},
     # COT (Commitment of Traders, CFTC) — posicionamiento REAL de especuladores
     # Nasdaq-100. data=None hasta que refresh_cot() traiga el dato oficial; si la
     # CFTC no responde, se queda en None → el brief dice "COT: sin dato" (Regla#1).
@@ -652,6 +657,8 @@ def save_cache():
             # "sin dato" durante toda la semana tras un redeploy.
             "cot": {"data": cache["cot"]["data"],
                     "lu":   cache["cot"]["last_update"]},
+            # Contexto del agente de geopolítica en vivo (para no perderlo en un redeploy).
+            "agent_context": cache.get("agent_context"),
             # Credenciales SnapTrade por usuario (user_secret intransferible).
             "snaptrade_users": _snaptrade_users,
             "ts_tokens": _ts_tokens,   # tokens OAuth de TradeStation (per-usuario)
@@ -730,6 +737,8 @@ def load_cache():
             cache["cot"]["data"]        = snap["cot"]["data"]
             cache["cot"]["last_update"] = snap["cot"].get("lu")
             cache["cot"]["status"]      = "stale"
+        if isinstance(snap.get("agent_context"), dict):
+            cache["agent_context"] = snap["agent_context"]
         print(f"[persist] cache restaurado: {len(cache['earnings']['data'])} earnings, "
               f"{len(cache['calendar']['data'])} eventos calendario, "
               f"{len(cache.get('_rapidapi_cache', []))} actuals TE, "
@@ -5241,6 +5250,25 @@ async def refresh_institutional(force=False):
         if mv:
             ctx.append("- Movers ultra-impacto (en vivo): " + " || ".join(mv))
 
+    # ── GEOPOLÍTICA EN VIVO (agente WebSearch: Reuters/Bloomberg/CNBC) ──
+    # Titulares reales de última hora que el backend no puede buscar solo. Solo si el agente
+    # corrió HOY (ET) → evita geopolítica rancia de días previos. Regla#1: si no hay, no se añade.
+    ag = cache.get("agent_context") or {}
+    _ag_today = False
+    try:
+        _ag_today = bool(ag.get("as_of")) and ag["as_of"][:10] == datetime.now(NY).strftime("%Y-%m-%d")
+    except Exception:
+        _ag_today = False
+    if _ag_today:
+        _src = (ag.get("sources") or [])
+        _srctag = (" · " + ", ".join(_src[:2])) if _src else ""
+        if ag.get("geopolitica"):
+            ctx.append(f"- Geopolítica en vivo (agente WebSearch{_srctag}): {ag['geopolitica']}")
+        if ag.get("petroleo"):
+            ctx.append(f"- Petróleo (agente WebSearch): {ag['petroleo']}")
+        if ag.get("catalizador"):
+            ctx.append(f"- Catalizador de última hora (agente WebSearch): {ag['catalizador']}")
+
     # ── CICLO MACRO: releases recientes clave (del calendario, actual vs esperado) ──
     MACRO_KEYS = ["gdp", "cpi", "inflation", "ppi", "nonfarm", "payroll",
                   "unemployment", "pce", "retail sales", "interest rate",
@@ -5345,8 +5373,9 @@ async def refresh_institutional(force=False):
                "aún por publicar hoy con su HORA ET y un tag de impacto (alto / secundario), ej. 'Subasta 3Y 13:00 ET (secundario) · CPI vie 11-sep (alto)'. Esta etiqueta SIEMPRE aparece: si NO hay ninguna "
                "noticia de alto impacto ni dato macro publicado hoy, escribe EXACTAMENTE 'Sin catalizador de alto "
                "impacto ahora mismo'>\n"
-               "**Geopolítica:** <1 oración: el foco geopolítico / macro-riesgo relevante para el NQ HOY, desde 'Movers "
-               "ultra-impacto' y noticias reales — guerra/sanciones (ej. Irán), petróleo (Brent/WTI, sobre todo si en máximos → presiona "
+               "**Geopolítica:** <1 oración: el foco geopolítico / macro-riesgo relevante para el NQ HOY. PRIORIZA la línea "
+               "'Geopolítica en vivo (agente WebSearch...)' si aparece (es el titular más fresco de Reuters/Bloomberg/CNBC); "
+               "si no, usa 'Movers ultra-impacto' y noticias reales — guerra/sanciones (ej. Irán), petróleo (Brent/WTI, sobre todo si en máximos → presiona "
                "inflación/tasas y castiga múltiplos tech), aranceles/guerra comercial. Encuádralo SIEMPRE por su efecto en el NQ "
                "intradía (riesgo de gaps/titulares súbitos). Si no hay foco geopolítico en los datos, escribe EXACTAMENTE 'sin foco "
                "geopolítico relevante hoy'>\n"
@@ -9531,6 +9560,50 @@ async def get_company(ticker: str):
     result = {"symbol": sym, **data}
     cache["company"][sym] = {"data": result, "ts": time.time()}
     return result
+
+@app.post("/api/context/agent-brief")
+async def ingest_agent_brief(request: Request, key: str = "", authorization: str = Header("")):
+    """INGESTA del agente de geopolítica en vivo (rutina Claude con WebSearch: Reuters/
+    Bloomberg/CNBC). El backend no puede hacer WebSearch; el agente le pasa aquí los
+    titulares REALES de última hora (geopolítica/petróleo/catalizador) que muevan el NQ.
+    Guarda en cache['agent_context'] y regenera el brief institucional (y el de options).
+    Regla #1: descarta vacíos/placeholders → None (NUNCA guarda inventos). Body JSON:
+    {geopolitica?, petroleo?, catalizador?, sources?:[...]}. Protegido por ADMIN_KEY."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "clave incorrecta")
+    try:
+        b = await request.json()
+    except Exception:
+        raise HTTPException(400, "JSON inválido")
+    def _clean(v):
+        s = str(v or "").strip()
+        if len(s) < 5 or s.lower() in ("none", "null", "n/a", "na", "sin datos", "-", "—", "ninguno", "nada"):
+            return None
+        return s[:400]
+    geo = _clean(b.get("geopolitica"))
+    oil = _clean(b.get("petroleo"))
+    cat = _clean(b.get("catalizador"))
+    srcs = [str(s)[:60].strip() for s in (b.get("sources") or []) if str(s or "").strip()][:5]
+    cache["agent_context"] = {
+        "geopolitica": geo, "petroleo": oil, "catalizador": cat, "sources": srcs,
+        "as_of": datetime.now(NY).isoformat(),
+        "status": "live" if (geo or oil or cat) else "sin-foco",
+    }
+    try:
+        save_cache()
+    except Exception:
+        pass
+    if geo or oil or cat:
+        asyncio.create_task(refresh_institutional(force=True))   # el brief toma el nuevo contexto
+        for _cn in ("_brief_cache", "_committee_cache"):         # invalida options → regenera
+            try:
+                globals()[_cn]["ts"] = 0
+            except Exception:
+                pass
+    print(f"[agent-brief] geo={bool(geo)} oil={bool(oil)} cat={bool(cat)} src={srcs}")
+    return {"ok": True, "stored": {"geopolitica": bool(geo), "petroleo": bool(oil), "catalizador": bool(cat)},
+            "as_of": cache["agent_context"]["as_of"], "status": cache["agent_context"]["status"]}
+
 
 @app.get("/api/context/institutional")
 async def get_institutional():
