@@ -1,1 +1,11 @@
-{"key":"","geopolitica":"","petroleo":"","catalizador":"","sources":[],"as_of":null}
+{
+  "geopolitica": "La cumbre Trump-Xi del jueves en Washington centrara la atencion del mercado: se negociara la extension de la tregua comercial (expira el 10-nov), aranceles, controles de exportacion de semiconductores y tierras raras, factor clave para el sentimiento de las tecnologicas del NQ.",
+  "petroleo": "El Brent cae ~1% a 98.92 USD/barril y el WTI ~2% a 93.50 USD/barril en la sesion premarket tras la oferta de Iran de reabrir el Estrecho de Ormuz en siete dias, alivio que reduce presion inflacionaria y favorece al NQ.",
+  "catalizador": "El vicepresidente de la Fed Philip Jefferson habla hoy a las 10:20 ET en la conferencia del mercado de Tesoro de la Fed de NY, y a las 13:15 ET se publica el dato de empleo ADP, ambos con potencial de mover la volatilidad intradia del NQ.",
+  "sources": [
+    "CNBC 22-sep (Daily Open - cumbre Trump-Xi)",
+    "CNBC premarket 22-sep (petroleo, oferta Iran Estrecho de Ormuz)",
+    "CNBC 22-sep (Fed Jefferson 10:20 ET, ADP 13:15 ET)"
+  ],
+  "as_of": "2026-09-22T12:26:36Z"
+}
