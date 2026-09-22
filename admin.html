@@ -248,8 +248,20 @@
 
   <div id="view-daily" class="hidden">
     <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">⚙️ Configuración de Discord</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">Pega aquí los links de Discord (se guardan al instante, sin tocar Railway). El <b>invite</b> va en cada correo de bienvenida gratis; los <b>webhooks</b> publican el brief.</div>
+      <div id="settings-msg"></div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Invite de Discord GRATIS (para la bienvenida) — usa uno que NO caduque</label>
+        <input class="field-input" id="s-invite" placeholder="https://discord.gg/xxxxxxxx"></div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Webhook del canal FREE (publica el brief sin GEX)</label>
+        <input class="field-input" id="s-free-wh" placeholder="https://discord.com/api/webhooks/…"></div>
+      <div class="form-g" style="margin-bottom:14px;"><label>Webhook del canal PREMIUM (brief con GEX, para cuando entren premium)</label>
+        <input class="field-input" id="s-prem-wh" placeholder="https://discord.com/api/webhooks/…"></div>
+      <button class="btn btn-sm" id="btn-settings" onclick="saveSettings()">Guardar configuración</button>
+    </div>
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Brief diario a Discord</div>
-      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">FREE (Discord, sin GEX) se envía 8:45 ET lun-vie. PREMIUM (con GEX) → Whop (más adelante).</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">FREE (Discord, sin GEX) se envía <b>8:00 y 9:30 ET</b> lun-vie (apertura). PREMIUM (con GEX) usa el webhook premium cuando lo pongas arriba.</div>
       <div id="daily-msg"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
         <button class="btn btn-sm" id="btn-daily-refresh" onclick="loadDailyPreview()">↻ Previsualizar</button>
@@ -306,7 +318,7 @@
     finally{ $('btn-enter').disabled=false; }
   }
 
-  function loadAll(){ loadUsersData(); loadDailyPreview(); }
+  function loadAll(){ loadUsersData(); loadDailyPreview(); loadSettings(); }
 
   async function loadUsersData(){
     try{
@@ -370,6 +382,26 @@
     $('btn-daily-send').disabled=true;
     try{ var r=await apiPost('/api/admin/daily-brief/send',{}); msg('daily-msg','Resultado: '+JSON.stringify(r),'ok'); }
     catch(e){ msg('daily-msg',e.message,'err'); } finally{ $('btn-daily-send').disabled=false; }
+  }
+
+  async function loadSettings(){
+    try{ var d=await api('/api/admin/settings');
+      $('s-invite').value=d.discord_free_invite||'';
+      $('s-free-wh').placeholder = d.discord_free_webhook_set ? (d.discord_free_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
+      $('s-prem-wh').placeholder = d.discord_premium_webhook_set ? (d.discord_premium_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
+    }catch(e){ /* silencioso: la vista puede abrir sin settings */ }
+  }
+  async function saveSettings(){
+    var body={}, inv=$('s-invite').value.trim(), fw=$('s-free-wh').value.trim(), pw=$('s-prem-wh').value.trim();
+    // Solo mandamos lo que el usuario tocó (invite siempre; webhooks solo si escribió algo).
+    body.discord_free_invite=inv;
+    if(fw) body.discord_free_webhook=fw;
+    if(pw) body.discord_premium_webhook=pw;
+    $('btn-settings').disabled=true;
+    try{ var r=await apiPost('/api/admin/settings',body);
+      msg('settings-msg','Guardado ✓ '+JSON.stringify(r.changed),'ok');
+      $('s-free-wh').value=''; $('s-prem-wh').value=''; loadSettings();
+    }catch(e){ msg('settings-msg',e.message,'err'); } finally{ $('btn-settings').disabled=false; }
   }
 
   function drawGrowth(total, recent7){
