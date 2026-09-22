@@ -5472,6 +5472,7 @@ async def refresh_institutional(force=False):
                     _splice_agent_geo_into_brief()
                 except Exception:
                     pass
+                cache["institutional"]["status"] = "fresh-claude"   # el brief vigente es de Claude
                 if groq_ok:   # devolvemos el crédito reservado: no se usó
                     try: budget_charge("groq", -1)
                     except Exception: pass
@@ -7119,6 +7120,21 @@ async def _sessions_remove(email, jti):
     await _sb_set_config("sessions:" + email, json.dumps(lst))
     _gate_cache.pop(email, None)
 
+async def _sessions_clear(email, keep_jti=None):
+    """Invalida las sesiones del usuario: TODAS, o todas menos keep_jti. Se usa al cambiar o
+    resetear la contraseña para EXPULSAR sesiones potencialmente comprometidas (best practice)."""
+    email = (email or "").lower()
+    try:
+        if keep_jti:
+            lst = [s for s in (await _sessions_get(email))
+                   if isinstance(s, dict) and s.get("jti") == keep_jti]
+        else:
+            lst = []
+        await _sb_set_config("sessions:" + email, json.dumps(lst))
+        _gate_cache.pop(email, None)
+    except Exception as e:
+        print(f"[sessions_clear] {e}")
+
 async def _issue_token(payload, request=None, days=30):
     """Emite un JWT con jti y registra la sesión (kick-oldest). Los admins NO cuentan
     para el límite de dispositivos (es Dave; no debe autobloquearse)."""
@@ -7344,7 +7360,7 @@ DISCORD_FREE_INVITE = os.getenv("DISCORD_FREE_INVITE", "").strip()   # Discord g
 WHOP_HUB_URL = os.getenv("WHOP_HUB_URL", "https://whop.com/dave-liberato-group/live-day-trading-52/").strip()
 # Base de la web (para links en correos). Cambiar a https://liberatocommunity.com
 # cuando el dominio quede apuntando a GitHub Pages.
-SITE_URL = os.getenv("SITE_URL", "https://davel1berat0.github.io/Liberato-Backend").strip().rstrip("/")
+SITE_URL = os.getenv("SITE_URL", "https://liberatocommunity.com").strip().rstrip("/")
 # URL del BACKEND (Railway) — para links que apuntan a endpoints /api/ (ej. baja de correo).
 BACKEND_URL = os.getenv("BACKEND_URL", "https://web-production-33671.up.railway.app").strip().rstrip("/")
 # Railway BLOQUEA los puertos SMTP salientes (465/587) → "Network is unreachable".
@@ -7362,6 +7378,11 @@ def _resend_from():
         return "onboarding@resend.dev"
     return f
 EMAIL_READY = bool(RESEND_API_KEY) or bool(BREVO_API_KEY and MAIL_FROM) or EMAIL_ON
+
+def _ename(n):
+    """Escapa el nombre del usuario para insertarlo en HTML de correo (anti-inyección HTML)."""
+    import html as _h
+    return _h.escape((n or "")[:80])
 
 def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
     cta = ""
@@ -7446,7 +7467,7 @@ async def _send_email(to, subject, html, reply_to=None):
         return False
 
 async def send_welcome_free(email, name):
-    body = (f"<p>Hola, {name or ''}.</p>"
+    body = (f"<p>Hola, {_ename(name)}.</p>"
             f"<p>Tu cuenta en <b>Liberato Community</b> ha sido <b>confirmada</b>. Ya puedes entrar a "
             f"nuestro Discord y disfrutar de <b>Daily Bias</b>, noticias de alto impacto en vivo, "
             f"resultados de nuestros estudiantes, contenido educativo gratuito y mucho más.</p>"
@@ -7456,7 +7477,7 @@ async def send_welcome_free(email, name):
                              _email_shell("Tu cuenta está confirmada", body, cta_t, cta_u))
 
 async def send_welcome_premium(email, name):
-    body = (f"<p>Hola, {name or ''}.</p>"
+    body = (f"<p>Hola, {_ename(name)}.</p>"
             f"<p>¡Bienvenido al <b>acceso completo</b> de Liberato Community! Con tu membresía ya tienes el "
             f"<b>Dashboard Institucional</b>, niveles de <b>GEX</b>, Earnings, noticias de alto impacto en vivo "
             f"y todo el contenido premium.</p>"
@@ -7485,7 +7506,7 @@ async def send_purchase_pending(email):
                                           "Crear mi cuenta →", f"{SITE_URL}/auth.html"))
 
 async def send_verify_code(email, name, code):
-    body = (f"<p>Hola, {name or ''}.</p>"
+    body = (f"<p>Hola, {_ename(name)}.</p>"
             f"<p>Para activar tu cuenta en <b>Liberato Community</b>, ingresa este código de verificación:</p>"
             f"<div style='margin:18px 0;text-align:center;'>"
             f"<span style='display:inline-block;font-family:monospace;font-size:34px;font-weight:800;"
@@ -7497,7 +7518,7 @@ async def send_verify_code(email, name, code):
                              _email_shell("Verifica tu correo", body))
 
 async def send_reset_code(email, name, code):
-    body = (f"<p>Hola, {name or ''}.</p>"
+    body = (f"<p>Hola, {_ename(name)}.</p>"
             f"<p>Recibimos una solicitud para <b>restablecer tu contraseña</b> en Liberato Community. "
             f"Usa este código:</p>"
             f"<div style='margin:18px 0;text-align:center;'>"
@@ -7558,7 +7579,6 @@ async def admin_users(key: str = "", authorization: str = Header("")):
                        "premium": len(b["premium"]), "trial": len(b["trial"])},
             "free": b["free"], "premium": b["premium"], "trial": b["trial"]}
 
-@app.post("/api/admin/email/broadcast")
 # ── Baja de correos de marketing (unsubscribe) ───────────────────────────────
 def _unsub_token(email):
     """Token firmado (HMAC con AUTH_SECRET) para el link de baja — evita que alguien
@@ -7613,6 +7633,7 @@ async def admin_resubscribe(request: Request, key: str = "", authorization: str 
     await _sb_set_config("unsub::" + email, "")
     return {"ok": True, "email": email, "resubscribed": True}
 
+@app.post("/api/admin/email/broadcast")
 async def admin_email_broadcast(request: Request, key: str = "", authorization: str = Header("")):
     """Envía un correo a un grupo (free | trial | paid | premium | all). Throttle anti-spam.
     Respeta la baja (unsubscribe). OJO: Gmail ~500/día; para listas grandes usar un ESP."""
@@ -8006,6 +8027,9 @@ async def auth_reset(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     email = (data.get("email") or "").strip().lower()
+    # Anti fuerza-bruta del código de 6 dígitos (mismos topes que /verify).
+    _rate_limit(request, "reset", 12, 600, email)                 # 12 / 10 min por IP
+    _rate_limit(request, "reset", 25, 600, email, use_ip=False)   # 25 / 10 min por email
     code = str(data.get("code") or "").strip()
     npw = data.get("new_password") or data.get("password") or ""
     if len(npw) < 8:
@@ -8025,6 +8049,7 @@ async def auth_reset(request: Request):
     u["pass_hash"] = _hash_pw(npw, salt)
     await user_put(email, u)
     await _reset_set(email, {"used": True})
+    await _sessions_clear(email)   # reset = posible cuenta comprometida → expulsa TODAS las sesiones
     return {"ok": True}
 
 @app.post("/api/admin/preview-email")
@@ -8151,6 +8176,12 @@ async def auth_change_password(request: Request, authorization: str = Header("")
     u["salt"] = base64.b64encode(nsalt).decode()
     u["pass_hash"] = _hash_pw(npw, nsalt)
     await user_put(email, u)
+    # Expulsa las OTRAS sesiones (posible robo de contraseña), conservando la actual.
+    try:
+        _p = _verify_jwt((authorization or "").replace("Bearer ", "").strip()) or {}
+        await _sessions_clear(email, keep_jti=_p.get("jti"))
+    except Exception:
+        pass
     return {"ok": True}
 
 @app.post("/api/auth/set-language")
