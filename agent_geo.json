@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Trump dijo en su discurso ante la ONU que tiene una 'gran decision' sobre Iran -acuerdo o 'aniquilar' al pais- y espera un pacto recien tras las elecciones de medio termino; ademas Xi Jinping ya esta en Washington para la cumbre del jueves con la tregua arancelaria por vencer y la IA/semiconductores en la mesa, lo que mantiene la cautela en tecnologicas del NQ.",
-  "petroleo": "WTI y Brent recortaron caidas tras el discurso de Trump en la ONU, luego de bajar por senales de que el suministro de Oriente Medio se normaliza (flujos por el Estrecho de Ormuz en maximos de 6 meses y sin escolta militar a petroleros); el respiro del crudo (Brent cerca de 100 USD, WTI cerca de 96 USD) favorece el apetito por riesgo en el NQ.",
-  "catalizador": "El vicepresidente de la Fed, Philip Jefferson, hablo hoy a las 9:30 ET en la Conferencia del Mercado de Tesoros de la Fed de Nueva York sobre funcionamiento del mercado de bonos, evento vigilado por el mercado tras la subida de tasas de 25pb y el tono hawkish de Warsh del 16-sep.",
+  "geopolitica": "Trump dijo ante la Asamblea General de la ONU que espera un acuerdo con Iran recien tras las elecciones de medio termino de noviembre (la alternativa que planteo es 'aniquilar' al regimen), mientras Iran senalizo que podria reabrir el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar; en paralelo Xi Jinping llega a Washington para la cumbre del 24-sep con la tregua arancelaria por vencer el 10-nov y la IA/semiconductores como tema central, lo que mantiene la cautela en las tecnologicas del NQ.",
+  "petroleo": "Brent y WTI cotizan practicamente sin cambios (Brent -0.38 USD a 99.96 USD/barril, WTI -0.17 USD a 95.61 USD/barril) tras los comentarios de Trump en la ONU que posponen un posible acuerdo con Iran hasta despues de las elecciones; el crudo estable, lejos de escaladas bruscas, deja un trasfondo neutral para el apetito de riesgo en el NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 anos cae por debajo del 5% mientras el mercado espera declaraciones de la Fed: el vicepresidente Philip Jefferson habla hoy en la Conferencia del Mercado de Tesoros de la Fed de Nueva York, en el contexto de la reciente suba de tasas de 25pb (16-sep) y el tono hawkish sobre inflacion del presidente Kevin Warsh, factor que el NQ sigue de cerca por su sensibilidad a tasas.",
   "sources": [
-    "Yahoo Finance 22-sep-2026 - stock-market-today-tuesday-september-22",
+    "CNBC 22-sep-2026 - oil-iran-us-bessent-un-crude",
+    "CNBC 22-sep-2026 - treasury-yield-us-bond-market-trump",
+    "CNBC 22-sep-2026 - 5-things-to-know-before-the-stock-market-opens",
     "CNBC 21-sep-2026 - trump-xi-china-summit-trade-tariffs",
-    "Federal Reserve Bank of New York - 2026 Treasury Market Conference, 22-sep-2026 09:30 ET",
-    "CNBC 16-sep-2026 - fed-meeting-today-live-updates (Warsh rate hike)"
+    "CNBC 16-sep-2026 - fed-rate-decision-september-2026"
   ],
-  "as_of": "2026-09-22T15:40:04Z"
+  "as_of": "2026-09-22T16:06:23Z"
 }
