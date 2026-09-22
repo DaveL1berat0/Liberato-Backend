@@ -1,12 +1,11 @@
 {
-  "geopolitica": "La cumbre Trump-Xi en Washington esta semana (Xi llega el miercoles, cena de Estado el jueves) busca extender la tregua comercial y avanzar en cooperacion de IA, lo que reduce la prima de riesgo geopolitico y da soporte al NQ, aunque persiste el riesgo de nuevos aranceles si las negociaciones fracasan.",
-  "petroleo": "Brent cotiza en torno a 101.7 USD/barril y WTI cerca de 93.4 USD/barril, revirtiendo al alza la caida de la semana pasada tras señales de apertura diplomatica de Trump hacia Iran antes de la Asamblea General de la ONU; el nivel de crudo sigue siendo un factor de presion inflacionaria a vigilar para el NQ.",
-  "catalizador": "El rally de IA impulso ayer al Nasdaq Composite +2.26% (cierre record), con AMD superando el billon de capitalizacion y Meta +11% por su app Muse AI, manteniendo el sesgo alcista de sentimiento tecnologico como principal motor intradia del NQ hoy.",
+  "geopolitica": "Iran senalo que reabriria el Estrecho de Ormuz en 7 dias si EE.UU. reduce la presion militar y Arabia Saudita prepara reiniciar su oleoducto Este-Oeste, lo que reduce el riesgo geopolitico de suministro y favorece el apetito por riesgo en el NQ (Reuters, ~07:51 ET).",
+  "petroleo": "El Brent cae 2.1% a 98.23 USD/barril y el WTI 2.59% a 93.30 USD/barril tras las senales de reapertura de Ormuz, lo que alivia la angustia inflacionaria y apoya a las tecnologicas del NQ cerca de maximos historicos (Reuters, 07:51 ET).",
+  "catalizador": "",
   "sources": [
-    "CNBC - 5 things to know before the market opens (22 Sep 2026)",
-    "CNBC - Trump-Xi summit trade tariffs AI (22 Sep 2026)",
-    "CNBC/OilPrice.com - Oil prices Brent WTI (22 Sep 2026)",
-    "Bloomberg - Stock market today live updates (22 Sep 2026)"
+    "Reuters 07:51 ET (oil wrap: Brent -2.1% a 98.23 USD, WTI -2.59% a 93.30 USD)",
+    "CNBC hoy (premarket: Nasdaq 100 futures +0.94%, semiconductores en racha de 6 dias)",
+    "NBC News / Al Jazeera hoy (Iran ofrece reabrir Ormuz en 7 dias, Arabia Saudita reinicia oleoducto)"
   ],
-  "as_of": "2026-09-22T14:06:47Z"
+  "as_of": "2026-09-22T14:39:49Z"
 }
