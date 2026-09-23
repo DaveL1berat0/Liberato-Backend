@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Xi Jinping llega hoy a Washington (Base Andrews, ~16:00 ET) para una cumbre con Trump marcada por la tregua arancelaria que vence el 10-nov y una ley que habilita aranceles de hasta 100% a compradores de petroleo ruso, lo que mantiene al Nasdaq cauteloso ante el riesgo comercial con China.",
-  "petroleo": "El Brent cotiza por encima de 100-101 USD/barril, sostenido por la disrupcion de suministro en Oriente Medio (guerra Iran-Israel y restricciones en el Estrecho de Ormuz), alimentando temores de inflacion que presionan al Nasdaq a la baja.",
-  "catalizador": "El gobernador de la Fed, Michael Barr, dijo hoy (11:23 ET) que probablemente se necesiten mas subas de tasas para bajar la inflacion persistente, lo que impulso el rendimiento del Tesoro a 10 anos a 5.09% (maximo desde 2007) y presiona a las tecnologicas del Nasdaq.",
+  "geopolitica": "Xi Jinping llega hoy a Washington para la cumbre de estado con Trump (23-25 sept, primera visita de Xi en una decada), con agenda centrada en comercio, semiconductores/IA, Taiwan y la guerra en Iran; la incertidumbre sobre posibles anuncios (aranceles a chips, controles de exportacion) mantiene cautos a los futuros del NQ.",
+  "petroleo": "El Brent sube ~2.4% a 101.6 USD/barril y el WTI +1.5% a 91.8 USD/barril, cortando una racha de cinco sesiones a la baja, mientras el mercado pondera la diplomacia EEUU-Iran sobre el Estrecho de Ormuz frente a la disrupcion de suministro (oleoducto saudi Este-Oeste) aun no normalizada; el repunte del crudo presiona expectativas de inflacion y pesa sobre el NQ.",
+  "catalizador": "El PMI flash de EEUU (S&P Global, difundido ~09:45 ET) salio mas caliente de lo esperado, disparando el rendimiento del Treasury a 10 anos +12-13pb hasta ~5.09-5.10% (maximo desde 2007), lo que gatillo una fuerte rotacion fuera de tech/growth: Nasdaq Composite -1.2% en la sesion y Nvidia cayendo mas de 2%.",
   "sources": [
-    "ABC News/Washington Times 16:00 ET (llegada de Xi a Andrews)",
-    "CNBC/Yahoo Finance 23-sep (Brent sobre 100 USD/barril)",
-    "Reuters/Investing.com 11:23 ET (declaraciones de Barr)",
-    "Bloomberg 22-sep ~20:30 ET (reunion EEUU-Iran de 3 horas en la ONU)"
+    "CNBC 23-Sep (oil prices rise after five-day losing streak)",
+    "S&P Global Flash PMI 09:45 ET",
+    "Yahoo Finance/Benzinga mediodia ET (Nasdaq, 10-yr yield 19-year high)",
+    "ABC News 23-Sep (Xi kicks off state visit to Washington)"
   ],
-  "as_of": "2026-09-23T17:06:35Z"
+  "as_of": "2026-09-23T18:05:58Z"
 }
