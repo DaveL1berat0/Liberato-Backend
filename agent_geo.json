@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump dijo ante la ONU que enfrenta una \"gran decisión\" entre negociar con Irán o \"aniquilar\" al régimen, tras calificar de \"muy buena\" la reunión de 3 horas con la delegación iraní en Nueva York, a horas de la llegada de Xi Jinping a Washington para la cumbre bilateral; la mezcla de retórica dura y diplomacia activa mantiene al NQ en un rango de incertidumbre intradía.",
-  "petroleo": "El petróleo cotiza errático (\"see-saw\"): Brent llegó a subir 2.4% hasta 101.61 USD/barril a media mañana antes de volver a ceder hacia ~98 USD, mientras el mercado sopesa la retórica dura de Trump en la ONU frente al plan saudí de reactivar el oleoducto Este-Oeste; la volatilidad energética añade presión mixta sobre las expectativas de inflación que pesan en el NQ.",
-  "catalizador": "El PMI compuesto flash de EE.UU. sorprendió al alza (58.4 vs 56.0 en agosto, ritmo más rápido desde 2021), publicado 9:45 ET, disparando el rendimiento del Treasury a 10 años por encima del 5% (máximo desde 2007) y reforzando apuestas de que la Fed mantendrá tasas altas, un viento en contra para el NQ.",
+  "geopolitica": "Xi Jinping llega hoy a Washington (Base Andrews, ~16:00 ET) para una cumbre con Trump marcada por la tregua arancelaria que vence el 10-nov y una ley que habilita aranceles de hasta 100% a compradores de petroleo ruso, lo que mantiene al Nasdaq cauteloso ante el riesgo comercial con China.",
+  "petroleo": "El Brent cotiza por encima de 100-101 USD/barril, sostenido por la disrupcion de suministro en Oriente Medio (guerra Iran-Israel y restricciones en el Estrecho de Ormuz), alimentando temores de inflacion que presionan al Nasdaq a la baja.",
+  "catalizador": "El gobernador de la Fed, Michael Barr, dijo hoy (11:23 ET) que probablemente se necesiten mas subas de tasas para bajar la inflacion persistente, lo que impulso el rendimiento del Tesoro a 10 anos a 5.09% (maximo desde 2007) y presiona a las tecnologicas del Nasdaq.",
   "sources": [
-    "CNBC 23-sep-2026",
-    "NBC News 23-sep-2026",
-    "Reuters 09:45 ET (PMI)",
-    "Reuters ~10:34 ET (petróleo)"
+    "ABC News/Washington Times 16:00 ET (llegada de Xi a Andrews)",
+    "CNBC/Yahoo Finance 23-sep (Brent sobre 100 USD/barril)",
+    "Reuters/Investing.com 11:23 ET (declaraciones de Barr)",
+    "Bloomberg 22-sep ~20:30 ET (reunion EEUU-Iran de 3 horas en la ONU)"
   ],
-  "as_of": "2026-09-23T16:07:11Z"
+  "as_of": "2026-09-23T17:06:35Z"
 }
