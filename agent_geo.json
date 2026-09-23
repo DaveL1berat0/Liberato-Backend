@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Iran ofrecio reabrir el Estrecho de Ormuz en una semana si EEUU relaja la presion militar, mientras Trump advirtio en la ONU que Washington enfrenta la disyuntiva entre un acuerdo con Iran o mas accion militar tras amenazar con 'aniquilar' al pais; la primera reunion directa EEUU-Iran desde el inicio de la guerra reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ si la diplomacia avanza.",
-  "petroleo": "El Brent sube 1% a 100.32 USD/barril y el WTI sube 0.3% a 90.88 USD/barril, un rebote moderado tras la oferta de reapertura de Ormuz luego de una caida previa por la misma noticia; un petroleo mas firme presiona las expectativas de inflacion, un viento en contra para el NQ.",
-  "catalizador": "Susan Collins (Fed de Boston) respaldo la subida de tasas de la semana pasada y advirtio que ve probable que la inflacion se mantenga 'notablemente' por encima del 2%, anticipando otra subida antes de fin de ano; un mensaje hawkish que presiona a la baja al NQ en la apertura.",
+  "geopolitica": "Trump advirtio en la ONU que podria 'aniquilar' Iran si no hay acuerdo, mientras el enviado Witkoff confirmo que las conversaciones indirectas EEUU-Iran en la Asamblea General completaron una ronda que podria continuar; la mezcla de amenaza militar y avance diplomatico mantiene la prima de riesgo geopolitico volatil para el NQ.",
+  "petroleo": "El Brent sube 0.36% a 99.57 USD/barril y el WTI cae 0.44% a 90.12 USD/barril tras las conversaciones EEUU-Iran en la ONU y el avance en el reinicio del oleoducto saudi Este-Oeste, moderando la prima de riesgo y aliviando presion inflacionaria sobre el NQ.",
+  "catalizador": "La presidenta de la Fed de Boston, Susan Collins, respaldo la subida de tasas de la semana pasada y advirtio que ve 'notablemente' probable que la inflacion se mantenga por encima del 2%, anticipando otra subida antes de fin de ano; un mensaje hawkish que presiona a la baja al NQ en la apertura.",
   "sources": [
-    "CNBC 23-sep-2026 (us-iran-war-trump-hormuz)",
-    "NBC News 23-sep-2026 (oil-prices-fall-saudi-pipeline-iran-hormuz-trump-talks)",
-    "CNBC 23-sep-2026 (federal-reserve-inflation-interest-rates-ecb)"
+    "CNBC 23-sep-2026 (iran-us-talks-crude-oil-un-wti)",
+    "Axios/NBC News 22-sep-2026 (discurso de Trump en la ONU, amenaza 'annihilate')",
+    "CNBC 23-sep-2026 (federal-reserve-inflation-interest-rates-ecb, comentarios de Collins)"
   ],
-  "as_of": "2026-09-23T14:08:52Z"
+  "as_of": "2026-09-23T14:40:12Z"
 }
