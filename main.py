@@ -10297,6 +10297,30 @@ async def diag_agent_context(key: str = "", authorization: str = Header("")):
             "sig_ultimo_github": (_agent_gh_sig[:120] + "…") if _agent_gh_sig else None}
 
 
+@app.get("/api/admin/px-diag")
+async def px_diag(key: str = "", authorization: str = Header("")):
+    """DIAGNÓSTICO del precio NQ en vivo: qué hay en px_ratio (source/spot/ts) y si Yahoo NQ=F
+    responde DESDE Railway ahora mismo (para saber si el pre-market se congela por rate-limit)."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    pr = dict(cache.get("px_ratio") or {})
+    yh = {}
+    try:
+        async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
+            r = await c.get("https://query1.finance.yahoo.com/v8/finance/chart/NQ%3DF",
+                            params={"range": "1d", "interval": "1m"})
+        yh["status"] = r.status_code
+        if r.status_code == 200:
+            m = (((r.json() or {}).get("chart", {}).get("result") or [{}])[0]).get("meta", {}) or {}
+            yh["price"] = m.get("regularMarketPrice")
+        else:
+            yh["body"] = (r.text or "")[:140]
+    except Exception as e:
+        yh["error"] = f"{type(e).__name__}: {str(e)[:120]}"
+    now = datetime.now(NY)
+    return {"px_ratio": pr, "yahoo_nqf_desde_railway": yh,
+            "hora_ET": now.strftime("%H:%M"), "weekday": now.weekday()}
+
 @app.get("/api/admin/brief-relay")
 async def diag_brief_relay(key: str = "", authorization: str = Header(""), publish: int = 0):
     """DIAGNÓSTICO/CONTROL del relay del brief con Claude. ?publish=1 publica el contexto AHORA.
