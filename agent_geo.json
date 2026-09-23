@@ -1,12 +1,15 @@
 {
-  "geopolitica": "Xi Jinping llega hoy hacia las 16:00 ET a la Base Andrews para su visita de Estado a Washington (cumbre con Trump del 23 al 25 de septiembre), con una delegacion empresarial china reducida que enfria las expectativas de avances en comercio y semiconductores, limitando el impulso de las tecnologicas en el NQ.",
-  "petroleo": "El Brent supera los 101 USD/barril (+3%) y el WTI ronda los 91 USD (+1%) por las disrupciones de suministro derivadas del conflicto Iran-Israel y el cierre parcial del Estrecho de Ormuz, presionando costos de insumos y sesgando a la baja al NQ.",
-  "catalizador": "El gobernador de la Fed Michael Barr respaldo nuevas subidas de tasas tras un PMI de servicios de EE.UU. en maximo de unos 5 anos (58.7), lo que llevo el Treasury a 10 anos a 5.079% (maximo desde 2007) y la probabilidad de un hike en octubre a ~73%, un viento en contra para el NQ.",
+  "geopolitica": "La guerra Iran-Israel/EEUU mantiene el Estrecho de Hormuz efectivamente cerrado y el oleoducto saudi East-West (bypass de Hormuz) sigue fuera de servicio tras el ataque con drones, mientras el mercado espera la reunion Trump-Xi manana; el riesgo geopolitico sostenido presiona el apetito por riesgo y pesa sobre el NQ intradia.",
+  "petroleo": "Brent cotiza sobre 101 USD/barril (+2.4%) y WTI cerca de 92-93 USD/barril (+1.8-2.2%) por el riesgo de suministro en Medio Oriente (Hormuz cerrado, oleoducto saudi offline); el crudo fuerte alimenta expectativas de inflacion y presiona a la baja al NQ via mayores rendimientos.",
+  "catalizador": "El rendimiento del Treasury a 10 anos salto a un maximo de 19 anos (~5.08-5.13%) por PMIs de servicios y manufactura muy por encima de lo esperado, comentarios hawkish de un funcionario de la Fed y floja demanda en subasta de notas a 5 anos, elevando la probabilidad de otra subida de tasas en octubre; el alza de yields golpea directamente la valuacion de las tecnologicas del NQ.",
   "sources": [
-    "ABC News 16:00 ET",
-    "FXStreet 12:19 ET",
-    "CNBC 14:00 ET",
-    "Reuters 09:30 ET"
+    "CNBC - 10-year Treasury yield rockets to 19-year high",
+    "TheStreet - Nasdaq, Russell 2000 sink as 5-year Treasury hits 5%",
+    "Motley Fool - Stocks Slip as Treasury Yields Hit 19-Year High",
+    "Yahoo Finance - Dow, S&P 500, Nasdaq tumble as 10-year Treasury yield surges",
+    "CNBC - Satellite images show damage to Saudi Arabia's East-West oil pipeline",
+    "Al Jazeera - Saudi Arabia shuts critical oil pipeline after drone attack",
+    "TradingEconomics - Brent crude oil price"
   ],
-  "as_of": "2026-09-23T20:06:15Z"
+  "as_of": "2026-09-23T21:05:02Z"
 }
