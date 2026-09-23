@@ -10325,8 +10325,22 @@ async def px_diag(key: str = "", authorization: str = Header("")):
             yh["body"] = (r.text or "")[:140]
     except Exception as e:
         yh["error"] = f"{type(e).__name__}: {str(e)[:120]}"
+    # ¿Finnhub QQQ da precio EXTENDIDO (pre-market)? Si 'c' != 'pc' fuera de RTH, sí sirve.
+    fh = {}
+    if FINNHUB_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=8) as c:
+                rr = await c.get(f"{FH_BASE}/quote", params={"symbol": FA_PROXY_ETF, "token": FINNHUB_KEY})
+            fh["status"] = rr.status_code
+            if rr.status_code == 200:
+                q = rr.json() or {}
+                fh["c"] = q.get("c"); fh["pc"] = q.get("pc"); fh["dp"] = q.get("dp"); fh["t"] = q.get("t")
+                fh["c_distinto_de_pc"] = (q.get("c") is not None and q.get("pc") is not None and abs(float(q.get("c")) - float(q.get("pc"))) > 0.01)
+        except Exception as e:
+            fh["error"] = f"{type(e).__name__}: {str(e)[:100]}"
     now = datetime.now(NY)
-    return {"px_ratio": pr, "yahoo_nqf_desde_railway": yh,
+    return {"px_ratio": pr, "yahoo_nqf_desde_railway": yh, "finnhub_qqq": fh,
+            "ratio_actual": get_px_ratio(),
             "hora_ET": now.strftime("%H:%M"), "weekday": now.weekday()}
 
 @app.get("/api/admin/brief-relay")
