@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Xi Jinping llega hoy a Washington (Base Andrews, recibido personalmente por Trump hacia las 16:00 hora local) en su primera visita de Estado en una decada; la cumbre de 3 dias sobre aranceles, semiconductores, tierras raras e IA mantiene en vilo a los valores tech del NQ ante el riesgo de sorpresas en la negociacion.",
-  "petroleo": "Brent sube 2.4% a 101.61 USD/barril y WTI sube 1.5% a 91.84 USD/barril (10:34 ET) tras casi tres horas de conversaciones indirectas EEUU-Iran en la ONU (Witkoff/Kushner con Araqchi), que reavivan la esperanza diplomatica pero no despejan el riesgo de suministro en Medio Oriente, sumando presion inflacionaria sobre el NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos toco 5.058%, maximo desde julio de 2007, antes de retroceder por debajo del 5%, mientras el mercado digiere el tono hawkish del presidente de la Fed de Richmond, Barkin, quien advirtio que una sola subida de tasas podria no bastar para controlar la inflacion, manteniendo nervioso al NQ.",
+  "geopolitica": "Irán calificó las amenazas de Trump de 'desesperación estratégica' y ofreció reabrir el Estrecho de Ormuz en 7 días si EE.UU. levanta el bloqueo militar, prolongando la incertidumbre geopolítica que limita el apetito por riesgo en el NQ antes de la cumbre Trump-Xi.",
+  "petroleo": "El Brent subió 2.4% hasta 101.61 USD/barril (WTI +1.5% a 91.84 USD) hacia las 10:34 ET, revirtiendo cinco sesiones de caídas por dudas sobre el reinicio del oleoducto saudí Este-Oeste, presionando expectativas de inflación en contra del NQ.",
+  "catalizador": "El PMI compuesto flash de EE.UU. sorprendió al alza (58.4 vs 56.0 en agosto, máximo desde 2021), publicado a las 9:45 ET, disparó el rendimiento del Treasury a 10 años por encima de 5% y reforzó apuestas de sesgo restrictivo de la Fed, un viento en contra para el NQ.",
   "sources": [
-    "CNBC 10:34 ET (23-sep-2026, iran-us-talks-crude-oil-un-wti)",
-    "Yahoo Finance 08:05 ET (23-sep-2026, live blog Dow S&P Nasdaq)",
-    "ABC News/US News 23-sep-2026 (llegada de Xi a Joint Base Andrews)"
+    "CNBC 07:40 ET",
+    "Reuters 10:34 ET",
+    "S&P Global/Reuters 09:45 ET"
   ],
-  "as_of": "2026-09-23T15:05:23Z"
+  "as_of": "2026-09-23T15:39:54Z"
 }
