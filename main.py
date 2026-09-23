@@ -678,7 +678,9 @@ def save_cache():
             "gex":      cache["gex"],
             "earnings": {"data": cache["earnings"]["data"]},
             "institutional": {"text": cache["institutional"]["text"],
-                              "lu":   cache["institutional"]["last_update"]},
+                              "lu":   cache["institutional"]["last_update"],
+                              "claude_as_of": cache["institutional"].get("claude_as_of"),
+                              "source": cache["institutional"].get("source")},
             # Persistidos para sobrevivir redeploys (el Volume /data los retiene):
             # sin esto, un redeploy al mediodía borraba los 'actual' del calendario
             # y las noticias high-impact acumuladas del día.
@@ -760,7 +762,11 @@ def load_cache():
         if snap.get("institutional", {}).get("text"):
             cache["institutional"]["text"]        = snap["institutional"]["text"]
             cache["institutional"]["last_update"] = snap["institutional"].get("lu")
-            cache["institutional"]["status"]      = "stale"
+            # Restaurar el rastro de Claude para que un redeploy NO deje que Groq pise el brief
+            # completo con uno corto (la guarda "Claude manda" necesita claude_as_of).
+            cache["institutional"]["claude_as_of"] = snap["institutional"].get("claude_as_of")
+            cache["institutional"]["source"]       = snap["institutional"].get("source")
+            cache["institutional"]["status"]       = "fresh-claude" if snap["institutional"].get("claude_as_of") else "stale"
         if snap.get("calendar", {}).get("data"):
             cache["calendar"]["data"]        = snap["calendar"]["data"]
             cache["calendar"]["last_update"] = snap["calendar"].get("lu")
@@ -1221,45 +1227,81 @@ async def refresh_real_indices():
     return
 
 
+_nqf_last_ts = 0.0
 async def refresh_nq_spot_fast():
-    """Precio NQ EN VIVO (~cada 4s): quote real-time de QQQ (Finnhub) × ratio real →
-    cache['px_ratio']['spot']. Desacopla el precio del cierre de vela de 5 min (antes
-    px_ratio.spot solo se refrescaba cada ~5 min desde el último candle → el NQ iba
-    ~5 min atrasado y el chart heredaba el atraso). QQQ (ETF) cotiza ~4:00-20:00 ET; fuera
-    de esa ventana no hay tick real y NO se toca nada. Regla #1: sin quote o sin ratio
-    real, no se escribe (se mantiene el último dato real; nunca se inventa)."""
-    if not FINNHUB_KEY:
+    """Precio NQ EN VIVO — el precio SIEMPRE se mueve durante la sesión de futuros (pre-market,
+    overnight y RTH), no solo en horario regular:
+      • RTH (9:30-16:00 ET): Finnhub QQQ real-time × ratio real (cada 4s) — muy fresco.
+      • Fuera de RTH pero con futuros abiertos (pre-market/after/overnight): Yahoo NQ=F, el
+        FUTURO REAL (Yahoo rate-limita → ~cada 14s). Finnhub QQQ NO refleja pre-market.
+    Sesión de futuros CME: dom 18:00 ET → vie 17:00 ET, con break diario 17:00-18:00 ET.
+    Regla #1: sin dato real no se escribe (se mantiene el último real + su ts; nunca se inventa)."""
+    global _nqf_last_ts
+    nowny = datetime.now(NY); wd, hr, mn = nowny.weekday(), nowny.hour, nowny.minute
+    # Cerrado: sábado; viernes ≥17:00; domingo <18:00; y el break diario 17:00-18:00 ET.
+    if (wd == 5) or (wd == 4 and hr >= 17) or (wd == 6 and hr < 18) or (hr == 17):
         return
-    nowny = datetime.now(NY)
-    if nowny.weekday() >= 5 or not (4 <= nowny.hour < 20):
+    _is_rth = (wd < 5) and ((hr > 9 or (hr == 9 and mn >= 30)) and hr < 16)
+    if _is_rth:
+        # ── RTH: Finnhub QQQ real-time × ratio (cada 4s) ──
+        if not FINNHUB_KEY or not fh_budget_ok(1):
+            return
+        fh_charge(1)
+        try:
+            async with httpx.AsyncClient(timeout=8) as client:
+                r = await client.get(f"{FH_BASE}/quote", params={"symbol": FA_PROXY_ETF, "token": FINNHUB_KEY})
+            if r.status_code != 200:
+                return
+            q = r.json() or {}
+            qqq, dp = q.get("c"), q.get("dp")
+            if not qqq:
+                return
+            ratio = get_px_ratio()
+            if not ratio:
+                return   # sin ratio real → la UI muestra "—", nunca un número inventado
+            cache["px_ratio"]["etf_price"] = float(qqq)
+            cache["px_ratio"]["spot"]   = round(float(qqq) * ratio, 2)
+            cache["px_ratio"]["source"] = "finnhub-qqq"
+            cache["px_ratio"]["ts"]     = datetime.now(NY).isoformat()
+            t = cache["heatmap"]["data"].get(FA_PROXY_ETF)
+            if isinstance(t, dict):
+                t["price"] = round(float(qqq), 4)
+                if dp is not None:
+                    t["chg_pct"] = round(float(dp), 3)
+        except Exception as e:
+            print(f"[nq-fast] finnhub: {e}")
         return
-    if not fh_budget_ok(1):
+    # ── Fuera de RTH (pre-market/after/overnight): Yahoo NQ=F, el futuro REAL. Throttle ~14s. ──
+    if time.time() - _nqf_last_ts < 14:
         return
-    fh_charge(1)
+    _nqf_last_ts = time.time()
     try:
-        async with httpx.AsyncClient(timeout=8) as client:
-            r = await client.get(f"{FH_BASE}/quote",
-                                 params={"symbol": FA_PROXY_ETF, "token": FINNHUB_KEY})
+        async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as client:
+            r = await client.get("https://query1.finance.yahoo.com/v8/finance/chart/NQ%3DF",
+                                 params={"range": "1d", "interval": "1m"})
         if r.status_code != 200:
+            print(f"[nq-fast] yahoo NQ=F {r.status_code} (rate-limit?) — mantiene el último real")
             return
-        q = r.json() or {}
-        qqq, dp = q.get("c"), q.get("dp")
-        if not qqq:
+        res = ((r.json() or {}).get("chart", {}).get("result") or [None])[0]
+        if not res:
             return
-        ratio = get_px_ratio()
-        if not ratio:
-            return   # sin ratio real → la UI muestra "—", nunca un número inventado
-        cache["px_ratio"]["etf_price"] = float(qqq)
-        cache["px_ratio"]["spot"] = round(float(qqq) * ratio, 2)
-        cache["px_ratio"]["ts"] = datetime.now(NY).isoformat()
-        # Consistencia: refrescar el tile QQQ (precio + % diario real) que alimenta el ratio.
-        t = cache["heatmap"]["data"].get(FA_PROXY_ETF)
+        m = res.get("meta", {}) or {}
+        px = m.get("regularMarketPrice")
+        prev = m.get("chartPreviousClose") or m.get("previousClose")
+        if not px:
+            return
+        cache["px_ratio"]["spot"]   = round(float(px), 2)   # NQ=F ya está en escala NQ (sin ratio)
+        cache["px_ratio"]["source"] = "yahoo-nqf"
+        cache["px_ratio"]["ts"]     = datetime.now(NY).isoformat()
+        # Tile NQ (precio + % diario real) — lo consume el brief y otros.
+        t = cache["heatmap"]["data"].get(FA_ASSET)
         if isinstance(t, dict):
-            t["price"] = round(float(qqq), 4)
-            if dp is not None:
-                t["chg_pct"] = round(float(dp), 3)
+            t["price"] = round(float(px), 2)
+            if prev:
+                try: t["chg_pct"] = round((float(px) / float(prev) - 1) * 100, 3)
+                except Exception: pass
     except Exception as e:
-        print(f"[nq-fast] {e}")
+        print(f"[nq-fast] yahoo NQ=F: {e}")
     return
 async def _refresh_real_indices_OLD_yahoo():
     global _indices_last_ts
@@ -5507,7 +5549,9 @@ async def refresh_institutional(force=False):
     _cl_as_of = cache["institutional"].get("claude_as_of")
     if _cl_as_of and cache["institutional"].get("text"):
         try:
-            if (datetime.now(NY) - datetime.fromisoformat(_cl_as_of)).total_seconds() < 7200:
+            _cl_fresh = (datetime.now(NY) - datetime.fromisoformat(_cl_as_of)).total_seconds() < 7200
+            _cl_today = str(_cl_as_of)[:10] == datetime.now(NY).strftime("%Y-%m-%d")
+            if _cl_fresh or _cl_today:   # brief de Claude de HOY (o <2h) → MANDA; no degradar a Groq
                 try:
                     _splice_agent_geo_into_brief()
                 except Exception:
@@ -5553,12 +5597,22 @@ async def refresh_institutional(force=False):
         except Exception as e:
             print(f"[institutional] fallback Gemini falló: {e}")
     if text:
-        cache["institutional"]["text"]        = text
-        cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
-        cache["institutional"]["status"]      = "fresh"
-        cache["institutional"]["has_gamma"]   = has_gamma
+        # Defensa anti-degradación: si el brief vigente es de Claude y de HOY, NO lo pises con un
+        # texto de Groq/Gemini notablemente más corto (peor). Cinturón-y-tirantes de la guarda de arriba.
+        _cur = cache["institutional"].get("text") or ""
+        _cur_claude_today = (cache["institutional"].get("source") == "claude-relay"
+                             and str(cache["institutional"].get("claude_as_of") or "")[:10] == datetime.now(NY).strftime("%Y-%m-%d"))
+        if _cur_claude_today and len(text) < len(_cur) * 0.8:
+            cache["institutional"]["status"] = "fresh-claude"   # conservar el brief de Claude (no degradar)
+            print("[institutional] Groq/Gemini más corto que Claude-hoy → conservo el brief de Claude")
+        else:
+            cache["institutional"]["text"]        = text
+            cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
+            cache["institutional"]["status"]      = "fresh"
+            cache["institutional"]["source"]      = "groq-gemini"
+            cache["institutional"]["has_gamma"]   = has_gamma
+            print(f"[institutional] ok ({'con gamma' if has_gamma else 'sin gamma — contexto macro'})")
         save_cache()
-        print(f"[institutional] ok ({'con gamma' if has_gamma else 'sin gamma — contexto macro'})")
     else:
         cache["institutional"]["status"] = "stale"
         print("[institutional] ni Groq ni Gemini generaron — se mantiene el último resumen")
@@ -10173,14 +10227,19 @@ async def refresh_brief_from_github():
     except Exception:
         pass
     sig = hashlib.sha256(brief.encode()).hexdigest()
+    # El brief de Claude de HOY sigue vigente: renovar su frescura en CADA poll (aunque el texto
+    # sea idéntico) para que la guarda "Claude manda" (refresh_institutional) NUNCA expire y Groq
+    # no lo pise con un brief más corto. Antes esto solo se hacía si el texto cambiaba.
+    cache["institutional"]["claude_as_of"] = datetime.now(NY).isoformat()
+    cache["institutional"]["source"]       = "claude-relay"
+    cache["institutional"]["status"]       = "fresh-claude"
     if sig == _brief_out_sig:
+        try: save_cache()
+        except Exception: pass
         return
     _brief_out_sig = sig
     cache["institutional"]["text"]        = brief
     cache["institutional"]["last_update"] = datetime.now(NY).isoformat()
-    cache["institutional"]["claude_as_of"] = datetime.now(NY).isoformat()
-    cache["institutional"]["status"]      = "fresh-claude"
-    cache["institutional"]["source"]      = "claude-relay"
     try:
         save_cache()
     except Exception:
