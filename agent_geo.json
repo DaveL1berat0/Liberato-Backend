@@ -1,10 +1,12 @@
 {
-  "geopolitica": "Trump confirmó que funcionarios de EEUU e Irán mantuvieron una reunión de unas tres horas al margen de la ONU, pero repitió la amenaza de \"aniquilar\" al régimen si no hay acuerdo, generando un efecto mixto que limita el apetito de riesgo en el NQ.",
-  "petroleo": "El Brent cotiza en 99,57 dólares (+0,36%) y el WTI en 90,12 dólares (-0,44%) hacia las 05:39 ET, estabilizándose por las conversaciones diplomáticas EEUU-Irán, lo que reduce la presión inflacionaria sobre el NQ.",
-  "catalizador": "",
+  "geopolitica": "Trump confirmó una reunión de unas tres horas entre funcionarios de EEUU e Irán al margen de la ONU sobre la reapertura del Estrecho de Ormuz, pero repitió la amenaza de \"aniquilar\" al régimen si no hay acuerdo, mientras se acerca la cumbre Trump-Xi tras conversaciones comerciales Bessent-He Lifeng calificadas de 'exitosas'; efecto mixto que limita el apetito de riesgo en el NQ.",
+  "petroleo": "Brent y WTI caen por quinta sesión consecutiva y cotizan por debajo de 100 USD por primera vez en una semana (Brent ~99 USD, WTI ~89-90 USD) ante expectativas de reapertura del Estrecho de Ormuz y avances en las pláticas EEUU-Irán, aliviando la presión inflacionaria y favoreciendo al NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 caen 0.2% este miércoles mientras el rendimiento del Treasury a 10 años sube a 4.99%, presionando a las tecnológicas de alta duración.",
   "sources": [
-    "CNBC 05:39 ET",
-    "CNBC/AP 23/09/2026"
+    "CNBC 05:39 ET 23-sep (Brent 99.57/WTI 90.12)",
+    "CNBC/AP 23-sep (Trump-Irán, amenaza 'aniquilar')",
+    "CNBC 23-sep (futuros Nasdaq-100 -0.2%, Treasury 10Y en 4.99%)",
+    "CNBC/Reuters 21-sep (Bessent-He Lifeng 'exitosa', cumbre Trump-Xi)"
   ],
-  "as_of": "2026-09-23T12:41:12Z"
+  "as_of": "2026-09-23T13:07:11Z"
 }
