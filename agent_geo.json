@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump recibe hoy en Washington a Xi Jinping para una cumbre de tres dias (23-25 sep) centrada en aranceles, IA, tierras raras y Taiwan, en un contexto de tension por el apoyo chino a Iran, lo que mantiene cautela y presion vendedora intradia sobre el Nasdaq.",
-  "petroleo": "El Brent cotiza por debajo de 99 USD/barril, extendiendo su sexta sesion consecutiva de bajas, tras el reinicio del oleoducto Este-Oeste saudi que evita el Estrecho de Ormuz y reportes de una reunion 'muy productiva' entre EEUU e Iran, lo que reduce la prima de riesgo geopolitico y resta soporte a las petroleras del Nasdaq.",
-  "catalizador": "El rendimiento del Treasury a 10 anos salto a su nivel mas alto desde 2007 (por encima de 5%) tras PMIs mas calientes de lo esperado y comentarios del gobernador de la Fed Michael Barr a favor de otra subida de tasas en octubre (probabilidad CME FedWatch subio a cerca de 73% desde 55%), lo que presiona al Nasdaq a la baja en la sesion de hoy.",
+  "geopolitica": "Xi Jinping llega hoy hacia las 16:00 ET a la Base Andrews para su visita de Estado a Washington (cumbre con Trump del 23 al 25 de septiembre), con una delegacion empresarial china reducida que enfria las expectativas de avances en comercio y semiconductores, limitando el impulso de las tecnologicas en el NQ.",
+  "petroleo": "El Brent supera los 101 USD/barril (+3%) y el WTI ronda los 91 USD (+1%) por las disrupciones de suministro derivadas del conflicto Iran-Israel y el cierre parcial del Estrecho de Ormuz, presionando costos de insumos y sesgando a la baja al NQ.",
+  "catalizador": "El gobernador de la Fed Michael Barr respaldo nuevas subidas de tasas tras un PMI de servicios de EE.UU. en maximo de unos 5 anos (58.7), lo que llevo el Treasury a 10 anos a 5.079% (maximo desde 2007) y la probabilidad de un hike en octubre a ~73%, un viento en contra para el NQ.",
   "sources": [
-    "CNBC - Trump-Xi summit: U.S. alliance strains complicate China strategy, 23 sep 2026",
-    "CNBC - Market sees next Fed hike in October, following Barr comments and hot inflation reading, 23 sep 2026",
-    "CNBC - 10-year Treasury yield leaps to fresh 19-year high after hot economic readings, 23 sep 2026",
-    "Trading Economics / The National - Saudi Arabia restarts East-West pipeline, Brent below $99, 22-23 sep 2026"
+    "ABC News 16:00 ET",
+    "FXStreet 12:19 ET",
+    "CNBC 14:00 ET",
+    "Reuters 09:30 ET"
   ],
-  "as_of": "2026-09-23T19:06:04Z"
+  "as_of": "2026-09-23T20:06:15Z"
 }
