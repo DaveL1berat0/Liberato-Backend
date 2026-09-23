@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump advirtio en la ONU que EEUU podria 'aniquilar' a Iran si no hay acuerdo, tras 3 horas de conversaciones con la delegacion irani el martes; la incertidumbre geopolitica eleva la aversion al riesgo y presiona al NQ (CNBC, 23-sep 05:39 ET).",
-  "petroleo": "Brent sube 0.36% a 99.57 USD/barril y WTI cae 0.44% a 90.12 USD por la incertidumbre en las conversaciones EEUU-Iran; el nivel elevado del crudo añade presion inflacionaria que pesa sobre el NQ (CNBC, 23-sep 05:39 ET).",
-  "catalizador": "El gobernador de la Fed Michael Barr habla hoy a las 10:05 ET sobre panorama economico en la Cumbre de Vivienda de la Fed de Chicago, tras la subida de tasas de 25pb del 16-sep liderada por el presidente Warsh; el mercado vigila señales de tasas como catalizador para el NQ (Fed Chicago / CNBC).",
+  "geopolitica": "Los avances diplomaticos para poner fin a la guerra EEUU-Iran reducen la aversion global al riesgo y presionan a la baja el crudo, mientras la cena de Estado entre Trump y Xi Jinping esta semana, con lideres de IA presentes, sostiene el optimismo del comercio tecnologico que impulso al Nasdaq-100 a maximos historicos, factor alcista neto para el NQ.",
+  "petroleo": "El Brent cotiza cerca de 99.60 USD/barril (+0.4%) y el WTI cerca de 89.97 USD/barril (-0.6%) esta manana, con el crudo presionado a la baja por el progreso en las negociaciones para terminar la guerra en Iran, lo que alivia el riesgo inflacionario y es levemente positivo para el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 05:39 ET",
-    "CNBC 09:22 (dia previo)",
-    "Federal Reserve Bank of Chicago - evento 10:05 ET"
+    "Bloomberg ~07:00 ET",
+    "CNBC 22-sep ~16:00 ET",
+    "Reuters/TradingView 22-sep"
   ],
-  "as_of": "2026-09-23T11:07:09Z"
+  "as_of": "2026-09-23T11:38:21Z"
 }
