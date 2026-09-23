@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Irán calificó las amenazas de Trump de 'desesperación estratégica' y ofreció reabrir el Estrecho de Ormuz en 7 días si EE.UU. levanta el bloqueo militar, prolongando la incertidumbre geopolítica que limita el apetito por riesgo en el NQ antes de la cumbre Trump-Xi.",
-  "petroleo": "El Brent subió 2.4% hasta 101.61 USD/barril (WTI +1.5% a 91.84 USD) hacia las 10:34 ET, revirtiendo cinco sesiones de caídas por dudas sobre el reinicio del oleoducto saudí Este-Oeste, presionando expectativas de inflación en contra del NQ.",
-  "catalizador": "El PMI compuesto flash de EE.UU. sorprendió al alza (58.4 vs 56.0 en agosto, máximo desde 2021), publicado a las 9:45 ET, disparó el rendimiento del Treasury a 10 años por encima de 5% y reforzó apuestas de sesgo restrictivo de la Fed, un viento en contra para el NQ.",
+  "geopolitica": "Trump dijo ante la ONU que enfrenta una \"gran decisión\" entre negociar con Irán o \"aniquilar\" al régimen, tras calificar de \"muy buena\" la reunión de 3 horas con la delegación iraní en Nueva York, a horas de la llegada de Xi Jinping a Washington para la cumbre bilateral; la mezcla de retórica dura y diplomacia activa mantiene al NQ en un rango de incertidumbre intradía.",
+  "petroleo": "El petróleo cotiza errático (\"see-saw\"): Brent llegó a subir 2.4% hasta 101.61 USD/barril a media mañana antes de volver a ceder hacia ~98 USD, mientras el mercado sopesa la retórica dura de Trump en la ONU frente al plan saudí de reactivar el oleoducto Este-Oeste; la volatilidad energética añade presión mixta sobre las expectativas de inflación que pesan en el NQ.",
+  "catalizador": "El PMI compuesto flash de EE.UU. sorprendió al alza (58.4 vs 56.0 en agosto, ritmo más rápido desde 2021), publicado 9:45 ET, disparando el rendimiento del Treasury a 10 años por encima del 5% (máximo desde 2007) y reforzando apuestas de que la Fed mantendrá tasas altas, un viento en contra para el NQ.",
   "sources": [
-    "CNBC 07:40 ET",
-    "Reuters 10:34 ET",
-    "S&P Global/Reuters 09:45 ET"
+    "CNBC 23-sep-2026",
+    "NBC News 23-sep-2026",
+    "Reuters 09:45 ET (PMI)",
+    "Reuters ~10:34 ET (petróleo)"
   ],
-  "as_of": "2026-09-23T15:39:54Z"
+  "as_of": "2026-09-23T16:07:11Z"
 }
