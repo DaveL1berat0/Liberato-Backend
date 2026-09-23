@@ -1228,6 +1228,7 @@ async def refresh_real_indices():
 
 
 _nqf_last_ts = 0.0
+_nqf_wait = 20.0   # seg entre llamadas a Yahoo NQ=F; sube con 429 (rate-limit), baja con 200
 async def refresh_nq_spot_fast():
     """Precio NQ EN VIVO — el precio SIEMPRE se mueve durante la sesión de futuros (pre-market,
     overnight y RTH), no solo en horario regular:
@@ -1236,7 +1237,7 @@ async def refresh_nq_spot_fast():
         FUTURO REAL (Yahoo rate-limita → ~cada 14s). Finnhub QQQ NO refleja pre-market.
     Sesión de futuros CME: dom 18:00 ET → vie 17:00 ET, con break diario 17:00-18:00 ET.
     Regla #1: sin dato real no se escribe (se mantiene el último real + su ts; nunca se inventa)."""
-    global _nqf_last_ts
+    global _nqf_last_ts, _nqf_wait
     nowny = datetime.now(NY); wd, hr, mn = nowny.weekday(), nowny.hour, nowny.minute
     # Cerrado: sábado; viernes ≥17:00; domingo <18:00; y el break diario 17:00-18:00 ET.
     if (wd == 5) or (wd == 4 and hr >= 17) or (wd == 6 and hr < 18) or (hr == 17):
@@ -1271,16 +1272,22 @@ async def refresh_nq_spot_fast():
         except Exception as e:
             print(f"[nq-fast] finnhub: {e}")
         return
-    # ── Fuera de RTH (pre-market/after/overnight): Yahoo NQ=F, el futuro REAL. Throttle ~14s. ──
-    if time.time() - _nqf_last_ts < 14:
+    # ── Fuera de RTH (pre-market/after/overnight): Yahoo NQ=F, el futuro REAL. Backoff adaptativo:
+    #    Yahoo rate-limita las IPs de Railway (429), así que ajustamos la cadencia sola. ──
+    if time.time() - _nqf_last_ts < _nqf_wait:
         return
     _nqf_last_ts = time.time()
     try:
+        # query2 tiende a rate-limitar menos que query1; interval 5m = respuesta más liviana.
         async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as client:
-            r = await client.get("https://query1.finance.yahoo.com/v8/finance/chart/NQ%3DF",
-                                 params={"range": "1d", "interval": "1m"})
+            r = await client.get("https://query2.finance.yahoo.com/v8/finance/chart/NQ%3DF",
+                                 params={"range": "1d", "interval": "5m"})
+        if r.status_code == 429:
+            _nqf_wait = min(_nqf_wait * 2, 180)   # nos frenaron → esperar más la próxima
+            print(f"[nq-fast] yahoo NQ=F 429 → backoff {_nqf_wait:.0f}s")
+            return
         if r.status_code != 200:
-            print(f"[nq-fast] yahoo NQ=F {r.status_code} (rate-limit?) — mantiene el último real")
+            print(f"[nq-fast] yahoo NQ=F {r.status_code} — mantiene el último real")
             return
         res = ((r.json() or {}).get("chart", {}).get("result") or [None])[0]
         if not res:
@@ -1290,6 +1297,7 @@ async def refresh_nq_spot_fast():
         prev = m.get("chartPreviousClose") or m.get("previousClose")
         if not px:
             return
+        _nqf_wait = max(15.0, _nqf_wait * 0.7)   # éxito → acelerar suave (sin snap que re-dispare 429)
         cache["px_ratio"]["spot"]   = round(float(px), 2)   # NQ=F ya está en escala NQ (sin ratio)
         cache["px_ratio"]["source"] = "yahoo-nqf"
         cache["px_ratio"]["ts"]     = datetime.now(NY).isoformat()
