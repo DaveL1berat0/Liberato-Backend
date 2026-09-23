@@ -701,6 +701,9 @@ def save_cache():
                     "lu":   cache["cot"]["last_update"]},
             # Contexto del agente de geopolítica en vivo (para no perderlo en un redeploy).
             "agent_context": cache.get("agent_context"),
+            # Ratio NQ/QQQ + último spot real: sin esto, tras un redeploy en pre-market el
+            # precio queda sin ratio (no se puede derivar QQQ×ratio) hasta que abra RTH.
+            "px_ratio": cache.get("px_ratio"),
             # Credenciales SnapTrade por usuario (user_secret intransferible).
             "snaptrade_users": _snaptrade_users,
             "ts_tokens": _ts_tokens,   # tokens OAuth de TradeStation (per-usuario)
@@ -785,6 +788,8 @@ def load_cache():
             cache["cot"]["status"]      = "stale"
         if isinstance(snap.get("agent_context"), dict):
             cache["agent_context"] = snap["agent_context"]
+        if isinstance(snap.get("px_ratio"), dict) and snap["px_ratio"].get("value"):
+            cache["px_ratio"] = snap["px_ratio"]   # ratio NQ/QQQ + último spot real (para pre-market)
         print(f"[persist] cache restaurado: {len(cache['earnings']['data'])} earnings, "
               f"{len(cache['calendar']['data'])} eventos calendario, "
               f"{len(cache.get('_rapidapi_cache', []))} actuals TE, "
@@ -1272,8 +1277,32 @@ async def refresh_nq_spot_fast():
         except Exception as e:
             print(f"[nq-fast] finnhub: {e}")
         return
-    # ── Fuera de RTH (pre-market/after/overnight): Yahoo NQ=F, el futuro REAL. Backoff adaptativo:
-    #    Yahoo rate-limita las IPs de Railway (429), así que ajustamos la cadencia sola. ──
+    # ── Fuera de RTH (pre-market/after/overnight) ──
+    # 1) Finnhub QQQ si su quote es FRESCO (<5 min): en pre-market Finnhub SÍ da ticks de QQQ
+    #    (extended hours). Alta frecuencia y sin bloqueo → fuente preferida. Necesita el ratio.
+    _ratio = get_px_ratio()
+    if FINNHUB_KEY and _ratio and fh_budget_ok(1):
+        fh_charge(1)
+        try:
+            async with httpx.AsyncClient(timeout=8) as client:
+                r = await client.get(f"{FH_BASE}/quote", params={"symbol": FA_PROXY_ETF, "token": FINNHUB_KEY})
+            if r.status_code == 200:
+                q = r.json() or {}
+                c, tq, dp = q.get("c"), q.get("t"), q.get("dp")
+                if c and tq and (time.time() - float(tq) < 300):   # quote fresco → Finnhub da pre-market
+                    cache["px_ratio"]["etf_price"] = float(c)
+                    cache["px_ratio"]["spot"]   = round(float(c) * _ratio, 2)
+                    cache["px_ratio"]["source"] = "finnhub-qqq-ext"
+                    cache["px_ratio"]["ts"]     = datetime.now(NY).isoformat()
+                    t = cache["heatmap"]["data"].get(FA_PROXY_ETF)
+                    if isinstance(t, dict):
+                        t["price"] = round(float(c), 4)
+                        if dp is not None:
+                            t["chg_pct"] = round(float(dp), 3)
+                    return   # Finnhub fresco → listo, sin tocar Yahoo
+        except Exception as e:
+            print(f"[nq-fast] finnhub ext: {e}")
+    # 2) Yahoo NQ=F, el futuro REAL, con backoff adaptativo (Yahoo rate-limita a Railway). ──
     if time.time() - _nqf_last_ts < _nqf_wait:
         return
     _nqf_last_ts = time.time()
@@ -10306,25 +10335,27 @@ async def diag_agent_context(key: str = "", authorization: str = Header("")):
 
 
 @app.get("/api/admin/px-diag")
-async def px_diag(key: str = "", authorization: str = Header("")):
-    """DIAGNÓSTICO del precio NQ en vivo: qué hay en px_ratio (source/spot/ts) y si Yahoo NQ=F
-    responde DESDE Railway ahora mismo (para saber si el pre-market se congela por rate-limit)."""
+async def px_diag(key: str = "", authorization: str = Header(""), yahoo: int = 0):
+    """DIAGNÓSTICO del precio NQ en vivo: px_ratio (source/spot/ts) + Finnhub QQQ. ?yahoo=1 prueba
+    Yahoo NQ=F desde Railway (OJO: cada prueba consume cupo de Yahoo; por eso NO se hace por defecto)."""
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     pr = dict(cache.get("px_ratio") or {})
-    yh = {}
-    try:
-        async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
-            r = await c.get("https://query1.finance.yahoo.com/v8/finance/chart/NQ%3DF",
-                            params={"range": "1d", "interval": "1m"})
-        yh["status"] = r.status_code
-        if r.status_code == 200:
-            m = (((r.json() or {}).get("chart", {}).get("result") or [{}])[0]).get("meta", {}) or {}
-            yh["price"] = m.get("regularMarketPrice")
-        else:
-            yh["body"] = (r.text or "")[:140]
-    except Exception as e:
-        yh["error"] = f"{type(e).__name__}: {str(e)[:120]}"
+    yh = {"nota": "no probado (usa ?yahoo=1)"}
+    if yahoo:
+        yh = {}
+        try:
+            async with httpx.AsyncClient(timeout=10, headers=_YAHOO_UA) as c:
+                r = await c.get("https://query2.finance.yahoo.com/v8/finance/chart/NQ%3DF",
+                                params={"range": "1d", "interval": "5m"})
+            yh["status"] = r.status_code
+            if r.status_code == 200:
+                m = (((r.json() or {}).get("chart", {}).get("result") or [{}])[0]).get("meta", {}) or {}
+                yh["price"] = m.get("regularMarketPrice")
+            else:
+                yh["body"] = (r.text or "")[:140]
+        except Exception as e:
+            yh["error"] = f"{type(e).__name__}: {str(e)[:120]}"
     # ¿Finnhub QQQ da precio EXTENDIDO (pre-market)? Si 'c' != 'pc' fuera de RTH, sí sirve.
     fh = {}
     if FINNHUB_KEY:
