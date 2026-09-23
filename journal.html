@@ -3021,7 +3021,7 @@ function renderLast30Trades(){
   var last=sorted.slice(-30);
   if(!last.length){el.innerHTML='<div class="empty"><p>Sin trades registrados</p></div>';return;}
   var wins=last.filter(function(t){return t.pnl>0;}).length;
-  var W=700,H=140,padL=44,padR=8,padT=12,padB=22;
+  var W=700,H=140,padL=62,padR=8,padT=12,padB=22;
   var plotW=W-padL-padR,plotTot=H-padT-padB;
   // Baseline ADAPTATIVO: la línea 0 se posiciona según cuánto sube vs cuánto baja,
   // así las barras llenan el cuadro aunque sean casi todas de un signo (no "a la mitad").
@@ -3053,7 +3053,7 @@ function renderLast30Trades(){
   // Ejes: línea 0 etiquetada + tope (+máx) y mínimo (-máx), como en P&L Diario. En la unidad activa.
   var axLines=[{v:maxUp,y:padT},{v:0,y:zY}]; if(maxDn>0)axLines.push({v:-maxDn,y:padT+plotTot});
   var grid='',ylab='';
-  axLines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-6)+'" y="'+((+g.y)+3).toFixed(1)+'" fill="rgba(232,228,217,0.42)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';});
+  axLines.forEach(function(g){var yy=(+g.y).toFixed(1);grid+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(255,255,255,'+(g.v===0?'0.14':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';ylab+='<text x="'+(padL-9)+'" y="'+((+g.y)+5).toFixed(1)+'" fill="rgba(232,228,217,0.78)" font-family="DM Mono,monospace" font-size="16" font-weight="600" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';});
   el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" style="width:100%;height:140px;" shape-rendering="geometricPrecision">'+grid+bars+xlabels+ylab+'</svg>';
   if(stats_el){
     var wr30=last.length?Math.round((wins/last.length)*100):0;
@@ -3336,7 +3336,7 @@ function renderDailyBars(){
   var maxPos=Math.max.apply(null,vals.map(function(v){return v>0?v:0;}).concat([0]));
   var maxNeg=Math.max.apply(null,vals.map(function(v){return v<0?-v:0;}).concat([0]));
   if(maxPos===0&&maxNeg===0){maxPos=1;maxNeg=1;}
-  var W=820,H=180,padL=44,padR=12,padT=14,padB=22;
+  var W=820,H=180,padL=66,padR=12,padT=14,padB=22;
   var plotH=H-padT-padB,plotW=W-padL-padR;
   var upH=plotH*(maxPos/(maxPos+maxNeg)),dnH=plotH-upH,zY=padT+upH;
   var n=dates.length,gap=Math.min(6,plotW/n*0.25),bw=(plotW-gap*(n-1))/n;
@@ -3344,7 +3344,7 @@ function renderDailyBars(){
   var grid='',ylabels='';
   [{v:maxPos,y:padT},{v:0,y:zY},{v:-maxNeg,y:padT+plotH}].forEach(function(g){
     grid+='<line x1="'+padL+'" y1="'+g.y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+g.y.toFixed(1)+'" stroke="rgba(255,255,255,'+(g.v===0?'0.12':'0.05')+')" stroke-width="1"'+(g.v!==0?' stroke-dasharray="3 4"':'')+'/>';
-    ylabels+='<text x="'+(padL-6)+'" y="'+(g.y+3).toFixed(1)+'" fill="rgba(232,228,217,0.4)" font-family="DM Mono,monospace" font-size="9" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';
+    ylabels+='<text x="'+(padL-9)+'" y="'+(g.y+5).toFixed(1)+'" fill="rgba(232,228,217,0.78)" font-family="DM Mono,monospace" font-size="16" font-weight="600" text-anchor="end">'+_uAxisLbl(g.v)+'</text>';
   });
   // Bars
   var bars='';
