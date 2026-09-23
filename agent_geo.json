@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump confirmó una reunión de unas tres horas entre funcionarios de EEUU e Irán al margen de la ONU sobre la reapertura del Estrecho de Ormuz, pero repitió la amenaza de \"aniquilar\" al régimen si no hay acuerdo, mientras se acerca la cumbre Trump-Xi tras conversaciones comerciales Bessent-He Lifeng calificadas de 'exitosas'; efecto mixto que limita el apetito de riesgo en el NQ.",
-  "petroleo": "Brent y WTI caen por quinta sesión consecutiva y cotizan por debajo de 100 USD por primera vez en una semana (Brent ~99 USD, WTI ~89-90 USD) ante expectativas de reapertura del Estrecho de Ormuz y avances en las pláticas EEUU-Irán, aliviando la presión inflacionaria y favoreciendo al NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen 0.2% este miércoles mientras el rendimiento del Treasury a 10 años sube a 4.99%, presionando a las tecnológicas de alta duración.",
+  "geopolitica": "Iran calificó las amenazas de Trump de \"aniquilar\" al país como una \"desesperación estratégica\" pero un alto funcionario iraní ofreció reabrir el Estrecho de Ormuz en una semana si EE.UU. relaja la presión militar, lo que reduce la prima de riesgo geopolítico y favorece el apetito por riesgo en el NQ si la diplomacia avanza.",
+  "petroleo": "El Brent sube 1% a 100,32 USD/barril y el WTI sube 0,3% a 90,88 USD/barril tras el rebote por la oferta de reapertura de Ormuz, aunque las amenazas de Trump limitan la baja del riesgo; un petróleo más firme presiona expectativas de inflación, un viento en contra para el NQ.",
+  "catalizador": "Susan Collins (Fed de Boston) respaldó la subida de tasas de la semana pasada y advirtió que ve probable que la inflación se mantenga \"notablemente\" por encima del 2%, anticipando otra subida antes de fin de año, un mensaje hawkish que presiona a la baja al NQ en la apertura.",
   "sources": [
-    "CNBC 05:39 ET 23-sep (Brent 99.57/WTI 90.12)",
-    "CNBC/AP 23-sep (Trump-Irán, amenaza 'aniquilar')",
-    "CNBC 23-sep (futuros Nasdaq-100 -0.2%, Treasury 10Y en 4.99%)",
-    "CNBC/Reuters 21-sep (Bessent-He Lifeng 'exitosa', cumbre Trump-Xi)"
+    "CNBC 05:39 ET (iran-us-talks-crude-oil-un-wti)",
+    "CNBC ~07:40 ET (us-iran-war-trump-hormuz)",
+    "CNBC 23-sep-2026 (federal-reserve-inflation-interest-rates-ecb)"
   ],
-  "as_of": "2026-09-23T13:07:11Z"
+  "as_of": "2026-09-23T13:39:42Z"
 }
