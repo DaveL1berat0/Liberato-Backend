@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Persisten las tensiones en Oriente Medio: escasos avances en las conversaciones EEUU-Iran mantienen al mercado en alerta, presionando el sentimiento de riesgo que pesa sobre el NQ.",
-  "petroleo": "El Brent sube 3.17% a 106.35 USD y el WTI 2.56% a 94.52 USD (04:28 ET) ante la falta de progreso diplomatico EEUU-Iran, encareciendo insumos y alimentando presion inflacionaria negativa para el NQ.",
-  "catalizador": "Los rendimientos del Treasury a 10 anos tocaron maximos de 19 anos (~5.11-5.15%) tras un PMI compuesto de S&P Global mas fuerte de lo esperado (58.4), elevando las apuestas de otra subida de tasas de la Fed y presionando a la baja al NQ.",
+  "geopolitica": "Xi Jinping llega a Washington para la cumbre bilateral con Trump (reunion y cena de estado hoy jueves); EEUU y China extendieron la tregua arancelaria hasta el 10 de enero segun el secretario del Tesoro Bessent, lo que da soporte moderado al NQ aunque persiste la cautela por los temas de IA/semiconductores y Taiwan sobre la mesa.",
+  "petroleo": "El Brent se mantiene por encima de 102 USD/barril y el WTI cerca de 92 USD tras el salto del miercoles (Brent +3.9% a 103.08, WTI +1.8% a 92.16) por la escalada belica EEUU-Iran, y las conversaciones sobre la reapertura de Ormuz siguen estancadas, lo que mantiene la presion inflacionaria y pesa sobre el NQ en el premarket.",
+  "catalizador": "El rendimiento del Treasury a 10 anos salto a 5.15% (maximo en 19 anos) y la probabilidad de una subida de tasas de la Fed en la reunion de octubre subio a 73% segun CME FedWatch, tras comentarios hawkish del gobernador Barr y un dato de inflacion mas caliente de lo esperado, lastrando a las tecnologicas del NQ.",
   "sources": [
-    "CNBC 04:28 ET",
-    "FXStreet 08:45 ET",
-    "TheStreet 06:00 ET"
+    "CNBC 24-Sep (Bessent: tregua EEUU-China extendida hasta 10-ene, inicio visita de Estado de Xi)",
+    "Reuters (via Investing.com) 24-Sep ~06:00 ET (futuros de Wall St caen por incertidumbre en Medio Oriente antes de la cumbre Trump-Xi)",
+    "OilPrice.com 24-Sep (Brent se sostiene sobre 102 USD; conversaciones EEUU-Iran estancadas por condiciones sobre Ormuz)",
+    "CNBC 23-Sep (Brent +3.9% a 103.08 USD, WTI +1.8% a 92.16 USD por tension EEUU-Iran)",
+    "CNBC 23-Sep (rendimiento del Treasury a 10 anos a 5.15%, probabilidad de hike de la Fed en octubre al 73% segun CME FedWatch)"
   ],
-  "as_of": "2026-09-24T11:06:36Z"
+  "as_of": "2026-09-24T11:40:01Z"
 }
