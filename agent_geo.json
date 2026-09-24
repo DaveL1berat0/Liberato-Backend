@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Xi Jinping llega a Washington para la cumbre bilateral con Trump (reunion y cena de estado hoy jueves); EEUU y China extendieron la tregua arancelaria hasta el 10 de enero segun el secretario del Tesoro Bessent, lo que da soporte moderado al NQ aunque persiste la cautela por los temas de IA/semiconductores y Taiwan sobre la mesa.",
-  "petroleo": "El Brent se mantiene por encima de 102 USD/barril y el WTI cerca de 92 USD tras el salto del miercoles (Brent +3.9% a 103.08, WTI +1.8% a 92.16) por la escalada belica EEUU-Iran, y las conversaciones sobre la reapertura de Ormuz siguen estancadas, lo que mantiene la presion inflacionaria y pesa sobre el NQ en el premarket.",
-  "catalizador": "El rendimiento del Treasury a 10 anos salto a 5.15% (maximo en 19 anos) y la probabilidad de una subida de tasas de la Fed en la reunion de octubre subio a 73% segun CME FedWatch, tras comentarios hawkish del gobernador Barr y un dato de inflacion mas caliente de lo esperado, lastrando a las tecnologicas del NQ.",
+  "geopolitica": "Trump recibe hoy a Xi Jinping en la Base Andrews para la cumbre bilateral en Washington (primera visita de Xi a EE.UU. en 11 anos), con la tregua arancelaria extendida hasta el 10 de enero como foco junto a Iran, tierras raras e IA, lo que mantiene nerviosismo y volatilidad en semiconductores dentro del NQ.",
+  "petroleo": "El Brent se dispara un 4.1% y recupera los 103 dolares (WTI cerca de 92) tras la escalada de hostilidades EE.UU.-Iran, despues de que Arabia Saudita suspendiera las cargas en Yanbu al cerrar su oleoducto Este-Oeste, alimentando temores de inflacion que presionan a la baja al NQ.",
+  "catalizador": "El rendimiento del bono a 30 anos toco 5.45%, su nivel mas alto desde 2004, tras datos economicos fuertes y una subasta del Tesoro debil, lo que hunde los futuros del Nasdaq-100 cerca de 1% en la premarket por la presion sobre las tecnologicas de alto multiplo.",
   "sources": [
-    "CNBC 24-Sep (Bessent: tregua EEUU-China extendida hasta 10-ene, inicio visita de Estado de Xi)",
-    "Reuters (via Investing.com) 24-Sep ~06:00 ET (futuros de Wall St caen por incertidumbre en Medio Oriente antes de la cumbre Trump-Xi)",
-    "OilPrice.com 24-Sep (Brent se sostiene sobre 102 USD; conversaciones EEUU-Iran estancadas por condiciones sobre Ormuz)",
-    "CNBC 23-Sep (Brent +3.9% a 103.08 USD, WTI +1.8% a 92.16 USD por tension EEUU-Iran)",
-    "CNBC 23-Sep (rendimiento del Treasury a 10 anos a 5.15%, probabilidad de hike de la Fed en octubre al 73% segun CME FedWatch)"
+    "CNBC, premarket ET",
+    "OilPrice.com / Investing.com, premarket ET",
+    "Yahoo Finance / TheStreet, premarket ET"
   ],
-  "as_of": "2026-09-24T11:40:01Z"
+  "as_of": "2026-09-24T12:06:12Z"
 }
