@@ -1,13 +1,14 @@
 {
-  "geopolitica": "Trump y Xi Jinping se reunen hoy y manana en Washington (primera visita de Xi a EEUU desde 2023) para hablar de comercio, IA, Iran, petroleo y Taiwan, tras extender la tregua comercial EEUU-China por dos meses; la incertidumbre sobre el resultado añade volatilidad al NQ por su alta exposicion a tech/semis ligados a China.",
-  "petroleo": "El Brent extendio su alza a mas de 3% hasta superar los 106 USD/barril (contrato noviembre ~106.35) y el WTI subio a ~94.5 USD (+2.6%), despues de que un asesor militar del lider supremo irani (Safavi) advirtiera que la guerra podria extenderse al Oceano Indico si EEUU vuelve a atacar, ademas de la advertencia previa de Pezeshkian en la ONU sobre el Estrecho de Ormuz; el crudo al alza presiona al NQ via mayor expectativa de inflacion y tasas.",
-  "catalizador": "El rendimiento del Treasury a 10 anios toco 5.11%-5.14%, el nivel mas alto en cerca de 19 anios, despues de que el PMI flash de S&P Global de septiembre mostrara la actividad empresarial mas fuerte desde julio de 2021, reavivando temores de inflacion pese a los comentarios recientes del presidente de la Fed, Kevin Warsh; yields mas altos golpean especialmente al NQ por el mayor descuento de flujos futuros de las tecnologicas de alto crecimiento.",
+  "geopolitica": "Trump y Xi Jinping se reunen hoy en la Casa Blanca para hablar de comercio, IA y Taiwan tras confirmar Bessent anoche la extension de la tregua arancelaria EE.UU.-China hasta el 10 de enero, un guino distensivo que podria dar soporte al NQ via tech/semis (CNBC, NBC News, 24 sep).",
+  "petroleo": "El Brent supera los 106 USD/barril (+3,17%) y el WTI ronda 94,5 USD (+2,56%) tras advertir un alto mando militar irani que Teheran podria ampliar el conflicto al Oceano Indico y restringir el paso por el Estrecho de Ormuz, presion inflacionaria bajista para el NQ (Bloomberg, CNBC, 23-24 sep).",
+  "catalizador": "La probabilidad de una nueva subida de tasas de la Fed en la reunion del 27-28 de octubre salto a ~70% tras el PMI flash de S&P Global (precios pagados en maximos de casi 4 anos) y comentarios hawkish del gobernador Barr, viento en contra para el NQ por mayor tasa de descuento (Reuters, CNBC, 23 sep).",
   "sources": [
-    "Business Standard/Reuters 24/09 - cumbre Trump-Xi en Washington",
-    "Bloomberg 24/09 - Brent +3% sobre 106 USD por amenaza irani de ampliar la guerra al Oceano Indico",
-    "Fortune 10:00 ET - Brent en 104.67 USD/barril",
-    "CNN Business 23/09 - Treasury a 10 anios en 5.11%",
-    "CNBC 16/09 - Fed (Kevin Warsh) sobre riesgos de inflacion"
+    "CNBC 24 sep (5 things to know / Trump-Xi summit)",
+    "NBC News 24 sep (Trump-Xi summit agenda)",
+    "Bloomberg 23 sep (oil market news for Sept 24)",
+    "CNBC 24 sep (oil-iran-crude)",
+    "Reuters 23 sep (Fed rate hike odds, via Kitco/Korea Times syndication)",
+    "CNBC 23 sep (market sees next Fed hike in October)"
   ],
-  "as_of": "2026-09-24T15:07:42Z"
+  "as_of": "2026-09-24T15:39:54Z"
 }
