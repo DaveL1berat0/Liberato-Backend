@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Xi Jinping llego hoy a la Casa Blanca (~10:00 ET) para la cumbre con Trump sobre aranceles, IA y Taiwan, con Bessent senalando anoche una posible extension de la tregua comercial EE.UU.-China: reduce el riesgo de escalada y favorece a tech/NQ.",
-  "petroleo": "El Brent supera los 106 USD/barril (+3%) y el WTI sube a unos 93,7 USD (+1,7%) despues de que un alto mando militar irani (Safavi) advirtiera que Teheran podria ampliar el conflicto al Oceano Indico, enfriando las expectativas de reabrir el Estrecho de Ormuz: presion inflacionaria, bajista para el NQ.",
-  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo hoy que otra subida de tasas antes de fin de ano es 'razonable', lo que disparo la probabilidad de un hike en octubre a 77,5% (desde 53% el dia previo) mientras el Treasury a 10 anos ronda 5,15%, maximo desde 2007: presiona a la baja al NQ por mayor costo de capital en tech.",
+  "geopolitica": "Xi Jinping llego hoy a la Casa Blanca (~10:00 ET) para la cumbre con Trump sobre aranceles, IA/semiconductores y Taiwan; Bessent confirmo anoche la extension de la tregua comercial EE.UU.-China hasta el 10 de enero, lo que reduce el riesgo de escalada y favorece a tech/NQ.",
+  "petroleo": "El Brent subio 4,6% hasta 107,83 USD y el WTI 4,6% hasta 96,42 USD tras que hutíes respaldados por Iran lanzaran misiles balisticos contra Arabia Saudita (interceptados en Yanbu y Taif), sumandose a la advertencia previa de un mando militar irani (Safavi) de ampliar el conflicto al Oceano Indico: eleva el riesgo de suministro y presiona al NQ via mayores costos energeticos.",
+  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo hoy que otra subida de tasas antes de fin de ano es 'razonable', disparando la probabilidad de un hike en octubre a ~77,5% mientras el Treasury a 10 anos ronda 5,15%, maximo desde 2007: presiona a la baja al NQ por mayor costo de capital en tech.",
   "sources": [
-    "CNBC 10:00 ET (Trump-Xi summit, White House arrival)",
-    "Bloomberg (via BusinessToday/CBS News) 24 sep (Brent >106, Iran Indian Ocean threat)",
-    "CNBC 24 sep (Fed's Williams, another rate hike 'reasonable' by year-end)"
+    "CNBC 10:00 ET (llegada Trump-Xi a la Casa Blanca)",
+    "CNBC hoy (misiles huties vs Arabia Saudita, Brent 107.83/WTI 96.42)",
+    "Bloomberg/CBS News 24 sep (Safavi, amenaza Oceano Indico)",
+    "CNBC 24 sep (Fed's Williams, hike 'razonable', odds 77.5%, 10Y 5.15%)"
   ],
-  "as_of": "2026-09-24T16:08:20Z"
+  "as_of": "2026-09-24T17:08:10Z"
 }
