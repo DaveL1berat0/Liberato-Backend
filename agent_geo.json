@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Reuters informa que EE.UU. e Iran negocian en Nueva York una reapertura gradual del Estrecho de Ormuz a cambio del fin del bloqueo naval estadounidense, mientras Arabia Saudita intercepto misiles y un dron hutties cerca de Yanbu (polo petrolero saudi); la tension geopolitica sostiene la prima de riesgo y presiona al NQ intradia.",
-  "petroleo": "Brent sube 2.5% a 105.69 USD/barril (llego a +5% hasta 108.23 tras el ataque huti antes de retroceder) y WTI sube 2.3% a 94.30 USD, por el ataque a Arabia Saudita y las negociaciones Iran-EEUU; el repunte del crudo alimenta el temor inflacionario que pesa sobre el NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos salto a 5.11% (maximo desde 2007) tras un PMI de EE.UU. mas fuerte de lo esperado y apuestas a una nueva subida de tasas de la Fed, sumado al aviso de fuerza mayor de Oracle en su centro de datos Project Jupiter (ORCL -4%), lo que presiona a la baja al NQ.",
+  "geopolitica": "Reuters reporta que un alto funcionario iraní señala que la vía más realista es que Teherán permita la navegación por el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo naval, mientras continúan en Nueva York las negociaciones EEUU-Irán por un fin gradual del conflicto en Medio Oriente, lo que alivia las pérdidas del NQ.",
+  "petroleo": "El Brent sube +2.5% a 105.69 USD/barril y el WTI +2.3% a 94.30 USD, tras un pico intradía de +5% (108.23 USD) por un ataque con misiles hutíes contra Arabia Saudita, retrocediendo desde máximos ante las conversaciones sobre Ormuz, lo que presiona al NQ vía costos e inflación.",
+  "catalizador": "El rendimiento del Treasury a 10 años sube a ~5.14% (el de 30 años a 5.43%, máximo desde 2004) mientras el mercado eleva a más del 75% la probabilidad de una nueva subida de tasas de la Fed en octubre tras datos económicos más fuertes de lo esperado, presionando las valoraciones tech del NQ.",
   "sources": [
-    "CNBC 24-Sep-2026",
-    "Reuters via Al Jazeera 24-Sep-2026",
-    "CNN Business 23-Sep-2026",
-    "Bloomberg 24-Sep-2026"
+    "Reuters (vía CNBC) 15:00 ET",
+    "CNBC 15:00 ET",
+    "CNBC/Bloomberg 15:00 ET"
   ],
-  "as_of": "2026-09-24T18:06:36Z"
+  "as_of": "2026-09-24T19:06:21Z"
 }
