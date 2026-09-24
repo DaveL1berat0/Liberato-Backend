@@ -1,15 +1,11 @@
 {
-  "geopolitica": "La guerra Iran-Israel/EEUU mantiene el Estrecho de Hormuz efectivamente cerrado y el oleoducto saudi East-West (bypass de Hormuz) sigue fuera de servicio tras el ataque con drones, mientras el mercado espera la reunion Trump-Xi manana; el riesgo geopolitico sostenido presiona el apetito por riesgo y pesa sobre el NQ intradia.",
-  "petroleo": "Brent cotiza sobre 101 USD/barril (+2.4%) y WTI cerca de 92-93 USD/barril (+1.8-2.2%) por el riesgo de suministro en Medio Oriente (Hormuz cerrado, oleoducto saudi offline); el crudo fuerte alimenta expectativas de inflacion y presiona a la baja al NQ via mayores rendimientos.",
-  "catalizador": "El rendimiento del Treasury a 10 anos salto a un maximo de 19 anos (~5.08-5.13%) por PMIs de servicios y manufactura muy por encima de lo esperado, comentarios hawkish de un funcionario de la Fed y floja demanda en subasta de notas a 5 anos, elevando la probabilidad de otra subida de tasas en octubre; el alza de yields golpea directamente la valuacion de las tecnologicas del NQ.",
+  "geopolitica": "Persisten las tensiones en Oriente Medio: escasos avances en las conversaciones EEUU-Iran mantienen al mercado en alerta, presionando el sentimiento de riesgo que pesa sobre el NQ.",
+  "petroleo": "El Brent sube 3.17% a 106.35 USD y el WTI 2.56% a 94.52 USD (04:28 ET) ante la falta de progreso diplomatico EEUU-Iran, encareciendo insumos y alimentando presion inflacionaria negativa para el NQ.",
+  "catalizador": "Los rendimientos del Treasury a 10 anos tocaron maximos de 19 anos (~5.11-5.15%) tras un PMI compuesto de S&P Global mas fuerte de lo esperado (58.4), elevando las apuestas de otra subida de tasas de la Fed y presionando a la baja al NQ.",
   "sources": [
-    "CNBC - 10-year Treasury yield rockets to 19-year high",
-    "TheStreet - Nasdaq, Russell 2000 sink as 5-year Treasury hits 5%",
-    "Motley Fool - Stocks Slip as Treasury Yields Hit 19-Year High",
-    "Yahoo Finance - Dow, S&P 500, Nasdaq tumble as 10-year Treasury yield surges",
-    "CNBC - Satellite images show damage to Saudi Arabia's East-West oil pipeline",
-    "Al Jazeera - Saudi Arabia shuts critical oil pipeline after drone attack",
-    "TradingEconomics - Brent crude oil price"
+    "CNBC 04:28 ET",
+    "FXStreet 08:45 ET",
+    "TheStreet 06:00 ET"
   ],
-  "as_of": "2026-09-23T21:05:02Z"
+  "as_of": "2026-09-24T11:06:36Z"
 }
