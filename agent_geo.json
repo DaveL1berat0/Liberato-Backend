@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Un asesor militar del líder supremo de Irán (Yahya Rahim Safavi) advirtió que el conflicto podría extenderse del Golfo Pérsico y el Estrecho de Ormuz al Océano Índico ante un nuevo ataque de EE.UU./Israel, enfriando el optimismo sobre conversaciones EE.UU.-Irán en la Asamblea General de la ONU y presionando el apetito por riesgo (CNBC).",
-  "petroleo": "El Brent subió 3.17% hasta 106.35 USD/barril (WTI por encima de 92 USD) hacia las 04:28 ET, impulsado por la advertencia iraní sobre una posible expansión del conflicto que amenaza el flujo por Ormuz, lo que eleva el riesgo inflacionario para el NQ (CNBC).",
-  "catalizador": "El rendimiento del bono del Tesoro a 30 años tocó 5.44%, su nivel más alto desde 2004, tras datos de crecimiento/inflación más fuertes de lo esperado que elevaron las apuestas por tasas altas de la Fed por más tiempo, presionando a las tecnológicas de alta duración del NQ (CNBC/Yahoo Finance).",
+  "geopolitica": "Cumbre Trump-Xi en Washington: EE.UU. y China extendieron la tregua comercial hasta el 10 de enero (anuncio del secretario del Tesoro Bessent), lo que reduce el riesgo arancelario de corto plazo y da soporte a semiconductores/tecnologia en el NQ (Reuters/CNBC).",
+  "petroleo": "Brent sube ~3.2% hasta unos 106 USD/barril y WTI +2.6% hasta unos 94.5 USD, por la falta de avances en las conversaciones EE.UU.-Iran y mayor demanda asiatica de crudo, lo que eleva el riesgo inflacionario y presiona al NQ (Reuters/CNBC).",
+  "catalizador": "El rendimiento del Treasury a 10 anos toco 5.12%, maximo desde 2007, tras comentarios del gobernador de la Fed Michael Barr de que la inflacion sigue por encima del objetivo y sin tendencia clara a la baja, golpeando a las tecnologicas de alta duracion del NQ (Reuters/TheStreet).",
   "sources": [
-    "CNBC 04:28 ET",
-    "Yahoo Finance 08:03 ET"
+    "Reuters/CNBC - tregua comercial EE.UU.-China, 24-sep",
+    "Reuters/CNBC - petroleo Brent/WTI, sesion de la manana ET",
+    "TheStreet/Reuters - rendimiento Treasury 10 anos, apertura de mercado"
   ],
-  "as_of": "2026-09-24T13:40:03Z"
+  "as_of": "2026-09-24T14:07:20Z"
 }
