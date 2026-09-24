@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Reuters reporta que un alto funcionario iraní señala que la vía más realista es que Teherán permita la navegación por el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo naval, mientras continúan en Nueva York las negociaciones EEUU-Irán por un fin gradual del conflicto en Medio Oriente, lo que alivia las pérdidas del NQ.",
-  "petroleo": "El Brent sube +2.5% a 105.69 USD/barril y el WTI +2.3% a 94.30 USD, tras un pico intradía de +5% (108.23 USD) por un ataque con misiles hutíes contra Arabia Saudita, retrocediendo desde máximos ante las conversaciones sobre Ormuz, lo que presiona al NQ vía costos e inflación.",
-  "catalizador": "El rendimiento del Treasury a 10 años sube a ~5.14% (el de 30 años a 5.43%, máximo desde 2004) mientras el mercado eleva a más del 75% la probabilidad de una nueva subida de tasas de la Fed en octubre tras datos económicos más fuertes de lo esperado, presionando las valoraciones tech del NQ.",
+  "geopolitica": "Reuters: negociadores de EE.UU. e Irán conversan en Nueva York (margen de la Asamblea General de la ONU) sobre un acuerdo por fases para reabrir el Estrecho de Ormuz a cambio de que Washington levante el bloqueo económico a Irán, noticia que recortó las pérdidas del S&P 500 a mediodía del jueves y mantiene cautos a los futuros del Nasdaq 100 (NQZ26).",
+  "petroleo": "Brent sube ~2.5% a 105.69 USD/barril y WTI +2.3% a 94.30 USD, ambos retrocediendo desde máximos intradía, tras el reporte de posibles conversaciones para reabrir el Estrecho de Ormuz que reduce parcialmente la prima de riesgo geopolítico que venía presionando al alza los precios.",
+  "catalizador": "El rendimiento del Treasury a 30 años tocó ~5.45% este jueves, el nivel más alto desde 2004, y el de 10 años también repuntó, tras datos de actividad empresarial (PMI) más fuertes de lo esperado que muestran presiones de precios; el mercado eleva a más de 75% (desde ~49% hace una semana) la probabilidad de una nueva subida de tasas de la Fed en octubre según CME FedWatch, presionando las valoraciones tech del NQ.",
   "sources": [
-    "Reuters (vía CNBC) 15:00 ET",
-    "CNBC 15:00 ET",
-    "CNBC/Bloomberg 15:00 ET"
+    "Reuters (via Benzinga) 12:00 ET",
+    "CNBC (petróleo) 24-sep",
+    "CNBC/Axios/Yahoo (rendimientos Treasury, CME FedWatch) 24-sep"
   ],
-  "as_of": "2026-09-24T19:06:21Z"
+  "as_of": "2026-09-24T20:06:15Z"
 }
