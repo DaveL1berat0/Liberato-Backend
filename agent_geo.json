@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Xi Jinping llego hoy a la Casa Blanca (~10:00 ET) para la cumbre con Trump sobre aranceles, IA/semiconductores y Taiwan; Bessent confirmo anoche la extension de la tregua comercial EE.UU.-China hasta el 10 de enero, lo que reduce el riesgo de escalada y favorece a tech/NQ.",
-  "petroleo": "El Brent subio 4,6% hasta 107,83 USD y el WTI 4,6% hasta 96,42 USD tras que hutíes respaldados por Iran lanzaran misiles balisticos contra Arabia Saudita (interceptados en Yanbu y Taif), sumandose a la advertencia previa de un mando militar irani (Safavi) de ampliar el conflicto al Oceano Indico: eleva el riesgo de suministro y presiona al NQ via mayores costos energeticos.",
-  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo hoy que otra subida de tasas antes de fin de ano es 'razonable', disparando la probabilidad de un hike en octubre a ~77,5% mientras el Treasury a 10 anos ronda 5,15%, maximo desde 2007: presiona a la baja al NQ por mayor costo de capital en tech.",
+  "geopolitica": "Reuters informa que EE.UU. e Iran negocian en Nueva York una reapertura gradual del Estrecho de Ormuz a cambio del fin del bloqueo naval estadounidense, mientras Arabia Saudita intercepto misiles y un dron hutties cerca de Yanbu (polo petrolero saudi); la tension geopolitica sostiene la prima de riesgo y presiona al NQ intradia.",
+  "petroleo": "Brent sube 2.5% a 105.69 USD/barril (llego a +5% hasta 108.23 tras el ataque huti antes de retroceder) y WTI sube 2.3% a 94.30 USD, por el ataque a Arabia Saudita y las negociaciones Iran-EEUU; el repunte del crudo alimenta el temor inflacionario que pesa sobre el NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 anos salto a 5.11% (maximo desde 2007) tras un PMI de EE.UU. mas fuerte de lo esperado y apuestas a una nueva subida de tasas de la Fed, sumado al aviso de fuerza mayor de Oracle en su centro de datos Project Jupiter (ORCL -4%), lo que presiona a la baja al NQ.",
   "sources": [
-    "CNBC 10:00 ET (llegada Trump-Xi a la Casa Blanca)",
-    "CNBC hoy (misiles huties vs Arabia Saudita, Brent 107.83/WTI 96.42)",
-    "Bloomberg/CBS News 24 sep (Safavi, amenaza Oceano Indico)",
-    "CNBC 24 sep (Fed's Williams, hike 'razonable', odds 77.5%, 10Y 5.15%)"
+    "CNBC 24-Sep-2026",
+    "Reuters via Al Jazeera 24-Sep-2026",
+    "CNN Business 23-Sep-2026",
+    "Bloomberg 24-Sep-2026"
   ],
-  "as_of": "2026-09-24T17:08:10Z"
+  "as_of": "2026-09-24T18:06:36Z"
 }
