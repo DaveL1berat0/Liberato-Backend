@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump recibe hoy a Xi Jinping en la Base Andrews para la cumbre bilateral en Washington (primera visita de Xi a EE.UU. en 11 anos), con la tregua arancelaria extendida hasta el 10 de enero como foco junto a Iran, tierras raras e IA, lo que mantiene nerviosismo y volatilidad en semiconductores dentro del NQ.",
-  "petroleo": "El Brent se dispara un 4.1% y recupera los 103 dolares (WTI cerca de 92) tras la escalada de hostilidades EE.UU.-Iran, despues de que Arabia Saudita suspendiera las cargas en Yanbu al cerrar su oleoducto Este-Oeste, alimentando temores de inflacion que presionan a la baja al NQ.",
-  "catalizador": "El rendimiento del bono a 30 anos toco 5.45%, su nivel mas alto desde 2004, tras datos economicos fuertes y una subasta del Tesoro debil, lo que hunde los futuros del Nasdaq-100 cerca de 1% en la premarket por la presion sobre las tecnologicas de alto multiplo.",
+  "geopolitica": "Xi Jinping llego a EE.UU. para su reunion de hoy con Trump, centrada en comercio, aranceles, IA y Taiwan, lo que mantiene a los mercados a la espera y limita el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent ronda los 100 USD/barril (WTI cerca de 92-93 USD) por el conflicto Iran-Estrecho de Ormuz que sigue restringiendo el trafico petrolero pese a la diplomacia y el reinicio parcial del oleoducto saudi Este-Oeste, presionando al alza los costos y pesando sobre el NQ.",
+  "catalizador": "El rendimiento del Treasury a 30 anos toco un maximo de mas de 20 anos (~5.39-5.45%) y el de 10 anos se acerca al 5% tras un PMI compuesto de EE.UU. muy por encima de lo esperado, reavivando el temor a mas subas de tasas y golpeando a las tecnologicas del NQ.",
   "sources": [
-    "CNBC, premarket ET",
-    "OilPrice.com / Investing.com, premarket ET",
-    "Yahoo Finance / TheStreet, premarket ET"
+    "Yahoo Finance 24-sep-2026",
+    "CNBC 23-sep-2026",
+    "Investing.com 24-sep-2026"
   ],
-  "as_of": "2026-09-24T12:06:12Z"
+  "as_of": "2026-09-24T12:39:22Z"
 }
