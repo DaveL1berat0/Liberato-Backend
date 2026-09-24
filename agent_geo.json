@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Cumbre Trump-Xi en Washington: EE.UU. y China extendieron la tregua comercial hasta el 10 de enero (anuncio del secretario del Tesoro Bessent), lo que reduce el riesgo arancelario de corto plazo y da soporte a semiconductores/tecnologia en el NQ (Reuters/CNBC).",
-  "petroleo": "Brent sube ~3.2% hasta unos 106 USD/barril y WTI +2.6% hasta unos 94.5 USD, por la falta de avances en las conversaciones EE.UU.-Iran y mayor demanda asiatica de crudo, lo que eleva el riesgo inflacionario y presiona al NQ (Reuters/CNBC).",
-  "catalizador": "El rendimiento del Treasury a 10 anos toco 5.12%, maximo desde 2007, tras comentarios del gobernador de la Fed Michael Barr de que la inflacion sigue por encima del objetivo y sin tendencia clara a la baja, golpeando a las tecnologicas de alta duracion del NQ (Reuters/TheStreet).",
+  "geopolitica": "Trump y Xi Jinping se reunen hoy y manana en Washington (primera visita de Xi a EEUU desde 2023) para hablar de comercio, IA, Iran, petroleo y Taiwan, tras extender la tregua comercial EEUU-China por dos meses; la incertidumbre sobre el resultado añade volatilidad al NQ por su alta exposicion a tech/semis ligados a China.",
+  "petroleo": "El Brent supero los 104 USD/barril hacia las 10:00 ET (extendiendo un alza de 1.8% de la sesion previa) y el WTI opera sobre 93 USD, tras que el presidente irani Pezeshkian advirtiera en la ONU con restringir la navegacion en el Estrecho de Ormuz mientras sigan las sanciones de EEUU; el crudo al alza presiona al NQ via mayor expectativa de inflacion y tasas.",
+  "catalizador": "El rendimiento del Treasury a 10 anios toco 5.11%-5.14%, el nivel mas alto en cerca de 19 anios, despues de que el PMI flash de S&P Global de septiembre mostrara la actividad empresarial mas fuerte desde julio de 2021, reavivando temores de inflacion pese a los comentarios recientes del presidente de la Fed, Kevin Warsh; yields mas altos golpean especialmente al NQ por el mayor descuento de flujos futuros de las tecnologicas de alto crecimiento.",
   "sources": [
-    "Reuters/CNBC - tregua comercial EE.UU.-China, 24-sep",
-    "Reuters/CNBC - petroleo Brent/WTI, sesion de la manana ET",
-    "TheStreet/Reuters - rendimiento Treasury 10 anos, apertura de mercado"
+    "Business Standard/Reuters 24/09 - cumbre Trump-Xi en Washington",
+    "Fortune 10:00 ET - Brent en 104.67 USD/barril",
+    "CNN Business 23/09 - Treasury a 10 anios en 5.11%",
+    "CNBC 16/09 - Fed (Kevin Warsh) sobre riesgos de inflacion"
   ],
-  "as_of": "2026-09-24T14:07:20Z"
+  "as_of": "2026-09-24T14:38:16Z"
 }
