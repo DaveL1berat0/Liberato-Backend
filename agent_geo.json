@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Reuters: negociadores de EE.UU. e Irán conversan en Nueva York (margen de la Asamblea General de la ONU) sobre un acuerdo por fases para reabrir el Estrecho de Ormuz a cambio de que Washington levante el bloqueo económico a Irán, noticia que recortó las pérdidas del S&P 500 a mediodía del jueves y mantiene cautos a los futuros del Nasdaq 100 (NQZ26).",
-  "petroleo": "Brent sube ~2.5% a 105.69 USD/barril y WTI +2.3% a 94.30 USD, ambos retrocediendo desde máximos intradía, tras el reporte de posibles conversaciones para reabrir el Estrecho de Ormuz que reduce parcialmente la prima de riesgo geopolítico que venía presionando al alza los precios.",
-  "catalizador": "El rendimiento del Treasury a 30 años tocó ~5.45% este jueves, el nivel más alto desde 2004, y el de 10 años también repuntó, tras datos de actividad empresarial (PMI) más fuertes de lo esperado que muestran presiones de precios; el mercado eleva a más de 75% (desde ~49% hace una semana) la probabilidad de una nueva subida de tasas de la Fed en octubre según CME FedWatch, presionando las valoraciones tech del NQ.",
+  "geopolitica": "El presidente chino Xi llego hoy a Washington para reunirse con Trump en medio de la disputa arancelaria, mientras Trump y el iraní Pezeshkian mantuvieron discursos desafiantes en la ONU por la guerra en Iran, sosteniendo la aversion al riesgo que puede volatilizar al NQ intradia (CNBC, 24 sep).",
+  "petroleo": "El Brent llego a tocar un maximo intradia cercano a USD 108 tras un ataque con misiles huties contra Arabia Saudita, para luego recortar ganancias al conocerse reportes de conversaciones para una reapertura por fases del Estrecho de Ormuz, lo que mantiene el petroleo volatil y presiona al NQ via mayor riesgo de inflacion (CNBC, 24 sep).",
+  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo el jueves que es 'razonable' esperar otra subida de tasas antes de fin de ano, lo que elevo la probabilidad de un alza en octubre a cerca de 70% y empujo el rendimiento del Treasury a 10 anos a maximos desde 2007 (~5.11%), un viento en contra para el NQ (CNBC/Reuters, 24 sep).",
   "sources": [
-    "Reuters (via Benzinga) 12:00 ET",
-    "CNBC (petróleo) 24-sep",
-    "CNBC/Axios/Yahoo (rendimientos Treasury, CME FedWatch) 24-sep"
+    "CNBC 24-sep - Oil pulls back from session highs after Hormuz phased reopening talk report",
+    "CNBC 24-sep - Fed's Williams says another rate hike by year-end is reasonable",
+    "CNBC 24-sep - 5 things to know: Xi arrives in DC, Treasury yields hit multiyear highs"
   ],
-  "as_of": "2026-09-24T20:06:15Z"
+  "as_of": "2026-09-24T21:06:26Z"
 }
