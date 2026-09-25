@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EEUU y China extendieron su tregua arancelaria por 2 meses (47 dias) tras la cena de Estado de Trump y Xi con CEOs tech (Nvidia, Tesla, Apple), reduciendo el riesgo de guerra comercial sobre semiconductores y dando soporte al NQ.",
-  "petroleo": "WTI cae cerca de 2.2% a unos US$92.6 y Brent retrocede desde maximos hacia US$102-105 tras reportes de negociaciones para una reapertura escalonada del Estrecho de Ormuz, aliviando el temor inflacionario que pesaba sobre el NQ.",
-  "catalizador": "Los pedidos de bienes duraderos de agosto salieron planos (0.0% vs -0.3% esperado) pero la confianza del consumidor de Michigan (lectura final de septiembre) se hundio a 47.8 vs 51.0 esperado, un shock de demanda que anade presion bajista de corto plazo sobre el NQ.",
+  "geopolitica": "La cumbre Trump-Xi en Washington concluyo con la extension de la tregua comercial EEUU-China (aranceles mas bajos y flujo de tierras raras) hasta el 10 de enero, con mas detalles prometidos por el USTR Greer el lunes, lo que reduce el riesgo arancelario/tecnologico y apoya el sentimiento de riesgo en el NQ.",
+  "petroleo": "El Brent cae cerca de 1% (~93.66 USD/barril) y el WTI retrocede tras reportes de que negociadores de EEUU e Iran discuten un acuerdo por fases para el Golfo Persico, lo que alivia la prima de riesgo geopolitico y reduce presion inflacionaria, un viento favorable para las tecnologicas del NQ.",
+  "catalizador": "El nuevo presidente de la Fed, Kevin Warsh, mantiene el sesgo restrictivo tras la subida a 3.75%-4% (primera desde 2023) y el presidente de la Fed de NY, Williams, senalo que es razonable esperar otra alza antes de fin de ano (mercado descuenta ~70% de probabilidad en octubre), presionando las valoraciones tecnologicas del NQ.",
   "sources": [
-    "Reuters/CNBC 24-sep ~15:00 ET (tregua comercial EEUU-China, cena Trump-Xi)",
-    "CNBC 24-sep ~15:00 ET (petroleo, negociaciones Estrecho de Ormuz)",
-    "Census Bureau via Reuters 08:30 ET (pedidos de bienes duraderos agosto)",
-    "University of Michigan 10:00 ET (confianza del consumidor, lectura final septiembre)"
+    "CNBC 25-sep-2026 (Trump-Xi, tregua comercial extendida a 10-ene, Greer)",
+    "CNBC 25-sep-2026 (petroleo, negociacion EEUU-Iran, Brent/WTI)",
+    "CNBC 24/25-sep-2026 (Fed, Warsh, Williams, subida a 3.75%-4%)"
   ],
-  "as_of": "2026-09-25T14:08:00Z"
+  "as_of": "2026-09-25T14:40:53Z"
 }
