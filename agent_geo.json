@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump y Xi extendieron dos meses la tregua arancelaria tras su cumbre del 24-sep y avanzaron en conversaciones sobre IA y tierras raras, lo que alivia el riesgo regulatorio para las tecnologicas y respalda al NQ en la apertura.",
-  "petroleo": "El Brent retrocede hacia ~105 USD/barril tras un reporte de Reuters sobre negociaciones EEUU-Iran para reabrir el Estrecho de Ormuz, revirtiendo el salto a 108 USD provocado por un ataque huti a Arabia Saudita el jueves; el alivio en crudo reduce la presion inflacionaria sobre el NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos cede a 5.17% esta manana tras el dato de pedidos de bienes duraderos (7:30 ET) mas debil de lo esperado, y el mercado aguarda el dato final de sentimiento del consumidor de Michigan a las 10:00 ET como proximo catalizador para el NQ.",
+  "geopolitica": "EEUU y China extendieron su tregua arancelaria por 2 meses (47 dias) tras la cena de Estado de Trump y Xi con CEOs tech (Nvidia, Tesla, Apple), reduciendo el riesgo de guerra comercial sobre semiconductores y dando soporte al NQ.",
+  "petroleo": "WTI cae cerca de 2.2% a unos US$92.6 y Brent retrocede desde maximos hacia US$102-105 tras reportes de negociaciones para una reapertura escalonada del Estrecho de Ormuz, aliviando el temor inflacionario que pesaba sobre el NQ.",
+  "catalizador": "Los pedidos de bienes duraderos de agosto salieron planos (0.0% vs -0.3% esperado) pero la confianza del consumidor de Michigan (lectura final de septiembre) se hundio a 47.8 vs 51.0 esperado, un shock de demanda que anade presion bajista de corto plazo sobre el NQ.",
   "sources": [
-    "Bloomberg 25-sep (premarket, cumbre Trump-Xi)",
-    "CNBC/Reuters 24-sep (Iran-Hormuz, petroleo)",
-    "Investing.com 25-sep 07:30 ET (durable goods)",
-    "BLS/Univ. Michigan 25-sep 10:00 ET (consumer sentiment, programado)"
+    "Reuters/CNBC 24-sep ~15:00 ET (tregua comercial EEUU-China, cena Trump-Xi)",
+    "CNBC 24-sep ~15:00 ET (petroleo, negociaciones Estrecho de Ormuz)",
+    "Census Bureau via Reuters 08:30 ET (pedidos de bienes duraderos agosto)",
+    "University of Michigan 10:00 ET (confianza del consumidor, lectura final septiembre)"
   ],
-  "as_of": "2026-09-25T13:39:14Z"
+  "as_of": "2026-09-25T14:08:00Z"
 }
