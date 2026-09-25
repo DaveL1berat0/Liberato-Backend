@@ -1,11 +1,12 @@
 {
-  "geopolitica": "El canciller irani Araghchi propuso reabrir el Estrecho de Ormuz en 7 dias y reanudar negociaciones nucleares con EEUU, en paralelo a la extension de 2 meses de la tregua comercial Trump-Xi, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ (CNBC, 25-sep-2026).",
-  "petroleo": "El Brent cayo por debajo de 105 USD/barril (WTI en torno a 92-94 USD) ante el optimismo por una posible reapertura del Estrecho de Ormuz, lo que alivia presiones inflacionarias y es positivo para el NQ intradia (CNBC/Bloomberg, 24/25-sep-2026).",
-  "catalizador": "El rendimiento del Treasury a 10 anos cedio 3pb hasta 5.17%, frenando dos dias de fuerte subida de tasas, mientras Akamai disparo mas de 19% en premarket tras un acuerdo plurianual con Anthropic, impulsando al sector tech/semis y apoyando al NQ (Bloomberg/CNBC, 25-sep-2026).",
+  "geopolitica": "Trump y Xi extendieron dos meses la tregua arancelaria tras su cumbre del 24-sep y avanzaron en conversaciones sobre IA y tierras raras, lo que alivia el riesgo regulatorio para las tecnologicas y respalda al NQ en la apertura.",
+  "petroleo": "El Brent retrocede hacia ~105 USD/barril tras un reporte de Reuters sobre negociaciones EEUU-Iran para reabrir el Estrecho de Ormuz, revirtiendo el salto a 108 USD provocado por un ataque huti a Arabia Saudita el jueves; el alivio en crudo reduce la presion inflacionaria sobre el NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 anos cede a 5.17% esta manana tras el dato de pedidos de bienes duraderos (7:30 ET) mas debil de lo esperado, y el mercado aguarda el dato final de sentimiento del consumidor de Michigan a las 10:00 ET como proximo catalizador para el NQ.",
   "sources": [
-    "CNBC 25-sep-2026 (Iran offers to reopen Strait of Hormuz within 7 days)",
-    "CNBC 24-sep-2026 (Oil prices pull back from session highs on Hormuz talks)",
-    "Bloomberg 24-sep-2026 (Stock Market Today: Dow, S&P Live Updates for September 25)"
+    "Bloomberg 25-sep (premarket, cumbre Trump-Xi)",
+    "CNBC/Reuters 24-sep (Iran-Hormuz, petroleo)",
+    "Investing.com 25-sep 07:30 ET (durable goods)",
+    "BLS/Univ. Michigan 25-sep 10:00 ET (consumer sentiment, programado)"
   ],
-  "as_of": "2026-09-25T13:06:24Z"
+  "as_of": "2026-09-25T13:39:14Z"
 }
