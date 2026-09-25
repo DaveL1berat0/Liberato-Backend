@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EEUU e Iran exploran en Nueva York, al margen de la Asamblea General de la ONU y con mediacion de Qatar, un acuerdo por fases para reabrir el Estrecho de Ormuz y levantar el bloqueo naval de EEUU a puertos iranies, lo que reduce el apetito por refugio y podria favorecer un tono risk-on para el NQ en la apertura.",
-  "petroleo": "El Brent retrocede cerca de 1% hacia zona de 105 USD/barril y el WTI cae en torno a 0.7% cerca de 94 USD, tras los reportes de que Washington y Teheran negocian un desescalamiento en Ormuz, lo que alivia la prima de riesgo belico que venia presionando al crudo.",
-  "catalizador": "El rendimiento del Treasury a 10 anos se mantiene cerca de 5.2%, el nivel mas alto desde 2007, tras la subida de tasas de la Fed del 16 de septiembre, con el mercado asignando entre 66% y 70% de probabilidad a otro alza de 25 pb en la proxima reunion, un trasfondo que sigue presionando multiplos de tecnologicas de alto crecimiento en el NQ.",
+  "geopolitica": "Negociadores de EE.UU. e Iran discuten en Nueva York un acuerdo por fases para poner fin al enfrentamiento en el Golfo Persico y reabrir el Estrecho de Ormuz, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia.",
+  "petroleo": "El Brent cae cerca de 0.7% hasta unos 105.9 USD/barril y el WTI baja cerca de 1% hasta unos 93.7 USD/barril por el optimismo ante una posible solucion diplomatica con Iran, aliviando la presion inflacionaria y dando soporte al NQ.",
+  "catalizador": "El indice final de confianza del consumidor de la Universidad de Michigan se hundio a 47.8 (-7.5%), el segundo nivel mas bajo registrado, con las expectativas de inflacion a un ano subiendo a 4.6% por el alza energetica, lo que complica el camino de tasas de la Fed de Warsh y genera volatilidad para el NQ.",
   "sources": [
-    "CNBC 25-sep-2026 (oil-falls-as-potential-diplomatic-solution-to-iran-conflict-arises)",
-    "Bloomberg 25-sep-2026 (US, Iran Explore Phased Deal to Reopen Strait of Hormuz)",
-    "CNBC 24/25-sep-2026 (treasury-yield-bond-market-fed-decision, 10-year near 5.2%)"
+    "CNBC 25-Sep-2026 - Oil falls as potential diplomatic solution to Iran conflict arises",
+    "Bloomberg 25-Sep-2026 07:26 ET - US Stock Futures Rise as Investors See Relief in Yields, Oil",
+    "Bloomberg 25-Sep-2026 - US Consumer Sentiment Falls on Concerns About Prices, Economy",
+    "CNBC 25-Sep-2026 - Kevin Warsh's regime change at the Fed pushes ahead - and meets resistance"
   ],
-  "as_of": "2026-09-25T15:40:01Z"
+  "as_of": "2026-09-25T16:07:24Z"
 }
