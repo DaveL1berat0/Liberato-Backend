@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Ataques con misiles y drones huties contra Riad y las instalaciones de Aramco en Yanbu (Arabia Saudi) reavivan el riesgo en Oriente Medio, mientras la cumbre Trump-Xi en Washington concluyo con la extension de la tregua comercial EEUU-China (aranceles mas bajos, flujo de tierras raras) hasta el 10 de enero sin tocar semiconductores ni Taiwan, un alivio parcial y con escepticismo del mercado que limita el impulso al sector tech/semis del NQ.",
-  "petroleo": "El Brent ronda 105-106 USD/barril y el WTI 94-95 USD, moderandose tras el repunte de ~3% del jueves por el ataque huti, ante reportes de que EEUU e Iran negocian un acuerdo por fases para reabrir el Estrecho de Ormuz, lo que reduce la prima de riesgo geopolitico y alivia la presion inflacionaria para el NQ.",
-  "catalizador": "El informe de pedidos de bienes duraderos en EEUU (08:30 ET) sorprendio con 0.0% frente al -0.3% esperado, dato mejor de lo previsto que reduce el temor a una desaceleracion manufacturera, en un contexto en que el presidente de la Fed, Kevin Warsh, mantiene sesgo restrictivo tras la subida a 3.75%-4% y el mercado descuenta ~70% de probabilidad de otra alza en octubre, presionando las valoraciones tecnologicas del NQ.",
+  "geopolitica": "EEUU e Iran exploran en Nueva York, al margen de la Asamblea General de la ONU y con mediacion de Qatar, un acuerdo por fases para reabrir el Estrecho de Ormuz y levantar el bloqueo naval de EEUU a puertos iranies, lo que reduce el apetito por refugio y podria favorecer un tono risk-on para el NQ en la apertura.",
+  "petroleo": "El Brent retrocede cerca de 1% hacia zona de 105 USD/barril y el WTI cae en torno a 0.7% cerca de 94 USD, tras los reportes de que Washington y Teheran negocian un desescalamiento en Ormuz, lo que alivia la prima de riesgo belico que venia presionando al crudo.",
+  "catalizador": "El rendimiento del Treasury a 10 anos se mantiene cerca de 5.2%, el nivel mas alto desde 2007, tras la subida de tasas de la Fed del 16 de septiembre, con el mercado asignando entre 66% y 70% de probabilidad a otro alza de 25 pb en la proxima reunion, un trasfondo que sigue presionando multiplos de tecnologicas de alto crecimiento en el NQ.",
   "sources": [
-    "Reuters - ataque huti a Riad y Yanbu, Arabia Saudi (jueves, reportado hoy)",
-    "CNBC - cierre cumbre Trump-Xi, tregua comercial extendida a 10-ene (hoy)",
-    "Reuters/TheStreet/Yahoo Finance - Brent/WTI y negociacion EEUU-Iran por Ormuz (hoy)",
-    "Investing.com/Census Bureau - pedidos de bienes duraderos, 08:30 ET (hoy)",
-    "CNBC - Fed, Warsh, subida a 3.75%-4% (24/25-sep-2026)"
+    "CNBC 25-sep-2026 (oil-falls-as-potential-diplomatic-solution-to-iran-conflict-arises)",
+    "Bloomberg 25-sep-2026 (US, Iran Explore Phased Deal to Reopen Strait of Hormuz)",
+    "CNBC 24/25-sep-2026 (treasury-yield-bond-market-fed-decision, 10-year near 5.2%)"
   ],
-  "as_of": "2026-09-25T15:08:22Z"
+  "as_of": "2026-09-25T15:40:01Z"
 }
