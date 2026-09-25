@@ -1,11 +1,13 @@
 {
-  "geopolitica": "La cumbre Trump-Xi en Washington concluyo con la extension de la tregua comercial EEUU-China (aranceles mas bajos y flujo de tierras raras) hasta el 10 de enero, con mas detalles prometidos por el USTR Greer el lunes, lo que reduce el riesgo arancelario/tecnologico y apoya el sentimiento de riesgo en el NQ.",
-  "petroleo": "El Brent cae cerca de 1% (~93.66 USD/barril) y el WTI retrocede tras reportes de que negociadores de EEUU e Iran discuten un acuerdo por fases para el Golfo Persico, lo que alivia la prima de riesgo geopolitico y reduce presion inflacionaria, un viento favorable para las tecnologicas del NQ.",
-  "catalizador": "El nuevo presidente de la Fed, Kevin Warsh, mantiene el sesgo restrictivo tras la subida a 3.75%-4% (primera desde 2023) y el presidente de la Fed de NY, Williams, senalo que es razonable esperar otra alza antes de fin de ano (mercado descuenta ~70% de probabilidad en octubre), presionando las valoraciones tecnologicas del NQ.",
+  "geopolitica": "Ataques con misiles y drones huties contra Riad y las instalaciones de Aramco en Yanbu (Arabia Saudi) reavivan el riesgo en Oriente Medio, mientras la cumbre Trump-Xi en Washington concluyo con la extension de la tregua comercial EEUU-China (aranceles mas bajos, flujo de tierras raras) hasta el 10 de enero sin tocar semiconductores ni Taiwan, un alivio parcial y con escepticismo del mercado que limita el impulso al sector tech/semis del NQ.",
+  "petroleo": "El Brent ronda 105-106 USD/barril y el WTI 94-95 USD, moderandose tras el repunte de ~3% del jueves por el ataque huti, ante reportes de que EEUU e Iran negocian un acuerdo por fases para reabrir el Estrecho de Ormuz, lo que reduce la prima de riesgo geopolitico y alivia la presion inflacionaria para el NQ.",
+  "catalizador": "El informe de pedidos de bienes duraderos en EEUU (08:30 ET) sorprendio con 0.0% frente al -0.3% esperado, dato mejor de lo previsto que reduce el temor a una desaceleracion manufacturera, en un contexto en que el presidente de la Fed, Kevin Warsh, mantiene sesgo restrictivo tras la subida a 3.75%-4% y el mercado descuenta ~70% de probabilidad de otra alza en octubre, presionando las valoraciones tecnologicas del NQ.",
   "sources": [
-    "CNBC 25-sep-2026 (Trump-Xi, tregua comercial extendida a 10-ene, Greer)",
-    "CNBC 25-sep-2026 (petroleo, negociacion EEUU-Iran, Brent/WTI)",
-    "CNBC 24/25-sep-2026 (Fed, Warsh, Williams, subida a 3.75%-4%)"
+    "Reuters - ataque huti a Riad y Yanbu, Arabia Saudi (jueves, reportado hoy)",
+    "CNBC - cierre cumbre Trump-Xi, tregua comercial extendida a 10-ene (hoy)",
+    "Reuters/TheStreet/Yahoo Finance - Brent/WTI y negociacion EEUU-Iran por Ormuz (hoy)",
+    "Investing.com/Census Bureau - pedidos de bienes duraderos, 08:30 ET (hoy)",
+    "CNBC - Fed, Warsh, subida a 3.75%-4% (24/25-sep-2026)"
   ],
-  "as_of": "2026-09-25T14:40:53Z"
+  "as_of": "2026-09-25T15:08:22Z"
 }
