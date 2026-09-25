@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Negociadores de EEUU e Iran en Nueva York discuten un plan de retirada gradual (Iran reabriria el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo economico), pero la falta de avances concretos mantiene la prima de riesgo geopolitico y presiona al NQ (Reuters, via TradingEconomics, 25/09).",
-  "petroleo": "El Brent cae ~1.4% a 105.11 USD/barril y el WTI cae ~2% a 92.6-92.8 USD/barril por las esperanzas de tregua EEUU-Iran, aunque ataques hutíes a petroleros sauditas en el Mar Rojo limitan la baja y son un riesgo de reversion si escalan (Reuters, 25/09).",
-  "catalizador": "El rendimiento del Treasury a 10 anos supero el 5.2%, maximo desde 2007, por comentarios hawkish de la Fed (Hammack senala riesgos de inflacion al alza) y el estancamiento en las negociaciones con Iran, presionando los multiplos tecnologicos y al NQ (CNBC/Reuters, 25/09).",
+  "geopolitica": "Negociadores de EEUU e Iran en Nueva York exploran una salida por fases (Iran reabriria el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo economico), mientras hutíes atacaron instalaciones sauditas en Yanbu y Taif; la falta de avances concretos sostiene la prima de riesgo geopolitico y presiona al NQ.",
+  "petroleo": "El Brent cotiza en torno a 105.7-106 USD/barril (-0.4% a -0.9%) y el WTI en 93-93.6 USD/barril (-1.1%), retrocediendo desde el pico de 108 USD del jueves por las esperanzas de tregua EEUU-Iran, aunque los ataques hutíes limitan la caida y mantienen volatilidad en energia.",
+  "catalizador": "El rendimiento del Treasury a 10 anos supero el 5.2%, maximo desde 2007, por comentarios hawkish de funcionarios de la Fed y el estancamiento en las negociaciones con Iran; el mercado asigna ~66% de probabilidad a una subida de 25pb el mes proximo, presionando los multiplos tecnologicos y al NQ.",
   "sources": [
-    "Reuters via TradingEconomics 25/09 - negociaciones EEUU-Iran sobre Estrecho de Ormuz",
-    "Reuters/CNBC 25/09 - precios Brent y WTI",
-    "CNBC 25/09 - rendimiento Treasury 10 anos supera 5.2%",
-    "FXStreet 24/09 - comentarios hawkish de Fed's Hammack sobre inflacion"
+    "Reuters/The National 04:21 ET - negociaciones EEUU-Iran y ataques hutíes",
+    "CNBC 25/09 - Treasury yields rise again to end a volatile week",
+    "TradingEconomics 25/09 - Brent y WTI intradia"
   ],
-  "as_of": "2026-09-25T18:06:09Z"
+  "as_of": "2026-09-25T19:06:07Z"
 }
