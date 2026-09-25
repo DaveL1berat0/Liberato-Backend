@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Hutíes lanzaron una salva de misiles contra Arabia Saudita el 24-sep, reavivando el riesgo de escalada del conflicto Israel-Iran en la región y presionando el sentimiento de riesgo que pesa sobre el NQ.",
-  "petroleo": "Brent cerró en 106.60 USD (+3.4%) y WTI en 94.61 USD (+2.7%) el 24-sep tras el ataque hutí, recortando parte de las ganancias por reportes de conversaciones para una reapertura escalonada del Estrecho de Ormuz; un crudo elevado sostenido eleva costos y presiona el apetito por riesgo, negativo para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Reuters y Bloomberg reportan que negociadores de EE.UU. e Iran exploran un acuerdo por fases para reabrir el Estrecho de Ormuz y levantar el bloqueo a puertos iranies, lo que reduce la prima de riesgo geopolitico que venia presionando a los activos de riesgo como el NQ.",
+  "petroleo": "El Brent cae por debajo de 105 USD/barril (desde ~107, -1.4%) ante el avance de las conversaciones EE.UU.-Iran sobre Ormuz, un alivio para el NQ al reducir la presion inflacionaria sobre insumos energeticos.",
+  "catalizador": "El rendimiento del Treasury a 10 anios retrocede 3 pb a 5.17% tras el fuerte selloff de esta semana, aliviando presion sobre las tecnologicas de mega-capitalizacion que componen el NQ.",
   "sources": [
-    "CNBC 24-Sep (09:15 ET) - stock market live updates",
-    "CNBC 24-Sep - oil prices pull back from session highs after Hormuz reopening talk report",
-    "Bloomberg 23-Sep - oil market news and analysis"
+    "Bloomberg 08:06 ET",
+    "Reuters 08:06 ET",
+    "CNBC 08:06 ET"
   ],
-  "as_of": "2026-09-25T11:39:38Z"
+  "as_of": "2026-09-25T12:06:19Z"
 }
