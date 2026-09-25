@@ -1,11 +1,13 @@
 {
-  "geopolitica": "El presidente chino Xi llego hoy a Washington para reunirse con Trump en medio de la disputa arancelaria, mientras Trump y el iraní Pezeshkian mantuvieron discursos desafiantes en la ONU por la guerra en Iran, sosteniendo la aversion al riesgo que puede volatilizar al NQ intradia (CNBC, 24 sep).",
-  "petroleo": "El Brent llego a tocar un maximo intradia cercano a USD 108 tras un ataque con misiles huties contra Arabia Saudita, para luego recortar ganancias al conocerse reportes de conversaciones para una reapertura por fases del Estrecho de Ormuz, lo que mantiene el petroleo volatil y presiona al NQ via mayor riesgo de inflacion (CNBC, 24 sep).",
-  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo el jueves que es 'razonable' esperar otra subida de tasas antes de fin de ano, lo que elevo la probabilidad de un alza en octubre a cerca de 70% y empujo el rendimiento del Treasury a 10 anos a maximos desde 2007 (~5.11%), un viento en contra para el NQ (CNBC/Reuters, 24 sep).",
+  "geopolitica": "Milicianos huties (aliados de Iran) lanzaron el jueves una andanada de misiles contra Arabia Saudita, mientras un funcionario irani señalo a Reuters que Teheran podria permitir la navegacion por el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo naval, negociaciones que se dan en Nueva York al margen de la ONU; la mezcla de ataque y posible acuerdo mantiene alta la volatilidad de riesgo que puede sacudir al NQ intradia (Reuters/CNBC, 24-25 sep).",
+  "petroleo": "El Brent salto cerca de 5% hasta un maximo intradia de USD 108.23/barril tras el ataque huti a Arabia Saudita, para luego recortar ganancias al conocerse reportes de un acuerdo por fases para reabrir Ormuz (WTI referencia miercoles: +2.7% a USD 94.61); el vaiven del crudo eleva el riesgo de inflacion y presiona al NQ (CNBC, 24-25 sep).",
+  "catalizador": "El presidente de la Fed de Nueva York, John Williams, dijo que es 'razonable' esperar otra subida de tasas antes de fin de ano, lo que elevo a mas de 75% la probabilidad de un alza en octubre y disparo el rendimiento del Treasury a 10 anos a 5.223% (maximo desde junio 2007) y el de 30 anos a 5.501% (maximo desde 2004), un fuerte viento en contra para las tecnologicas del NQ (CNBC/Invezz, 24 sep).",
   "sources": [
+    "Reuters (via CNBC) 24-sep - senior Iranian official on Hormuz navigation swap",
     "CNBC 24-sep - Oil pulls back from session highs after Hormuz phased reopening talk report",
-    "CNBC 24-sep - Fed's Williams says another rate hike by year-end is reasonable",
-    "CNBC 24-sep - 5 things to know: Xi arrives in DC, Treasury yields hit multiyear highs"
+    "CNBC 25-sep - Brent surges ~5% to $108.23 intraday after Houthi missile attack on Saudi Arabia",
+    "Invezz 24-sep - Fed's Williams signals another rate hike as October bets surge",
+    "CNBC 24-sep - 30-year Treasury yield hits highest level since 2004 as bond market rout continues"
   ],
-  "as_of": "2026-09-24T21:06:26Z"
+  "as_of": "2026-09-25T11:06:44Z"
 }
