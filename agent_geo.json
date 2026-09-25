@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Negociadores de EEUU e Iran en Nueva York exploran una salida por fases (Iran reabriria el Estrecho de Ormuz a cambio de que EEUU levante el bloqueo economico), mientras hutíes atacaron instalaciones sauditas en Yanbu y Taif; la falta de avances concretos sostiene la prima de riesgo geopolitico y presiona al NQ.",
-  "petroleo": "El Brent cotiza en torno a 105.7-106 USD/barril (-0.4% a -0.9%) y el WTI en 93-93.6 USD/barril (-1.1%), retrocediendo desde el pico de 108 USD del jueves por las esperanzas de tregua EEUU-Iran, aunque los ataques hutíes limitan la caida y mantienen volatilidad en energia.",
-  "catalizador": "El rendimiento del Treasury a 10 anos supero el 5.2%, maximo desde 2007, por comentarios hawkish de funcionarios de la Fed y el estancamiento en las negociaciones con Iran; el mercado asigna ~66% de probabilidad a una subida de 25pb el mes proximo, presionando los multiplos tecnologicos y al NQ.",
+  "geopolitica": "Reuters reporto que negociadores de EEUU e Iran buscan en Nueva York un acuerdo por fases para reabrir el Estrecho de Ormuz y levantar el bloqueo economico a Teheran, con un posible avance el jueves en la ONU; reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent bajo a unos 102-105 USD/barril y el WTI cayo a 92.55 USD (-2.18%) hacia las 09:00 ET del 25/9 por expectativas de reapertura del Estrecho de Ormuz, lo que alivia el temor a un shock de oferta y resta presion inflacionaria sobre el NQ.",
+  "catalizador": "El indice final de confianza del consumidor de Michigan de septiembre se ubico en 48.1 (vs 47.8 esperado), publicado a las 10:00 ET, pero las expectativas de inflacion a 1 ano subieron a 4.6%, un dato mixto que limita el impulso alcista del NQ.",
   "sources": [
-    "Reuters/The National 04:21 ET - negociaciones EEUU-Iran y ataques hutíes",
-    "CNBC 25/09 - Treasury yields rise again to end a volatile week",
-    "TradingEconomics 25/09 - Brent y WTI intradia"
+    "Reuters (US-Iran Hormuz deal talks, 24-25 sep)",
+    "Reuters/Fortune 09:00 ET (oil prices)",
+    "CNBC 10:00 ET (Michigan consumer sentiment)"
   ],
-  "as_of": "2026-09-25T19:06:07Z"
+  "as_of": "2026-09-25T20:06:01Z"
 }
