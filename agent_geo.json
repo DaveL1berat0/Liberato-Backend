@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Iran ofrece reabrir el Estrecho de Ormuz en 7 dias y reanudar negociaciones nucleares si EE.UU. acepta sus condiciones, reduciendo la prima de riesgo geopolitico que pesaba sobre el NQ (CNBC, 25-sep-2026).",
-  "petroleo": "El Brent cae ~1% a 105.56 USD/barril y el WTI retrocede 1.8% a 92.94 USD tras la oferta iraní de reabrir Ormuz, aliviando el temor a un shock de suministro y favoreciendo el apetito por riesgo en tecnologicas (CNBC, 25-sep-2026).",
-  "catalizador": "",
+  "geopolitica": "El canciller irani Araghchi propuso reabrir el Estrecho de Ormuz en 7 dias y reanudar negociaciones nucleares con EEUU, en paralelo a la extension de 2 meses de la tregua comercial Trump-Xi, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ (CNBC, 25-sep-2026).",
+  "petroleo": "El Brent cayo por debajo de 105 USD/barril (WTI en torno a 92-94 USD) ante el optimismo por una posible reapertura del Estrecho de Ormuz, lo que alivia presiones inflacionarias y es positivo para el NQ intradia (CNBC/Bloomberg, 24/25-sep-2026).",
+  "catalizador": "El rendimiento del Treasury a 10 anos cedio 3pb hasta 5.17%, frenando dos dias de fuerte subida de tasas, mientras Akamai disparo mas de 19% en premarket tras un acuerdo plurianual con Anthropic, impulsando al sector tech/semis y apoyando al NQ (Bloomberg/CNBC, 25-sep-2026).",
   "sources": [
-    "CNBC 25-sep-2026 - Iran offers to reopen Strait of Hormuz within 7 days and restart nuclear talks",
-    "CNBC 24-sep-2026 - Oil prices pull back from session highs after report of talks for phased reopening of Strait of Hormuz"
+    "CNBC 25-sep-2026 (Iran offers to reopen Strait of Hormuz within 7 days)",
+    "CNBC 24-sep-2026 (Oil prices pull back from session highs on Hormuz talks)",
+    "Bloomberg 24-sep-2026 (Stock Market Today: Dow, S&P Live Updates for September 25)"
   ],
-  "as_of": "2026-09-25T12:40:48Z"
+  "as_of": "2026-09-25T13:06:24Z"
 }
