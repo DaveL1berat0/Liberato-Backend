@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Negociadores de EE.UU. e Iran discuten en Nueva York un acuerdo por fases para poner fin al enfrentamiento en el Golfo Persico y reabrir el Estrecho de Ormuz, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia.",
-  "petroleo": "El Brent cae cerca de 0.7% hasta unos 105.9 USD/barril y el WTI baja cerca de 1% hasta unos 93.7 USD/barril por el optimismo ante una posible solucion diplomatica con Iran, aliviando la presion inflacionaria y dando soporte al NQ.",
-  "catalizador": "El indice final de confianza del consumidor de la Universidad de Michigan se hundio a 47.8 (-7.5%), el segundo nivel mas bajo registrado, con las expectativas de inflacion a un ano subiendo a 4.6% por el alza energetica, lo que complica el camino de tasas de la Fed de Warsh y genera volatilidad para el NQ.",
+  "geopolitica": "Iran ofrece reabrir el Estrecho de Ormuz a cambio de que EE.UU. termine su bloqueo naval, y Teheran busca retomar el memorando de entendimiento antes de las elecciones de medio termino en EE.UU., lo que reduce la prima de riesgo geopolitico y apoya el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae cerca de 0.7% hasta unos 105.9 USD/barril y el WTI baja cerca de 1% hasta unos 93.7 USD/barril ante el optimismo por una posible solucion diplomatica con Iran, lo que alivia la presion inflacionaria y favorece a las tecnologicas de alta duracion del NQ.",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, avanza con su 'cambio de regimen' en la comunicacion del banco central pese a la resistencia interna, mientras las probabilidades de una subida de tasas en octubre suben a cerca de 58% (CME FedWatch) desde 42% hace una semana, generando presion e incertidumbre para el NQ.",
   "sources": [
-    "CNBC 25-Sep-2026 - Oil falls as potential diplomatic solution to Iran conflict arises",
-    "Bloomberg 25-Sep-2026 07:26 ET - US Stock Futures Rise as Investors See Relief in Yields, Oil",
-    "Bloomberg 25-Sep-2026 - US Consumer Sentiment Falls on Concerns About Prices, Economy",
-    "CNBC 25-Sep-2026 - Kevin Warsh's regime change at the Fed pushes ahead - and meets resistance"
+    "CNBC 25-sep-2026 - Oil falls as potential diplomatic solution to Iran conflict arises",
+    "CNBC 25-sep-2026 - Warsh's regime change at the Fed pushes ahead - and meets resistance",
+    "Reuters/Yahoo Finance 25-sep-2026 - Pezeshkian UNGA Hormuz MOU comments",
+    "TradingEconomics 25-sep-2026 - US Michigan consumer sentiment final 48.1, inflation expectations 4.6%"
   ],
-  "as_of": "2026-09-25T16:07:24Z"
+  "as_of": "2026-09-25T17:07:37Z"
 }
