@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Reuters reporto que negociadores de EEUU e Iran buscan en Nueva York un acuerdo por fases para reabrir el Estrecho de Ormuz y levantar el bloqueo economico a Teheran, con un posible avance el jueves en la ONU; reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent bajo a unos 102-105 USD/barril y el WTI cayo a 92.55 USD (-2.18%) hacia las 09:00 ET del 25/9 por expectativas de reapertura del Estrecho de Ormuz, lo que alivia el temor a un shock de oferta y resta presion inflacionaria sobre el NQ.",
-  "catalizador": "El indice final de confianza del consumidor de Michigan de septiembre se ubico en 48.1 (vs 47.8 esperado), publicado a las 10:00 ET, pero las expectativas de inflacion a 1 ano subieron a 4.6%, un dato mixto que limita el impulso alcista del NQ.",
+  "geopolitica": "Iran ofrecio reabrir el estrecho de Ormuz en 7 dias y reanudar negociaciones nucleares si EEUU cumple las condiciones del memorando de junio, mientras hutíes lanzaron misiles y drones contra objetivos sauditas el viernes por la manana; el mercado descuenta una posible desescalada que reduce la prima de riesgo geopolitico y podria dar soporte al NQ (CNBC, 25/09).",
+  "petroleo": "El Brent cae cerca de 2.3% hasta ~104 USD/barril y el WTI baja ~2.5% hasta ~92 USD/barril tras la oferta de Iran de reabrir Ormuz, lo que alivia el temor a un shock de oferta y reduce la presion inflacionaria que pesa sobre el NQ (CNBC, 25/09).",
+  "catalizador": "Los pedidos de bienes duraderos de agosto salieron planos, mejor de lo esperado (se estimaba una caida de 0.3%), y la confianza del consumidor de Michigan cerro en 48.1, con expectativas de inflacion a 1 ano subiendo a 4.6%, el nivel mas alto desde junio, lo que mantiene la presion sobre tasas y anade volatilidad intradia al NQ (CNBC, 25/09).",
   "sources": [
-    "Reuters (US-Iran Hormuz deal talks, 24-25 sep)",
-    "Reuters/Fortune 09:00 ET (oil prices)",
-    "CNBC 10:00 ET (Michigan consumer sentiment)"
+    "CNBC 25/09 - oil-falls-as-potential-diplomatic-solution-to-iran-conflict-arises",
+    "CNBC 25/09 - us-iran-trump-hormuz",
+    "CNBC 25/09 - treasury-yields-bonds-debt"
   ],
-  "as_of": "2026-09-25T20:06:01Z"
+  "as_of": "2026-09-25T21:07:23Z"
 }
