@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump rechazó la propuesta de Irán para reabrir el Estrecho de Ormuz y advirtió que los ataques de EE.UU. podrían reanudarse, reavivando el riesgo geopolítico en Medio Oriente y presionando a la baja los futuros del NQ por temor a un shock energético (Reuters/CNBC/Al Jazeera, 28-sep).",
-  "petroleo": "El Brent sube cerca de 2-3% hacia ~107 USD y el WTI ronda los 94-95 USD tras el rechazo de Trump al plan iraní sobre Ormuz, lo que eleva el riesgo inflacionario y añade presión bajista de corto plazo sobre el NQ (CNBC/Al Jazeera, 28-sep).",
-  "catalizador": "El repunte del petróleo y los rendimientos del Treasury en máximos plurianuales elevaron a ~70% la probabilidad que da el mercado a una nueva subida de tasas de la Fed el 28 de octubre, un factor restrictivo para el NQ en el corto plazo (Bloomberg, 28-sep).",
+  "geopolitica": "Trump rechazo la propuesta condicional de Iran para reabrir el Estrecho de Ormuz y funcionarios de la Casa Blanca dijeron a CNN y Axios que estaria abierto a aliviar sanciones a Iran si hay avances hacia un acuerdo nuclear, lo que ayudo a los indices a recortar perdidas a media sesion; el conflicto EEUU-Iran sigue como fuente de incertidumbre para el NQ.",
+  "petroleo": "El Brent cotiza cerca de 106 USD/barril, con un alza acumulada de mas del 18% en septiembre por el enfrentamiento EEUU-Iran y la falta de un avance diplomatico inmediato, lo que mantiene presionado el apetito por riesgo del NQ.",
+  "catalizador": "Los rendimientos del Tesoro subieron con fuerza al iniciar la semana (10 anios por encima de 5.2%, 30 anios por encima de 5.5%), presionando a las tecnologicas de crecimiento y al NQ; el PCE de agosto (miercoles) y el reporte de empleo de septiembre (viernes) son los proximos catalizadores de la Fed.",
   "sources": [
-    "Reuters 28-sep-2026",
-    "CNBC 28-sep-2026",
-    "Bloomberg 28-sep-2026",
-    "Al Jazeera 28-sep-2026"
+    "CNBC - Stock market news for Sept. 28, 2026 (Dow/S&P/Nasdaq live updates)",
+    "CNBC - Oil price today: WTI, Brent, Trump, Iran (28-sep-2026)",
+    "Bloomberg - Trump Says US Expects Talks With Iran This Week: Axios (27-sep-2026)",
+    "CNBC - Trump rejects Iran's conditional ceasefire proposal, WSJ reports (26-sep-2026)"
   ],
-  "as_of": "2026-09-28T19:06:11Z"
+  "as_of": "2026-09-28T20:06:17Z"
 }
