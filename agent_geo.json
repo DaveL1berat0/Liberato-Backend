@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Iran ofrecio reabrir el estrecho de Ormuz en 7 dias y reanudar negociaciones nucleares si EEUU cumple las condiciones del memorando de junio, mientras hutíes lanzaron misiles y drones contra objetivos sauditas el viernes por la manana; el mercado descuenta una posible desescalada que reduce la prima de riesgo geopolitico y podria dar soporte al NQ (CNBC, 25/09).",
-  "petroleo": "El Brent cae cerca de 2.3% hasta ~104 USD/barril y el WTI baja ~2.5% hasta ~92 USD/barril tras la oferta de Iran de reabrir Ormuz, lo que alivia el temor a un shock de oferta y reduce la presion inflacionaria que pesa sobre el NQ (CNBC, 25/09).",
-  "catalizador": "Los pedidos de bienes duraderos de agosto salieron planos, mejor de lo esperado (se estimaba una caida de 0.3%), y la confianza del consumidor de Michigan cerro en 48.1, con expectativas de inflacion a 1 ano subiendo a 4.6%, el nivel mas alto desde junio, lo que mantiene la presion sobre tasas y anade volatilidad intradia al NQ (CNBC, 25/09).",
+  "geopolitica": "Trump rechazo la propuesta de alto el fuego de 7 dias de Iran para reabrir el Estrecho de Hormuz y dijo a asesores que espera reanudar ataques tras las elecciones de medio termino, prolongando la guerra de Medio Oriente y elevando la aversion al riesgo.",
+  "petroleo": "Brent sube mas de 4% hasta 108.48 USD/barril (6:35 ET) y WTI +4% a 96.16 USD/barril tras el rechazo de Trump a la propuesta de Iran, disparando el riesgo de suministro via Estrecho de Hormuz.",
+  "catalizador": "Futuros del Nasdaq-100 caen cerca de 1% a 30,595 puntos (03:50 ET) por la escalada con Iran, el salto del petroleo, el repunte de yields del Tesoro y la pausa de OpenAI en el entrenamiento de sus modelos de IA mas avanzados, lo que enfria el sentimiento tech.",
   "sources": [
-    "CNBC 25/09 - oil-falls-as-potential-diplomatic-solution-to-iran-conflict-arises",
-    "CNBC 25/09 - us-iran-trump-hormuz",
-    "CNBC 25/09 - treasury-yields-bonds-debt"
+    "CNBC 06:35 ET",
+    "Yahoo Finance 03:50 ET",
+    "CNBC 28 sep (Live Updates)"
   ],
-  "as_of": "2026-09-25T21:07:23Z"
+  "as_of": "2026-09-28T11:06:41Z"
 }
