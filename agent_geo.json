@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz en 7 dias, reavivando el riesgo de escalada militar EE.UU.-Iran y presionando a la baja al Nasdaq en la sesion de hoy.",
-  "petroleo": "El Brent sube cerca de 1.3% hasta ~105.7 USD y el WTI ~1% hasta ~93.3 USD por el estancamiento en las negociaciones sobre el Estrecho de Ormuz, elevando el temor a mas inflacion y presionando al NQ.",
-  "catalizador": "La pausa de OpenAI en el entrenamiento de sus modelos mas avanzados tras un incidente de seguridad hundio a los semiconductores en Asia y arrastra a la baja a los futuros del Nasdaq 100 antes de la apertura.",
+  "geopolitica": "Repunta la tensión EEUU-Irán tras el rechazo de Washington a la propuesta iraní de reabrir el Estrecho de Ormuz, lo que presiona al Nasdaq a la baja (-1,14% hoy) con caída en semiconductores y software; en paralelo, EEUU y China detallaron hoy recortes arancelarios recíprocos por unos $30.000-60.000M en bienes tras la cumbre Trump-Xi, un alivio parcial para el sector tecnológico.",
+  "petroleo": "El WTI sube a unos $95/barril (+2,9%) impulsado por el estancamiento en las negociaciones EEUU-Irán y el rechazo de Washington a la reapertura del Estrecho de Ormuz, lo que eleva el riesgo de mayor inflación y presiona al NQ intradía.",
+  "catalizador": "El rendimiento del Treasury a 10 años trepó a ~5,21% (máximo desde 2007) y el de 30 años a ~5,48% (máximo desde 2004), con el mercado descontando ~70% de probabilidad de una nueva subida de 25pb de la Fed en la reunión del 28 de octubre, lo que presiona al Nasdaq por el mayor descuento aplicado a los flujos futuros de las tecnológicas.",
   "sources": [
-    "Bloomberg 08:00 ET",
-    "CNBC 08:00 ET",
-    "Investing.com/Reuters 08:00 ET"
+    "CNBC 28-sep-2026",
+    "Yahoo Finance 28-sep-2026",
+    "CNN Business 28-sep-2026",
+    "Bloomberg 28-sep-2026"
   ],
-  "as_of": "2026-09-28T17:05:20Z"
+  "as_of": "2026-09-28T18:06:27Z"
 }
