@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz, escalando la tension en Medio Oriente y presionando a la baja los futuros del Nasdaq-100 en la premarket.",
-  "petroleo": "El WTI sube cerca de 3-4% hasta unos 95-96 USD/barril y el Brent avanza 2.7% a 107.11 USD (08:32 ET), tras el rechazo de EEUU a la propuesta irani sobre el Estrecho de Ormuz, reavivando temores de inflacion y presionando al NQ.",
-  "catalizador": "La gobernadora de la Fed Michelle Bowman tiene una intervencion confirmada a las 08:15 ET, en una semana cargada de discursos de la Fed y datos de empleo/inflacion que mantienen nervioso al mercado antes de la apertura.",
+  "geopolitica": "Trump rechazo la propuesta irani para reabrir el Estrecho de Hormuz, lo que hundio los futuros del Nasdaq (NQ) cerca de -0.8% en la premarket por el repunte del petroleo y el temor a un rebrote inflacionario (Reuters/Investing.com 08:00 ET).",
+  "petroleo": "El Brent subia 2.7% a 107.11 dolares (llego a tocar 108.83) y el WTI subia 3% a 95.20 dolares hacia las 08:32 ET, tras el rechazo de Trump a la oferta de Iran sobre Hormuz, presionando al NQ por el riesgo de mayor inflacion (Reuters/CNBC).",
+  "catalizador": "",
   "sources": [
-    "CNBC 08:32 ET (Brent/WTI)",
-    "TheStreet 28-sep-2026 (Iran/Hormuz)",
-    "Yahoo Finance 08:15 ET (Fed Bowman)"
+    "Reuters (via Investing.com) 08:32 ET",
+    "CNBC 06:35 ET",
+    "Yahoo Finance 08:00 ET"
   ],
-  "as_of": "2026-09-28T13:39:31Z"
+  "as_of": "2026-09-28T14:06:18Z"
 }
