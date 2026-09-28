@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Trump rechazo este fin de semana la propuesta de Iran para reabrir el Estrecho de Hormuz, intensificando la tension en Medio Oriente y presionando a la baja los futuros del Nasdaq-100 en la premarket (~-0.8%).",
-  "petroleo": "El Brent sube ~4% a 108.5 USD/barril y el WTI ~4% a 96.2 USD/barril tras el rechazo de Trump a la oferta iraní sobre Hormuz, anadiendo presion inflacionaria que lastra al NQ antes de la apertura.",
+  "geopolitica": "Trump rechazo la propuesta iraní para reabrir el Estrecho de Ormuz y el conflicto en Medio Oriente sigue sin resolverse, lo que hunde los futuros del Nasdaq junto con el resto de indices en la apertura de hoy.",
+  "petroleo": "El Brent sube cerca de 2.9% a unos 107 USD/barril y el WTI avanza cerca de 3% a unos 95 USD/barril por temor a una disrupcion de suministro tras el rechazo de Trump al plan iraní sobre Ormuz, presionando al NQ via mayores costos e inflacion.",
   "catalizador": "",
   "sources": [
-    "CNBC 06:35 ET",
-    "Yahoo Finance 04:00 ET",
-    "Bloomberg 27/09 2026"
+    "CNBC 09:00 ET",
+    "Bloomberg 27-Sep",
+    "Yahoo Finance 08:04 ET",
+    "TheStreet 08:30 ET",
+    "NPR 26-Sep"
   ],
-  "as_of": "2026-09-28T12:40:28Z"
+  "as_of": "2026-09-28T13:07:00Z"
 }
