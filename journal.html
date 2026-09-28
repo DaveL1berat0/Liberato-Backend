@@ -7158,5 +7158,37 @@ function filterTradesByDate(arr){return getFilteredT(_dfShared);}
 
   <script src="opening_bell.js" defer></script>
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"70c4ae0378b29f36cc2348fb8b674472"})});</script>
+<script>
+/* GUARDA ANTI-SALTO DE SCROLL — si un refresco de datos en segundo plano (polls cada
+   pocos segundos) reinicia el scroll hacia ARRIBA sin que el usuario lo pida, lo
+   devolvemos a su posicion. Solo actua ante un salto INVOLUNTARIO al tope (y<80) desde
+   una posicion alta (>300) y SIN gesto reciente del usuario -> nunca pelea con el scroll
+   manual ni con un scroll-al-top legitimo (clic de menu / cambio de vista, que van con
+   gesto). 'restoring' ignora el propio scroll de la restauracion (sin bucles); reintenta
+   por rAF hasta 800ms por si la altura de la pagina tarda un frame en volver. */
+(function(){
+  if(window.__lbcScrollGuard)return; window.__lbcScrollGuard=1;
+  var lastGesture=0, target=0, restoring=false;
+  ['wheel','touchstart','touchmove','keydown','pointerdown','mousedown'].forEach(function(ev){
+    addEventListener(ev,function(){lastGesture=Date.now(); if(restoring)restoring=false;},{passive:true,capture:true});
+  });
+  addEventListener('scroll',function(){
+    if(restoring)return;
+    var y=window.pageYOffset;
+    if(y>=target-4 || (Date.now()-lastGesture)<1400){ target=y; return; }
+    if(y<80 && target>300){
+      var goal=target, t0=Date.now(); restoring=true;
+      (function retry(){
+        if(!restoring)return;
+        if((Date.now()-lastGesture)<200){ restoring=false; return; }
+        window.scrollTo(0,goal);
+        if(Math.abs(window.pageYOffset-goal)>4 && (Date.now()-t0)<800){ requestAnimationFrame(retry); }
+        else { restoring=false; }
+      })();
+    } else { target=y; }
+  },{passive:true});
+})();
+</script>
+
 </body>
 </html>
