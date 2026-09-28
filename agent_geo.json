@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump rechazo la propuesta irani de reabrir el Estrecho de Ormuz y reanudar negociaciones nucleares en 7 dias, y espera que los ataques de EE.UU. a Iran se reanuden tras las elecciones de medio termino, lo que eleva la aversion al riesgo y presiona al NQ a la baja.",
-  "petroleo": "El Brent sube 4% a 108.48 USD/barril y el WTI sube 4% a 96.16 USD/barril (06:35 ET), su nivel mas alto desde el 15 de septiembre, tras el rechazo de Trump a la propuesta de paz de Iran, lo que encarece insumos y pesa sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "Los rendimientos del Treasury repuntan (2 anos +5 pb a 4.90%) ante la escalada en Medio Oriente, endureciendo las condiciones financieras y presionando los multiplos de crecimiento del Nasdaq en la premarket.",
+  "geopolitica": "Trump rechazo este fin de semana la propuesta de Iran para reabrir el Estrecho de Hormuz, intensificando la tension en Medio Oriente y presionando a la baja los futuros del Nasdaq-100 en la premarket (~-0.8%).",
+  "petroleo": "El Brent sube ~4% a 108.5 USD/barril y el WTI ~4% a 96.2 USD/barril tras el rechazo de Trump a la oferta iraní sobre Hormuz, anadiendo presion inflacionaria que lastra al NQ antes de la apertura.",
+  "catalizador": "",
   "sources": [
     "CNBC 06:35 ET",
-    "CNBC (via WSJ) 26-Sep",
-    "Bloomberg 27-Sep",
-    "TheStreet 28-Sep"
+    "Yahoo Finance 04:00 ET",
+    "Bloomberg 27/09 2026"
   ],
-  "as_of": "2026-09-28T12:06:30Z"
+  "as_of": "2026-09-28T12:40:28Z"
 }
