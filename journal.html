@@ -3100,7 +3100,7 @@ function syncBalances(){
           try{var pref=localStorage.getItem('lbc_junit');
             if(pref==='pct'&&JUNIT!=='pct'&&acctSize()>0){JUNIT='pct';try{syncUnitSeg();}catch(e){}}
           }catch(e){}
-          if(typeof curView!=='undefined'&&curView){try{go(curView);}catch(e){}}
+          if(typeof curView!=='undefined'&&curView){try{go(curView,true);}catch(e){}}   // sync de saldos: sin subir al top
         }
       }).catch(function(){});
   }catch(e){}
@@ -5873,7 +5873,7 @@ function syncFills(force){
       _setBrokerConnFlag(true);              // conexión confirmada → durable
       var r=importFromBroker(fills);
       try{updateBrokerButtons();refreshBrokerSyncRow();}catch(e){}
-      if(curView)go(curView);
+      if(curView)go(curView,true);   // refresco de fondo: re-render sin subir al top
       if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
         +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones importadas de <strong>'+fills.length+'</strong> fills.'
         +'<div style="font-size:11px;color:var(--text3);margin-top:6px;">Verificadas: '+r.verified+' · En revisión: '+r.pending+' · Duplicadas ignoradas: '+r.dup+'</div>'
@@ -6027,7 +6027,7 @@ function brokerBtnDisconnect(){
       T=[]; saveTrades(T);
       _applyBrokerBtn(false); try{refreshTsState();}catch(e){}
       try{notif('Broker desconectado','Journal reseteado a cero','⏻');}catch(e){}
-      if(curView)go(curView);
+      if(curView)go(curView,true);   // refresco de fondo: re-render sin subir al top
     }});
 }
 // TradeStation DIRECTO: trae los fills (incluye FUTUROS) y los importa al journal.
@@ -6041,7 +6041,7 @@ function syncTradestation(){
       var fills=d.trades||[];
       _setBrokerConnFlag(true);              // TradeStation conectado → durable
       var r=importFromBroker(fills);
-      if(curView)go(curView);
+      if(curView)go(curView,true);   // refresco de fondo: re-render sin subir al top
       try{updateBrokerButtons();refreshBrokerSyncRow();}catch(e){}
       if(st)st.innerHTML='<div style="font-size:12px;color:var(--text2);background:rgba(46,232,164,0.06);border:0.5px solid rgba(46,232,164,0.28);border-radius:9px;padding:13px;line-height:1.7;">'
         +'✓ <strong style="color:var(--green);">'+r.added+'</strong> operaciones de TradeStation (incl. futuros) importadas de <strong>'+fills.length+'</strong> fills.'
@@ -6625,14 +6625,17 @@ window.addEventListener('pagehide', function(){
   _fetchControllers.forEach(function(c){try{c.abort();}catch(e){}});
   _fetchControllers = [];
 });
-function go(v){
+function go(v,keepScroll){
   curView=v;
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
   document.getElementById('v-'+v).classList.add('active');
   document.querySelectorAll('.sbi,.bti').forEach(function(el){el.classList.toggle('active',el.dataset.v===v);});
   try{dfpRenderBars();}catch(e){}   // barras de fecha reflejan el rango COMPARTIDO en cada vista
   if(v==='dashboard')renderDash();else if(v==='calendar')renderCal();else if(v==='trades')renderTrades();else if(v==='reports')renderReports();else if(v==='genius')renderGenius();else if(v==='playbooks')renderPlaybooks();
-  try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+  // keepScroll=true → NO subir al top. Lo usan los refrescos EN SEGUNDO PLANO (sync del
+  // broker), que re-renderizan la vista en el sitio; antes subían el scroll solo "como si
+  // se refrescara". El cambio de vista por clic sí sube (keepScroll ausente).
+  if(!keepScroll){try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}}
 }
 document.querySelectorAll('[data-f]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-f]').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');trFilter=btn.dataset.f;renderTrades();});});
 
