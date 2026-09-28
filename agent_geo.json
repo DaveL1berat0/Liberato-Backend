@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Repunta la tensión EEUU-Irán tras el rechazo de Washington a la propuesta iraní de reabrir el Estrecho de Ormuz, lo que presiona al Nasdaq a la baja (-1,14% hoy) con caída en semiconductores y software; en paralelo, EEUU y China detallaron hoy recortes arancelarios recíprocos por unos $30.000-60.000M en bienes tras la cumbre Trump-Xi, un alivio parcial para el sector tecnológico.",
-  "petroleo": "El WTI sube a unos $95/barril (+2,9%) impulsado por el estancamiento en las negociaciones EEUU-Irán y el rechazo de Washington a la reapertura del Estrecho de Ormuz, lo que eleva el riesgo de mayor inflación y presiona al NQ intradía.",
-  "catalizador": "El rendimiento del Treasury a 10 años trepó a ~5,21% (máximo desde 2007) y el de 30 años a ~5,48% (máximo desde 2004), con el mercado descontando ~70% de probabilidad de una nueva subida de 25pb de la Fed en la reunión del 28 de octubre, lo que presiona al Nasdaq por el mayor descuento aplicado a los flujos futuros de las tecnológicas.",
+  "geopolitica": "Trump rechazó la propuesta de Irán para reabrir el Estrecho de Ormuz y advirtió que los ataques de EE.UU. podrían reanudarse, reavivando el riesgo geopolítico en Medio Oriente y presionando a la baja los futuros del NQ por temor a un shock energético (Reuters/CNBC/Al Jazeera, 28-sep).",
+  "petroleo": "El Brent sube cerca de 2-3% hacia ~107 USD y el WTI ronda los 94-95 USD tras el rechazo de Trump al plan iraní sobre Ormuz, lo que eleva el riesgo inflacionario y añade presión bajista de corto plazo sobre el NQ (CNBC/Al Jazeera, 28-sep).",
+  "catalizador": "El repunte del petróleo y los rendimientos del Treasury en máximos plurianuales elevaron a ~70% la probabilidad que da el mercado a una nueva subida de tasas de la Fed el 28 de octubre, un factor restrictivo para el NQ en el corto plazo (Bloomberg, 28-sep).",
   "sources": [
+    "Reuters 28-sep-2026",
     "CNBC 28-sep-2026",
-    "Yahoo Finance 28-sep-2026",
-    "CNN Business 28-sep-2026",
-    "Bloomberg 28-sep-2026"
+    "Bloomberg 28-sep-2026",
+    "Al Jazeera 28-sep-2026"
   ],
-  "as_of": "2026-09-28T18:06:27Z"
+  "as_of": "2026-09-28T19:06:11Z"
 }
