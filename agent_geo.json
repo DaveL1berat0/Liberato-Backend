@@ -1,10 +1,12 @@
 {
-  "geopolitica": "Trump rechazo la propuesta condicional de Iran para reabrir el Estrecho de Hormuz y poner fin al conflicto en Medio Oriente, elevando el riesgo geopolitico y presionando al NQ a la baja (CNBC, Reuters).",
-  "petroleo": "El Brent sube 2.7% a 107.11 USD/barril y el WTI sube 3% a 95.20 USD/barril tras el rechazo de EEUU a la oferta de paz irani, encareciendo costos energeticos y alimentando presion inflacionaria negativa para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Trump rechazo la propuesta de paz de Iran para reabrir el Estrecho de Ormuz y no descarta nuevos ataques, lo que llevo a los futuros del Nasdaq-100 a caer cerca de 1% (unos 304 puntos) por temor a una escalada en Medio Oriente.",
+  "petroleo": "El Brent sube 2.3% a 106.73 USD/barril y el WTI 2% a 94.25 USD/barril (10:33 ET) tras el rechazo de Trump a la oferta iraní, reavivando temores inflacionarios que presionan al NQ.",
+  "catalizador": "El rendimiento del bono del Tesoro a 10 anos sube a 5.21%, cerca de maximos desde 2007, ante expectativas de que la Fed suba 25pb el proximo mes, sumando presion bajista sobre las tecnologicas del NQ.",
   "sources": [
-    "CNBC 08:32 ET",
-    "TheStreet 09:28 ET"
+    "CNBC 10:33 ET",
+    "Reuters/Investing.com premercado ET",
+    "TheStreet ET",
+    "TradingEconomics ET"
   ],
-  "as_of": "2026-09-28T14:38:53Z"
+  "as_of": "2026-09-28T15:06:04Z"
 }
