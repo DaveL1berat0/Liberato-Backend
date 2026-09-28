@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump rechazo la propuesta condicional de Iran para reabrir el Estrecho de Ormuz y funcionarios de la Casa Blanca dijeron a CNN y Axios que estaria abierto a aliviar sanciones a Iran si hay avances hacia un acuerdo nuclear, lo que ayudo a los indices a recortar perdidas a media sesion; el conflicto EEUU-Iran sigue como fuente de incertidumbre para el NQ.",
-  "petroleo": "El Brent cotiza cerca de 106 USD/barril, con un alza acumulada de mas del 18% en septiembre por el enfrentamiento EEUU-Iran y la falta de un avance diplomatico inmediato, lo que mantiene presionado el apetito por riesgo del NQ.",
-  "catalizador": "Los rendimientos del Tesoro subieron con fuerza al iniciar la semana (10 anios por encima de 5.2%, 30 anios por encima de 5.5%), presionando a las tecnologicas de crecimiento y al NQ; el PCE de agosto (miercoles) y el reporte de empleo de septiembre (viernes) son los proximos catalizadores de la Fed.",
+  "geopolitica": "Trump rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz, reavivando el riesgo geopolitico en Medio Oriente y presionando a los futuros del Nasdaq a la baja en la premarket.",
+  "petroleo": "El Brent cotiza cerca de 106 USD/barril (+2-3%) y el WTI ronda los 94-95 USD tras el rechazo de Trump a la oferta iraní sobre Ormuz, sumando presion inflacionaria negativa para el NQ.",
+  "catalizador": "Los futuros del Nasdaq cayeron cerca de 0.8% en la premarket (04:00 ET) por el repunte del petroleo y el temor a que la inflacion fuerce nuevas subidas de tasas de la Fed.",
   "sources": [
-    "CNBC - Stock market news for Sept. 28, 2026 (Dow/S&P/Nasdaq live updates)",
-    "CNBC - Oil price today: WTI, Brent, Trump, Iran (28-sep-2026)",
-    "Bloomberg - Trump Says US Expects Talks With Iran This Week: Axios (27-sep-2026)",
-    "CNBC - Trump rejects Iran's conditional ceasefire proposal, WSJ reports (26-sep-2026)"
+    "CNBC 04:00 ET",
+    "Yahoo Finance 04:00 ET",
+    "TheStreet 28-sep",
+    "Bloomberg 27-sep"
   ],
-  "as_of": "2026-09-28T20:06:17Z"
+  "as_of": "2026-09-28T21:06:30Z"
 }
