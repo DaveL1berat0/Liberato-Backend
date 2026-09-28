@@ -772,7 +772,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-ev-badge.med{color:var(--warn);background:var(--warn-dim);border:1px solid rgba(255,194,71,0.25);}
 .lg-ev-badge.holiday{color:var(--violet);background:rgba(177,151,252,0.1);border:1px solid rgba(177,151,252,0.25);}
 .lg-ev-data{display:grid;gap:1px;background:var(--hair);margin-top:var(--sp2);}
-@media(max-width:560px){.lg-ev-data{grid-template-columns:1fr 1fr!important;}}
+@media(max-width:680px){.lg-ev-data{grid-template-columns:1fr 1fr!important;}}/* 2-col hasta 680 (antes 560 dejaba 4 col apretadas en 561-599) */
 .lg-ev-cell{background:var(--bg-1);padding:var(--sp2) var(--sp2);}
 .lg-ev-cell-k{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;font-weight:600;}
 .lg-ev-cell-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);}
@@ -793,8 +793,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-mv-ftab.active{background:rgba(204,169,79,0.14);border-color:var(--gold);color:var(--gold);}
 .lg-mv-fn{font-size:9px;font-weight:800;opacity:0.7;background:rgba(255,255,255,0.06);border-radius:999px;padding:1px 6px;}
 .lg-mv-ftab.active .lg-mv-fn{background:rgba(204,169,79,0.25);opacity:1;}
-.lg-mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp3);min-height:200px;}
-@media(max-width:680px){.lg-mv-grid{grid-template-columns:1fr;}}
+/* Movers: 2 hijos (Gainers/Losers) → auto-fit fluye 2→1 sin 3a columna vacia ni regla muerta */
+.lg-mv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--sp3);min-height:200px;}
 .lg-mv-col-t{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
 .lg-mv-col-t.up{color:var(--up);} .lg-mv-col-t.down{color:var(--down);}
 .lg-mv{display:flex;align-items:center;justify-content:space-between;padding:var(--sp2);border-radius:var(--r-sm);background:rgba(0,0,0,0.22);border:1px solid var(--hair);margin-bottom:7px;transition:transform 0.2s var(--smooth),border-color 0.25s var(--ease);}
@@ -858,7 +858,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .sm-inner{padding:14px 16px;}
   .sm-brief{font-size:13px!important;}
   .structmeter{width:160px!important;}
-  .lg-mv-grid{grid-template-columns:1fr 1fr;}
 }
 /* Mobile: ≤600px */
 @media(max-width:600px){
@@ -896,8 +895,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
   .diag-row{grid-template-columns:1.4fr 1fr 0.7fr!important;}
   .diag-lat,.diag-sync{display:none;}
-  /* Heatmap — smaller on mobile */
-  .hmap-grid{grid-template-rows:60px 48px 44px 38px 34px!important;gap:2px!important;}
+  /* Heatmap — en movil se ignora el treemap 6-col fijo y los tiles fluyen en 3 columnas
+     uniformes y legibles (antes se quedaba rigido a 6 col y recortaba el texto). */
+  .hmap-grid{grid-template-columns:repeat(3,1fr)!important;grid-template-areas:none!important;grid-template-rows:none!important;grid-auto-rows:58px!important;gap:2px!important;}
+  .hmap-tile{grid-area:auto!important;}
   .hmap-tile[data-tier="1"] .hmap-sym{font-size:11px!important;}
   .hmap-tile[data-tier="1"] .hmap-chg{font-size:13px!important;}
   .hmap-tile[data-tier="2"] .hmap-sym{font-size:9px!important;}
@@ -916,10 +917,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .iro-v{font-size:18px!important;}
   .sm-brief{font-size:16px!important;line-height:1.8!important;}
   .imap-ro{grid-template-columns:repeat(4,1fr);}
-}
-/* Wide desktop: ≥1400px */
-@media(min-width:1400px){
-  .lg-mv-grid{grid-template-columns:1fr 1fr 1fr;}
 }
 /* Mobile small: ≤380px */
 @media(max-width:380px){
