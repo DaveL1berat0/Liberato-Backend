@@ -1365,6 +1365,10 @@ nav { max-width: 100%; }
   .plans-grid-2 { gap: 20px !important; }
   .sec-title { font-size: clamp(30px, 4.5vw, 40px) !important; }
   .payouts-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  /* nav: los 5 enlaces de escritorio NO caben entre 768 y 1023 (se encimaban ilegibles) →
+     usar la hamburguesa hasta 1024, igual que en movil. */
+  .nav-desktop-links { display: none !important; }
+  .hamburger { display: flex !important; }
 }
 
 /* Evita el scroll horizontal fantasma en móvil/tablet (drawers off-canvas, sticky CTA)
@@ -1383,10 +1387,12 @@ nav { max-width: 100%; }
 
   /* Plans header con gutter */
   .plans-header { padding: 0 var(--page-gutter); margin-bottom: 1.25rem !important; }
-  /* Grid: dos tarjetas visibles juntas, sin scroll */
+  /* Planes: apilar en 1 columna en todo movil/tablet-vertical (<=767) para que cada tarjeta
+     tenga ancho completo y legible. Antes solo apilaban a <=360 y a 390/414 quedaban apretadas. */
   .plans-grid-2 {
+    flex-direction: column !important;
     padding: 0 var(--page-gutter) !important;
-    gap: 8px !important;
+    gap: 16px !important;
     overflow: visible !important;
   }
   /* Cards side by side — padding compacto para caber en pantalla */
@@ -1394,7 +1400,7 @@ nav { max-width: 100%; }
   .card-hero-2  {
     padding: 1rem 0.75rem 0.875rem !important;
     border-radius: 10px !important;
-    margin-top: 14px !important;
+    margin-top: 0 !important;   /* apiladas: la separacion la da gap:16px del contenedor */
   }
   .hero-badge-2 { font-size: 7px !important; padding: 4px 10px !important; letter-spacing: 0.08em !important; }
 
@@ -1438,9 +1444,9 @@ nav { max-width: 100%; }
 /* ─── EXTRA-SMALL (≤ 360px): apilar las 2 tarjetas de planes en 1 columna ─── */
 /* Por encima de 360px se mantienen "2 visibles" lado a lado (diseño original). */
 @media (max-width: 360px) {
-  .plans-grid-2 { flex-direction: column !important; gap: 16px !important; }
+  /* ya apila desde <=767; aqui solo un poco mas de aire en pantallas diminutas */
   .card-free-2  { padding: 1.125rem 1rem !important; }
-  .card-hero-2  { padding: 1.375rem 1rem 1.25rem !important; margin-top: 18px !important; }
+  .card-hero-2  { padding: 1.375rem 1rem 1.25rem !important; margin-top: 0 !important; }
 }
 @media (min-width: 1024px) {
   nav {

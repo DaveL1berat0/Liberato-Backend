@@ -415,9 +415,18 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 /* DAILY BARS */
 .daily-bars-svg{width:100%;height:150px;}
 
-/* DONUT TRIO */
-.donut-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-@media(max-width:800px){.donut-grid{grid-template-columns:1fr;}}
+/* DONUT TRIO — container-query: los 3 donuts se acomodan segun el ancho REAL
+   de su tarjeta (no del viewport) → nunca queda uno huerfano a ninguna
+   resolucion de ventana. 3-en-fila solo cuando hay espacio comodo (≥560px),
+   si no se apilan verticalmente (simetricos, todos a ancho completo). */
+.donut-host{container-type:inline-size;}
+.donut-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+@container (min-width:560px){.donut-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@supports not (container-type:inline-size){
+  /* fallback sin container-queries: 3-en-fila solo en pantallas anchas, si no apilado — jamas 2 (evita huerfano) */
+  .donut-grid{grid-template-columns:1fr;}
+  @media(min-width:1000px){.donut-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+}
 .donut-card{background:linear-gradient(180deg,rgba(11,14,21,0.55),rgba(6,8,13,0.35));border:0.5px solid var(--border2);border-radius:var(--r);padding:18px;transition:border-color 0.3s;overflow:hidden;min-width:0;}
 .donut-card:hover{border-color:rgba(201,168,76,0.2);}
 .donut-card-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px;}
@@ -428,8 +437,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .dl-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
 .dl-label{font-size:11px;color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dl-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--text);flex-shrink:0;}
-@media(max-width:1200px){.donut-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:600px){.donut-grid{grid-template-columns:1fr;}}
 
 /* BOTTOM */
 .dash-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
@@ -480,8 +487,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .pb-cat-dot{width:10px;height:10px;border-radius:3px;}
 .pb-cat-name{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;}
 .pb-cat-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:999px;}
-.pb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-@media(max-width:700px){.pb-grid{grid-template-columns:1fr;}}
+/* playbooks: conteo VARIABLE por categoria → auto-fit para que par o impar llenen la fila y el paso a 1 col sea suave */
+.pb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
 .pb-card{background:linear-gradient(180deg,rgba(11,14,21,0.55),rgba(6,8,13,0.35));border:0.5px solid var(--border2);border-radius:var(--r);padding:16px 18px;transition:all 0.25s cubic-bezier(0.4,0,0.2,1);border-left:3px solid var(--green);position:relative;overflow:hidden;}
 .pb-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.25);}
 .pb-card.inactive{opacity:0.4;}
@@ -992,7 +999,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .fsec-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
 .fsec-lbl::before{content:'';width:14px;height:0.5px;background:var(--border2);}
 .frow2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr;gap:10px;}/* 4 inputs (Entrada/Salida/Stop/Contratos) = 2+2, antes 3 cols dejaban el 4º huerfano */
+@media(max-width:380px){.frow3{grid-template-columns:1fr;}}
 .fgroup{display:flex;flex-direction:column;gap:5px;}
 .flbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);}
 .finput,.fsel{padding:10px 12px;background:rgba(0,0,0,0.35);border:0.5px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;transition:border-color 0.2s;width:100%;}
@@ -1410,9 +1418,11 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 @media(max-width:768px){.dash-charts-row{grid-template-columns:1fr;}}
 
 /* Improve KPI row — bigger numbers, more impact */
-.tz-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
-@media(max-width:900px){.tz-kpi-row{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:560px){.tz-kpi-row{grid-template-columns:1fr 1fr;}}
+/* fila KPI compartida por una fila de 5 tiles y otra de 6 → fluida por auto-fit para que
+   AMBAS llenen filas sin huerfano fijo a ningun ancho (antes repeat(5) dejaba 5+1 en la de 6). */
+.tz-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px;}
+/* movil 2-col: si el conteo es impar, el ultimo tile solo ocupa el ancho completo (sin hueco al lado) */
+@media(max-width:480px){.tz-kpi-row>.tz-kpi:last-child:nth-child(odd){grid-column:1/-1;}}
 .tz-kpi-value{font-family:'DM Mono',monospace;font-size:clamp(18px,2.5vw,26px);font-weight:700;font-variant-numeric:tabular-nums;}
 .tz-kpi-value.pos{color:var(--green);} .tz-kpi-value.neg{color:var(--red);} .tz-kpi-value.white{color:var(--text);}
 
@@ -1441,7 +1451,7 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 .tz-kpi:hover{transform:translateY(-3px);box-shadow:0 14px 32px -14px rgba(0,0,0,0.55),0 0 0 0.5px rgba(201,168,76,0.18);border-color:rgba(201,168,76,0.35);}
 .tz-kpi:active{transform:translateY(-1px) scale(0.99);}
 @media(max-width:560px){
-  .tz-kpi-row{grid-template-columns:repeat(2,1fr) !important;gap:8px !important;}
+  .tz-kpi-row{gap:8px !important;}/* columnas las decide auto-fit (base), no forzamos 2-col (evita 5→2+2+1) */
   .tz-kpi{padding:10px 12px !important;}
   .tz-kpi-value{font-size:17px !important;}
   /* Selector de unidad + botones del header de Mis Trades: más compactos */
@@ -2330,7 +2340,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 
     <!-- DONUTS + SETUPS ROW -->
     <div class="dash-charts-row" style="align-items:stretch;">
-      <div class="card" style="margin-bottom:0;">
+      <div class="card donut-host" style="margin-bottom:0;">
         <div class="card-head"><span class="card-title">Distribución de Operativa</span></div>
         <div class="donut-grid" id="donut-grid"></div>
       </div>
@@ -5318,7 +5328,7 @@ function renderGenius(){
   if(pend)falta.push('<strong>'+pend+' trades en revisión</strong> sin aprobar (no cuentan en KPIs).');
   if(!falta.length)falta.push('Tu data está completa. Excelente disciplina.');
 
-  diag.innerHTML='<div class="genius-diag-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">'
+  diag.innerHTML='<div class="genius-diag-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">'
     +geniusBlock('Cómo vas','#CCA94F','◆',como)
     +geniusBlock('Fortalezas','#22c55e','▲',fort)
     +geniusBlock('Dónde fallas','#ef4444','▼',falla)

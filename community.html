@@ -41,12 +41,20 @@
   .lock{font-size:46px;margin-bottom:16px;}
   .hidden{display:none;}
   /* Vista premium (contenido real de la comunidad) */
-  .wrap{max-width:1000px;margin:0 auto;padding:32px 20px;}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 20px;container-type:inline-size;}
   .hd{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--brd);margin-bottom:28px;}
   .hd-l{font-family:var(--serif);font-size:24px;font-weight:600;}
   .hd-l span{color:var(--gold);}
   .welcome{font-size:13px;color:var(--ink-3);font-family:var(--mono);}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+  /* 4 tiles: pasos limpios 4→2×2→1 segun el ancho REAL del contenedor. Nunca 3 columnas (evita el huerfano 3+1). */
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  @container (min-width:520px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @container (min-width:860px){.grid{grid-template-columns:repeat(4,1fr);}}
+  @supports not (container-type:inline-size){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr);}}
+    @media(max-width:519px){.grid{grid-template-columns:1fr;}}
+  }
   .tile{background:var(--bg-2);border:1px solid var(--brd);border-radius:14px;padding:24px;transition:border 0.2s;}
   .tile:hover{border-color:var(--brd-gold);}
   .tile-ic{font-size:26px;margin-bottom:12px;}

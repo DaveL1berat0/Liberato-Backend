@@ -307,9 +307,8 @@ body::before{
     min-width:unset;
     scroll-snap-align:unset;
   }
-  /* 3 tiles per row on mobile (!important: la regla base .cards de 4-col va después en el CSS y la pisaba) */
+  /* movil: el auto-fill base ya da ~3 col a 375px; solo ajustamos el gap */
   .cards{
-    grid-template-columns:repeat(3,1fr)!important;
     gap:6px;
   }
   .ec{padding:10px 6px 9px;}
@@ -413,8 +412,8 @@ body::before{
 .sess-head.close{color:var(--blue);}
 
 /* PESTAÑAS DE DÍA (mismo lenguaje visual que el calendario macro) */
-.ec-day-tabs{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap;}
-.ec-day-tab{position:relative;flex:1;min-width:56px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(232,228,217,0.1);border-radius:9px;cursor:pointer;transition:all 0.2s ease;font-family:'DM Mono',monospace;line-height:1;}
+.ec-day-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 16px;}
+.ec-day-tab{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 6px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(232,228,217,0.1);border-radius:9px;cursor:pointer;transition:all 0.2s ease;font-family:'DM Mono',monospace;line-height:1;}
 .ec-day-tab:hover{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);}
 .ec-day-tab-d{font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);transition:color 0.2s;}
 .ec-day-tab-n{font-size:16px;font-weight:700;color:var(--text2);transition:color 0.2s;}
@@ -426,9 +425,12 @@ body::before{
 .ec-day-empty{text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.04em;padding:34px 0;}
 
 /* COMPANY TILES — compact grid style */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+/* Empresas (conteo VARIABLE del feed): tile de tamaño CONSTANTE a cualquier ancho con auto-fill
+   → ~3 col a 375px, ~6 a 768px, ~13 a 1500px. Evita 4 columnas gigantes en desktop y el mismo
+   criterio aplica en todos los moviles. */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;}
 .ec{
-  display:flex;flex-direction:column;align-items:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:7px;padding:13px 8px 11px;
   background:rgba(0,0,0,0.45);border-radius:var(--r-sm);
   border:0.5px solid rgba(232,228,217,0.08);cursor:pointer;

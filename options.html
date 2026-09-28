@@ -152,7 +152,7 @@ a{color:inherit;text-decoration:none;}
 @media(max-width:900px){.mrow{grid-template-columns:1fr;}}
 .posture-inpanel{padding:16px 18px;border-top:1px solid var(--hair);}
 .lc-panel .lc-card{max-width:none;}
-.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;}
 .gcell{background:var(--panel-2);border:0.5px solid var(--hair);border-radius:10px;padding:7px 5px 6px;text-align:center;}
 /* Cada tarjeta se tiñe por su PROPIO score (mismo criterio que el velocímetro): verde=sano, ámbar=vigilar, rojo=presión. Sin tarjetas "sin color". */
 .gcell.g-good{background:rgba(46,232,164,0.05);border-color:rgba(46,232,164,0.20);}
@@ -178,8 +178,8 @@ a{color:inherit;text-decoration:none;}
 .yc-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;}
 .yc-lbl{font-size:12.5px;font-weight:700;letter-spacing:0.02em;}   /* etiqueta de cada curva (nominal / inflación) grande y a color de su línea */
 /* ── ③ MARKET (chart + contexto) ── */
-.chart-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);border-bottom:1px solid var(--hair);}
-@media(max-width:700px){.chart-stats{grid-template-columns:repeat(2,1fr);}}
+.chart-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:1px;background:var(--hair);border-bottom:1px solid var(--hair);}
+/* fluido: se acomoda al ancho REAL de la tarjeta (evita el huerfano 2-col con 5 stats) */
 .cstat{background:var(--panel);padding:10px 14px;}
 .cstat-k{font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-3);}
 .cstat-v{font-family:var(--mono);font-size:15px;font-weight:700;margin-top:3px;}
@@ -301,7 +301,7 @@ a{color:inherit;text-decoration:none;}
 @media(max-width:700px){.chart-tf button{padding:8px 13px;font-size:11px;}.dtool{width:32px;height:32px;font-size:15px;}.dtoolbar{left:4px;}}
 @media(max-width:640px){.lc-f input{font-size:16px;}}
 @media(max-width:600px){.owrap{padding:var(--gap) 12px 40px;}}
-@media(max-width:420px){.gg{grid-template-columns:repeat(2,1fr);}}
+/* .gg fluye con auto-fit (sin override 2-col que dejaba huerfano con 11 motores) */
 @media(max-width:360px){.env-rs{grid-template-columns:1fr;}}
 /* móvil: el scanner fluye con la página (sin scroll anidado / trampa de scroll) y se ve grande */
 @media(max-width:760px){#scan-body{max-height:none;overflow:visible;}}
@@ -661,7 +661,7 @@ body::before{
 }
 
 /* — MOTORES: 2 columnas cómodas en todo el rango móvil (mejor que 3 apretadas) — */
-@media(max-width:600px){.gg{grid-template-columns:repeat(2,1fr);gap:9px;}}
+@media(max-width:600px){.gg{gap:9px;}}
 
 /* — SCANNER: la tabla se reinterpreta como CARDS táctiles (0 scroll horizontal) — */
 @media(max-width:760px){

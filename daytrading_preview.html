@@ -4232,7 +4232,8 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       if(!d||!d.macro_calendar||!d.macro_calendar.length){
         console.warn('[calendar] empty response — showing dates from buildMacroDays');
         MOCK.macro.days=typeof buildMacroDays==='function'?buildMacroDays():[];
-        renderAll(); return;
+        renderLegacy(); return;   // FIX: solo re-renderiza el calendario. Antes llamaba renderAll()
+        // que reconstruía TODA la página cada 15-30s → el scroll saltaba al top "como si se refrescara".
       }
       // Real data arrived — build calendar from backend
       // ── PRESERVAR EVENTOS DE HOY: guardar los eventos del día actual con su
