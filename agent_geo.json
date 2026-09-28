@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump rechazo la propuesta de paz condicional de Iran sobre el Estrecho de Ormuz y dijo a asesores que espera reanudar los ataques tras las elecciones de medio mandato de noviembre, reavivando las tensiones EEUU-Iran y presionando a la baja al NQ en la apertura.",
-  "petroleo": "El Brent sube 2.3% hasta 106.73 USD/barril y el WTI 2% hasta 94.25 USD/barril (10:33 ET) por el recrudecimiento de la tension EEUU-Iran sobre el Estrecho de Ormuz, encareciendo insumos y lastrando al Nasdaq.",
-  "catalizador": "Los rendimientos del Tesoro a 10 anos tocaron maximos de casi dos decadas y el sentimiento del consumidor de la Universidad de Michigan cayo a 48.1, cerca de minimos historicos, presionando a las tecnologicas de alta duracion como el NQ.",
+  "geopolitica": "Trump rechazo la propuesta condicional de Iran para reabrir el Estrecho de Ormuz, reavivando el riesgo de conflicto en Medio Oriente y presionando al Nasdaq a la baja por aversion al riesgo.",
+  "petroleo": "El Brent sube 2.3% a 106.73 USD/barril (llego a tocar 108.83 antes de recortar ganancias) y el WTI avanza 2% a 94.25 USD, tras el rechazo de Trump a la oferta irani sobre el Estrecho de Ormuz.",
+  "catalizador": "El rendimiento del Treasury a 10 anos volvio a superar 5.2%, cerca de su nivel mas alto desde 2007, endureciendo las condiciones financieras y golpeando a las tecnologicas de alto crecimiento del Nasdaq.",
   "sources": [
-    "CNBC 10:33 ET (Brent/WTI, Iran)",
-    "TheStreet/Yahoo Finance premarket ET (Nasdaq, rendimientos, sentimiento consumidor)",
-    "Bloomberg 27-28 sep (Iran, Estrecho de Ormuz)"
+    "CNBC 10:33 ET",
+    "Yahoo Finance (Stock Market Today, 28 sep)",
+    "Bloomberg (Stock Market Today, 28 sep)"
   ],
-  "as_of": "2026-09-28T15:39:18Z"
+  "as_of": "2026-09-28T16:06:54Z"
 }
