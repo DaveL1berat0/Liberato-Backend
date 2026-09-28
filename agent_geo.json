@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump rechazo la propuesta condicional de Iran para reabrir el Estrecho de Ormuz, reavivando el riesgo de conflicto en Medio Oriente y presionando al Nasdaq a la baja por aversion al riesgo.",
-  "petroleo": "El Brent sube 2.3% a 106.73 USD/barril (llego a tocar 108.83 antes de recortar ganancias) y el WTI avanza 2% a 94.25 USD, tras el rechazo de Trump a la oferta irani sobre el Estrecho de Ormuz.",
-  "catalizador": "El rendimiento del Treasury a 10 anos volvio a superar 5.2%, cerca de su nivel mas alto desde 2007, endureciendo las condiciones financieras y golpeando a las tecnologicas de alto crecimiento del Nasdaq.",
+  "geopolitica": "Trump rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz en 7 dias, reavivando el riesgo de escalada militar EE.UU.-Iran y presionando a la baja al Nasdaq en la sesion de hoy.",
+  "petroleo": "El Brent sube cerca de 1.3% hasta ~105.7 USD y el WTI ~1% hasta ~93.3 USD por el estancamiento en las negociaciones sobre el Estrecho de Ormuz, elevando el temor a mas inflacion y presionando al NQ.",
+  "catalizador": "La pausa de OpenAI en el entrenamiento de sus modelos mas avanzados tras un incidente de seguridad hundio a los semiconductores en Asia y arrastra a la baja a los futuros del Nasdaq 100 antes de la apertura.",
   "sources": [
-    "CNBC 10:33 ET",
-    "Yahoo Finance (Stock Market Today, 28 sep)",
-    "Bloomberg (Stock Market Today, 28 sep)"
+    "Bloomberg 08:00 ET",
+    "CNBC 08:00 ET",
+    "Investing.com/Reuters 08:00 ET"
   ],
-  "as_of": "2026-09-28T16:06:54Z"
+  "as_of": "2026-09-28T17:05:20Z"
 }
