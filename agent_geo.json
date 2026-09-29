@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Las negociaciones EE.UU.-Iran sobre reabrir el estrecho de Ormuz siguen estancadas tras el rechazo de Trump a la propuesta iraní el fin de semana y un ataque hutí a Riad, lo que mantiene la prima de riesgo geopolítico como viento en contra para el sentimiento de riesgo del NQ (Bloomberg, 27-28/09).",
-  "petroleo": "El Brent cae 1.6% a 103.60 USD y el WTI baja cerca de 2% a 90.72 USD hoy, al recuperarse las exportaciones de crudo saudí desde sus puertos del Mar Rojo tras la reparación del oleoducto Este-Oeste, lo que alivia algo la prima de riesgo y es marginalmente positivo para el NQ vía menor presión inflacionaria (CNBC, 29/09).",
-  "catalizador": "El índice de confianza del consumidor del Conference Board se desplomó a 81.9 (mínimo desde 2014), muy por debajo de lo esperado, por temores a precios y empleo, un dato débil que añade presión bajista de corto plazo sobre el NQ al reforzar el temor a una desaceleración del consumo (Bloomberg/CNBC, 29/09, 10:00 ET).",
+  "geopolitica": "",
+  "petroleo": "El Brent cae 1.6% a 103.60 USD y el WTI baja cerca de 2% a 90.72 USD tras confirmarse la recuperacion operativa de las exportaciones de crudo saudita por los puertos del Mar Rojo (Yanbu y Muajjiz) y flujos por el Estrecho de Ormuz en 77% de su nivel previo a la guerra, lo que reduce la prima de riesgo geopolitico y podria restar soporte inflacionario al NQ intradia.",
+  "catalizador": "El informe JOLTS de aperturas de empleo de agosto se publico hoy a las 10:00 ET y los futuros del Nasdaq 100 operaban con alza de 0.4% en premarket a la espera de datos economicos clave, dejando al NQ sensible a sorpresas frente al consenso en la sesion.",
   "sources": [
-    "CNBC 29/09",
-    "Bloomberg 29/09",
-    "Bloomberg 27/09"
+    "CNBC 29-sep-2026 (oil-prices-today-brent-wti-hormuz)",
+    "Bloomberg 29-sep-2026 (US stock futures rise as traders await key economic data)",
+    "BLS JOLTS release 10:00 ET 29-sep-2026"
   ],
-  "as_of": "2026-09-29T17:06:32Z"
+  "as_of": "2026-09-29T18:06:15Z"
 }
