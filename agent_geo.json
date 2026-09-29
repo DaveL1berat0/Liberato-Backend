@@ -1,11 +1,12 @@
 {
-  "geopolitica": "La tension entre EE.UU. e Iran por el Estrecho de Ormuz y los ataques a infraestructura petrolera saudi en el Mar Rojo mantienen la aversion al riesgo y presionan a la baja a Wall Street, incluido el Nasdaq (Yahoo Finance/CNBC, 29 sep).",
-  "petroleo": "Brent opera en la zona de 103-106 USD/barril y WTI cerca de 89-94 USD: los precios bajaron al recuperarse las exportaciones saudies desde el Mar Rojo, pero la incertidumbre por las negociaciones EE.UU.-Iran limita el retroceso y sostiene presion inflacionaria sobre el NQ (CNBC, 29 sep).",
-  "catalizador": "El rendimiento del bono del Tesoro a 30 anos toco su nivel mas alto en varias decadas y un prospecto filtrado de la IPO de Anthropic junto a la cancelacion de un modelo de proxima generacion de OpenAI suman presion bajista sobre las tecnologicas del Nasdaq (Yahoo Finance, 29 sep).",
+  "geopolitica": "Trump rechazo la propuesta iraní para reabrir el Estrecho de Ormuz y espera nuevas conversaciones esta semana, lo que mantiene la tension EE.UU.-Iran y presiona el apetito por riesgo del NQ.",
+  "petroleo": "El Brent supero los 107 USD/barril (+3% aprox.) tras el rechazo de Trump a la propuesta de Iran sobre Ormuz, elevando el riesgo de inflacion y presionando al Nasdaq.",
+  "catalizador": "El rendimiento del Treasury a 10 anos ronda 5.24%-5.25%, su nivel mas alto desde mediados de 2007, mientras el presidente de la Fed de NY, Williams, habla hoy a las 14:00 ET sobre perspectivas economicas, un factor clave para el NQ intradia.",
   "sources": [
-    "CNBC 29 sep 2026 - oil-prices-today-brent-wti-hormuz",
-    "Yahoo Finance 29 sep 2026 - stock-market-today-tuesday-september-29",
-    "CNBC 28 sep 2026 - oil-price-today-wti-brent-trump-iran"
+    "CNBC 28/09 - Brent crude tops $107 as Trump rejects Iran Hormuz proposal",
+    "Al Jazeera 28/09 - Oil prices surge after Trump rejects Iran's Hormuz plan",
+    "Federal Reserve calendar - Williams speech 14:00 ET (18:00 UTC) 29/09",
+    "RioTimesOnline 29/09 - US 10-Year Treasury yield at 5.24%"
   ],
-  "as_of": "2026-09-29T20:06:26Z"
+  "as_of": "2026-09-29T21:05:59Z"
 }
