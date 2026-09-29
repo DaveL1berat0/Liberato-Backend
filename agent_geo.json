@@ -1,11 +1,9 @@
 {
-  "geopolitica": "EEUU y China extendieron dos meses (hasta el 10 de enero) su tregua comercial y reducen aranceles sobre unos 60.000 millones de dolares en bienes tras la cumbre Trump-Xi, mientras EEUU rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz, combinacion que sostiene el apetito por riesgo en tech pero deja latente la prima geopolitica en el NQ.",
-  "petroleo": "El petroleo cae hoy: Brent -1.6% a 103.60 USD/barril y WTI -2% a 90.72 USD, tras confirmarse por imagenes satelitales la recuperacion operativa de las terminales sauditas de Yanbu y Muajjiz, lo que alivia temores de escasez de suministro y reduce presion inflacionaria sobre el NQ.",
-  "catalizador": "El indice de confianza del consumidor del Conference Board sorprendio a la baja (81.9 vs ~89 esperado, -6.7 puntos) por temores a inflacion y empleo, mientras el Treasury a 10 anos ronda maximos plurianuales (~5.2%), presionando el sentimiento de riesgo del NQ antes de la apertura.",
+  "geopolitica": "Persisten las tensiones en Oriente Medio tras el reciente ataque a un oleoducto clave de Arabia Saudita en el Mar Rojo (oleoductos Yanbu y Muajjiz); imagenes satelitales confirmaron hoy la recuperacion operativa de las exportaciones, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia (CNBC, 29-sep-2026).",
+  "petroleo": "El Brent cae 1.6% a 103.60 USD/barril y el WTI cae cerca de 2% a 90.72 USD/barril tras confirmarse la recuperacion de las exportaciones saudies desde el Mar Rojo, lo que alivia el riesgo de oferta y reduce la presion inflacionaria, un viento a favor para el NQ (CNBC, 29-sep-2026).",
+  "catalizador": "",
   "sources": [
-    "CNBC (oil-prices-today-brent-wti-hormuz) 2026-09-29",
-    "CNBC (consumer-optimism-slides-sharply) 2026-09-29",
-    "CNBC (us-china-lower-tariffs-trump-xi-meeting) 2026-09-28"
+    "CNBC 29-sep-2026 (Oil prices today: Brent, WTI, Hormuz)"
   ],
-  "as_of": "2026-09-29T15:40:55Z"
+  "as_of": "2026-09-29T16:07:31Z"
 }
