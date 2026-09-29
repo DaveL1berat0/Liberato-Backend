@@ -1,11 +1,11 @@
 {
   "geopolitica": "EE.UU. rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz y ambos paises mantienen conversaciones separadas con mediadores, prolongando el conflicto en Medio Oriente y sosteniendo el apetito por riesgo bajo presion en el NQ.",
   "petroleo": "El petroleo cae hoy: Brent -1.6% a 103.60 USD/barril y WTI -2% a 90.72 USD, tras confirmarse por imagenes satelitales la recuperacion operativa de las terminales sauditas de Yanbu y Muajjiz, lo que alivia temores de escasez de suministro.",
-  "catalizador": "El rendimiento del Treasury a 10 anos cede a 5.246% tras tocar maximos, mientras el mercado de futuros de Fed Funds asigna mas de 72% de probabilidad a una nueva subida de tasas en la reunion de octubre, manteniendo cautela previo al dato de PCE del miercoles.",
+  "catalizador": "El rendimiento del Treasury a 10 anos sube a ~5.26% en la sesion previa a la apertura, mientras el indice de confianza del consumidor del Conference Board sorprendio a la baja (81.9 vs ~89 esperado), presionando el sentimiento de riesgo antes del dato de PCE del miercoles.",
   "sources": [
-    "CNBC 2026-09-29 (oil-prices-today-brent-wti-hormuz)",
-    "CNBC 2026-09-29 (stock-market-today-live-updates)",
-    "Bloomberg 2026-09-27 (iran-says-won-t-soften-demands-after-trump-rejects-hormuz-offer)"
+    "CNBC (oil-prices-today-brent-wti-hormuz) 2026-09-29",
+    "CNBC Premarkets (pre-markets) 2026-09-29",
+    "CBS News Iran War Updates (live blog) 2026-09-29"
   ],
-  "as_of": "2026-09-29T15:02:27Z"
+  "as_of": "2026-09-29T15:14:12Z"
 }
