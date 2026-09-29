@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump rechazo el sabado la propuesta de Iran de reabrir el Estrecho de Ormuz y funcionarios de EE.UU. e Iran retomaron contactos con mediadores el lunes para intentar poner fin al conflicto de siete meses, manteniendo elevada la prima de riesgo geopolitico que limita el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cae 2.6% a 102.59 USD y el WTI cae 3.5% a 89.38 USD este martes tras confirmarse la recuperacion operativa de las terminales sauditas de Yanbu y Muajjiz en el Mar Rojo, lo que reduce la prima de riesgo de suministro y resta presion inflacionaria sobre el NQ.",
-  "catalizador": "En la sesion de la tarde el rendimiento del bono del Tesoro a 30 anios toco 5.613% (maximo desde junio de 2002) y el de 10 anios subio a 5.281%, presionando a la banca (Goldman Sachs, JPMorgan, Bank of America a la baja) y dejando al Nasdaq practicamente plano pese al alivio en el petroleo.",
+  "geopolitica": "La tension entre EE.UU. e Iran por el Estrecho de Ormuz y los ataques a infraestructura petrolera saudi en el Mar Rojo mantienen la aversion al riesgo y presionan a la baja a Wall Street, incluido el Nasdaq (Yahoo Finance/CNBC, 29 sep).",
+  "petroleo": "Brent opera en la zona de 103-106 USD/barril y WTI cerca de 89-94 USD: los precios bajaron al recuperarse las exportaciones saudies desde el Mar Rojo, pero la incertidumbre por las negociaciones EE.UU.-Iran limita el retroceso y sostiene presion inflacionaria sobre el NQ (CNBC, 29 sep).",
+  "catalizador": "El rendimiento del bono del Tesoro a 30 anos toco su nivel mas alto en varias decadas y un prospecto filtrado de la IPO de Anthropic junto a la cancelacion de un modelo de proxima generacion de OpenAI suman presion bajista sobre las tecnologicas del Nasdaq (Yahoo Finance, 29 sep).",
   "sources": [
-    "CNBC 29-sep-2026 (oil-prices-today-brent-wti-hormuz)",
-    "CNBC 29-sep-2026 (stock-market-today-live-updates)",
-    "CNBC 28-sep-2026 (oil-price-today-wti-brent-trump-iran)"
+    "CNBC 29 sep 2026 - oil-prices-today-brent-wti-hormuz",
+    "Yahoo Finance 29 sep 2026 - stock-market-today-tuesday-september-29",
+    "CNBC 28 sep 2026 - oil-price-today-wti-brent-trump-iran"
   ],
-  "as_of": "2026-09-29T19:07:07Z"
+  "as_of": "2026-09-29T20:06:26Z"
 }
