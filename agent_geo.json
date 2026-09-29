@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz, reavivando el riesgo geopolitico en Medio Oriente y presionando a los futuros del Nasdaq a la baja en la premarket.",
-  "petroleo": "El Brent cotiza cerca de 106 USD/barril (+2-3%) y el WTI ronda los 94-95 USD tras el rechazo de Trump a la oferta iraní sobre Ormuz, sumando presion inflacionaria negativa para el NQ.",
-  "catalizador": "Los futuros del Nasdaq cayeron cerca de 0.8% en la premarket (04:00 ET) por el repunte del petroleo y el temor a que la inflacion fuerce nuevas subidas de tasas de la Fed.",
+  "geopolitica": "EEUU e Irán mantienen conversaciones indirectas via mediadores de Qatar en Nueva York para poner fin a la guerra; Trump calificó la propuesta iraní de 'inaceptable', lo que mantiene la prima de riesgo geopolítico y la volatilidad sobre el NQ intradía.",
+  "petroleo": "El Brent cotiza prácticamente plano en 105.24 USD/barril (tras llegar a subir más de 2% en la sesión) y el WTI cae ~0.1% a 92.54 USD, por la incertidumbre en torno a Irán y el estrecho de Ormuz pese al regreso de un oleoducto saudí; el crudo elevado presiona al NQ vía mayores costos e inflación.",
+  "catalizador": "El rendimiento del Treasury a 10 años tocó un máximo de 19 años (5.27%) y el mercado eleva a más de 70% la probabilidad de una subida de tasas de la Fed a fines de octubre, un viento en contra para el Nasdaq de cara al dato de empleo del viernes.",
   "sources": [
-    "CNBC 04:00 ET",
-    "Yahoo Finance 04:00 ET",
-    "TheStreet 28-sep",
-    "Bloomberg 27-sep"
+    "CNBC 05:12 ET - Oil prices flat as Middle East supply concerns persist",
+    "CNBC - U.S., Iran hold separate mediator talks as Mideast oil exports hit war-time high",
+    "CNBC - Dollar holds near two-month peak as yields rise, Fed data looms"
   ],
-  "as_of": "2026-09-28T21:06:30Z"
+  "as_of": "2026-09-29T13:06:47Z"
 }
