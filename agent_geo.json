@@ -1,9 +1,11 @@
 {
-  "geopolitica": "Persisten las tensiones en Oriente Medio tras el reciente ataque a un oleoducto clave de Arabia Saudita en el Mar Rojo (oleoductos Yanbu y Muajjiz); imagenes satelitales confirmaron hoy la recuperacion operativa de las exportaciones, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia (CNBC, 29-sep-2026).",
-  "petroleo": "El Brent cae 1.6% a 103.60 USD/barril y el WTI cae cerca de 2% a 90.72 USD/barril tras confirmarse la recuperacion de las exportaciones saudies desde el Mar Rojo, lo que alivia el riesgo de oferta y reduce la presion inflacionaria, un viento a favor para el NQ (CNBC, 29-sep-2026).",
-  "catalizador": "",
+  "geopolitica": "Las negociaciones EE.UU.-Iran sobre reabrir el estrecho de Ormuz siguen estancadas tras el rechazo de Trump a la propuesta iraní el fin de semana y un ataque hutí a Riad, lo que mantiene la prima de riesgo geopolítico como viento en contra para el sentimiento de riesgo del NQ (Bloomberg, 27-28/09).",
+  "petroleo": "El Brent cae 1.6% a 103.60 USD y el WTI baja cerca de 2% a 90.72 USD hoy, al recuperarse las exportaciones de crudo saudí desde sus puertos del Mar Rojo tras la reparación del oleoducto Este-Oeste, lo que alivia algo la prima de riesgo y es marginalmente positivo para el NQ vía menor presión inflacionaria (CNBC, 29/09).",
+  "catalizador": "El índice de confianza del consumidor del Conference Board se desplomó a 81.9 (mínimo desde 2014), muy por debajo de lo esperado, por temores a precios y empleo, un dato débil que añade presión bajista de corto plazo sobre el NQ al reforzar el temor a una desaceleración del consumo (Bloomberg/CNBC, 29/09, 10:00 ET).",
   "sources": [
-    "CNBC 29-sep-2026 (Oil prices today: Brent, WTI, Hormuz)"
+    "CNBC 29/09",
+    "Bloomberg 29/09",
+    "Bloomberg 27/09"
   ],
-  "as_of": "2026-09-29T16:07:31Z"
+  "as_of": "2026-09-29T17:06:32Z"
 }
