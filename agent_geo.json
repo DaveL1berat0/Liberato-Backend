@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La filtracion del prospecto de IPO de Anthropic (advertencias de riesgo existencial de su IA) y la cancelacion por parte de OpenAI de su modelo GPT-6.1 Astra por fallos de seguridad estan generando nerviosismo ('AI jitters') entre las megacaps tecnologicas, lastrando el futuro del Nasdaq-100 en la apertura.",
-  "petroleo": "El Brent cotiza casi plano cerca de 105,24 USD/barril y el WTI cae ~0,1% a 92,54 USD/barril, ya que las preocupaciones de suministro en Oriente Medio (Estrecho de Ormuz, tensiones Arabia Saudita-huties) compensan el avance de las conversaciones indirectas Iran-EEUU via mediadores cataries en Nueva York.",
-  "catalizador": "A las 10:00 ET se publican el Indice de Confianza del Consumidor (consenso 90,1 vs 89,4 previo) y el informe JOLTS, datos que podrian mover al NQ tras la apertura si sorprenden frente al consenso.",
+  "geopolitica": "EE.UU. rechazo la propuesta de Iran para reabrir el Estrecho de Ormuz y ambos paises mantienen conversaciones separadas con mediadores, prolongando el conflicto en Medio Oriente y sosteniendo el apetito por riesgo bajo presion en el NQ.",
+  "petroleo": "El petroleo cae hoy: Brent -1.6% a 103.60 USD/barril y WTI -2% a 90.72 USD, tras confirmarse por imagenes satelitales la recuperacion operativa de las terminales sauditas de Yanbu y Muajjiz, lo que alivia temores de escasez de suministro.",
+  "catalizador": "El rendimiento del Treasury a 10 anos cede a 5.246% tras tocar maximos, mientras el mercado de futuros de Fed Funds asigna mas de 72% de probabilidad a una nueva subida de tasas en la reunion de octubre, manteniendo cautela previo al dato de PCE del miercoles.",
   "sources": [
-    "Yahoo Finance 08:05 ET",
-    "CNBC (Oil prices today, Brent/WTI/Hormuz) 29 sep",
-    "Investing.com Economic Calendar - Consumer Confidence 10:00 ET"
+    "CNBC 2026-09-29 (oil-prices-today-brent-wti-hormuz)",
+    "CNBC 2026-09-29 (stock-market-today-live-updates)",
+    "Bloomberg 2026-09-27 (iran-says-won-t-soften-demands-after-trump-rejects-hormuz-offer)"
   ],
-  "as_of": "2026-09-29T13:40:23Z"
+  "as_of": "2026-09-29T15:02:27Z"
 }
