@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EEUU e Irán mantienen conversaciones indirectas via mediadores de Qatar en Nueva York para poner fin a la guerra; Trump calificó la propuesta iraní de 'inaceptable', lo que mantiene la prima de riesgo geopolítico y la volatilidad sobre el NQ intradía.",
-  "petroleo": "El Brent cotiza prácticamente plano en 105.24 USD/barril (tras llegar a subir más de 2% en la sesión) y el WTI cae ~0.1% a 92.54 USD, por la incertidumbre en torno a Irán y el estrecho de Ormuz pese al regreso de un oleoducto saudí; el crudo elevado presiona al NQ vía mayores costos e inflación.",
-  "catalizador": "El rendimiento del Treasury a 10 años tocó un máximo de 19 años (5.27%) y el mercado eleva a más de 70% la probabilidad de una subida de tasas de la Fed a fines de octubre, un viento en contra para el Nasdaq de cara al dato de empleo del viernes.",
+  "geopolitica": "La filtracion del prospecto de IPO de Anthropic (advertencias de riesgo existencial de su IA) y la cancelacion por parte de OpenAI de su modelo GPT-6.1 Astra por fallos de seguridad estan generando nerviosismo ('AI jitters') entre las megacaps tecnologicas, lastrando el futuro del Nasdaq-100 en la apertura.",
+  "petroleo": "El Brent cotiza casi plano cerca de 105,24 USD/barril y el WTI cae ~0,1% a 92,54 USD/barril, ya que las preocupaciones de suministro en Oriente Medio (Estrecho de Ormuz, tensiones Arabia Saudita-huties) compensan el avance de las conversaciones indirectas Iran-EEUU via mediadores cataries en Nueva York.",
+  "catalizador": "A las 10:00 ET se publican el Indice de Confianza del Consumidor (consenso 90,1 vs 89,4 previo) y el informe JOLTS, datos que podrian mover al NQ tras la apertura si sorprenden frente al consenso.",
   "sources": [
-    "CNBC 05:12 ET - Oil prices flat as Middle East supply concerns persist",
-    "CNBC - U.S., Iran hold separate mediator talks as Mideast oil exports hit war-time high",
-    "CNBC - Dollar holds near two-month peak as yields rise, Fed data looms"
+    "Yahoo Finance 08:05 ET",
+    "CNBC (Oil prices today, Brent/WTI/Hormuz) 29 sep",
+    "Investing.com Economic Calendar - Consumer Confidence 10:00 ET"
   ],
-  "as_of": "2026-09-29T13:06:47Z"
+  "as_of": "2026-09-29T13:40:23Z"
 }
