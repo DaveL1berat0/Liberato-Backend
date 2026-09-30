@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Trump califico de \"inaceptable\" la oferta de Iran de reabrir el estrecho de Hormuz en 7 dias y reanudar negociaciones nucleares, mientras EEUU e Iran mantienen conversaciones separadas con mediadores en Nueva York, sosteniendo la incertidumbre geopolitica que presiona el sentimiento de riesgo en el NQ.",
-  "petroleo": "El WTI cotiza cerca de 89.26 USD/barril tras caer 3.5% en la sesion previa y el Brent ronda 103.43 USD/barril, retrocediendo por la recuperacion de las exportaciones de crudo de Arabia Saudita y Oriente Medio que alivia el temor a un corte de suministro por el conflicto con Iran.",
-  "catalizador": "El PCE de agosto (dato clave de inflacion de la Fed) subio 3.4% interanual, por debajo del 3.7% esperado, y el PCE subyacente subio 3% frente al 3.3% previo; la sorpresa a la baja en inflacion impulso al Nasdaq Composite cerca de 1% y presiono a la baja los rendimientos del Tesoro.",
+  "geopolitica": "Trump niega en Truth Social haber ofrecido alivio de sanciones a Irán en medio de la disputa por el Estrecho de Ormuz, lo que eleva la prima de riesgo geopolítico y presiona el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent sube 0.69% a 103.30 USD/barril y el WTI 0.48% a 89.81 USD/barril tras la negativa de Trump sobre Irán; el encarecimiento de la energía añade presión inflacionaria, un viento en contra para el NQ intradía.",
+  "catalizador": "El PCE subyacente de agosto (publicado 8:30 ET) subió 0.2% m/m y ronda 2.9%-3.0% interanual, levemente por encima de lo esperado, pero el mercado mantiene cerca de 87%-88% de probabilidad de recorte de tasas en la reunión de la Fed del 29 de octubre, lo que sostiene el apetito por riesgo en el NQ.",
   "sources": [
-    "CNBC 2026-09-29 (stock-market-today-live-updates)",
-    "CNBC 2026-09-29 (us-iran-war-trump-hormuz)",
-    "CNBC 2026-09-29 (oil-prices-today-brent-wti-hormuz)",
-    "CNBC 2026-09-29 (the-feds-main-inflation-measure-will-be-released-wednesday)"
+    "CNBC - Oil climbs after Trump denies he is willing to ease sanctions on Iran (30-Sep-2026)",
+    "BEA - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-Sep-2026)"
   ],
-  "as_of": "2026-09-30T15:06:49Z"
+  "as_of": "2026-09-30T15:39:23Z"
 }
