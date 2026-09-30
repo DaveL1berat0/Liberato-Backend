@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Trump negó públicamente estar dispuesto a suavizar las sanciones a Irán justo cuando mediadores buscaban reabrir el diálogo por el Estrecho de Ormuz, reavivando la tensión en Medio Oriente y presionando el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent sube 1.11% a 103.73 USD/barril y el WTI sube 0.38% a 89.72 USD/barril tras la negativa de Trump a aliviar las sanciones a Irán, encareciendo el costo energético y pesando sobre las tecnológicas de alta duración del NQ.",
-  "catalizador": "El PCE subyacente de agosto salió en 3.0% interanual, muy por debajo del 3.3% esperado, lo que reduce la probabilidad de una subida de tasas de la Fed en octubre y da soporte alcista al NQ.",
+  "geopolitica": "Trump negó en Truth Social un reporte de Axios sobre un posible alivio de sanciones a Irán, mientras Catar impulsa negociaciones de paz, lo que sostiene la prima de riesgo geopolítico y el tono de aversión al riesgo que puede presionar al NQ intradía.",
+  "petroleo": "Brent sube 1.11% a 103.73 USD/barril y WTI +0.38% a 89.72 USD/barril tras la negativa de Trump a aliviar sanciones a Irán, lo que encarece el costo energético y añade presión inflacionaria/bajista sobre el NQ.",
+  "catalizador": "Trump pidió la renuncia forzada de Powell del consejo de la Fed tras un informe del Inspector General que halló fallas de gestión (sin delito) en la renovación de la sede, reavivando dudas sobre la independencia de la Fed y añadiendo volatilidad al NQ en la última hora de sesión.",
   "sources": [
-    "CNBC 30-sep-2026 - Oil climbs after Trump denies he is willing to ease sanctions on Iran",
-    "CNBC 08:30 ET - Fed's preferred gauge showed core inflation at 3.0% in August",
-    "CNBC 30-sep-2026 - Crude oil exports through the Strait of Hormuz hit prewar levels"
+    "Reuters 21:31 ET",
+    "CNBC 16:16 ET"
   ],
-  "as_of": "2026-09-30T20:06:41Z"
+  "as_of": "2026-09-30T21:07:14Z"
 }
