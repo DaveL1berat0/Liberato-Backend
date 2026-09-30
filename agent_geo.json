@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump negó públicamente en Truth Social estar dispuesto a flexibilizar las sanciones a Irán (tras un reporte de Axios), reavivando la prima de riesgo geopolítico que puede presionar el apetito por riesgo del NQ intradía.",
-  "petroleo": "Brent sube 0.69% a 103.30 USD/barril y WTI +0.48% a 89.81 USD/barril tras la negativa de Trump sobre Irán; el crudo más firme añade presión inflacionaria, un viento en contra para el NQ intradía.",
-  "catalizador": "El PCE de agosto (publicado 8:30 ET) subió 3.4% interanual y el subyacente 3% (ambos por debajo de lo esperado), catalizador sorpresa que impulsó al Nasdaq ~1% en la apertura de hoy.",
+  "geopolitica": "Trump nego publicamente (tras un reporte de Axios) estar dispuesto a flexibilizar las sanciones a Iran y reafirmo su rechazo a la oferta irani para reabrir el Estrecho de Ormuz, reavivando la prima de riesgo geopolitico y presionando el apetito por riesgo del NQ intradia.",
+  "petroleo": "Brent sube cerca de 0.7% hasta ~103.3 USD/barril y WTI +0.5% hasta ~89.8 USD/barril tras la negativa de Trump sobre Iran; el crudo mas firme añade presion inflacionaria, un viento en contra para el NQ.",
+  "catalizador": "El PCE de agosto (publicado 8:30 ET) salio mas frio de lo esperado: general 3.4% interanual vs 3.7% esperado y subyacente 3.0% vs 3.3% esperado, reduciendo probabilidades de subida de tasas en octubre e impulsando al Nasdaq al alza en la apertura de hoy.",
   "sources": [
-    "CNBC - Oil climbs after Trump denies he is willing to ease sanctions on Iran (30-Sep-2026)",
-    "FXStreet - WTI drifts higher above $88.00 as Trump denies Iran sanctions relief (30-Sep-2026)",
-    "BEA/CNBC - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-Sep-2026)"
+    "CNBC - Oil climbs after Trump denies he is willing to ease sanctions on Iran (30-sep-2026)",
+    "FXStreet - WTI drifts higher above $88.00 as Trump denies Iran sanctions relief (30-sep-2026)",
+    "BEA/CNBC - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-sep-2026)",
+    "Bloomberg - Trump Rejects Iran Proposal to Reopen Strait of Hormuz (28-sep-2026)"
   ],
-  "as_of": "2026-09-30T16:06:53Z"
+  "as_of": "2026-09-30T17:06:44Z"
 }
