@@ -6779,7 +6779,7 @@ async def snaptrade_portal(request: Request):
     # Sin broker → el portal de SnapTrade muestra TODOS los brokers (Tradovate, IBKR,
     # tastytrade, etc.) para que el estudiante elija el suyo. Antes forzaba TradeStation.
     broker = (data.get("broker") or "").strip().upper() or None
-    ukw = await _st_user_kwargs(data.get("app_user_id"))
+    ukw = await _st_user_kwargs(_broker_uid(request.headers.get("authorization")))
     try:
         resp = await _snaptrade().authentication.alogin_snap_trade_user(
             broker=broker, custom_redirect=SNAPTRADE_REDIRECT_URI or None,
@@ -6795,11 +6795,11 @@ async def snaptrade_portal(request: Request):
 
 
 @app.get("/api/broker/snaptrade/accounts")
-async def snaptrade_accounts(app_user_id: str = ""):
+async def snaptrade_accounts(authorization: str = Header(None)):
     """Lista las cuentas de broker conectadas por el usuario."""
     if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
         raise HTTPException(400, "SnapTrade no configurado en el servidor")
-    ukw = await _st_user_kwargs(app_user_id, register=False)
+    ukw = await _st_user_kwargs(_broker_uid(authorization), register=False)
     try:
         resp = await _snaptrade().account_information.alist_user_accounts(**ukw)
         rows = _st_plain(resp.body) or []
@@ -6814,7 +6814,7 @@ async def snaptrade_accounts(app_user_id: str = ""):
 
 
 @app.get("/api/broker/snaptrade/fills")
-async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0, refresh: int = 0):
+async def snaptrade_fills(days: int = 90, raw: int = 0, refresh: int = 0, authorization: str = Header(None)):
     """Trae las órdenes (fills) de todas las cuentas conectadas y las mapea a
     trades del journal. ?raw=1 devuelve la forma cruda (para calibrar el mapeo).
     ?refresh=1 FUERZA a SnapTrade a re-sincronizar con el broker ANTES de leer (para
@@ -6823,7 +6823,7 @@ async def snaptrade_fills(app_user_id: str = "", days: int = 90, raw: int = 0, r
     fill muy reciente puede tardar unos segundos aún tras forzar el refresh."""
     if not (SNAPTRADE_CLIENT_ID and SNAPTRADE_CONSUMER_KEY):
         raise HTTPException(400, "SnapTrade no configurado en el servidor")
-    ukw = await _st_user_kwargs(app_user_id, register=False)
+    ukw = await _st_user_kwargs(_broker_uid(authorization), register=False)
     st = _snaptrade()
     refreshed = []
     if refresh:
@@ -7033,7 +7033,7 @@ def _st_map_order(o):
 TS_MANUAL_REDIRECT = os.getenv("TS_MANUAL_REDIRECT", "http://localhost:3000").strip()
 
 @app.get("/api/broker/tradestation/connect")
-async def tradestation_connect(app_user_id: str = "", manual: int = 0):
+async def tradestation_connect(manual: int = 0, authorization: str = Header(None)):
     """Inicia el OAuth de TradeStation en modo SOLO LECTURA (scope sin 'Trade').
     manual=1 usa el redirect localhost pre-aprobado (para probar sin registrar la URL
     de Railway); el usuario pega el código a mano en /exchange."""
@@ -7041,7 +7041,7 @@ async def tradestation_connect(app_user_id: str = "", manual: int = 0):
         return {"configured": False,
                 "message": "TradeStation aún no activado: faltan TRADESTATION_CLIENT_ID/SECRET en Railway."}
     from urllib.parse import urlencode
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     redirect = TS_MANUAL_REDIRECT if manual else TRADESTATION_REDIRECT_URI
     params = {
         "response_type": "code",
@@ -7063,7 +7063,7 @@ async def tradestation_exchange(request: Request):
         data = await request.json()
     except Exception:
         raise HTTPException(400, "JSON inválido")
-    uid = (data.get("app_user_id") or "dave").strip() or "dave"
+    uid = _broker_uid(request.headers.get("authorization"))
     code = (data.get("code") or "").strip()
     # aceptar que pegue la URL completa o solo el code
     if "code=" in code:
@@ -8299,6 +8299,18 @@ async def _require_user(authorization):
         raise HTTPException(404, "Cuenta no encontrada")
     return email, u
 
+def _broker_uid(authorization):
+    """UID de broker derivado del JWT autenticado ('u:'+sub), IGNORANDO cualquier
+    app_user_id del cliente. Cierra el IDOR (antes cualquier premium podía leer/escribir
+    los datos de broker de otro usuario, y por defecto los de 'dave'). Coincide con
+    currentUserId() del front ('u:'+sub) → sin migración de datos. /api/broker/* ya está
+    tras el paywall, así que el JWT siempre está presente aquí."""
+    token = (authorization or "").replace("Bearer ", "").strip()
+    p = _verify_jwt(token)
+    if not p or not p.get("sub"):
+        raise HTTPException(401, "Sesión inválida")
+    return "u:" + str(p.get("sub"))
+
 async def _del_user(email):
     if _sb_on():
         try:
@@ -8742,9 +8754,9 @@ async def tradestation_callback(code: str = "", state: str = "", error: str = ""
 
 
 @app.get("/api/broker/tradestation/accounts")
-async def tradestation_accounts(app_user_id: str = "dave"):
+async def tradestation_accounts(authorization: str = Header(None)):
     """Lista las cuentas de TradeStation del usuario (incluye FUTUROS)."""
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     tokn = await _ts_access(uid)
     async with httpx.AsyncClient(timeout=12, headers={"Authorization": f"Bearer {tokn}"}) as c:
         r = await c.get(f"{TS_API_BASE}/brokerage/accounts")
@@ -8757,11 +8769,11 @@ async def tradestation_accounts(app_user_id: str = "dave"):
 
 
 @app.get("/api/broker/tradestation/balances")
-async def tradestation_balances(app_user_id: str = "dave"):
+async def tradestation_balances(authorization: str = Header(None)):
     """Equity REAL por cuenta de TradeStation → el journal auto-rellena el 'tamaño de
     cuenta' sin que el usuario lo escriba (Regla#1: dato real del broker). Devuelve
     {account_id: equity} para todas las cuentas conectadas."""
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     tokn = await _ts_access(uid)
     async with httpx.AsyncClient(timeout=12, headers={"Authorization": f"Bearer {tokn}"}) as c:
         ra = await c.get(f"{TS_API_BASE}/brokerage/accounts")
@@ -8832,10 +8844,10 @@ def _ts_map_order(o, acct):
 
 
 @app.get("/api/broker/tradestation/fills")
-async def tradestation_fills(app_user_id: str = "dave", days: int = 90, raw: int = 0):
+async def tradestation_fills(days: int = 90, raw: int = 0, authorization: str = Header(None)):
     """Trae las órdenes históricas (fills) de TradeStation — incluye FUTUROS — y las
     mapea al formato del journal. ?raw=1 devuelve la forma cruda para calibrar."""
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     tokn = await _ts_access(uid)
     from datetime import date, timedelta
     since = (date.today() - timedelta(days=int(days))).isoformat()
@@ -8962,10 +8974,10 @@ async def ts_sync_diag(key: str = "", app_user_id: str = ""):
 
 
 @app.get("/api/broker/tradestation/status")
-async def tradestation_status(app_user_id: str = "dave"):
+async def tradestation_status(authorization: str = Header(None)):
     """Dice si este usuario ya tiene TradeStation conectado (para que el frontend
     muestre 'Desconectar' en vez de 'Conectar')."""
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     rec = _ts_tokens.get(uid) or {}
     return {"connected": bool(rec.get("refresh_token") or rec.get("access_token")),
             "configured": bool(TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET)}
@@ -8979,6 +8991,10 @@ async def tradestation_claim(app_user_id: str = "", from_uid: str = ""):
     (bug histórico: currentUserId leía la clave equivocada). Solo copia si el destino
     aún NO tiene token, para no pisar una conexión buena. Va tras el paywall
     (/api/broker/ está gated), así que el llamante está autenticado."""
+    # DESHABILITADO: permitía reclamar el token OAuth de OTRO uid → robo de credenciales de
+    # broker (IDOR). Ya no hace falta: currentUserId() es estable ('u:'+sub del JWT), no hay
+    # migración anon→estable pendiente. Se deja el cuerpo abajo como muerto por historial.
+    return {"claimed": False, "reason": "deshabilitado"}
     dst = (app_user_id or "").strip()
     src = (from_uid or "").strip()
     if not dst or not src or dst == src:
@@ -8998,10 +9014,10 @@ async def tradestation_claim(app_user_id: str = "", from_uid: str = ""):
 
 
 @app.post("/api/broker/tradestation/disconnect")
-async def tradestation_disconnect(app_user_id: str = "dave"):
+async def tradestation_disconnect(authorization: str = Header(None)):
     """Borra los tokens OAuth de este usuario — deslogueo del broker. El próximo
     'Conectar' vuelve a pedir autorización."""
-    uid = (app_user_id or "dave").strip() or "dave"
+    uid = _broker_uid(authorization)
     existed = uid in _ts_tokens
     _ts_tokens.pop(uid, None)
     try:

@@ -80,7 +80,7 @@
     <div class="lock">🔒</div>
     <div class="title">Inicia <span>sesión</span></div>
     <div class="text">Necesitas iniciar sesión para acceder a la comunidad premium.</div>
-    <a class="btn" href="/auth">Iniciar sesión</a>
+    <a class="btn" href="auth.html">Iniciar sesión</a>
   </div>
 </div>
 
@@ -90,7 +90,7 @@
     <div class="lock">⭐</div>
     <div class="title">Área <span>Premium</span></div>
     <div class="text">Esta comunidad es exclusiva para miembros con Acceso Completo. Mejora tu plan para entrar al trading en vivo, los niveles institucionales y la comunidad.</div>
-    <a class="btn" href="/cuenta">Mejorar a Premium</a>
+    <a class="btn" href="auth.html">Mejorar a Acceso Completo</a>
     <button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
   </div>
 </div>
@@ -150,7 +150,7 @@
       fetch(API+'/api/auth/logout', {method:'POST', headers:{'Authorization':'Bearer '+token}}).catch(function(){});
     }
     localStorage.removeItem('lbc_token');
-    window.location.href='/auth';
+    window.location.href='auth.html';
   }
 
   async function checkAccess(){
