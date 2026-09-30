@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EE.UU. e Iran siguen sin acuerdo sobre la reapertura del Estrecho de Ormuz tras el rechazo de Trump a la propuesta de Teheran (26/09), lo que sostiene la prima de riesgo geopolitico y puede limitar el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) y el WTI en 89.38 USD (-3.5%) al recuperarse las exportaciones saudies desde puertos del Mar Rojo tras el ataque a un oleoducto, lo que alivia la presion inflacionaria sobre el NQ.",
-  "catalizador": "El PCE de agosto (dato de hoy) subio 3.4% interanual (vs 3.7% previo) y el subyacente 3% (vs 3.3% previo), reforzando las apuestas de que la Fed mantendra las tasas sin cambios en octubre, lo que impulso los futuros del Nasdaq-100 cerca de 0.3% en el premarket.",
+  "geopolitica": "Trump negó en Truth Social haber ofrecido alivio de sanciones a Irán tras un reporte de Axios, mientras Qatar media entre Teherán y Washington, sosteniendo la prima de riesgo geopolítico que puede pesar sobre el sentimiento de riesgo y el NQ.",
+  "petroleo": "Brent sube 0.69% a 103.30 USD y WTI 0.48% a 89.81 USD por la tensión EEUU-Irán tras la negativa de Trump a flexibilizar sanciones, lo que eleva costos energéticos y podría presionar márgenes tech en el NQ.",
+  "catalizador": "El PCE subyacente de agosto (medida preferida de la Fed) subió 3.0% interanual vs 3.3% esperado, una sorpresa a la baja que refuerza expectativas de recorte de tasas y da soporte alcista al NQ en la sesión.",
   "sources": [
-    "CNBC 29/09 - Oil prices fall as crude exports recover at Saudi Arabia's Red Sea ports",
-    "Bloomberg 27/09 - Oil Rises as Iran Says It Won't Soften Strait of Hormuz Demands",
-    "CNBC/Bloomberg 30/09 - Stock market today live updates (PCE de agosto, futuros Nasdaq-100)",
-    "Bloomberg 01/09 - Congress Sends Funding Bill to Avert US Shutdown to Trump (financiamiento vigente hasta el 11/12, sin shutdown activo)"
+    "CNBC 08:30 ET (PCE subyacente agosto)",
+    "Reuters/CNBC 30/09 (petróleo, tensión Irán)",
+    "CNBC/Axios 30/09 (Trump-Irán, Truth Social)"
   ],
-  "as_of": "2026-09-30T13:40:33Z"
+  "as_of": "2026-09-30T14:08:11Z"
 }
