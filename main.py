@@ -531,6 +531,10 @@ _PUBLIC_API_EXACT = {
     "/api/email/unsubscribe",   # baja pública desde el pie del correo (token firmado)
 }
 _PUBLIC_API_PREFIX = ("/api/auth/", "/api/admin/", "/api/webhooks/")
+# Rutas bajo /api/auth/ que conceden PRIVILEGIOS con ADMIN_KEY → deben recibir el MISMO
+# rate-limit anti-fuerza-bruta que /api/admin/* (antes se lo saltaban por el prefijo público → la
+# ADMIN_KEY era brute-forceable sin límite en set-plan = bypass del paywall).
+_ADMIN_KEY_AUTH_PATHS = {"/api/auth/set-plan", "/api/auth/create-trial", "/api/auth/trial-code"}
 _gate_cache = {}   # email -> (is_premium:bool, jtis:set|None, expires_at:float) · evita hit a Supabase por poll
 
 async def _gate_check(payload):
@@ -581,8 +585,9 @@ async def _premium_gate(request, call_next):
         if request.method == "OPTIONS" or not path.startswith("/api/"):
             return await call_next(request)
         if path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
-            # Rate-limit extra para /api/admin/* (fuerza bruta de ADMIN_KEY): 30/5min por IP.
-            if path.startswith("/api/admin/"):
+            # Rate-limit extra para /api/admin/* y los /api/auth/* que usan ADMIN_KEY
+            # (fuerza bruta de ADMIN_KEY): 30/5min por IP.
+            if path.startswith("/api/admin/") or path in _ADMIN_KEY_AUTH_PATHS:
                 _now = time.time(); _k = "admin:" + _client_ip(request)
                 _arr = [t for t in _rl_hits.get(_k, []) if _now - t < 300]
                 if len(_arr) >= 30:
@@ -1627,7 +1632,7 @@ async def diag_gexbot_full(key: str = ""):
     """Sonda TODAS las categorías de GexBot v2 para ver la FORMA REAL de cada respuesta
     (max pain / orderflow / 0DTE / vanna / charm) ANTES de cablearlas — así no mostramos
     números equivocados (Regla #1). Uso: ?key=ADMIN_KEY"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     if not GEXBOT_API_KEY:
         return {"error": "falta GEXBOT_API_KEY"}
@@ -4879,7 +4884,7 @@ async def refresh_movers():
 async def diag_news(key: str = ""):
     """Sondea Finnhub /news crudo: cuántas noticias trae y cuántas pasan el
     clasificador (y con qué score). Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {"finnhub_key": bool(FINNHUB_KEY), "movers_status": cache["movers"].get("status"),
            "categorias": {}}
@@ -5810,7 +5815,7 @@ _candles_cache = {}   # {tf: {"ts": epoch, "data": {...}}}
 async def budget_status(key: str = ""):
     """Monitor de presupuesto de APIs en tiempo real.
     Uso: /api/admin/budget?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     real_limits = {"twelvedata":800,"finnhub":60,"flashalpha":100,
                    "fmp":250,"alphavantage":25,"groq":1000}
@@ -5834,7 +5839,7 @@ async def diag_candles_iv(key: str = ""):
     """Diagnóstico: muestra qué responde TwelveData (velas) y FlashAlpha
     (summary/atm_iv) en CRUDO, para ver por qué fallan.
     Uso: /api/admin/diag-candles-iv?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {}
     # ── 1. Probar time_series para cada símbolo candidato ──
@@ -6400,7 +6405,7 @@ async def gamma_levels():
 async def diag_yahoo(key: str = ""):
     """¿Alcanza Railway a Yahoo? Yahoo bloquea IPs de datacenter con frecuencia.
     Gratis: Yahoo no consume créditos de ninguna API nuestra."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {}
     for label, sym in ((FA_CASH_INDEX, FA_YAHOO_INDEX),
@@ -6431,7 +6436,7 @@ async def diag_yahoo(key: str = ""):
 async def diag_sentiment(key: str = ""):
     """Verifica las fuentes que reemplazan a FlashAlpha: VIX (TwelveData) y
     Fear&Greed (CNN). Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     res = await _refresh_market_sentiment()
     g = cache["gex"].get(FA_ASSET, {})
@@ -6450,7 +6455,7 @@ async def diag_gexbot(key: str = ""):
     """Sondea la API de GexBot con la key REAL (de Railway) y muestra la forma
     exacta del JSON, SIN exponer la key. Prueba varias combinaciones state/tipo
     para saber qué habilita tu tier. Uso: /api/admin/diag-gexbot?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {
         "key_presente": bool(GEXBOT_API_KEY),
@@ -6517,7 +6522,7 @@ async def api_audit(key: str = ""):
     """CONTABILIDAD de todas las APIs: límite, uso real, presupuesto teórico del
     cron y estado. No gasta NI UN crédito: solo lee contadores y cache.
     Uso: /api/admin/api-audit?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     hm = cache["heatmap"]["data"]
     # Presupuesto TEÓRICO derivado del cron real (no de comentarios).
@@ -6630,7 +6635,7 @@ async def diag_snaptrade(key: str = ""):
     """Muestra QUÉ variables de entorno relacionadas con SnapTrade existen y con
     qué nombre exacto (valores enmascarados). Sirve para depurar sin que nadie
     tenga que pegar credenciales en un chat."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     def mask(v):
         if not v: return None
@@ -6873,7 +6878,7 @@ async def snaptrade_fills(days: int = 90, raw: int = 0, refresh: int = 0, author
 async def snaptrade_refresh(key: str = ""):
     """Fuerza a SnapTrade a re-sincronizar todas las conexiones (por si una cuenta
     recién conectada —futuros 210EKW34— no apareció). Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     ukw = await _st_user_kwargs("", register=False)
     st = _snaptrade()
@@ -6899,7 +6904,7 @@ async def diag_snaptrade_connections(key: str = ""):
     """Lista las CONEXIONES (brokerage authorizations) de SnapTrade con su estado y
     las cuentas de cada una. Sirve para ver si una cuenta recién conectada (ej. la de
     futuros 210EKW34) quedó enganchada o pendiente. Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     ukw = await _st_user_kwargs("", register=False)
     st = _snaptrade()
@@ -6943,7 +6948,7 @@ async def diag_snaptrade_activities(key: str = "", days: int = 150):
     """Sondea las 'activities' de SnapTrade para ver la forma de los eventos de
     EXPIRACIÓN/ASIGNACIÓN de opciones (que las órdenes no traen). Resumen de tipos
     + muestras. Uso: /api/admin/diag-snaptrade-activities?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     from datetime import date, timedelta
     ukw = await _st_user_kwargs("", register=False)
@@ -8046,6 +8051,10 @@ async def auth_register(request: Request):
         _texp = await _trial_grant(data.get("trial_code") or data.get("trial"))
         if _texp:
             plan0 = "trial"
+    # H1: premium via Whop pendiente también nace con caducidad-backstop (38 días); las
+    # renovaciones de Whop la extienden por webhook. Sin esto, el pending premium no caducaba.
+    if plan0 in ("premium", "pro") and not _texp:
+        _texp = int(time.time()) + 38 * 86400
     lang = (data.get("language") or "").strip().lower()
     rec = {"id": uid, "name": name or email.split("@")[0],
            "salt": base64.b64encode(salt).decode(), "pass_hash": _hash_pw(pw, salt),
@@ -8467,7 +8476,7 @@ async def auth_logout(request: Request, authorization: str = Header("")):
 @app.post("/api/auth/set-plan")
 async def auth_set_plan(request: Request, key: str = ""):
     """Marca el plan de un usuario (admin, o desde un webhook de pago Whop/Stripe)."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     try:
         data = await request.json()
@@ -8506,7 +8515,7 @@ async def auth_create_trial(request: Request, key: str = ""):
     email + contraseña EN CLARO (una sola vez) para entregar al prospecto. La expiración
     la hace cumplir auth_me (al pasar la fecha, la cuenta baja sola a 'free'). Requiere ADMIN_KEY.
     Body opcional: {email, name, password, days (def. 3)}. Sin email → se autogenera uno."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     try:
         data = await request.json()
@@ -8582,7 +8591,7 @@ async def auth_trial_code(request: Request, key: str = ""):
     """ADMIN: crea/actualiza/consulta un código de trial y devuelve su LINK.
     POST body: {code?, days=3, max_uses=50, active=true}. GET ?code=X → estado.
     Sin 'code' en POST se autogenera uno. Requiere ADMIN_KEY."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     data = {}
     if request.method == "POST":
@@ -8662,9 +8671,13 @@ async def whop_webhook(request: Request):
     # hay que evaluar revoke PRIMERO (con "deactiv") para no confundirlos.
     # Nombres reales de Whop: membership.activated / membership.deactivated /
     # payment.succeeded (NO existen went_valid/went_invalid en este panel).
-    revoke = any(w in evt for w in ("invalid", "deactiv", "cancel", "expire",
-                                    "refund", "deleted", "failed"))
-    grant = (not revoke) and any(w in evt for w in ("valid", "activ", "created",
+    # M2: "cancel" (baja PROGRAMADA a fin de período) y "failed" (cargo fallido en dunning)
+    # ya NO revocan al instante — el usuario pagó hasta fin de período. Solo revoca la baja
+    # EFECTIVA por tiempo/dinero. También se quita "created" del grant (puede dispararse
+    # ANTES de que el pago liquide → concesión prematura); se concede con activ/succeeded/paid.
+    revoke = any(w in evt for w in ("invalid", "deactiv", "expire",
+                                    "refund", "chargeback", "deleted"))
+    grant = (not revoke) and any(w in evt for w in ("valid", "activ",
                                                     "completed", "succeeded", "paid"))
     plan = "premium" if grant else ("free" if revoke else None)
     if plan is None:
@@ -8674,8 +8687,15 @@ async def whop_webhook(request: Request):
     if u:
         was = u.get("plan")
         u["plan"] = plan
+        # H1: caducidad-backstop. Cada pago/renovación de Whop la EXTIENDE 38 días; si se
+        # pierde el webhook de baja, el premium expira solo (enforcement perezoso en el gate)
+        # en vez de quedar gratis para siempre. Requiere la columna plan_expires en app_users.
+        if plan == "premium":
+            u["plan_expires"] = int(time.time()) + 38 * 86400
+        elif plan == "free":
+            u["plan_expires"] = None
         await user_put(email, u)
-        print(f"[whop] {email} -> {plan} ({evt})")
+        print(f"[whop] {email} -> {plan} ({evt}) exp={u.get('plan_expires')}")
         # al CONCEDER premium (transición), enviar el correo de bienvenida premium
         if plan == "premium" and was != "premium":
             try:
@@ -8893,7 +8913,7 @@ async def ts_sync_diag(key: str = "", app_user_id: str = ""):
     qué uids tienen token, estado del token (válido/expirado/refresh), cuentas, cuántas
     órdenes crudas trae y cuántos trades mapea — para saber DÓNDE se rompe el resync.
     Gated por ADMIN_KEY (prefijo /api/admin/ salta el paywall). NO expone tokens."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {"configured": bool(TRADESTATION_CLIENT_ID and TRADESTATION_CLIENT_SECRET),
            "uids_con_token": list(_ts_tokens.keys())}
@@ -9031,7 +9051,7 @@ async def tradestation_disconnect(authorization: str = Header(None)):
 async def admin_costs(key: str = ""):
     """Panel de GASTOS mensuales de la web. Montos configurables en Railway (COST_*).
     Uso: /api/admin/costs?key=TU_ADMIN_KEY  (renderiza un panel; añade &json=1 para JSON)."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     def _f(name, d):
         try:
@@ -9254,7 +9274,7 @@ async def journal_coach(request: Request):
 async def diag_ai(key: str = ""):
     """Monitoreo de consumo de IA (Groq): cuota global del día + uso del AI Coach por
     estudiante. Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     from datetime import date
     day = date.today().isoformat()
@@ -9274,7 +9294,7 @@ async def diag_ai(key: str = ""):
 async def test_gemini(key: str = "", model: str = ""):
     """Prueba el fallback de Gemini con la MISMA personalidad del AI Coach, sin esperar
     a que Groq falle. Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     if not GEMINI_API_KEY:
         return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
@@ -9303,7 +9323,7 @@ async def gemini_models(key: str = ""):
     """Lista los modelos Gemini disponibles en la cuenta de Dave (los que soportan
     generateContent), para elegir el más nuevo/capaz como respaldo del Coach.
     Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     if not GEMINI_API_KEY:
         return {"ok": False, "estado": "dormido", "detalle": "falta GEMINI_API_KEY en Railway"}
@@ -9333,7 +9353,7 @@ async def gemini_models(key: str = ""):
 async def groq_models(key: str = ""):
     """Lista los modelos Groq disponibles en la cuenta de Dave, para elegir el de VISIÓN
     correcto (los Llama 4 con acceso real). Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "clave incorrecta")
     if not GROQ_KEY:
         return {"ok": False, "estado": "dormido", "detalle": "falta GROQ_KEY en Railway"}
@@ -9485,7 +9505,7 @@ async def extract_levels_test(request: Request):
         b = await request.json()
     except Exception:
         raise HTTPException(400, "JSON inválido")
-    if (b.get("key") or "") != ADMIN_KEY:
+    if not hmac.compare_digest((b.get("key") or ""), ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     img = (b.get("image") or "").strip()
     mime = b.get("mime") or "image/png"
@@ -9667,7 +9687,7 @@ async def calendar_diag(key: str = "", day: str = ""):
     """DIAGNÓSTICO admin del calendario macro: eventos del día con su actual/forecast/
     status/fuente, para verificar si el pipeline rellena los 'actual' (y por qué un
     evento niche como 'ADP Weekly' se queda sin dato). Gated por ADMIN_KEY."""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     data = cache["calendar"]["data"] or []
     today = day or datetime.now(NY).strftime("%Y-%m-%d")
@@ -10922,7 +10942,7 @@ def _is_admin(key="", authorization=""):
 @app.get("/api/admin/refresh-gex")
 async def manual_refresh_gex(key: str = ""):
     """Dispara una llamada manual a FlashAlpha (GEX). Uso: /api/admin/refresh-gex?key=TU_CLAVE"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     try:
         await refresh_gex()
@@ -10969,7 +10989,7 @@ async def manual_refresh_gex(key: str = ""):
 @app.get("/api/admin/refresh-institutional")
 async def manual_refresh_institutional(key: str = ""):
     """Dispara una llamada manual a Groq (resumen institucional). Uso: ?key=TU_CLAVE"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     try:
         await refresh_institutional(force=True)
@@ -10988,7 +11008,7 @@ async def manual_refresh_institutional(key: str = ""):
 # ═══════════════════════════════════════════════════════════════════════════
 @app.get("/api/admin/diag-symbol")
 async def diag_symbol(sym: str = "NDX", key: str = ""):
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     from urllib.parse import quote
     sym = (sym or "").strip().upper()
@@ -11064,7 +11084,7 @@ async def diag_ndx(key: str = ""):
     """Prueba el futuro DIRECTO del instrumento (plan Basic): confirma que los
     niveles reales llegan sin conversión.
     ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
     # SIN comprobar ni registrar presupuesto → cada ejecución se comía ~3 créditos
@@ -11154,7 +11174,7 @@ async def diag_ndx(key: str = ""):
 async def diag_flashalpha(key: str = ""):
     """Diagnóstico completo de FlashAlpha: plan, quota, y qué devuelve.
     ⚠️ CUESTA ~3 créditos de los 100/día. Uso: ?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     # GUARDIÁN DE CRÉDITOS: este diag llama a FlashAlpha de verdad. Antes lo hacía
     # SIN comprobar ni registrar presupuesto → cada ejecución se comía ~3 créditos
@@ -11229,7 +11249,7 @@ async def diag_flashalpha(key: str = ""):
 async def diag_calendar(key: str = ""):
     """Diagnóstico: muestra qué trae cada fuente del calendario (FF, Finnhub, RapidAPI).
     Uso: /api/admin/diag-calendar?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     out = {"sources": {}}
     async with httpx.AsyncClient(timeout=15) as client:
@@ -11370,7 +11390,7 @@ async def diag_env(key: str = ""):
     """Muestra qué variables de entorno detecta el sistema (sin exponer las keys
     completas, solo si están presentes y sus primeros caracteres).
     Uso: /api/admin/diag-env?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     def mask(v):
         if not v: return None
@@ -11420,7 +11440,7 @@ async def diag_env(key: str = ""):
 async def diag_rapidapi(key: str = ""):
     """Prueba los endpoints de la Ultimate Economic Calendar para ver cuál responde.
     Uso: /api/admin/diag-rapidapi?key=<ADMIN_KEY>"""
-    if key != ADMIN_KEY:
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
         raise HTTPException(403, "Clave incorrecta")
     if not RAPIDAPI_KEY:
         return {"error": "No hay RAPIDAPI_KEY"}

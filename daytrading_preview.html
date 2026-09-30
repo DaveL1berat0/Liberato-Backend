@@ -49,7 +49,7 @@
    ════════════════════════════════════════════════════════════════ */
 :root{
   /* Brand — gold reserved for pivots & identity only */
-  --gold:#CCA94F; --gold-bright:#E8D080; --gold-2:#E7CC74; --gold-faint:rgba(204,169,79,0.06);
+  --gold:#C9A84C; --gold-bright:#E8D080; --gold-2:#E7CC74; --gold-faint:rgba(204,169,79,0.06);
   --gold-glow:rgba(204,169,79,0.35); --gold-line:rgba(204,169,79,0.18);
   /* Surfaces */
   --bg:#05060C; --bg-1:#080A11; --bg-2:#0C0F18; --panel:rgba(12,15,23,0.65);
@@ -308,11 +308,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hl-num{color:var(--gold-2,#E7CC74);font-family:var(--mono,monospace);font-size:0.94em;}
   .rg-vol-c.fear{color:var(--down);}
   .rg-vol-c.greed{color:var(--up);}
-  .rg-vol-c.fneutral{color:var(--gold, #CCA94F);}
-  .info-i{display:inline-flex;align-items:center;justify-content:center;cursor:help;font-size:12px;line-height:1;font-style:normal;color:var(--gold,#CCA94F);opacity:0.9;margin-left:3px;vertical-align:middle;transition:opacity 0.2s,transform 0.2s;}
+  .rg-vol-c.fneutral{color:var(--gold, #C9A84C);}
+  .info-i{display:inline-flex;align-items:center;justify-content:center;cursor:help;font-size:12px;line-height:1;font-style:normal;color:var(--gold,#C9A84C);opacity:0.9;margin-left:3px;vertical-align:middle;transition:opacity 0.2s,transform 0.2s;}
   .info-i:hover{opacity:1;transform:scale(1.12);}
   .rg-fear-bar{width:100%;max-width:150px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin:6px auto 3px;overflow:hidden;}
-  .rg-fear-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,#B197FC,#CCA94F,#2EE8A4);transition:width 0.6s ease;}
+  .rg-fear-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,#B197FC,#C9A84C,#2EE8A4);transition:width 0.6s ease;}
   .rg-fear-score{font-family:var(--mono, monospace);font-size:11px;color:#6B7280;margin-top:4px;letter-spacing:0.06em;}
   .rg-vol-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);}
 
@@ -727,7 +727,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .lg-day-tab.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);box-shadow:inset 0 0 0 0.5px rgba(201,168,76,0.3);}
 .lg-day-tab.active .lg-day-tab-d{color:var(--gold);}
 .lg-day-tab.active .lg-day-tab-n{color:#E7CC74;}
-.lg-day-tab-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:#CCA94F;box-shadow:0 0 5px rgba(204,169,79,0.7);}
+.lg-day-tab-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:#C9A84C;box-shadow:0 0 5px rgba(204,169,79,0.7);}
 .lg-day{display:flex;align-items:center;gap:var(--sp1);margin:var(--sp2) 0 var(--sp2);}
 .lg-day-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
 .lg-day-txt{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-2);}
@@ -1565,7 +1565,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
                 <defs>
                   <linearGradient id="smGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#B197FC"/>
-                    <stop offset="50%" stop-color="#CCA94F"/>
+                    <stop offset="50%" stop-color="#C9A84C"/>
                     <stop offset="100%" stop-color="#2EE8A4"/>
                   </linearGradient>
                 </defs>
@@ -2960,7 +2960,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
     function _inView(p){return _lo==null||(p>=_lo&&p<=_hi);}
     // PRIMARIOS + flip + maxpain: línea nítida + PRECIO en el eje (axisLabelVisible).
     if(_cw!=null&&_inView(_cw))lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
-    if(_gf!=null&&_inView(_gf))lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
+    if(_gf!=null&&_inView(_gf))lines.flip=series.createPriceLine({price:_gf,color:'#C9A84C',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
     if(_pw!=null&&_inView(_pw))lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
     if(S.maxPain!=null&&_inView(S.maxPain))lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
     try{_updateVwapLine();}catch(e){}   // VWAP como LÍNEA (estilo EMA) que sigue la sesión, no una priceLine horizontal
@@ -3364,7 +3364,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
     if(!param||!param.point||param.point.x<0||param.point.y<0||!param.time){ tip.style.display='none'; return; }
     var d=param.seriesData&&param.seriesData.get?param.seriesData.get(series):null;
     var cp=null; try{cp=series.coordinateToPrice(param.point.y);}catch(e){}
-    var levels=[{n:'Call',p:_actCW(),c:'#2EE8A4'},{n:'Flip',p:_actGF(),c:'#CCA94F'},{n:'Put',p:_actPW(),c:'#B197FC'},{n:'MaxPain',p:S.maxPain,c:'#4FD6E0'}].filter(function(l){return l.p!=null;});
+    var levels=[{n:'Call',p:_actCW(),c:'#2EE8A4'},{n:'Flip',p:_actGF(),c:'#C9A84C'},{n:'Put',p:_actPW(),c:'#B197FC'},{n:'MaxPain',p:S.maxPain,c:'#4FD6E0'}].filter(function(l){return l.p!=null;});
     var near=null,nd=1e9;
     if(cp!=null) levels.forEach(function(l){var dd=Math.abs(l.p-cp);if(dd<nd){nd=dd;near=l;}});
     var html='';

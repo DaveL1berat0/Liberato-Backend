@@ -421,7 +421,7 @@ body::before{
 .ec-day-tab.active{border-color:rgba(201,168,76,0.55);background:rgba(201,168,76,0.12);box-shadow:inset 0 0 0 0.5px rgba(201,168,76,0.3);}
 .ec-day-tab.active .ec-day-tab-d{color:#C9A84C;}
 .ec-day-tab.active .ec-day-tab-n{color:#E7CC74;}
-.ec-day-tab-dot{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#CCA94F;box-shadow:0 0 5px rgba(204,169,79,0.7);}
+.ec-day-tab-dot{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#C9A84C;box-shadow:0 0 5px rgba(204,169,79,0.7);}
 .ec-day-empty{text-align:center;color:var(--text3);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.04em;padding:34px 0;}
 
 /* COMPANY TILES — compact grid style */
@@ -1591,7 +1591,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 // ============ COMPANIES DB (detallado - semana actual) ============
 var COMPANIES={
   CRDO:{name:'Credo Technology',sector:'Semiconductores',logo:'CR',color:'#1a3a6b',cap:'$8.2B',impact:'low',weight:'No NQ-100',nq:'Proveedor de conectividad para data centers AI. No es componente del NQ-100, impacto indirecto via sentimiento de chips.'},
-  HPE:{name:'HP Enterprise',sector:'Tecnologia / Hardware',logo:'HPE',color:'#0a8f4c',cap:'$28B',impact:'low',weight:'No NQ-100',nq:'Servidores y networking empresarial. NYSE, no afecta directamente al NQ pero da lectura del gasto en data centers.'},
+  HPE:{name:'HP Enterprise',sector:'Tecnología / Hardware',logo:'HPE',color:'#0a8f4c',cap:'$28B',impact:'low',weight:'No NQ-100',nq:'Servidores y networking empresarial. NYSE, no afecta directamente al NQ pero da lectura del gasto en data centers.'},
   DG:{name:'Dollar General',sector:'Retail',logo:'DG',color:'#f5c518',tcolor:'#000',cap:'$24B',impact:'low',weight:'No NQ-100',nq:'Retail de descuento. NYSE, no NQ-100. Termometro del consumidor de bajos ingresos.'},
   HIVE:{name:'HIVE Digital',sector:'Crypto / Mining',logo:'HV',color:'#f5a623',cap:'$0.8B',impact:'low',weight:'No NQ-100',nq:'Mineria Bitcoin. No NQ-100. Alta beta ligada a precio de BTC.'},
   VSCO:{name:"Victoria's Secret",sector:'Retail / Apparel',logo:'VS',color:'#1a1a1a',tcolor:'#fff',cap:'$2.5B',impact:'low',weight:'No NQ-100',nq:"Retail de lenceria. NYSE, no NQ-100."},
@@ -1607,10 +1607,10 @@ var COMPANIES={
   VEEV:{name:'Veeva Systems',sector:'Software / Salud',logo:'VE',color:'#ff5c35',cap:'$38B',impact:'med',weight:'NQ-100',nq:'Componente NQ-100. Software cloud para farma/biotech.'},
   FIVE:{name:'Five Below',sector:'Retail / Descuento',logo:'FB',color:'#1d4ed8',cap:'$7B',impact:'low',weight:'No NQ-100',nq:'Retail de descuento juvenil. No NQ-100.'},
   CHPT:{name:'ChargePoint',sector:'EV / Energía',logo:'CH',color:'#f47216',cap:'$0.5B',impact:'low',weight:'No NQ-100',nq:'Infraestructura de carga EV. No NQ-100. Alta volatilidad en reportes.'},
-  CIEN:{name:'Ciena',sector:'Networking optico',logo:'CI',color:'#c8102e',cap:'$11B',impact:'low',weight:'No NQ-100',nq:'Equipos de red optica. Se beneficia del buildout de AI data centers.'},
+  CIEN:{name:'Ciena',sector:'Networking óptico',logo:'CI',color:'#c8102e',cap:'$11B',impact:'low',weight:'No NQ-100',nq:'Equipos de red optica. Se beneficia del buildout de AI data centers.'},
   LULU:{name:'Lululemon',sector:'Retail / Apparel',logo:'LU',color:'#d31334',cap:'$40B',impact:'high',weight:'NQ-100',nq:'Componente NQ-100. Proxy del consumidor premium. Mueve sector athleisure.'},
   RBRK:{name:'Rubrik',sector:'Software / Datos',logo:'RB',color:'#00b8d4',cap:'$12B',impact:'med',weight:'No NQ-100',nq:'Ciberseguridad y respaldo cloud. Da lectura del gasto en protección de datos.'},
-  PL:{name:'Planet Labs',sector:'Satelites / Datos',logo:'PL',color:'#1a1a1a',tcolor:'#fff',cap:'$1.2B',impact:'low',weight:'No NQ-100',nq:'Datos satelitales. No NQ-100.'},
+  PL:{name:'Planet Labs',sector:'Satélites / Datos',logo:'PL',color:'#1a1a1a',tcolor:'#fff',cap:'$1.2B',impact:'low',weight:'No NQ-100',nq:'Datos satelitales. No NQ-100.'},
   DOCU:{name:'DocuSign',sector:'Software / SaaS',logo:'DS',color:'#1a1a1a',tcolor:'#fff',cap:'$18B',impact:'med',weight:'No NQ-100',nq:'Firma electrónica. Lectura del SaaS empresarial.'},
   IOT:{name:'Samsara',sector:'IoT / Software',logo:'IOT',color:'#0b4f6c',cap:'$22B',impact:'med',weight:'No NQ-100',nq:'Plataforma IoT para operaciones físicas. Crece rápido.'},
   AGX:{name:'Argan',sector:'Energía / Construcción',logo:'AG',color:'#1f7a3d',cap:'$2B',impact:'low',weight:'No NQ-100',nq:'Construcción de plantas de energia. Se beneficia de demanda eléctrica de AI data centers.'},
