@@ -3503,9 +3503,8 @@ async function submitContact(){
     if(heroS)tl.from(heroS,{opacity:0,y:40,z:-180,transformPerspective:P,duration:0.9},0.4);
     if(heroV)tl.from(heroV,{opacity:0,y:80,z:-280,rotationX:14,transformPerspective:P,transformOrigin:'50% 100%',duration:1.15},0.55);
     if(heroC)tl.from(heroC,{opacity:0,y:30,z:-120,transformPerspective:P,duration:0.8},0.9);
-    // parallax al hacer scroll: el título se aleja/asciende, el video se retrasa
-    if(heroT)gsap.to(heroT,{yPercent:-45,z:-280,opacity:0.2,transformPerspective:P,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:0.6}});
-    if(heroV)gsap.to(heroV,{yPercent:-6,z:-40,transformPerspective:P,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:0.6}});
+    // (Sin parallax de scroll sobre el hero-title/video: colisionaba con la entrada y dejaba
+    //  el título en opacity 0. El efecto 3D-scroll lo dan los reveals + el fondo WebGL que gira.)
 
     // ── REVELADO EN PROFUNDIDAD de cada bloque al entrar en pantalla ──
     ['.plans-header','.stats','.tr-header','.block','.countdown','.disclaimer','footer'].forEach(function(sel){
@@ -3524,8 +3523,6 @@ async function submitContact(){
     if(chartWrap)gsap.from(chartWrap,{opacity:0,rotationY:-24,rotationX:8,z:-160,transformPerspective:1400,transformOrigin:'50% 50%',duration:1.2,ease:'power3.out',
       scrollTrigger:{trigger:'.chart-grid',start:'top 84%'}});
 
-    // ── Parallax sutil de capas (velocidades distintas → profundidad) ──
-    var stats=q('.stats'); if(stats)gsap.to(stats,{yPercent:-5,ease:'none',scrollTrigger:{trigger:stats,start:'top bottom',end:'bottom top',scrub:true}});
 
     // ── Tilt 3D interactivo (sigue el mouse) en tarjetas de precio y el video ──
     tiltEl(q('.card-free-2'),9); tiltEl(q('.card-hero-2'),9); tiltEl(q('.video-box'),5);
