@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Trump rechazo la propuesta irani de reabrir el Estrecho de Ormuz mientras Arabia Saudita reactiva su oleoducto East-West para esquivar la zona, manteniendo viva la prima de riesgo de la guerra EE.UU.-Iran que limita el apetito por riesgo del NQ.",
-  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) y el WTI en 89.38 USD (-3.5%) al recuperarse las exportaciones saudies por el Mar Rojo, aliviando la presion inflacionaria del crudo sobre el NQ aunque el flujo por Ormuz sigue en 77% de lo normal.",
-  "catalizador": "Los futuros del Nasdaq-100 cotizan hoy con ligera baja en el premarket por el cierre de gobierno de EE.UU. que entra en su segunda semana, mientras el presidente de la Fed de Nueva York John Williams ofrece un discurso en la Reykjavik Economic Conference que el mercado sigue de cerca por senales de politica monetaria.",
+  "geopolitica": "EE.UU. e Iran siguen sin acuerdo sobre la reapertura del Estrecho de Ormuz tras el rechazo de Trump a la propuesta de Teheran (26/09), lo que sostiene la prima de riesgo geopolitico y puede limitar el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) y el WTI en 89.38 USD (-3.5%) al recuperarse las exportaciones saudies desde puertos del Mar Rojo tras el ataque a un oleoducto, lo que alivia la presion inflacionaria sobre el NQ.",
+  "catalizador": "El PCE de agosto (dato de hoy) subio 3.4% interanual (vs 3.7% previo) y el subyacente 3% (vs 3.3% previo), reforzando las apuestas de que la Fed mantendra las tasas sin cambios en octubre, lo que impulso los futuros del Nasdaq-100 cerca de 0.3% en el premarket.",
   "sources": [
-    "CBS News 29/09 - Tehran expects US response to Hormuz ceasefire proposal",
     "CNBC 29/09 - Oil prices fall as crude exports recover at Saudi Arabia's Red Sea ports",
-    "NPR 26/09 - Trump rejects Iranian plan to reopen Strait of Hormuz",
-    "Newsquawk 30/09 - Primer: today's Fedspeak includes NY Fed's Williams",
-    "TipRanks 30/09 - US stock futures slip as government shutdown enters second week"
+    "Bloomberg 27/09 - Oil Rises as Iran Says It Won't Soften Strait of Hormuz Demands",
+    "CNBC/Bloomberg 30/09 - Stock market today live updates (PCE de agosto, futuros Nasdaq-100)",
+    "Bloomberg 01/09 - Congress Sends Funding Bill to Avert US Shutdown to Trump (financiamiento vigente hasta el 11/12, sin shutdown activo)"
   ],
-  "as_of": "2026-09-30T13:08:02Z"
+  "as_of": "2026-09-30T13:40:33Z"
 }
