@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Trump negó en Truth Social haber ofrecido alivio de sanciones a Irán tras un reporte de Axios, mientras Qatar media entre Teherán y Washington, sosteniendo la prima de riesgo geopolítico que puede pesar sobre el sentimiento de riesgo y el NQ.",
-  "petroleo": "Brent sube 0.69% a 103.30 USD y WTI 0.48% a 89.81 USD por la tensión EEUU-Irán tras la negativa de Trump a flexibilizar sanciones, lo que eleva costos energéticos y podría presionar márgenes tech en el NQ.",
-  "catalizador": "El PCE subyacente de agosto (medida preferida de la Fed) subió 3.0% interanual vs 3.3% esperado, una sorpresa a la baja que refuerza expectativas de recorte de tasas y da soporte alcista al NQ en la sesión.",
+  "geopolitica": "La tregua comercial EEUU-China se extiende hasta el 10 de enero tras la cumbre Trump-Xi y Trump firma acuerdos 'moralmente vinculantes' sobre IA con Nvidia, Tesla y Meta, reduciendo el riesgo arancelario a semis pero dejando incertidumbre regulatoria sobre IA, soporte moderado para el NQ.",
+  "petroleo": "WTI sube 0.83% a 90.12 USD y Brent 1.08% a 103.70 USD, rebotando tras el desplome del martes (Brent -2.6% a 102.59, WTI -3.5% a 89.38) por la recuperacion de exportaciones saudies en el Mar Rojo, mientras persiste la tension en el estrecho de Ormuz; sesgo levemente negativo para el NQ por presion en costos.",
+  "catalizador": "El PCE subyacente de agosto se desacelero a 3.0% interanual (desde 3.3%), por debajo de lo esperado, lo que hizo retroceder el rendimiento del Treasury a 10 anios a 5.23% desde el maximo del martes (5.29%, con el bono a 30 anios sobre 5.6%, nivel no visto desde 2002); catalizador alcista clave para el NQ en la apertura de hoy.",
   "sources": [
-    "CNBC 08:30 ET (PCE subyacente agosto)",
-    "Reuters/CNBC 30/09 (petróleo, tensión Irán)",
-    "CNBC/Axios 30/09 (Trump-Irán, Truth Social)"
+    "Bloomberg 05:04 ET (WTI)",
+    "Bloomberg 10:23 ET (Brent)",
+    "CNBC 08:30 ET (dato PCE)",
+    "CNBC Daily Open 30-sep-2026 (tregua comercial EEUU-China / acuerdos IA)",
+    "CNBC 29-sep-2026 (rendimientos Treasury y reaccion de mercado)"
   ],
-  "as_of": "2026-09-30T14:08:11Z"
+  "as_of": "2026-09-30T14:40:17Z"
 }
