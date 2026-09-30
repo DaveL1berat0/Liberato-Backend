@@ -1,13 +1,12 @@
 {
-  "geopolitica": "La tregua comercial EEUU-China se extiende hasta el 10 de enero tras la cumbre Trump-Xi y Trump firma acuerdos 'moralmente vinculantes' sobre IA con Nvidia, Tesla y Meta, reduciendo el riesgo arancelario a semis pero dejando incertidumbre regulatoria sobre IA, soporte moderado para el NQ.",
-  "petroleo": "WTI sube 0.83% a 90.12 USD y Brent 1.08% a 103.70 USD, rebotando tras el desplome del martes (Brent -2.6% a 102.59, WTI -3.5% a 89.38) por la recuperacion de exportaciones saudies en el Mar Rojo, mientras persiste la tension en el estrecho de Ormuz; sesgo levemente negativo para el NQ por presion en costos.",
-  "catalizador": "El PCE subyacente de agosto se desacelero a 3.0% interanual (desde 3.3%), por debajo de lo esperado, lo que hizo retroceder el rendimiento del Treasury a 10 anios a 5.23% desde el maximo del martes (5.29%, con el bono a 30 anios sobre 5.6%, nivel no visto desde 2002); catalizador alcista clave para el NQ en la apertura de hoy.",
+  "geopolitica": "Trump califico de \"inaceptable\" la oferta de Iran de reabrir el estrecho de Hormuz en 7 dias y reanudar negociaciones nucleares, mientras EEUU e Iran mantienen conversaciones separadas con mediadores en Nueva York, sosteniendo la incertidumbre geopolitica que presiona el sentimiento de riesgo en el NQ.",
+  "petroleo": "El WTI cotiza cerca de 89.26 USD/barril tras caer 3.5% en la sesion previa y el Brent ronda 103.43 USD/barril, retrocediendo por la recuperacion de las exportaciones de crudo de Arabia Saudita y Oriente Medio que alivia el temor a un corte de suministro por el conflicto con Iran.",
+  "catalizador": "El PCE de agosto (dato clave de inflacion de la Fed) subio 3.4% interanual, por debajo del 3.7% esperado, y el PCE subyacente subio 3% frente al 3.3% previo; la sorpresa a la baja en inflacion impulso al Nasdaq Composite cerca de 1% y presiono a la baja los rendimientos del Tesoro.",
   "sources": [
-    "Bloomberg 05:04 ET (WTI)",
-    "Bloomberg 10:23 ET (Brent)",
-    "CNBC 08:30 ET (dato PCE)",
-    "CNBC Daily Open 30-sep-2026 (tregua comercial EEUU-China / acuerdos IA)",
-    "CNBC 29-sep-2026 (rendimientos Treasury y reaccion de mercado)"
+    "CNBC 2026-09-29 (stock-market-today-live-updates)",
+    "CNBC 2026-09-29 (us-iran-war-trump-hormuz)",
+    "CNBC 2026-09-29 (oil-prices-today-brent-wti-hormuz)",
+    "CNBC 2026-09-29 (the-feds-main-inflation-measure-will-be-released-wednesday)"
   ],
-  "as_of": "2026-09-30T14:40:17Z"
+  "as_of": "2026-09-30T15:06:49Z"
 }
