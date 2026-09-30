@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump nego publicamente (tras un reporte de Axios) estar dispuesto a flexibilizar las sanciones a Iran y reafirmo su rechazo a la oferta irani para reabrir el Estrecho de Ormuz, reavivando la prima de riesgo geopolitico y presionando el apetito por riesgo del NQ intradia.",
-  "petroleo": "Brent sube cerca de 0.7% hasta ~103.3 USD/barril y WTI +0.5% hasta ~89.8 USD/barril tras la negativa de Trump sobre Iran; el crudo mas firme añade presion inflacionaria, un viento en contra para el NQ.",
-  "catalizador": "El PCE de agosto (publicado 8:30 ET) salio mas frio de lo esperado: general 3.4% interanual vs 3.7% esperado y subyacente 3.0% vs 3.3% esperado, reduciendo probabilidades de subida de tasas en octubre e impulsando al Nasdaq al alza en la apertura de hoy.",
+  "geopolitica": "Trump nego que este dispuesto a flexibilizar las sanciones a Iran, reafirmando la postura de presion maxima y reavivando la prima de riesgo geopolitico que puede pesar sobre el apetito por riesgo del NQ intradia (CNBC, 30 sep).",
+  "petroleo": "El crudo sube tras la negativa de Trump sobre Iran: Brent ronda ~103 USD/barril y WTI ~89.5 USD/barril, con ambos benchmarks cerrando el mes en terreno positivo; un crudo mas firme añade presion inflacionaria, viento en contra para el NQ (Bloomberg/CNBC, 30 sep).",
+  "catalizador": "El PCE de agosto, medida preferida de la Fed (publicado 8:30 ET), salio mas frio de lo esperado: general 3.4% interanual vs 3.7% esperado y subyacente 3.0% vs 3.3% esperado, reduciendo la probabilidad de una subida de tasas en octubre e impulsando al Nasdaq al alza intradia (CNBC, 08:30 ET).",
   "sources": [
-    "CNBC - Oil climbs after Trump denies he is willing to ease sanctions on Iran (30-sep-2026)",
-    "FXStreet - WTI drifts higher above $88.00 as Trump denies Iran sanctions relief (30-sep-2026)",
-    "BEA/CNBC - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-sep-2026)",
-    "Bloomberg - Trump Rejects Iran Proposal to Reopen Strait of Hormuz (28-sep-2026)"
+    "CNBC 30-sep - Oil climbs after Trump denies he is willing to ease sanctions on Iran",
+    "CNBC 08:30 ET - Fed's preferred gauge showed core inflation at 3.0% in August, much lighter than expected",
+    "Bloomberg 30-sep - Latest Oil Market News and Analysis for Sept. 30"
   ],
-  "as_of": "2026-09-30T17:06:44Z"
+  "as_of": "2026-09-30T18:06:46Z"
 }
