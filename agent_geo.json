@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump rechazo la propuesta iraní para reabrir el Estrecho de Ormuz y espera nuevas conversaciones esta semana, lo que mantiene la tension EE.UU.-Iran y presiona el apetito por riesgo del NQ.",
-  "petroleo": "El Brent supero los 107 USD/barril (+3% aprox.) tras el rechazo de Trump a la propuesta de Iran sobre Ormuz, elevando el riesgo de inflacion y presionando al Nasdaq.",
-  "catalizador": "El rendimiento del Treasury a 10 anos ronda 5.24%-5.25%, su nivel mas alto desde mediados de 2007, mientras el presidente de la Fed de NY, Williams, habla hoy a las 14:00 ET sobre perspectivas economicas, un factor clave para el NQ intradia.",
+  "geopolitica": "Trump espera reanudar esta semana las conversaciones con Iran tras rechazar la propuesta irani de reabrir el Estrecho de Ormuz, manteniendo la tension geopolitica de la guerra EE.UU.-Iran que presiona el apetito por riesgo del NQ.",
+  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) al recuperarse las exportaciones saudies por el Mar Rojo, aunque el flujo por Ormuz sigue en 77% de lo normal, dejando el crudo elevado y como riesgo de inflacion para el NQ.",
+  "catalizador": "El presidente de la Fed de Nueva York, John Williams, ofrece hoy un discurso en la Reykjavik Economic Conference, un evento de Fedspeak que el mercado seguira de cerca por pistas sobre la politica monetaria y su impacto en el NQ intradia.",
   "sources": [
-    "CNBC 28/09 - Brent crude tops $107 as Trump rejects Iran Hormuz proposal",
-    "Al Jazeera 28/09 - Oil prices surge after Trump rejects Iran's Hormuz plan",
-    "Federal Reserve calendar - Williams speech 14:00 ET (18:00 UTC) 29/09",
-    "RioTimesOnline 29/09 - US 10-Year Treasury yield at 5.24%"
+    "CBS News 29/09 - Tehran expects US response to Hormuz ceasefire proposal",
+    "CNBC 29/09 - Oil prices fall as crude exports recover at Saudi Arabia's Red Sea ports",
+    "NPR 26/09 - Trump rejects Iranian plan to reopen Strait of Hormuz",
+    "Newsquawk 30/09 - Primer: today's Fedspeak includes NY Fed's Williams"
   ],
-  "as_of": "2026-09-29T21:05:59Z"
+  "as_of": "2026-09-30T12:58:37Z"
 }
