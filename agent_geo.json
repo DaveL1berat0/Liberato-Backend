@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Trump espera reanudar esta semana las conversaciones con Iran tras rechazar la propuesta irani de reabrir el Estrecho de Ormuz, manteniendo la tension geopolitica de la guerra EE.UU.-Iran que presiona el apetito por riesgo del NQ.",
-  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) al recuperarse las exportaciones saudies por el Mar Rojo, aunque el flujo por Ormuz sigue en 77% de lo normal, dejando el crudo elevado y como riesgo de inflacion para el NQ.",
-  "catalizador": "El presidente de la Fed de Nueva York, John Williams, ofrece hoy un discurso en la Reykjavik Economic Conference, un evento de Fedspeak que el mercado seguira de cerca por pistas sobre la politica monetaria y su impacto en el NQ intradia.",
+  "geopolitica": "Trump rechazo la propuesta irani de reabrir el Estrecho de Ormuz mientras Arabia Saudita reactiva su oleoducto East-West para esquivar la zona, manteniendo viva la prima de riesgo de la guerra EE.UU.-Iran que limita el apetito por riesgo del NQ.",
+  "petroleo": "El Brent cerro el 29/09 en 102.59 USD/barril (-2.6%) y el WTI en 89.38 USD (-3.5%) al recuperarse las exportaciones saudies por el Mar Rojo, aliviando la presion inflacionaria del crudo sobre el NQ aunque el flujo por Ormuz sigue en 77% de lo normal.",
+  "catalizador": "Los futuros del Nasdaq-100 cotizan hoy con ligera baja en el premarket por el cierre de gobierno de EE.UU. que entra en su segunda semana, mientras el presidente de la Fed de Nueva York John Williams ofrece un discurso en la Reykjavik Economic Conference que el mercado sigue de cerca por senales de politica monetaria.",
   "sources": [
     "CBS News 29/09 - Tehran expects US response to Hormuz ceasefire proposal",
     "CNBC 29/09 - Oil prices fall as crude exports recover at Saudi Arabia's Red Sea ports",
     "NPR 26/09 - Trump rejects Iranian plan to reopen Strait of Hormuz",
-    "Newsquawk 30/09 - Primer: today's Fedspeak includes NY Fed's Williams"
+    "Newsquawk 30/09 - Primer: today's Fedspeak includes NY Fed's Williams",
+    "TipRanks 30/09 - US stock futures slip as government shutdown enters second week"
   ],
-  "as_of": "2026-09-30T12:58:37Z"
+  "as_of": "2026-09-30T13:08:02Z"
 }
