@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump niega en Truth Social haber ofrecido alivio de sanciones a Irán en medio de la disputa por el Estrecho de Ormuz, lo que eleva la prima de riesgo geopolítico y presiona el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent sube 0.69% a 103.30 USD/barril y el WTI 0.48% a 89.81 USD/barril tras la negativa de Trump sobre Irán; el encarecimiento de la energía añade presión inflacionaria, un viento en contra para el NQ intradía.",
-  "catalizador": "El PCE subyacente de agosto (publicado 8:30 ET) subió 0.2% m/m y ronda 2.9%-3.0% interanual, levemente por encima de lo esperado, pero el mercado mantiene cerca de 87%-88% de probabilidad de recorte de tasas en la reunión de la Fed del 29 de octubre, lo que sostiene el apetito por riesgo en el NQ.",
+  "geopolitica": "Trump negó públicamente en Truth Social estar dispuesto a flexibilizar las sanciones a Irán (tras un reporte de Axios), reavivando la prima de riesgo geopolítico que puede presionar el apetito por riesgo del NQ intradía.",
+  "petroleo": "Brent sube 0.69% a 103.30 USD/barril y WTI +0.48% a 89.81 USD/barril tras la negativa de Trump sobre Irán; el crudo más firme añade presión inflacionaria, un viento en contra para el NQ intradía.",
+  "catalizador": "El PCE de agosto (publicado 8:30 ET) subió 3.4% interanual y el subyacente 3% (ambos por debajo de lo esperado), catalizador sorpresa que impulsó al Nasdaq ~1% en la apertura de hoy.",
   "sources": [
     "CNBC - Oil climbs after Trump denies he is willing to ease sanctions on Iran (30-Sep-2026)",
-    "BEA - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-Sep-2026)"
+    "FXStreet - WTI drifts higher above $88.00 as Trump denies Iran sanctions relief (30-Sep-2026)",
+    "BEA/CNBC - Personal Income and Outlays, PCE Price Index, 08:30 ET (30-Sep-2026)"
   ],
-  "as_of": "2026-09-30T15:39:23Z"
+  "as_of": "2026-09-30T16:06:53Z"
 }
