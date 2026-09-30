@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump nego que este dispuesto a flexibilizar las sanciones a Iran, reafirmando la postura de presion maxima y reavivando la prima de riesgo geopolitico que puede pesar sobre el apetito por riesgo del NQ intradia (CNBC, 30 sep).",
-  "petroleo": "El crudo sube tras la negativa de Trump sobre Iran: Brent ronda ~103 USD/barril y WTI ~89.5 USD/barril, con ambos benchmarks cerrando el mes en terreno positivo; un crudo mas firme añade presion inflacionaria, viento en contra para el NQ (Bloomberg/CNBC, 30 sep).",
-  "catalizador": "El PCE de agosto, medida preferida de la Fed (publicado 8:30 ET), salio mas frio de lo esperado: general 3.4% interanual vs 3.7% esperado y subyacente 3.0% vs 3.3% esperado, reduciendo la probabilidad de una subida de tasas en octubre e impulsando al Nasdaq al alza intradia (CNBC, 08:30 ET).",
+  "geopolitica": "Rusia intensificó ataques contra infraestructura de datos y comunicaciones en Kiev y la OTAN condenó la retórica nuclear de Moscú sobre Kaliningrado, elevando la aversión al riesgo que presiona al NQ.",
+  "petroleo": "El Brent subió cerca de 1.1% a 103.73 USD/barril y el WTI +0.38% a 89.72 USD/barril tras negar Trump estar dispuesto a aliviar las sanciones a Irán en medio de conversaciones de paz en Qatar, reavivando el riesgo de suministro que pesa sobre el NQ.",
+  "catalizador": "El PCE subyacente de agosto (medida preferida de la Fed) se ubicó en 3.0% interanual, muy por debajo de lo esperado, impulsando al Nasdaq Composite y presionando a la baja los rendimientos del Tesoro, un viento a favor para el NQ.",
   "sources": [
-    "CNBC 30-sep - Oil climbs after Trump denies he is willing to ease sanctions on Iran",
-    "CNBC 08:30 ET - Fed's preferred gauge showed core inflation at 3.0% in August, much lighter than expected",
-    "Bloomberg 30-sep - Latest Oil Market News and Analysis for Sept. 30"
+    "CNBC 30-Sep (Ukraine war: Russia targets Kyiv as NATO condemns nuclear rhetoric)",
+    "Reuters ~21:31 ET vía CNBC (oil climbs after Trump denies easing Iran sanctions)",
+    "CNBC ~08:30 ET (Fed's preferred gauge showed core inflation at 3.0% in August)"
   ],
-  "as_of": "2026-09-30T18:06:46Z"
+  "as_of": "2026-09-30T19:06:45Z"
 }
