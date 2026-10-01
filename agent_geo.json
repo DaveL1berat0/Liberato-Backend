@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El secretario de Estado Marco Rubio ordenó a la delegación iraní abandonar EE.UU. tras concluir la Asamblea General de la ONU, señal de que persiste la escalada diplomática en la guerra Irán-EE.UU. y sostiene la prima de riesgo geopolítico sobre activos de riesgo como el NQ.",
-  "petroleo": "El Brent supera los 100 USD/barril (+2.4%) y el WTI sube a unos 92.70 USD (+2.5%) después de que refinerías chinas (PetroChina) suspendieran exportaciones de combustible de octubre para proteger el suministro interno, endureciendo un mercado ya tensionado por las guerras de Irán y Ucrania, lo que presiona al NQ vía mayores costos e inflación esperada.",
-  "catalizador": "El presidente de la Fed de Minneapolis, Neel Kashkari, dijo que la inflación 'sigue siendo demasiado alta' y calificó el mercado laboral como 'bastante bueno' pero no 'excelente', mientras los inversores esperan la próxima decisión de tasas de la Fed a fines de octubre, lo que añade cautela a los futuros del Nasdaq.",
+  "geopolitica": "",
+  "petroleo": "El Brent (venc. dic) sube 2,2% a 100,15 USD/b y el WTI (venc. nov) sube 1,5% a 91,74 USD/b tras reportes de que refinerias chinas suspendieron las exportaciones de combustible de octubre para proteger el abastecimiento domestico, lo que presiona al alza los costos energeticos y podria lastrar al NQ por mayor riesgo inflacionario.",
+  "catalizador": "El informe ADP de septiembre sorprendio al alza con 90.000 empleos privados creados frente a unos 68.000 esperados, lo que reduce expectativas de recortes de tasas de la Fed y genera presion bajista de corto plazo sobre el NQ antes del ISM manufacturero y las solicitudes de desempleo de hoy.",
   "sources": [
-    "CNBC 01-Oct-2026 (oil-prices-today-wti-brent)",
-    "CNBC 01-Oct-2026 (iran-war-strait-hormuz-gulf-oil-fuel / Rubio Iran delegation)",
-    "CNBC 30-Sep-2026 (stock-market-today-live-updates, Kashkari)",
-    "Bloomberg 01-Oct-2026 (china-cancels-some-fuel-shipments-to-support-domestic-supply)"
+    "CNBC 01-oct-2026 (oil prices today: WTI, Brent)",
+    "CNBC 30-sep-2026 (ADP private payrolls)",
+    "Bloomberg 30-sep-2026 (ADP private payrolls)"
   ],
-  "as_of": "2026-10-01T11:07:57Z"
+  "as_of": "2026-10-01T11:41:51Z"
 }
