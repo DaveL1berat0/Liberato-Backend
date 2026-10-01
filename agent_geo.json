@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump dijo que intensificar los bombardeos contra Iran es \"posible\" tras las elecciones de medio mandato de noviembre (Bloomberg), lo que reaviva el riesgo de escalada belica y presiona al NQ a la baja por aversion al riesgo.",
-  "petroleo": "Brent cotiza cerca de 100 USD/barril y WTI en torno a 90 USD tras que refinerias chinas suspendieran las exportaciones de combustible de octubre y por la guerra EEUU-Iran, que mantiene el Estrecho de Ormuz con transito restringido (CNBC); el crudo elevado encarece costos y pesa sobre el sentimiento de riesgo del NQ intradia.",
+  "geopolitica": "Trump afirma que la guerra EEUU/Israel-Iran terminara recien despues de las elecciones de medio mandato del 3 de noviembre, mientras republicanos temen el costo politico del conflicto prolongado (Bloomberg Government, LBC), lo que sostiene la aversion al riesgo y presiona al NQ a la baja.",
+  "petroleo": "China ordeno a sus refinerias (PetroChina, Sinopec, CNOOC) suspender nuevas exportaciones de diesel y gasolina para priorizar el abasto interno ante el practico cese de exportaciones del Golfo tras los ataques de EEUU e Israel, manteniendo a Brent cerca de USD 96-100 y a WTI en torno a USD 90 (Bloomberg, S&P Global), lo que encarece costos y pesa sobre el sentimiento de riesgo del NQ intradia.",
   "catalizador": "",
   "sources": [
     "Bloomberg 01 oct 2026",
-    "CNBC 01 oct 2026"
+    "Bloomberg Government 01 oct 2026",
+    "S&P Global Commodity Insights 01 oct 2026"
   ],
-  "as_of": "2026-10-01T14:06:55Z"
+  "as_of": "2026-10-01T14:40:23Z"
 }
