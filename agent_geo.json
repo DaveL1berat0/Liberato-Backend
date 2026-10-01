@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Las conversaciones de alto el fuego entre EEUU e Iran sobre la reapertura del Estrecho de Ormuz siguen estancadas por sanciones, terminos del bloqueo y supervision nuclear, lo que sostiene la aversion al riesgo y limita el apetito comprador en el NQ intradia.",
-  "petroleo": "El Brent sube cerca de 2.4% hasta unos 100-100.4 USD/barril y el WTI avanza ~2.5% a unos 92-92.7 USD tras reportes de que refinadoras chinas suspendieron las exportaciones de combustible de octubre, presionando costos e inflacion y pesando sobre el sentimiento de riesgo en el NQ.",
-  "catalizador": "El cierre parcial del gobierno de EEUU, vigente desde las 00:01 ET de hoy, amenaza con retrasar el informe de empleo de septiembre, lo que puede sumar volatilidad e incertidumbre macro adicional en la apertura del NQ.",
+  "geopolitica": "Las negociaciones entre EEUU e Iran para reabrir el Estrecho de Ormuz siguen estancadas: Trump mantiene el alto el fuego por 'terminado' y Washington emitio una nueva ronda de sanciones contra financistas del lider supremo Khamenei tras ataques a petroleros, lo que sostiene la aversion al riesgo y limita el apetito comprador en el NQ intradia.",
+  "petroleo": "El Brent sube cerca de 2.2% hasta unos 100 USD/barril y el WTI avanza ~1.5% a unos 91.7 USD tras reportes de que refinadoras chinas, incluida PetroChina, suspendieron exportaciones de combustible de octubre, tensionando aun mas una oferta global ya ajustada por los conflictos en Oriente Medio y Ucrania, lo que presiona costos de insumos y pesa sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "El cierre parcial del gobierno de EEUU, vigente desde las 00:01 ET de hoy tras el fracaso del acuerdo presupuestario, amenaza con retrasar el informe de empleo de septiembre justo cuando el rendimiento del Tesoro a 10 anos toco un maximo desde 2002 (~5.33%), sumando incertidumbre macro a la apertura del NQ.",
   "sources": [
-    "Reuters (via TradingView) - Chinese refiners suspend October fuel exports, Brent/WTI rise ~2.4-2.5% (01-oct-2026)",
-    "SAN / CBS News - US-Iran Strait of Hormuz ceasefire talks stall (01-oct-2026)",
-    "CNBC / Fox Business - Government shutdown since 00:01 ET threatens Sept jobs report (01-oct-2026)"
+    "Bloomberg/TheStreet 09:07 ET - Nasdaq-100 futures y Treasury yields al maximo desde 2002",
+    "CNBC 09:07 ET - Oil prices rise as Chinese refiners reportedly ban October fuel exports",
+    "The New Arab / Bloomberg Law 2026-07 (vigente) - Trump dice que el alto el fuego con Iran esta 'over', sanciones a financistas de Khamenei",
+    "Fox Business/CBS News 00:01 ET - Cierre del gobierno de EEUU inicia hoy, retrasa datos economicos"
   ],
-  "as_of": "2026-10-01T12:42:16Z"
+  "as_of": "2026-10-01T13:08:00Z"
 }
