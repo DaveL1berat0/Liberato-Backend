@@ -1,13 +1,11 @@
 {
-  "geopolitica": "El Tesoro de EEUU sanciono hoy los sectores automotor y ferroviario de Iran dentro de la 'Operacion Economic Outcast', mientras Trump niega haber ofrecido alivio de sanciones a Teheran tras las conversaciones mediadas por Qatar, lo que sostiene el tono de aversion al riesgo que presiona al NQ (CNBC, 01-Oct).",
-  "petroleo": "El Brent cotiza por encima de 100 USD/barril y el WTI cerca de 90 USD/barril, sostenidos por la tension en el Estrecho de Ormuz y los recortes de exportacion de combustibles de refinadores chinos, encareciendo insumos y lastrando el apetito por riesgo en el NQ (CNBC/Bloomberg, 01-Oct).",
-  "catalizador": "El rendimiento del Treasury a 10 anos toco hoy un maximo de 24 anos (en torno a 5.25%) en medio de una venta masiva global de bonos antes de recortar mas de 4 puntos basicos, generando volatilidad en las tecnologicas de alta duracion dentro del NQ (CNBC, 01-Oct).",
+  "geopolitica": "EE.UU. reporta el envio de un tercer grupo de ataque de portaaviones y hasta 10,000 tropas adicionales a Oriente Medio mientras el Secretario de Estado Rubio ordeno a la delegacion iraní abandonar EE.UU., elevando la prima de riesgo geopolitico y presionando el apetito por activos de riesgo como el NQ.",
+  "petroleo": "El Brent sube cerca de 4.6% a 102.55 USD y el WTI cerca de 3% a 93.24 USD tras reportes de que refinerias chinas (PetroChina) suspenden exportaciones de combustible en octubre, reavivando temores de inflacion energetica que pesan sobre el NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 anos retrocede ligeramente desde maximos de casi 19 anos tras el dato de inflacion mas suave de lo esperado conocido esta semana, aliviando algo de presion sobre las tecnologicas de alta duracion del NQ.",
   "sources": [
-    "CNBC (Treasury sanciona sectores automotor y ferroviario de Iran) 01-Oct",
-    "CNBC (Trump niega oferta de alivio de sanciones a Iran tras talks en Qatar) 01-Oct",
-    "Bloomberg (Oil Holds Gain as Traders Weigh Recovery in Middle East Flows) 01-Oct",
-    "CNBC (Daily Open: Crude flows back at prewar levels) 01-Oct",
-    "CNBC (10-year Treasury yield climbs to a 24-year high amid relentless global bond sell-off) 01-Oct"
+    "CNBC (01/10/2026) - oil-prices-today-wti-brent",
+    "CNBC (30/09/2026) - stock-market-today-live-updates",
+    "CNBC (30/09/2026) - treasury-yields-bonds-selloff"
   ],
-  "as_of": "2026-10-01T18:07:06Z"
+  "as_of": "2026-10-01T19:06:49Z"
 }
