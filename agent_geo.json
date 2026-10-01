@@ -1,11 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El Brent (venc. dic) sube 2,2% a 100,15 USD/b y el WTI (venc. nov) sube 1,5% a 91,74 USD/b tras reportes de que refinerias chinas suspendieron las exportaciones de combustible de octubre para proteger el abastecimiento domestico, lo que presiona al alza los costos energeticos y podria lastrar al NQ por mayor riesgo inflacionario.",
-  "catalizador": "El informe ADP de septiembre sorprendio al alza con 90.000 empleos privados creados frente a unos 68.000 esperados, lo que reduce expectativas de recortes de tasas de la Fed y genera presion bajista de corto plazo sobre el NQ antes del ISM manufacturero y las solicitudes de desempleo de hoy.",
+  "geopolitica": "Las conversaciones de alto el fuego entre EEUU e Iran sobre la reapertura del Estrecho de Ormuz siguen estancadas, lo que sostiene el tono de aversion al riesgo y limita el apetito comprador en el NQ intradia (CNBC, AA).",
+  "petroleo": "El Brent supera los 100 USD/barril (+2.2%, ~100.15) y el WTI sube a 91.74 (+1.5%) tras el veto de refinadoras chinas a exportar combustible en octubre y el estancamiento de las negociaciones EEUU-Iran, lo que presiona costos e inflacion y pesa sobre el sentimiento de riesgo del NQ (CNBC).",
+  "catalizador": "El cierre del gobierno de EEUU, vigente desde las 00:01 ET de hoy 1 de octubre, retrasa publicaciones clave (no habra informe de empleo de septiembre), anadiendo incertidumbre macro que puede generar volatilidad adicional en el NQ durante la sesion (CNBC).",
   "sources": [
-    "CNBC 01-oct-2026 (oil prices today: WTI, Brent)",
-    "CNBC 30-sep-2026 (ADP private payrolls)",
-    "Bloomberg 30-sep-2026 (ADP private payrolls)"
+    "CNBC - Oil prices today, WTI/Brent (01/10/2026)",
+    "AA (Anadolu Agency) - Brent rises above $100 as stalled US-Iran talks fuel supply concerns (01/10/2026)",
+    "CNBC - Government shutdown live updates - vigente desde 00:01 ET (01/10/2026)"
   ],
-  "as_of": "2026-10-01T11:41:51Z"
+  "as_of": "2026-10-01T12:07:53Z"
 }
