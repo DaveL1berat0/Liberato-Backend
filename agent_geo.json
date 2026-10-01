@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EEUU envia un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) a Medio Oriente tras ataques a petroleros en el Estrecho de Ormuz, elevando el riesgo de escalada con Iran y presionando al NQ hacia modo risk-off intradia.",
-  "petroleo": "Brent sube 4.4% hasta 102.31 USD/barril y WTI avanza 2.7% hasta 92.87 USD/barril, impulsados por el reporte del despliegue del tercer portaaviones a Medio Oriente, lo que encarece insumos y presiona al Nasdaq via temor inflacionario.",
-  "catalizador": "Los rendimientos del Treasury a 10 anos tocaron maximos de mas de 20 anos (cerca de 5.285%) en la primera sesion de octubre, en medio del shutdown del gobierno federal, antes de ceder parcialmente; la volatilidad en bonos sigue siendo el principal lastre para las valuaciones tech del NQ.",
+  "geopolitica": "EE.UU. envía un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) hacia Medio Oriente, señal de posible escalada contra Irán, mientras esta semana al menos tres petroleros fueron atacados al transitar el Estrecho de Ormuz (CNBC, 1-oct-2026) — refuerza la aversión al riesgo que puede pesar sobre el NQ intradía.",
+  "petroleo": "Brent sube 4.4% a 102.31 USD/barril y WTI avanza 2.7% a 92.87 USD/barril (CNBC, 1-oct-2026), impulsados por el despliegue naval de EE.UU. hacia Medio Oriente y el temor a disrupciones de suministro vía Ormuz — el salto del crudo añade presión inflacionaria que puede lastrar al NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 años tocó un máximo intradía de 5.344% (el más alto desde 2002) antes de retroceder, mientras el mercado reduce las apuestas de una subida de la Fed este mes (CNBC, 1-oct-2026) — el posterior retroceso de yields alivia algo de presión sobre las tecnológicas del NQ.",
   "sources": [
     "CNBC 2026-10-01 (oil-prices-today-wti-brent)",
-    "CNBC 2026-09-30 (stock-market-today-live-updates)",
-    "CNBC 2026-10-01 (q3-markets-stocks-oil-iran-war)"
+    "CNBC 2026-10-01 (5-things-to-know-before-the-stock-market-opens)",
+    "CNBC 2026-09-30 (stock-market-today-live-updates)"
   ],
-  "as_of": "2026-10-01T20:06:03Z"
+  "as_of": "2026-10-01T21:06:34Z"
 }
