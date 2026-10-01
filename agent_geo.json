@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. reporta el envio de un tercer grupo de ataque de portaaviones y hasta 10,000 tropas adicionales a Oriente Medio mientras el Secretario de Estado Rubio ordeno a la delegacion iraní abandonar EE.UU., elevando la prima de riesgo geopolitico y presionando el apetito por activos de riesgo como el NQ.",
-  "petroleo": "El Brent sube cerca de 4.6% a 102.55 USD y el WTI cerca de 3% a 93.24 USD tras reportes de que refinerias chinas (PetroChina) suspenden exportaciones de combustible en octubre, reavivando temores de inflacion energetica que pesan sobre el NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos retrocede ligeramente desde maximos de casi 19 anos tras el dato de inflacion mas suave de lo esperado conocido esta semana, aliviando algo de presion sobre las tecnologicas de alta duracion del NQ.",
+  "geopolitica": "EEUU envia un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) a Medio Oriente tras ataques a petroleros en el Estrecho de Ormuz, elevando el riesgo de escalada con Iran y presionando al NQ hacia modo risk-off intradia.",
+  "petroleo": "Brent sube 4.4% hasta 102.31 USD/barril y WTI avanza 2.7% hasta 92.87 USD/barril, impulsados por el reporte del despliegue del tercer portaaviones a Medio Oriente, lo que encarece insumos y presiona al Nasdaq via temor inflacionario.",
+  "catalizador": "Los rendimientos del Treasury a 10 anos tocaron maximos de mas de 20 anos (cerca de 5.285%) en la primera sesion de octubre, en medio del shutdown del gobierno federal, antes de ceder parcialmente; la volatilidad en bonos sigue siendo el principal lastre para las valuaciones tech del NQ.",
   "sources": [
-    "CNBC (01/10/2026) - oil-prices-today-wti-brent",
-    "CNBC (30/09/2026) - stock-market-today-live-updates",
-    "CNBC (30/09/2026) - treasury-yields-bonds-selloff"
+    "CNBC 2026-10-01 (oil-prices-today-wti-brent)",
+    "CNBC 2026-09-30 (stock-market-today-live-updates)",
+    "CNBC 2026-10-01 (q3-markets-stocks-oil-iran-war)"
   ],
-  "as_of": "2026-10-01T19:06:49Z"
+  "as_of": "2026-10-01T20:06:03Z"
 }
