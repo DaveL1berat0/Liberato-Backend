@@ -1,10 +1,12 @@
 {
-  "geopolitica": "Trump negó en Truth Social un reporte de Axios sobre un posible alivio de sanciones a Irán, mientras Catar impulsa negociaciones de paz, lo que sostiene la prima de riesgo geopolítico y el tono de aversión al riesgo que puede presionar al NQ intradía.",
-  "petroleo": "Brent sube 1.11% a 103.73 USD/barril y WTI +0.38% a 89.72 USD/barril tras la negativa de Trump a aliviar sanciones a Irán, lo que encarece el costo energético y añade presión inflacionaria/bajista sobre el NQ.",
-  "catalizador": "Trump pidió la renuncia forzada de Powell del consejo de la Fed tras un informe del Inspector General que halló fallas de gestión (sin delito) en la renovación de la sede, reavivando dudas sobre la independencia de la Fed y añadiendo volatilidad al NQ en la última hora de sesión.",
+  "geopolitica": "El secretario de Estado Marco Rubio ordenó a la delegación iraní abandonar EE.UU. tras concluir la Asamblea General de la ONU, señal de que persiste la escalada diplomática en la guerra Irán-EE.UU. y sostiene la prima de riesgo geopolítico sobre activos de riesgo como el NQ.",
+  "petroleo": "El Brent supera los 100 USD/barril (+2.4%) y el WTI sube a unos 92.70 USD (+2.5%) después de que refinerías chinas (PetroChina) suspendieran exportaciones de combustible de octubre para proteger el suministro interno, endureciendo un mercado ya tensionado por las guerras de Irán y Ucrania, lo que presiona al NQ vía mayores costos e inflación esperada.",
+  "catalizador": "El presidente de la Fed de Minneapolis, Neel Kashkari, dijo que la inflación 'sigue siendo demasiado alta' y calificó el mercado laboral como 'bastante bueno' pero no 'excelente', mientras los inversores esperan la próxima decisión de tasas de la Fed a fines de octubre, lo que añade cautela a los futuros del Nasdaq.",
   "sources": [
-    "Reuters 21:31 ET",
-    "CNBC 16:16 ET"
+    "CNBC 01-Oct-2026 (oil-prices-today-wti-brent)",
+    "CNBC 01-Oct-2026 (iran-war-strait-hormuz-gulf-oil-fuel / Rubio Iran delegation)",
+    "CNBC 30-Sep-2026 (stock-market-today-live-updates, Kashkari)",
+    "Bloomberg 01-Oct-2026 (china-cancels-some-fuel-shipments-to-support-domestic-supply)"
   ],
-  "as_of": "2026-09-30T21:07:14Z"
+  "as_of": "2026-10-01T11:07:57Z"
 }
