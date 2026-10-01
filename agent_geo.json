@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump afirma que la guerra EEUU/Israel-Iran terminara recien despues de las elecciones de medio mandato del 3 de noviembre, mientras republicanos temen el costo politico del conflicto prolongado (Bloomberg Government, LBC), lo que sostiene la aversion al riesgo y presiona al NQ a la baja.",
-  "petroleo": "China ordeno a sus refinerias (PetroChina, Sinopec, CNOOC) suspender nuevas exportaciones de diesel y gasolina para priorizar el abasto interno ante el practico cese de exportaciones del Golfo tras los ataques de EEUU e Israel, manteniendo a Brent cerca de USD 96-100 y a WTI en torno a USD 90 (Bloomberg, S&P Global), lo que encarece costos y pesa sobre el sentimiento de riesgo del NQ intradia.",
-  "catalizador": "El rendimiento del Treasury a 10 anos toco maximos de 24 anos (~5.33%) tras un dato de precios pagados del ISM manufacturero muy por encima de lo esperado (77.9% vs ~72% estimado), presionando las valuaciones tech de alta duracion en el NQ.",
+  "geopolitica": "Iran recibio una propuesta de EE.UU. para restablecer un alto el fuego en Oriente Medio y los futuros del Nasdaq 100 suben ante el optimismo de desescalada, aunque persiste volatilidad por dudas sobre si Teheran la aceptara.",
+  "petroleo": "El crudo retrocede hoy (Brent en torno a 96.76 USD/barril, -1.30%; WTI en torno a 90.06 USD/barril, -0.40%) por el optimismo en torno al posible alto el fuego entre EE.UU. e Iran, que reduce la prima de riesgo de suministro.",
+  "catalizador": "El ISM manufacturero de septiembre se publica hoy a las 10:00 ET en medio de rendimientos del Treasury elevados, tras el solido reporte de resultados de Micron que impulsa a los semiconductores.",
   "sources": [
-    "Bloomberg 01 oct 2026",
-    "Bloomberg Government 01 oct 2026",
-    "S&P Global Commodity Insights 01 oct 2026",
-    "FXStreet 08:41 ET"
+    "Benzinga 01-oct-2026",
+    "TradingEconomics 01-oct-2026",
+    "Yahoo Finance 01-oct-2026"
   ],
-  "as_of": "2026-10-01T15:08:30Z"
+  "as_of": "2026-10-01T16:08:38Z"
 }
