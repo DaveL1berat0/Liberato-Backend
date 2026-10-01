@@ -1,12 +1,13 @@
 {
-  "geopolitica": "La guerra EE.UU.-Iran en Oriente Medio sigue activa y mantiene la prima de riesgo geopolitico elevada, presionando al alza el petroleo y restando apetito por riesgo en el NQ intradia (CNBC Daily Open, 01-Oct).",
-  "petroleo": "El Brent sube ~3.7% hasta 101.64 USD y el WTI +2.3% hasta 92.49 USD tras reportarse que refinadoras chinas (PetroChina) suspendieron exportaciones de combustible en octubre, agravando un mercado energetico ya tensionado por la guerra; el shock de costos de insumos es un viento en contra para el NQ hoy (CNBC, 01-Oct).",
-  "catalizador": "El cierre del gobierno de EE.UU. comenzo a las 12:01 am ET del 1-oct tras el fracaso del Congreso en aprobar el presupuesto, con los futuros del Nasdaq 100 cayendo cerca de 0.6% en la reaccion inicial de aversion al riesgo y el retraso de datos de empleo (Nasdaq.com, 01-Oct).",
+  "geopolitica": "El Tesoro de EEUU sanciono hoy los sectores automotor y ferroviario de Iran dentro de la 'Operacion Economic Outcast', mientras Trump niega haber ofrecido alivio de sanciones a Teheran tras las conversaciones mediadas por Qatar, lo que sostiene el tono de aversion al riesgo que presiona al NQ (CNBC, 01-Oct).",
+  "petroleo": "El Brent cotiza por encima de 100 USD/barril y el WTI cerca de 90 USD/barril, sostenidos por la tension en el Estrecho de Ormuz y los recortes de exportacion de combustibles de refinadores chinos, encareciendo insumos y lastrando el apetito por riesgo en el NQ (CNBC/Bloomberg, 01-Oct).",
+  "catalizador": "El rendimiento del Treasury a 10 anos toco hoy un maximo de 24 anos (en torno a 5.25%) en medio de una venta masiva global de bonos antes de recortar mas de 4 puntos basicos, generando volatilidad en las tecnologicas de alta duracion dentro del NQ (CNBC, 01-Oct).",
   "sources": [
-    "CNBC 01-Oct (Daily Open: crude flows back at prewar levels)",
-    "CNBC 01-Oct (Oil prices today: WTI, Brent)",
-    "Nasdaq.com 01-Oct (Stocks retreat as US government shuts down)",
-    "Yahoo Finance 04:48 ET (Nasdaq 100 E-minis premarket)"
+    "CNBC (Treasury sanciona sectores automotor y ferroviario de Iran) 01-Oct",
+    "CNBC (Trump niega oferta de alivio de sanciones a Iran tras talks en Qatar) 01-Oct",
+    "Bloomberg (Oil Holds Gain as Traders Weigh Recovery in Middle East Flows) 01-Oct",
+    "CNBC (Daily Open: Crude flows back at prewar levels) 01-Oct",
+    "CNBC (10-year Treasury yield climbs to a 24-year high amid relentless global bond sell-off) 01-Oct"
   ],
-  "as_of": "2026-10-01T17:06:51Z"
+  "as_of": "2026-10-01T18:07:06Z"
 }
