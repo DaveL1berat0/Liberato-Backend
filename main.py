@@ -7539,11 +7539,18 @@ def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
             f'color:#7A7870;font-size:12px;">Recibiste este correo porque creaste una cuenta en Liberato Community.</div>'
             f'</div></div>')
 
-async def _send_email(to, subject, html, reply_to=None):
+async def _send_email(to, subject, html, reply_to=None, list_unsub=False):
     """Envía un correo transaccional (no bloqueante). reply_to = correo al que
-    responderá el destinatario (ej. quien escribió el contacto)."""
+    responderá el destinatario (ej. quien escribió el contacto). list_unsub=True añade la
+    cabecera List-Unsubscribe (one-click, RFC 8058) → úsalo en correos de MARKETING."""
     if not to:
         return False
+    # Cabecera List-Unsubscribe de 1 clic: Gmail/Yahoo la exigen a remitentes de volumen
+    # (feb-2024) → sin ella el marketing cae en spam. Transaccionales NO la llevan.
+    _unsub_h = {}
+    if list_unsub:
+        _uu = f"{BACKEND_URL}/api/email/unsubscribe?e={(to or '').lower()}&t={_unsub_token(to)}"
+        _unsub_h = {"List-Unsubscribe": f"<{_uu}>", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"}
     # 1) Resend por HTTP (puerto 443 → funciona en Railway)
     if RESEND_API_KEY:
         try:
@@ -7551,6 +7558,8 @@ async def _send_email(to, subject, html, reply_to=None):
                         "to": [to], "subject": subject, "html": html}
             if reply_to:
                 _payload["reply_to"] = reply_to
+            if _unsub_h:
+                _payload["headers"] = _unsub_h
             async with httpx.AsyncClient(timeout=15) as c:
                 r = await c.post("https://api.resend.com/emails",
                     headers={"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"},
@@ -7570,6 +7579,8 @@ async def _send_email(to, subject, html, reply_to=None):
                    "to": [{"email": to}], "subject": subject, "htmlContent": html}
             if reply_to:
                 _bp["replyTo"] = {"email": reply_to}
+            if _unsub_h:
+                _bp["headers"] = _unsub_h
             async with httpx.AsyncClient(timeout=15) as c:
                 r = await c.post("https://api.brevo.com/v3/smtp/email",
                     headers={"api-key": BREVO_API_KEY, "Content-Type": "application/json",
@@ -7593,6 +7604,8 @@ async def _send_email(to, subject, html, reply_to=None):
         msg["To"] = to
         if reply_to:
             msg["Reply-To"] = reply_to
+        for _hk, _hv in _unsub_h.items():
+            msg[_hk] = _hv
         msg.attach(MIMEText(html, "html"))
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
             s.login(GMAIL_USER, GMAIL_APP_PASSWORD)
@@ -7613,7 +7626,7 @@ async def send_welcome_free(email, name):
             f"<p>¡Bienvenido a Liberato Community! 🚀</p>")
     cta_t, cta_u = ("Entrar al Discord gratuito →", DISCORD_FREE_INVITE) if DISCORD_FREE_INVITE else (None, None)
     return await _send_email(email, "Bienvenido a Liberato Community ✅",
-                             _email_shell("Tu cuenta está confirmada", body, cta_t, cta_u))
+                             _email_shell("Tu cuenta está confirmada", body, cta_t, cta_u), list_unsub=True)
 
 async def send_welcome_premium(email, name):
     body = (f"<p>Hola, {_ename(name)}.</p>"
@@ -7623,11 +7636,11 @@ async def send_welcome_premium(email, name):
             f"<p>Entra a la plataforma con el botón de abajo (inicia sesión con este mismo correo) y accederás "
             f"directo al dashboard con todo abierto.</p>"
             f"<p>Y no te pierdas los <b>livestreams en vivo</b> desde Whop: "
-            f"<a href='{WHOP_HUB_URL}' style='color:#CCA94F;'>ir al Livestream →</a></p>"
+            f"<a href='{WHOP_HUB_URL}' style='color:#C9A84C;'>ir al Livestream →</a></p>"
             f"<p>¡Nos vemos adentro! 🚀</p>")
     return await _send_email(email, "Acceso completo activado — Liberato Community ⭐",
                              _email_shell("Tu acceso premium está activo", body,
-                                          "Entrar al Dashboard →", f"{SITE_URL}/auth.html"))
+                                          "Entrar al Dashboard →", f"{SITE_URL}/auth.html"), list_unsub=True)
 
 async def send_purchase_pending(email):
     """Compra en Whop SIN cuenta todavía: le pedimos crear la cuenta con ESTE
@@ -7743,25 +7756,53 @@ def _unsub_footer(email):
             f"correos? <a href='{link}' style='color:#7A7870;text-decoration:underline;'>Cancela tu "
             f"suscripción aquí</a>.</p>")
 
+_UNSUB_BAD = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
+              "<h2 style='color:#12121C;'>Link inválido</h2><p style='color:#555;'>No pudimos "
+              "procesar la baja. Escríbenos y lo hacemos manualmente.</p></div>")
+_UNSUB_OK = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
+             "<h2 style='color:#12121C;'>Suscripción cancelada</h2>"
+             "<p style='color:#555;'>Ya no recibirás correos de marketing de Liberato Community. "
+             "Seguirás recibiendo los correos importantes de tu cuenta.</p></div>")
+
 @app.get("/api/email/unsubscribe")
-async def email_unsubscribe(e: str = "", t: str = ""):
-    """Baja pública (link del pie). Valida el token firmado. Marca al usuario como desuscrito
-    en Supabase (config unsub::email). Devuelve una página simple de confirmación."""
+async def email_unsubscribe_page(e: str = "", t: str = ""):
+    """GET = PÁGINA DE CONFIRMACIÓN (NO da de baja). Así los prefetchers/escáneres de correo
+    que siguen GETs automáticamente (Gmail/Outlook/antivirus) NO desuscriben a nadie sin querer.
+    La baja real la ejecuta el POST (botón de abajo, o el one-click RFC 8058)."""
     email = (e or "").strip().lower()
-    html_ok = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
-               "<h2 style='color:#12121C;'>Suscripción cancelada</h2>"
-               "<p style='color:#555;'>Ya no recibirás correos de marketing de Liberato Community. "
-               "Seguirás recibiendo correos importantes de tu cuenta.</p></div>")
-    html_bad = ("<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
-                "<h2 style='color:#12121C;'>Link inválido</h2><p style='color:#555;'>No pudimos "
-                "procesar la baja. Escríbenos y lo hacemos manualmente.</p></div>")
-    if not email or not t or not hmac.compare_digest(t, _unsub_token(email)):
-        return HTMLResponse(html_bad, status_code=400)
+    if not (email and t and hmac.compare_digest(t, _unsub_token(email))):
+        return HTMLResponse(_UNSUB_BAD, status_code=400)
+    page = (f"<div style='font-family:Arial;max-width:480px;margin:60px auto;text-align:center;'>"
+            f"<h2 style='color:#12121C;'>Cancelar suscripción</h2>"
+            f"<p style='color:#555;'>¿Seguro que no quieres recibir más correos de marketing de "
+            f"Liberato Community? Seguirás recibiendo los correos importantes de tu cuenta.</p>"
+            f"<form method='POST' action='{BACKEND_URL}/api/email/unsubscribe'>"
+            f"<input type='hidden' name='e' value='{html.escape(email)}'>"
+            f"<input type='hidden' name='t' value='{html.escape(t)}'>"
+            f"<button type='submit' style='background:#C9A84C;color:#12121C;border:0;border-radius:8px;"
+            f"padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;'>Sí, cancelar suscripción</button>"
+            f"</form></div>")
+    return HTMLResponse(page)
+
+@app.post("/api/email/unsubscribe")
+async def email_unsubscribe_do(request: Request, e: str = "", t: str = ""):
+    """POST = EJECUTA la baja. Desde el botón de confirmación o el one-click de los clientes
+    de correo (List-Unsubscribe-Post, RFC 8058). Acepta e/t por query o por formulario."""
+    email = (e or "").strip().lower(); tok = t or ""
+    if not email or not tok:
+        try:
+            form = await request.form()
+            email = email or (form.get("e") or "").strip().lower()
+            tok = tok or (form.get("t") or "")
+        except Exception:
+            pass
+    if not (email and tok and hmac.compare_digest(tok, _unsub_token(email))):
+        return HTMLResponse(_UNSUB_BAD, status_code=400)
     try:
         await _sb_set_config("unsub::" + email, "1")
     except Exception as e2:
         print(f"[unsub] {e2}")
-    return HTMLResponse(html_ok)
+    return HTMLResponse(_UNSUB_OK)
 
 @app.post("/api/admin/email/resubscribe")
 async def admin_resubscribe(request: Request, key: str = "", authorization: str = Header("")):
@@ -7818,7 +7859,7 @@ async def admin_email_broadcast(request: Request, key: str = "", authorization: 
             continue
         # Link de baja por-usuario (firmado) en el pie de CADA correo masivo.
         wrapped = _email_shell(subject, html + _unsub_footer(em))
-        ok = await _send_email(em, subject, wrapped)
+        ok = await _send_email(em, subject, wrapped, list_unsub=True)
         sent += 1 if ok else 0
         failed += 0 if ok else 1
         await asyncio.sleep(1.1)   # throttle
@@ -8642,6 +8683,27 @@ def _whop_extract_email(d):
             return cur.strip().lower()
     return ""
 
+# M1: allowlist OPCIONAL de productos Whop que dan premium. Vacía = se comporta como antes
+# (cualquier compra concede). Configúrala en Railway: WHOP_PRODUCT_IDS=prod_xxx,prod_yyy
+WHOP_PRODUCT_IDS = {x.strip() for x in (os.getenv("WHOP_PRODUCT_IDS", "") or "").split(",") if x.strip()}
+
+def _whop_product_id(d):
+    """Extrae el product_id/plan_id del payload de Whop (varias variantes)."""
+    if not isinstance(d, dict):
+        return None
+    data = d.get("data") if isinstance(d.get("data"), dict) else d
+    for path in (("product_id",), ("plan_id",), ("product", "id"), ("plan", "id"),
+                 ("membership", "product_id"), ("membership", "plan_id")):
+        cur = data; ok = True
+        for k in path:
+            if isinstance(cur, dict) and k in cur:
+                cur = cur[k]
+            else:
+                ok = False; break
+        if ok and isinstance(cur, (str, int)):
+            return str(cur)
+    return None
+
 @app.post("/api/whop/webhook")
 async def whop_webhook(request: Request):
     """Recibe eventos de Whop y marca el plan del usuario (premium/free).
@@ -8683,6 +8745,16 @@ async def whop_webhook(request: Request):
     if plan is None:
         print(f"[whop] evento no accionable: {evt} ({email})")
         return {"ok": True, "note": f"evento {evt} ignorado"}
+    # M1: con allowlist configurada, solo el/los producto(s) correctos conceden premium
+    # (evita que CUALQUIER compra del Whop conectado dé acceso completo). Si no se puede leer
+    # el product_id, se concede igual (no bloquear compras legítimas) pero se avisa en el log.
+    if plan == "premium" and WHOP_PRODUCT_IDS:
+        pid = _whop_product_id(d)
+        if pid and pid not in WHOP_PRODUCT_IDS:
+            print(f"[whop] producto {pid} fuera de WHOP_PRODUCT_IDS → NO concede premium ({email})")
+            return {"ok": True, "note": f"producto {pid} no da premium"}
+        if not pid:
+            print(f"[whop] AVISO: product_id no legible en el payload; se concede igual ({email})")
     u = await user_get(email)
     if u:
         was = u.get("plan")
