@@ -2603,7 +2603,7 @@ updateCD();setInterval(updateCD,1000);
       <h4>Asistente</h4>
       <p>Siempre disponible</p>
     </div>
-    <button class="lc-close" onclick="toggleChat()">×</button>
+    <button class="lc-close" onclick="toggleChat()" aria-label="Cerrar chat">×</button>
   </div>
   <div class="lc-messages" id="lc-messages"></div>
   <div class="lc-chips" id="lc-chips"></div>
@@ -2613,7 +2613,7 @@ updateCD();setInterval(updateCD,1000);
   </a>
   <div class="lc-input-row">
     <input class="lc-input" id="lc-input" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendMsg()">
-    <button class="lc-send" onclick="sendMsg()">➤</button>
+    <button class="lc-send" onclick="sendMsg()" aria-label="Enviar">➤</button>
   </div>
 </div>
 
@@ -2835,7 +2835,7 @@ function irAPlanes(e){
 <!-- LOGIN MODAL -->
 <div id="lc-login" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(6,8,13,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:24px;">
   <div style="background:linear-gradient(180deg,rgba(14,18,28,0.99),rgba(6,8,13,0.97));border:0.5px solid rgba(201,168,76,0.3);border-radius:18px;padding:40px 34px;max-width:380px;width:100%;text-align:center;position:relative;">
-    <button onclick="closeLoginModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(232,228,217,0.4);font-size:18px;cursor:pointer;">✕</button>
+    <button onclick="closeLoginModal()" aria-label="Cerrar" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(232,228,217,0.4);font-size:18px;cursor:pointer;">✕</button>
     <h3 style="font-size:19px;font-weight:600;color:#E8E4D9;margin:6px 0 8px;">Acceso de miembros</h3>
     <p style="font-size:12.5px;color:rgba(232,228,217,0.45);line-height:1.6;margin:0 0 22px;">Ingresa tu email y contraseña para acceder a tu cuenta.</p>
     <input id="lc-login-email" type="email" placeholder="tu@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid rgba(201,168,76,0.3);border-radius:10px;padding:13px 16px;color:#E8E4D9;font-size:14px;outline:none;margin-bottom:8px;box-sizing:border-box;">
@@ -2905,7 +2905,7 @@ window.addEventListener('unhandledrejection',function(e){if(e.reason&&/fetch|Abo
 <!-- NEWSLETTER MODAL -->
 <div id="newsletter-overlay" onclick="closeNewsletter()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;backdrop-filter:blur(8px);"></div>
 <div id="newsletter-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10000;background:#0E0E16;border:1px solid rgba(204,169,79,0.3);border-radius:18px;padding:40px 36px;max-width:440px;width:90%;box-shadow:0 30px 80px rgba(0,0,0,0.8);">
-  <button onclick="closeNewsletter()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(239,236,227,0.4);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+  <button onclick="closeNewsletter()" aria-label="Cerrar" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(239,236,227,0.4);font-size:20px;cursor:pointer;line-height:1;">✕</button>
   <div style="text-align:center;margin-bottom:24px;">
     <div style="font-family:Georgia,serif;font-size:26px;color:#C9A84C;margin-bottom:8px;">Liberato Community</div>
     <div style="font-size:13px;color:rgba(239,236,227,0.6);line-height:1.5;">Déjanos tu correo y serás el primero en recibir acceso cuando abramos, contenido exclusivo y nuestra guía gratuita de Order Flow.</div>
