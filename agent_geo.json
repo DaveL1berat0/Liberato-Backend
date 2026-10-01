@@ -1,11 +1,12 @@
 {
   "geopolitica": "Trump afirma que la guerra EEUU/Israel-Iran terminara recien despues de las elecciones de medio mandato del 3 de noviembre, mientras republicanos temen el costo politico del conflicto prolongado (Bloomberg Government, LBC), lo que sostiene la aversion al riesgo y presiona al NQ a la baja.",
   "petroleo": "China ordeno a sus refinerias (PetroChina, Sinopec, CNOOC) suspender nuevas exportaciones de diesel y gasolina para priorizar el abasto interno ante el practico cese de exportaciones del Golfo tras los ataques de EEUU e Israel, manteniendo a Brent cerca de USD 96-100 y a WTI en torno a USD 90 (Bloomberg, S&P Global), lo que encarece costos y pesa sobre el sentimiento de riesgo del NQ intradia.",
-  "catalizador": "",
+  "catalizador": "El rendimiento del Treasury a 10 anos toco maximos de 24 anos (~5.33%) tras un dato de precios pagados del ISM manufacturero muy por encima de lo esperado (77.9% vs ~72% estimado), presionando las valuaciones tech de alta duracion en el NQ.",
   "sources": [
     "Bloomberg 01 oct 2026",
     "Bloomberg Government 01 oct 2026",
-    "S&P Global Commodity Insights 01 oct 2026"
+    "S&P Global Commodity Insights 01 oct 2026",
+    "FXStreet 08:41 ET"
   ],
-  "as_of": "2026-10-01T14:40:23Z"
+  "as_of": "2026-10-01T15:08:30Z"
 }
