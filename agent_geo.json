@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Las negociaciones entre EEUU e Iran para reabrir el Estrecho de Ormuz siguen estancadas: Trump mantiene el alto el fuego por 'terminado' y Washington emitio una nueva ronda de sanciones contra financistas del lider supremo Khamenei tras ataques a petroleros, lo que sostiene la aversion al riesgo y limita el apetito comprador en el NQ intradia.",
-  "petroleo": "El Brent sube cerca de 2.2% hasta unos 100 USD/barril y el WTI avanza ~1.5% a unos 91.7 USD tras reportes de que refinadoras chinas, incluida PetroChina, suspendieron exportaciones de combustible de octubre, tensionando aun mas una oferta global ya ajustada por los conflictos en Oriente Medio y Ucrania, lo que presiona costos de insumos y pesa sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "El cierre parcial del gobierno de EEUU, vigente desde las 00:01 ET de hoy tras el fracaso del acuerdo presupuestario, amenaza con retrasar el informe de empleo de septiembre justo cuando el rendimiento del Tesoro a 10 anos toco un maximo desde 2002 (~5.33%), sumando incertidumbre macro a la apertura del NQ.",
+  "geopolitica": "Iran envio a Washington una propuesta para restablecer el alto el fuego mientras Trump califico de 'engano' (hoax) cualquier alivio de sanciones, lo que mantiene la aversion al riesgo y limita el apetito comprador en el NQ en la apertura.",
+  "petroleo": "El Brent sube ~1.8% hasta cerca de 99.81 USD/barril y el WTI avanza ~0.5% a 90.87 USD tras reportes de que refinadoras chinas, entre ellas PetroChina, suspendieron exportaciones de combustible de octubre, tensionando una oferta global ya ajustada por el conflicto en Oriente Medio y la guerra en Ucrania, lo que presiona el sentimiento de riesgo del NQ.",
+  "catalizador": "El rendimiento del Treasury a 30 anos toco un maximo de 24 anos (el mayor desde 2002), presionando a las tecnologicas de alta duracion, aunque el pronostico optimista de Micron y el lanzamiento de Gemini 4 de Alphabet (+2.3%) sostienen a los futuros del Nasdaq-100 (+0.5%) de cara a la apertura.",
   "sources": [
-    "Bloomberg/TheStreet 09:07 ET - Nasdaq-100 futures y Treasury yields al maximo desde 2002",
-    "CNBC 09:07 ET - Oil prices rise as Chinese refiners reportedly ban October fuel exports",
-    "The New Arab / Bloomberg Law 2026-07 (vigente) - Trump dice que el alto el fuego con Iran esta 'over', sanciones a financistas de Khamenei",
-    "Fox Business/CBS News 00:01 ET - Cierre del gobierno de EEUU inicia hoy, retrasa datos economicos"
+    "CNBC 2026-10-01 - Oil prices rise as Chinese refiners reportedly ban October fuel exports; Brent crude near $100",
+    "Benzinga/TradingView 2026-09-30 - Nasdaq 100 Futures Gain, Dow Jones Drops as Iran Receives US Proposal To Restore Ceasefire",
+    "Yahoo Finance 2026-09-29 - Dow, S&P 500, Nasdaq wobble as 30-year Treasury yield climbs to 24-year high",
+    "Bloomberg 2026-09-30 - Stock Market Today: Dow, S&P Live Updates for October 1 (Micron, Alphabet Gemini 4)"
   ],
-  "as_of": "2026-10-01T13:08:00Z"
+  "as_of": "2026-10-01T13:40:53Z"
 }
