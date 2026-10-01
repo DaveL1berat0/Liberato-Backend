@@ -2219,9 +2219,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
   <div style="background:linear-gradient(180deg,rgba(14,18,28,0.99),rgba(6,8,13,0.97));border:0.5px solid rgba(201,168,76,0.3);border-radius:20px;padding:44px 36px;text-align:center;max-width:400px;width:100%;box-shadow:0 32px 80px -16px rgba(0,0,0,0.9);">
     <div style="font-family:Georgia,serif;font-style:italic;font-size:17px;color:rgba(232,228,217,0.45);margin-bottom:18px;letter-spacing:0.02em;">Liberato <span style="color:#C9A84C;">Community</span></div>
     <div style="font-size:38px;margin-bottom:14px;">🔐</div>
-    <h2 style="font-size:20px;font-weight:600;color:#E8E4D9;margin:0 0 10px;line-height:1.3;">Contenido exclusivo<br>para miembros Pro</h2>
+    <h2 style="font-size:20px;font-weight:600;color:#E8E4D9;margin:0 0 10px;line-height:1.3;">Contenido exclusivo<br>para miembros con Acceso Completo</h2>
     <p style="font-size:13px;color:rgba(232,228,217,0.45);line-height:1.65;margin:0 0 26px;">Activa tu membresía para acceder al dashboard institucional, journal, lives diarios y más.</p>
-    <a href="https://whop.com/dave-liberato-group/live-day-trading-52/" target="_blank" style="display:block;background:linear-gradient(135deg,#C9A84C,#a07828);color:#06080D;font-weight:700;font-size:13px;padding:14px 24px;border-radius:10px;text-decoration:none;margin-bottom:12px;letter-spacing:0.04em;">Activar membresía Pro — $199/mes</a>
+    <a href="https://whop.com/dave-liberato-group/live-day-trading-52/" target="_blank" style="display:block;background:linear-gradient(135deg,#C9A84C,#a07828);color:#06080D;font-weight:700;font-size:13px;padding:14px 24px;border-radius:10px;text-decoration:none;margin-bottom:12px;letter-spacing:0.04em;">Activar Acceso Completo — $199/mes</a>
     <a href="homepage.html" style="display:block;font-size:12px;color:rgba(232,228,217,0.35);text-decoration:none;padding:8px 0;margin-bottom:20px;">← Volver al inicio</a>
     <div style="border-top:0.5px solid rgba(255,255,255,0.06);padding-top:16px;">
       <a href="auth.html" style="font-size:12px;color:rgba(201,168,76,0.6);text-decoration:none;letter-spacing:0.03em;">¿Ya tienes cuenta? <span style="color:#C9A84C;font-weight:600;">Inicia sesión →</span></a>
@@ -2373,9 +2373,9 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <div class="cal-stats-bar" id="cal-stats"></div>
     <div class="cal-outer">
       <div class="cal-header">
-        <button class="cnav" id="cprev">‹</button>
+        <button aria-label="Anterior" class="cnav" id="cprev">‹</button>
         <span class="cal-label" id="cal-label">Junio 2026</span>
-        <button class="cnav" id="cnext">›</button>
+        <button aria-label="Siguiente" class="cnav" id="cnext">›</button>
       </div>
       <div class="cal-mode-row" id="cal-mode-row">
         <button class="cal-mode-btn active" data-m="money" onclick="setCalMode('money')">$</button>
@@ -2508,7 +2508,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="doverlay" id="doverlay" onclick="closeForm()"></div>
 <div class="tdrawer" id="tdrawer">
   <div class="td-handle"></div>
-  <div class="td-head"><span class="td-title">Nuevo Trade</span><button class="td-close" onclick="closeForm()">✕</button></div>
+  <div class="td-head"><span class="td-title">Nuevo Trade</span><button aria-label="Cerrar" class="td-close" onclick="closeForm()">✕</button></div>
   <div class="td-body">
     <div class="fsec"><div class="fsec-lbl">Dirección</div>
       <div class="dtoggle"><button class="dbtn long active" id="btn-l" onclick="setDir('long')">▲ Long</button><button class="dbtn short" id="btn-s" onclick="setDir('short')">▼ Short</button><button class="dbtn sideways" id="btn-sw" onclick="setDir('sideways')">⟺ Lateral</button></div>
@@ -2554,7 +2554,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="ai-chat-modal" id="pb-editor-modal">
   <div class="acm-bg" onclick="closePbEditor()"></div>
   <div class="acm-card" style="height:auto;max-height:92vh;">
-    <div class="acm-head"><div class="acm-title" id="pbe-title">Nuevo Playbook</div><button class="acm-close" onclick="closePbEditor()">✕</button></div>
+    <div class="acm-head"><div class="acm-title" id="pbe-title">Nuevo Playbook</div><button aria-label="Cerrar" class="acm-close" onclick="closePbEditor()">✕</button></div>
     <div style="padding:20px;overflow-y:auto;">
       <div class="fsec"><div class="fsec-lbl">Nombre</div><input class="finput" id="pbe-name" placeholder="Ej: VAL Reclaim → VAH"></div>
       <div class="fsec"><div class="fsec-lbl">Categoría</div><div class="ctx-group" id="pbe-cats"></div></div>
@@ -2615,7 +2615,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="ai-chat-modal" id="ai-chat-modal">
   <div class="acm-bg" onclick="closeAIChat()"></div>
   <div class="acm-card">
-    <div class="acm-head"><div class="acm-dot"></div><div class="acm-title">El Genio — AI Coach</div><button class="acm-close" onclick="closeAIChat()">✕</button></div>
+    <div class="acm-head"><div class="acm-dot"></div><div class="acm-title">El Genio — AI Coach</div><button aria-label="Cerrar" class="acm-close" onclick="closeAIChat()">✕</button></div>
     <div class="acm-messages" id="acm-messages">
       <div class="acm-msg ai"><div class="acm-bubble">¡Hola! Soy tu Genio. Puedo analizar tus trades, identificar patrones y ayudarte a mejorar. ¿Qué quieres saber hoy?</div><div class="acm-time">Ahora</div></div>
     </div>
@@ -2633,7 +2633,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 </div>
 
 <!-- TRADE DETAIL MODAL (día) -->
-<div class="tdmodal" id="tdmodal"><div class="tdm-bg" onclick="closeTDM()"></div><div class="tdm-card"><div class="tdm-head"><span class="tdm-title" id="tdm-title">Trade</span><button class="tdm-close" onclick="closeTDM()">✕</button></div><div id="tdm-body"></div></div></div>
+<div class="tdmodal" id="tdmodal"><div class="tdm-bg" onclick="closeTDM()"></div><div class="tdm-card"><div class="tdm-head"><span class="tdm-title" id="tdm-title">Trade</span><button aria-label="Cerrar" class="tdm-close" onclick="closeTDM()">✕</button></div><div id="tdm-body"></div></div></div>
 
 <!-- TRADE DETAIL WORKSPACE (full-screen, Review 2.0) -->
 <div class="tws" id="tws"><div class="tws-inner" id="tws-inner"></div></div>
@@ -2673,7 +2673,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="doverlay" id="chk-editor-overlay" onclick="closeChkEditor()"></div>
 <div class="tdrawer" id="chk-editor">
   <div class="td-handle"></div>
-  <div class="td-head"><span class="td-title">Editar Checklist</span><button class="td-close" onclick="closeChkEditor()">✕</button></div>
+  <div class="td-head"><span class="td-title">Editar Checklist</span><button aria-label="Cerrar" class="td-close" onclick="closeChkEditor()">✕</button></div>
   <div class="td-body" id="chk-editor-body"></div>
   <div style="padding:16px 18px;border-top:0.5px solid var(--border2);display:flex;gap:10px;">
     <button onclick="closeChkEditor()" style="flex:1;background:rgba(0,0,0,0.3);border:0.5px solid var(--border2);color:var(--text2);border-radius:9px;padding:12px;font-size:13px;cursor:pointer;">Cancelar</button>
@@ -2685,7 +2685,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="doverlay" id="ctx-editor-overlay" onclick="closeCtxEditor()"></div>
 <div class="tdrawer" id="ctx-editor">
   <div class="td-handle"></div>
-  <div class="td-head"><span class="td-title">Editar Campos de Contexto</span><button class="td-close" onclick="closeCtxEditor()">✕</button></div>
+  <div class="td-head"><span class="td-title">Editar Campos de Contexto</span><button aria-label="Cerrar" class="td-close" onclick="closeCtxEditor()">✕</button></div>
   <div class="td-body" id="ctx-editor-body"></div>
   <div style="padding:16px 18px;border-top:0.5px solid var(--border2);display:flex;gap:10px;">
     <button onclick="closeCtxEditor()" style="flex:1;background:rgba(0,0,0,0.3);border:0.5px solid var(--border2);color:var(--text2);border-radius:9px;padding:12px;font-size:13px;cursor:pointer;">Cancelar</button>
@@ -2697,7 +2697,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <div class="doverlay" id="csv-overlay" onclick="closeCsvImport()"></div>
 <div class="tdrawer" id="csv-modal">
   <div class="td-handle"></div>
-  <div class="td-head"><span class="td-title">Conectar broker</span><button class="td-close" onclick="closeCsvImport()">✕</button></div>
+  <div class="td-head"><span class="td-title">Conectar broker</span><button aria-label="Cerrar" class="td-close" onclick="closeCsvImport()">✕</button></div>
   <div class="td-body" id="csv-body">
     <!-- HERO: conectar broker en 1 paso, diseño propio -->
     <div style="border:1px solid rgba(201,168,76,0.28);border-radius:18px;padding:22px 20px;background:linear-gradient(180deg,rgba(201,168,76,0.07),rgba(201,168,76,0.015));text-align:center;">
@@ -4074,7 +4074,7 @@ function twsCloseLb(){document.getElementById('tws-lb').classList.remove('open')
 function twsRenderShots(){
   var host=document.getElementById('tws-shots-host');if(!host)return;
   idbShots(_twsId).then(function(arr){
-    var grid=arr.map(function(src,i){return '<div class="tws-shot"><img src="'+src+'" onclick="twsFull(this.src)"><button class="tws-shot-del" onclick="event.stopPropagation();twsDelShot('+i+')">✕</button><button class="tws-shot-ai" title="Leer stop/target del cuadro Risk/Reward con IA" onclick="event.stopPropagation();twsExtractLevelsIdx('+i+')">✨ Niveles</button></div>';}).join('');
+    var grid=arr.map(function(src,i){return '<div class="tws-shot"><img src="'+src+'" onclick="twsFull(this.src)"><button aria-label="Eliminar" class="tws-shot-del" onclick="event.stopPropagation();twsDelShot('+i+')">✕</button><button class="tws-shot-ai" title="Leer stop/target del cuadro Risk/Reward con IA" onclick="event.stopPropagation();twsExtractLevelsIdx('+i+')">✨ Niveles</button></div>';}).join('');
     host.innerHTML=(arr.length?'<div class="tws-shots" style="margin-bottom:14px;">'+grid+'</div>':'')
       +'<div class="tws-drop" id="tws-drop" onclick="twsPickShots()"><div style="font-size:22px;margin-bottom:6px;opacity:0.7;">📸</div><div style="font-size:12px;color:var(--text2);font-weight:600;">Sube capturas del trade</div><div style="font-size:10px;color:var(--text3);font-family:\'DM Mono\',monospace;margin-top:3px;">Arrastra o toca · entrada · gestión · salida · máx 12</div></div>';
     var dz=document.getElementById('tws-drop');
@@ -4240,7 +4240,7 @@ function renderTws(){
   host.innerHTML=
     '<div class="tws-topbar"><button class="tws-back" onclick="twsClose()">← Mis Trades</button>'
     +'<span class="tws-count">'+(_twsIdx+1)+' / '+_twsList.length+'</span>'
-    +'<span class="tws-navbtns"><button class="tws-navbtn" onclick="twsNav(-1)"'+(_twsIdx<=0?' disabled':'')+'>←</button><button class="tws-navbtn" onclick="twsNav(1)"'+(_twsIdx>=_twsList.length-1?' disabled':'')+'>→</button></span></div>'
+    +'<span class="tws-navbtns"><button aria-label="Anterior" class="tws-navbtn" onclick="twsNav(-1)"'+(_twsIdx<=0?' disabled':'')+'>←</button><button class="tws-navbtn" onclick="twsNav(1)"'+(_twsIdx>=_twsList.length-1?' disabled':'')+'>→</button></span></div>'
     // hero
     +'<div class="tws-hero"><div class="tws-hero-top"><div>'
     +'<span class="tws-asset">'+_esc(t.asset)+'</span><span class="tws-dir '+dir+'">'+(dir==='long'?'LONG':'SHORT')+'</span>'
@@ -5590,7 +5590,7 @@ function renderChkEditor(){
         +'<input value="'+_esc(it.title)+'" oninput="updChkItem('+i+',\'title\',this.value)" placeholder="Pregunta del checklist" style="background:rgba(0,0,0,0.3);border:0.5px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;font-weight:600;">'
         +'<input value="'+_esc(it.desc||'')+'" oninput="updChkItem('+i+',\'desc\',this.value)" placeholder="Descripción (opcional)" style="background:rgba(0,0,0,0.3);border:0.5px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:11px;">'
       +'</div>'
-      +'<button onclick="removeChkItem('+i+')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;flex-shrink:0;font-size:14px;">✕</button>'
+      +'<button aria-label="Eliminar" onclick="removeChkItem('+i+')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;flex-shrink:0;font-size:14px;">✕</button>'
     +'</div>';
   }).join('');
   body.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;overflow-x:auto;">'+tabs+'</div>'
@@ -6512,7 +6512,7 @@ function renderCtxEditor(){
       CTX_COLORS.forEach(function(c){html+='<option value="'+c+'"'+(item.color===c?' selected':'')+'>'+CTX_COLOR_LABELS[c]+'</option>';});
       html+='</select>';
       html+='<input value="'+_esc(item.label)+'" oninput="updCtxItemLabel(\''+fk+'\','+i+',this.value)" style="flex:1;background:rgba(0,0,0,0.3);border:0.5px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;">';
-      html+='<button onclick="removeCtxItem(\''+fk+'\','+i+')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>';
+      html+='<button aria-label="Eliminar" onclick="removeCtxItem(\''+fk+'\','+i+')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>';
       html+='</div>';
     });
     html+='<button onclick="addCtxItem(\''+fk+'\')" style="width:100%;background:rgba(201,168,76,0.06);color:var(--gold);border:0.5px dashed rgba(201,168,76,0.3);border-radius:7px;padding:8px;font-size:11px;cursor:pointer;margin-top:4px;font-family:DM Mono,monospace;">+ Agregar opción</button>';
@@ -6567,7 +6567,7 @@ function renderPbeCustomList(containerId,type,arr,bg,color){
     +' onkeydown="if(event.key===\'Enter\')pbeConfirmCustom(\''+type+'\')"'
     +' style="flex:1;background:rgba(0,0,0,0.35);border:0.5px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-size:12px;font-family:\'DM Mono\',monospace;outline:none;">'
     +'<button onclick="pbeConfirmCustom(\''+type+'\')" style="background:rgba(201,168,76,0.15);border:0.5px solid rgba(201,168,76,0.4);color:var(--gold);border-radius:7px;padding:7px 12px;font-size:11px;font-family:\'DM Mono\',monospace;cursor:pointer;white-space:nowrap;">✓ OK</button>'
-    +'<button onclick="pbeCancelCustom(\''+type+'\')" style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.25);color:#ef4444;border-radius:7px;padding:7px 10px;font-size:11px;cursor:pointer;">✕</button>'
+    +'<button aria-label="Cancelar" onclick="pbeCancelCustom(\''+type+'\')" style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.25);color:#ef4444;border-radius:7px;padding:7px 10px;font-size:11px;cursor:pointer;">✕</button>'
     +'</div>'
     +'</div>';
   cont.innerHTML=tags+inputRow;
@@ -7020,9 +7020,9 @@ function dfpRenderPanel(){
   if(view==='years'){
     // Year picker grid
     html+='<div class="dfp-p-head">'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(-12)">‹</button>'
+      +'<button aria-label="Anterior" class="dfp-p-nav" onclick="dfpPanMo(-12)">‹</button>'
       +'<span class="dfp-p-month" onclick="dfpSetView(\'days\')">'+yr+'</span>'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(12)">›</button>'
+      +'<button aria-label="Siguiente" class="dfp-p-nav" onclick="dfpPanMo(12)">›</button>'
       +'</div>';
     html+='<div class="dfp-yr-grid">';
     var startYr=yr-6;
@@ -7034,9 +7034,9 @@ function dfpRenderPanel(){
     html+='</div>';
   } else if(view==='months'){
     html+='<div class="dfp-p-head">'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(-12)">‹</button>'
+      +'<button aria-label="Anterior" class="dfp-p-nav" onclick="dfpPanMo(-12)">‹</button>'
       +'<span class="dfp-p-month" onclick="dfpSetView(\'years\')">'+yr+'</span>'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(12)">›</button>'
+      +'<button aria-label="Siguiente" class="dfp-p-nav" onclick="dfpPanMo(12)">›</button>'
       +'</div>';
     html+='<div class="dfp-mo-grid">';
     var nowMo=new Date().getMonth(),nowYr=new Date().getFullYear();
@@ -7049,9 +7049,9 @@ function dfpRenderPanel(){
   } else {
     // Day grid
     html+='<div class="dfp-p-head">'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(-1)">‹</button>'
+      +'<button aria-label="Anterior" class="dfp-p-nav" onclick="dfpPanMo(-1)">‹</button>'
       +'<span class="dfp-p-month" onclick="dfpSetView(\'months\')">'+MNAMES_S[mo]+' <span style="color:rgba(201,168,76,0.6);font-size:13px;">'+yr+'</span></span>'
-      +'<button class="dfp-p-nav" onclick="dfpPanMo(1)">›</button>'
+      +'<button aria-label="Siguiente" class="dfp-p-nav" onclick="dfpPanMo(1)">›</button>'
       +'</div>';
     // Picking label
     var pickLbl=_dfpState.picking==='start'?'Selecciona fecha inicio':'Selecciona fecha fin';

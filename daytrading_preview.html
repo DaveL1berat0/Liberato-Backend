@@ -2152,28 +2152,9 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
   }
 
   var candleCache={};
-  function applyMockPrice(){
-    var m=MOCK.price; S.prevPrice=S.price; S.price=m.price; S.dayOpen=m.open; S.dayHigh=m.high; S.dayLow=m.low;
-    // synth a gentle candle series for the sparkline
-    if(!S.candles||!S.candles.length){
-      var base=m.open,arr=[],t=Math.floor(Date.now()/1000)-78*300;
-      for(var i=0;i<78;i++){var drift=(m.price-m.open)*(i/77);var noise=Math.sin(i*0.7)*22+Math.cos(i*0.3)*14;var c=Math.round((base+drift+noise)/NQ_STEP)*NQ_STEP;arr.push({time:t+i*300,open:c,high:c+15,low:c-15,close:c});}
-      arr[arr.length-1].close=m.price; S.candles=arr;
-    }
-  }
-  async function fetchPrice(){
-    var t0=performance.now();
-    var urls=['https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval=5m&range=1d','https://query2.finance.yahoo.com/v8/finance/chart/QQQ?interval=5m&range=1d'];
-    for(var i=0;i<urls.length;i++){try{var r=await withTimeout(urls[i],6000);if(!r||!r.ok)continue;var d=await r.json();var res=d&&d.chart&&d.chart.result&&d.chart.result[0];if(!res)continue;var meta=res.meta||{},rt=getRatio();var q=res.indicators&&res.indicators.quote&&res.indicators.quote[0];var ts=res.timestamp||[];var out=[];if(q&&ts.length){for(var j=0;j<ts.length;j++){var o=q.open[j],h=q.high[j],l=q.low[j],c=q.close[j];if(o==null||h==null||l==null||c==null)continue;out.push({time:ts[j],open:Math.round(o*rt*4)/4,high:Math.round(h*rt*4)/4,low:Math.round(l*rt*4)/4,close:Math.round(c*rt*4)/4});}}if(out.length){S.candles=out;candleCache['c5']={ts:Date.now(),d:out};
-      // derive day high/low from candles
-      S.dayHigh=Math.max.apply(null,out.map(function(x){return x.high;}));S.dayLow=Math.min.apply(null,out.map(function(x){return x.low;}));}
-      var px=meta.regularMarketPrice?Math.round(meta.regularMarketPrice*rt/NQ_STEP)*NQ_STEP:(out.length?out[out.length-1].close:null);var op=meta.chartPreviousClose?Math.round(meta.chartPreviousClose*rt/NQ_STEP)*NQ_STEP:(out.length?out[0].open:null);if(px){S.prevPrice=S.price;S.price=px;S.dayOpen=op;if(typeof checkGammaCross==='function')checkGammaCross(S.prevPrice,px);}
-      setHealth('price','connected','real',Math.round(performance.now()-t0));
-      return;}catch(e){console.warn("[lbc] silent error:",e);}}
-    // all failed → mock
-    if(MOCK.enabled){applyMockPrice();setHealth('price','error','mock',null);}
-    else setHealth('price','error','none',null);
-  }
+  // (código muerto eliminado: applyMockPrice + un fetchPrice que pegaba a Yahoo desde el
+  //  cliente — estaba shadoweado por el fetchPrice de init() y NUNCA se ejecutaba. El precio
+  //  real lo trae el fetchPrice de init() vía el backend /api/heatmap.)
 
   /* ── derive structure (CHOP/RANGE/TREND) + volatility from real data ──
      Placeholder logic until AI defines exact params (you'll provide).
