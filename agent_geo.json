@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Las conversaciones de alto el fuego entre EEUU e Iran sobre la reapertura del Estrecho de Ormuz siguen estancadas, lo que sostiene el tono de aversion al riesgo y limita el apetito comprador en el NQ intradia (CNBC, AA).",
-  "petroleo": "El Brent supera los 100 USD/barril (+2.2%, ~100.15) y el WTI sube a 91.74 (+1.5%) tras el veto de refinadoras chinas a exportar combustible en octubre y el estancamiento de las negociaciones EEUU-Iran, lo que presiona costos e inflacion y pesa sobre el sentimiento de riesgo del NQ (CNBC).",
-  "catalizador": "El cierre del gobierno de EEUU, vigente desde las 00:01 ET de hoy 1 de octubre, retrasa publicaciones clave (no habra informe de empleo de septiembre), anadiendo incertidumbre macro que puede generar volatilidad adicional en el NQ durante la sesion (CNBC).",
+  "geopolitica": "Las conversaciones de alto el fuego entre EEUU e Iran sobre la reapertura del Estrecho de Ormuz siguen estancadas por sanciones, terminos del bloqueo y supervision nuclear, lo que sostiene la aversion al riesgo y limita el apetito comprador en el NQ intradia.",
+  "petroleo": "El Brent sube cerca de 2.4% hasta unos 100-100.4 USD/barril y el WTI avanza ~2.5% a unos 92-92.7 USD tras reportes de que refinadoras chinas suspendieron las exportaciones de combustible de octubre, presionando costos e inflacion y pesando sobre el sentimiento de riesgo en el NQ.",
+  "catalizador": "El cierre parcial del gobierno de EEUU, vigente desde las 00:01 ET de hoy, amenaza con retrasar el informe de empleo de septiembre, lo que puede sumar volatilidad e incertidumbre macro adicional en la apertura del NQ.",
   "sources": [
-    "CNBC - Oil prices today, WTI/Brent (01/10/2026)",
-    "AA (Anadolu Agency) - Brent rises above $100 as stalled US-Iran talks fuel supply concerns (01/10/2026)",
-    "CNBC - Government shutdown live updates - vigente desde 00:01 ET (01/10/2026)"
+    "Reuters (via TradingView) - Chinese refiners suspend October fuel exports, Brent/WTI rise ~2.4-2.5% (01-oct-2026)",
+    "SAN / CBS News - US-Iran Strait of Hormuz ceasefire talks stall (01-oct-2026)",
+    "CNBC / Fox Business - Government shutdown since 00:01 ET threatens Sept jobs report (01-oct-2026)"
   ],
-  "as_of": "2026-10-01T12:07:53Z"
+  "as_of": "2026-10-01T12:42:16Z"
 }
