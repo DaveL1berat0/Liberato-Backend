@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Iran envio a Washington una propuesta para restablecer el alto el fuego mientras Trump califico de 'engano' (hoax) cualquier alivio de sanciones, lo que mantiene la aversion al riesgo y limita el apetito comprador en el NQ en la apertura.",
-  "petroleo": "El Brent sube ~1.8% hasta cerca de 99.81 USD/barril y el WTI avanza ~0.5% a 90.87 USD tras reportes de que refinadoras chinas, entre ellas PetroChina, suspendieron exportaciones de combustible de octubre, tensionando una oferta global ya ajustada por el conflicto en Oriente Medio y la guerra en Ucrania, lo que presiona el sentimiento de riesgo del NQ.",
-  "catalizador": "El rendimiento del Treasury a 30 anos toco un maximo de 24 anos (el mayor desde 2002), presionando a las tecnologicas de alta duracion, aunque el pronostico optimista de Micron y el lanzamiento de Gemini 4 de Alphabet (+2.3%) sostienen a los futuros del Nasdaq-100 (+0.5%) de cara a la apertura.",
+  "geopolitica": "Trump dijo que intensificar los bombardeos contra Iran es \"posible\" tras las elecciones de medio mandato de noviembre (Bloomberg), lo que reaviva el riesgo de escalada belica y presiona al NQ a la baja por aversion al riesgo.",
+  "petroleo": "Brent cotiza cerca de 100 USD/barril y WTI en torno a 90 USD tras que refinerias chinas suspendieran las exportaciones de combustible de octubre y por la guerra EEUU-Iran, que mantiene el Estrecho de Ormuz con transito restringido (CNBC); el crudo elevado encarece costos y pesa sobre el sentimiento de riesgo del NQ intradia.",
+  "catalizador": "",
   "sources": [
-    "CNBC 2026-10-01 - Oil prices rise as Chinese refiners reportedly ban October fuel exports; Brent crude near $100",
-    "Benzinga/TradingView 2026-09-30 - Nasdaq 100 Futures Gain, Dow Jones Drops as Iran Receives US Proposal To Restore Ceasefire",
-    "Yahoo Finance 2026-09-29 - Dow, S&P 500, Nasdaq wobble as 30-year Treasury yield climbs to 24-year high",
-    "Bloomberg 2026-09-30 - Stock Market Today: Dow, S&P Live Updates for October 1 (Micron, Alphabet Gemini 4)"
+    "Bloomberg 01 oct 2026",
+    "CNBC 01 oct 2026"
   ],
-  "as_of": "2026-10-01T13:40:53Z"
+  "as_of": "2026-10-01T14:06:55Z"
 }
