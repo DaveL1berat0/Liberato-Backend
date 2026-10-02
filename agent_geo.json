@@ -1,14 +1,13 @@
 {
-  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones (USS Theodore Roosevelt, sumandose al USS George H.W. Bush y al USS George Washington) hacia Oriente Medio en medio de la escalada con Iran y las conversaciones mediadas por Qatar en Doha, lo que eleva la aversion al riesgo y presiona el apetito por tech en el NQ.",
-  "petroleo": "El Brent subio 4.4% hasta 102.31 USD/barril y el WTI 2.7% hasta 92.87 USD/barril el 1 de octubre por el despliegue naval de EE.UU. y el corte de exportaciones de combustible de China, aunque el 2 de octubre el petroleo modera la subida ante rumores de liberacion de reservas de diesel y crudo, aliviando algo la presion inflacionaria sobre el NQ.",
-  "catalizador": "El mercado espera el informe de empleo de EE.UU. de septiembre (nonfarm payrolls) que se publica hoy a las 8:30 ET, con consenso de +84.000 empleos y tasa de paro en 4.1%; una sorpresa en cualquier direccion puede mover con fuerza al NQ por su impacto en las expectativas de recorte de tasas de la Fed.",
+  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones hacia Oriente Medio en medio de la escalada con Iran, lo que eleva la aversion al riesgo global y presiona el apetito por tech antes de la apertura del NQ.",
+  "petroleo": "El Brent subio 4.4% hasta 102.31 USD/barril y el WTI 2.7% hasta 92.87 USD/barril el 1 de octubre por el despliegue naval de EE.UU. y el corte de exportaciones de combustible de China, moderando algo la subida el 2 de octubre; el encarecimiento energetico añade presion inflacionaria de fondo sobre el NQ.",
+  "catalizador": "El informe de empleo de septiembre (nonfarm payrolls), publicado hoy a las 8:30 ET, mostro solo 29.000 empleos creados frente a los 84.000 esperados, con tasa de paro subiendo a 4.2%; el dato debil dispara expectativas de recorte de tasas de la Fed y impulsa los futuros del Nasdaq-100 un 1.2% antes de la apertura.",
   "sources": [
-    "CNBC 01-oct (oil-prices-today-wti-brent, Brent +4.4% a 102.31 USD por despliegue de portaaviones)",
+    "CNBC 02-oct (jobs-report-september-2026, nomina +29.000 vs +84.000 esperado, paro 4.2%)",
+    "CNBC 02-oct (stock-market-today-live-updates, futuros Nasdaq-100 +1.2% tras dato de empleo debil)",
     "CNBC 02-oct (cnbc-daily-open-us-third-carrier-iran)",
     "CNBC 02-oct (oil-rises-slightly-as-market-weighs-mixed-supply-signals)",
-    "The National 02-oct (oil-prices-fall-3-on-reports-of-talks-over-diesel-and-crude-stock-releases)",
-    "CNBC 01-oct (the-september-jobs-report-will-be-released-friday-heres-what-to-expect)",
-    "Bloomberg 26-sep (us-jobs-report-seen-showing-90-000-payrolls-4-1-unemployment-rate)"
+    "CNBC 01-oct (oil-prices-today-wti-brent, Brent +4.4% a 102.31 USD por despliegue de portaaviones)"
   ],
-  "as_of": "2026-10-02T12:08:49Z"
+  "as_of": "2026-10-02T12:39:42Z"
 }
