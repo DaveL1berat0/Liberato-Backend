@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Escalada en el Estrecho de Ormuz: EEUU despliega un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) y la 13ª MEU hacia Oriente Medio tras ataques a petroleros, mientras Iran amenaza con declarar una 'zona de exclusion' maritima, lo que eleva la aversion al riesgo y puede presionar al NQ.",
-  "petroleo": "El Brent cerro el jueves con un salto del 4,4% hasta 102,31 USD/barril tras conocerse el envio del tercer grupo de portaaviones de EEUU a Oriente Medio por la tension con Iran; un repunte energetico que historicamente lastra al sector growth/tech del NQ.",
-  "catalizador": "El informe de nominas no agricolas (NFP) de septiembre, publicado hoy a las 8:30 ET, decepciono con solo 29.000 empleos creados frente a los 84.000 esperados y una tasa de paro que subio a 4,2% (con fuertes revisiones a la baja de julio y agosto), lo que reduce la presion sobre la Fed para subir tipos, hunde los rendimientos y favorece al Nasdaq.",
+  "geopolitica": "EE.UU. enviará un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) a Oriente Medio y Trump advirtió de nuevos ataques contra Irán, elevando la aversión al riesgo que puede presionar al NQ (CNBC, 02-Oct).",
+  "petroleo": "El Brent cotiza en torno a 102.60 USD/barril (+0.3%) tras el salto del jueves (+4.4% a 102.31) por el despliegue naval de EE.UU. frente a Irán, manteniendo una prima de riesgo que encarece costos y lastra el sentimiento de riesgo del NQ (CNBC, 02-Oct).",
+  "catalizador": "El informe de nóminas no agrícolas de septiembre (08:30 ET) decepcionó con 29,000 empleos vs ~84,000 esperados y desempleo al 4.2% vs 4.1% esperado, reforzando apuestas de un recorte de tasas de la Fed este mes, lo que favorece al NQ en la apertura (CNBC/BLS, 02-Oct, 08:30 ET).",
   "sources": [
-    "CNBC 01-Oct (cierre de mercado)",
-    "BLS/Yahoo Finance 02-Oct 08:30 ET"
+    "BLS/CNBC 08:30 ET - Jobs report September 2026",
+    "CNBC 02-Oct - U.S. to send third carrier group to Mideast as Trump warns of new Iran strikes",
+    "CNBC 02-Oct - Oil rises slightly as market weighs mixed supply signals"
   ],
-  "as_of": "2026-10-02T15:07:13Z"
+  "as_of": "2026-10-02T15:41:01Z"
 }
