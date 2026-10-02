@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. envia un tercer grupo de ataque de portaaviones a Oriente Medio mientras persiste la escalada entre EE.UU. e Iran tras la ruptura del alto el fuego, lo que mantiene una prima de riesgo geopolitico que presiona el sentimiento de riesgo del NQ en la apertura.",
-  "petroleo": "El Brent cae 2.5% a 99.78 USD/barril y el WTI cae 3.7% a 89.42 USD/barril tras reportes de que la UE y la AIE evaluan liberar hasta 50 millones de barriles de diesel y crudo de reservas para aliviar el desabasto de Oriente Medio, revirtiendo el salto del jueves (Brent +4.4%) por el envio del portaaviones; el alivio en crudo reduce la presion inflacionaria y actua como viento de cola para el NQ en la apertura.",
-  "catalizador": "La nomina no agricola de septiembre sumo solo 29,000 empleos frente a los 90,000 esperados y el desempleo subio a 4.2% (dato publicado a las 08:30 ET), lo que reduce las apuestas de alza de tasas y refuerza expectativas de recorte de la Fed, impulsando a los futuros del NQ al alza en la apertura.",
+  "geopolitica": "Escalada EE.UU.-Iran: EE.UU. presiona a Europa para que libere 'de inmediato' sus reservas de diesel mientras la guerra con Iran dispara los precios del combustible y persiste el despliegue de un tercer grupo de portaaviones hacia Oriente Medio, manteniendo una prima de riesgo geopolitico que genera volatilidad en el sentimiento de riesgo del NQ.",
+  "petroleo": "El Brent cae 2.5% a 99.78 USD/barril y el WTI cae 3.7% a 89.42 USD/barril tras conocerse una propuesta de Francia para que la UE libere 50 millones de barriles de diesel y la AIE otros 50 millones de crudo de sus reservas, revirtiendo el salto del jueves por el envio del portaaviones; el alivio en crudo reduce la presion inflacionaria y actua como viento de cola para el NQ en la apertura.",
+  "catalizador": "La nomina no agricola de septiembre sumo solo 29,000 empleos frente a los ~90,000 esperados y el desempleo subio a 4.2% (dato publicado a las 08:30 ET), lo que reduce las apuestas de una subida de tasas de la Fed en octubre y impulso a los futuros del NQ (+1% premarket) y al Nasdaq Composite (+1.1%) en la apertura.",
   "sources": [
-    "CNBC 01/10/2026 - tercer portaaviones a Oriente Medio",
-    "CNBC 02/10/2026 - petroleo cae por posible liberacion de reservas UE/AIE",
-    "Reuters 08:30 ET - nomina no agricola de septiembre"
+    "CNBC 02/10/2026 - EE.UU. urge a Europa a liberar reservas de diesel por guerra con Iran",
+    "CNBC/Bloomberg 02/10/2026 - petroleo cae por propuesta de Francia de liberar reservas UE/AIE (Brent -2.5%, WTI -3.7%)",
+    "CNBC/Bloomberg 08:30 ET - nomina no agricola de septiembre (+29,000 vs ~90,000 esperados, desempleo 4.2%); futuros NQ +1% premarket"
   ],
-  "as_of": "2026-10-02T13:40:30Z"
+  "as_of": "2026-10-02T14:07:23Z"
 }
