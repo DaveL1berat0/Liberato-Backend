@@ -1,13 +1,10 @@
 {
-  "geopolitica": "EE.UU. (el asesor comercial de Trump, Greer, en el G20) presiona a Europa para liberar 'de inmediato' sus reservas de diesel mientras la guerra con Iran dispara los precios del combustible, y persiste el riesgo de escalada con el despliegue de un tercer portaaviones (USS Theodore Roosevelt) hacia Oriente Medio y nuevas sanciones del Tesoro a los sectores automotor y ferroviario iranies y a la red A7, lo que mantiene una prima de riesgo geopolitico que genera volatilidad en el sentimiento de riesgo del NQ.",
-  "petroleo": "El Brent cae cerca de 2,6% a unos 99,65 USD/barril (de nuevo por debajo de 100) y el WTI cae cerca de 4% a unos 89,11 USD/barril, tras conocerse una propuesta de Francia para que la UE libere 50 millones de barriles de diesel y la AIE otros 50 millones de crudo de sus reservas estrategicas, revirtiendo el salto de precios del jueves por el despliegue del portaaviones; el alivio en crudo reduce la presion inflacionaria y actua como viento de cola para el NQ en la apertura.",
-  "catalizador": "La nomina no agricola de septiembre (dato publicado a las 08:30 ET) sumo solo 29.000 empleos frente a los 84.000 esperados por consenso y el desempleo subio a 4,2% (vs 4,1% esperado), lo que bajo los rendimientos del Tesoro y reforzo las apuestas de que la Fed mantendra/recortara tasas en octubre, un viento de cola para el NQ en la apertura.",
+  "geopolitica": "Escalada en el Estrecho de Ormuz: EEUU despliega un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) y la 13ª MEU hacia Oriente Medio tras ataques a petroleros, mientras Iran amenaza con declarar una 'zona de exclusion' maritima, lo que eleva la aversion al riesgo y puede presionar al NQ.",
+  "petroleo": "El Brent cerro el jueves con un salto del 4,4% hasta 102,31 USD/barril tras conocerse el envio del tercer grupo de portaaviones de EEUU a Oriente Medio por la tension con Iran; un repunte energetico que historicamente lastra al sector growth/tech del NQ.",
+  "catalizador": "El informe de nominas no agricolas (NFP) de septiembre, publicado hoy a las 8:30 ET, decepciono con solo 29.000 empleos creados frente a los 84.000 esperados y una tasa de paro que subio a 4,2% (con fuertes revisiones a la baja de julio y agosto), lo que reduce la presion sobre la Fed para subir tipos, hunde los rendimientos y favorece al Nasdaq.",
   "sources": [
-    "CNBC 02-oct - Oil prices fall on report of potential diesel, crude stock release; Brent back below $100",
-    "CNBC 02-oct - U.S. urges Europe to 'immediately' release diesel reserves as Iran war fuels record prices",
-    "Bloomberg 01-oct - Trump Trade Adviser Urges Europe to Release Diesel Reserves During G20 Talks",
-    "CNBC 08:30 ET - Jobs report September 2026 (nonfarm payrolls +29,000, unemployment 4.2%)",
-    "CNBC 02-oct - CNBC Daily Open: carrier buildup in Middle East / Treasury sanctions on Iran"
+    "CNBC 01-Oct (cierre de mercado)",
+    "BLS/Yahoo Finance 02-Oct 08:30 ET"
   ],
-  "as_of": "2026-10-02T14:43:10Z"
+  "as_of": "2026-10-02T15:07:13Z"
 }
