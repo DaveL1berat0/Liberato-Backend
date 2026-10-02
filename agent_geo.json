@@ -1,11 +1,12 @@
 {
   "geopolitica": "EE.UU. enviará un tercer grupo de ataque de portaaviones (USS Theodore Roosevelt) a Oriente Medio y Trump advirtió de nuevos ataques contra Irán, elevando la aversión al riesgo que puede presionar al NQ (CNBC, 02-Oct).",
-  "petroleo": "El Brent cotiza en torno a 102.60 USD/barril (+0.3%) tras el salto del jueves (+4.4% a 102.31) por el despliegue naval de EE.UU. frente a Irán, manteniendo una prima de riesgo que encarece costos y lastra el sentimiento de riesgo del NQ (CNBC, 02-Oct).",
+  "petroleo": "El Brent revirtió a la baja hasta 99.65 USD/barril (-2.6%) y el WTI a 89.11 USD (-4%) tras conocerse que el G7/IEA negocia liberar hasta 100 millones de barriles de diésel y crudo de reservas estratégicas por presión de EE.UU., lo que compensa la prima de riesgo por Irán y es un alivio puntual para el sentimiento de riesgo del NQ (CNBC, 02-Oct).",
   "catalizador": "El informe de nóminas no agrícolas de septiembre (08:30 ET) decepcionó con 29,000 empleos vs ~84,000 esperados y desempleo al 4.2% vs 4.1% esperado, reforzando apuestas de un recorte de tasas de la Fed este mes, lo que favorece al NQ en la apertura (CNBC/BLS, 02-Oct, 08:30 ET).",
   "sources": [
     "BLS/CNBC 08:30 ET - Jobs report September 2026",
     "CNBC 02-Oct - U.S. to send third carrier group to Mideast as Trump warns of new Iran strikes",
-    "CNBC 02-Oct - Oil rises slightly as market weighs mixed supply signals"
+    "CNBC 02-Oct - Oil prices fall on report of potential diesel, crude stock release; Brent back below $100",
+    "Bloomberg 02-Oct - G7 to Release Up to 100 Million Barrels of Diesel, Crude"
   ],
-  "as_of": "2026-10-02T15:41:01Z"
+  "as_of": "2026-10-02T16:07:27Z"
 }
