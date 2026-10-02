@@ -1,13 +1,14 @@
 {
-  "geopolitica": "EE.UU. enviara un tercer grupo de portaaviones (USS Theodore Roosevelt, sumandose al George H.W. Bush y George Washington) a Oriente Medio y Trump advierte de nuevos ataques contra Iran tras las elecciones de medio termino, mientras las conversaciones diplomaticas mediadas por Qatar siguen estancadas; esto eleva la aversion al riesgo y presiona al NQ en la apertura (CNBC, 02-oct).",
-  "petroleo": "Brent cotiza en torno a 102.60 USD/barril (+0.28%) y WTI cerca de 93.14 USD (+0.29%), tras el salto de +4.4% del jueves (Brent a 102.31 USD) impulsado por el despliegue naval a Oriente Medio, con senales mixtas de oferta (exportaciones saudies mas solidas frente al freno de China a exportaciones de combustibles refinados); el crudo elevado añade presion inflacionaria que pesa sobre los multiplos tech del NQ (CNBC, 02-oct).",
-  "catalizador": "Se espera hoy viernes 02-oct a las 8:30 ET el informe de nominas no agricolas (NFP) de septiembre, con consenso cercano a +84,000 empleos y tasa de desempleo estable en 4.1%, tras un ADP de septiembre mejor de lo esperado (+90,000); una sorpresa frente al consenso puede mover con fuerza las expectativas de recorte de tasas de la Fed y la volatilidad del NQ en la apertura (CNBC).",
+  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones (USS Theodore Roosevelt, sumandose al USS George H.W. Bush y al USS George Washington) hacia Oriente Medio en medio de la escalada con Iran y las conversaciones mediadas por Qatar en Doha, lo que eleva la aversion al riesgo y presiona el apetito por tech en el NQ.",
+  "petroleo": "El Brent subio 4.4% hasta 102.31 USD/barril y el WTI 2.7% hasta 92.87 USD/barril el 1 de octubre por el despliegue naval de EE.UU. y el corte de exportaciones de combustible de China, aunque el 2 de octubre el petroleo modera la subida ante rumores de liberacion de reservas de diesel y crudo, aliviando algo la presion inflacionaria sobre el NQ.",
+  "catalizador": "El mercado espera el informe de empleo de EE.UU. de septiembre (nonfarm payrolls) que se publica hoy a las 8:30 ET, con consenso de +84.000 empleos y tasa de paro en 4.1%; una sorpresa en cualquier direccion puede mover con fuerza al NQ por su impacto en las expectativas de recorte de tasas de la Fed.",
   "sources": [
-    "CNBC 02-oct (US to send third carrier group, Trump warns of new Iran strikes)",
-    "CNBC 02-oct (Oil rises slightly as market weighs mixed supply signals)",
-    "CNBC 01-oct (Brent oil jumps 4%+ on carrier deployment report)",
-    "CNBC 01-oct (Stock futures rise as investors await September jobs report)",
-    "CNBC 30-sep (ADP: private payrolls +90,000 in September)"
+    "CNBC 01-oct (oil-prices-today-wti-brent, Brent +4.4% a 102.31 USD por despliegue de portaaviones)",
+    "CNBC 02-oct (cnbc-daily-open-us-third-carrier-iran)",
+    "CNBC 02-oct (oil-rises-slightly-as-market-weighs-mixed-supply-signals)",
+    "The National 02-oct (oil-prices-fall-3-on-reports-of-talks-over-diesel-and-crude-stock-releases)",
+    "CNBC 01-oct (the-september-jobs-report-will-be-released-friday-heres-what-to-expect)",
+    "Bloomberg 26-sep (us-jobs-report-seen-showing-90-000-payrolls-4-1-unemployment-rate)"
   ],
-  "as_of": "2026-10-02T11:39:07Z"
+  "as_of": "2026-10-02T12:08:49Z"
 }
