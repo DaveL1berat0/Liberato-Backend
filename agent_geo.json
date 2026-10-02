@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. envia un tercer portaaviones (USS George H.W. Bush) y hasta 10.000 tropas adicionales a Oriente Medio mientras Trump evalua reanudar ataques contra Iran tras las elecciones de medio termino, elevando la prima de riesgo geopolitico y presionando al NQ a la baja.",
-  "petroleo": "El Brent sube 0,28% a 102,60 USD/barril y el WTI 0,29% a 93,14 USD, impulsados por el cierre de exportaciones de combustible de China y el refuerzo militar de EE.UU. en Oriente Medio, un viento en contra para el NQ al encarecer costos energeticos.",
-  "catalizador": "La nomina no agricola de septiembre decepciono con solo 29.000 empleos (vs. 84.000 esperados) y el desempleo subio a 4,2%, lo que redujo a ~20% la probabilidad de una suba de la Fed en octubre pero elevo el rendimiento del Tesoro a 10 anios, un efecto mixto para el NQ.",
+  "geopolitica": "EE.UU. envio un tercer portaaviones (USS George H.W. Bush, sumado al Gerald R. Ford y al Abraham Lincoln) a Oriente Medio, elevando el riesgo de escalada con Iran y presionando al alza la aversion al riesgo que pesa sobre el NQ (CNBC Daily Open, 02-oct).",
+  "petroleo": "Brent cerro el jueves con un salto de +4.4% a 102.31 USD/barril y WTI +2.7% a 92.87 USD/barril por el despliegue militar de EE.UU. en Oriente Medio y el corte de exportaciones de combustible de China; un crudo mas caro presiona costos e inflacion, negativo para el NQ (CNBC, 01-oct cierre de mercado).",
+  "catalizador": "El informe de empleo de septiembre, publicado a las 08:30 ET, decepciono con solo +29,000 nominas (vs +84,000 esperado) y desempleo al 4.2%, lo que redujo a 17% (desde 36%) la probabilidad de que la Fed suba tasas en octubre segun CME FedWatch, un sesgo dovish que favorece al NQ (CNBC/Bloomberg, 02-oct 08:30 ET).",
   "sources": [
-    "CNBC 01-oct (portaaviones/Iran)",
-    "CNBC/Reuters 02-oct (Brent-WTI)",
-    "CNBC 08:30 ET (nomina de septiembre)"
+    "CNBC Daily Open 02-oct",
+    "CNBC Oil 01-oct (cierre de mercado)",
+    "CNBC Jobs Report 02-oct 08:30 ET",
+    "Bloomberg Jobs Report 02-oct 08:30 ET"
   ],
-  "as_of": "2026-10-02T17:06:33Z"
+  "as_of": "2026-10-02T18:07:32Z"
 }
