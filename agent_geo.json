@@ -1,12 +1,12 @@
 {
-  "geopolitica": "EE.UU. envio un tercer portaaviones (USS George H.W. Bush, sumado al Gerald R. Ford y al Abraham Lincoln) a Oriente Medio, elevando el riesgo de escalada con Iran y presionando al alza la aversion al riesgo que pesa sobre el NQ (CNBC Daily Open, 02-oct).",
-  "petroleo": "Brent cerro el jueves con un salto de +4.4% a 102.31 USD/barril y WTI +2.7% a 92.87 USD/barril por el despliegue militar de EE.UU. en Oriente Medio y el corte de exportaciones de combustible de China; un crudo mas caro presiona costos e inflacion, negativo para el NQ (CNBC, 01-oct cierre de mercado).",
-  "catalizador": "El informe de empleo de septiembre, publicado a las 08:30 ET, decepciono con solo +29,000 nominas (vs +84,000 esperado) y desempleo al 4.2%, lo que redujo a 17% (desde 36%) la probabilidad de que la Fed suba tasas en octubre segun CME FedWatch, un sesgo dovish que favorece al NQ (CNBC/Bloomberg, 02-oct 08:30 ET).",
+  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones (USS Theodore Roosevelt, sumado a otros dos ya desplegados) a Oriente Medio y Trump advierte de nuevos ataques a Iran tras ataques con proyectiles a petroleros en el estrecho de Ormuz, lo que eleva la aversion al riesgo y presiona al NQ a la baja intradia (CNBC, 02-oct).",
+  "petroleo": "Brent subio 4.4% hasta 102.31 USD/barril y WTI 2.7% hasta 92.87 USD/barril por el despliegue militar de EE.UU. en Oriente Medio, un crudo mas caro que presiona costos e inflacion y resta apetito por riesgo al NQ (CNBC, 01-oct cierre de mercado).",
+  "catalizador": "El informe de empleo de septiembre (08:30 ET) decepciono con solo +29,000 nominas (vs +84,000 esperado) y desempleo al 4.2%, lo que redujo las apuestas de subida de tasas de la Fed y hundio al dolar, un sesgo dovish que favorece al NQ pese al cierre parcial del gobierno de EE.UU. que retraso parte de los datos oficiales (CNBC/Bloomberg, 02-oct).",
   "sources": [
-    "CNBC Daily Open 02-oct",
-    "CNBC Oil 01-oct (cierre de mercado)",
+    "CNBC 02-oct (US third carrier Iran)",
+    "CNBC 01-oct (Brent/WTI cierre de mercado)",
     "CNBC Jobs Report 02-oct 08:30 ET",
-    "Bloomberg Jobs Report 02-oct 08:30 ET"
+    "Bloomberg Jobs Report 02-oct"
   ],
-  "as_of": "2026-10-02T18:07:32Z"
+  "as_of": "2026-10-02T19:06:09Z"
 }
