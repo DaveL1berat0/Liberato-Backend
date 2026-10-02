@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EE.UU. envia un tercer portaaviones (USS Theodore Roosevelt) y hasta 10.000 tropas adicionales a Oriente Medio mientras Trump senala que reanudara los ataques a Iran tras las elecciones de medio mandato de noviembre, elevando la aversion al riesgo que presiona al NQ intradia (CNBC, 02/10).",
-  "petroleo": "El Brent sube 0.28% a 102.60 USD/barril y el WTI avanza 0.29% a 93.14 USD tras el recorte de exportaciones de combustible de China y el refuerzo naval de EE.UU. en el Golfo, lo que suma presion bajista moderada sobre el NQ por mayor riesgo de costos e inflacion (CNBC, 02/10).",
-  "catalizador": "El informe de empleo de septiembre decepciono (solo 29.000 empleos nuevos vs. 84.000 esperados y desempleo al 4.2%), lo que redujo la probabilidad de una subida de tasas en octubre a cerca del 20% e impulso al NQ al alza intradia tras la apertura (CNBC/Bloomberg, 08:30 ET).",
+  "geopolitica": "",
+  "petroleo": "El WTI cae a USD 91.24/barril (-1.76%) ante expectativas de que la OPEP+ amplie el aumento de produccion en octubre, lo que resta soporte inflacionario y añade presion bajista marginal sobre el NQ.",
+  "catalizador": "El cierre parcial del gobierno de EE.UU. (iniciado el 1 de octubre) entra en su segundo dia y retrasa la publicacion de datos clave como el informe de empleo, elevando la incertidumbre sobre la trayectoria de tasas de la Fed y la volatilidad intradia del NQ.",
   "sources": [
-    "CNBC 02/10 (cnbc.com/2026/10/02/jobs-report-september-2026.html) 08:30 ET",
-    "CNBC 02/10 (cnbc.com/2026/10/02/us-iran-war-trump-hormuz-.html)",
-    "CNBC 02/10 (cnbc.com/2026/10/02/oil-rises-slightly-as-market-weighs-mixed-supply-signals.html)",
-    "Bloomberg 02/10 (US Stock Futures Rise as Investors Await September Jobs Report)"
+    "TradingEconomics/EIA 17:00 ET",
+    "Reuters/FOXBusiness 17:00 ET",
+    "CNBC 16:00 ET"
   ],
-  "as_of": "2026-10-02T20:06:06Z"
+  "as_of": "2026-10-02T21:06:05Z"
 }
