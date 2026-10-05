@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) reclamaron ataques con misiles balísticos y drones contra instalaciones de Saudi Aramco en Riad y Khurais mientras Arabia Saudita prepara una ofensiva a gran escala para romper su control del mar Rojo, lo que eleva el riesgo geopolítico en Oriente Medio y puede presionar el apetito por riesgo del NQ intradía.",
-  "petroleo": "El Brent sube 0.79% a 103.06 USD/barril y el WTI +0.50% a 91.57 USD/barril tras el ataque hutí a instalaciones de Aramco, un repunte que si se sostiene añade presión inflacionaria y es un viento en contra para el NQ.",
-  "catalizador": "El ISM de servicios de septiembre cayó a 54.9% (vs 55.0% esperado y 55.4% previo) en su publicación de las 10:00 ET, lo que impulsó los rendimientos del Treasury y puede moderar intradía las apuestas de un recorte agresivo de la Fed, un factor de presión para el NQ.",
+  "geopolitica": "La guerra Israel-EE.UU. contra Iran sigue activa y mantiene danada la infraestructura del Golfo (Estrecho de Ormuz), lo que sostiene una prima de riesgo geopolitico que presiona el sentimiento de riesgo sobre el NQ aunque las exportaciones de crudo ya rondan niveles pre-guerra (CNBC).",
+  "petroleo": "El Brent cae cerca de 1.6% a USD 100.62/barril y el WTI baja alrededor de 1.5% a USD 89.77/barril tras el repunte de exportaciones de crudo de Oriente Medio y el anuncio del G7 de liberar reservas de crudo y diesel, lo que alivia presion inflacionaria y es un leve soporte para el NQ (CNBC).",
+  "catalizador": "El rendimiento del Treasury a 10 anos subio unos 7 puntos basicos a 5.347%, su nivel mas alto desde 2002, mientras el mercado espera las minutas de la reunion de la Fed de septiembre; el alza en tasas largas presiona a las tecnologicas de alta duracion del NQ (CNBC).",
   "sources": [
-    "Reuters (vía Investing.com) 05-Oct",
-    "UPI 04-Oct",
-    "ISM/PR Newswire 10:00 ET",
-    "Kitco 05-Oct"
+    "CNBC 05-oct-2026 (oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks)",
+    "CNBC 05-oct-2026 (treasury-yields-bonds-fed-rates)",
+    "CNBC 05-oct-2026 (stocks-making-the-biggest-moves-premarket)"
   ],
-  "as_of": "2026-10-05T18:09:02Z"
+  "as_of": "2026-10-05T19:16:56Z"
 }
