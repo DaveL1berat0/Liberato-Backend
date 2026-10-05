@@ -1,11 +1,10 @@
 {
-  "geopolitica": "La guerra Israel-EE.UU. contra Iran sigue activa y mantiene danada la infraestructura del Golfo (Estrecho de Ormuz), lo que sostiene una prima de riesgo geopolitico que presiona el sentimiento de riesgo sobre el NQ aunque las exportaciones de crudo ya rondan niveles pre-guerra (CNBC).",
-  "petroleo": "El Brent cae cerca de 1.6% a USD 100.62/barril y el WTI baja alrededor de 1.5% a USD 89.77/barril tras el repunte de exportaciones de crudo de Oriente Medio y el anuncio del G7 de liberar reservas de crudo y diesel, lo que alivia presion inflacionaria y es un leve soporte para el NQ (CNBC).",
-  "catalizador": "El rendimiento del Treasury a 10 anos subio unos 7 puntos basicos a 5.347%, su nivel mas alto desde 2002, mientras el mercado espera las minutas de la reunion de la Fed de septiembre; el alza en tasas largas presiona a las tecnologicas de alta duracion del NQ (CNBC).",
+  "geopolitica": "Continua el conflicto belico entre EEUU-Israel e Iran con ataques a petroleros en el Estrecho de Ormuz, lo que mantiene el riesgo geopolitico latente sobre el sentimiento de riesgo del NQ (CNBC, 05/10).",
+  "petroleo": "El crudo (Brent/WTI) opera con presion bajista pese a la guerra EEUU-Israel-Iran, ya que el aumento de las exportaciones de Oriente Medio y la liberacion de reservas estrategicas del G7 compensan el temor a danos en infraestructura del Golfo, aliviando algo de presion inflacionaria sobre el NQ (CNBC, 05/10).",
+  "catalizador": "El shutdown del gobierno de EEUU continua desde el 1/10 y mantiene retrasado el informe de empleo de septiembre, dejando a la Fed sin datos clave de cara a su reunion de octubre, lo que anade incertidumbre a la apertura del NQ (CNBC).",
   "sources": [
-    "CNBC 05-oct-2026 (oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks)",
-    "CNBC 05-oct-2026 (treasury-yields-bonds-fed-rates)",
-    "CNBC 05-oct-2026 (stocks-making-the-biggest-moves-premarket)"
+    "CNBC 05/10/2026 (oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks)",
+    "CNBC 04/10/2026 (stock-market-today-live-updates)"
   ],
-  "as_of": "2026-10-05T19:16:56Z"
+  "as_of": "2026-10-05T20:07:53Z"
 }
