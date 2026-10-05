@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones y refuerzos de Marines a Oriente Medio mientras Trump senala que reanudaria los ataques contra Iran tras las elecciones de medio mandato, lo que mantiene elevada la prima de riesgo geopolitico en el Golfo y puede presionar al NQ en la apertura.",
-  "petroleo": "El Brent cae 0.71% a 101.59 USD/barril y el WTI retrocede 1.2% a 90.05 USD/barril este lunes, despues de que el G7 anunciara la liberacion de reservas estrategicas y de que repuntaran las exportaciones de crudo de Oriente Medio, lo que alivia la presion inflacionaria y resulta ligeramente favorable para el NQ.",
-  "catalizador": "El oro sube mientras se desvanecen las apuestas a una subida de tasas de la Fed en octubre, senal que reduce el temor a un endurecimiento monetario y podria dar un impulso leve al NQ en la apertura.",
+  "geopolitica": "Iran mantiene cerrado el Estrecho de Ormuz hasta que EEUU cumpla sus siete condiciones del memorando de Islamabad, tras nuevos ataques con misiles y drones contra Jordania y Bahrein, lo que eleva la prima de riesgo geopolitico y presiona el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cotiza en torno a 102 USD/barril y el WTI cerca de 90 USD/barril, con el diferencial Brent-WTI superior a 11 USD por la prima de riesgo del Estrecho de Ormuz, lo que encarece costos energeticos y pesa sobre el sentimiento de riesgo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 operan mixtos mientras el rendimiento del Treasury a 10 anos se mantiene en maximos de ~20 anos (5.27%) y el mercado espera las minutas de la Fed de septiembre el miercoles, manteniendo cautela en tech pese al retroceso de apuestas de alza de tasas.",
   "sources": [
-    "CNBC, 05-oct-2026 (premercado ET) - Oil falls as Middle East crude exports rise, G7 to release stocks",
-    "CNBC, 02-oct-2026 (contexto vigente) - US to send third carrier group to Mideast as Trump warns of new Iran strikes",
-    "CNBC, 05-oct-2026 (premercado ET) - Gold gains as October Fed rate hike prospects fade"
+    "Al Jazeera 2026-10-04 Iran Hormuz closure",
+    "CBS News Live Updates - Iran war, Jordan/Bahrain intercepts",
+    "TradingEconomics/Reuters data Oct 5 - Brent/WTI levels",
+    "CNBC/Yahoo Finance premarket Oct 5 - bond yields, Fed minutes"
   ],
-  "as_of": "2026-10-05T12:39:53Z"
+  "as_of": "2026-10-05T13:07:16Z"
 }
