@@ -1,11 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El WTI cae a USD 91.24/barril (-1.76%) ante expectativas de que la OPEP+ amplie el aumento de produccion en octubre, lo que resta soporte inflacionario y añade presion bajista marginal sobre el NQ.",
-  "catalizador": "El cierre parcial del gobierno de EE.UU. (iniciado el 1 de octubre) entra en su segundo dia y retrasa la publicacion de datos clave como el informe de empleo, elevando la incertidumbre sobre la trayectoria de tasas de la Fed y la volatilidad intradia del NQ.",
+  "geopolitica": "EE.UU. desplegó bombarderos desde la base de RAF Fairford por una presunta trama terrorista y se reportaron nuevos ataques a petroleros cerca de Irán, mientras el gobierno de Yemen lanza una ofensiva nacional contra los huthis, sosteniendo la aversión al riesgo que presiona al NQ (CNBC Daily Open, 05-oct-2026).",
+  "petroleo": "El Brent cae 0.92% a 101.31 USD/barril y el WTI retrocede 1.22% a 90 USD/barril por la prima de riesgo del cierre del Estrecho de Ormuz derivado de la guerra con Irán, un petróleo elevado que sigue lastrando el apetito por riesgo en el NQ (TradingEconomics/GulfNews, 05-oct-2026).",
+  "catalizador": "Los futuros de Wall Street se mantienen prácticamente planos a la espera de las minutas de la Fed de esta semana, con rendimientos del Tesoro elevados y datos económicos oscurecidos por el cierre histórico del gobierno de EE.UU., lo que limita el apetito por riesgo en el NQ (CNBC Daily Open, 05-oct-2026).",
   "sources": [
-    "TradingEconomics/EIA 17:00 ET",
-    "Reuters/FOXBusiness 17:00 ET",
-    "CNBC 16:00 ET"
+    "CNBC Daily Open 05-oct-2026",
+    "TradingEconomics 05-oct-2026",
+    "GulfNews 05-oct-2026"
   ],
-  "as_of": "2026-10-02T21:06:05Z"
+  "as_of": "2026-10-05T11:07:04Z"
 }
