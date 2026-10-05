@@ -1,12 +1,12 @@
 {
-  "geopolitica": "La crisis del Estrecho de Ormuz sigue sin resolverse -Iran mantiene el bloqueo del paso y persisten los ataques a petroleros en el Golfo- lo que sostiene la prima de riesgo geopolitico y limita el apetito por riesgo en los futuros del Nasdaq 100 hoy.",
-  "petroleo": "El Brent cotiza cerca de 101 USD/barril (-0.9%) y el WTI cerca de 90 USD/barril (-1.2%) por la incertidumbre persistente sobre las rutas de suministro del Golfo Perico ligada al Estrecho de Ormuz, un encarecimiento energetico que presiona al alza los costos y pesa sobre el NQ.",
-  "catalizador": "La Fed publica hoy a las 14:00 ET las minutas de la reunion de septiembre del FOMC, catalizador clave tras el informe de empleo mas debil de lo esperado del viernes, que el mercado seguira de cerca por su impacto en las apuestas de recorte de tasas y la volatilidad del NQ en la tarde.",
+  "geopolitica": "La guerra EEUU-Israel-Iran sigue escalando: EEUU retiro sus bombarderos B-1 de la base RAF Fairford (Reino Unido) por una amenaza de atentado vinculada a Iran y continuan los ataques a petroleros en el estrecho de Ormuz, lo que mantiene el sesgo de aversion al riesgo sobre el NQ en la apertura.",
+  "petroleo": "El Brent cede cerca de 1% hoy (en torno a 101-103 USD/b, WTI cerca de 90 USD/b) pese a la guerra en Iran, despues de conocerse que las exportaciones de crudo de Oriente Medio repuntan y que el G7/AIE evalua liberar reservas estrategicas, lo que alivia algo la presion inflacionaria para el NQ.",
+  "catalizador": "El cierre del gobierno de EEUU sigue privando a la Fed de datos clave (BLS suspendido) de cara al FOMC del 28-29 de octubre, dejando a la Fed sin visibilidad y añadiendo incertidumbre de politica monetaria que puede generar volatilidad en el NQ intradia.",
   "sources": [
-    "Bloomberg - Markets Wrap, hoy (Oriente Medio / Estrecho de Ormuz)",
-    "TradingEconomics - datos Brent/WTI, hoy",
-    "TheStreet - 14:00 ET (minutas FOMC)",
-    "CNBC - 01-Oct-2026 (informe de empleo debil)"
+    "CNBC 04/10/2026 - bombarderos B-1 retirados de RAF Fairford; nuevos ataques a petroleros cerca de Iran",
+    "CNBC 05/10/2026 - petroleo cede, exportaciones de Oriente Medio suben, G7 evalua liberar reservas",
+    "UK Maritime Trade Operations (UKMTO), reporte del lunes 05/10/2026 - petrolero rechazado en el estrecho de Ormuz tras amenaza del IRGC",
+    "TipRanks - mercado mixto con la Fed 'volando a ciegas' por falta de datos durante el cierre de gobierno"
   ],
-  "as_of": "2026-10-05T14:11:19Z"
+  "as_of": "2026-10-05T14:40:40Z"
 }
