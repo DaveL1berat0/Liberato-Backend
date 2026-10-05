@@ -1,12 +1,11 @@
 {
-  "geopolitica": "La guerra EEUU-Israel-Iran sigue escalando: EEUU retiro sus bombarderos B-1 de la base RAF Fairford (Reino Unido) por una amenaza de atentado vinculada a Iran y continuan los ataques a petroleros en el estrecho de Ormuz, lo que mantiene el sesgo de aversion al riesgo sobre el NQ en la apertura.",
-  "petroleo": "El Brent cede cerca de 1% hoy (en torno a 101-103 USD/b, WTI cerca de 90 USD/b) pese a la guerra en Iran, despues de conocerse que las exportaciones de crudo de Oriente Medio repuntan y que el G7/AIE evalua liberar reservas estrategicas, lo que alivia algo la presion inflacionaria para el NQ.",
-  "catalizador": "El cierre del gobierno de EEUU sigue privando a la Fed de datos clave (BLS suspendido) de cara al FOMC del 28-29 de octubre, dejando a la Fed sin visibilidad y añadiendo incertidumbre de politica monetaria que puede generar volatilidad en el NQ intradia.",
+  "geopolitica": "El G7 coordino la liberacion de 100 millones de barriles de reservas estrategicas (diesel y crudo) para contener el riesgo del conflicto en Medio Oriente, mientras persiste la guerra EEUU-Israel-Iran de fondo, un factor de riesgo que presiona el sentimiento de riesgo global y puede pesar sobre el NQ (CNBC, 05-oct).",
+  "petroleo": "Brent sube 0.38 a 102.63 USD/barril y WTI cae 0.77 a 90.34 USD/barril: el crudo se mantiene casi sin cambios al recuperarse las exportaciones de Medio Oriente por encima de niveles previos a la guerra y sumarse la liberacion de reservas del G7, lo que modera el impulso inflacionario que podria presionar al NQ (CNBC, 05-oct).",
+  "catalizador": "Los rendimientos del Treasury suben al inicio de la semana (10 anos cerca/por encima del 5%) mientras los inversores esperan las minutas de la Fed de septiembre (miercoles) y el mercado de futuros (CME FedWatch) asigna ~82% de probabilidad a que la Fed mantenga las tasas sin cambios, un rendimiento mas alto que es viento en contra para el NQ (CNBC, 05-oct).",
   "sources": [
-    "CNBC 04/10/2026 - bombarderos B-1 retirados de RAF Fairford; nuevos ataques a petroleros cerca de Iran",
-    "CNBC 05/10/2026 - petroleo cede, exportaciones de Oriente Medio suben, G7 evalua liberar reservas",
-    "UK Maritime Trade Operations (UKMTO), reporte del lunes 05/10/2026 - petrolero rechazado en el estrecho de Ormuz tras amenaza del IRGC",
-    "TipRanks - mercado mixto con la Fed 'volando a ciegas' por falta de datos durante el cierre de gobierno"
+    "CNBC 05-oct: oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks",
+    "CNBC 05-oct: treasury-yields-bonds-fed-rates",
+    "CNBC 05-oct: aramco-saudi-arabia-iran-hormuz-oil-energy"
   ],
-  "as_of": "2026-10-05T14:40:40Z"
+  "as_of": "2026-10-05T15:07:06Z"
 }
