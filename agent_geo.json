@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los huties de Yemen reivindicaron un ataque con misiles y drones contra una instalacion de Aramco en Riad el sabado, en represalia por ataques sauditas a Sana'a; el episodio reavivo la prima de riesgo geopolitico en el Golfo, que puede presionar al NQ via costos energeticos y apetito de riesgo.",
-  "petroleo": "El Brent, que llego a subir hasta 103.06 USD tras el ataque huti a Aramco, revirtio gran parte del alza y cae 0.65% a 101.59 USD/barril (WTI -1.03% a 90.12 USD) en la sesion asiatica/europea, tras el recorte de precios del crudo saudita Arab Light para Asia y el anuncio del G7 de liberar 100 millones de barriles de reservas, lo que modera el riesgo de un shock energetico para el NQ.",
-  "catalizador": "El informe de empleo de septiembre en EE.UU. quedo muy por debajo de lo esperado (+29,000 vs ~85,000-95,000 estimados; desempleo subio a 4.2%), lo que hundio las probabilidades de una subida de tasas de la Fed en octubre (CME FedWatch ahora ve mayoria de probabilidad de tasas sin cambios), catalizador que favorece al NQ al reducir el riesgo de endurecimiento monetario.",
+  "geopolitica": "EE.UU. envia un tercer grupo de portaaviones y refuerzos de Marines a Oriente Medio mientras Trump senala que reanudaria los ataques contra Iran tras las elecciones de medio mandato, lo que mantiene elevada la prima de riesgo geopolitico en el Golfo y puede presionar al NQ en la apertura.",
+  "petroleo": "El Brent cae 0.71% a 101.59 USD/barril y el WTI retrocede 1.2% a 90.05 USD/barril este lunes, despues de que el G7 anunciara la liberacion de reservas estrategicas y de que repuntaran las exportaciones de crudo de Oriente Medio, lo que alivia la presion inflacionaria y resulta ligeramente favorable para el NQ.",
+  "catalizador": "El oro sube mientras se desvanecen las apuestas a una subida de tasas de la Fed en octubre, senal que reduce el temor a un endurecimiento monetario y podria dar un impulso leve al NQ en la apertura.",
   "sources": [
-    "Reuters/NBC News/Al Jazeera (04-oct, ataque a Aramco)",
-    "Reuters/Business Recorder 22:40 ET (04-oct, petroleo)",
-    "CNBC/FXStreet (02-oct, payrolls y CME FedWatch)"
+    "CNBC, 05-oct-2026 (premercado ET) - Oil falls as Middle East crude exports rise, G7 to release stocks",
+    "CNBC, 02-oct-2026 (contexto vigente) - US to send third carrier group to Mideast as Trump warns of new Iran strikes",
+    "CNBC, 05-oct-2026 (premercado ET) - Gold gains as October Fed rate hike prospects fade"
   ],
-  "as_of": "2026-10-05T12:07:57Z"
+  "as_of": "2026-10-05T12:39:53Z"
 }
