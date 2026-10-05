@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Iran mantiene cerrado el Estrecho de Ormuz hasta que EEUU cumpla sus siete condiciones del memorando de Islamabad, tras nuevos ataques con misiles y drones contra Jordania y Bahrein, lo que eleva la prima de riesgo geopolitico y presiona el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cotiza en torno a 102 USD/barril y el WTI cerca de 90 USD/barril, con el diferencial Brent-WTI superior a 11 USD por la prima de riesgo del Estrecho de Ormuz, lo que encarece costos energeticos y pesa sobre el sentimiento de riesgo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 operan mixtos mientras el rendimiento del Treasury a 10 anos se mantiene en maximos de ~20 anos (5.27%) y el mercado espera las minutas de la Fed de septiembre el miercoles, manteniendo cautela en tech pese al retroceso de apuestas de alza de tasas.",
+  "geopolitica": "El mando militar de Iran reitero el cierre del Estrecho de Ormuz exigiendo el cumplimiento del memorando de Islamabad (fin del bloqueo naval y levantamiento de sanciones) antes de reabrirlo, lo que mantiene una prima de riesgo geopolitico que limita el apetito por riesgo en el NQ.",
+  "petroleo": "Brent cerca de 102 USD/barril y WTI cerca de 90 USD/barril, con presion al alza por el cierre de Ormuz y ataques huties contra infraestructura saudi parcialmente compensada por el aumento de exportaciones de crudo de Oriente Medio y la liberacion de reservas de diesel del G7, lo que modera el traspaso de costos energeticos al NQ.",
+  "catalizador": "El debil informe de empleo de septiembre (+29.000 vs +84.000 esperado) refuerza las apuestas de que la Fed mantendra las tasas sin cambios, con las minutas de la Fed del miercoles como proximo catalizador, mientras un repunte en semiconductores (Micron y pares) da soporte puntual al NQ pese al rendimiento del Treasury a 10 anos cerca de maximos de ciclo.",
   "sources": [
-    "Al Jazeera 2026-10-04 Iran Hormuz closure",
-    "CBS News Live Updates - Iran war, Jordan/Bahrain intercepts",
-    "TradingEconomics/Reuters data Oct 5 - Brent/WTI levels",
-    "CNBC/Yahoo Finance premarket Oct 5 - bond yields, Fed minutes"
+    "Al Jazeera 05-Oct-2026 - Iran Hormuz closure",
+    "Anadolu Agency (AA) 05-Oct-2026 - IRGC Hormuz conditions",
+    "Petra/Jordan News Agency - Jordan/Bahrain missile intercepts",
+    "Bloomberg 04-Oct-2026 - oil market Brent/WTI",
+    "CNBC 05-Oct-2026 - Fed minutes, jobs report, chip stocks"
   ],
-  "as_of": "2026-10-05T13:07:16Z"
+  "as_of": "2026-10-05T13:41:41Z"
 }
