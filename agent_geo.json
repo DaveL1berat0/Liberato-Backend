@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. desplegó bombarderos desde la base de RAF Fairford por una presunta trama terrorista y se reportaron nuevos ataques a petroleros cerca de Irán, mientras el gobierno de Yemen lanza una ofensiva nacional contra los huthis, sosteniendo la aversión al riesgo que presiona al NQ (CNBC Daily Open, 05-oct-2026).",
-  "petroleo": "El Brent cae 0.92% a 101.31 USD/barril y el WTI retrocede 1.22% a 90 USD/barril por la prima de riesgo del cierre del Estrecho de Ormuz derivado de la guerra con Irán, un petróleo elevado que sigue lastrando el apetito por riesgo en el NQ (TradingEconomics/GulfNews, 05-oct-2026).",
-  "catalizador": "Los futuros de Wall Street se mantienen prácticamente planos a la espera de las minutas de la Fed de esta semana, con rendimientos del Tesoro elevados y datos económicos oscurecidos por el cierre histórico del gobierno de EE.UU., lo que limita el apetito por riesgo en el NQ (CNBC Daily Open, 05-oct-2026).",
+  "geopolitica": "Iran mantiene cerrado el estrecho de Ormuz hasta que EE.UU. acepte sus condiciones y los huties reivindicaron un ataque con misiles y drones contra instalaciones de Aramco cerca de Riad, sosteniendo la prima de riesgo geopolitico que presiona al NQ a la baja en la apertura.",
+  "petroleo": "El Brent subio 0.79% hasta 103.06 USD/barril (cierre 18:02 ET del 4-oct) tras el ataque huti a Aramco, pero revirtio parte de la subida despues de que Arabia Saudita recortara el precio de su crudo Arab Light para Asia, lo que modera el lastre alcista de costos energeticos sobre el NQ.",
+  "catalizador": "Las probabilidades de una subida de tasas de la Fed en octubre cayeron a cerca del 23% segun CME FedWatch tras un informe de empleo de septiembre muy debil (+29,000 vs ~+80,000 esperados), catalizador que reduce el riesgo de endurecimiento monetario y favorece al NQ.",
   "sources": [
-    "CNBC Daily Open 05-oct-2026",
-    "TradingEconomics 05-oct-2026",
-    "GulfNews 05-oct-2026"
+    "Reuters 18:02 ET (04-oct)",
+    "Al Jazeera (04-oct)",
+    "CNBC (02-oct)",
+    "Bloomberg (04-oct)"
   ],
-  "as_of": "2026-10-05T11:07:04Z"
+  "as_of": "2026-10-05T11:41:28Z"
 }
