@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El conflicto Medio Oriente-Iran en el Estrecho de Ormuz sigue como trasfondo geopolitico dominante: el CEO de Aramco advirtio que el shock energetico podria extenderse hasta 2027 y el G7 coordina la liberacion de reservas estrategicas de diesel/crudo para contener el riesgo, lo que mantiene elevada la prima de riesgo global y puede presionar el sentimiento del NQ.",
-  "petroleo": "Brent sube 0.38 a 102.63 USD/barril y WTI cae 0.77 a 90.34 USD/barril: el crudo cotiza casi sin cambios porque la recuperacion de exportaciones de Oriente Medio y la liberacion de reservas del G7 compensan el riesgo de tension en Yemen, moderando la presion inflacionaria de energia sobre el NQ intradia.",
-  "catalizador": "Los rendimientos del Treasury siguen elevados tras tocar maximos de 19 anos a fines de septiembre (10 anos cerca de 5.1%) por datos de actividad economica fuerte y comentarios hawkish de la Fed, con el mercado (CME FedWatch) dividido sobre el proximo movimiento de tasas, un viento en contra potencial para el NQ si los rendimientos se mantienen altos.",
+  "geopolitica": "Ataques a petroleros cerca de Oman y el Estrecho de Ormuz durante el fin de semana, sumados a la retirada de los bombarderos B-1 de la base aerea RAF Fairford por una trama terrorista vinculada a Teheran, mantienen elevada la prima de riesgo geopolitico y limitan el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cotiza cerca de 102 USD/barril (practicamente sin cambios) y el WTI en torno a 90 USD (-0.3% a -0.8%), ya que el aumento de las exportaciones de crudo de Oriente Medio y la liberacion de reservas de diesel/crudo del G7 compensan el riesgo de oferta de la guerra Iran-EEUU, lo que alivia algo la presion inflacionaria sobre el NQ.",
+  "catalizador": "Los rendimientos del Tesoro suben al inicio de la semana mientras los traders esperan las minutas de la Fed, tras el debil reporte de empleo de septiembre (+29.000 vs ~84.000 esperados, desempleo en 4.2%) que elevo a cerca de 82% la probabilidad de que la Fed mantenga tasas sin cambios, un viento de cola que ya llevo al Nasdaq a un maximo historico intradia el viernes.",
   "sources": [
-    "CNBC 05-oct: oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks",
-    "Bloomberg 04-oct: latest-oil-market-news-and-analysis-for-oct-5",
-    "Bloomberg 10-mar: aramco-ceo-oil-market-catastrophe-iran-war",
-    "CNBC/Nasdaq fines-sep: treasury-yields-fed-minutes-cme-fedwatch"
+    "CNBC ~07:00 ET (05/10) - 5 things to know before the stock market opens Monday",
+    "CNBC ~08:00 ET (05/10) - Oil little changed as Middle East crude exports rise, G7 to release stocks",
+    "CNBC ~09:00 ET (05/10) - Treasury yields rise to start the week; traders look ahead to Fed minutes",
+    "CNBC (04/10) - All U.S. bombers leave UK air base on concerns of suspected terror plot; more tankers struck near Iran",
+    "CNBC (02/10) - September jobs report: payrolls +29,000, unemployment rate 4.2%"
   ],
-  "as_of": "2026-10-05T15:42:38Z"
+  "as_of": "2026-10-05T16:14:03Z"
 }
