@@ -1,11 +1,12 @@
 {
-  "geopolitica": "El G7 coordino la liberacion de 100 millones de barriles de reservas estrategicas (diesel y crudo) para contener el riesgo del conflicto en Medio Oriente, mientras persiste la guerra EEUU-Israel-Iran de fondo, un factor de riesgo que presiona el sentimiento de riesgo global y puede pesar sobre el NQ (CNBC, 05-oct).",
-  "petroleo": "Brent sube 0.38 a 102.63 USD/barril y WTI cae 0.77 a 90.34 USD/barril: el crudo se mantiene casi sin cambios al recuperarse las exportaciones de Medio Oriente por encima de niveles previos a la guerra y sumarse la liberacion de reservas del G7, lo que modera el impulso inflacionario que podria presionar al NQ (CNBC, 05-oct).",
-  "catalizador": "Los rendimientos del Treasury suben al inicio de la semana (10 anos cerca/por encima del 5%) mientras los inversores esperan las minutas de la Fed de septiembre (miercoles) y el mercado de futuros (CME FedWatch) asigna ~82% de probabilidad a que la Fed mantenga las tasas sin cambios, un rendimiento mas alto que es viento en contra para el NQ (CNBC, 05-oct).",
+  "geopolitica": "El conflicto Medio Oriente-Iran en el Estrecho de Ormuz sigue como trasfondo geopolitico dominante: el CEO de Aramco advirtio que el shock energetico podria extenderse hasta 2027 y el G7 coordina la liberacion de reservas estrategicas de diesel/crudo para contener el riesgo, lo que mantiene elevada la prima de riesgo global y puede presionar el sentimiento del NQ.",
+  "petroleo": "Brent sube 0.38 a 102.63 USD/barril y WTI cae 0.77 a 90.34 USD/barril: el crudo cotiza casi sin cambios porque la recuperacion de exportaciones de Oriente Medio y la liberacion de reservas del G7 compensan el riesgo de tension en Yemen, moderando la presion inflacionaria de energia sobre el NQ intradia.",
+  "catalizador": "Los rendimientos del Treasury siguen elevados tras tocar maximos de 19 anos a fines de septiembre (10 anos cerca de 5.1%) por datos de actividad economica fuerte y comentarios hawkish de la Fed, con el mercado (CME FedWatch) dividido sobre el proximo movimiento de tasas, un viento en contra potencial para el NQ si los rendimientos se mantienen altos.",
   "sources": [
     "CNBC 05-oct: oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks",
-    "CNBC 05-oct: treasury-yields-bonds-fed-rates",
-    "CNBC 05-oct: aramco-saudi-arabia-iran-hormuz-oil-energy"
+    "Bloomberg 04-oct: latest-oil-market-news-and-analysis-for-oct-5",
+    "Bloomberg 10-mar: aramco-ceo-oil-market-catastrophe-iran-war",
+    "CNBC/Nasdaq fines-sep: treasury-yields-fed-minutes-cme-fedwatch"
   ],
-  "as_of": "2026-10-05T15:07:06Z"
+  "as_of": "2026-10-05T15:42:38Z"
 }
