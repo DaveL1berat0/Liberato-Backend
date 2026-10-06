@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Continua el conflicto belico EEUU-Israel-Iran con ataques a petroleros en el Estrecho de Ormuz (ultima alerta UKMTO por impacto a un buque hacia las 13:50 ET del 1-oct, e Iran reiterando el 4-oct que no detendra los ataques), lo que mantiene el riesgo geopolitico latente sobre el sentimiento de riesgo del NQ.",
-  "petroleo": "Brent cae a unos 100.3 USD/barril (-1.9%) y WTI a unos 89.4 USD/barril (-1.8%) pese a la guerra EEUU-Israel-Iran, ya que el aumento de exportaciones de crudo de Oriente Medio y la liberacion de reservas estrategicas del G7 compensan el temor a danos en infraestructura del Golfo, un alivio marginal para el NQ al reducir presion inflacionaria (CNBC, 05/10).",
-  "catalizador": "El shutdown record del gobierno de EEUU (43 dias) elimino el informe de empleo de octubre y pone en duda el IPC de octubre, dejando a la Fed sin datos oficiales clave antes de su proxima decision, lo que anade incertidumbre y puede elevar la volatilidad intradia del NQ ante cualquier comentario de la Fed.",
+  "geopolitica": "Iran intensifica ataques a petroleros en el Estrecho de Ormuz pese al despliegue militar de EEUU que sostenia la recuperacion de exportaciones (CNBC, 06 oct 2026), lo que mantiene una prima de riesgo geopolitico y puede frenar el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cotiza en torno a 100.7-100.8 USD/barril (+0.4%/+0.5%) por las tensiones en el Estrecho de Ormuz y Medio Oriente (CNBC, 05-06 oct 2026), presion que de sostenerse pesa sobre margenes y sentimiento de riesgo del NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 05/10/2026 (oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks)",
-    "CNBC 04/10/2026 (stock-market-today-live-updates)",
-    "UKMTO/Reuters 01-oct ~13:50 ET (Hormuz tanker strike)"
+    "CNBC 06 oct 2026 - Crude oil tanker Strait Hormuz Iran attack",
+    "CNBC 05 oct 2026 - Daily Open: Who's steering oil now?"
   ],
-  "as_of": "2026-10-05T21:06:56Z"
+  "as_of": "2026-10-06T19:07:00Z"
 }
