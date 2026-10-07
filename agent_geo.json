@@ -1,11 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El Brent cotiza cerca de 101.8 USD/barril (+1.17%) y el WTI en 90.6 USD (+1.26%) este miercoles, por los ataques hutíes a petroleros cerca del Estrecho de Ormuz y el debate en EEUU sobre una posible prohibicion de exportar diesel, lo que eleva el costo energetico y resta apetito por riesgo en el NQ.",
-  "catalizador": "El mercado espera hoy la publicacion de las minutas de la Fed de septiembre y una subasta clave de bonos del Tesoro a 10 anos, con el rendimiento a 10 anos ya en 5.32% tras subir 6 puntos basicos, lo que podria generar volatilidad intradia en el NQ si el tono resulta mas hawkish de lo esperado.",
+  "geopolitica": "Los hutíes (respaldados por Irán) atacaron los aeropuertos saudíes de Jazán y Najrán, e Irán intensificó ataques a petroleros en el Estrecho de Ormuz, elevando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo del NQ.",
+  "petroleo": "El Brent sube +0.44% hasta 101.02 USD/barril (futuro de diciembre) y el WTI se mantiene plano en 89.46 USD/barril, impulsados por los ataques hutíes a Arabia Saudí y el repunte de ataques iraníes a petroleros en Ormuz.",
+  "catalizador": "Los futuros del Nasdaq-100 caen 0.8% este miércoles, lastrados por el repunte del petróleo y el alza de los rendimientos del Treasury, pese a que el S&P 500 marcó un máximo histórico en la sesión previa.",
   "sources": [
-    "CNBC 07-Oct-2026 (Treasury yields rise as oil moves higher, traders await key U.S. bond sale)",
-    "CNBC 07-Oct-2026 (Chevron CEO warns against 'unwise' diesel export ban)",
-    "CNBC 07-Oct-2026 (Daily Open: AI rally defies bond market rout)"
+    "CNBC - Oil prices today: Brent, WTI, Hormuz (07 oct 2026)",
+    "CNBC - Daily Open: AI rally defies bond market rout (07 oct 2026)",
+    "CNBC - Stock market today: Live updates (06 oct 2026)"
   ],
-  "as_of": "2026-10-07T11:39:41Z"
+  "as_of": "2026-10-07T12:06:52Z"
 }
