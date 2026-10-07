@@ -1,10 +1,10 @@
 {
-  "geopolitica": "Ataques de los hutíes contra objetivos sauditas mantienen elevada la prima de riesgo en el Golfo pese a las fuertes exportaciones de crudo de Medio Oriente, lo que puede presionar el sentimiento de riesgo del NQ intradía.",
-  "petroleo": "El Brent cotiza estable en 100,58 USD/barril (+0,26%) y el WTI en 89,44 USD/barril (+0,01), tras sopesar el mercado el aumento de exportaciones de Medio Oriente frente a las tensiones en el Golfo (CNBC).",
-  "catalizador": "Los rendimientos del Treasury a 10 años retroceden más de 2 pb hasta 5,286% desde el máximo desde 2002, aliviando la presión sobre las valuaciones tech y apoyando al NQ (Bloomberg/CNBC).",
+  "geopolitica": "",
+  "petroleo": "El Brent sube mas de 1% a 101.73 USD/barril y el WTI +0.5% a 89.86 USD, impulsados por las tensiones en el Golfo y el riesgo de oferta en Medio Oriente, lo que presiona al alza los rendimientos del Tesoro y resta apetito por riesgo en el NQ.",
+  "catalizador": "El mercado espera hoy miercoles las minutas de la Fed de septiembre (14:00 ET) y una subasta de notas del Tesoro a 10 anos por 39,000 millones USD, con un 78% de probabilidad segun CME FedWatch de que la Fed mantenga tasas sin cambios, lo que podria generar volatilidad intradia en el NQ.",
   "sources": [
-    "CNBC 06-Oct-2026",
-    "Bloomberg 06-Oct-2026"
+    "CNBC 07:05 ET",
+    "CNBC (CME FedWatch) 07:05 ET"
   ],
-  "as_of": "2026-10-06T21:06:12Z"
+  "as_of": "2026-10-07T11:07:13Z"
 }
