@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Irán intensificó los ataques a petroleros en el Estrecho de Ormuz (11 ataques en la última semana) y la Guardia Revolucionaria amenazó con destruir buques que usen la ruta respaldada por EE.UU., elevando la prima de riesgo geopolítico que presiona al NQ (CNBC, 06-oct, ~13:00 ET).",
-  "petroleo": "El Brent cotiza cerca de 101-102 USD/barril (WTI en línea), subiendo cerca de 1% tras el repunte de ataques a petroleros en el Estrecho de Ormuz, encareciendo insumos y pesando sobre el apetito por riesgo del NQ (CNBC/Bloomberg, 07-oct, ~08:00 ET).",
-  "catalizador": "El rendimiento del Treasury a 30 años tocó su nivel más alto desde 2002 (~5.70%) antes de una subasta de 39.000 millones en el bono a 10 años y de la publicación a las 14:00 ET de las minutas de la Fed de septiembre, presionando a las tecnológicas de alta duración del Nasdaq (CNBC, 07-oct, 08:43 ET).",
+  "geopolitica": "El secretario de Estado Rubio afirmó que Teherán desperdició 'múltiples' oportunidades para un acuerdo nuclear mientras persiste el estancamiento del conflicto EE.UU.-Irán, lo que mantiene la prima de riesgo geopolítico presionando al NQ (CNBC, 07-oct).",
+  "petroleo": "El Brent sube 0.64% a 101.23 USD y el WTI avanza 0.21% a 89.63 USD tras dos ataques de los hutíes contra los aeropuertos saudíes de Jazán y Najrán, reavivando temores sobre el flujo de crudo en Oriente Medio y presionando el apetito por riesgo del NQ (CNBC, 07-oct).",
+  "catalizador": "Las minutas del FOMC de septiembre se publican hoy a las 14:00 ET justo cuando el rendimiento del Treasury a 10 años toca su nivel más alto desde 2002 (~5.3%), lo que presiona a las tecnológicas de alta duración del Nasdaq-100 antes de la publicación (CNBC, 07-oct).",
   "sources": [
-    "CNBC 06-oct ~13:00 ET (crude-oil-tanker-strait-hormuz-iran-attack)",
-    "CNBC 07-oct 08:43 ET (treasury-yields-auction-fomc-minutes)",
-    "Bloomberg 07-oct (Stock Market Today live updates)",
-    "FXStreet 07-oct 08:43 ET (Dow Jones futures fall ahead of FOMC Minutes)"
+    "CNBC 07-oct (us-iran-war-trump-hormuz)",
+    "CNBC 07-oct (oil-prices-today-brent-wti-hormuz)",
+    "CNBC 07-oct 14:00 ET (treasury-yields-auction-fomc-minutes)"
   ],
-  "as_of": "2026-10-07T16:06:39Z"
+  "as_of": "2026-10-07T17:07:50Z"
 }
