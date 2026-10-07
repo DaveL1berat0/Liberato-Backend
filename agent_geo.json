@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) atacaron los aeropuertos saudíes de Jazán y Najrán, e Irán intensificó ataques a petroleros en el Estrecho de Ormuz, elevando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo del NQ.",
-  "petroleo": "El Brent sube +0.44% hasta 101.02 USD/barril (futuro de diciembre) y el WTI se mantiene plano en 89.46 USD/barril, impulsados por los ataques hutíes a Arabia Saudí y el repunte de ataques iraníes a petroleros en Ormuz.",
-  "catalizador": "Los futuros del Nasdaq-100 caen 0.8% este miércoles, lastrados por el repunte del petróleo y el alza de los rendimientos del Treasury, pese a que el S&P 500 marcó un máximo histórico en la sesión previa.",
+  "geopolitica": "El secretario de Estado Rubio afirmo el 7-oct que Iran ha dejado pasar 'multiples' oportunidades para un acuerdo nuclear, estancando las negociaciones y coincidiendo con una escalada de ataques iranies a petroleros en el Estrecho de Ormuz, lo que sostiene una prima de riesgo geopolitico que presiona al NQ via mayor cautela risk-off.",
+  "petroleo": "El Brent sube 0.44% a 101.02 USD/barril (4:48 ET) y el WTI se mantiene plano en 89.46 USD tras ataques huties a los aeropuertos sauditas de Jazan y Najran, lo que encarece los costos energeticos y presiona a las tecnologicas del NQ.",
+  "catalizador": "Las actas de la reunion de septiembre de la Fed se publican hoy a las 14:00 ET, junto con una subasta de 39,000 millones de dolares en notas a 10 anos, eventos que pueden generar volatilidad en el NQ segun el tono sobre tasas.",
   "sources": [
-    "CNBC - Oil prices today: Brent, WTI, Hormuz (07 oct 2026)",
-    "CNBC - Daily Open: AI rally defies bond market rout (07 oct 2026)",
-    "CNBC - Stock market today: Live updates (06 oct 2026)"
+    "CNBC 04:48 ET - Oil prices today: Brent, WTI, Hormuz",
+    "CNBC 07/10 - Rubio says Tehran missed 'multiple' chances for nuclear deal amid Iran stalemate",
+    "CNBC 07/10 - Treasury yields rise as oil moves higher, traders await key U.S. bond sale (actas FOMC 14:00 ET)"
   ],
-  "as_of": "2026-10-07T12:06:52Z"
+  "as_of": "2026-10-07T12:39:36Z"
 }
