@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Milicianos hutíes (respaldados por Irán) lanzaron nuevos ataques contra los aeropuertos sauditas de Jazan y Najran, reavivando el temor a que se frene la recuperación de las exportaciones petroleras de Oriente Medio y presionando el apetito por riesgo que afecta al NQ intradía (CNBC, 13:53 ET).",
-  "petroleo": "El Brent cedió 66 centavos a 99.92 USD/barril y el WTI bajó 1.34 USD a 88.10 USD tras la decisión de la AIE de priorizar la liberación de reservas de diésel, mientras los ataques hutíes a Arabia Saudita limitaban la caída; el resultado mixto deja presión moderada sobre costos de insumos para el NQ (CNBC, 13:53 ET).",
-  "catalizador": "El rendimiento del Treasury a 10 años tocó 5.35%, su nivel más alto desde 2002, antes de ceder a ~5.29% tras una sólida subasta de 39,000 millones de USD, mientras las minutas de la Fed de septiembre mostraron inclinación hacia otra subida de tasas antes de fin de año, presionando al Nasdaq por el mayor costo de capital (CNBC, 07 oct).",
+  "geopolitica": "La guerra EE.UU.-Iran sigue activa en el Estrecho de Ormuz, con ataques a petroleros persistentes y Rubio diciendo que Iran 'perdio el control' del estrecho, lo que mantiene un sesgo de aversion al riesgo que presiona al NQ intradia (CBS News, CNBC, 07/10).",
+  "petroleo": "Brent opera cerca de 99-101 USD/barril y WTI justo debajo de 90 USD por la escalada belica en el Estrecho de Ormuz, encareciendo insumos y alimentando cautela en las tecnologicas que componen el NQ (CBS News, CNBC, 07/10).",
+  "catalizador": "Las minutas de la Fed de septiembre (mas hawkish, mayoria ve una subida adicional de tasas antes de fin de ano) y una subasta solida de notas del Tesoro a 10 anos aliviaron los rendimientos tras tocar maximos de 24 anos, dando un respiro parcial al NQ despues de las caidas ligadas a tasas (CNBC, 07/10, subasta ~13:00 ET).",
   "sources": [
-    "CNBC 13:53 ET",
-    "CNBC 13:31 ET",
-    "CNBC 14:46 ET",
-    "CNBC 07 oct (treasury-yields-auction-fomc-minutes)"
+    "CNBC 07/10 (subasta T-10y ~13:00 ET, rendimientos ceden desde maximos de 2002)",
+    "CBS News 07/10 (live updates Iran war / Strait of Hormuz, Brent cerca de 99 USD)",
+    "CNBC 06/10 (Treasury yields hit 24-year highs ahead of Fed minutes)"
   ],
-  "as_of": "2026-10-07T19:07:01Z"
+  "as_of": "2026-10-07T20:06:50Z"
 }
