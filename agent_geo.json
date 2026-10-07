@@ -1,11 +1,11 @@
 {
-  "geopolitica": "El secretario de Estado Rubio afirmó que Teherán desperdició 'múltiples' oportunidades para un acuerdo nuclear mientras persiste el estancamiento del conflicto EE.UU.-Irán, lo que mantiene la prima de riesgo geopolítico presionando al NQ (CNBC, 07-oct).",
-  "petroleo": "El Brent sube 0.64% a 101.23 USD y el WTI avanza 0.21% a 89.63 USD tras dos ataques de los hutíes contra los aeropuertos saudíes de Jazán y Najrán, reavivando temores sobre el flujo de crudo en Oriente Medio y presionando el apetito por riesgo del NQ (CNBC, 07-oct).",
-  "catalizador": "Las minutas del FOMC de septiembre se publican hoy a las 14:00 ET justo cuando el rendimiento del Treasury a 10 años toca su nivel más alto desde 2002 (~5.3%), lo que presiona a las tecnológicas de alta duración del Nasdaq-100 antes de la publicación (CNBC, 07-oct).",
+  "geopolitica": "Ataques huties contra Arabia Saudi elevan la tension en Oriente Medio y presionan al Nasdaq junto a rendimientos del Tesoro en maximos de mas de dos decadas (CNBC, 09:30 ET).",
+  "petroleo": "El Brent sube a unos 100-102 USD/barril (+1.4%) y el WTI a unos 90 USD (+1.0%) por los ataques huties a Arabia Saudi que eclipsan la recuperacion de la oferta via el Estrecho de Ormuz (Reuters/FXStreet).",
+  "catalizador": "Los rendimientos del Tesoro a 10 y 30 anos tocan maximos de mas de dos decadas (10 anos ~5.31%, 30 anos ~5.68%) mientras el mercado espera las minutas de la Fed de septiembre, lo que presiona al Nasdaq (CNBC/Yahoo Finance, 09:30 ET).",
   "sources": [
-    "CNBC 07-oct (us-iran-war-trump-hormuz)",
-    "CNBC 07-oct (oil-prices-today-brent-wti-hormuz)",
-    "CNBC 07-oct 14:00 ET (treasury-yields-auction-fomc-minutes)"
+    "CNBC 09:30 ET",
+    "Yahoo Finance 08:02 ET",
+    "Reuters/FXStreet 13:26 ET"
   ],
-  "as_of": "2026-10-07T17:07:50Z"
+  "as_of": "2026-10-07T18:06:05Z"
 }
