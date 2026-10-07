@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La guerra EEUU-Israel/Iran entra en su octavo mes con repunte de ataques iranies a petroleros en el estrecho de Ormuz, elevando el tono risk-off pre-apertura en el NQ (CNBC, Bloomberg, 6-7 oct 2026).",
-  "petroleo": "Brent cotiza por encima de 101 USD/barril por el aumento de ataques iranies a buques en Ormuz pese a que el flujo de crudo por la ruta ya roza el 80% de niveles previos a la guerra, presion bajista para el apetito de riesgo del NQ (CNBC, Bloomberg).",
-  "catalizador": "El rendimiento del Treasury a 10 anos toco 5.350%, maximo desde abril de 2002, presionando a la renta variable de cara a una subasta de bonos clave y las minutas del FOMC, catalizador negativo para el NQ en la apertura (CNBC, 7 oct 2026).",
+  "geopolitica": "Un comite bipartidista del Congreso de EE.UU. determino que Webull (listada en Nasdaq) mantiene vinculos estructurales con el gobierno chino y es un riesgo de seguridad nacional, hundiendo la accion hasta ~30% en premarket y reavivando la narrativa de riesgo regulatorio tech-China, lo que presiona el sentimiento de riesgo en el NQ.",
+  "petroleo": "El Brent sube a 101.41 USD/barril (+0.83, +0.8%) y el WTI a 89.82 USD/barril (+0.38, +0.4%) por ataques hutíes a buques e infraestructura saudi que elevan el riesgo de suministro en Oriente Medio, encareciendo costos energeticos y pudiendo pesar sobre el apetito por riesgo en el NQ.",
+  "catalizador": "La Fed publica esta tarde (~14:00 ET) las minutas de su reunion de septiembre, en la que subio tasas por primera vez en tres anos, evento clave que el mercado vigila por pistas sobre el ritmo de politica monetaria y que puede generar volatilidad intradia en el NQ.",
   "sources": [
-    "CNBC 07-oct-2026 (treasury-yields-auction-fomc-minutes)",
-    "CNBC/Bloomberg 06/07-oct-2026 (Hormuz tanker attacks, oil jumps)",
-    "ZeroHedge 07-oct-2026 (futures slide, 30Y yield 2002 high)"
+    "CNBC 08:00 ET",
+    "CNBC 07:00 ET",
+    "CNBC 14:00 ET"
   ],
-  "as_of": "2026-10-07T14:39:55Z"
+  "as_of": "2026-10-07T15:40:45Z"
 }
