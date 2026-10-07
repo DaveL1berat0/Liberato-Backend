@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Iran intensifico los ataques a petroleros en el Estrecho de Ormuz (9 ataques en lo que va de octubre, el doble que en septiembre segun UKMTO), reavivando el riesgo geopolitico sobre el suministro energetico y presionando el apetito por riesgo que pesa sobre el NQ.",
-  "petroleo": "El Brent cotiza en 101.24 USD/barril (+0.65%) y el WTI en 89.87 USD/barril (+0.48%), impulsados por los ataques iranies a buques en Ormuz y una tormenta en el Golfo de Mexico que amenaza la produccion de EE.UU., lo que presiona al NQ via mayores rendimientos de bonos.",
-  "catalizador": "Los mercados esperan hoy la publicacion de las minutas de la Fed de la reunion de septiembre (14:00 ET), mientras el rendimiento del Treasury a 10 anos se mantiene elevado en 5.31% y el de 30 anos en 5.68%, lo que mantiene presionados a los futuros del Nasdaq en la premarket.",
+  "geopolitica": "Iran intensifico los ataques a petroleros en el Estrecho de Ormuz (9 en lo que va de octubre, casi el doble que en todo septiembre) y los hutíes atacaron aeropuertos en Arabia Saudita, elevando la prima de riesgo geopolitico que presiona a la baja los futuros tecnologicos del NQ.",
+  "petroleo": "El Brent sube 1.23% a 101.82 USD/barril y el WTI 0.84% a 90.19 USD/barril por los ataques a petroleros en Ormuz y a infraestructura saudi, un alza que encarece costos y pesa sobre el apetito de riesgo del Nasdaq.",
+  "catalizador": "Las minutas de la Fed de septiembre se publican esta tarde junto a una subasta de bonos a 10 anos por 39,000 millones de dolares, con el rendimiento a 30 anos cerca de 5.73%, factores que podrian anadir volatilidad al NQ en la sesion.",
   "sources": [
-    "Bloomberg 2026-10-06",
-    "CNBC 2026-10-06",
-    "TradingEconomics 2026-10-07",
-    "TheStreet 2026-10-07"
+    "CNBC 07 oct 2026 (oil-prices-today-brent-wti-hormuz)",
+    "CNBC 07 oct 2026 (5 things to know before the stock market opens)",
+    "Bloomberg 06 oct 2026 (Iran ramps up ship attacks in Hormuz as oil and gas flows climb)"
   ],
-  "as_of": "2026-10-07T13:40:17Z"
+  "as_of": "2026-10-07T14:06:45Z"
 }
