@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Ataques huties contra Arabia Saudi elevan la tension en Oriente Medio y presionan al Nasdaq junto a rendimientos del Tesoro en maximos de mas de dos decadas (CNBC, 09:30 ET).",
-  "petroleo": "El Brent sube a unos 100-102 USD/barril (+1.4%) y el WTI a unos 90 USD (+1.0%) por los ataques huties a Arabia Saudi que eclipsan la recuperacion de la oferta via el Estrecho de Ormuz (Reuters/FXStreet).",
-  "catalizador": "Los rendimientos del Tesoro a 10 y 30 anos tocan maximos de mas de dos decadas (10 anos ~5.31%, 30 anos ~5.68%) mientras el mercado espera las minutas de la Fed de septiembre, lo que presiona al Nasdaq (CNBC/Yahoo Finance, 09:30 ET).",
+  "geopolitica": "Milicianos hutíes (respaldados por Irán) lanzaron nuevos ataques contra los aeropuertos sauditas de Jazan y Najran, reavivando el temor a que se frene la recuperación de las exportaciones petroleras de Oriente Medio y presionando el apetito por riesgo que afecta al NQ intradía (CNBC, 13:53 ET).",
+  "petroleo": "El Brent cedió 66 centavos a 99.92 USD/barril y el WTI bajó 1.34 USD a 88.10 USD tras la decisión de la AIE de priorizar la liberación de reservas de diésel, mientras los ataques hutíes a Arabia Saudita limitaban la caída; el resultado mixto deja presión moderada sobre costos de insumos para el NQ (CNBC, 13:53 ET).",
+  "catalizador": "El rendimiento del Treasury a 10 años tocó 5.35%, su nivel más alto desde 2002, antes de ceder a ~5.29% tras una sólida subasta de 39,000 millones de USD, mientras las minutas de la Fed de septiembre mostraron inclinación hacia otra subida de tasas antes de fin de año, presionando al Nasdaq por el mayor costo de capital (CNBC, 07 oct).",
   "sources": [
-    "CNBC 09:30 ET",
-    "Yahoo Finance 08:02 ET",
-    "Reuters/FXStreet 13:26 ET"
+    "CNBC 13:53 ET",
+    "CNBC 13:31 ET",
+    "CNBC 14:46 ET",
+    "CNBC 07 oct (treasury-yields-auction-fomc-minutes)"
   ],
-  "as_of": "2026-10-07T18:06:05Z"
+  "as_of": "2026-10-07T19:07:01Z"
 }
