@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Un comite bipartidista del Congreso de EE.UU. determino que Webull (listada en Nasdaq) mantiene vinculos estructurales con el gobierno chino y es un riesgo de seguridad nacional, hundiendo la accion hasta ~30% en premarket y reavivando la narrativa de riesgo regulatorio tech-China, lo que presiona el sentimiento de riesgo en el NQ.",
-  "petroleo": "El Brent sube a 101.41 USD/barril (+0.83, +0.8%) y el WTI a 89.82 USD/barril (+0.38, +0.4%) por ataques hutíes a buques e infraestructura saudi que elevan el riesgo de suministro en Oriente Medio, encareciendo costos energeticos y pudiendo pesar sobre el apetito por riesgo en el NQ.",
-  "catalizador": "La Fed publica esta tarde (~14:00 ET) las minutas de su reunion de septiembre, en la que subio tasas por primera vez en tres anos, evento clave que el mercado vigila por pistas sobre el ritmo de politica monetaria y que puede generar volatilidad intradia en el NQ.",
+  "geopolitica": "Irán intensificó los ataques a petroleros en el Estrecho de Ormuz (11 ataques en la última semana) y la Guardia Revolucionaria amenazó con destruir buques que usen la ruta respaldada por EE.UU., elevando la prima de riesgo geopolítico que presiona al NQ (CNBC, 06-oct, ~13:00 ET).",
+  "petroleo": "El Brent cotiza cerca de 101-102 USD/barril (WTI en línea), subiendo cerca de 1% tras el repunte de ataques a petroleros en el Estrecho de Ormuz, encareciendo insumos y pesando sobre el apetito por riesgo del NQ (CNBC/Bloomberg, 07-oct, ~08:00 ET).",
+  "catalizador": "El rendimiento del Treasury a 30 años tocó su nivel más alto desde 2002 (~5.70%) antes de una subasta de 39.000 millones en el bono a 10 años y de la publicación a las 14:00 ET de las minutas de la Fed de septiembre, presionando a las tecnológicas de alta duración del Nasdaq (CNBC, 07-oct, 08:43 ET).",
   "sources": [
-    "CNBC 08:00 ET",
-    "CNBC 07:00 ET",
-    "CNBC 14:00 ET"
+    "CNBC 06-oct ~13:00 ET (crude-oil-tanker-strait-hormuz-iran-attack)",
+    "CNBC 07-oct 08:43 ET (treasury-yields-auction-fomc-minutes)",
+    "Bloomberg 07-oct (Stock Market Today live updates)",
+    "FXStreet 07-oct 08:43 ET (Dow Jones futures fall ahead of FOMC Minutes)"
   ],
-  "as_of": "2026-10-07T15:40:45Z"
+  "as_of": "2026-10-07T16:06:39Z"
 }
