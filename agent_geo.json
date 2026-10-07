@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La guerra EE.UU.-Iran sigue activa en el Estrecho de Ormuz, con ataques a petroleros persistentes y Rubio diciendo que Iran 'perdio el control' del estrecho, lo que mantiene un sesgo de aversion al riesgo que presiona al NQ intradia (CBS News, CNBC, 07/10).",
-  "petroleo": "Brent opera cerca de 99-101 USD/barril y WTI justo debajo de 90 USD por la escalada belica en el Estrecho de Ormuz, encareciendo insumos y alimentando cautela en las tecnologicas que componen el NQ (CBS News, CNBC, 07/10).",
-  "catalizador": "Las minutas de la Fed de septiembre (mas hawkish, mayoria ve una subida adicional de tasas antes de fin de ano) y una subasta solida de notas del Tesoro a 10 anos aliviaron los rendimientos tras tocar maximos de 24 anos, dando un respiro parcial al NQ despues de las caidas ligadas a tasas (CNBC, 07/10, subasta ~13:00 ET).",
+  "geopolitica": "Los ataques iraníes a petroleros en el Estrecho de Hormuz se intensificaron (10 buques impactados desde el 29-sep, según UKMTO), manteniendo una prima de riesgo geopolítico que puede frenar el apetito por riesgo en el NQ intradía.",
+  "petroleo": "WTI cayó 1.2% a 88.37 USD/barril y Brent 0.75% a 99.57 USD/barril tras el anuncio del G7 de liberar hasta 100M de barriles de reservas estratégicas, aunque el riesgo de nuevos ataques en Hormuz limita la caída y sostiene presión inflacionaria sobre el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 07/10 (subasta T-10y ~13:00 ET, rendimientos ceden desde maximos de 2002)",
-    "CBS News 07/10 (live updates Iran war / Strait of Hormuz, Brent cerca de 99 USD)",
-    "CNBC 06/10 (Treasury yields hit 24-year highs ahead of Fed minutes)"
+    "CNBC 06-Oct",
+    "Al Jazeera 06-Oct",
+    "UKMTO (vía TradeWinds) 06-Oct"
   ],
-  "as_of": "2026-10-07T20:06:50Z"
+  "as_of": "2026-10-07T21:07:08Z"
 }
