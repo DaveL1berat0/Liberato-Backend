@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Iran intensifica sus ataques a petroleros en el Estrecho de Ormuz este jueves, elevando el riesgo geopolitico sobre el suministro de crudo de Oriente Medio y alimentando la aversion al riesgo que puede pesar sobre el Nasdaq 100 intradia (CNBC, 8 oct 2026).",
-  "petroleo": "El Brent sube 5.2% a 105.36 USD/barril y el WTI sube 5% a 92.70 USD/barril por los ataques a petroleros en el Estrecho de Ormuz y el huracan Isaias, que corta produccion en el Golfo de Mexico; el salto del crudo reaviva temores de inflacion que presionan a la baja al Nasdaq (CNBC, 8 oct 2026).",
-  "catalizador": "Las minutas de la Fed de la reunion de septiembre insinuan la posibilidad de una subida adicional de tasas este ano, lo que empujo a los futuros del Nasdaq a la baja durante la noche (futuros en -0.7% a -1.3% hacia las 07:31 ET) (Goodreturns / Yahoo Finance, 8 oct 2026).",
+  "geopolitica": "Trump dice que no busca un acuerdo con Iran mientras EEUU prepara un posible 'bombardeo masivo' y continuan los ataques iranies a petroleros en el Estrecho de Hormuz, elevando la prima de riesgo geopolitico sobre el Nasdaq (CNBC, 08/10).",
+  "petroleo": "El Brent sube cerca de 3.8% hasta ~104-105 USD/barril y el WTI avanza ~3.4-4.1% hasta ~91-93 USD/barril por los ataques a petroleros en Hormuz y el cierre parcial de produccion en el Golfo de Mexico, presionando al Nasdaq por el riesgo inflacionario (CNBC, 08/10).",
+  "catalizador": "Las minutas de la Fed de septiembre muestran respaldo a otra subida de tasas antes de fin de ano y el gobernador Waller reitera la necesidad de mas alzas, empujando al alza los rendimientos del Treasury y presionando a las tecnologicas del Nasdaq (CNBC/Yahoo Finance, 08/10).",
   "sources": [
-    "CNBC - 8 oct 2026 (Brent +5.2% a 105.36 USD, WTI +5% a 92.70 USD, ataques a petroleros en Ormuz y huracan Isaias)",
-    "Goodreturns - 8 oct 2026 (minutas de la Fed insinuan mas subidas de tasas, futuros Nasdaq a la baja)",
-    "Yahoo Finance - 07:31 ET (Nasdaq 100 futuros -0.7% a -1.3%)"
+    "CNBC 13:24 ET",
+    "CNBC 08/10",
+    "Yahoo Finance 08/10"
   ],
-  "as_of": "2026-10-08T17:07:53Z"
+  "as_of": "2026-10-08T18:06:49Z"
 }
