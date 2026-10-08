@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los ataques iraníes a petroleros en el Estrecho de Hormuz se intensificaron (10 buques impactados desde el 29-sep, según UKMTO), manteniendo una prima de riesgo geopolítico que puede frenar el apetito por riesgo en el NQ intradía.",
-  "petroleo": "WTI cayó 1.2% a 88.37 USD/barril y Brent 0.75% a 99.57 USD/barril tras el anuncio del G7 de liberar hasta 100M de barriles de reservas estratégicas, aunque el riesgo de nuevos ataques en Hormuz limita la caída y sostiene presión inflacionaria sobre el NQ.",
+  "geopolitica": "The Atlantic reporto (7-8 oct) que la Casa Blanca pidio al Pentagono opciones para atacar Iran antes de las elecciones de medio mandato del 3 de noviembre, reavivando el temor a una escalada belica que presiona al NQ via mayor aversion al riesgo.",
+  "petroleo": "El Brent llego a subir hasta 4.2% y supero los 104 USD/barril tras el informe sobre posibles ataques a Iran, moderandose despues cerca de 101.5 USD (Benzinga); el repunte reaviva temores inflacionarios que pesan sobre el NQ.",
   "catalizador": "",
   "sources": [
-    "CNBC 06-Oct",
-    "Al Jazeera 06-Oct",
-    "UKMTO (vía TradeWinds) 06-Oct"
+    "Bloomberg 08-oct (hora ET no confirmada)",
+    "euronews 08-oct (hora ET no confirmada)",
+    "Benzinga 07-oct (hora ET no confirmada)",
+    "CBS News 08-oct, live updates (hora ET no confirmada)"
   ],
-  "as_of": "2026-10-07T21:07:08Z"
+  "as_of": "2026-10-08T11:07:24Z"
 }
