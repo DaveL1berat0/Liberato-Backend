@@ -1,12 +1,13 @@
 {
-  "geopolitica": "The Atlantic reporto (7-8 oct) que la Casa Blanca pidio al Pentagono opciones para atacar Iran antes de las elecciones de medio mandato del 3 de noviembre, reavivando el temor a una escalada belica que presiona al NQ via mayor aversion al riesgo.",
-  "petroleo": "El Brent llego a subir hasta 4.2% y supero los 104 USD/barril tras el informe sobre posibles ataques a Iran, moderandose despues cerca de 101.5 USD (Benzinga); el repunte reaviva temores inflacionarios que pesan sobre el NQ.",
-  "catalizador": "",
+  "geopolitica": "The Atlantic y Reuters informan (7-8 oct) que la Casa Blanca pidio al Pentagono opciones para atacar Iran y que la administracion prefiere esperar a las elecciones de medio mandato del 3 de noviembre antes de escalar, lo que mantiene elevada la prima de riesgo belico y presiona al NQ via mayor aversion al riesgo.",
+  "petroleo": "El Brent se mantiene por encima de 100 USD/barril, con picos cercanos a 104-108 USD en las ultimas horas, tras el repunte de ataques a petroleros en el Estrecho de Ormuz (UKMTO via Bloomberg, 06-oct) y el reporte sobre posibles ataques a Iran; el repunte reaviva temores inflacionarios que pesan sobre el Nasdaq.",
+  "catalizador": "Las minutas de la Fed de septiembre (difundidas 07-oct, CNBC) mostraron que la mayoria de los funcionarios espera otra subida de tasas antes de fin de ano, lo que impulso el rendimiento del Treasury a 10 anos a 5.35%, su nivel mas alto desde 2002, y presiona a la baja a los futuros tecnologicos del NQ.",
   "sources": [
-    "Bloomberg 08-oct (hora ET no confirmada)",
-    "euronews 08-oct (hora ET no confirmada)",
+    "The Atlantic 07-oct (hora ET no confirmada)",
+    "Bloomberg 06-oct (hora ET no confirmada)",
     "Benzinga 07-oct (hora ET no confirmada)",
-    "CBS News 08-oct, live updates (hora ET no confirmada)"
+    "CBS News 08-oct, live updates (hora ET no confirmada)",
+    "CNBC 07-oct (hora ET no confirmada)"
   ],
-  "as_of": "2026-10-08T11:07:24Z"
+  "as_of": "2026-10-08T11:40:10Z"
 }
