@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Crudo y futuros bajo presion tras reportes de que EE.UU. prepara operaciones militares de gran escala contra Iran en las proximas semanas, sumado a nuevos ataques hutíes contra los aeropuertos sauditas de Jazan y Najran, lo que eleva el riesgo de escalada en Oriente Medio y presiona el apetito por riesgo del NQ (CNBC, 08 oct 2026).",
-  "petroleo": "El Brent subio 5.2% hasta 105.36 USD/barril y el WTI 5.1% hasta 92.75 USD/barril este jueves por el temor a una escalada militar en Iran y el riesgo sobre el Estrecho de Ormuz, un salto que encarece insumos y presiona margenes, negativo para el NQ (CNBC, 08 oct 2026).",
-  "catalizador": "Los futuros del Nasdaq-100 cotizaban cerca de 0.5% a la baja hacia las 04:00 ET por el salto del rendimiento del bono a 30 anos a un maximo de 24 anos y dudas sobre el financiamiento del boom de inversion en IA, con Micron y TSMC cayendo mas de 1% en premarket a pesar del fuerte ingreso de TSMC en septiembre (+54.6% interanual), un combo de tasas altas y nerviosismo tecnologico que pesa sobre la apertura del NQ (Yahoo Finance/Stocktwits, 08 oct 2026, ~04:00 ET).",
+  "geopolitica": "Iran intensifico ataques a petroleros en el Estrecho de Ormuz (al menos 9 buques atacados en la ultima semana) y la administracion Trump evalua una operacion militar de gran escala contra Iran, lo que eleva el apetito por refugio y presiona al NQ (CNBC, 08-oct; NBC News).",
+  "petroleo": "Brent sube 3.9% a 104.07 USD/barril y WTI 3.7% a 91.58 USD/barril por los ataques en Ormuz y el huracan Isaias que amenaza la produccion del Golfo de Mexico; el salto energetico encarece insumos y presiona margenes tech, negativo para el NQ (CNBC, 08-oct).",
+  "catalizador": "Las peticiones iniciales de desempleo cayeron a 197,000 frente a 200,000 esperado y el gobernador Waller mantuvo sesgo hawkish sobre mas subas de tasas, lo que empuja el rendimiento del Treasury a 10 anos a maximos de 24 anos (~5.3%) y presiona los multiplos tech del NQ (BLS 08:30 ET; FXStreet).",
   "sources": [
-    "CNBC 08-oct-2026 (oil-prices-today-brent-wti-hormuz)",
-    "Bloomberg 06-oct-2026 (Oil Steadies With Focus on Hormuz Shipments and Vessel Attacks)",
-    "Yahoo Finance / Stocktwits 08-oct-2026 ~04:00 ET (Nasdaq, Dow futures falling premarket)"
+    "CNBC 08-oct (Brent +3.9% a $104.07, WTI +3.7% a $91.58, ataques en Ormuz)",
+    "NBC News via CNBC 08-oct (Trump evalua operacion militar en Iran)",
+    "BLS 08:30 ET (peticiones de desempleo 197K vs 200K esperado)",
+    "FXStreet 07-oct (rendimiento T-10y en maximo de 24 anos ~5.3%)"
   ],
-  "as_of": "2026-10-08T14:06:28Z"
+  "as_of": "2026-10-08T14:39:07Z"
 }
