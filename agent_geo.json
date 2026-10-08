@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Trump dice que no busca un acuerdo con Iran mientras EEUU prepara un posible 'bombardeo masivo' y continuan los ataques iranies a petroleros en el Estrecho de Hormuz, elevando la prima de riesgo geopolitico sobre el Nasdaq (CNBC, 08/10).",
-  "petroleo": "El Brent sube cerca de 3.8% hasta ~104-105 USD/barril y el WTI avanza ~3.4-4.1% hasta ~91-93 USD/barril por los ataques a petroleros en Hormuz y el cierre parcial de produccion en el Golfo de Mexico, presionando al Nasdaq por el riesgo inflacionario (CNBC, 08/10).",
-  "catalizador": "Las minutas de la Fed de septiembre muestran respaldo a otra subida de tasas antes de fin de ano y el gobernador Waller reitera la necesidad de mas alzas, empujando al alza los rendimientos del Treasury y presionando a las tecnologicas del Nasdaq (CNBC/Yahoo Finance, 08/10).",
+  "geopolitica": "Iran intensifico los ataques a petroleros en el Estrecho de Hormuz (mas de una docena entre el 28 sep y el 2 oct), elevando el riesgo geopolitico y presionando el apetito por riesgo en Wall Street (CNBC, 06:46 ET).",
+  "petroleo": "El Brent subio por encima de 105 USD/barril (+4.8%) y el WTI a unos 92.69 USD (+5%) por los ataques iranies a petroleros en Hormuz, impulsando energia y pesando sobre el sentimiento de riesgo que afecta al NQ (Oilprice.com, 06:46 ET).",
+  "catalizador": "El Nasdaq caia cerca de 1.25% hacia las 14:20 ET, lastrado por una fuerte rotacion de riesgo en tecnologia (fotonica, IA) tras una sorpresa alcista en la encuesta de inflacion a 12 meses de la Fed de Nueva York (CNBC).",
   "sources": [
-    "CNBC 13:24 ET",
-    "CNBC 08/10",
-    "Yahoo Finance 08/10"
+    "CNBC 06:46 ET",
+    "Oilprice.com 06:46 ET",
+    "CNBC 14:20 ET"
   ],
-  "as_of": "2026-10-08T18:06:49Z"
+  "as_of": "2026-10-08T19:06:05Z"
 }
