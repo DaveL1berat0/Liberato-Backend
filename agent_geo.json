@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Iran intensifico ataques a petroleros en el Estrecho de Ormuz (al menos 9 buques atacados en la ultima semana) y la administracion Trump evalua una operacion militar de gran escala contra Iran, lo que eleva el apetito por refugio y presiona al NQ (CNBC, 08-oct; NBC News).",
-  "petroleo": "Brent sube 3.9% a 104.07 USD/barril y WTI 3.7% a 91.58 USD/barril por los ataques en Ormuz y el huracan Isaias que amenaza la produccion del Golfo de Mexico; el salto energetico encarece insumos y presiona margenes tech, negativo para el NQ (CNBC, 08-oct).",
-  "catalizador": "Las peticiones iniciales de desempleo cayeron a 197,000 frente a 200,000 esperado y el gobernador Waller mantuvo sesgo hawkish sobre mas subas de tasas, lo que empuja el rendimiento del Treasury a 10 anos a maximos de 24 anos (~5.3%) y presiona los multiplos tech del NQ (BLS 08:30 ET; FXStreet).",
+  "geopolitica": "Trump y su equipo de seguridad nacional evaluan reanudar ataques militares de gran escala contra Iran antes de las elecciones de medio termino, mientras los hutíes atacan aeropuertos en Arabia Saudita e Iran sigue golpeando petroleros en el Estrecho de Ormuz, elevando el apetito por refugio y presionando al NQ (NBC News/CNBC, 2026-10-08).",
+  "petroleo": "Brent y WTI suben cerca de 4% por la escalada de ataques iranies a petroleros en Ormuz y porque el huracan Isaias obligo a cerrar unos 500,000 barriles/dia (25% de la produccion) en el Golfo de Mexico, encareciendo insumos y presionando margenes tech del NQ (CNBC, 2026-10-08).",
+  "catalizador": "El gobernador de la Fed Waller reitero que haran falta mas subas de tasas para bajar la inflacion y las peticiones iniciales de desempleo cayeron a 197K (vs 200K esperado); el rendimiento del Treasury a 10 anos ronda 5.27%-5.32%, el mas alto desde 2002, presionando los multiplos del NQ (CNBC 2026-10-08; FXStreet 08:32 ET).",
   "sources": [
-    "CNBC 08-oct (Brent +3.9% a $104.07, WTI +3.7% a $91.58, ataques en Ormuz)",
-    "NBC News via CNBC 08-oct (Trump evalua operacion militar en Iran)",
-    "BLS 08:30 ET (peticiones de desempleo 197K vs 200K esperado)",
-    "FXStreet 07-oct (rendimiento T-10y en maximo de 24 anos ~5.3%)"
+    "NBC News/CNBC 2026-10-08 (Trump evalua ataque militar a gran escala contra Iran antes de midterms)",
+    "CNBC 2026-10-08 (Brent/WTI +4%, ataques en Ormuz, huracan Isaias cierra 500K bpd en el Golfo de Mexico)",
+    "CNBC 2026-10-08 (Waller: se necesitan mas subas de tasas)",
+    "FXStreet 08:32 ET (peticiones de desempleo 197K vs 200K esperado)",
+    "CNBC 2026-10-08 (rendimiento T-10y 5.27%-5.32%, maximo desde 2002)"
   ],
-  "as_of": "2026-10-08T14:39:07Z"
+  "as_of": "2026-10-08T15:07:09Z"
 }
