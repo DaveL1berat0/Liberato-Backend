@@ -1,13 +1,13 @@
 {
-  "geopolitica": "Trump y su equipo de seguridad nacional evaluan reanudar ataques militares de gran escala contra Iran antes de las elecciones de medio termino, mientras los hutíes atacan aeropuertos en Arabia Saudita e Iran sigue golpeando petroleros en el Estrecho de Ormuz, elevando el apetito por refugio y presionando al NQ (NBC News/CNBC, 2026-10-08).",
-  "petroleo": "Brent y WTI suben cerca de 4% por la escalada de ataques iranies a petroleros en Ormuz y porque el huracan Isaias obligo a cerrar unos 500,000 barriles/dia (25% de la produccion) en el Golfo de Mexico, encareciendo insumos y presionando margenes tech del NQ (CNBC, 2026-10-08).",
-  "catalizador": "El gobernador de la Fed Waller reitero que haran falta mas subas de tasas para bajar la inflacion y las peticiones iniciales de desempleo cayeron a 197K (vs 200K esperado); el rendimiento del Treasury a 10 anos ronda 5.27%-5.32%, el mas alto desde 2002, presionando los multiplos del NQ (CNBC 2026-10-08; FXStreet 08:32 ET).",
+  "geopolitica": "Trump y su equipo de seguridad nacional evaluan reanudar ataques militares de gran escala contra Iran antes de las elecciones de medio termino, mientras Iran sigue golpeando petroleros en el Estrecho de Ormuz y hay ataques a buques en el Golfo Perico, elevando el apetito por refugio y presionando al NQ en la apertura (Reuters 06:50 ET; CNBC 2026-10-08).",
+  "petroleo": "Brent supera los 104 USD/barril (+4%) por la escalada de ataques a petroleros en Ormuz/Golfo Perico y porque un huracan obligo a cerrar produccion en el Golfo de Mexico; el salto del crudo reavivo temores de inflacion y presiona multiplos tech del NQ (Reuters 06:50 ET; CNBC 2026-10-08).",
+  "catalizador": "El gobernador de la Fed Waller reitero que haran falta mas subas de tasas para bajar la inflacion, la encuesta de expectativas de inflacion a 12 meses de la Fed de Nueva York subio a su maximo desde 2023, y el rendimiento del Treasury a 10 anos ronda 5.27%-5.34% (el mas alto desde 2002), presionando los multiplos del NQ antes de las minutas de la Fed de hoy (CNBC 2026-10-08; FXStreet 08:32 ET).",
   "sources": [
-    "NBC News/CNBC 2026-10-08 (Trump evalua ataque militar a gran escala contra Iran antes de midterms)",
-    "CNBC 2026-10-08 (Brent/WTI +4%, ataques en Ormuz, huracan Isaias cierra 500K bpd en el Golfo de Mexico)",
+    "Reuters 06:50 ET (futuros caen por petroleo y rendimientos)",
+    "CNBC 2026-10-08 (Dow -181, Nasdaq -0.5% en apertura; petroleo +4%)",
     "CNBC 2026-10-08 (Waller: se necesitan mas subas de tasas)",
-    "FXStreet 08:32 ET (peticiones de desempleo 197K vs 200K esperado)",
-    "CNBC 2026-10-08 (rendimiento T-10y 5.27%-5.32%, maximo desde 2002)"
+    "FXStreet 08:32 ET (T-10y 5.27%-5.34%, maximo desde 2002)",
+    "CNBC Morning Squawk 2026-10-08 (encuesta Fed NY: inflacion esperada maxima desde 2023)"
   ],
-  "as_of": "2026-10-08T15:07:09Z"
+  "as_of": "2026-10-08T15:38:55Z"
 }
