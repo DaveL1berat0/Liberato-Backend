@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump dijo que no busca un acuerdo con Irán para terminar la guerra, lo que intensifica el riesgo geopolítico en Medio Oriente y añade presión bajista sobre el NQ en la apertura.",
-  "petroleo": "El Brent sube con fuerza a unos 105 USD/barril (+5%) y el WTI ronda 92.75 USD por la escalada del conflicto en Medio Oriente, encareciendo costos e inflación y presionando al NQ a la baja.",
-  "catalizador": "Un funcionario de la Fed anticipa más subas de tasas y los rendimientos del Treasury suben antes de la subasta a 30 años, mientras la Fed de NY vincula el alza de precios de consumo a los aranceles de Trump, reforzando la presión bajista sobre el NQ.",
+  "geopolitica": "Crudo y futuros bajo presion tras reportes de que EE.UU. prepara operaciones militares de gran escala contra Iran en las proximas semanas, sumado a nuevos ataques hutíes contra los aeropuertos sauditas de Jazan y Najran, lo que eleva el riesgo de escalada en Oriente Medio y presiona el apetito por riesgo del NQ (CNBC, 08 oct 2026).",
+  "petroleo": "El Brent subio 5.2% hasta 105.36 USD/barril y el WTI 5.1% hasta 92.75 USD/barril este jueves por el temor a una escalada militar en Iran y el riesgo sobre el Estrecho de Ormuz, un salto que encarece insumos y presiona margenes, negativo para el NQ (CNBC, 08 oct 2026).",
+  "catalizador": "Los futuros del Nasdaq-100 cotizaban cerca de 0.5% a la baja hacia las 04:00 ET por el salto del rendimiento del bono a 30 anos a un maximo de 24 anos y dudas sobre el financiamiento del boom de inversion en IA, con Micron y TSMC cayendo mas de 1% en premarket a pesar del fuerte ingreso de TSMC en septiembre (+54.6% interanual), un combo de tasas altas y nerviosismo tecnologico que pesa sobre la apertura del NQ (Yahoo Finance/Stocktwits, 08 oct 2026, ~04:00 ET).",
   "sources": [
-    "Bloomberg 08:08 ET",
-    "CNBC 08:56 ET"
+    "CNBC 08-oct-2026 (oil-prices-today-brent-wti-hormuz)",
+    "Bloomberg 06-oct-2026 (Oil Steadies With Focus on Hormuz Shipments and Vessel Attacks)",
+    "Yahoo Finance / Stocktwits 08-oct-2026 ~04:00 ET (Nasdaq, Dow futures falling premarket)"
   ],
-  "as_of": "2026-10-08T13:09:29Z"
+  "as_of": "2026-10-08T13:39:28Z"
 }
