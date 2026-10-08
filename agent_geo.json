@@ -1,13 +1,10 @@
 {
-  "geopolitica": "The Atlantic y Reuters informan (7-8 oct) que la Casa Blanca pidio al Pentagono opciones para atacar Iran y que la administracion prefiere esperar a las elecciones de medio mandato del 3 de noviembre antes de escalar, lo que mantiene elevada la prima de riesgo belico y presiona al NQ via mayor aversion al riesgo.",
-  "petroleo": "El Brent se mantiene por encima de 100 USD/barril, con picos cercanos a 104-108 USD en las ultimas horas, tras el repunte de ataques a petroleros en el Estrecho de Ormuz (UKMTO via Bloomberg, 06-oct) y el reporte sobre posibles ataques a Iran; el repunte reaviva temores inflacionarios que pesan sobre el Nasdaq.",
-  "catalizador": "Las minutas de la Fed de septiembre (difundidas 07-oct, CNBC) mostraron que la mayoria de los funcionarios espera otra subida de tasas antes de fin de ano, lo que impulso el rendimiento del Treasury a 10 anos a 5.35%, su nivel mas alto desde 2002, y presiona a la baja a los futuros tecnologicos del NQ.",
+  "geopolitica": "Trump dijo que no busca un acuerdo con Iran para terminar la guerra y EE.UU. estaria preparando un bombardeo masivo en Medio Oriente, lo que eleva la aversion al riesgo y presiona al NQ a la baja (CNBC, 07:56 ET).",
+  "petroleo": "El Brent subio cerca de 4% hasta unos 104 USD/barril por la escalada Iran-EE.UU. y ataques a petroleros en el Estrecho de Ormuz, lo que encarece insumos y pesa sobre el sentimiento de riesgo del NQ (CNBC, 07:56 ET).",
+  "catalizador": "El gobernador de la Fed Christopher Waller dijo en Istanbul que se necesitaran mas subidas de tasas aunque con flexibilidad en el ritmo, manteniendo el rendimiento del Treasury a 10 anios cerca de maximos desde 2002 (~5.33%) y limitando el apetito por tech de alto multiplo en el NQ (Reuters, 04:30 ET).",
   "sources": [
-    "The Atlantic 07-oct (hora ET no confirmada)",
-    "Bloomberg 06-oct (hora ET no confirmada)",
-    "Benzinga 07-oct (hora ET no confirmada)",
-    "CBS News 08-oct, live updates (hora ET no confirmada)",
-    "CNBC 07-oct (hora ET no confirmada)"
+    "CNBC 07:56 ET",
+    "Reuters 04:30 ET"
   ],
-  "as_of": "2026-10-08T11:40:10Z"
+  "as_of": "2026-10-08T12:07:41Z"
 }
