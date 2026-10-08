@@ -1,10 +1,10 @@
 {
-  "geopolitica": "Trump dijo que no busca un acuerdo con Iran para terminar la guerra y EE.UU. estaria preparando un bombardeo masivo en Medio Oriente, lo que eleva la aversion al riesgo y presiona al NQ a la baja (CNBC, 07:56 ET).",
-  "petroleo": "El Brent subio cerca de 4% hasta unos 104 USD/barril por la escalada Iran-EE.UU. y ataques a petroleros en el Estrecho de Ormuz, lo que encarece insumos y pesa sobre el sentimiento de riesgo del NQ (CNBC, 07:56 ET).",
-  "catalizador": "El gobernador de la Fed Christopher Waller dijo en Istanbul que se necesitaran mas subidas de tasas aunque con flexibilidad en el ritmo, manteniendo el rendimiento del Treasury a 10 anios cerca de maximos desde 2002 (~5.33%) y limitando el apetito por tech de alto multiplo en el NQ (Reuters, 04:30 ET).",
+  "geopolitica": "Trump dijo que no busca un acuerdo con Iran para poner fin a la guerra, lo que eleva el riesgo geopolitico en Oriente Medio y presiona a la baja los futuros del Nasdaq-100 en la apertura.",
+  "petroleo": "El Brent salto un 4% hasta cerca de 104 USD/barril (WTI en torno a 89-92 USD) tras los comentarios de Trump sobre Iran, encareciendo costos y pesando sobre el NQ.",
+  "catalizador": "El gobernador de la Fed Christopher Waller dijo que se necesitan mas subidas de tasas, impulsando el rendimiento del Treasury a 10 anos a 5.328%, cerca de maximos desde 2002, lo que presiona a la baja al Nasdaq-100.",
   "sources": [
-    "CNBC 07:56 ET",
-    "Reuters 04:30 ET"
+    "CNBC 08:10 ET",
+    "CNBC (Treasury yields / Waller) 08:10 ET"
   ],
-  "as_of": "2026-10-08T12:07:41Z"
+  "as_of": "2026-10-08T12:38:42Z"
 }
