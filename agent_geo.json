@@ -1,13 +1,11 @@
 {
-  "geopolitica": "El Tesoro de EE.UU. (Bessent) intensifica la presion economica sobre Iran en medio de la guerra en curso entre EE.UU./Israel e Iran, generando volatilidad en los futuros del Nasdaq 100 (Benzinga, 8 oct 2026).",
-  "petroleo": "El Brent cotiza por encima de 104 USD/barril por la persistente tension en el Estrecho de Ormuz ligada al conflicto con Iran, reavivando temores de inflacion que presionan al Nasdaq (Yahoo Finance / TradingKey, 8 oct 2026).",
-  "catalizador": "El rendimiento del Treasury a 10 anos se mantiene cerca de 5.3%, su nivel mas alto desde 2002, comprimiendo los multiplos de las tecnologicas del Nasdaq (Bloomberg/CNBC, principios de oct 2026).",
+  "geopolitica": "Iran intensifica sus ataques a petroleros en el Estrecho de Ormuz este jueves, elevando el riesgo geopolitico sobre el suministro de crudo de Oriente Medio y alimentando la aversion al riesgo que puede pesar sobre el Nasdaq 100 intradia (CNBC, 8 oct 2026).",
+  "petroleo": "El Brent sube 5.2% a 105.36 USD/barril y el WTI sube 5% a 92.70 USD/barril por los ataques a petroleros en el Estrecho de Ormuz y el huracan Isaias, que corta produccion en el Golfo de Mexico; el salto del crudo reaviva temores de inflacion que presionan a la baja al Nasdaq (CNBC, 8 oct 2026).",
+  "catalizador": "Las minutas de la Fed de la reunion de septiembre insinuan la posibilidad de una subida adicional de tasas este ano, lo que empujo a los futuros del Nasdaq a la baja durante la noche (futuros en -0.7% a -1.3% hacia las 07:31 ET) (Goodreturns / Yahoo Finance, 8 oct 2026).",
   "sources": [
-    "Benzinga - 8 oct 2026 (Bessent/Iran, futuros Nasdaq 100)",
-    "Yahoo Finance - 8 oct 2026 (Nasdaq cae, petroleo sube, temores de inflacion)",
-    "TradingKey - 8 oct 2026 (Brent/WTI +4%)",
-    "Bloomberg via iTiger - 6 oct 2026 (Treasury 10y 5.34%, maximo desde 2002)",
-    "CNBC - 5 oct 2026 (10y toco 5.349%, maximo desde abril 2002)"
+    "CNBC - 8 oct 2026 (Brent +5.2% a 105.36 USD, WTI +5% a 92.70 USD, ataques a petroleros en Ormuz y huracan Isaias)",
+    "Goodreturns - 8 oct 2026 (minutas de la Fed insinuan mas subidas de tasas, futuros Nasdaq a la baja)",
+    "Yahoo Finance - 07:31 ET (Nasdaq 100 futuros -0.7% a -1.3%)"
   ],
-  "as_of": "2026-10-08T16:12:18Z"
+  "as_of": "2026-10-08T17:07:53Z"
 }
