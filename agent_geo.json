@@ -1,7 +1,12 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-10-09T16:05:45Z"
+  "geopolitica": "Trump afirmo que EE.UU. no atacara Iran antes de las elecciones de medio termino de noviembre, lo que alivia el riesgo geopolitico inmediato tras una semana de ataques a petroleros en el Estrecho de Ormuz, apoyando el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae a 103.97 dolares (-0.3%) y el WTI sube a 91.50 dolares (+0.01%) hacia las 10:01 ET, por los comentarios de Trump sobre Iran y la reanudacion de exportaciones chinas, lo que reduce la presion inflacionaria sobre el NQ.",
+  "catalizador": "El informe de ingresos de OpenAI (unos 50,000 millones de dolares anualizados, por debajo de los 68,000 millones reportados previamente) golpeo a Nvidia, Oracle y CoreWeave el jueves y mantiene plano el futuro del Nasdaq 100 este viernes, con el rendimiento del Tesoro a 10 anos cerca de maximos de dos decadas (~5.27%) presionando las valoraciones tecnologicas.",
+  "sources": [
+    "CNBC 10:01 ET - Oil falls as Trump comments on Iran talks ease supply concerns",
+    "CNBC - Nvidia, Oracle, CoreWeave sink on OpenAI revenue report (08-oct)",
+    "CNBC - Treasury yields steady as Trump strikes diplomatic tone on Iran ahead of midterms (09-oct)",
+    "CNBC Daily Open - Is cheap gas America's Godot? (09-oct)"
+  ],
+  "as_of": "2026-10-09T18:06:12Z"
 }
