@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump dijo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato de noviembre, reduciendo la prima de riesgo geopolitico que venia presionando a los futuros tecnologicos.",
-  "petroleo": "WTI retrocede hacia 91 USD y Brent cae desde 104 USD tras los comentarios de Trump que descartan un ataque inminente a Iran, aliviando el temor a una disrupcion de oferta y favoreciendo el apetito por riesgo en el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 0.9% en premarket al enfriarse el temor a una burbuja de IA, tras el desplome de 1.4% del jueves liderado por semiconductores (indice de chips -3.4%).",
+  "geopolitica": "Trump descarto atacar Iran antes de las midterms del 3 de noviembre pese a la advertencia de la IRGC de perseguir embarcaciones mas alla del Estrecho de Ormuz, lo que reduce el riesgo geopolitico percibido y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "Brent cae ~1.3% a 102.9 USD y WTI ~1.2% a 90.4 USD tras el anuncio de Trump de no atacar Iran antes de las midterms, aliviando el temor a una disrupcion de suministro y restando presion inflacionaria sobre las tecnologicas.",
+  "catalizador": "Los futuros del Nasdaq 100 rebotan ~0.8% en premarket liderados por semiconductores de IA (Nvidia, AMD, Broadcom), tras el desplome del jueves de 1.4% en el NQ y 3.4% en el indice de chips por dudas sobre los ingresos de OpenAI, su peor jornada en siete semanas.",
   "sources": [
-    "Bloomberg 07:55 ET",
-    "CNBC 10:39 ET"
+    "Reuters 04:19 ET",
+    "Bloomberg 09/10/2026",
+    "Stocktwits 04:00 ET"
   ],
-  "as_of": "2026-10-09T15:06:20Z"
+  "as_of": "2026-10-09T15:41:24Z"
 }
