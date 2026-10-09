@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump afirmo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato y califico de 'productivas' las conversaciones con Teheran, tras sanciones de EE.UU. el jueves a 17 buques y redes que mueven crudo irani; la distension reduce la prima de riesgo y favorece el apetito por riesgo en el NQ (CNBC, ~22:20 ET jueves).",
-  "petroleo": "Brent cae 0.7% a 103.53 USD/barril y WTI baja 0.6% a 90.97 USD/barril tras los comentarios de Trump sobre Iran, luego de dispararse +4% el jueves por ataques a petroleros en el Estrecho de Hormuz; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ (CNBC, ~22:20 ET jueves).",
-  "catalizador": "El trade de IA sigue volatil: Nvidia, Oracle y CoreWeave cayeron el jueves tras un reporte de que los ingresos anualizados de OpenAI quedaron muy por debajo de lo esperado, y Firmus (respaldada por Nvidia) retiro su IPO citando volatilidad de mercado; los futuros del Nasdaq-100 rebotan +0.8% en el premarket del viernes, dejando al NQ sensible a cualquier nuevo dato de IA (CNBC, 07:48 ET viernes).",
+  "geopolitica": "Trump dijo el jueves que EE.UU. no atacara a Iran antes de las elecciones de medio mandato, calificando de 'productivas' las conversaciones con Teheran, mientras el Tesoro de EE.UU. amplio sanciones a buques vinculados al crudo irani; la distension reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "El petroleo retrocede este viernes (Brent y WTI bajan tras los comentarios de Trump sobre Iran) luego de dispararse el jueves (Brent +4% a 104.28 USD/barril, WTI +3.6% a 91.49 USD/barril) por reportes de un tercer portaaviones de EE.UU. enviado a Oriente Medio; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ.",
+  "catalizador": "El Nasdaq cayo cerca de 1% el jueves por dudas sobre los ingresos de OpenAI (brecha percibida de 20,000 millones de USD) que presionaron al trade de IA (Nvidia, Oracle, CoreWeave), mientras las minutas de la Fed publicadas el 7-oct mostraron que los funcionarios esperan subir tasas antes de fin de ano para contener la inflacion, un combo que resta impulso al NQ en la apertura.",
   "sources": [
-    "CNBC 22:20 ET (jueves 08-oct) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
-    "CNBC (jueves 08-oct) - iran-war-trump-midterm-election",
-    "CNBC 07:48 ET (viernes 09-oct) - stock-market-today-live-updates (Nasdaq-100 futuros +0.8%)",
-    "CNBC Daily Open (viernes 09-oct) - trump-iran-war-gas-openai-nvidia-microsoft"
+    "CNBC (jueves 08-oct-2026) - oil-prices-today-brent-wti-hormuz (Brent +4% a 104.28, WTI +3.6% a 91.49)",
+    "Bloomberg (jueves/viernes 08/09-oct-2026) - Oil Declines After Trump Says No Iran Attacks Before Midterms",
+    "Bloomberg (jueves 08-oct-2026) - Rubio Urges Portugal and Europe to Reduce Dependence on China",
+    "CNBC Daily Open (viernes 09-oct-2026) - What happened to the $20 billion? (OpenAI, Nasdaq, Fed minutes)"
   ],
-  "as_of": "2026-10-09T12:09:03Z"
+  "as_of": "2026-10-09T12:43:00Z"
 }
