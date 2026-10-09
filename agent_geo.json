@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Iran intensifico ataques a petroleros en el Estrecho de Ormuz y medios reportan que la administracion Trump pidio al Pentagono desarrollar opciones de ataque militar contra Iran, elevando la aversion al riesgo que presiona al NQ (Oilprice.com / Trading Economics, 06:46 ET).",
-  "petroleo": "El Brent salto a unos 105 USD/barril (+4.8%) y el WTI a 89-93 USD, por los ataques iranies a petroleros en Ormuz y cierres preventivos de produccion en el Golfo de EE.UU. ante una tormenta, lo que alimenta temores inflacionarios que pesan sobre el NQ (Oilprice.com, 06:46 ET).",
-  "catalizador": "El Nasdaq Composite cerro con caida de 1.25% (27,193.34) y el Nasdaq 100 bajo 1.4% tras un reporte de ingresos de OpenAI por debajo de lo esperado que golpeo a semiconductoras (Oracle -5%, Nvidia -3%, AMD -4%), sumado a mayores rendimientos del Tesoro (CNBC / Bloomberg, cierre 16:00 ET).",
+  "geopolitica": "Iran intensifico sus ataques a petroleros en el Estrecho de Ormuz y medios reportaron que Washington evalua opciones de ataque militar contra Iran, lo que eleva la aversion al riesgo y presiona a la baja al NQ (Reuters/Maritime Executive, reportado jueves 8-oct).",
+  "petroleo": "El Brent se disparo por encima de 105 USD/barril (+5% aprox.) y el WTI subio a la zona de 89-93 USD, impulsados por los ataques a petroleros en Ormuz y cierres de produccion en el Golfo de Mexico por tormenta; el shock energetico alimenta temor inflacionario que pesa sobre el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en premarket del viernes tras el desplome de 1.4% del jueves (peor sesion en 7 semanas), golpeado por un reporte de posible faltante de 20.000M USD en ingresos de semiconductores; el mercado tambien vigila el IPC de EEUU de la proxima semana por su impacto en las expectativas de la Fed (Reuters/Yahoo Finance, Bloomberg, Tickmill).",
   "sources": [
-    "Oilprice.com 06:46 ET",
-    "Trading Economics 06:46 ET",
-    "CNBC 16:00 ET",
-    "Bloomberg 16:00 ET"
+    "Reuters/Yahoo Finance ~08:00 ET (viernes 9-oct, premarket)",
+    "Bloomberg (jueves 8-oct, cierre de sesion)",
+    "Oilprice.com / Maritime Executive (jueves 8-oct)",
+    "Tickmill Daily Market Outlook (9-oct)"
   ],
-  "as_of": "2026-10-08T21:04:47Z"
+  "as_of": "2026-10-09T11:05:39Z"
 }
