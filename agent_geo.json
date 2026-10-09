@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Trump dijo el jueves que EE.UU. no atacara a Iran antes de las elecciones de medio mandato, calificando de 'productivas' las conversaciones con Teheran, mientras el Tesoro de EE.UU. amplio sanciones a buques vinculados al crudo irani; la distension reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
-  "petroleo": "El petroleo retrocede este viernes (Brent y WTI bajan tras los comentarios de Trump sobre Iran) luego de dispararse el jueves (Brent +4% a 104.28 USD/barril, WTI +3.6% a 91.49 USD/barril) por reportes de un tercer portaaviones de EE.UU. enviado a Oriente Medio; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ.",
-  "catalizador": "El Nasdaq cayo cerca de 1% el jueves por dudas sobre los ingresos de OpenAI (brecha percibida de 20,000 millones de USD) que presionaron al trade de IA (Nvidia, Oracle, CoreWeave), mientras las minutas de la Fed publicadas el 7-oct mostraron que los funcionarios esperan subir tasas antes de fin de ano para contener la inflacion, un combo que resta impulso al NQ en la apertura.",
+  "geopolitica": "Iran amplio sus ataques a petroleros fuera del estrecho de Ormuz y EEUU sanciono el jueves a 17 buques de su 'flota fantasma' (Operacion Economic Outcast), mientras Trump descarto atacar Iran antes de las elecciones de medio termino del 3-nov, lo que relaja algo la prima de riesgo y podria dar soporte puntual al NQ en la apertura.",
+  "petroleo": "El Brent cerro el jueves 08-oct en 104.28 USD (+4%) y el WTI en 91.49 USD (+3.6%) por la escalada de ataques iranies a petroleros en Ormuz; en la premarket del viernes retrocedia a unos 102.83/90.33 USD tras el comentario de Trump, presion energetica que puede pesar sobre margenes y sentimiento de riesgo en el NQ.",
+  "catalizador": "Nasdaq rebotaba +0.6% hacia las 09:33 ET (09-oct) tras el desplome de -1.25% del jueves (cierre 27,193.34) gatillado por el reporte de ingresos de OpenAI que sacudio el 'AI trade'; Delta cayo ~2.9% premarket por resultados debiles y recorte de guidance 2026 por altos costos de combustible, catalizador mixto para la apertura del NQ.",
   "sources": [
-    "CNBC (jueves 08-oct-2026) - oil-prices-today-brent-wti-hormuz (Brent +4% a 104.28, WTI +3.6% a 91.49)",
-    "Bloomberg (jueves/viernes 08/09-oct-2026) - Oil Declines After Trump Says No Iran Attacks Before Midterms",
-    "Bloomberg (jueves 08-oct-2026) - Rubio Urges Portugal and Europe to Reduce Dependence on China",
-    "CNBC Daily Open (viernes 09-oct-2026) - What happened to the $20 billion? (OpenAI, Nasdaq, Fed minutes)"
+    "CNBC 09:33 ET (09-oct)",
+    "CNBC oil prices (cierre 08-oct)",
+    "Fox News (08-oct)",
+    "Euronews (08-oct)",
+    "OilPrice.com (09-oct)"
   ],
-  "as_of": "2026-10-09T13:08:55Z"
+  "as_of": "2026-10-09T13:40:02Z"
 }
