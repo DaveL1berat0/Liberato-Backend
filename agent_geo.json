@@ -1,12 +1,10 @@
 {
-  "geopolitica": "La guerra Irán-EEUU continúa más de 7 meses después; Trump dijo el 8 de octubre que no atacará Irán antes de las elecciones de medio mandato de noviembre, aunque NBC reportó que se siguen considerando nuevos ataques, y el Tesoro de EEUU sancionó 17 petroleros vinculados a la 'flota fantasma' iraní, lo que mantiene la tensión geopolítica como riesgo latente para el NQ sin gatillar una escalada inmediata.",
-  "petroleo": "Brent cotiza cerca de 103.5 USD/barril (-0.7%) y WTI cerca de 91 USD/barril (-0.6%) en la sesión del 9 de octubre, retrocediendo desde el fuerte repunte del día previo (Brent +4% a 104.28 USD, WTI +3.6% a 91.49 USD) impulsado por ataques a petroleros en el Estrecho de Ormuz; la caída de hoy responde a comentarios de Trump que redujeron el temor a una escalada con Irán, lo que alivia ligeramente la presión inflacionaria para el NQ.",
-  "catalizador": "OpenAI informó a inversores un ingreso anualizado de ~50.000 millones de USD a fines de septiembre, muy por debajo de los 68.000 millones ampliamente reportados el mes pasado, lo que hundió a Nvidia, Oracle, CoreWeave y otros nombres de IA el viernes y mantiene presión bajista sobre el trade de IA pese a que los futuros del Nasdaq 100 cotizan prácticamente planos (+0.05%) esta mañana.",
+  "geopolitica": "Trump dijo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato de noviembre, reduciendo la prima de riesgo geopolitico que venia presionando a los futuros tecnologicos.",
+  "petroleo": "WTI retrocede hacia 91 USD y Brent cae desde 104 USD tras los comentarios de Trump que descartan un ataque inminente a Iran, aliviando el temor a una disrupcion de oferta y favoreciendo el apetito por riesgo en el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 0.9% en premarket al enfriarse el temor a una burbuja de IA, tras el desplome de 1.4% del jueves liderado por semiconductores (indice de chips -3.4%).",
   "sources": [
-    "CNBC (09 oct 2026) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
-    "CNBC (09 oct 2026) - CNBC Daily Open: trump-iran-war-gas-openai-nvidia-microsoft",
-    "CNBC (08 oct 2026) - oil-prices-today-brent-wti-hormuz",
-    "CNBC (08 oct 2026) - iran-war-trump-midterm-election"
+    "Bloomberg 07:55 ET",
+    "CNBC 10:39 ET"
   ],
-  "as_of": "2026-10-09T14:39:59Z"
+  "as_of": "2026-10-09T15:06:20Z"
 }
