@@ -1,10 +1,12 @@
 {
-  "geopolitica": "Trump afirmo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato y califico de 'productivas' las conversaciones con Teheran, tras sanciones de EE.UU. el jueves a 17 buques y redes que mueven crudo iraní; la distension reduce la prima de riesgo y favorece el apetito por riesgo en el NQ (CNBC, ~22:20 ET).",
-  "petroleo": "Brent cae 0.7% a 103.53 USD/barril y WTI baja 0.6% a 90.97 USD/barril tras los comentarios de Trump sobre Iran, luego de dispararse +4% el jueves por ataques a petroleros en el Estrecho de Hormuz; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ (CNBC, ~22:20 ET).",
-  "catalizador": "",
+  "geopolitica": "Trump afirmo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato y califico de 'productivas' las conversaciones con Teheran, tras sanciones de EE.UU. el jueves a 17 buques y redes que mueven crudo irani; la distension reduce la prima de riesgo y favorece el apetito por riesgo en el NQ (CNBC, ~22:20 ET jueves).",
+  "petroleo": "Brent cae 0.7% a 103.53 USD/barril y WTI baja 0.6% a 90.97 USD/barril tras los comentarios de Trump sobre Iran, luego de dispararse +4% el jueves por ataques a petroleros en el Estrecho de Hormuz; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ (CNBC, ~22:20 ET jueves).",
+  "catalizador": "El trade de IA sigue volatil: Nvidia, Oracle y CoreWeave cayeron el jueves tras un reporte de que los ingresos anualizados de OpenAI quedaron muy por debajo de lo esperado, y Firmus (respaldada por Nvidia) retiro su IPO citando volatilidad de mercado; los futuros del Nasdaq-100 rebotan +0.8% en el premarket del viernes, dejando al NQ sensible a cualquier nuevo dato de IA (CNBC, 07:48 ET viernes).",
   "sources": [
-    "CNBC 22:20 ET (jueves 8-9 oct) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
-    "CNBC (jueves) - iran-war-trump-midterm-election"
+    "CNBC 22:20 ET (jueves 08-oct) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
+    "CNBC (jueves 08-oct) - iran-war-trump-midterm-election",
+    "CNBC 07:48 ET (viernes 09-oct) - stock-market-today-live-updates (Nasdaq-100 futuros +0.8%)",
+    "CNBC Daily Open (viernes 09-oct) - trump-iran-war-gas-openai-nvidia-microsoft"
   ],
-  "as_of": "2026-10-09T11:40:42Z"
+  "as_of": "2026-10-09T12:09:03Z"
 }
