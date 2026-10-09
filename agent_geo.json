@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Iran amplio sus ataques a petroleros fuera del estrecho de Ormuz y EEUU sanciono el jueves a 17 buques de su 'flota fantasma' (Operacion Economic Outcast), mientras Trump descarto atacar Iran antes de las elecciones de medio termino del 3-nov, lo que relaja algo la prima de riesgo y podria dar soporte puntual al NQ en la apertura.",
-  "petroleo": "El Brent cerro el jueves 08-oct en 104.28 USD (+4%) y el WTI en 91.49 USD (+3.6%) por la escalada de ataques iranies a petroleros en Ormuz; en la premarket del viernes retrocedia a unos 102.83/90.33 USD tras el comentario de Trump, presion energetica que puede pesar sobre margenes y sentimiento de riesgo en el NQ.",
-  "catalizador": "Nasdaq rebotaba +0.6% hacia las 09:33 ET (09-oct) tras el desplome de -1.25% del jueves (cierre 27,193.34) gatillado por el reporte de ingresos de OpenAI que sacudio el 'AI trade'; Delta cayo ~2.9% premarket por resultados debiles y recorte de guidance 2026 por altos costos de combustible, catalizador mixto para la apertura del NQ.",
+  "geopolitica": "La guerra Irán-EEUU continúa más de 7 meses después; Trump dijo el 8 de octubre que no atacará Irán antes de las elecciones de medio mandato de noviembre, aunque NBC reportó que se siguen considerando nuevos ataques, y el Tesoro de EEUU sancionó 17 petroleros vinculados a la 'flota fantasma' iraní, lo que mantiene la tensión geopolítica como riesgo latente para el NQ sin gatillar una escalada inmediata.",
+  "petroleo": "Brent cotiza cerca de 103.5 USD/barril (-0.7%) y WTI cerca de 91 USD/barril (-0.6%) en la sesión del 9 de octubre, retrocediendo desde el fuerte repunte del día previo (Brent +4% a 104.28 USD, WTI +3.6% a 91.49 USD) impulsado por ataques a petroleros en el Estrecho de Ormuz; la caída de hoy responde a comentarios de Trump que redujeron el temor a una escalada con Irán, lo que alivia ligeramente la presión inflacionaria para el NQ.",
+  "catalizador": "OpenAI informó a inversores un ingreso anualizado de ~50.000 millones de USD a fines de septiembre, muy por debajo de los 68.000 millones ampliamente reportados el mes pasado, lo que hundió a Nvidia, Oracle, CoreWeave y otros nombres de IA el viernes y mantiene presión bajista sobre el trade de IA pese a que los futuros del Nasdaq 100 cotizan prácticamente planos (+0.05%) esta mañana.",
   "sources": [
-    "CNBC 09:33 ET (09-oct)",
-    "CNBC oil prices (cierre 08-oct)",
-    "Fox News (08-oct)",
-    "Euronews (08-oct)",
-    "OilPrice.com (09-oct)"
+    "CNBC (09 oct 2026) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
+    "CNBC (09 oct 2026) - CNBC Daily Open: trump-iran-war-gas-openai-nvidia-microsoft",
+    "CNBC (08 oct 2026) - oil-prices-today-brent-wti-hormuz",
+    "CNBC (08 oct 2026) - iran-war-trump-midterm-election"
   ],
-  "as_of": "2026-10-09T14:08:27Z"
+  "as_of": "2026-10-09T14:39:59Z"
 }
