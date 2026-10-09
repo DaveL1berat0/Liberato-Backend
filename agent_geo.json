@@ -1,10 +1,13 @@
 {
-  "geopolitica": "Trump dijo que EE.UU. no atacara a Iran antes de las elecciones de medio termino, reduciendo el riesgo geopolitico inmediato y favoreciendo el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cae 0.77% hasta 103.48 USD/barril tras los comentarios de Trump sobre Iran, aliviando la presion inflacionaria que pesa sobre las tecnologicas del NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos retrocede desde maximos multianuales (~5.23%) tras comentarios de un funcionario de la Fed y una subasta de bonos largos, impulsando a los futuros del Nasdaq 100 (+0.9% premarket).",
+  "geopolitica": "Tension Iran-EE.UU. en el Estrecho de Ormuz: la Casa Blanca pidio al Pentagono opciones de ataque contra Iran antes de las elecciones de medio termino, pero Trump dijo que no atacara antes de esa fecha, lo que genera volatilidad de riesgo (risk-on/risk-off) para el NQ.",
+  "petroleo": "El Brent cerro el jueves en 104.28 USD/barril (+4%) y el WTI en 91.49 USD/barril (+3.6%) por los ataques a petroleros cerca de Ormuz, pero ambos retroceden el viernes tras el mensaje de Trump de no atacar Iran antes de las elecciones, lo que relaja parcialmente la prima de riesgo que pesaba sobre acciones tech.",
+  "catalizador": "El Nasdaq 100 cayo 1.4% el jueves (peor sesion en 7 semanas) y el indice de semiconductores Philadelphia se desplomo 3.4% tras conocerse que OpenAI reporto ingresos anualizados de 50,000 millones de USD, muy por debajo de los 68,000 millones reportados previamente, lo que reavivo el temor a una burbuja de IA y presiona a Nvidia, Oracle y CoreWeave.",
   "sources": [
-    "Bloomberg 07:55 ET",
-    "CNBC 07:55 ET"
+    "Bloomberg 2026-10-08 (Nasdaq 100 Drops 1.4% as OpenAI Warning Deepens Bubble Fears)",
+    "CNBC 2026-10-07 (Nasdaq falls 1% as AI trade stumbles following OpenAI revenue setback)",
+    "Bloomberg 2026-10-08 (Oil Declines After Trump Says No Iran Attacks Before Midterms)",
+    "CNBC 2026-10-08 (Oil prices today: Brent, WTI, Hormuz tanker attacks)",
+    "CNBC 2026-10-08 (Trump says U.S. will not attack Iran before midterm election)"
   ],
-  "as_of": "2026-10-09T19:05:41Z"
+  "as_of": "2026-10-09T20:05:51Z"
 }
