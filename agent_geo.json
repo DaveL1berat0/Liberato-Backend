@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Iran intensifico sus ataques a petroleros en el Estrecho de Ormuz y medios reportaron que Washington evalua opciones de ataque militar contra Iran, lo que eleva la aversion al riesgo y presiona a la baja al NQ (Reuters/Maritime Executive, reportado jueves 8-oct).",
-  "petroleo": "El Brent se disparo por encima de 105 USD/barril (+5% aprox.) y el WTI subio a la zona de 89-93 USD, impulsados por los ataques a petroleros en Ormuz y cierres de produccion en el Golfo de Mexico por tormenta; el shock energetico alimenta temor inflacionario que pesa sobre el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en premarket del viernes tras el desplome de 1.4% del jueves (peor sesion en 7 semanas), golpeado por un reporte de posible faltante de 20.000M USD en ingresos de semiconductores; el mercado tambien vigila el IPC de EEUU de la proxima semana por su impacto en las expectativas de la Fed (Reuters/Yahoo Finance, Bloomberg, Tickmill).",
+  "geopolitica": "Trump afirmo que EE.UU. no atacara a Iran antes de las elecciones de medio mandato y califico de 'productivas' las conversaciones con Teheran, tras sanciones de EE.UU. el jueves a 17 buques y redes que mueven crudo iraní; la distension reduce la prima de riesgo y favorece el apetito por riesgo en el NQ (CNBC, ~22:20 ET).",
+  "petroleo": "Brent cae 0.7% a 103.53 USD/barril y WTI baja 0.6% a 90.97 USD/barril tras los comentarios de Trump sobre Iran, luego de dispararse +4% el jueves por ataques a petroleros en el Estrecho de Hormuz; el alivio en crudo reduce presion inflacionaria y es positivo para el NQ (CNBC, ~22:20 ET).",
+  "catalizador": "",
   "sources": [
-    "Reuters/Yahoo Finance ~08:00 ET (viernes 9-oct, premarket)",
-    "Bloomberg (jueves 8-oct, cierre de sesion)",
-    "Oilprice.com / Maritime Executive (jueves 8-oct)",
-    "Tickmill Daily Market Outlook (9-oct)"
+    "CNBC 22:20 ET (jueves 8-9 oct) - oil-falls-as-trump-comments-on-iran-talks-ease-supply-concerns",
+    "CNBC (jueves) - iran-war-trump-midterm-election"
   ],
-  "as_of": "2026-10-09T11:05:39Z"
+  "as_of": "2026-10-09T11:40:42Z"
 }
