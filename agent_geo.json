@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Trump mantiene el bloqueo naval a los puertos de Iran y descarta un ataque antes de las elecciones de medio periodo, prolongando la tension en Oriente Medio que presiona el apetito por riesgo.",
-  "petroleo": "El Brent subio un 4% hasta superar los 104 USD/barril y el WTI un 3.6% hasta 91.49 USD en la sesion previa, impulsados por temores de escalada en Oriente Medio por la tension con Iran, lo que eleva costos y presiona margenes de consumo.",
-  "catalizador": "OpenAI reporto ingresos anualizados unos 18.000 millones de dolares por debajo de lo esperado, golpeando el trade de IA (Nvidia -3%, Oracle -6%, CoreWeave -8%) y arrastrando al Nasdaq a su peor sesion desde mediados de agosto.",
+  "geopolitica": "El Nasdaq 100 cae ~0.5-0.7% presionado por una fuerte venta en chips (Micron, Intel, AMD) ante temores de competencia de una firma china en IA, mientras persiste la tension geopolitica en Oriente Medio con el Estrecho de Ormuz sin resolver.",
+  "petroleo": "El Brent retrocede ~1.2% a unos 105.3 USD/barril y el WTI sube levemente a unos 93.9 USD, tras tambalearse el 'alto el fuego energetico' Rusia-Ucrania anunciado por Trump y persistir dudas sobre el suministro de diesel ruso.",
+  "catalizador": "Resultados bancarios mixtos antes de la apertura: JPMorgan decepciono (EPS 5.57 USD vs 5.90 USD esperado) aunque elevo su guia de ingresos netos por intereses, mientras Goldman Sachs supero ampliamente estimaciones (EPS 17.01 USD vs 13.02 USD) impulsado por trading de acciones, con sus acciones subiendo ~3.6% en premarket.",
   "sources": [
-    "CNBC - Oil prices today: Brent, WTI gain on Middle East tensions (8 oct 2026)",
-    "CNBC - 5 things to know before the stock market opens Friday (9 oct 2026)",
-    "CNBC Daily Open - Trump, Iran, gas, OpenAI, Nvidia, Microsoft (9 oct 2026)"
+    "Bloomberg 2026-10-13 (S&P 500 Futures Little Changed as Banks Report, Chipmakers Fall)",
+    "CNBC 04:22 ET (Premarket Stock Trading Data: Dow, S&P, NASDAQ Futures)",
+    "CNBC 2026-10-13 (Oil prices today: WTI, Brent)",
+    "CNBC 2026-10-13 (Bank earnings takeaways: JPMorgan, Goldman, Wells Fargo and Citi)",
+    "CNBC 2026-10-13 (Stocks making the biggest moves premarket: JPMorgan Chase, Micron, UnitedHealth)"
   ],
-  "as_of": "2026-10-09T21:06:30Z"
+  "as_of": "2026-10-13T19:05:46Z"
 }
