@@ -1,13 +1,12 @@
 {
-  "geopolitica": "El Nasdaq 100 cae ~0.5-0.7% presionado por una fuerte venta en chips (Micron, Intel, AMD) ante temores de competencia de una firma china en IA, mientras persiste la tension geopolitica en Oriente Medio con el Estrecho de Ormuz sin resolver.",
-  "petroleo": "El Brent retrocede ~1.2% a unos 105.3 USD/barril y el WTI sube levemente a unos 93.9 USD, tras tambalearse el 'alto el fuego energetico' Rusia-Ucrania anunciado por Trump y persistir dudas sobre el suministro de diesel ruso.",
-  "catalizador": "Resultados bancarios mixtos antes de la apertura: JPMorgan decepciono (EPS 5.57 USD vs 5.90 USD esperado) aunque elevo su guia de ingresos netos por intereses, mientras Goldman Sachs supero ampliamente estimaciones (EPS 17.01 USD vs 13.02 USD) impulsado por trading de acciones, con sus acciones subiendo ~3.6% en premarket.",
+  "geopolitica": "El Nasdaq 100 sigue presionado por la venta en semiconductores (Micron -4.5% hacia las 10:00 ET, SK Hynix, Samsung) tras el avance de la china CXMT en memoria DRAM mas densa (diseno 4F2), que reaviva la tension tecnologica EE.UU.-China y pesa en el NQ por su alto peso en semis.",
+  "petroleo": "Brent cae a 105.50 USD/barril (-1.08%) y WTI a 93.13 USD (-0.65%) en la sesion de hoy, al aliviarse el temor a escasez de diesel ruso, revirtiendo parte del salto de ayer por el ataque huti al aeropuerto de Riad y las dudas sobre el alto el fuego energetico Rusia-Ucrania; el retroceso del crudo reduce la presion inflacionaria y actua como viento de cola leve para el NQ.",
+  "catalizador": "Resultados bancarios mixtos reportados antes de la apertura (JPMorgan, Goldman Sachs, Citigroup, Wells Fargo): Goldman Sachs supero estimaciones y sus acciones subieron, mientras Wells Fargo decepciono en ingresos, sumando volatilidad a los indices junto con la presion en chips, sin un catalizador claro de la Fed hoy.",
   "sources": [
-    "Bloomberg 2026-10-13 (S&P 500 Futures Little Changed as Banks Report, Chipmakers Fall)",
-    "CNBC 04:22 ET (Premarket Stock Trading Data: Dow, S&P, NASDAQ Futures)",
-    "CNBC 2026-10-13 (Oil prices today: WTI, Brent)",
-    "CNBC 2026-10-13 (Bank earnings takeaways: JPMorgan, Goldman, Wells Fargo and Citi)",
-    "CNBC 2026-10-13 (Stocks making the biggest moves premarket: JPMorgan Chase, Micron, UnitedHealth)"
+    "Yahoo Finance 11:30 ET",
+    "CNBC apertura 09:30 ET",
+    "Investrade Mid-Morning Look 10:00 ET",
+    "24/7 Wall St 10:00 ET"
   ],
-  "as_of": "2026-10-13T19:05:46Z"
+  "as_of": "2026-10-13T20:06:40Z"
 }
