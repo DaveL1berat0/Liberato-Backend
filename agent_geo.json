@@ -1,11 +1,11 @@
 {
-  "geopolitica": "El anuncio del fabricante chino de memorias CXMT desato una fuerte venta en semiconductores asiaticos (Kospi -5.5%, Samsung -7%, SK Hynix -10%, el dolar taiwanes con su peor caida desde junio de 2025) por temor a mayor competencia china en IA, lo que arrastra al sector semis del NQ en el premarket.",
-  "petroleo": "El Brent sube a 106.58 USD/barril (+0.8%) y el WTI a 94.94 USD (+0.8%) tras ataques huties contra instalaciones de Saudi Aramco en Dhahran y nuevas tacticas iranies contra buques en el Estrecho de Ormuz, lo que reaviva el riesgo de oferta y presiona la narrativa de inflacion que pesa sobre el NQ.",
-  "catalizador": "El IPC de septiembre de EE.UU. sorprendio al alza (3.7% interanual vs 3.6% esperado) al publicarse a las 8:30 ET, lo que envio a los futuros del Nasdaq-100 a caer hasta 0.5% en el premarket por mayores dudas sobre el ritmo de recortes de la Fed.",
+  "geopolitica": "Hutíes respaldados por Irán intensifican ataques contra instalaciones de Aramco en Arabia Saudita, elevando la prima de riesgo geopolítico en Oriente Medio y presionando al NQ vía mayores costos energéticos.",
+  "petroleo": "Brent sube 0.7% a 106.46 USD/barril y WTI +1.2% a 95.30 USD/barril esta mañana, impulsados por los ataques hutíes a instalaciones de Aramco y una advertencia de la AIE sobre una escasez de diésel que se prolongaría hasta 2027.",
+  "catalizador": "El IPC de EE.UU. de septiembre subió 3.7% interanual frente al 3.6% esperado, disparando los rendimientos de los bonos y presionando a la baja los futuros del Nasdaq-100 en la premarket de hoy.",
   "sources": [
-    "Saxo Bank Market Quick Take 14-oct-2026 (sesion asiatica, madrugada ET)",
-    "CNBC/Reuters 00:30 GMT (20:30 ET, 13-oct-2026)",
-    "CNBC/Yahoo Finance 08:30 ET"
+    "CNBC 08:30 ET (IPC septiembre)",
+    "CNBC premarket ET (oil-rises-amid-growing-tensions-between-saudis-and-iran-backed-houthis)",
+    "Bloomberg premarket ET (Stock Market Today Live Updates Oct 14)"
   ],
-  "as_of": "2026-10-14T12:40:01Z"
+  "as_of": "2026-10-14T13:07:43Z"
 }
