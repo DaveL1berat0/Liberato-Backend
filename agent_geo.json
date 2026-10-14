@@ -1,11 +1,12 @@
 {
-  "geopolitica": "El fabricante chino de memoria CXMT afirmo haber superado a Samsung y SK Hynix en DRAM, lo que extiende hoy la liquidacion en semiconductores (Micron, SK Hynix, Samsung) y anade presion bajista sobre el Nasdaq-100 por su alto peso tecnologico.",
-  "petroleo": "El Brent cotiza cerca de 106 USD/barril, al alza, tras nuevos ataques hutíes contra instalaciones de Aramco en Arabia Saudita y persistentes tensiones en el Estrecho de Ormuz, reforzando la narrativa inflacionaria que presiona al NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. salio mas caliente de lo esperado (3,7% interanual vs 3,6% estimado; nucleo 2,6% vs 2,5%), lo que elevo los rendimientos de bonos y empujo al Nasdaq a la baja en la sesion de hoy.",
+  "geopolitica": "Misiles hutíes impactaron instalaciones de Aramco en Dhahran y Riad (incendio, pisos danados) y Trump evalúa unirse a los ataques saudíes contra los hutíes, elevando el riesgo geopolítico en Oriente Medio que presiona al NQ via petróleo y aversión al riesgo.",
+  "petroleo": "Brent cerca de 106 USD/barril y WTI cerca de 95 USD/barril (ambos al alza) por el riesgo de suministro tras los ataques hutíes a Aramco y la tensión en el Estrecho de Ormuz, lo que encarece energía y pesa sobre el NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. salió más caliente de lo esperado (3.7% interanual vs 3.6% esperado, núcleo 2.6%), elevando las apuestas de otra subida de la Fed en la reunión del 27-28 de octubre (~54% según CME FedWatch) y disparando el rendimiento a 2 años a ~4.92%, lo que llevó al Nasdaq a caer y a los semiconductores a su sexta sesión consecutiva en rojo.",
   "sources": [
-    "CNBC 08:30 ET (CPI septiembre, dato oficial BLS)",
-    "CNBC/Bloomberg 13-14 oct (rout en chips de memoria por CXMT)",
-    "CNBC 14 oct (petroleo al alza por tensiones Saudi-Houthi/Ormuz)"
+    "Reuters/Gulf News 14 oct (ataque hutí a Aramco en Dhahran/Riad)",
+    "The National 14 oct (daños en sede histórica de Aramco)",
+    "Reuters vía hdfcsky/Sunday Guardian 14 oct (Brent ~106, WTI ~95)",
+    "CNBC/Bloomberg 08:30 ET (IPC de septiembre, reacción de mercado)"
   ],
-  "as_of": "2026-10-14T14:40:10Z"
+  "as_of": "2026-10-14T15:07:36Z"
 }
