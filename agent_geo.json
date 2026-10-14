@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Nuevos ataques hutíes contra Riad y Dhahran (misiles y drones interceptados) y proyectiles no identificados contra petroleros en el Estrecho de Ormuz reavivan el riesgo geopolítico en Oriente Medio, favoreciendo un sesgo risk-off que puede lastrar al NQ intradía.",
-  "petroleo": "El Brent sube cerca de 1.2% hasta un máximo de casi dos semanas en torno a 106.19 USD/barril (WTI ~92-93 USD) por los ataques hutíes y en el Estrecho de Ormuz, lo que presiona expectativas de inflación/costos energéticos y resta soporte a los growth stocks del NQ.",
-  "catalizador": "El presidente de la Fed de Nueva York, John Williams, reiteró que ve apropiada una subida de tasas más este año, un tono hawkish que puede presionar al NQ a la espera del dato de IPC de EE.UU. de mañana.",
+  "geopolitica": "Tensión tech/semis: el fabricante chino de memoria CXMT afirmó un avance en densidad de chips que desató una ola de ventas en el sector (Micron -3.9%, SK Hynix -10%, Samsung -7.4%), presionando a los nombres de semiconductores del Nasdaq por el riesgo competitivo (CNBC, 13 oct).",
+  "petroleo": "Brent sube 0.61% a 106.33 USD/barril y WTI 0.63% a 94.73 USD/barril por la escalada entre Arabia Saudita y los hutíes respaldados por Irán tras el ataque al aeropuerto de Riad, lo que eleva el riesgo de suministro y presiona al NQ vía inflación/costos (CNBC, 14 oct).",
+  "catalizador": "Los mercados operan cautelosos a la espera del dato de inflación (CPI) de EE.UU. de hoy, tras comentarios del presidente de la Fed de Nueva York John Williams anticipando una subida de tasas adicional este año, lo que mantiene presión sobre el Nasdaq (Bloomberg, 14 oct, futuros ~05:12 ET).",
   "sources": [
-    "Fox News, live blog 12 oct (ataques hutíes/Saudi-Hormuz)",
-    "Sunday Guardian Live/Reuters, ~07:24 ET (Brent 106.19 USD)",
-    "Investrade Market Review, 13 oct (comentarios de Williams, Fed de NY)"
+    "CNBC 13 oct (CXMT/memory chip rout)",
+    "CNBC 14 oct (oil Saudi-Houthi)",
+    "Bloomberg 14 oct 05:12 ET (futures/CPI wait)"
   ],
-  "as_of": "2026-10-13T21:07:02Z"
+  "as_of": "2026-10-14T11:07:15Z"
 }
