@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Irán advirtió a Reuters que sus fuerzas planean intensificar los ataques a petroleros en el Estrecho de Ormuz, reavivando el riesgo geopolítico en Medio Oriente y presionando el sentimiento de riesgo que afecta al NQ.",
-  "petroleo": "El Brent cotiza en torno a 106.40 USD/barril y el WTI cerca de 95.96 USD/barril (datos intradía del 14 oct), tras las amenazas iraníes de nuevos ataques en Ormuz; el crudo elevado alimenta temores de inflación que pesan sobre el NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. subió a 3.7% interanual (vs 3.4% previo) y el núcleo a 2.6%, ambos por encima de lo esperado, elevando la probabilidad de una subida de tasas de la Fed en la reunión del 27-28 de octubre de ~22% a ~45-46% (datos LSEG vía Reuters), lo que presiona al NQ por expectativas de tasas más altas.",
+  "geopolitica": "Renovados ataques huties contra infraestructura petrolera saudi y tension persistente en el Estrecho de Ormuz mantienen elevada la prima de riesgo geopolitico, lastrando el apetito por riesgo en equities (Fox News/Reuters, 13 oct 2026).",
+  "petroleo": "Brent cotiza en torno a 106,6 USD/barril (+0,8%) y WTI en 94,9 USD/barril (+0,9%), impulsados por los ataques huties a Arabia Saudita y el riesgo en el Estrecho de Ormuz, que compensan las expectativas de mayores exportaciones rusas de diesel; el petroleo al alza presiona costos y resta soporte al NQ (Reuters/Sunday Guardian, ~20:30 ET 13 oct 2026).",
+  "catalizador": "El IPC de septiembre en EE.UU. (publicado 08:30 ET) sorprendio al alza en el nucleo (core 0,3% m/m y 2,6% a/a vs estimado), reavivando temores de que la Fed no pueda bajar tasas e impulsando una caida superior al 1% en el Nasdaq-100 durante la sesion (TheStreet/Yahoo Finance, 08:30 ET 14 oct 2026).",
   "sources": [
-    "Reuters 08:30 ET (BLS CPI release)",
-    "Reuters/Oilprice.com (Hormuz, intradía 14 oct)",
-    "Investing.com citando Reuters (rate-hike odds, LSEG)"
+    "Fox News/Reuters 13 oct 2026 (Huties/Ormuz)",
+    "Sunday Guardian Live ~20:30 ET 13 oct 2026 (Brent/WTI)",
+    "TheStreet 08:30 ET 14 oct 2026 (CPI)",
+    "Yahoo Finance 08:30 ET 14 oct 2026 (CPI/Nasdaq)"
   ],
-  "as_of": "2026-10-14T16:08:19Z"
+  "as_of": "2026-10-14T17:06:28Z"
 }
