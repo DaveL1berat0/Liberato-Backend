@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Renovados ataques huties contra infraestructura petrolera saudi y tension persistente en el Estrecho de Ormuz mantienen elevada la prima de riesgo geopolitico, lastrando el apetito por riesgo en equities (Fox News/Reuters, 13 oct 2026).",
-  "petroleo": "Brent cotiza en torno a 106,6 USD/barril (+0,8%) y WTI en 94,9 USD/barril (+0,9%), impulsados por los ataques huties a Arabia Saudita y el riesgo en el Estrecho de Ormuz, que compensan las expectativas de mayores exportaciones rusas de diesel; el petroleo al alza presiona costos y resta soporte al NQ (Reuters/Sunday Guardian, ~20:30 ET 13 oct 2026).",
-  "catalizador": "El IPC de septiembre en EE.UU. (publicado 08:30 ET) sorprendio al alza en el nucleo (core 0,3% m/m y 2,6% a/a vs estimado), reavivando temores de que la Fed no pueda bajar tasas e impulsando una caida superior al 1% en el Nasdaq-100 durante la sesion (TheStreet/Yahoo Finance, 08:30 ET 14 oct 2026).",
+  "geopolitica": "Irán intensifica sus ataques a petroleros en el Estrecho de Ormuz (al menos 12 en la última semana, incluido un buque portacontenedores reportado como hundido), elevando la prima de riesgo geopolítico y presionando el sentimiento de riesgo que pesa sobre el NQ intradía.",
+  "petroleo": "El Brent cotiza en torno a 106,37 USD/barril y el WTI cerca de 94,7-95,4 USD (ambos al alza frente a la sesión previa) por la escalada de ataques a buques en el Estrecho de Ormuz, lo que encarece la energía y añade presión bajista al sentimiento de riesgo del NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. salió más caliente de lo esperado (interanual 3,7%, núcleo 2,6%), publicado a las 8:30 ET, elevó las apuestas de un sesgo más duro de la Fed y provocó una caída liderada por tecnológicas (Nasdaq ~-0,6% a -1,4%, CoreWeave -15%), lastrando directamente al NQ.",
   "sources": [
-    "Fox News/Reuters 13 oct 2026 (Huties/Ormuz)",
-    "Sunday Guardian Live ~20:30 ET 13 oct 2026 (Brent/WTI)",
-    "TheStreet 08:30 ET 14 oct 2026 (CPI)",
-    "Yahoo Finance 08:30 ET 14 oct 2026 (CPI/Nasdaq)"
+    "Oilprice.com 06:52 ET",
+    "BLS/Reuters 08:30 ET (CPI septiembre)",
+    "RTE.ie/Reuters 14 oct (ataques Estrecho de Ormuz, hora exacta no confirmada)",
+    "TheStreet / Yahoo Finance / Motley Fool 14 oct (reacción de mercado al IPC)"
   ],
-  "as_of": "2026-10-14T17:06:28Z"
+  "as_of": "2026-10-14T18:06:14Z"
 }
