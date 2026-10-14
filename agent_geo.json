@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Irán intensifica sus ataques a petroleros en el Estrecho de Ormuz (al menos 12 en la última semana, incluido un buque portacontenedores reportado como hundido), elevando la prima de riesgo geopolítico y presionando el sentimiento de riesgo que pesa sobre el NQ intradía.",
-  "petroleo": "El Brent cotiza en torno a 106,37 USD/barril y el WTI cerca de 94,7-95,4 USD (ambos al alza frente a la sesión previa) por la escalada de ataques a buques en el Estrecho de Ormuz, lo que encarece la energía y añade presión bajista al sentimiento de riesgo del NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. salió más caliente de lo esperado (interanual 3,7%, núcleo 2,6%), publicado a las 8:30 ET, elevó las apuestas de un sesgo más duro de la Fed y provocó una caída liderada por tecnológicas (Nasdaq ~-0,6% a -1,4%, CoreWeave -15%), lastrando directamente al NQ.",
+  "geopolitica": "Los ataques a petroleros en el Estrecho de Ormuz se mantienen en su ritmo mas alto desde el inicio del conflicto Iran-EEUU (al menos 11-12 buques impactados desde principios de octubre segun UKMTO/gCaptain), sin una atribucion clara entre Iran y EEUU, lo que sostiene la prima de riesgo geopolitico que presiona el sentimiento de riesgo del NQ intradia.",
+  "petroleo": "El Brent cotiza en torno a 106,4 USD/barril y el WTI cerca de 95 USD (ambos al alza), sostenidos por la escalada de ataques en el Estrecho de Ormuz pese a que, segun la AIE, aun no hay perdida medible de suministro; el encarecimiento de la energia anade presion bajista al sentimiento de riesgo que pesa sobre el NQ.",
+  "catalizador": "El IPC de septiembre en EEUU se publico hoy a las 8:30 ET con un interanual en torno a 3,6-3,7% (nucleo cerca de 2,4-2,6%), por encima del mes previo, lo que reabre las apuestas de un sesgo mas duro de la Fed de cara al FOMC del 27-28 de octubre y lastra a las tecnologicas, presionando al NQ.",
   "sources": [
-    "Oilprice.com 06:52 ET",
-    "BLS/Reuters 08:30 ET (CPI septiembre)",
-    "RTE.ie/Reuters 14 oct (ataques Estrecho de Ormuz, hora exacta no confirmada)",
-    "TheStreet / Yahoo Finance / Motley Fool 14 oct (reacción de mercado al IPC)"
+    "gCaptain/UKMTO (ataques Estrecho de Ormuz, visto 15:06 ET)",
+    "Oilprice.com / IG (precio petroleo, visto 15:06 ET)",
+    "Admiral Markets/Cleveland Fed nowcast (previsión IPC septiembre, visto 15:06 ET)"
   ],
-  "as_of": "2026-10-14T18:06:14Z"
+  "as_of": "2026-10-14T19:06:23Z"
 }
