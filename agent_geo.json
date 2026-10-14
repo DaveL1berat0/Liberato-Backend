@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Los ataques a petroleros en el Estrecho de Ormuz se mantienen en su ritmo mas alto desde el inicio del conflicto Iran-EEUU (al menos 11-12 buques impactados desde principios de octubre segun UKMTO/gCaptain), sin una atribucion clara entre Iran y EEUU, lo que sostiene la prima de riesgo geopolitico que presiona el sentimiento de riesgo del NQ intradia.",
-  "petroleo": "El Brent cotiza en torno a 106,4 USD/barril y el WTI cerca de 95 USD (ambos al alza), sostenidos por la escalada de ataques en el Estrecho de Ormuz pese a que, segun la AIE, aun no hay perdida medible de suministro; el encarecimiento de la energia anade presion bajista al sentimiento de riesgo que pesa sobre el NQ.",
-  "catalizador": "El IPC de septiembre en EEUU se publico hoy a las 8:30 ET con un interanual en torno a 3,6-3,7% (nucleo cerca de 2,4-2,6%), por encima del mes previo, lo que reabre las apuestas de un sesgo mas duro de la Fed de cara al FOMC del 27-28 de octubre y lastra a las tecnologicas, presionando al NQ.",
+  "geopolitica": "",
+  "petroleo": "El WTI cotiza en torno a USD 95,2/barril (+1,15%) y el Brent cerca de USD 105,7 (+0,05%), sosteniendo una prima de riesgo por la tension en Oriente Medio (Estrecho de Ormuz/ataques a buques) que mantiene presion sobre los costos de energia y el sentimiento de riesgo del NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. subio 3.7% interanual (vs 3.6% esperado) y el nucleo 2.6% (vs 2.5% esperado), reduciendo las expectativas de un recorte de tasas de la Fed y provocando una fuerte venta en tecnologia/IA (CoreWeave -16%, Oracle -9%, AMD -5%) que arrastra al Nasdaq.",
   "sources": [
-    "gCaptain/UKMTO (ataques Estrecho de Ormuz, visto 15:06 ET)",
-    "Oilprice.com / IG (precio petroleo, visto 15:06 ET)",
-    "Admiral Markets/Cleveland Fed nowcast (previsión IPC septiembre, visto 15:06 ET)"
+    "CNBC 08:30 ET (IPC septiembre)",
+    "CNBC cotizaciones @CL.1/@LCO.1, consultado 16:06 ET"
   ],
-  "as_of": "2026-10-14T19:06:23Z"
+  "as_of": "2026-10-14T20:06:49Z"
 }
