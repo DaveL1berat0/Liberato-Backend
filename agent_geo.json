@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) golpearon la sede de Saudi Aramco en Dhahran y el oleoducto Este-Oeste en Arabia Saudita tras un ataque previo al aeropuerto de Riad, escalando el conflicto Arabia Saudita-Irán y elevando la aversión al riesgo que presiona al NQ.",
-  "petroleo": "Brent sube 0.7% a 106.46 USD/barril y WTI sube 1.2% a 95.30 USD/barril por los ataques hutíes a instalaciones petroleras sauditas y una advertencia de la AIE sobre una oferta del Golfo ajustada hasta 2027; el crudo elevado es un viento en contra para el sector tech/growth del NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. salió más caliente de lo esperado (3.7% anual vs 3.6% estimado; núcleo 2.6%), y CNBC reporta que los traders ahora apuestan a que la Fed suba tasas el 28 de octubre con probabilidad de 53.7% (desde 22.1% el día previo) o incluso duplique el movimiento en diciembre, presionando al Nasdaq por mayores rendimientos del Tesoro.",
+  "geopolitica": "El fabricante chino de memoria CXMT afirmo haber superado a Samsung y SK Hynix en DRAM, lo que extiende hoy la liquidacion en semiconductores (Micron, SK Hynix, Samsung) y anade presion bajista sobre el Nasdaq-100 por su alto peso tecnologico.",
+  "petroleo": "El Brent cotiza cerca de 106 USD/barril, al alza, tras nuevos ataques hutíes contra instalaciones de Aramco en Arabia Saudita y persistentes tensiones en el Estrecho de Ormuz, reforzando la narrativa inflacionaria que presiona al NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. salio mas caliente de lo esperado (3,7% interanual vs 3,6% estimado; nucleo 2,6% vs 2,5%), lo que elevo los rendimientos de bonos y empujo al Nasdaq a la baja en la sesion de hoy.",
   "sources": [
-    "CNBC 14/10 (Oil rises amid growing tensions between Saudis and Iran-backed Houthis)",
-    "Bloomberg 14/10 (Houthi attack on Saudi Aramco HQ raises oil-price risks)",
-    "CNBC 14/10 (Fed may now have to hike twice or increase by a half point in December, traders bet)",
-    "CNBC 13/10 (S&P 500 falls as yields rise after hot inflation report)"
+    "CNBC 08:30 ET (CPI septiembre, dato oficial BLS)",
+    "CNBC/Bloomberg 13-14 oct (rout en chips de memoria por CXMT)",
+    "CNBC 14 oct (petroleo al alza por tensiones Saudi-Houthi/Ormuz)"
   ],
-  "as_of": "2026-10-14T14:07:36Z"
+  "as_of": "2026-10-14T14:40:10Z"
 }
