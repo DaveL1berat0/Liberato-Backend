@@ -1,11 +1,13 @@
 {
-  "geopolitica": "El presidente ucraniano Zelenskyy viajo hoy al Reino Unido para reunirse con el primer ministro Burnham, quien prepara nuevas sanciones y apoyo militar/fiscal a Ucrania mientras persisten dudas sobre el alto el fuego con Rusia, lo que sostiene una prima de riesgo geopolitico moderada que limita el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cerro el martes en 105.69 USD/barril (-0.9%) y el WTI en 94.14 USD/barril (+0.43%), presionados a la baja por la perspectiva de mas diesel ruso llegando al mercado tras el alto el fuego Rusia-Ucrania, lo que alivia ligeramente la presion inflacionaria sobre el NQ.",
-  "catalizador": "Los mercados operan cautelosos a la espera del dato de IPC de EE.UU. de septiembre (consenso +0.6% intermensual, 3.6% interanual) que se publica hoy antes de la apertura, un catalizador clave para las expectativas de la Fed que puede generar fuerte volatilidad en el NQ en los primeros minutos de la sesion.",
+  "geopolitica": "Los hutíes atacaron de madrugada la sede administrativa de Aramco en Dhahran y la coalición liderada por Arabia Saudí respondió golpeando instalaciones petroleras hutíes en Yemen, escalando el conflicto Arabia-Irán/hutíes y elevando la aversión al riesgo que presiona al NQ (CNBC, CNN, Bloomberg, 13-14 oct).",
+  "petroleo": "El Brent cotiza por encima de 105-106 USD/barril (cerró +1.84% el lunes en 106.65) tras el ataque a Aramco y el giro de Irán hacia nuevas tácticas contra petroleros en el estrecho de Ormuz, encareciendo insumos energéticos y presionando al sector tech/NQ (CNBC, Korea Herald vía Reuters, 13-14 oct).",
+  "catalizador": "El IPC de septiembre se publica hoy a las 8:30 AM ET (calendario oficial BLS); aún no ha salido, por lo que es el catalizador pendiente de mayor riesgo para el NQ en la apertura de la sesión.",
   "sources": [
-    "CNBC Daily Open 14-oct-2026",
-    "CNBC Oil prices 13-oct-2026 (cierre)",
-    "CNBC Stock market live 13/14-oct-2026"
+    "CNBC 14-Oct (oil rises amid Saudi-Houthi tensions)",
+    "CNN 13-Oct (Aramco HQ strike)",
+    "Bloomberg 14-Oct (Houthi attack video)",
+    "Korea Herald/mbiz 13-Oct (Brent +1.84% a 106.65, WTI +2.06% a 93.74)",
+    "BLS calendar (CPI septiembre 8:30 ET)"
   ],
-  "as_of": "2026-10-14T11:40:45Z"
+  "as_of": "2026-10-14T12:06:25Z"
 }
