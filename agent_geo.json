@@ -1,10 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El WTI cotiza en torno a USD 95,2/barril (+1,15%) y el Brent cerca de USD 105,7 (+0,05%), sosteniendo una prima de riesgo por la tension en Oriente Medio (Estrecho de Ormuz/ataques a buques) que mantiene presion sobre los costos de energia y el sentimiento de riesgo del NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. subio 3.7% interanual (vs 3.6% esperado) y el nucleo 2.6% (vs 2.5% esperado), reduciendo las expectativas de un recorte de tasas de la Fed y provocando una fuerte venta en tecnologia/IA (CoreWeave -16%, Oracle -9%, AMD -5%) que arrastra al Nasdaq.",
+  "geopolitica": "Acciones de semiconductores caen en premarket por reportes de mayor competencia de chipmakers chinos, presionando a la baja los futuros del Nasdaq 100 (fuente: Goodreturns, premarket 14-oct).",
+  "petroleo": "El Brent sube ~0.5% a USD 106.2 y el WTI ~0.6% a USD 94.7 por riesgo de oferta saudi tras ataques Houthi a infraestructura petrolera, un viento en contra para el sentimiento de riesgo que pesa sobre el NQ (fuente: HDFC Sky, 14-oct).",
+  "catalizador": "Se espera hoy el dato de IPC de septiembre (consenso 3.6% interanual); una sorpresa al alza reabriria el debate de una suba de tasas de la Fed en octubre, catalizador clave para el NQ en la sesion (fuente: Goodreturns/Sunday Guardian Live, premarket 14-oct).",
   "sources": [
-    "CNBC 08:30 ET (IPC septiembre)",
-    "CNBC cotizaciones @CL.1/@LCO.1, consultado 16:06 ET"
+    "Goodreturns premarket 14-oct (CPI consenso 3.6%, Nasdaq futuros)",
+    "Sunday Guardian Live premarket 14-oct (Nasdaq futuros -0.16%, CPI/bancos/petroleo)",
+    "HDFC Sky 14-oct (Brent USD 106.2 +0.5%, WTI USD 94.7 +0.6%, riesgo saudi)"
   ],
-  "as_of": "2026-10-14T20:06:49Z"
+  "as_of": "2026-10-14T21:05:56Z"
 }
