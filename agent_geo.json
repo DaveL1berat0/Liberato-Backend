@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Los hutíes atacaron de madrugada la sede administrativa de Aramco en Dhahran y la coalición liderada por Arabia Saudí respondió golpeando instalaciones petroleras hutíes en Yemen, escalando el conflicto Arabia-Irán/hutíes y elevando la aversión al riesgo que presiona al NQ (CNBC, CNN, Bloomberg, 13-14 oct).",
-  "petroleo": "El Brent cotiza por encima de 105-106 USD/barril (cerró +1.84% el lunes en 106.65) tras el ataque a Aramco y el giro de Irán hacia nuevas tácticas contra petroleros en el estrecho de Ormuz, encareciendo insumos energéticos y presionando al sector tech/NQ (CNBC, Korea Herald vía Reuters, 13-14 oct).",
-  "catalizador": "El IPC de septiembre se publica hoy a las 8:30 AM ET (calendario oficial BLS); aún no ha salido, por lo que es el catalizador pendiente de mayor riesgo para el NQ en la apertura de la sesión.",
+  "geopolitica": "El anuncio del fabricante chino de memorias CXMT desato una fuerte venta en semiconductores asiaticos (Kospi -5.5%, Samsung -7%, SK Hynix -10%, el dolar taiwanes con su peor caida desde junio de 2025) por temor a mayor competencia china en IA, lo que arrastra al sector semis del NQ en el premarket.",
+  "petroleo": "El Brent sube a 106.58 USD/barril (+0.8%) y el WTI a 94.94 USD (+0.8%) tras ataques huties contra instalaciones de Saudi Aramco en Dhahran y nuevas tacticas iranies contra buques en el Estrecho de Ormuz, lo que reaviva el riesgo de oferta y presiona la narrativa de inflacion que pesa sobre el NQ.",
+  "catalizador": "El IPC de septiembre de EE.UU. sorprendio al alza (3.7% interanual vs 3.6% esperado) al publicarse a las 8:30 ET, lo que envio a los futuros del Nasdaq-100 a caer hasta 0.5% en el premarket por mayores dudas sobre el ritmo de recortes de la Fed.",
   "sources": [
-    "CNBC 14-Oct (oil rises amid Saudi-Houthi tensions)",
-    "CNN 13-Oct (Aramco HQ strike)",
-    "Bloomberg 14-Oct (Houthi attack video)",
-    "Korea Herald/mbiz 13-Oct (Brent +1.84% a 106.65, WTI +2.06% a 93.74)",
-    "BLS calendar (CPI septiembre 8:30 ET)"
+    "Saxo Bank Market Quick Take 14-oct-2026 (sesion asiatica, madrugada ET)",
+    "CNBC/Reuters 00:30 GMT (20:30 ET, 13-oct-2026)",
+    "CNBC/Yahoo Finance 08:30 ET"
   ],
-  "as_of": "2026-10-14T12:06:25Z"
+  "as_of": "2026-10-14T12:40:01Z"
 }
