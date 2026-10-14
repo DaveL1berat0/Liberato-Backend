@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) intensifican ataques con misiles y drones contra instalaciones de Aramco y el oleoducto Este-Oeste en Arabia Saudita, elevando el riesgo geopolítico en Oriente Medio y generando presión de aversion al riesgo sobre el NQ.",
-  "petroleo": "Brent cotiza en torno a 105-106 USD/barril y WTI cerca de 93-95 USD/barril, sostenidos por los ataques huties a Aramco y una advertencia de la AIE de que la recuperacion de la oferta del Golfo se retrasa hasta 2027 con el diesel muy ajustado; el crudo elevado es un viento en contra para tech/growth del NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. salio mas caliente de lo esperado (3.7% anual vs 3.6% estimado) a las 8:30 ET de hoy, elevando los rendimientos del Tesoro y presionando a la baja los futuros del Nasdaq (-0.7%) justo antes de la apertura; resultados bancarios mixtos (BAC -4%, Morgan Stanley supera estimados) suman presion.",
+  "geopolitica": "Los hutíes (respaldados por Irán) golpearon la sede de Saudi Aramco en Dhahran y el oleoducto Este-Oeste en Arabia Saudita tras un ataque previo al aeropuerto de Riad, escalando el conflicto Arabia Saudita-Irán y elevando la aversión al riesgo que presiona al NQ.",
+  "petroleo": "Brent sube 0.7% a 106.46 USD/barril y WTI sube 1.2% a 95.30 USD/barril por los ataques hutíes a instalaciones petroleras sauditas y una advertencia de la AIE sobre una oferta del Golfo ajustada hasta 2027; el crudo elevado es un viento en contra para el sector tech/growth del NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. salió más caliente de lo esperado (3.7% anual vs 3.6% estimado; núcleo 2.6%), y CNBC reporta que los traders ahora apuestan a que la Fed suba tasas el 28 de octubre con probabilidad de 53.7% (desde 22.1% el día previo) o incluso duplique el movimiento en diciembre, presionando al Nasdaq por mayores rendimientos del Tesoro.",
   "sources": [
-    "CNBC 08:30 ET (publicacion IPC de septiembre)",
-    "Yahoo Finance 08:11 ET (futuros Nasdaq caen tras dato de inflacion)",
-    "Businesstoday/Al Jazeera/InvestingLive (ataques huties a Aramco, oleoducto Este-Oeste)",
-    "IEA / Engineering News (advertencia sobre brecha de oferta del Golfo hasta 2027)"
+    "CNBC 14/10 (Oil rises amid growing tensions between Saudis and Iran-backed Houthis)",
+    "Bloomberg 14/10 (Houthi attack on Saudi Aramco HQ raises oil-price risks)",
+    "CNBC 14/10 (Fed may now have to hike twice or increase by a half point in December, traders bet)",
+    "CNBC 13/10 (S&P 500 falls as yields rise after hot inflation report)"
   ],
-  "as_of": "2026-10-14T13:39:55Z"
+  "as_of": "2026-10-14T14:07:36Z"
 }
