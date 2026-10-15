@@ -1,13 +1,14 @@
 {
-  "geopolitica": "Persisten las tensiones en el Estrecho de Ormuz tras los ataques a petroleros saudies desde septiembre, mientras un funcionario de EE.UU. dijo que la administracion evalua relajar sanciones sobre parte de la flota no regulada de petroleros rusos; la incertidumbre geopolitica en Oriente Medio mantiene la cautela en el apetito de riesgo que pesa sobre el NQ.",
-  "petroleo": "El Brent cotiza en torno a 105.3 USD/barril (-0.75%) y el WTI sube a cerca de 96.4 USD/barril (+1.4%) este jueves, con el crudo aun elevado por el riesgo geopolitico en Oriente Medio pese a una posible relajacion de sanciones a Rusia y una rebaja de la demanda global de la AIE, lo que presiona a los sectores sensibles a energia dentro del NQ.",
-  "catalizador": "El dato de inflacion (CPI/PPI) mas caliente de lo esperado publicado esta semana elevo la probabilidad de una subida de tasas de la Fed en octubre a cerca del 37% (desde 22%), disparando los rendimientos del Treasury y provocando una caida de casi 2% en el Nasdaq Composite el miercoles, con el futuro del NQ bajo presion en la apertura del jueves.",
+  "geopolitica": "Irán hundió un segundo buque en el Estrecho de Ormuz en 24 horas y persisten los ataques Houthi tras el misilazo contra la sede de Aramco en Dhahran, manteniendo elevada la prima de riesgo geopolítico y presionando el apetito por riesgo del NQ (UPI, CBS News, Reuters).",
+  "petroleo": "Brent cae 0.75% a 105.3 USD/barril y WTI sube 1.42% a 96.44 USD/barril, con precios aún muy por encima de 100 USD por el riesgo de suministro en Ormuz y el ataque a Aramco, encareciendo costos de insumos y presionando márgenes tecnológicos (Arbiterz).",
+  "catalizador": "El PPI de septiembre sorprendió al alza en 6.3% interanual (vs 5.4% esperado), publicado por el BLS, disparando temores de que la Fed deba subir tasas en la reunión del 27-28 de octubre en lugar de recortarlas, lo que hundió a los semiconductores (Nvidia -2%, AMD -4%, TSMC -4%) y arrastra al NQ (CNBC, Yahoo Finance).",
   "sources": [
-    "Yahoo Finance 15-oct-2026 (midday ET)",
-    "TheStreet 15-oct-2026",
-    "Zacks via Yahoo Finance 14-oct-2026 (close ET)",
-    "Arbiterz 15-oct-2026",
-    "Reuters via Yahoo Finance 14-oct-2026"
+    "UPI 2026-10-15 - Strait of Hormuz ship sinkings",
+    "CBS News - Iran war live updates, Hormuz attacks",
+    "Reuters/Bloomberg (vía Globe and Mail, World Oil) - Houthi missile hits Aramco Dhahran HQ",
+    "Arbiterz - Oil prices Brent $105.3 / WTI $96.44",
+    "CNBC 08:30 ET - US PPI inflation report September 2026",
+    "Yahoo Finance - Nvidia, AMD, chip sell-off on hot inflation data"
   ],
-  "as_of": "2026-10-15T19:06:03Z"
+  "as_of": "2026-10-15T20:06:10Z"
 }
