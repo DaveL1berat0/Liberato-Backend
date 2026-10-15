@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Ucrania anunció que reanudará los ataques a refinerías petroleras rusas tras acusar a Rusia de violar el alto el fuego energético pactado, lo que eleva la tensión geopolítica y la aversión al riesgo que puede presionar al NQ intradía.",
-  "petroleo": "El Brent se mantiene cerca de 106 USD/barril y el WTI cerca de 95 USD, al alza por los ataques a buques en el Estrecho de Ormuz y a infraestructura energética rusa-ucraniana, lo que aumenta el temor a mayor inflación y tasas más altas y presiona al NQ.",
-  "catalizador": "Fuerte liquidación en acciones de IA y semiconductores (Nvidia, Micron y AMD a la baja en premarket; SK Hynix -10% y Samsung -8.7% en Asia) por temor a sobreinversión en IA y rendimientos del Tesoro por encima de 5% tras un dato de inflación en EE.UU. más caliente de lo esperado, lo que arrastra directamente al NQ.",
+  "geopolitica": "Zelensky acuso a Rusia de violar la tregua energetica pactada con Trump al atacar infraestructura energetica ucraniana (una planta electrica en Kharkiv y una instalacion de gas) y advirtio que Ucrania 'respondera' si los ataques continuan, lo que mantiene elevada la tension geopolitica Rusia-Ucrania y el riesgo que puede pesar sobre el NQ.",
+  "petroleo": "El Brent cae -2.00% a 103.94 USD/barril y el WTI retrocede -0.13% a 94.97 USD/barril en el premarket, en medio de la tension por la tregua energetica Rusia-Ucrania, lo que anade presion bajista al sentimiento de riesgo que pesa sobre el NQ.",
+  "catalizador": "El CPI subyacente de septiembre subio 2.6% interanual (vs. 2.5% esperado) y el presidente de la Fed de Nueva York, John Williams, dijo el 13/10 que una subida mas de tasas este ano es 'razonable', lo que reavivo los temores de endurecimiento monetario y hundio los futuros del Nasdaq-100 hasta -1.26% en el premarket, un viento en contra directo para el NQ en la apertura.",
   "sources": [
-    "Bloomberg 2026-10-15 (Ukraine to Resume Russia Refinery Strikes, Zelenskyy Tells FT)",
-    "Bloomberg 2026-10-14 (Oil Holds Gain as Middle East and Russia Strikes Threaten Supply)",
-    "CNBC 2026-10-15 (Nvidia, SK Hynix, ASML, SoftBank stocks: Global tech rout, AI funding worries)",
-    "CNBC 2026-10-14 (Nasdaq futures fall as tech shares drop on fears of AI overspending)"
+    "Axios 2026-10-11 (energy ceasefire)",
+    "Euromaidan Press 2026-10-13 (Zelensky, ataques rusos)",
+    "Roic.ai 2026-10-13 (Williams, una subida mas)",
+    "TipRanks ~05:40 ET (futuros premarket y petroleo)",
+    "Investing.com premarket (CPI, temores Fed)"
   ],
-  "as_of": "2026-10-15T11:06:27Z"
+  "as_of": "2026-10-15T11:41:34Z"
 }
