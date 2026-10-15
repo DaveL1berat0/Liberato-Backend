@@ -1,13 +1,12 @@
 {
-  "geopolitica": "EE.UU. evalua suavizar las sanciones a los petroleros rusos justo cuando se reportaron nuevos ataques a buques en el Estrecho de Ormuz, una combinacion que inyecta incertidumbre de oferta energetica y volatilidad geopolitica de fondo para el NQ.",
-  "petroleo": "El Brent cae cerca de 1.4-1.5% a unos 104.4 USD/barril y el WTI retrocede hacia 93.9 USD/barril, presionados por la posible flexibilizacion de sanciones a tanqueros rusos pese a las amenazas de suministro en Oriente Medio, lo que limita el contagio alcista de la energia sobre el NQ hoy.",
-  "catalizador": "El IPP de septiembre en EE.UU. se publico a las 08:30 ET con una sorpresa al alza (el mayor avance interanual en mas de 4 anos), reforzando las apuestas de que la Fed mantendra tasas altas por mas tiempo y profundizando la aversion al riesgo que ya golpeaba a los futuros del Nasdaq-100 tras el desplome de Kospi y el selloff de IA/semiconductores, el principal catalizador bajista del NQ en la sesion.",
+  "geopolitica": "EE.UU. evalua aliviar sanciones a la 'flota en la sombra' de petroleros mientras persisten los ataques a buques en el Estrecho de Ormuz (tension Iran-EE.UU.), lo que reduciria la prima de riesgo geopolitico y podria dar soporte al apetito de riesgo en el NQ.",
+  "petroleo": "El Brent cayo 1.6% (-1.64 USD) a 104.42 USD/barril y el WTI bajo 1% (-0.98 USD) a 94.11 USD/barril hacia las 23:37 ET, presionados por la posible flexibilizacion de sanciones a petroleros pese a un fuerte drawdown de inventarios en EE.UU., lo que resta presion inflacionaria y es marginalmente positivo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq caen mas de 1% en la premarket tras el mayor retroceso diario del Nasdaq/S&P 500 desde julio, luego de un dato de inflacion mas caliente de lo esperado que eleva las apuestas de una proxima subida de tasas de la Fed (27% de probabilidad segun CME FedWatch), golpeando a nombres de IA apalancados en deuda como CoreWeave (-4.5%) y Oracle (-2%), lo que presiona al NQ en la apertura.",
   "sources": [
-    "Today in Oil and Gas 15 oct - Brent Crude Slips as U.S. Considers Easing Russian Tanker Sanctions Amid Middle East Supply Threats",
-    "HDFC Sky 15 oct - Global Markets Today: Asian shares slide, Wall Street falls on hot US inflation data",
-    "Bloomberg 15 oct (premercado) - US Stock Futures Today: CoreWeave, Dell, FMC, Intel, Micron, Penske",
-    "CNBC 15 oct - 5 things to know before the stock market opens",
-    "BLS - Producer Price Index (September), publicado 08:30 ET 15 oct"
+    "Reuters via Investing.com - premarket 15 oct",
+    "CNN - 15 oct 2026",
+    "Reuters via Irish Times - 23:37 ET",
+    "Business Standard/Oilprice (Reuters) - 15 oct"
   ],
-  "as_of": "2026-10-15T15:09:16Z"
+  "as_of": "2026-10-15T15:40:34Z"
 }
