@@ -1,12 +1,10 @@
 {
-  "geopolitica": "EE.UU. evalua aliviar sanciones a la 'flota en la sombra' de petroleros mientras persisten los ataques a buques en el Estrecho de Ormuz (tension Iran-EE.UU.), lo que reduciria la prima de riesgo geopolitico y podria dar soporte al apetito de riesgo en el NQ.",
-  "petroleo": "El Brent cayo 1.6% (-1.64 USD) a 104.42 USD/barril y el WTI bajo 1% (-0.98 USD) a 94.11 USD/barril hacia las 23:37 ET, presionados por la posible flexibilizacion de sanciones a petroleros pese a un fuerte drawdown de inventarios en EE.UU., lo que resta presion inflacionaria y es marginalmente positivo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq caen mas de 1% en la premarket tras el mayor retroceso diario del Nasdaq/S&P 500 desde julio, luego de un dato de inflacion mas caliente de lo esperado que eleva las apuestas de una proxima subida de tasas de la Fed (27% de probabilidad segun CME FedWatch), golpeando a nombres de IA apalancados en deuda como CoreWeave (-4.5%) y Oracle (-2%), lo que presiona al NQ en la apertura.",
+  "geopolitica": "Ataques renovados contra buques cerca del Estrecho de Ormuz elevan la tension geopolitica en Oriente Medio y presionan el apetito de riesgo global, anadiendo volatilidad al NQ en la sesion de hoy.",
+  "petroleo": "WTI sube 0.3% a 95.40 USD/barril y Brent cae 1.1% a 104.91 USD/barril hacia las 07:57 ET, por el choque entre nuevos ataques cerca de Ormuz y expectativas de alivio de sanciones a la flota petrolera rusa; el encarecimiento del crudo eleva costos y pesa sobre el riesgo en el NQ.",
+  "catalizador": "El IPP de EEUU de septiembre, difundido ayer, subio al mayor ritmo en 4.5 anios, reforzando apuestas por una Fed mas restrictiva y desatando una fuerte venta en acciones de IA (Nvidia -3.3%, AMD -6.4%, Micron -5%) que hunde al Nasdaq cerca de un minimo de un mes hacia las 09:50 ET.",
   "sources": [
-    "Reuters via Investing.com - premarket 15 oct",
-    "CNN - 15 oct 2026",
-    "Reuters via Irish Times - 23:37 ET",
-    "Business Standard/Oilprice (Reuters) - 15 oct"
+    "Reuters 07:57 ET",
+    "Reuters 09:50 ET"
   ],
-  "as_of": "2026-10-15T15:40:34Z"
+  "as_of": "2026-10-15T16:06:09Z"
 }
