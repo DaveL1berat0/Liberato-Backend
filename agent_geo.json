@@ -1,14 +1,14 @@
 {
-  "geopolitica": "Irán hundió un segundo buque en el Estrecho de Ormuz en 24 horas y persisten los ataques Houthi tras el misilazo contra la sede de Aramco en Dhahran, manteniendo elevada la prima de riesgo geopolítico y presionando el apetito por riesgo del NQ (UPI, CBS News, Reuters).",
-  "petroleo": "Brent cae 0.75% a 105.3 USD/barril y WTI sube 1.42% a 96.44 USD/barril, con precios aún muy por encima de 100 USD por el riesgo de suministro en Ormuz y el ataque a Aramco, encareciendo costos de insumos y presionando márgenes tecnológicos (Arbiterz).",
-  "catalizador": "El PPI de septiembre sorprendió al alza en 6.3% interanual (vs 5.4% esperado), publicado por el BLS, disparando temores de que la Fed deba subir tasas en la reunión del 27-28 de octubre en lugar de recortarlas, lo que hundió a los semiconductores (Nvidia -2%, AMD -4%, TSMC -4%) y arrastra al NQ (CNBC, Yahoo Finance).",
+  "geopolitica": "Hunden otro buque en el Estrecho de Ormuz (mas de 20 ataques desde el 1 de octubre, segun UKMTO) y un misil houthi golpeo la sede de Aramco en Dhahran el 13 de octubre, sosteniendo la prima de riesgo geopolitico en Oriente Medio y presionando el apetito por riesgo del NQ (CNBC, Reuters, Al-Monitor).",
+  "petroleo": "Brent cotiza en torno a 105 USD/barril y WTI cerca de 96 USD/barril, aun muy por encima de 100 USD por el riesgo de suministro en Ormuz y el ataque a Aramco, aunque se moderan tras reportes de que EE.UU. evalua aliviar sanciones a la 'flota fantasma' rusa; la volatilidad del crudo anade presion a costos y margenes tecnologicos del NQ (CNBC, Arbiterz).",
+  "catalizador": "El IPP de septiembre subio 6.3% a/a y 1.3% m/m (el mayor salto desde 2022), tras el IPC caliente del miercoles, elevando las probabilidades de un alza de tasas de la Fed el 27-28 de octubre y provocando una rotacion de ventas en IA/semiconductores (Nvidia, AMD, TSMC) que arrastra al NQ pese al rebote del Dow (CNBC, Yahoo Finance).",
   "sources": [
-    "UPI 2026-10-15 - Strait of Hormuz ship sinkings",
-    "CBS News - Iran war live updates, Hormuz attacks",
-    "Reuters/Bloomberg (vía Globe and Mail, World Oil) - Houthi missile hits Aramco Dhahran HQ",
-    "Arbiterz - Oil prices Brent $105.3 / WTI $96.44",
-    "CNBC 08:30 ET - US PPI inflation report September 2026",
-    "Yahoo Finance - Nvidia, AMD, chip sell-off on hot inflation data"
+    "CNBC 14-oct (Container ship sinks in Strait of Hormuz as Iran steps up attacks)",
+    "Reuters/Al-Monitor 13-oct (Missile hits headquarters of Saudi Aramco in Dhahran)",
+    "Arbiterz 15-oct (Oil Prices Today: Brent Crude Eases to $105.3 Per Barrel, WTI ~$96.44)",
+    "CNBC 14-oct (September PPI report: +6.3% y/y, hot inflation, largest since 2022)",
+    "CNBC 13:13 ET (Stock market live updates: Dow jumps 400 points, Nasdaq slides as investors rotate out of tech)",
+    "CNBC 15-oct (Nvidia, AMD, Dell sell-off in global tech rout on AI funding worries)"
   ],
-  "as_of": "2026-10-15T20:06:10Z"
+  "as_of": "2026-10-15T21:06:41Z"
 }
