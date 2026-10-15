@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Persiste la tension Arabia Saudita-Houthis/Iran (ataques reportados contra instalaciones de Aramco en Dhahran y buques cerca del Estrecho de Hormuz, con el FMI advirtiendo sobre el impacto en la economia global), sosteniendo la prima de riesgo geopolitico que limita el apetito por el NQ.",
-  "petroleo": "Brent cotiza en torno a 106.7 USD/barril y WTI cerca de 95 USD/barril en la manana del 15-Oct, sostenidos por los ataques Houthi a instalaciones de Aramco y el riesgo en el Estrecho de Hormuz (parcialmente contrarrestado por expectativas de mayores exportaciones de diesel ruso); el crudo elevado añade presion inflacionaria que pesa sobre el NQ.",
-  "catalizador": "El IPP (PPI) de septiembre, publicado hoy 15-Oct a las 08:30 ET, subio 1.3% mensual (el mayor avance desde marzo 2022) con el nucleo interanual en 5.0% vs 4.4% esperado; el dato mas caliente de lo previsto se suma al IPC caliente del 14-Oct y reaviva temores de una Fed mas restrictiva, presionando al Nasdaq-100 en la apertura (Composite cerca de -1.1% hacia las 09:38 ET).",
+  "geopolitica": "Un ataque hutí contra un edificio administrativo de Saudi Aramco en Dhahran (Provincia Oriental) provocó un incendio limitado sin heridos segun el Ministerio de Energia saudi, y la escalada de ataques iranies contra buques en el Estrecho de Ormuz mantiene la aversion al riesgo, presionando al NQ a la baja (CNBC, 14 oct 2026).",
+  "petroleo": "El Brent cerro en 106,06 USD/barril (+0,35%) y el WTI en 95,09 USD/barril (+1,01%, maximo de tres semanas) tras el ataque a Aramco y las nuevas tacticas iranies contra petroleros en el Golfo, encareciendo insumos energeticos y pesando sobre el NQ (Reuters, 14 oct 2026).",
+  "catalizador": "El dato de inflacion mayorista (PPI) de septiembre, mas caliente de lo esperado, se sumo al IPC fuerte del lunes y alimento ventas en tecnologia, con el Nasdaq Composite cayendo 1,3% en la apertura del jueves por temor a que la Fed retrase los recortes de tasas (CNBC, 14 oct 2026).",
   "sources": [
-    "BLS 15-Oct 08:30 ET (PPI +1.3% m/m, nucleo interanual 5.0%)",
-    "CNBC 14-Oct (Aramco/Houthi, Estrecho de Hormuz)",
-    "Euronews 15-Oct (FMI advierte sobre impacto economico de ataques a Arabia Saudita)",
-    "Fortune 15-Oct 07:15 ET (Brent ~106.67 USD/barril)",
-    "Yahoo Finance 15-Oct 09:38 ET (Nasdaq Composite ~-1.1% en apertura)"
+    "CNBC 14 oct 2026 - us-iran-war-trump-hormuz-saudi",
+    "Reuters 14 oct 2026 (via Yahoo Finance / Korea Times) - oil prices gain on attacks in Saudi Arabia",
+    "CNBC 14 oct 2026 - stock-market-today-live-updates"
   ],
-  "as_of": "2026-10-15T13:39:30Z"
+  "as_of": "2026-10-15T14:06:53Z"
 }
