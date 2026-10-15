@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Tensión en el estrecho de Ormuz: un buque registrado en Singapur se hundió e Irán dijo estar \"contando los momentos\" para atacar buques de EE.UU., mientras el Comando Central estadounidense niega que Irán controle el estrecho, lo que eleva la aversión al riesgo global y presiona al NQ a la baja.",
-  "petroleo": "El Brent cayó cerca de 1.5% hasta unos 104.52 USD/barril y el WTI se mantuvo plano cerca de 94.15 USD/barril, pese a las tensiones en Ormuz, en parte por reportes de que EE.UU. evalúa aliviar sanciones a la \"flota fantasma\" para ampliar la oferta, lo que modera el riesgo inflacionario pero no alcanza a compensar la aversión al riesgo que pesa sobre el NQ.",
-  "catalizador": "El IPC de septiembre en EE.UU. subió 3.7% interanual (vs. 3.6% esperado) reavivando dudas sobre el margen de la Fed para recortar tasas, justo cuando una venta masiva en el trade de IA -gatillada por temores de sobregasto tras la divulgación de ingresos de Anthropic- golpea a semiconductores (Nvidia, AMD, Micron) y hunde al Kospi casi 8%, un catalizador bajista directo para el NQ por su alta ponderación tecnológica.",
+  "geopolitica": "Los hutíes atacaron instalaciones de Aramco en Dhahran y aeropuertos de Riad el 13-14 de octubre, y los ataques a buques en el Estrecho de Hormuz se intensificaron a más de 10 desde el domingo, elevando la prima de riesgo geopolítico que presiona el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae cerca de 1.5% hasta unos 104.4 USD/barril (WTI ~93.9 USD) este jueves tras informes de que Washington evalúa aliviar sanciones a la 'flota fantasma' de petroleros, lo que reduce la prima de riesgo pese a la tensión en Hormuz.",
+  "catalizador": "El PPI de septiembre se publica hoy a las 8:30 ET tras un IPC más caliente de lo esperado el miércoles que ya disparó ventas en Wall Street, mientras continúa el desplome de semiconductores (avance de CXMT, tono cauteloso de TSMC sin guía anual) que presiona a los futuros del Nasdaq.",
   "sources": [
-    "CNBC - Oil prices today: Brent, WTI fall, 15 oct 2026",
-    "CNBC Daily Open - A Singapore ship goes down as Hormuz risks rise, 15 oct 2026",
-    "Bloomberg - Market Calm Shatters as AI, Rate Fears Collide, 15 oct 2026",
-    "Bloomberg - Kospi Drops 8% as Samsung, SK Hynix Shares Plunge on AI and Rate Fears, 15 oct 2026"
+    "CNBC 2026-10-14 (Aramco/Hormuz)",
+    "Reuters 2026-10-14 (ataques a buques en Hormuz)",
+    "Reuters 2026-10-15 07:00 ET (sanciones flota fantasma, Brent)",
+    "CNBC 2026-10-13 (rally CXMT en semiconductores)",
+    "Bloomberg 2026-10-15 (selloff tecnológico, CPI)"
   ],
-  "as_of": "2026-10-15T12:07:28Z"
+  "as_of": "2026-10-15T12:39:25Z"
 }
