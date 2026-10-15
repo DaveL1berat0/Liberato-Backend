@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Zelenskyy ordenó reanudar los ataques ucranianos a refinerías rusas de petróleo, rompiendo la pausa del 'alto el fuego energético' propuesto por Trump en medio de una disputa por inteligencia militar de EE.UU., lo que añade riesgo de suministro de crudo (Bloomberg, 15 oct).",
-  "petroleo": "El crudo cotiza cerca de máximos recientes tras el cierre del miércoles: Brent en 106.06 USD (+0.35%) y WTI en 95.09 USD (+1.0%), sostenidos por los ataques a refinerías rusas y la tensión Arabia Saudita-Hutíes en el Mar Rojo (CNBC, 14 oct).",
-  "catalizador": "El IPP de EE.UU. de septiembre subió 6.3% interanual (vs 5.5% esperado) y 1.3% mensual, la mayor alza en más de 4 años, reforzando las apuestas de que la Fed mantendrá tasas altas por más tiempo tras el selloff de IA/semis del día previo (CoreWeave -15%, Kospi -8%) (CNBC, 15 oct, dato publicado 08:30 ET).",
+  "geopolitica": "EE.UU. evalua suavizar las sanciones a los petroleros rusos justo cuando se reportaron nuevos ataques a buques en el Estrecho de Ormuz, una combinacion que inyecta incertidumbre de oferta energetica y volatilidad geopolitica de fondo para el NQ.",
+  "petroleo": "El Brent cae cerca de 1.4-1.5% a unos 104.4 USD/barril y el WTI retrocede hacia 93.9 USD/barril, presionados por la posible flexibilizacion de sanciones a tanqueros rusos pese a las amenazas de suministro en Oriente Medio, lo que limita el contagio alcista de la energia sobre el NQ hoy.",
+  "catalizador": "El IPP de septiembre en EE.UU. se publico a las 08:30 ET con una sorpresa al alza (el mayor avance interanual en mas de 4 anos), reforzando las apuestas de que la Fed mantendra tasas altas por mas tiempo y profundizando la aversion al riesgo que ya golpeaba a los futuros del Nasdaq-100 tras el desplome de Kospi y el selloff de IA/semiconductores, el principal catalizador bajista del NQ en la sesion.",
   "sources": [
-    "Bloomberg 15 oct - Ukraine to Resume Russia Refinery Strikes, Defying Trump",
-    "CNBC 15 oct - 5 things to know before the stock market opens Thursday",
-    "CNBC 14 oct - Oil rises amid growing tensions between Saudis and Iran-backed Houthis",
-    "Bloomberg 15 oct - Market Calm Shatters as AI, Rate Fears Collide"
+    "Today in Oil and Gas 15 oct - Brent Crude Slips as U.S. Considers Easing Russian Tanker Sanctions Amid Middle East Supply Threats",
+    "HDFC Sky 15 oct - Global Markets Today: Asian shares slide, Wall Street falls on hot US inflation data",
+    "Bloomberg 15 oct (premercado) - US Stock Futures Today: CoreWeave, Dell, FMC, Intel, Micron, Penske",
+    "CNBC 15 oct - 5 things to know before the stock market opens",
+    "BLS - Producer Price Index (September), publicado 08:30 ET 15 oct"
   ],
-  "as_of": "2026-10-15T14:40:05Z"
+  "as_of": "2026-10-15T15:09:16Z"
 }
