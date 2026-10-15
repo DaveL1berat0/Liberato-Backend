@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Ataque huti contra un edificio administrativo de Saudi Aramco en Dhahran y escalada de ataques contra buques en el Estrecho de Ormuz mantienen elevada la prima de riesgo geopolitico, sosteniendo presion de aversion al riesgo sobre el NQ (CNBC, 14 oct).",
-  "petroleo": "El Brent cotiza en zona de 105-106 USD/barril, cerca de maximos recientes por el riesgo de suministro en el Estrecho de Ormuz tras los ataques huties contra Arabia Saudita, lo que presiona el sentimiento de riesgo y pesa sobre el NQ intradia (Arbiterz/TradingEconomics, 15 oct).",
-  "catalizador": "El IPP de EE.UU. de septiembre, publicado hoy a las 08:30 ET, subio 6.3% interanual vs 5.3% esperado (nucleo +0.7% vs +0.3%), reavivando temores de inflacion y presionando al NQ a la baja en la apertura (BLS/Schwab, 15 oct 08:30 ET).",
+  "geopolitica": "Persisten las tensiones en el Estrecho de Ormuz tras los ataques a petroleros saudies desde septiembre, mientras un funcionario de EE.UU. dijo que la administracion evalua relajar sanciones sobre parte de la flota no regulada de petroleros rusos; la incertidumbre geopolitica en Oriente Medio mantiene la cautela en el apetito de riesgo que pesa sobre el NQ.",
+  "petroleo": "El Brent cotiza en torno a 105.3 USD/barril (-0.75%) y el WTI sube a cerca de 96.4 USD/barril (+1.4%) este jueves, con el crudo aun elevado por el riesgo geopolitico en Oriente Medio pese a una posible relajacion de sanciones a Rusia y una rebaja de la demanda global de la AIE, lo que presiona a los sectores sensibles a energia dentro del NQ.",
+  "catalizador": "El dato de inflacion (CPI/PPI) mas caliente de lo esperado publicado esta semana elevo la probabilidad de una subida de tasas de la Fed en octubre a cerca del 37% (desde 22%), disparando los rendimientos del Treasury y provocando una caida de casi 2% en el Nasdaq Composite el miercoles, con el futuro del NQ bajo presion en la apertura del jueves.",
   "sources": [
-    "CNBC 14-oct (hora exacta no reportada)",
-    "BLS/Schwab 08:30 ET",
-    "Arbiterz/TradingEconomics 15-oct (intradia, hora exacta no reportada)"
+    "Yahoo Finance 15-oct-2026 (midday ET)",
+    "TheStreet 15-oct-2026",
+    "Zacks via Yahoo Finance 14-oct-2026 (close ET)",
+    "Arbiterz 15-oct-2026",
+    "Reuters via Yahoo Finance 14-oct-2026"
   ],
-  "as_of": "2026-10-15T18:06:01Z"
+  "as_of": "2026-10-15T19:06:03Z"
 }
