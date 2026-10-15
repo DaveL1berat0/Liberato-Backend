@@ -1,13 +1,13 @@
 {
-  "geopolitica": "Persiste la tension Arabia Saudita-Houthis (ataques reportados a instalaciones de Aramco y a buques en el Estrecho de Hormuz), sosteniendo la prima de riesgo geopolitico que presiona el sentimiento de riesgo global y limita el apetito por el NQ.",
-  "petroleo": "Brent cotiza en torno a 106.67 USD/barril en la mañana del 15-Oct (bajando ~2 USD vs el dia previo), tras cerrar el 14-Oct en 106.06 USD (WTI 95.09 USD) impulsado por la tension Arabia Saudita-Houthis y una advertencia de la AIE sobre restricciones de diesel hasta 2027; el nivel elevado de crudo añade presion inflacionaria que pesa sobre el NQ.",
-  "catalizador": "A las 04:04 ET del 15-Oct, los futuros del Nasdaq-100 caian ~1.1-1.3% tras el dato de IPC de septiembre mas caliente de lo esperado (3.7% interanual, nucleo 2.6%), que reaviva temores de postura mas restrictiva de la Fed, sumado a dudas sobre el financiamiento del gasto en IA (CoreWeave, Oracle) tras la peor caida diaria del Nasdaq desde julio el 14-Oct (-1.9%).",
+  "geopolitica": "Persiste la tension Arabia Saudita-Houthis/Iran (ataques reportados contra instalaciones de Aramco en Dhahran y buques cerca del Estrecho de Hormuz, con el FMI advirtiendo sobre el impacto en la economia global), sosteniendo la prima de riesgo geopolitico que limita el apetito por el NQ.",
+  "petroleo": "Brent cotiza en torno a 106.7 USD/barril y WTI cerca de 95 USD/barril en la manana del 15-Oct, sostenidos por los ataques Houthi a instalaciones de Aramco y el riesgo en el Estrecho de Hormuz (parcialmente contrarrestado por expectativas de mayores exportaciones de diesel ruso); el crudo elevado añade presion inflacionaria que pesa sobre el NQ.",
+  "catalizador": "El IPP (PPI) de septiembre, publicado hoy 15-Oct a las 08:30 ET, subio 1.3% mensual (el mayor avance desde marzo 2022) con el nucleo interanual en 5.0% vs 4.4% esperado; el dato mas caliente de lo previsto se suma al IPC caliente del 14-Oct y reaviva temores de una Fed mas restrictiva, presionando al Nasdaq-100 en la apertura (Composite cerca de -1.1% hacia las 09:38 ET).",
   "sources": [
+    "BLS 15-Oct 08:30 ET (PPI +1.3% m/m, nucleo interanual 5.0%)",
     "CNBC 14-Oct (Aramco/Houthi, Estrecho de Hormuz)",
-    "CNBC 14-Oct (Brent 106.06 USD, WTI 95.09 USD, AIE diesel)",
-    "Fortune 15-Oct AM (Brent ~106.67 USD)",
-    "QZ.com 15-Oct 04:04 ET (Nasdaq-100 futuros -1.26%, IPC 3.7%/2.6%, AI financing)",
-    "TradingView 15-Oct (Nasdaq Composite -1.9% cierre previo, selloff IA)"
+    "Euronews 15-Oct (FMI advierte sobre impacto economico de ataques a Arabia Saudita)",
+    "Fortune 15-Oct 07:15 ET (Brent ~106.67 USD/barril)",
+    "Yahoo Finance 15-Oct 09:38 ET (Nasdaq Composite ~-1.1% en apertura)"
   ],
-  "as_of": "2026-10-15T13:06:23Z"
+  "as_of": "2026-10-15T13:39:30Z"
 }
