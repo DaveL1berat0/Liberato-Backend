@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Un ataque hutí contra un edificio administrativo de Saudi Aramco en Dhahran (Provincia Oriental) provocó un incendio limitado sin heridos segun el Ministerio de Energia saudi, y la escalada de ataques iranies contra buques en el Estrecho de Ormuz mantiene la aversion al riesgo, presionando al NQ a la baja (CNBC, 14 oct 2026).",
-  "petroleo": "El Brent cerro en 106,06 USD/barril (+0,35%) y el WTI en 95,09 USD/barril (+1,01%, maximo de tres semanas) tras el ataque a Aramco y las nuevas tacticas iranies contra petroleros en el Golfo, encareciendo insumos energeticos y pesando sobre el NQ (Reuters, 14 oct 2026).",
-  "catalizador": "El dato de inflacion mayorista (PPI) de septiembre, mas caliente de lo esperado, se sumo al IPC fuerte del lunes y alimento ventas en tecnologia, con el Nasdaq Composite cayendo 1,3% en la apertura del jueves por temor a que la Fed retrase los recortes de tasas (CNBC, 14 oct 2026).",
+  "geopolitica": "Zelenskyy ordenó reanudar los ataques ucranianos a refinerías rusas de petróleo, rompiendo la pausa del 'alto el fuego energético' propuesto por Trump en medio de una disputa por inteligencia militar de EE.UU., lo que añade riesgo de suministro de crudo (Bloomberg, 15 oct).",
+  "petroleo": "El crudo cotiza cerca de máximos recientes tras el cierre del miércoles: Brent en 106.06 USD (+0.35%) y WTI en 95.09 USD (+1.0%), sostenidos por los ataques a refinerías rusas y la tensión Arabia Saudita-Hutíes en el Mar Rojo (CNBC, 14 oct).",
+  "catalizador": "El IPP de EE.UU. de septiembre subió 6.3% interanual (vs 5.5% esperado) y 1.3% mensual, la mayor alza en más de 4 años, reforzando las apuestas de que la Fed mantendrá tasas altas por más tiempo tras el selloff de IA/semis del día previo (CoreWeave -15%, Kospi -8%) (CNBC, 15 oct, dato publicado 08:30 ET).",
   "sources": [
-    "CNBC 14 oct 2026 - us-iran-war-trump-hormuz-saudi",
-    "Reuters 14 oct 2026 (via Yahoo Finance / Korea Times) - oil prices gain on attacks in Saudi Arabia",
-    "CNBC 14 oct 2026 - stock-market-today-live-updates"
+    "Bloomberg 15 oct - Ukraine to Resume Russia Refinery Strikes, Defying Trump",
+    "CNBC 15 oct - 5 things to know before the stock market opens Thursday",
+    "CNBC 14 oct - Oil rises amid growing tensions between Saudis and Iran-backed Houthis",
+    "Bloomberg 15 oct - Market Calm Shatters as AI, Rate Fears Collide"
   ],
-  "as_of": "2026-10-15T14:06:53Z"
+  "as_of": "2026-10-15T14:40:05Z"
 }
