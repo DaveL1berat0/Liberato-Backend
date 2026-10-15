@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Zelensky acuso a Rusia de violar la tregua energetica pactada con Trump al atacar infraestructura energetica ucraniana (una planta electrica en Kharkiv y una instalacion de gas) y advirtio que Ucrania 'respondera' si los ataques continuan, lo que mantiene elevada la tension geopolitica Rusia-Ucrania y el riesgo que puede pesar sobre el NQ.",
-  "petroleo": "El Brent cae -2.00% a 103.94 USD/barril y el WTI retrocede -0.13% a 94.97 USD/barril en el premarket, en medio de la tension por la tregua energetica Rusia-Ucrania, lo que anade presion bajista al sentimiento de riesgo que pesa sobre el NQ.",
-  "catalizador": "El CPI subyacente de septiembre subio 2.6% interanual (vs. 2.5% esperado) y el presidente de la Fed de Nueva York, John Williams, dijo el 13/10 que una subida mas de tasas este ano es 'razonable', lo que reavivo los temores de endurecimiento monetario y hundio los futuros del Nasdaq-100 hasta -1.26% en el premarket, un viento en contra directo para el NQ en la apertura.",
+  "geopolitica": "Tensión en el estrecho de Ormuz: un buque registrado en Singapur se hundió e Irán dijo estar \"contando los momentos\" para atacar buques de EE.UU., mientras el Comando Central estadounidense niega que Irán controle el estrecho, lo que eleva la aversión al riesgo global y presiona al NQ a la baja.",
+  "petroleo": "El Brent cayó cerca de 1.5% hasta unos 104.52 USD/barril y el WTI se mantuvo plano cerca de 94.15 USD/barril, pese a las tensiones en Ormuz, en parte por reportes de que EE.UU. evalúa aliviar sanciones a la \"flota fantasma\" para ampliar la oferta, lo que modera el riesgo inflacionario pero no alcanza a compensar la aversión al riesgo que pesa sobre el NQ.",
+  "catalizador": "El IPC de septiembre en EE.UU. subió 3.7% interanual (vs. 3.6% esperado) reavivando dudas sobre el margen de la Fed para recortar tasas, justo cuando una venta masiva en el trade de IA -gatillada por temores de sobregasto tras la divulgación de ingresos de Anthropic- golpea a semiconductores (Nvidia, AMD, Micron) y hunde al Kospi casi 8%, un catalizador bajista directo para el NQ por su alta ponderación tecnológica.",
   "sources": [
-    "Axios 2026-10-11 (energy ceasefire)",
-    "Euromaidan Press 2026-10-13 (Zelensky, ataques rusos)",
-    "Roic.ai 2026-10-13 (Williams, una subida mas)",
-    "TipRanks ~05:40 ET (futuros premarket y petroleo)",
-    "Investing.com premarket (CPI, temores Fed)"
+    "CNBC - Oil prices today: Brent, WTI fall, 15 oct 2026",
+    "CNBC Daily Open - A Singapore ship goes down as Hormuz risks rise, 15 oct 2026",
+    "Bloomberg - Market Calm Shatters as AI, Rate Fears Collide, 15 oct 2026",
+    "Bloomberg - Kospi Drops 8% as Samsung, SK Hynix Shares Plunge on AI and Rate Fears, 15 oct 2026"
   ],
-  "as_of": "2026-10-15T11:41:34Z"
+  "as_of": "2026-10-15T12:07:28Z"
 }
