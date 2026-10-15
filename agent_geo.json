@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Acciones de semiconductores caen en premarket por reportes de mayor competencia de chipmakers chinos, presionando a la baja los futuros del Nasdaq 100 (fuente: Goodreturns, premarket 14-oct).",
-  "petroleo": "El Brent sube ~0.5% a USD 106.2 y el WTI ~0.6% a USD 94.7 por riesgo de oferta saudi tras ataques Houthi a infraestructura petrolera, un viento en contra para el sentimiento de riesgo que pesa sobre el NQ (fuente: HDFC Sky, 14-oct).",
-  "catalizador": "Se espera hoy el dato de IPC de septiembre (consenso 3.6% interanual); una sorpresa al alza reabriria el debate de una suba de tasas de la Fed en octubre, catalizador clave para el NQ en la sesion (fuente: Goodreturns/Sunday Guardian Live, premarket 14-oct).",
+  "geopolitica": "Ucrania anunció que reanudará los ataques a refinerías petroleras rusas tras acusar a Rusia de violar el alto el fuego energético pactado, lo que eleva la tensión geopolítica y la aversión al riesgo que puede presionar al NQ intradía.",
+  "petroleo": "El Brent se mantiene cerca de 106 USD/barril y el WTI cerca de 95 USD, al alza por los ataques a buques en el Estrecho de Ormuz y a infraestructura energética rusa-ucraniana, lo que aumenta el temor a mayor inflación y tasas más altas y presiona al NQ.",
+  "catalizador": "Fuerte liquidación en acciones de IA y semiconductores (Nvidia, Micron y AMD a la baja en premarket; SK Hynix -10% y Samsung -8.7% en Asia) por temor a sobreinversión en IA y rendimientos del Tesoro por encima de 5% tras un dato de inflación en EE.UU. más caliente de lo esperado, lo que arrastra directamente al NQ.",
   "sources": [
-    "Goodreturns premarket 14-oct (CPI consenso 3.6%, Nasdaq futuros)",
-    "Sunday Guardian Live premarket 14-oct (Nasdaq futuros -0.16%, CPI/bancos/petroleo)",
-    "HDFC Sky 14-oct (Brent USD 106.2 +0.5%, WTI USD 94.7 +0.6%, riesgo saudi)"
+    "Bloomberg 2026-10-15 (Ukraine to Resume Russia Refinery Strikes, Zelenskyy Tells FT)",
+    "Bloomberg 2026-10-14 (Oil Holds Gain as Middle East and Russia Strikes Threaten Supply)",
+    "CNBC 2026-10-15 (Nvidia, SK Hynix, ASML, SoftBank stocks: Global tech rout, AI funding worries)",
+    "CNBC 2026-10-14 (Nasdaq futures fall as tech shares drop on fears of AI overspending)"
   ],
-  "as_of": "2026-10-14T21:05:56Z"
+  "as_of": "2026-10-15T11:06:27Z"
 }
