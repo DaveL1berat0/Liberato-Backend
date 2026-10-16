@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Los hutíes intensifican sus ataques contra Arabia Saudí (aeropuerto de Riad) y persisten los incidentes en el Estrecho de Ormuz tras el hundimiento de un buque el 14-oct, manteniendo una prima de riesgo geopolítico que invita a cautela en el NQ intradía.",
-  "petroleo": "Brent cae 0.39% a 105.51 USD y WTI cae 0.55% a 97.43 USD (CNBC/Reuters) ante la posible relajación de sanciones de EE.UU. a la 'flota fantasma' de Rusia/Irán/Venezuela, lo que alivia algo la presión inflacionaria que pesa sobre el NQ.",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, destacó el potencial de la IA en su intervención en las reuniones del FMI/Banco Mundial en Bangkok, impulsando los futuros del Nasdaq-100 hasta un 0.2% y reduciendo la probabilidad implícita de una subida de tasas en la reunión del 27-28 de octubre de ~30% a ~17% (Bloomberg), un catalizador alcista de última hora para el NQ.",
+  "geopolitica": "Taiwan prepara nuevas restricciones a la exportacion de chips avanzados de IA hacia China para alinearse con EE.UU., lo que reaviva la tension tecnologica entre Washington y Pekin y presiona a los semiconductores en el NQ (Bloomberg, ~08:00 ET).",
+  "petroleo": "El Brent cotiza cerca de 105.5 USD/barril (-0.4%) y el WTI en 97.4 USD/barril (-0.6%), presionados por reportes de que EE.UU. podria aliviar sanciones a la 'flota fantasma' rusa, en medio de tensiones por ataques a petroleros en el estrecho de Ormuz (Investing.com, ~08:30 ET).",
+  "catalizador": "El gobernador de la Fed Kevin Warsh moderó las apuestas de una subida de tasas en octubre al describir a la IA como un posible 'shock de oferta positivo' sin comprometerse a un alza inmediata, lo que impulso a los futuros del Nasdaq 100 tras el selloff tecnologico reciente (Bloomberg/Investing.com, ~08:00 ET).",
   "sources": [
-    "CNBC/Reuters 20:12 ET",
-    "Bloomberg 00:00 ET"
+    "Bloomberg 08:00 ET",
+    "Investing.com 08:30 ET",
+    "Barchart 08:15 ET"
   ],
-  "as_of": "2026-10-16T12:10:11Z"
+  "as_of": "2026-10-16T12:39:43Z"
 }
