@@ -1,12 +1,12 @@
 {
-  "geopolitica": "El desplome de semiconductores entra en su octava sesion consecutiva (la peor racha desde 2008) tras el avance en memoria de la china ChangXin Memory, que alimenta temores de sobreoferta y golpea a Nvidia, SK Hynix y Samsung, lastrando al NQ por su alto peso en tech/semis.",
-  "petroleo": "El Brent cae a 105,51 USD/barril (-0,39%) ante reportes de que EEUU evalua aliviar las sanciones a la 'flota fantasma' de crudo ruso, irani y venezolano para enfriar los fletes, lo que reduciria el riesgo de oferta y da un alivio marginal a la presion inflacionaria que pesa sobre el NQ.",
-  "catalizador": "El PPI de septiembre subio 6,3% interanual (vs 5,5% esperado), el mayor incremento desde 2022, y el presidente de la Fed Kevin Warsh evito confirmar una pausa en la proxima reunion del 27-28 de octubre, generando volatilidad premarket en el NQ entre el temor a inflacion y la expectativa de que la Fed mantenga tasas.",
+  "geopolitica": "Ataques a buques cisterna cerca del Estrecho de Hormuz y la campana de presion economica del Tesoro de EEUU (Bessent) contra Iran mantienen la prima de riesgo geopolitico, factor de aversion al riesgo para el NQ.",
+  "petroleo": "El WTI cae cerca de 1.7% a unos 95.84 USD/barril y el Brent se mantiene cerca de 105.46 USD/barril, con los ataques en Hormuz presionando al alza compensados por senales de EEUU de posible relajacion de sanciones a la 'flota fantasma' y un fuerte drenaje de inventarios de crudo.",
+  "catalizador": "El dato de inflacion subyacente (core CPI) sorprendio al alza (0.3% m/m vs 0.2% esperado, 2.6% a/a), enfriando las expectativas de recortes de tasas de la Fed y dejando los futuros del Nasdaq 100 ligeramente negativos (-0.08%) pese a que Dow y S&P suben.",
   "sources": [
-    "CNBC 08:30 ET",
-    "CNBC 09:30 ET",
-    "CNBC (Daily Open, AM ET)",
-    "CNBC (oil shadow fleet report, early AM ET)"
+    "Vantage Markets ~02:15 UTC (~22:15 ET prev. dia)",
+    "Sunday Guardian/Reuters 06:21 ET",
+    "Benzinga 16 oct 2026 (Bessent/Iran/Treasury yields)",
+    "Oilprice.com 16 oct 2026 (Hormuz flows, Kpler data)"
   ],
-  "as_of": "2026-10-16T15:07:28Z"
+  "as_of": "2026-10-16T15:39:20Z"
 }
