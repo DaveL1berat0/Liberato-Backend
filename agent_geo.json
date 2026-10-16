@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Las acciones de semiconductores siguen bajo presion por la competencia china (CXMT en memoria): el ETF SMH cae 0.7% en la apertura y acumula -7.4% semanal, lastrando al Nasdaq por su alto peso tecnologico (CNBC, 09:06 ET).",
-  "petroleo": "El Brent cae 0.74% a 105.14 USD y el WTI baja 1% a 96.98 USD tras conocerse que EE.UU. evalua aliviar sanciones a la 'flota fantasma' rusa/irani/venezolana y la IEA libera mas diesel, lo que reduce la prima de riesgo energetico (CNBC, 05:27 ET).",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, no dio senales claras sobre la decision de tasas del 27-28 de octubre en su conversacion en el FMI en Bangkok; la probabilidad de una subida cayo a cerca de 17% desde 30%, un tono que el mercado interpreta como neutral/dovish para el NQ (Bloomberg/CNBC, hoy).",
+  "geopolitica": "Taiwan anuncio que restringira (y criminalizara) las exportaciones de chips de IA avanzados a China para alinearse con EE.UU., lo que intensifica la friccion tecnologica con Pekin y agrega presion sobre semiconductores con exposicion china, un lastre puntual para el NQ en la apertura (Bloomberg, 16 oct).",
+  "petroleo": "El Brent cotiza cerca de USD 105.5 (-0.7%) y el WTI cerca de USD 97.4 (-1%), con el crudo cediendo levemente mientras el mercado evalua posibles sanciones de EE.UU. a la 'flota fantasma' rusa; la cautela energetica se suma a un tono de riesgo mixto para el NQ (CNBC, 16 oct).",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, evito senalar una decision de tasas en su dialogo con la directora del FMI en Bangkok y describio un endurecimiento monetario global 'sincronizado' sin comprometerse para el resto del ano; CME FedWatch ubica en ~28% la probabilidad de alza el 27-28 de octubre, un tono que reduce el riesgo hawkish inminente y da soporte al NQ (CNBC/Bloomberg, 16 oct).",
   "sources": [
-    "CNBC 09:06 ET - Stock market today: Live updates",
-    "CNBC 05:27 ET - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet'",
-    "Bloomberg/CNBC - Warsh Boosts Market Expectations of Fed Rate Hold in October"
+    "Bloomberg - Taiwan to Curb AI Chip Exports to China as Part of US Trade Deal (16 oct)",
+    "CNBC - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet' (16 oct)",
+    "CNBC - Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders' (16 oct)"
   ],
-  "as_of": "2026-10-16T13:10:08Z"
+  "as_of": "2026-10-16T13:40:17Z"
 }
