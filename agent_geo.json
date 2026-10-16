@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La tension en Oriente Medio se intensifica por ataques cerca del Estrecho de Hormuz y la escalada entre Arabia Saudita y los huties de Yemen, mientras Washington evalua aliviar sanciones a la 'flota fantasma' de petroleros de Rusia, Iran y Venezuela para frenar los fletes record, un cuadro que alimenta aversion al riesgo y presiona al NQ via mayores costos energeticos.",
-  "petroleo": "El Brent cotiza cerca de 105-106 USD/barril y el WTI cerca de 96-97 USD/barril, retrocediendo levemente (aprox. -0.5% a -1.4%) tras conocerse que EEUU evalua flexibilizar sanciones a la 'flota fantasma', aunque el crudo se mantiene elevado por el riesgo de suministro en Oriente Medio, lo que sigue siendo viento en contra para el NQ al presionar margenes e inflacion esperada.",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, hablando en Bangkok (reuniones del FMI/Banco Mundial), no dio senal sobre la decision de tasas de octubre y advirtio que el camino de la IA sera 'muy accidentado' con riesgo de inflacion, lo que redujo la probabilidad implicita de una subida en octubre a ~17% desde ~30% segun Bloomberg, aliviando algo de presion sobre el NQ pese a la aversion tecnologica por la deuda de centros de datos de IA (Oracle, CoreWeave).",
+  "geopolitica": "La tension en Oriente Medio se mantiene elevada por nuevos ataques a petroleros cerca del Estrecho de Hormuz y la escalada entre la coalicion liderada por Arabia Saudita y los huties de Yemen (incluidos ataques al aeropuerto de Riad), mientras Washington evalua aliviar sanciones a la 'flota fantasma' de petroleros de Rusia, Iran y Venezuela para frenar los fletes record, un cuadro que alimenta aversion al riesgo y presiona al NQ via mayores costos energeticos.",
+  "petroleo": "El Brent cotiza cerca de 105 USD/barril y el WTI cerca de 97 USD/barril, retrocediendo levemente tras conocerse que EEUU evalua flexibilizar sanciones a la 'flota fantasma', aunque el crudo se mantiene elevado por el riesgo de suministro en Oriente Medio, lo que sigue siendo viento en contra para el NQ al presionar margenes e inflacion esperada.",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, hablando en Bangkok en las reuniones del FMI/Banco Mundial, no dio senal sobre la decision de tasas de octubre y advirtio que el camino de la IA sera 'muy accidentado' con riesgo de inflacion, lo que redujo la probabilidad implicita de una subida en octubre, aliviando algo de presion sobre el NQ pese a la aversion tecnologica por la deuda ligada a centros de datos de IA (CoreWeave, Nvidia, AMD).",
   "sources": [
-    "Reuters/CNBC 16 Oct 2026 - Oil edges down as investors weigh possible US sanctions on shadow fleet",
-    "Bloomberg live blog 16 Oct 2026 - IMF/World Bank Bangkok meetings, Fed's Warsh AI remarks",
-    "CNBC/TheStreet 11:52 ET 16 Oct 2026 - Nasdaq Composite -1.1% intradia por preocupacion de deuda de IA"
+    "CNBC 16 Oct 2026 - Oil edges down as investors weigh possible US easing of shadow fleet sanctions",
+    "Mitrade/Business Standard 16 Oct 2026 - Fed Chair Warsh, Bangkok IMF meetings, no signal on October decision",
+    "Yahoo Finance/CNBC 16 Oct 2026 - Nasdaq falls as tech stocks slide on AI debt financing fears, oil elevated"
   ],
-  "as_of": "2026-10-16T19:06:44Z"
+  "as_of": "2026-10-16T20:06:41Z"
 }
