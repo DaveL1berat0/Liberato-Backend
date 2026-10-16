@@ -1,14 +1,11 @@
 {
-  "geopolitica": "China evalua nuevos controles de exportacion sobre modelos y chips de IA, y Taiwan estudia endurecer sus propias restricciones de chips de IA hacia China para alinearse con EE.UU., reavivando la guerra tecnologica que presiona a los semiconductores del NQ (Bloomberg, 16 Oct).",
-  "petroleo": "El Brent cotiza cerca de 105.8 USD/barril y el WTI cerca de 97.4 USD/barril, sostenidos por la escalada de ataques a buques petroleros en el Estrecho de Ormuz (mas de 20 buques atacados este mes), lo que eleva el riesgo de oferta y presiona costos energeticos en el NQ (oilprice.com, 16 Oct).",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, evito dar una senal clara sobre una suba de tasas en octubre durante su aparicion en las reuniones del FMI en Bangkok (23:30 ET del 15 Oct), manteniendo la incertidumbre de politica monetaria tras un IPC de septiembre mas caliente de lo esperado (CNBC, 16 Oct).",
+  "geopolitica": "Irán intensifica sus ataques a petroleros en el Estrecho de Ormuz y califica de \"inadecuada\" la respuesta de EE.UU. a sus términos de paz, elevando la prima de riesgo geopolítico y presionando al NQ a la baja.",
+  "petroleo": "El Brent cotiza cerca de 105,5 USD y el WTI cae alrededor de 1,7%, sostenidos por los riesgos de suministro en Oriente Medio y nuevas sanciones a la flota \"fantasma\" rusa, lo que añade presión inflacionaria y pesa sobre el NQ.",
+  "catalizador": "",
   "sources": [
-    "Bloomberg 16 Oct 2026 (China AI export controls)",
-    "Bloomberg 16 Oct 2026 (Taiwan AI chip curbs)",
-    "oilprice.com 16 Oct 2026 (Brent/WTI levels)",
-    "CNBC 14-15 Oct 2026 (Hormuz tanker attacks)",
-    "CNBC/Newsquawk 23:30 ET 15 Oct 2026 (Kevin Warsh Bangkok remarks)",
-    "CNBC 15 Oct 2026 (September CPI hot, Fed odds)"
+    "Benzinga 16 Oct 2026 (Iran flags inadequate US response to peace terms)",
+    "Vantage Markets 16 Oct 2026 (Oil Prices Today: Brent, WTI, shadow fleet sanctions)",
+    "The National 13 Oct 2026 (Strait of Hormuz attacks surge)"
   ],
-  "as_of": "2026-10-16T17:06:35Z"
+  "as_of": "2026-10-16T18:06:14Z"
 }
