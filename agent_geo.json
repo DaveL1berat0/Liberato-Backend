@@ -1,12 +1,10 @@
 {
-  "geopolitica": "EE.UU. evalua nuevas sanciones contra la 'flota fantasma' de petroleros rusos, lo que añade presion geopolitica y puede elevar la volatilidad de riesgo en la apertura del NQ (CNBC, hoy).",
-  "petroleo": "El Brent cotiza cerca de 105,5 USD/barril y el WTI cerca de 97,4 USD/barril, ambos levemente a la baja hoy mientras el mercado pondera las posibles sanciones a la 'flota fantasma' rusa frente al soporte de la tension Saudi-Houthi, un factor que de intensificarse presiona costos y pesa sobre el NQ (CNBC, hoy).",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, evito dar una senal clara sobre la trayectoria de tasas y elogio el ajuste monetario global coordinado ('no free riders'), manteniendo la incertidumbre de politica monetaria como catalizador clave para el NQ en la apertura (CNBC, hoy).",
+  "geopolitica": "Los hutíes intensifican sus ataques contra Arabia Saudí (aeropuerto de Riad) y persisten los incidentes en el Estrecho de Ormuz tras el hundimiento de un buque el 14-oct, manteniendo una prima de riesgo geopolítico que invita a cautela en el NQ intradía.",
+  "petroleo": "Brent cae 0.39% a 105.51 USD y WTI cae 0.55% a 97.43 USD (CNBC/Reuters) ante la posible relajación de sanciones de EE.UU. a la 'flota fantasma' de Rusia/Irán/Venezuela, lo que alivia algo la presión inflacionaria que pesa sobre el NQ.",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, destacó el potencial de la IA en su intervención en las reuniones del FMI/Banco Mundial en Bangkok, impulsando los futuros del Nasdaq-100 hasta un 0.2% y reduciendo la probabilidad implícita de una subida de tasas en la reunión del 27-28 de octubre de ~30% a ~17% (Bloomberg), un catalizador alcista de última hora para el NQ.",
   "sources": [
-    "CNBC 07:25 ET - Stock market today: Live updates (futuros premarket)",
-    "CNBC 07:40 ET - Nasdaq-100 futures quote (@ND.1)",
-    "CNBC hoy - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet'",
-    "CNBC hoy - Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders'"
+    "CNBC/Reuters 20:12 ET",
+    "Bloomberg 00:00 ET"
   ],
-  "as_of": "2026-10-16T11:40:48Z"
+  "as_of": "2026-10-16T12:10:11Z"
 }
