@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Taiwan prepara nuevas restricciones a la exportacion de chips avanzados de IA hacia China para alinearse con EE.UU., lo que reaviva la tension tecnologica entre Washington y Pekin y presiona a los semiconductores en el NQ (Bloomberg, ~08:00 ET).",
-  "petroleo": "El Brent cotiza cerca de 105.5 USD/barril (-0.4%) y el WTI en 97.4 USD/barril (-0.6%), presionados por reportes de que EE.UU. podria aliviar sanciones a la 'flota fantasma' rusa, en medio de tensiones por ataques a petroleros en el estrecho de Ormuz (Investing.com, ~08:30 ET).",
-  "catalizador": "El gobernador de la Fed Kevin Warsh moderó las apuestas de una subida de tasas en octubre al describir a la IA como un posible 'shock de oferta positivo' sin comprometerse a un alza inmediata, lo que impulso a los futuros del Nasdaq 100 tras el selloff tecnologico reciente (Bloomberg/Investing.com, ~08:00 ET).",
+  "geopolitica": "Las acciones de semiconductores siguen bajo presion por la competencia china (CXMT en memoria): el ETF SMH cae 0.7% en la apertura y acumula -7.4% semanal, lastrando al Nasdaq por su alto peso tecnologico (CNBC, 09:06 ET).",
+  "petroleo": "El Brent cae 0.74% a 105.14 USD y el WTI baja 1% a 96.98 USD tras conocerse que EE.UU. evalua aliviar sanciones a la 'flota fantasma' rusa/irani/venezolana y la IEA libera mas diesel, lo que reduce la prima de riesgo energetico (CNBC, 05:27 ET).",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, no dio senales claras sobre la decision de tasas del 27-28 de octubre en su conversacion en el FMI en Bangkok; la probabilidad de una subida cayo a cerca de 17% desde 30%, un tono que el mercado interpreta como neutral/dovish para el NQ (Bloomberg/CNBC, hoy).",
   "sources": [
-    "Bloomberg 08:00 ET",
-    "Investing.com 08:30 ET",
-    "Barchart 08:15 ET"
+    "CNBC 09:06 ET - Stock market today: Live updates",
+    "CNBC 05:27 ET - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet'",
+    "Bloomberg/CNBC - Warsh Boosts Market Expectations of Fed Rate Hold in October"
   ],
-  "as_of": "2026-10-16T12:39:43Z"
+  "as_of": "2026-10-16T13:10:08Z"
 }
