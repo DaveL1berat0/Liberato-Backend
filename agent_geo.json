@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Ataques a buques cisterna cerca del Estrecho de Hormuz y la campana de presion economica del Tesoro de EEUU (Bessent) contra Iran mantienen la prima de riesgo geopolitico, factor de aversion al riesgo para el NQ.",
-  "petroleo": "El WTI cae cerca de 1.7% a unos 95.84 USD/barril y el Brent se mantiene cerca de 105.46 USD/barril, con los ataques en Hormuz presionando al alza compensados por senales de EEUU de posible relajacion de sanciones a la 'flota fantasma' y un fuerte drenaje de inventarios de crudo.",
-  "catalizador": "El dato de inflacion subyacente (core CPI) sorprendio al alza (0.3% m/m vs 0.2% esperado, 2.6% a/a), enfriando las expectativas de recortes de tasas de la Fed y dejando los futuros del Nasdaq 100 ligeramente negativos (-0.08%) pese a que Dow y S&P suben.",
+  "geopolitica": "Trump mantiene en pausa los ataques a Iran hasta despues de las elecciones de medio termino (3 nov), pero Iran sigue atacando buques en el Estrecho de Ormuz, lo que mantiene una prima de riesgo geopolitico que favorece activos defensivos y presiona al NQ (CBS News / Fox News, 15 oct).",
+  "petroleo": "El Brent cotiza en torno a 105,45 USD (-0,44%) y el WTI en 97,39 USD (-0,59%), presionados al alza por los ataques en el Estrecho de Ormuz; el encarecimiento energetico eleva costos de insumos y pesa sobre el apetito de riesgo en el NQ (CNBC, 15 oct; 5paisa, 16 oct).",
+  "catalizador": "Los futuros del Nasdaq-100 bajan cerca de 0,08% en la apertura tras una racha de ocho sesiones consecutivas en rojo para semiconductores y nombres de IA (la mas larga desde 2008), alimentada por temores sobre el financiamiento con deuda de CoreWeave y el gasto en centros de datos (Reuters via Sunday Guardian / Bloomberg, 16 oct).",
   "sources": [
-    "Vantage Markets ~02:15 UTC (~22:15 ET prev. dia)",
-    "Sunday Guardian/Reuters 06:21 ET",
-    "Benzinga 16 oct 2026 (Bessent/Iran/Treasury yields)",
-    "Oilprice.com 16 oct 2026 (Hormuz flows, Kpler data)"
+    "CNBC 2026-10-15",
+    "Fox News 2026-10-15",
+    "Reuters 06:21 ET",
+    "Bloomberg 2026-10-16"
   ],
-  "as_of": "2026-10-16T15:39:20Z"
+  "as_of": "2026-10-16T16:06:45Z"
 }
