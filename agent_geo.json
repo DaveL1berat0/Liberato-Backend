@@ -1,12 +1,12 @@
 {
-  "geopolitica": "EEUU evalua suavizar las sanciones a la 'shadow fleet' que transporta crudo ruso, iraní y venezolano para bajar los fletes record antes de las elecciones de mitad de mandato (Reuters, 16 oct), lo que reduce algo la prima de riesgo geopolitico que venia sosteniendo al petroleo y, por contagio, al sentimiento de riesgo del NQ.",
-  "petroleo": "Brent ronda 105-106 USD y WTI cerca de 95-96 USD, ambos a la baja tras conocerse que Washington negocia aliviar sanciones al 'shadow fleet' (Reuters, 16 oct, madrugada ET), un petroleo mas barato alivia presion inflacionaria y es marginalmente positivo para el NQ.",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, hablo hoy en Bangkok (IMF/World Bank meetings) y no dio señal clara sobre una suba de tasas en la reunion del 27-28 de octubre, advirtiendo que la transicion de IA sera 'muy accidentada'; el mercado leyo esto como alivio y la probabilidad implicita de hike cayo de ~27% a ~15% (CNBC/Bloomberg, 16 oct, madrugada ET), lo que favorece a las tecnologicas del NQ.",
+  "geopolitica": "EE.UU. evalua nuevas sanciones contra la 'flota fantasma' de petroleros rusos, lo que añade presion geopolitica y puede elevar la volatilidad de riesgo en la apertura del NQ (CNBC, hoy).",
+  "petroleo": "El Brent cotiza cerca de 105,5 USD/barril y el WTI cerca de 97,4 USD/barril, ambos levemente a la baja hoy mientras el mercado pondera las posibles sanciones a la 'flota fantasma' rusa frente al soporte de la tension Saudi-Houthi, un factor que de intensificarse presiona costos y pesa sobre el NQ (CNBC, hoy).",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, evito dar una senal clara sobre la trayectoria de tasas y elogio el ajuste monetario global coordinado ('no free riders'), manteniendo la incertidumbre de politica monetaria como catalizador clave para el NQ en la apertura (CNBC, hoy).",
   "sources": [
-    "Reuters 16 oct 2026 (via Investing.com) - oil edges down as investors weigh possible US sanctions easing on shadow fleet",
-    "Vantage Markets 16 oct 2026 02:15 UTC - Brent $105.46 (-0.21%), WTI $95.84 (-1.74%)",
-    "CNBC 16 oct 2026 - Fed's Warsh withholds rate signal, says AI development path will be very bumpy",
-    "Bloomberg Live Blog 16 oct 2026 - IMF/World Bank Annual Meetings Bangkok, Fed Warsh"
+    "CNBC 07:25 ET - Stock market today: Live updates (futuros premarket)",
+    "CNBC 07:40 ET - Nasdaq-100 futures quote (@ND.1)",
+    "CNBC hoy - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet'",
+    "CNBC hoy - Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders'"
   ],
-  "as_of": "2026-10-16T11:07:10Z"
+  "as_of": "2026-10-16T11:40:48Z"
 }
