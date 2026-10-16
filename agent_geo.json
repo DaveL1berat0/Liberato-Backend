@@ -1,14 +1,12 @@
 {
-  "geopolitica": "Hunden otro buque en el Estrecho de Ormuz (mas de 20 ataques desde el 1 de octubre, segun UKMTO) y un misil houthi golpeo la sede de Aramco en Dhahran el 13 de octubre, sosteniendo la prima de riesgo geopolitico en Oriente Medio y presionando el apetito por riesgo del NQ (CNBC, Reuters, Al-Monitor).",
-  "petroleo": "Brent cotiza en torno a 105 USD/barril y WTI cerca de 96 USD/barril, aun muy por encima de 100 USD por el riesgo de suministro en Ormuz y el ataque a Aramco, aunque se moderan tras reportes de que EE.UU. evalua aliviar sanciones a la 'flota fantasma' rusa; la volatilidad del crudo anade presion a costos y margenes tecnologicos del NQ (CNBC, Arbiterz).",
-  "catalizador": "El IPP de septiembre subio 6.3% a/a y 1.3% m/m (el mayor salto desde 2022), tras el IPC caliente del miercoles, elevando las probabilidades de un alza de tasas de la Fed el 27-28 de octubre y provocando una rotacion de ventas en IA/semiconductores (Nvidia, AMD, TSMC) que arrastra al NQ pese al rebote del Dow (CNBC, Yahoo Finance).",
+  "geopolitica": "EEUU evalua suavizar las sanciones a la 'shadow fleet' que transporta crudo ruso, iraní y venezolano para bajar los fletes record antes de las elecciones de mitad de mandato (Reuters, 16 oct), lo que reduce algo la prima de riesgo geopolitico que venia sosteniendo al petroleo y, por contagio, al sentimiento de riesgo del NQ.",
+  "petroleo": "Brent ronda 105-106 USD y WTI cerca de 95-96 USD, ambos a la baja tras conocerse que Washington negocia aliviar sanciones al 'shadow fleet' (Reuters, 16 oct, madrugada ET), un petroleo mas barato alivia presion inflacionaria y es marginalmente positivo para el NQ.",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, hablo hoy en Bangkok (IMF/World Bank meetings) y no dio señal clara sobre una suba de tasas en la reunion del 27-28 de octubre, advirtiendo que la transicion de IA sera 'muy accidentada'; el mercado leyo esto como alivio y la probabilidad implicita de hike cayo de ~27% a ~15% (CNBC/Bloomberg, 16 oct, madrugada ET), lo que favorece a las tecnologicas del NQ.",
   "sources": [
-    "CNBC 14-oct (Container ship sinks in Strait of Hormuz as Iran steps up attacks)",
-    "Reuters/Al-Monitor 13-oct (Missile hits headquarters of Saudi Aramco in Dhahran)",
-    "Arbiterz 15-oct (Oil Prices Today: Brent Crude Eases to $105.3 Per Barrel, WTI ~$96.44)",
-    "CNBC 14-oct (September PPI report: +6.3% y/y, hot inflation, largest since 2022)",
-    "CNBC 13:13 ET (Stock market live updates: Dow jumps 400 points, Nasdaq slides as investors rotate out of tech)",
-    "CNBC 15-oct (Nvidia, AMD, Dell sell-off in global tech rout on AI funding worries)"
+    "Reuters 16 oct 2026 (via Investing.com) - oil edges down as investors weigh possible US sanctions easing on shadow fleet",
+    "Vantage Markets 16 oct 2026 02:15 UTC - Brent $105.46 (-0.21%), WTI $95.84 (-1.74%)",
+    "CNBC 16 oct 2026 - Fed's Warsh withholds rate signal, says AI development path will be very bumpy",
+    "Bloomberg Live Blog 16 oct 2026 - IMF/World Bank Annual Meetings Bangkok, Fed Warsh"
   ],
-  "as_of": "2026-10-15T21:06:41Z"
+  "as_of": "2026-10-16T11:07:10Z"
 }
