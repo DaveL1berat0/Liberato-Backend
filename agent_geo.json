@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Taiwan anuncio que restringira (y criminalizara) las exportaciones de chips de IA avanzados a China para alinearse con EE.UU., lo que intensifica la friccion tecnologica con Pekin y agrega presion sobre semiconductores con exposicion china, un lastre puntual para el NQ en la apertura (Bloomberg, 16 oct).",
-  "petroleo": "El Brent cotiza cerca de USD 105.5 (-0.7%) y el WTI cerca de USD 97.4 (-1%), con el crudo cediendo levemente mientras el mercado evalua posibles sanciones de EE.UU. a la 'flota fantasma' rusa; la cautela energetica se suma a un tono de riesgo mixto para el NQ (CNBC, 16 oct).",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, evito senalar una decision de tasas en su dialogo con la directora del FMI en Bangkok y describio un endurecimiento monetario global 'sincronizado' sin comprometerse para el resto del ano; CME FedWatch ubica en ~28% la probabilidad de alza el 27-28 de octubre, un tono que reduce el riesgo hawkish inminente y da soporte al NQ (CNBC/Bloomberg, 16 oct).",
+  "geopolitica": "Taiwan anuncio que endurecera (y criminalizara) las exportaciones de chips y servidores de IA avanzados a China como parte de su alineamiento comercial con EE.UU., intensificando la friccion tecnologica con Pekin y presionando a las acciones de semiconductores con exposicion china, un lastre puntual para el NQ en la apertura (Bloomberg, 16 oct).",
+  "petroleo": "El Brent cotiza cerca de USD 105.5 (-0.4%) y el WTI cerca de USD 97.4 (-0.5%) en la madrugada del viernes, mientras el mercado evalua que la administracion Trump estudia relajar sanciones sobre la 'flota fantasma' de buques que transportan crudo ruso, iraní y venezolano para bajar los fletes globales; el tono de oferta mas laxa limita el impacto energetico sobre el NQ (Reuters/CNBC, 16 oct).",
+  "catalizador": "El presidente de la Fed, Kevin Warsh, hablo en Bangkok (reunion FMI-Banco Mundial) junto a la directora Georgieva y evito dar una señal sobre la decision de tasas del 27-28 de octubre, reiterando su rechazo a usar guidance explicita; la probabilidad de alza implicita en mercados cayo a ~17% desde ~30% durante su intervencion, lo que reduce el riesgo hawkish inmediato y da soporte al NQ (Bloomberg/CNBC, 16 oct).",
   "sources": [
     "Bloomberg - Taiwan to Curb AI Chip Exports to China as Part of US Trade Deal (16 oct)",
-    "CNBC - Oil edges down as investors weigh possible U.S. sanctions on 'shadow fleet' (16 oct)",
-    "CNBC - Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders' (16 oct)"
+    "Reuters/CNBC - Oil edges down as investors weigh possible US sanctions easing on 'shadow fleet' (16 oct)",
+    "CNBC/Bloomberg - Fed's Warsh withholds rate signal at IMF Bangkok fireside chat with Georgieva (16 oct)"
   ],
-  "as_of": "2026-10-16T13:40:17Z"
+  "as_of": "2026-10-16T14:39:22Z"
 }
