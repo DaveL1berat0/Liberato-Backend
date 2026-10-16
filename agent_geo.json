@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Taiwan anuncio que endurecera (y criminalizara) las exportaciones de chips y servidores de IA avanzados a China como parte de su alineamiento comercial con EE.UU., intensificando la friccion tecnologica con Pekin y presionando a las acciones de semiconductores con exposicion china, un lastre puntual para el NQ en la apertura (Bloomberg, 16 oct).",
-  "petroleo": "El Brent cotiza cerca de USD 105.5 (-0.4%) y el WTI cerca de USD 97.4 (-0.5%) en la madrugada del viernes, mientras el mercado evalua que la administracion Trump estudia relajar sanciones sobre la 'flota fantasma' de buques que transportan crudo ruso, iraní y venezolano para bajar los fletes globales; el tono de oferta mas laxa limita el impacto energetico sobre el NQ (Reuters/CNBC, 16 oct).",
-  "catalizador": "El presidente de la Fed, Kevin Warsh, hablo en Bangkok (reunion FMI-Banco Mundial) junto a la directora Georgieva y evito dar una señal sobre la decision de tasas del 27-28 de octubre, reiterando su rechazo a usar guidance explicita; la probabilidad de alza implicita en mercados cayo a ~17% desde ~30% durante su intervencion, lo que reduce el riesgo hawkish inmediato y da soporte al NQ (Bloomberg/CNBC, 16 oct).",
+  "geopolitica": "El desplome de semiconductores entra en su octava sesion consecutiva (la peor racha desde 2008) tras el avance en memoria de la china ChangXin Memory, que alimenta temores de sobreoferta y golpea a Nvidia, SK Hynix y Samsung, lastrando al NQ por su alto peso en tech/semis.",
+  "petroleo": "El Brent cae a 105,51 USD/barril (-0,39%) ante reportes de que EEUU evalua aliviar las sanciones a la 'flota fantasma' de crudo ruso, irani y venezolano para enfriar los fletes, lo que reduciria el riesgo de oferta y da un alivio marginal a la presion inflacionaria que pesa sobre el NQ.",
+  "catalizador": "El PPI de septiembre subio 6,3% interanual (vs 5,5% esperado), el mayor incremento desde 2022, y el presidente de la Fed Kevin Warsh evito confirmar una pausa en la proxima reunion del 27-28 de octubre, generando volatilidad premarket en el NQ entre el temor a inflacion y la expectativa de que la Fed mantenga tasas.",
   "sources": [
-    "Bloomberg - Taiwan to Curb AI Chip Exports to China as Part of US Trade Deal (16 oct)",
-    "Reuters/CNBC - Oil edges down as investors weigh possible US sanctions easing on 'shadow fleet' (16 oct)",
-    "CNBC/Bloomberg - Fed's Warsh withholds rate signal at IMF Bangkok fireside chat with Georgieva (16 oct)"
+    "CNBC 08:30 ET",
+    "CNBC 09:30 ET",
+    "CNBC (Daily Open, AM ET)",
+    "CNBC (oil shadow fleet report, early AM ET)"
   ],
-  "as_of": "2026-10-16T14:39:22Z"
+  "as_of": "2026-10-16T15:07:28Z"
 }
