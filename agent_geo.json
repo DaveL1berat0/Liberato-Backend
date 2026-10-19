@@ -1,12 +1,11 @@
 {
-  "geopolitica": "La guerra EEUU-Iran entra en su octavo mes de estancamiento: Iran dijo el 18/10 que tiene un 'nuevo plan operativo' ante posibles ataques de EEUU/Israel y se reportaron ataques a buques cerca de Arabia Saudita, Yemen y EAU, lo que mantiene elevada la prima de riesgo geopolitico y presiona el sentimiento de riesgo para el NQ.",
-  "petroleo": "Brent cae mas de 1% a ~108 USD/barril y WTI retrocede 0.3% a 101.03 USD hoy (19/10), al moderarse momentaneamente el temor a interrupcion de suministro en el Estrecho de Ormuz, lo que alivia ligeramente la presion de costos energeticos sobre las tecnologicas del NQ.",
-  "catalizador": "El rendimiento del Treasury a 10 anos bajo a 5.079% mientras el mercado digiere datos de inflacion de septiembre (IPC +3.7% anual, PPI +6.3% anual) de cara a la decision de la Fed del 28/10 (mercado da >85% de probabilidad de mantener tasas), catalizador clave porque yields mas bajos alivian la presion de valuacion sobre el Nasdaq tras el selloff de IA del viernes (-2.5%); los futuros del Nasdaq 100 suben 1% esta mañana.",
+  "geopolitica": "Putin propuso una cumbre trilateral con Trump y Xi sobre Ucrania sin incluir a Zelenskyy, mientras colapsa el alto el fuego energetico tras un ataque ucraniano con mas de 1.000 drones contra un terminal petrolero y refineria en San Petersburgo, elevando el riesgo geopolitico que presiona al NQ.",
+  "petroleo": "Brent cae 1.88% a 107.80 USD/barril y WTI baja 0.84% a 100.56 USD/barril en la sesion del lunes, presionados por expectativas de mayor oferta rusa tras el alivio de sanciones de EEUU al diesel, aunque los ataques de Iran a petroleros en el Estrecho de Ormuz mantienen el piso de precios elevado.",
+  "catalizador": "Las acciones tecnologicas y de semiconductores rebotan el lunes tras la peor semana del Nasdaq desde junio (-4.5%), con futuros del Nasdaq-100 subiendo cerca de 0.4% en premarket, aunque BTIG advierte usar el rebote de semis para reducir exposicion.",
   "sources": [
-    "CNBC 18/10/2026 (Iran US war - operational plan / shipping attacks)",
-    "CNBC 19/10/2026 (oil prices today Brent WTI)",
-    "CNBC 19/10/2026 (Treasury yields move lower)",
-    "CNBC 19/10/2026 (Jim Cramer top 10 things to watch Monday)"
+    "CNBC 19 Oct 2026 (Putin-Trump-Xi summit proposal)",
+    "CNBC/Oilprice 19 Oct 2026 (oil prices Hormuz/diesel deal)",
+    "CNBC 09:35 ET (stock market live updates)"
   ],
-  "as_of": "2026-10-19T13:40:29Z"
+  "as_of": "2026-10-19T14:07:30Z"
 }
