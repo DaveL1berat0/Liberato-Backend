@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Las tensiones en el Estrecho de Ormuz se intensifican tras ataques a al menos 12 buques en la ultima semana (6 el domingo) mientras Trump evalua una decision 'muy pronto' sobre Iran, lo que mantiene elevada la prima de riesgo geopolitico que presiona al NQ (Bloomberg/CBS News, 18-19 oct).",
-  "petroleo": "El WTI sube 2.6% hasta 99.02 USD/barril por las tensiones en el Estrecho de Ormuz, un encarecimiento energetico que añade presion de costos sobre el Nasdaq (Bloomberg/Yahoo Finance, 19 oct).",
-  "catalizador": "El Nasdaq 100 rebota 1.9% liderado por semiconductores tras nueve sesiones de caidas, con los inversores a la espera de los resultados de Meta y Tesla esta semana como prueba de confianza en el trade de IA (Bloomberg, 19 oct).",
+  "geopolitica": "Los hutíes reivindicaron ataques con misiles y drones contra instalaciones de Aramco y petroleros en el Golfo Pérsico/Estrecho de Ormuz, mientras Putin propuso una cumbre trilateral con Trump y Xi sobre Ucrania; la escalada en Oriente Medio eleva la prima de riesgo y presiona al NQ a la baja pese al potencial alivio diplomático con Rusia.",
+  "petroleo": "El Brent cotiza cerca de 109,55 dólares (-0,28%) y el WTI en 103,66 dólares (+2,22%) según CNBC, tras los ataques hutíes a instalaciones de Aramco que reavivan el temor a una disrupción de oferta en el Golfo, encareciendo costos energéticos que presionan márgenes tecnológicos y al NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1,5%-1,9% con compradores regresando tras la caída y los semiconductores rompiendo una racha de ocho sesiones a la baja tras su peor semana desde junio por el selloff de IA, impulsando al NQ en la apertura.",
   "sources": [
-    "Bloomberg 19 oct (premarket/intradia)",
-    "Yahoo Finance 19 oct",
-    "CBS News 18 oct",
-    "The National 14 oct"
+    "CNBC 19 oct 2026",
+    "Bloomberg 19 oct 2026",
+    "CNBC (Houthi/Aramco) 18 oct 2026"
   ],
-  "as_of": "2026-10-19T19:06:24Z"
+  "as_of": "2026-10-19T20:06:47Z"
 }
