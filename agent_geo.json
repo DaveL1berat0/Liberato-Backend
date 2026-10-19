@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Bloomberg informa hoy que Zelenskyy afirma que Trump presiona a Kiev para que ceda en las negociaciones de paz con Rusia, mientras Ucrania mantiene sus ataques a refinerias y petroleros rusos en el Mar Negro, sosteniendo elevada la prima de riesgo geopolitico que pesa sobre el sentimiento de riesgo en el NQ.",
-  "petroleo": "Brent cotiza en torno a 107.8 USD/barril y WTI cerca de 100.3-100.9 USD/barril este lunes (Oilprice.com/CNBC), presionados al alza por los ataques ucranianos a refinerias y petroleros rusos en el Mar Negro, aunque el acuerdo Trump-Putin de suministro de diesel ruso limita las subidas; un crudo mas caro presiona costos y sentimiento de riesgo, pesando levemente sobre el NQ.",
-  "catalizador": "Los semiconductores rebotan con fuerza hoy (indice SOX +2.9%, Nasdaq-100 +1.3% a media sesion segun Bloomberg) cortando una racha de ocho sesiones a la baja -la mas larga en 18 anos- tras mejoras de Goldman Sachs en CoreWeave y de JPMorgan en Intel; no hay catalizador de Fed/Powell ni dato macro sorpresa en las ultimas horas, ya que la proxima reunion de la Fed es el 27-28 de octubre.",
+  "geopolitica": "Tension entre Zelenskyy y Trump por la reanudacion de ataques ucranianos a refinerias de petroleo rusas (Trump las califico de verguenza por presionar al alza el crudo), mientras Trump firmo ademas una orden que levanta sanciones clave a Rusia bajo la Ley Graham para bajar precios energeticos; el choque mantiene nerviosismo geopolitico que puede pesar sobre el apetito por riesgo en el NQ.",
+  "petroleo": "Brent cae cerca de 2% a unos 107,6 USD/barril y WTI retrocede a unos 99,5 USD/barril (02:19 ET), tras la exencion de sanciones petroleras a Rusia anunciada por Trump que alivia temores de oferta pese a las tensiones por los ataques a refinerias rusas y el riesgo persistente en Ormuz; un crudo mas bajo suele ser positivo para el NQ al reducir presion inflacionaria.",
+  "catalizador": "",
   "sources": [
-    "Bloomberg 19 oct 2026 (Zelenskyy: Trump presiona a Kiev)",
-    "Oilprice.com 19 oct 2026 (Brent 107.84 / WTI 100.29 USD)",
-    "CNBC 19 oct 2026 (WTI Nov'26 contrato 100.93 USD, quotes)",
-    "Bloomberg 19 oct 2026 (rebote semiconductores +2.9%, Nasdaq-100 +1.3% medio dia)"
+    "Reuters (via RTE.ie) ~02:19 ET",
+    "Stripes.com / AP 15 oct 2026 (Zelenskyy ordena nuevos ataques a refinerias rusas)",
+    "Ara.cat (Trump critica a Zelenski) 15-16 oct 2026"
   ],
-  "as_of": "2026-10-19T15:07:31Z"
+  "as_of": "2026-10-19T15:41:47Z"
 }
