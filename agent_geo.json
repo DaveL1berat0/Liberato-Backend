@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Putin propuso una cumbre trilateral con Trump y Xi sobre Ucrania sin incluir a Zelenskyy, mientras colapsa el alto el fuego energetico tras un ataque ucraniano con mas de 1.000 drones contra un terminal petrolero y refineria en San Petersburgo, elevando el riesgo geopolitico que presiona al NQ.",
-  "petroleo": "Brent cae 1.88% a 107.80 USD/barril y WTI baja 0.84% a 100.56 USD/barril en la sesion del lunes, presionados por expectativas de mayor oferta rusa tras el alivio de sanciones de EEUU al diesel, aunque los ataques de Iran a petroleros en el Estrecho de Ormuz mantienen el piso de precios elevado.",
-  "catalizador": "Las acciones tecnologicas y de semiconductores rebotan el lunes tras la peor semana del Nasdaq desde junio (-4.5%), con futuros del Nasdaq-100 subiendo cerca de 0.4% en premarket, aunque BTIG advierte usar el rebote de semis para reducir exposicion.",
+  "geopolitica": "Los ataques a petroleros en el Estrecho de Ormuz alcanzan su nivel semanal mas alto desde el inicio de la guerra Iran-EEUU (buque incendiado el 10 oct, supertanker que choco con una mina y otro petrolero en llamas el 15 oct), manteniendo elevada la prima de riesgo geopolitico que presiona el sentimiento de riesgo en el NQ.",
+  "petroleo": "Brent cae 1.9% a 107.8 USD/barril y WTI baja cerca de 1% a 100.4-100.6 USD/barril este lunes 19 de octubre, tras la decision de Trump de aliviar sanciones y arenceles al petroleo/diesel ruso (expectativa de mas oferta), aunque los ataques en Ormuz limitan la caida; un crudo mas barato alivia costos de insumos y resulta levemente positivo para margenes tech en el NQ.",
+  "catalizador": "Las tecnologicas y semiconductores rebotan hoy tras la peor semana del Nasdaq desde junio (-4.5%), con el Nasdaq-100 recuperando terreno en la apertura; no hay catalizador confirmado de Fed/Powell ni dato macro sorpresa en las ultimas horas.",
   "sources": [
-    "CNBC 19 Oct 2026 (Putin-Trump-Xi summit proposal)",
-    "CNBC/Oilprice 19 Oct 2026 (oil prices Hormuz/diesel deal)",
-    "CNBC 09:35 ET (stock market live updates)"
+    "ARY News/gvwire 19 Oct 2026 (ataques tanqueros Ormuz)",
+    "HDFC Sky 19 Oct 2026 (Brent/WTI, alivio sanciones Rusia)",
+    "FinanceFeeds 19 Oct 2026 (Brent 108, diesel, sanciones)",
+    "Bloomberg/Yahoo Finance 19 Oct 2026 (rebote tech, Nasdaq-100)"
   ],
-  "as_of": "2026-10-19T14:07:30Z"
+  "as_of": "2026-10-19T14:40:54Z"
 }
