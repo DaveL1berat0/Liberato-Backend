@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Tension entre Zelenskyy y Trump por la reanudacion de ataques ucranianos a refinerias de petroleo rusas (Trump las califico de verguenza por presionar al alza el crudo), mientras Trump firmo ademas una orden que levanta sanciones clave a Rusia bajo la Ley Graham para bajar precios energeticos; el choque mantiene nerviosismo geopolitico que puede pesar sobre el apetito por riesgo en el NQ.",
-  "petroleo": "Brent cae cerca de 2% a unos 107,6 USD/barril y WTI retrocede a unos 99,5 USD/barril (02:19 ET), tras la exencion de sanciones petroleras a Rusia anunciada por Trump que alivia temores de oferta pese a las tensiones por los ataques a refinerias rusas y el riesgo persistente en Ormuz; un crudo mas bajo suele ser positivo para el NQ al reducir presion inflacionaria.",
-  "catalizador": "",
+  "geopolitica": "Trump invoco la exencion de interes nacional de la ley Graham para suspender aranceles a bienes y grandes compradores de energia rusa, mientras persisten ataques ucranianos a refinerias rusas (criticados por Trump como factor que presiona al alza el crudo) y ataques a petroleros en el Golfo Persico/Estrecho de Ormuz, lo que mantiene elevado el riesgo geopolitico que presiona el sentimiento de riesgo (CNBC, 19/10/2026).",
+  "petroleo": "El Brent cae cerca de 1.9% a unos 107.80 USD/barril y el WTI baja 0.84% a 100.56 USD/barril ante expectativas de mayor oferta rusa tras el alivio de sanciones, aunque los ataques a refinerias e infraestructura petrolera en el Golfo limitan la caida; un crudo mas bajo suele aliviar presion inflacionaria y favorecer al NQ (CNBC, 19/10/2026).",
+  "catalizador": "Los inversores compran la caida en tecnologia tras la peor semana del Nasdaq desde junio (-4.5%), con el VIX en maximos desde junio y los rendimientos del Tesoro a 10 anos moviendose de forma mixta (~5.08%-5.14%) ante un mercado que descuenta con mas de 80% de probabilidad que la Fed mantenga tasas sin cambios en su reunion del 28 de octubre, lo que podria impulsar al NQ en la apertura (CNBC, 19/10/2026).",
   "sources": [
-    "Reuters (via RTE.ie) ~02:19 ET",
-    "Stripes.com / AP 15 oct 2026 (Zelenskyy ordena nuevos ataques a refinerias rusas)",
-    "Ara.cat (Trump critica a Zelenski) 15-16 oct 2026"
+    "CNBC 19/10/2026 - Investors are buying on Monday despite fear the AI trade nightmare scenario is far from over",
+    "CNBC 19/10/2026 - Treasury yields move higher as investors assess U.S. inflation backdrop",
+    "CNBC 18/10/2026 - Oil prices slide as sanctions relief on Russian crude raises hopes of increased supply",
+    "CNBC 18/10/2026 - Nasdaq futures gain as investors buy the dip in the AI trade"
   ],
-  "as_of": "2026-10-19T15:41:47Z"
+  "as_of": "2026-10-19T16:08:34Z"
 }
