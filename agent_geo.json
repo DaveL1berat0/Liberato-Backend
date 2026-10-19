@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump invoco la exencion de interes nacional de la ley Graham para suspender aranceles a bienes y grandes compradores de energia rusa, mientras persisten ataques ucranianos a refinerias rusas (criticados por Trump como factor que presiona al alza el crudo) y ataques a petroleros en el Golfo Persico/Estrecho de Ormuz, lo que mantiene elevado el riesgo geopolitico que presiona el sentimiento de riesgo (CNBC, 19/10/2026).",
-  "petroleo": "El Brent cae cerca de 1.9% a unos 107.80 USD/barril y el WTI baja 0.84% a 100.56 USD/barril ante expectativas de mayor oferta rusa tras el alivio de sanciones, aunque los ataques a refinerias e infraestructura petrolera en el Golfo limitan la caida; un crudo mas bajo suele aliviar presion inflacionaria y favorecer al NQ (CNBC, 19/10/2026).",
-  "catalizador": "Los inversores compran la caida en tecnologia tras la peor semana del Nasdaq desde junio (-4.5%), con el VIX en maximos desde junio y los rendimientos del Tesoro a 10 anos moviendose de forma mixta (~5.08%-5.14%) ante un mercado que descuenta con mas de 80% de probabilidad que la Fed mantenga tasas sin cambios en su reunion del 28 de octubre, lo que podria impulsar al NQ en la apertura (CNBC, 19/10/2026).",
+  "geopolitica": "Trump advirtio que Rusia podria unir fuerzas con Iran si Teheran vuelve a atacar en el Estrecho de Ormuz, lo que mantiene la prima de riesgo geopolitico y presiona al NQ hacia aversion al riesgo intradia (Fox News, 18 oct., noche ET).",
+  "petroleo": "El Brent cae ~1.3% a 108.43 USD y el WTI a 100.88 USD tras la exencion de sanciones de Trump que permitiria mas suministro de combustible ruso, lo que alivia algo la presion inflacionaria por energia y resulta moderadamente favorable para el NQ (Reuters via Business Standard, 19 oct., ~19:40 ET ref. cierre previo).",
+  "catalizador": "El secretario del Tesoro Bessent vinculo la inflacion de septiembre a un 'shock energetico', y junto con el rebote de los chips el Nasdaq 100 sube cerca de 1.9-1.4% mientras el Dow cae, reflejando rotacion hacia tecnologia que favorece al NQ en la apertura (Bloomberg/TradingView-Benzinga, 19 oct.).",
   "sources": [
-    "CNBC 19/10/2026 - Investors are buying on Monday despite fear the AI trade nightmare scenario is far from over",
-    "CNBC 19/10/2026 - Treasury yields move higher as investors assess U.S. inflation backdrop",
-    "CNBC 18/10/2026 - Oil prices slide as sanctions relief on Russian crude raises hopes of increased supply",
-    "CNBC 18/10/2026 - Nasdaq futures gain as investors buy the dip in the AI trade"
+    "Fox News 18 oct. (noche ET) - tension Iran-Rusia en Ormuz",
+    "Reuters via Business Standard 19 oct. - Brent 108.43 USD / WTI 100.88 USD, exencion de sanciones a Rusia",
+    "Bloomberg 19 oct. - rebote liderado por chips, Nasdaq 100 +1.9%",
+    "TradingView/Benzinga 19 oct. - Bessent vincula inflacion de septiembre a 'energy shock'"
   ],
-  "as_of": "2026-10-19T16:08:34Z"
+  "as_of": "2026-10-19T17:06:36Z"
 }
