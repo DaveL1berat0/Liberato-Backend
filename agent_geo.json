@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los hutíes reivindicaron ataques con misiles y drones contra instalaciones de Aramco y petroleros en el Golfo Pérsico/Estrecho de Ormuz, mientras Putin propuso una cumbre trilateral con Trump y Xi sobre Ucrania; la escalada en Oriente Medio eleva la prima de riesgo y presiona al NQ a la baja pese al potencial alivio diplomático con Rusia.",
-  "petroleo": "El Brent cotiza cerca de 109,55 dólares (-0,28%) y el WTI en 103,66 dólares (+2,22%) según CNBC, tras los ataques hutíes a instalaciones de Aramco que reavivan el temor a una disrupción de oferta en el Golfo, encareciendo costos energéticos que presionan márgenes tecnológicos y al NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1,5%-1,9% con compradores regresando tras la caída y los semiconductores rompiendo una racha de ocho sesiones a la baja tras su peor semana desde junio por el selloff de IA, impulsando al NQ en la apertura.",
+  "geopolitica": "El canciller ruso Lavrov visito Teherán este lunes condenando los ataques de EEUU e Israel como ilegales, mientras Netanyahu le dijo a Trump que 'queda un trabajo por terminar' con Iran, sosteniendo la prima de riesgo geopolitico que presiona al NQ via sentimiento de riesgo.",
+  "petroleo": "El Brent cayo 1.43 dolares hasta 108.43 USD/barril (Reuters) tras el acuerdo entre Trump y Putin que exime sanciones y permite exportaciones de diesel ruso, aunque las tensiones en el Estrecho de Ormuz siguen poniendo un piso a los precios, un alivio parcial que reduce algo la aversion al riesgo para el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 19 oct 2026",
-    "Bloomberg 19 oct 2026",
-    "CNBC (Houthi/Aramco) 18 oct 2026"
+    "CBS News Live Updates - Iran war/Trump talks/Russia/Strait of Hormuz, 19 oct 2026",
+    "Reuters (via Business Recorder) - Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies, 19 oct 2026",
+    "Al Jazeera - Qatar warns global energy shockwaves from Iran war have yet to peak, 19 oct 2026"
   ],
-  "as_of": "2026-10-19T20:06:47Z"
+  "as_of": "2026-10-19T21:06:43Z"
 }
