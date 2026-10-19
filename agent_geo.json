@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Putin propone a Trump y Xi una cumbre trilateral sobre Ucrania que excluiria a Zelenski buscando un acuerdo favorable a Moscu, lo que alimenta apuestas de desescalacion y favorece el apetito por riesgo en el NQ, aunque alarma a los aliados europeos (CNBC/WSJ, 19 oct).",
-  "petroleo": "El Brent cae 2.38% a 107.25 USD/b y el WTI pierde 1.78% a 99.60 USD/b tras la orden ejecutiva de Trump que alivia sanciones al crudo/diesel ruso, abaratando insumos energeticos y dando soporte marginal al NQ (CNBC, 19 oct).",
-  "catalizador": "China sorprende con un PIB del 3T que crece 4.5% interanual por encima de lo esperado y Wall Street compra la caida en IA (CoreWeave +6% premarket tras upgrade de Goldman Sachs), impulsando los futuros del Nasdaq ~1% esta manana (CNBC, 19 oct ~06:18 ET).",
+  "geopolitica": "La guerra EEUU-Iran entra en su octavo mes de estancamiento: Iran dijo el 18/10 que tiene un 'nuevo plan operativo' ante posibles ataques de EEUU/Israel y se reportaron ataques a buques cerca de Arabia Saudita, Yemen y EAU, lo que mantiene elevada la prima de riesgo geopolitico y presiona el sentimiento de riesgo para el NQ.",
+  "petroleo": "Brent cae mas de 1% a ~108 USD/barril y WTI retrocede 0.3% a 101.03 USD hoy (19/10), al moderarse momentaneamente el temor a interrupcion de suministro en el Estrecho de Ormuz, lo que alivia ligeramente la presion de costos energeticos sobre las tecnologicas del NQ.",
+  "catalizador": "El rendimiento del Treasury a 10 anos bajo a 5.079% mientras el mercado digiere datos de inflacion de septiembre (IPC +3.7% anual, PPI +6.3% anual) de cara a la decision de la Fed del 28/10 (mercado da >85% de probabilidad de mantener tasas), catalizador clave porque yields mas bajos alivian la presion de valuacion sobre el Nasdaq tras el selloff de IA del viernes (-2.5%); los futuros del Nasdaq 100 suben 1% esta mañana.",
   "sources": [
-    "CNBC 19 oct (Putin-Trump-Xi Ukraine summit)",
-    "CNBC 19 oct (oil sanctions relief Russia)",
-    "CNBC 06:18 ET (US equity futures)",
-    "CNBC 19 oct (China Q3 GDP, CoreWeave/Goldman upgrade)"
+    "CNBC 18/10/2026 (Iran US war - operational plan / shipping attacks)",
+    "CNBC 19/10/2026 (oil prices today Brent WTI)",
+    "CNBC 19/10/2026 (Treasury yields move lower)",
+    "CNBC 19/10/2026 (Jim Cramer top 10 things to watch Monday)"
   ],
-  "as_of": "2026-10-19T13:08:05Z"
+  "as_of": "2026-10-19T13:40:29Z"
 }
