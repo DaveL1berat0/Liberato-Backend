@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Trump anuncio que EE.UU. flexibiliza sanciones y aranceles sobre el petroleo ruso (acuerdo de diesel con Putin), reduciendo la prima de riesgo geopolitico, un trasfondo mixto para el apetito por riesgo del NQ (Reuters/HDFC Sky, 19-oct).",
-  "petroleo": "Brent cae cerca de 1.9% a unos 107.8 USD/barril y WTI baja cerca de 1% a unos 100.4 USD/barril tras la exencion de sanciones a Rusia y toma de beneficios tras el repunte semanal, lo que alivia la presion inflacionaria y es levemente positivo para el NQ (HDFC Sky/Oilprice.com, 19-oct).",
-  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 1% en la premarket del lunes, liderados por el rebote de semiconductores (Intel tras mejora de JPMorgan, CoreWeave recuperandose del desplome de la semana pasada), tras la peor semana del Nasdaq desde junio (-4.5%); no hubo comentarios relevantes de la Fed en las ultimas horas (CNBC/Bloomberg, 19-oct).",
+  "geopolitica": "El conflicto EE.UU.-Iran se intensifica en el estrecho de Ormuz (unos 20 ataques a buques registrados por UKMTO desde el 1 de octubre, con picos de ataques el fin de semana segun Reuters/AFP), sosteniendo una prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ pese al rebote tecnico de premercado.",
+  "petroleo": "Brent cae cerca de 1.8-2% a unos 107-108 USD/barril y WTI retrocede cerca de 1-2% a unos 98-100 USD/barril tras la exencion de sanciones de EE.UU. al petroleo y diesel ruso (acuerdo Trump-Putin anunciado la semana pasada), lo que alivia el temor a escasez de oferta y resta presion inflacionaria, un viento de cola moderado para el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 1.0-1.1% en premercado, recortando parte de la caida semanal de 5.5% en el trade de IA, de cara a una semana cargada de resultados de grandes tecnologicas (Netflix y SpaceX el martes, Tesla y Meta el miercoles), lo que favorece un sesgo alcista en la apertura del NQ.",
   "sources": [
-    "Reuters/HDFC Sky 19-oct (sanciones y aranceles a Rusia)",
-    "HDFC Sky/Oilprice.com 19-oct (Brent/WTI)",
-    "CNBC 19-oct (premarket Nasdaq, Intel, CoreWeave)",
-    "Bloomberg 18-oct (rebote tech tras selloff de chips)"
+    "Bloomberg 2026-10-18 (live blog) - futuros Nasdaq 100 suben ~1.1% en premercado",
+    "FXStreet 05:49 ET 19-oct - Brent cae tras exencion de sanciones a Rusia",
+    "FXStreet ~21:06 ET 18-oct - WTI cae a ~97.50 tras exencion de sanciones petroleras a Rusia",
+    "Reuters/AFP (via Hawaii Tribune-Herald) 15-oct - ataques en el estrecho de Ormuz, hundimientos de buques",
+    "CNBC 2026-10-18 (live updates) - Nasdaq futures suben comprando la caida del trade de IA"
   ],
-  "as_of": "2026-10-19T12:13:41Z"
+  "as_of": "2026-10-19T12:40:55Z"
 }
