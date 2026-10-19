@@ -1,13 +1,12 @@
 {
-  "geopolitica": "El conflicto EE.UU.-Iran se intensifica en el estrecho de Ormuz (unos 20 ataques a buques registrados por UKMTO desde el 1 de octubre, con picos de ataques el fin de semana segun Reuters/AFP), sosteniendo una prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ pese al rebote tecnico de premercado.",
-  "petroleo": "Brent cae cerca de 1.8-2% a unos 107-108 USD/barril y WTI retrocede cerca de 1-2% a unos 98-100 USD/barril tras la exencion de sanciones de EE.UU. al petroleo y diesel ruso (acuerdo Trump-Putin anunciado la semana pasada), lo que alivia el temor a escasez de oferta y resta presion inflacionaria, un viento de cola moderado para el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 1.0-1.1% en premercado, recortando parte de la caida semanal de 5.5% en el trade de IA, de cara a una semana cargada de resultados de grandes tecnologicas (Netflix y SpaceX el martes, Tesla y Meta el miercoles), lo que favorece un sesgo alcista en la apertura del NQ.",
+  "geopolitica": "Putin propone a Trump y Xi una cumbre trilateral sobre Ucrania que excluiria a Zelenski buscando un acuerdo favorable a Moscu, lo que alimenta apuestas de desescalacion y favorece el apetito por riesgo en el NQ, aunque alarma a los aliados europeos (CNBC/WSJ, 19 oct).",
+  "petroleo": "El Brent cae 2.38% a 107.25 USD/b y el WTI pierde 1.78% a 99.60 USD/b tras la orden ejecutiva de Trump que alivia sanciones al crudo/diesel ruso, abaratando insumos energeticos y dando soporte marginal al NQ (CNBC, 19 oct).",
+  "catalizador": "China sorprende con un PIB del 3T que crece 4.5% interanual por encima de lo esperado y Wall Street compra la caida en IA (CoreWeave +6% premarket tras upgrade de Goldman Sachs), impulsando los futuros del Nasdaq ~1% esta manana (CNBC, 19 oct ~06:18 ET).",
   "sources": [
-    "Bloomberg 2026-10-18 (live blog) - futuros Nasdaq 100 suben ~1.1% en premercado",
-    "FXStreet 05:49 ET 19-oct - Brent cae tras exencion de sanciones a Rusia",
-    "FXStreet ~21:06 ET 18-oct - WTI cae a ~97.50 tras exencion de sanciones petroleras a Rusia",
-    "Reuters/AFP (via Hawaii Tribune-Herald) 15-oct - ataques en el estrecho de Ormuz, hundimientos de buques",
-    "CNBC 2026-10-18 (live updates) - Nasdaq futures suben comprando la caida del trade de IA"
+    "CNBC 19 oct (Putin-Trump-Xi Ukraine summit)",
+    "CNBC 19 oct (oil sanctions relief Russia)",
+    "CNBC 06:18 ET (US equity futures)",
+    "CNBC 19 oct (China Q3 GDP, CoreWeave/Goldman upgrade)"
   ],
-  "as_of": "2026-10-19T12:40:55Z"
+  "as_of": "2026-10-19T13:08:05Z"
 }
