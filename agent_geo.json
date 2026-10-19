@@ -1,12 +1,12 @@
 {
-  "geopolitica": "La tension en el Estrecho de Ormuz sigue latente tras las advertencias de Trump a Iran de reabrir el paso o enfrentar una posible accion militar, lo que mantiene cierta prima de riesgo geopolitico y limita el apetito por riesgo en el NQ (Fox News, 18-19 oct.).",
-  "petroleo": "El Brent cotiza cerca de 108 USD/barril (~-1.6%) y el WTI en torno a 100-101 USD (~-1%) este lunes, retrocediendo desde los maximos de varios meses del viernes por la exencion de sanciones de EE.UU. a Rusia (acuerdo Trump-Putin de diesel) que alivia el temor a menor oferta, un efecto moderadamente favorable para el NQ al reducir la presion inflacionaria energetica (Reuters via ABC News Australia / Zeebiz, 19 oct.).",
-  "catalizador": "El secretario del Tesoro Bessent insiste en que el repunte inflacionario ligado a la energia es 'transitorio', mientras el mercado sigue de cerca el ritmo de recortes de tasas de la Fed de cara al FOMC del 27-28 de octubre, un factor clave para el apetito por riesgo en el NQ (Reuters/CNBC, seguimiento continuo).",
+  "geopolitica": "Las tensiones en el Estrecho de Ormuz se intensifican tras ataques a al menos 12 buques en la ultima semana (6 el domingo) mientras Trump evalua una decision 'muy pronto' sobre Iran, lo que mantiene elevada la prima de riesgo geopolitico que presiona al NQ (Bloomberg/CBS News, 18-19 oct).",
+  "petroleo": "El WTI sube 2.6% hasta 99.02 USD/barril por las tensiones en el Estrecho de Ormuz, un encarecimiento energetico que añade presion de costos sobre el Nasdaq (Bloomberg/Yahoo Finance, 19 oct).",
+  "catalizador": "El Nasdaq 100 rebota 1.9% liderado por semiconductores tras nueve sesiones de caidas, con los inversores a la espera de los resultados de Meta y Tesla esta semana como prueba de confianza en el trade de IA (Bloomberg, 19 oct).",
   "sources": [
-    "Fox News 18-19 oct. - tension Ormuz/Iran",
-    "Reuters via ABC News Australia 19 oct. - Brent ~108 USD, WTI ~100-101 USD",
-    "Zeebiz 19 oct. - caida del crudo tras repunte del viernes",
-    "Reuters/CNBC - postura de Bessent sobre inflacion 'transitoria' y FOMC 27-28 oct."
+    "Bloomberg 19 oct (premarket/intradia)",
+    "Yahoo Finance 19 oct",
+    "CBS News 18 oct",
+    "The National 14 oct"
   ],
-  "as_of": "2026-10-19T18:09:10Z"
+  "as_of": "2026-10-19T19:06:24Z"
 }
