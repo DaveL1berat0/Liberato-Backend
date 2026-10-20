@@ -1,10 +1,12 @@
 {
-  "geopolitica": "Persisten las tensiones en Oriente Medio tras los ataques hutíes contra instalaciones de Aramco y aeropuertos sauditas reportados esta semana; el mercado vigila señales de progreso diplomático EEUU-Irán, lo que puede aliviar el apetito por riesgo y favorecer al NQ si se confirma.",
-  "petroleo": "El WTI retrocede cerca de 1.8% hasta ~101.79 USD y el Brent cae ~0.7% hasta ~108.79 USD, replegándose desde máximos cercanos a 110 USD, ante esperanzas de una resolución diplomática en Oriente Medio; una caída del crudo suele reducir presión inflacionaria y es ligeramente positiva para el NQ intradía.",
-  "catalizador": "",
+  "geopolitica": "Arabia Saudita aplazó a 2027 su conferencia de inversión FII citando la escalada de ataques con misiles y drones hutíes contra instalaciones de Aramco y aeropuertos; el mercado vigila señales de progreso diplomático EEUU-Irán en el Estrecho de Hormuz, cuya confirmación aliviaría el apetito por riesgo y favorecería al NQ.",
+  "petroleo": "El Brent cerró en 108,79 USD/barril (-0,7%) y el WTI en 101,79 USD (-1,8%), replegándose desde máximos intradía cercanos a 112 USD por esperanzas de una resolución diplomática en Oriente Medio; la caída del crudo reduce presión inflacionaria y es ligeramente positiva para el NQ.",
+  "catalizador": "Los datos de vivienda de septiembre en EEUU salieron muy débiles (inicios de construcción -5,2% m/m, venta de casas pendientes -7,3% m/m, confianza de constructores en mínimo de 14 años), lo que bajó el rendimiento del Treasury a 10 años y alimenta apuestas por una Fed más cautelosa antes del FOMC del 28 de octubre, un viento de cola para el NQ.",
   "sources": [
     "CNBC (oil-price-wti-brent-crude), 20 oct 2026",
-    "CNBC (oil-price-today-ukraine-russia-iran-strait-hormuz), 18 oct 2026"
+    "CNBC (saudi-arabia-postpones-fii-investor-conference-to-2027), 19 oct 2026",
+    "CNBC (us-treasury-yields-investors-economy), 20 oct 2026",
+    "CNBC (september-data-shows-housing-market-in-a-deep-freeze), 20 oct 2026"
   ],
-  "as_of": "2026-10-20T20:07:20Z"
+  "as_of": "2026-10-20T21:07:33Z"
 }
