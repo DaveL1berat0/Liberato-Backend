@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Irán advierte de un bloqueo mas amplio en el Estrecho de Ormuz y medios ligados a la Guardia Revolucionaria plantean cobrar o amenazar los cables submarinos de internet usados por Google, Microsoft, Meta y Amazon, elevando el riesgo geopolitico tech que presiona a la baja los futuros del Nasdaq-100 (Benzinga, FXStreet).",
-  "petroleo": "El Brent sube hacia 111 USD/barril y el WTI opera por encima de 99 USD por nuevos ataques a petroleros en el Golfo y la amenaza de bloqueo iraní en Ormuz, alimentando una aversion al riesgo que lastra al NQ (Invezz, FXStreet).",
-  "catalizador": "Los futuros del Nasdaq-100 caen por la debilidad en semiconductores (Micron, SanDisk) tras resultados bancarios flojos, con Netflix y SpaceX reportando resultados hoy tras el cierre (CNBC).",
+  "geopolitica": "Iran rechazo el plan de EE.UU. para el estrecho de Ormuz y amenazo con atacar cables submarinos, mientras los huties reivindican un ataque (no confirmado por Riad) contra la planta de Aramco en Yanbu, lo que mantiene presionado el sentimiento de riesgo del NQ.",
+  "petroleo": "El WTI llego a subir hasta ~2.3% en la apertura de Nueva York cerca de USD 100.78/barril y el Brent supero los USD 109-111 por los ataques huties a instalaciones sauditas y la amenaza irani sobre Ormuz, aunque hacia media tarde el crudo cedio parte de la subida.",
+  "catalizador": "Wall Street sigue de cerca una semana cargada de resultados (Tesla, Meta, Netflix) y la debilidad en acciones de IA/semiconductores (Nvidia, CoreWeave), que limito las ganancias del Nasdaq 100 pese al rebote general hacia las 14:30 ET.",
   "sources": [
-    "FXStreet ~02:15 ET",
-    "Invezz premarket ET",
-    "CNBC premarket ET",
-    "Benzinga premarket ET"
+    "Benzinga/TradingView 20/10 AM ET",
+    "Yahoo Finance 14:30 ET",
+    "FreeMalaysiaToday 20/10",
+    "Schaeffer's Investment Research 20/10"
   ],
-  "as_of": "2026-10-20T12:12:17Z"
+  "as_of": "2026-10-20T19:07:24Z"
 }
