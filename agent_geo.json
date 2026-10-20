@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Los Houthis reclamaron ataques contra aeropuertos sauditas e instalaciones de Aramco, mientras Iran escala ataques a petroleros en el Golfo Persico y el Estrecho de Hormuz, lo que eleva la prima de riesgo geopolitico y presiona activos de riesgo como el NQ.",
-  "petroleo": "El Brent cotiza cerca de 110.10 USD/barril (+0.50%), su nivel mas alto en cinco meses, impulsado por la tension en Medio Oriente (ataques Houthi/Iran), aunque la posible mayor oferta rusa tras el alivio de sanciones de EE.UU. limita el avance.",
-  "catalizador": "Los rendimientos del Tesoro subieron mientras los inversores evaluan un trasfondo inflacionario mas caliente de lo esperado (CPI de septiembre en 3.7% anual vs 3.6% estimado), lo que reduce la certeza de recortes de tasas antes de la reunion de la Fed del 27-28 de octubre y presiona las valuaciones tecnologicas del NQ.",
+  "geopolitica": "Irán advierte de un bloqueo mas amplio en el Estrecho de Ormuz y medios ligados a la Guardia Revolucionaria plantean cobrar o amenazar los cables submarinos de internet usados por Google, Microsoft, Meta y Amazon, elevando el riesgo geopolitico tech que presiona a la baja los futuros del Nasdaq-100 (Benzinga, FXStreet).",
+  "petroleo": "El Brent sube hacia 111 USD/barril y el WTI opera por encima de 99 USD por nuevos ataques a petroleros en el Golfo y la amenaza de bloqueo iraní en Ormuz, alimentando una aversion al riesgo que lastra al NQ (Invezz, FXStreet).",
+  "catalizador": "Los futuros del Nasdaq-100 caen por la debilidad en semiconductores (Micron, SanDisk) tras resultados bancarios flojos, con Netflix y SpaceX reportando resultados hoy tras el cierre (CNBC).",
   "sources": [
-    "CNBC 2026-10-18 (Brent oil tops $109 after Houthi attacks on Saudi airports/Aramco)",
-    "CNBC 2026-10-20 03:19 GMT (Brent crude holds near five-month high on Middle East tension)",
-    "Bloomberg 2026-10-19/20 (Oil Wavers as Iran Threats Vie With Robust Gulf Crude Flows)",
-    "CNBC 2026-10-19 (Treasury yields move higher as investors assess U.S. inflation backdrop)",
-    "CNBC 2026-10-13 (S&P 500 drops 1%, dragged down by hot inflation data)"
+    "FXStreet ~02:15 ET",
+    "Invezz premarket ET",
+    "CNBC premarket ET",
+    "Benzinga premarket ET"
   ],
-  "as_of": "2026-10-20T11:39:44Z"
+  "as_of": "2026-10-20T12:12:17Z"
 }
