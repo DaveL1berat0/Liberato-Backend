@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Iran rechazo el plan de EE.UU. para el estrecho de Ormuz y amenazo con atacar cables submarinos, mientras los huties reivindican un ataque (no confirmado por Riad) contra la planta de Aramco en Yanbu, lo que mantiene presionado el sentimiento de riesgo del NQ.",
-  "petroleo": "El WTI llego a subir hasta ~2.3% en la apertura de Nueva York cerca de USD 100.78/barril y el Brent supero los USD 109-111 por los ataques huties a instalaciones sauditas y la amenaza irani sobre Ormuz, aunque hacia media tarde el crudo cedio parte de la subida.",
-  "catalizador": "Wall Street sigue de cerca una semana cargada de resultados (Tesla, Meta, Netflix) y la debilidad en acciones de IA/semiconductores (Nvidia, CoreWeave), que limito las ganancias del Nasdaq 100 pese al rebote general hacia las 14:30 ET.",
+  "geopolitica": "Persisten las tensiones en Oriente Medio tras los ataques hutíes contra instalaciones de Aramco y aeropuertos sauditas reportados esta semana; el mercado vigila señales de progreso diplomático EEUU-Irán, lo que puede aliviar el apetito por riesgo y favorecer al NQ si se confirma.",
+  "petroleo": "El WTI retrocede cerca de 1.8% hasta ~101.79 USD y el Brent cae ~0.7% hasta ~108.79 USD, replegándose desde máximos cercanos a 110 USD, ante esperanzas de una resolución diplomática en Oriente Medio; una caída del crudo suele reducir presión inflacionaria y es ligeramente positiva para el NQ intradía.",
+  "catalizador": "",
   "sources": [
-    "Benzinga/TradingView 20/10 AM ET",
-    "Yahoo Finance 14:30 ET",
-    "FreeMalaysiaToday 20/10",
-    "Schaeffer's Investment Research 20/10"
+    "CNBC (oil-price-wti-brent-crude), 20 oct 2026",
+    "CNBC (oil-price-today-ukraine-russia-iran-strait-hormuz), 18 oct 2026"
   ],
-  "as_of": "2026-10-20T19:07:24Z"
+  "as_of": "2026-10-20T20:07:20Z"
 }
