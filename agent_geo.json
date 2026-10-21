@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Las tensiones EEUU-Iran en el Estrecho de Ormuz mantienen un sesgo de aversion al riesgo que limita el apetito por el NQ en la apertura.",
-  "petroleo": "El Brent supera los 110 USD/barril por las tensiones EEUU-Iran, presionando costos y sumando cautela sobre el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.7% en premarket tras comentarios de SpaceX sobre IA que impulsan a los semiconductores.",
+  "geopolitica": "Los hutíes reclamaron nuevos ataques contra instalaciones de Aramco (Yanbu, Shaybah) y los aeropuertos de Riad y Abha, mientras Irán reporta minas navales bloqueando buques en el estrecho de Ormuz, escalando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo tech del NQ.",
+  "petroleo": "El Brent sube 0.78% a 109.73 USD/barril y el WTI 0.78% a 98.58 USD/barril en la sesión asiática por temor a una interrupción de suministro en Oriente Medio tras los ataques hutíes y las minas iraníes en Ormuz.",
+  "catalizador": "",
   "sources": [
-    "Yahoo Finance ~04:00 ET",
-    "AnalyticsInsight ~08:00 ET"
+    "CNBC 03:33 ET - Oil price today: WTI, Brent rise on Middle East worries",
+    "CNBC - Oil rises on Middle East supply worries",
+    "CNBC - Iran says it's 'counting the moments' until it can strike U.S. warships; Saudi Aramco facilities attacked"
   ],
-  "as_of": "2026-10-21T12:11:52Z"
+  "as_of": "2026-10-21T12:39:34Z"
 }
