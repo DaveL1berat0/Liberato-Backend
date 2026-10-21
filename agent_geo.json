@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Arabia Saudita aplazó a 2027 su conferencia de inversión FII citando la escalada de ataques con misiles y drones hutíes contra instalaciones de Aramco y aeropuertos; el mercado vigila señales de progreso diplomático EEUU-Irán en el Estrecho de Hormuz, cuya confirmación aliviaría el apetito por riesgo y favorecería al NQ.",
-  "petroleo": "El Brent cerró en 108,79 USD/barril (-0,7%) y el WTI en 101,79 USD (-1,8%), replegándose desde máximos intradía cercanos a 112 USD por esperanzas de una resolución diplomática en Oriente Medio; la caída del crudo reduce presión inflacionaria y es ligeramente positiva para el NQ.",
-  "catalizador": "Los datos de vivienda de septiembre en EEUU salieron muy débiles (inicios de construcción -5,2% m/m, venta de casas pendientes -7,3% m/m, confianza de constructores en mínimo de 14 años), lo que bajó el rendimiento del Treasury a 10 años y alimenta apuestas por una Fed más cautelosa antes del FOMC del 28 de octubre, un viento de cola para el NQ.",
+  "geopolitica": "Los hutíes reivindicaron el lunes ataques con misiles contra instalaciones de Aramco en Yanbu, el yacimiento de Shaybah y los aeropuertos de Riad y Abha, lo que eleva el riesgo geopolítico en Oriente Medio y presiona el apetito por riesgo del NQ.",
+  "petroleo": "El Brent sube 0.86% a 109.73 USD y el WTI 0.78% a 98.58 USD por temores de oferta tras los ataques hutíes a infraestructura petrolera saudí, un alza que puede pesar sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "Las yields del Tesoro se mantienen estables mientras los inversores esperan la decisión de la Fed de la próxima semana y los resultados de Tesla hoy, catalizadores clave para el NQ dado su peso en el Nasdaq-100.",
   "sources": [
-    "CNBC (oil-price-wti-brent-crude), 20 oct 2026",
-    "CNBC (saudi-arabia-postpones-fii-investor-conference-to-2027), 19 oct 2026",
-    "CNBC (us-treasury-yields-investors-economy), 20 oct 2026",
-    "CNBC (september-data-shows-housing-market-in-a-deep-freeze), 20 oct 2026"
+    "CNBC 03:33 ET",
+    "Bloomberg 13-Oct",
+    "CNBC 21-Oct"
   ],
-  "as_of": "2026-10-20T21:07:33Z"
+  "as_of": "2026-10-21T11:09:31Z"
 }
