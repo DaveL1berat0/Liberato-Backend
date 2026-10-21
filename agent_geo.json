@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Los hutíes reclaman nuevos ataques contra instalaciones de Saudi Aramco (Yanbu, Shaybah) y los aeropuertos de Riad y Abha, mientras Irán mantiene el estrecho de Ormuz bloqueado por minas navales tras el impacto en un superpetrolero el 20-oct, escalando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo tech del NQ.",
-  "petroleo": "El Brent cotiza cerca de 108,6-109,7 USD/barril y el WTI cerca de 97,9-98,6 USD/barril (variaciones intradía de ~+0,8%), sostenidos por el temor a una interrupción de suministro en Oriente Medio tras los ataques hutíes y las minas iraníes en Ormuz.",
-  "catalizador": "",
+  "geopolitica": "Iran intensifica sus ataques a buques en el Estrecho de Ormuz, con incidentes en maximos record y sin señales de avance diplomatico para poner fin a la guerra con Iran, lo que eleva la prima de riesgo geopolitico para los mercados.",
+  "petroleo": "El Brent cotiza cerca de 109-110 USD/barril y el WTI cerca de 98-99 USD/barril, cerca de maximos de cinco meses, impulsados por los ataques a petroleros en el Golfo Persico y una caida de 4.9 millones de barriles en inventarios de EEUU.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1% en la premarket mientras los inversores esperan los resultados de Tesla y Meta tras el cierre de hoy, sosteniendo el apetito por riesgo antes de la apertura.",
   "sources": [
-    "CNBC 03:33 ET - Oil price today: WTI, Brent rise on Middle East worries",
-    "CNBC - Oil rises on Middle East supply worries",
-    "CNBC - Iran says it's 'counting the moments' until it can strike U.S. warships; Saudi Aramco facilities attacked",
-    "CNBC 2026-10-09 - Tanker attacks in Strait of Hormuz surge to wartime high"
+    "Rigzone 21-oct-2026",
+    "RTE News 21-oct-2026",
+    "OilPriceAPI 00:26 ET",
+    "TradingView/CNBC TV18 21-oct-2026",
+    "InvestingCube 21-oct-2026"
   ],
-  "as_of": "2026-10-21T13:40:38Z"
+  "as_of": "2026-10-21T14:10:33Z"
 }
