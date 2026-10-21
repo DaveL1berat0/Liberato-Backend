@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Tension persistente en el Estrecho de Ormuz por ataques a petroleros e incertidumbre sobre las conversaciones EE.UU.-Iran mantiene elevada la prima de riesgo global, presionando el apetito por activos de riesgo como el NQ (Reuters/Oilprice, 23:50 ET).",
-  "petroleo": "Brent cotiza en 110.38 USD/barril (+1.5%) y WTI en 99.18 USD/barril (+1.4%) a las 23:50 ET, impulsados por ataques a petroleros en el Estrecho de Ormuz; la subida del crudo presiona margenes y sentimiento de riesgo, un viento en contra para el NQ (Reuters).",
-  "catalizador": "Meta (16:30 ET) y Tesla (17:30 ET) publican resultados tras el cierre de hoy, un catalizador clave para el NQ por el peso de las megacaps tecnologicas en el indice (Finviz/Blofin).",
+  "geopolitica": "Los hutíes reivindicaron ataques con misiles contra instalaciones de Aramco en Yanbu, el yacimiento de Shaybah y aeropuertos en Riad y Abha, mientras Irán denunció minas navales que impidieron el paso de tres petroleros por el Estrecho de Ormuz, lo que eleva la prima de riesgo geopolítico que puede presionar al NQ via energía e inflación (CNBC, 18-21 oct).",
+  "petroleo": "El Brent cotiza en torno a 108.8 USD/barril y el WTI cerró en 97.15 USD (-0.7%) por la escalada de ataques hutíes contra Arabia Saudita y tensión en el Estrecho de Ormuz, lo que sostiene el riesgo inflacionario y puede restar apetito por riesgo en el NQ (CNBC, 21 oct).",
+  "catalizador": "Las acciones de Tesla subieron tras conocerse que Musk formó un comité especial para explorar una fusión con SpaceX, impulsando los futuros del Nasdaq, mientras el mercado espera los resultados de Meta y Tesla tras el cierre, claves para el NQ (CNBC, 21 oct).",
   "sources": [
-    "Reuters 23:50 ET",
-    "Oilprice.com 23:50 ET",
-    "Finviz (earnings preview)",
-    "Blofin Academy (earnings calendar Oct 19-23 2026)"
+    "CNBC 21 oct - Futures orbit around SpaceX as Tesla merger talk cheers investors",
+    "CNBC 21 oct - Oil price today: WTI, Brent rise on Middle East worries",
+    "CNBC 18 oct - Brent oil tops $109 after Houthi militants claim attacks on Saudi airports and Aramco facilities",
+    "CNBC 21 oct - Treasury yields steady as investors await jobless claims, mortgage data"
   ],
-  "as_of": "2026-10-21T20:05:36Z"
+  "as_of": "2026-10-21T21:06:30Z"
 }
