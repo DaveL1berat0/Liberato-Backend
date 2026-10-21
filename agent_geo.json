@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los huties (respaldados por Iran) reivindicaron ataques contra instalaciones de Aramco en Yanbu, el yacimiento Shaybah y aeropuertos de Riad y Abha, mientras la Guardia Revolucionaria iraní bloqueo el paso de petroleros por rutas no autorizadas en el estrecho de Ormuz, lo que sostiene el riesgo geopolitico y presiona al NQ via aversion al riesgo (CNBC, 08:47 ET).",
-  "petroleo": "El Brent cotiza en 108.62 USD/barril (-0.2%) y el WTI en 97.90 USD/barril (+0.1%) hacia las 08:47 ET, sostenidos por el riesgo de suministro en Medio Oriente, lo que presiona el sentimiento de riesgo para el NQ (CNBC, 08:47 ET).",
-  "catalizador": "Los futuros del Nasdaq 100 suben 0.6% hacia las 08:18 ET tras los solidos resultados de SpaceX, que reavivaron el optimismo de IA de cara a los reportes de Meta y Tesla tras el cierre, mientras los rendimientos del Treasury se mantienen estables a la espera de los datos de solicitudes de desempleo (Bloomberg, 08:18 ET).",
+  "geopolitica": "Un proyectil impactó un petrolero frente a Bukha (Omán), cerca del estrecho de Ormuz, dentro de la escalada de ataques del conflicto Irán-EEUU que mantiene elevada la aversión al riesgo y puede presionar al NQ vía risk-off.",
+  "petroleo": "El Brent cotiza en torno a 108-110 USD/barril y el WTI en 97-99 USD/barril, cerca de máximos de varios meses por los ataques a petroleros en el estrecho de Ormuz, lo que encarece costos energéticos y puede pesar sobre el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 08:47 ET (21 oct, oil price today WTI Brent)",
-    "CNBC (Houthi strikes on Saudi Aramco facilities)",
-    "Bloomberg 08:18 ET (21 oct, US futures climb with SpaceX results)"
+    "Al Arabiya English 21-oct (UKMTO)",
+    "Arbiterz 21-oct",
+    "Al Jazeera 17-oct (Ormuz)"
   ],
-  "as_of": "2026-10-21T18:07:11Z"
+  "as_of": "2026-10-21T19:06:50Z"
 }
