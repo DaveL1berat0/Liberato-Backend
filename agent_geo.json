@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los hutíes reclamaron nuevos ataques contra instalaciones de Aramco (Yanbu, Shaybah) y los aeropuertos de Riad y Abha, mientras Irán reporta minas navales bloqueando buques en el estrecho de Ormuz, escalando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo tech del NQ.",
-  "petroleo": "El Brent sube 0.78% a 109.73 USD/barril y el WTI 0.78% a 98.58 USD/barril en la sesión asiática por temor a una interrupción de suministro en Oriente Medio tras los ataques hutíes y las minas iraníes en Ormuz.",
+  "geopolitica": "Los hutíes reclaman nuevos ataques contra instalaciones de Saudi Aramco (Yanbu, Shaybah) y los aeropuertos de Riad y Abha, mientras Irán mantiene el estrecho de Ormuz bloqueado por minas navales tras el impacto en un superpetrolero el 20-oct, escalando el riesgo geopolítico en Oriente Medio y presionando el apetito por riesgo tech del NQ.",
+  "petroleo": "El Brent cotiza cerca de 108,6-109,7 USD/barril y el WTI cerca de 97,9-98,6 USD/barril (variaciones intradía de ~+0,8%), sostenidos por el temor a una interrupción de suministro en Oriente Medio tras los ataques hutíes y las minas iraníes en Ormuz.",
   "catalizador": "",
   "sources": [
     "CNBC 03:33 ET - Oil price today: WTI, Brent rise on Middle East worries",
     "CNBC - Oil rises on Middle East supply worries",
-    "CNBC - Iran says it's 'counting the moments' until it can strike U.S. warships; Saudi Aramco facilities attacked"
+    "CNBC - Iran says it's 'counting the moments' until it can strike U.S. warships; Saudi Aramco facilities attacked",
+    "CNBC 2026-10-09 - Tanker attacks in Strait of Hormuz surge to wartime high"
   ],
-  "as_of": "2026-10-21T13:12:36Z"
+  "as_of": "2026-10-21T13:40:38Z"
 }
