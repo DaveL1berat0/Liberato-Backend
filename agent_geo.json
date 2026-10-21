@@ -1,12 +1,10 @@
 {
-  "geopolitica": "La guerra Iran-Israel sigue escalando: ataques a petroleros en el estrecho de Ormuz alcanzaron un maximo belico a inicios de octubre (cerca de 20 buques atacados en un mes) y un portacontenedores se hundio el 14/10, lo que mantiene el sesgo de risk-off que puede presionar al NQ.",
-  "petroleo": "Brent cotiza cerca de 110 USD/barril y WTI cerca de 98-101 USD/barril, en maximos de varios meses por el riesgo de suministro en el Golfo Persico debido a los ataques a petroleros, lo que eleva los costos energeticos y pesa sobre el apetito por riesgo en el NQ.",
-  "catalizador": "",
+  "geopolitica": "Las tensiones EEUU-Iran en el Estrecho de Ormuz mantienen un sesgo de aversion al riesgo que limita el apetito por el NQ en la apertura.",
+  "petroleo": "El Brent supera los 110 USD/barril por las tensiones EEUU-Iran, presionando costos y sumando cautela sobre el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.7% en premarket tras comentarios de SpaceX sobre IA que impulsan a los semiconductores.",
   "sources": [
-    "CNBC 2026-10-09 (tanker attacks surge to wartime high)",
-    "CNBC 2026-10-14 (container ship sinks in Strait of Hormuz)",
-    "Al Jazeera 2026-10-17 (US and Iran both claim control of Strait of Hormuz)",
-    "Bloomberg 2026-10-20 (Brent crude futures near $110/bbl)"
+    "Yahoo Finance ~04:00 ET",
+    "AnalyticsInsight ~08:00 ET"
   ],
-  "as_of": "2026-10-21T11:39:21Z"
+  "as_of": "2026-10-21T12:11:52Z"
 }
