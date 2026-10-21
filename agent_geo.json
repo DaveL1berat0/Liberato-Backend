@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Un proyectil impactó un petrolero frente a Bukha (Omán), cerca del estrecho de Ormuz, dentro de la escalada de ataques del conflicto Irán-EEUU que mantiene elevada la aversión al riesgo y puede presionar al NQ vía risk-off.",
-  "petroleo": "El Brent cotiza en torno a 108-110 USD/barril y el WTI en 97-99 USD/barril, cerca de máximos de varios meses por los ataques a petroleros en el estrecho de Ormuz, lo que encarece costos energéticos y puede pesar sobre el NQ.",
-  "catalizador": "",
+  "geopolitica": "Tension persistente en el Estrecho de Ormuz por ataques a petroleros e incertidumbre sobre las conversaciones EE.UU.-Iran mantiene elevada la prima de riesgo global, presionando el apetito por activos de riesgo como el NQ (Reuters/Oilprice, 23:50 ET).",
+  "petroleo": "Brent cotiza en 110.38 USD/barril (+1.5%) y WTI en 99.18 USD/barril (+1.4%) a las 23:50 ET, impulsados por ataques a petroleros en el Estrecho de Ormuz; la subida del crudo presiona margenes y sentimiento de riesgo, un viento en contra para el NQ (Reuters).",
+  "catalizador": "Meta (16:30 ET) y Tesla (17:30 ET) publican resultados tras el cierre de hoy, un catalizador clave para el NQ por el peso de las megacaps tecnologicas en el indice (Finviz/Blofin).",
   "sources": [
-    "Al Arabiya English 21-oct (UKMTO)",
-    "Arbiterz 21-oct",
-    "Al Jazeera 17-oct (Ormuz)"
+    "Reuters 23:50 ET",
+    "Oilprice.com 23:50 ET",
+    "Finviz (earnings preview)",
+    "Blofin Academy (earnings calendar Oct 19-23 2026)"
   ],
-  "as_of": "2026-10-21T19:06:50Z"
+  "as_of": "2026-10-21T20:05:36Z"
 }
