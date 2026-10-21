@@ -1,10 +1,11 @@
 {
-  "geopolitica": "La Guardia Revolucionaria de Iran dijo el martes que minas navales impidieron el paso de tres petroleros por el Estrecho de Ormuz por rutas que Teheran considera no autorizadas e incendio a dos de ellos, manteniendo elevada la prima de riesgo geopolitico que presiona el sentimiento de riesgo en el NQ.",
-  "petroleo": "Brent cotiza en torno a 108.62 dolares (-0.17) y WTI en torno a 97.90 dolares (+0.08) hacia las 08:47 ET, sostenidos por la tension en Oriente Medio (minado de petroleros en Ormuz y ataques reclamados por los hutíes contra instalaciones sauditas), lo que puede lastrar el apetito por riesgo en acciones tech si el crudo extiende subidas.",
-  "catalizador": "SpaceX subio cerca de 8% en premercado tras superar estimados en ingresos del 3T (+161%) y Musk insinuo una posible fusion con Tesla, impulsando los futuros del Nasdaq-100 cerca de 1% esta mañana y arrastrando al alza a semiconductores, lo que favorece un sesgo comprador en el NQ intradia.",
+  "geopolitica": "Los huties (respaldados por Iran) reivindicaron el 19 de octubre ataques contra instalaciones de Aramco en Yanbu, el yacimiento Shaybah y aeropuertos de Riad y Abha, mientras continuan los ataques a petroleros en el estrecho de Ormuz, lo que sostiene el riesgo geopolitico y presiona al NQ via aversion al riesgo.",
+  "petroleo": "El Brent cotiza en 108.62 USD/barril (-0.17, -0.2%) y el WTI en 97.90 USD/barril (+0.08, +0.1%) hacia las 08:47 ET, sostenidos por el riesgo de suministro en Medio Oriente, lo que presiona margenes y sentimiento de riesgo para el NQ.",
+  "catalizador": "Los mercados fijan en ~82% la probabilidad de que la Fed mantenga tasas sin cambios en la reunion del 28 de octubre tras el debil reporte de empleo de septiembre (+29,000 nominas), con los rendimientos del Treasury estables hoy a la espera de datos de solicitudes de desempleo, factor clave para el NQ de cara a la decision.",
   "sources": [
-    "CNBC 08:47 ET",
-    "CNBC premercado 21/10"
+    "CNBC 08:47 ET (21 oct, oil price today WTI Brent)",
+    "CNBC (19-21 oct, Houthi strikes on Saudi Aramco facilities)",
+    "CNBC (02 oct, September jobs report / Fed odds)"
   ],
-  "as_of": "2026-10-21T16:08:23Z"
+  "as_of": "2026-10-21T17:06:09Z"
 }
