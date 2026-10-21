@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los hutíes reivindicaron el lunes ataques con misiles contra instalaciones de Aramco en Yanbu, el yacimiento de Shaybah y los aeropuertos de Riad y Abha, lo que eleva el riesgo geopolítico en Oriente Medio y presiona el apetito por riesgo del NQ.",
-  "petroleo": "El Brent sube 0.86% a 109.73 USD y el WTI 0.78% a 98.58 USD por temores de oferta tras los ataques hutíes a infraestructura petrolera saudí, un alza que puede pesar sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "Las yields del Tesoro se mantienen estables mientras los inversores esperan la decisión de la Fed de la próxima semana y los resultados de Tesla hoy, catalizadores clave para el NQ dado su peso en el Nasdaq-100.",
+  "geopolitica": "La guerra Iran-Israel sigue escalando: ataques a petroleros en el estrecho de Ormuz alcanzaron un maximo belico a inicios de octubre (cerca de 20 buques atacados en un mes) y un portacontenedores se hundio el 14/10, lo que mantiene el sesgo de risk-off que puede presionar al NQ.",
+  "petroleo": "Brent cotiza cerca de 110 USD/barril y WTI cerca de 98-101 USD/barril, en maximos de varios meses por el riesgo de suministro en el Golfo Persico debido a los ataques a petroleros, lo que eleva los costos energeticos y pesa sobre el apetito por riesgo en el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 03:33 ET",
-    "Bloomberg 13-Oct",
-    "CNBC 21-Oct"
+    "CNBC 2026-10-09 (tanker attacks surge to wartime high)",
+    "CNBC 2026-10-14 (container ship sinks in Strait of Hormuz)",
+    "Al Jazeera 2026-10-17 (US and Iran both claim control of Strait of Hormuz)",
+    "Bloomberg 2026-10-20 (Brent crude futures near $110/bbl)"
   ],
-  "as_of": "2026-10-21T11:09:31Z"
+  "as_of": "2026-10-21T11:39:21Z"
 }
