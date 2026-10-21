@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Iran intensifica sus ataques a buques en el Estrecho de Ormuz, con incidentes en maximos record y sin señales de avance diplomatico para poner fin a la guerra con Iran, lo que eleva la prima de riesgo geopolitico para los mercados.",
-  "petroleo": "El Brent cotiza cerca de 109-110 USD/barril y el WTI cerca de 98-99 USD/barril, cerca de maximos de cinco meses, impulsados por los ataques a petroleros en el Golfo Persico y una caida de 4.9 millones de barriles en inventarios de EEUU.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1% en la premarket mientras los inversores esperan los resultados de Tesla y Meta tras el cierre de hoy, sosteniendo el apetito por riesgo antes de la apertura.",
+  "geopolitica": "Iran mantiene ataques a petroleros en el Estrecho de Ormuz pese a la escolta naval de EE.UU., sosteniendo la prima de riesgo geopolitico en Medio Oriente que presiona el apetito por riesgo global (Bloomberg, 20-21 oct 2026).",
+  "petroleo": "Brent ronda los 111 USD/barril tras un repunte brusco (rango superior a 6 USD) por los nuevos ataques a petroleros en Ormuz, aunque el benchmark regional de Oriente Medio cayo a minimos de 3 meses al confirmarse que las exportaciones del Golfo siguen resilientes, lo que modera el shock de oferta percibido (Bloomberg, 20-21 oct 2026).",
+  "catalizador": "Los futuros del Nasdaq-100 subian cerca de 1% en la sesion nocturna del martes, impulsados por el repunte de SpaceX y Tesla que revivio el 'trade' tecnologico, mientras crece el escepticismo sobre valoraciones de IA tras el desplome de ~40% del Kospi surcoreano desde su maximo de junio (CNBC, noche ET 20 oct 2026; Bloomberg, 20 oct 2026).",
   "sources": [
-    "Rigzone 21-oct-2026",
-    "RTE News 21-oct-2026",
-    "OilPriceAPI 00:26 ET",
-    "TradingView/CNBC TV18 21-oct-2026",
-    "InvestingCube 21-oct-2026"
+    "Bloomberg 20-21 oct 2026 (oil wrap)",
+    "Bloomberg 21 oct 2026 (Mideast benchmark)",
+    "CNBC noche ET 20 oct 2026 (live updates)",
+    "Bloomberg 20 oct 2026 (AI/Kospi newsletter)"
   ],
-  "as_of": "2026-10-21T14:10:33Z"
+  "as_of": "2026-10-21T14:39:52Z"
 }
