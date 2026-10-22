@@ -1,11 +1,13 @@
 {
   "geopolitica": "La Guardia Revolucionaria de Iran ataco buques cerca del Estrecho de Ormuz y un dron impacto el yacimiento Shaybah de Saudi Aramco, elevando el riesgo geopolitico en Medio Oriente y presionando a la baja los futuros del NQ por aversion al riesgo (Rigzone, Voice of Emirates, 22-oct).",
-  "petroleo": "El Brent cotiza cerca de 111-112 USD/barril (+2-3%), rozando maximos de cinco meses, impulsado por las tensiones en el Estrecho de Ormuz y el ataque a instalaciones petroleras sauditas, lo que añade presion inflacionaria y lastra al NQ (Rigzone, Voice of Emirates, 22-oct).",
-  "catalizador": "Los futuros del Nasdaq 100 caen por la rotacion fuera del trade de IA tras los resultados de Meta y Tesla, sumado a la escalada petrolera, con el rendimiento a 10 años cerca de 5.07% (CNBC, 21/22-oct).",
+  "petroleo": "El Brent cotiza cerca de 110-112 USD/barril (+1.6-3%), rozando maximos de cinco meses, impulsado por las tensiones en el Estrecho de Ormuz y el ataque a instalaciones petroleras sauditas, lo que añade presion inflacionaria y lastra al NQ (Rigzone, Voice of Emirates, Stocktwits, 22-oct).",
+  "catalizador": "Los futuros del Nasdaq 100 caen hasta 1.9% en la premarket por la rotacion fuera del trade de IA tras los resultados de Meta y Tesla, sumado a la escalada petrolera, con el rendimiento a 10 años cerca de 5.07% (CNBC 21/22-oct, Stocktwits 22-oct).",
   "sources": [
     "Rigzone 22-oct-2026",
     "Voice of Emirates 22-oct-2026",
-    "CNBC 21-oct-2026"
+    "CNBC 21/22-oct-2026",
+    "Stocktwits 22-oct-2026",
+    "Newsquawk US Opening News 22-oct-2026"
   ],
-  "as_of": "2026-10-22T13:09:50Z"
+  "as_of": "2026-10-22T13:40:45Z"
 }
