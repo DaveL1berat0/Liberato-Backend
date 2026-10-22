@@ -1,13 +1,10 @@
 {
-  "geopolitica": "EE.UU. ordenó la salida de personal diplomático no esencial de Arabia Saudita tras una escalada de ataques hutíes (al menos 3 muertos, incluido un ataque con dron a un campo petrolero) y CNBC reporta que Washington prepararía posibles ataques contra Irán tras las elecciones de mitad de mandato, lo que eleva la aversión al riesgo y presiona al NQ.",
-  "petroleo": "El Brent cotiza cerca de 112 USD/barril y el WTI en torno a 99-100 USD (acumulando más de +10% en el mes) por el riesgo de suministro en Oriente Medio tras los ataques hutíes, sumando presión bajista al NQ vía temores de inflación y costos.",
-  "catalizador": "Los futuros del Nasdaq caen más de 1% en la premarket por el resurgir de las dudas sobre el gasto en IA: Tesla retrocede tras recortar su previsión de capex anual, Meta cae por una nueva emisión de acciones para financiar IA, e Intel, AMD, Qualcomm, Broadcom, Micron e IBM bajan entre 3% y 6%, anticipando presión bajista en la apertura del NQ.",
+  "geopolitica": "Trump afirma que EE.UU. no esta negociando con Iran y que \"algo pasara pronto\", en medio de la escalada belica Israel-EE.UU.-Iran, lo que eleva la aversion al riesgo y presiona al NQ intradia.",
+  "petroleo": "El Brent sube 3.3% a 112.37 USD/barril y el WTI sube 2.8% a 99.88 USD (rompiendo los 100 USD) ante el temor a una reanudacion de ataques de EE.UU. contra Iran, lo que presiona a las tecnologicas del NQ via mayores costos e inflacion esperada.",
+  "catalizador": "",
   "sources": [
-    "Bloomberg 21/10/2026 - EEUU retira diplomáticos de Arabia Saudita por ataques hutíes",
-    "CNBC 22/10/2026 - EEUU prepararía ataques a Irán tras ataques hutíes",
-    "Reuters 22/10/2026 - futuros del Nasdaq caen 1% por dudas sobre gasto en IA",
-    "CNBC 06:44 ET 22/10/2026 - futuros Dow -0.6%, Nasdaq -1.6%",
-    "Mercado petrolero 06:56 ET 22/10/2026 - WTI ~99.3 USD, Brent ~112 USD"
+    "CNBC 09:15 ET (oil-prices-today-wti-brent-saudi-arabia)",
+    "CNBC (comentarios de Trump sobre Iran, 22 oct)"
   ],
-  "as_of": "2026-10-22T14:40:30Z"
+  "as_of": "2026-10-22T15:09:31Z"
 }
