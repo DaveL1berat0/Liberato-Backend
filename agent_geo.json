@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Reportes de que EE.UU. e Israel planean reanudar ataques contra Iran tras las elecciones de medio termino, con Saudi Aramco evacuando personal de su sede en Dhahran, elevan la aversion al riesgo y presionan al NQ a la baja (CNBC, ~11:07 ET).",
-  "petroleo": "El Brent sube 2.8% a 111.81 USD/barril (toco casi 113 USD intradia) y el WTI avanza 1.7% a 98.83 USD por temor a una escalada EE.UU.-Iran, encareciendo insumos y presionando el sentimiento de riesgo del NQ (CNBC, ~11:07 ET).",
-  "catalizador": "Las solicitudes semanales de subsidio por desempleo cayeron a 194,000 (vs. 200,000 esperado), cerca de minimos historicos, reforzando la narrativa de mercado laboral fuerte y manteniendo la cautela sobre futuros recortes de tasas de la Fed (CNBC, ~08:30 ET).",
+  "geopolitica": "Los hutíes atacaron infraestructura saudí (aeropuerto de Dammam y un campo petrolero) y Washington ordenó evacuar personal diplomático de Arabia Saudí, disparando la demanda de refugio y presionando a la baja al NQ (Reuters/RTE, 22 oct, ~tarde ET).",
+  "petroleo": "El Brent subió 2.9% hasta 112.01 USD/barril (máximo de 5 meses, llegó a tocar 112.68) y el WTI avanzó 2.5% a 99.56 USD, por la escalada de ataques hutíes contra instalaciones sauditas, lo que eleva el riesgo inflacionario y lastra al Nasdaq (Reuters vía RTE / CNBC, 22 oct).",
+  "catalizador": "La venta masiva de semiconductores (SOXX -6%, AMD y Marvell -8%, Intel -7%) por dudas sobre el gasto en IA, agravada por la reacción a los resultados de Meta y Tesla, golpea directamente al NQ (CNBC / Yahoo Finance, 22 oct).",
   "sources": [
-    "CNBC 11:07 ET - Oil prices today: WTI, Brent, Saudi Arabia",
-    "CNBC 08:30 ET - Jobless claims record low weekly"
+    "Reuters/RTE 22 oct (Brent 112.01 USD, +2.9%, ataques hutíes)",
+    "CNBC 22 oct (oil price today: WTI, Brent rise on Middle East worries)",
+    "CNBC/Yahoo Finance 22 oct (chip stocks selloff, SOXX -6%)"
   ],
-  "as_of": "2026-10-22T17:07:04Z"
+  "as_of": "2026-10-22T18:07:07Z"
 }
