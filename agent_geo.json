@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump afirma que EE.UU. no esta negociando con Iran y que \"algo pasara pronto\", en medio de la escalada belica Israel-EE.UU.-Iran, lo que eleva la aversion al riesgo y presiona al NQ intradia.",
-  "petroleo": "El Brent sube 3.3% a 112.37 USD/barril y el WTI sube 2.8% a 99.88 USD (rompiendo los 100 USD) ante el temor a una reanudacion de ataques de EE.UU. contra Iran, lo que presiona a las tecnologicas del NQ via mayores costos e inflacion esperada.",
-  "catalizador": "",
+  "geopolitica": "Los hutíes reivindican múltiples ataques (incluido un dron contra el campo petrolero saudí de Shaybah, con 2 muertos) contra Arabia Saudita en las últimas 48h; EE.UU. ordena la salida de personal y familiares de su embajada en Riad, lo que eleva la aversión al riesgo y presiona al NQ intradía.",
+  "petroleo": "El Brent supera los 112 USD/barril (+3% intradía, máximo desde que empezó el conflicto) y el WTI ronda los 98-99 USD, ante el temor a una interrupción de suministro por los ataques hutíes a instalaciones sauditas, lo que presiona a las tecnológicas del NQ vía mayores costos e inflación esperada.",
+  "catalizador": "Hoy a las 8:30am ET se publican las solicitudes iniciales de desempleo (semana del 17-oct, previa 206,000); sin discurso de Powell ni CPI confirmados para la sesión de hoy.",
   "sources": [
-    "CNBC 09:15 ET (oil-prices-today-wti-brent-saudi-arabia)",
-    "CNBC (comentarios de Trump sobre Iran, 22 oct)"
+    "Bloomberg 22-oct (Stock Market Today / Latest Oil Market News)",
+    "Reuters vía AOL/24NewsHD 22-oct (ataques hutíes y evacuación de la embajada en Riad)",
+    "FinanceCalendar/DOL 08:30 ET (jobless claims)"
   ],
-  "as_of": "2026-10-22T15:09:31Z"
+  "as_of": "2026-10-22T15:40:13Z"
 }
