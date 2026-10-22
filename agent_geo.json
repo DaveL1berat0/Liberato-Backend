@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los hutíes intensificaron sus ataques a infraestructura y tanqueros petroleros sauditas (Mar Rojo), elevando la prima de riesgo geopolítico y el tono de aversión al riesgo que presiona al NQ intradía (Oilprice/Khaleej Times, 22-oct, s/h ET exacta).",
-  "petroleo": "El Brent cotiza en zona de 108-111 USD/barril (WTI ~98 USD) con sesgo alcista tras los nuevos ataques hutíes a infraestructura saudita, un encarecimiento de insumos que añade presión bajista sobre los futuros tecnológicos del NQ (Oilprice/Investing.com, 22-oct, s/h ET exacta).",
-  "catalizador": "Los futuros del Nasdaq-100 cayeron cerca de 1.6% tras resultados decepcionantes de Tesla (-3%) y Meta (-1%) que golpearon el 'AI trade', catalizador de último momento que agrega presión bajista intradía al NQ (CNBC, post-cierre 21-oct ET, s/h exacta confirmada).",
+  "geopolitica": "Reportes de NYT (via CNBC) indican que EEUU e Israel preparan planes para posibles nuevos ataques a Iran tras las elecciones de medio mandato del 3 de noviembre, lo que eleva la aversion al riesgo y presiona a la baja al NQ en el premarket.",
+  "petroleo": "El Brent cotiza en torno a 110-112 USD/barril y el WTI cerca de 98 USD, en alza por el riesgo geopolitico Iran-Israel, encareciendo insumos y pesando sobre los futuros tecnologicos (NQ) antes de la apertura.",
+  "catalizador": "Los resultados de Meta y Tesla reavivaron el temor a un capex excesivo en IA, arrastrando a la baja a los futuros del Nasdaq-100 (NQ) en el premarket de hoy.",
   "sources": [
-    "CNBC - Stock market today: Live updates (post-cierre 21-oct-2026 ET)",
-    "Oilprice.com - Brent Back Above $100/Houthi attacks on Saudi infrastructure (22-oct-2026)",
-    "Khaleej Times - Brent rises above $107 as attacks, pipeline outage deepen Saudi supply concerns (14-oct-2026)",
-    "HDFC Sky - Oil prices today: Brent tops $110 over escalating Middle East tensions (22-oct-2026)"
+    "CNBC (live updates) - premarket",
+    "Reuters (via Yahoo Finance) - premarket",
+    "Yahoo Finance - premarket"
   ],
-  "as_of": "2026-10-22T11:07:34Z"
+  "as_of": "2026-10-22T11:39:26Z"
 }
