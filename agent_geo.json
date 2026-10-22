@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los hutíes reivindican múltiples ataques (incluido un dron contra el campo petrolero saudí de Shaybah, con 2 muertos) contra Arabia Saudita en las últimas 48h; EE.UU. ordena la salida de personal y familiares de su embajada en Riad, lo que eleva la aversión al riesgo y presiona al NQ intradía.",
-  "petroleo": "El Brent supera los 112 USD/barril (+3% intradía, máximo desde que empezó el conflicto) y el WTI ronda los 98-99 USD, ante el temor a una interrupción de suministro por los ataques hutíes a instalaciones sauditas, lo que presiona a las tecnológicas del NQ vía mayores costos e inflación esperada.",
-  "catalizador": "Hoy a las 8:30am ET se publican las solicitudes iniciales de desempleo (semana del 17-oct, previa 206,000); sin discurso de Powell ni CPI confirmados para la sesión de hoy.",
+  "geopolitica": "Ataques hutíes (alineados con Irán) contra el aeropuerto de Dammam y el yacimiento de Shaybah en Arabia Saudita, más el ataque iraní a 4 petroleros en el Golfo Pérsico y la orden de EE.UU. de evacuar diplomáticos de Arabia Saudita, elevan la aversión al riesgo y presionan a la baja al NQ.",
+  "petroleo": "El Brent sube ~2.9% hasta 112.01 USD (máximo intradía 112.68, el nivel más alto desde mayo) por los ataques hutíes en Arabia Saudita; el WTI ronda 99.56 USD, encareciendo insumos y pesando sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "Las preocupaciones por el elevado gasto en IA tras los resultados de Meta y Tesla, con fuerte caída de semiconductores (Intel -5.3%), fueron el catalizador que llevó al Nasdaq a su peor sesión reciente (-1.46%), arrastrando al NQ a la baja.",
   "sources": [
-    "Bloomberg 22-oct (Stock Market Today / Latest Oil Market News)",
-    "Reuters vía AOL/24NewsHD 22-oct (ataques hutíes y evacuación de la embajada en Riad)",
-    "FinanceCalendar/DOL 08:30 ET (jobless claims)"
+    "RTE/Reuters 22 Oct 2026",
+    "Oilprice.com 22 Oct 2026",
+    "The National News 22 Oct 2026",
+    "CNBC 21-22 Oct 2026",
+    "Invezz 22 Oct 2026"
   ],
-  "as_of": "2026-10-22T15:40:13Z"
+  "as_of": "2026-10-22T16:07:29Z"
 }
