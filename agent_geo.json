@@ -1,10 +1,10 @@
 {
-  "geopolitica": "Reuters informa (05:40 ET) que EE.UU. e Israel planean intensificar los ataques contra Iran tras las elecciones legislativas de EE.UU. de noviembre, sin senales claras de desescalada en Medio Oriente, lo que mantiene elevada la prima de riesgo geopolitico y presiona al NQ.",
-  "petroleo": "El Brent sube 3.4% a 112.47 USD/barril y el WTI avanza 2.6% a 99.66 USD/barril (Reuters, 05:40 ET), cerca de maximos de cinco meses por las tensiones en Medio Oriente, encareciendo insumos y presionando el sentimiento de riesgo en el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 1.7%-1.9% en premercado tras resultados que decepcionaron de Tesla y Meta, reavivando dudas sobre el gasto en IA, con Intel y Marvell cayendo mas de 5% (CNBC/Yahoo Finance, 07:23 ET).",
+  "geopolitica": "Segun NYT (via CNBC, 06:30 ET), EEUU e Israel habrian preparado planes para nuevos ataques a Iran tras las elecciones de medio termino, intensificando el conflicto en Oriente Medio y el sentimiento de risk-off que presiona al NQ a la baja.",
+  "petroleo": "El Brent sube cerca de 2.7% a USD 111.74 y el WTI ronda USD 99.30 (CNBC, 06:30 ET) por temor a nuevos ataques a Iran y ataques a buques e instalaciones sauditas, alimentando temores de inflacion que pesan sobre el NQ.",
+  "catalizador": "Bloomberg (07:29 ET) reporta futuros del Nasdaq 100 cayendo 1.9% y del S&P 500 1.1% por la escalada en Oriente Medio, el alza del petroleo y la cautela ante resultados tecnologicos de Meta y Tesla, lastrando el apetito por riesgo en la apertura.",
   "sources": [
-    "Reuters 05:40 ET",
-    "CNBC/Yahoo Finance 07:23 ET"
+    "CNBC 06:30 ET",
+    "Bloomberg 07:29 ET"
   ],
-  "as_of": "2026-10-22T12:08:25Z"
+  "as_of": "2026-10-22T12:40:25Z"
 }
