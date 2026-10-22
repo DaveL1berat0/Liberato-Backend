@@ -1,13 +1,10 @@
 {
-  "geopolitica": "Ataques hutíes (alineados con Irán) contra el aeropuerto de Dammam y el yacimiento de Shaybah en Arabia Saudita, más el ataque iraní a 4 petroleros en el Golfo Pérsico y la orden de EE.UU. de evacuar diplomáticos de Arabia Saudita, elevan la aversión al riesgo y presionan a la baja al NQ.",
-  "petroleo": "El Brent sube ~2.9% hasta 112.01 USD (máximo intradía 112.68, el nivel más alto desde mayo) por los ataques hutíes en Arabia Saudita; el WTI ronda 99.56 USD, encareciendo insumos y pesando sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "Las preocupaciones por el elevado gasto en IA tras los resultados de Meta y Tesla, con fuerte caída de semiconductores (Intel -5.3%), fueron el catalizador que llevó al Nasdaq a su peor sesión reciente (-1.46%), arrastrando al NQ a la baja.",
+  "geopolitica": "Reportes de que EE.UU. e Israel planean reanudar ataques contra Iran tras las elecciones de medio termino, con Saudi Aramco evacuando personal de su sede en Dhahran, elevan la aversion al riesgo y presionan al NQ a la baja (CNBC, ~11:07 ET).",
+  "petroleo": "El Brent sube 2.8% a 111.81 USD/barril (toco casi 113 USD intradia) y el WTI avanza 1.7% a 98.83 USD por temor a una escalada EE.UU.-Iran, encareciendo insumos y presionando el sentimiento de riesgo del NQ (CNBC, ~11:07 ET).",
+  "catalizador": "Las solicitudes semanales de subsidio por desempleo cayeron a 194,000 (vs. 200,000 esperado), cerca de minimos historicos, reforzando la narrativa de mercado laboral fuerte y manteniendo la cautela sobre futuros recortes de tasas de la Fed (CNBC, ~08:30 ET).",
   "sources": [
-    "RTE/Reuters 22 Oct 2026",
-    "Oilprice.com 22 Oct 2026",
-    "The National News 22 Oct 2026",
-    "CNBC 21-22 Oct 2026",
-    "Invezz 22 Oct 2026"
+    "CNBC 11:07 ET - Oil prices today: WTI, Brent, Saudi Arabia",
+    "CNBC 08:30 ET - Jobless claims record low weekly"
   ],
-  "as_of": "2026-10-22T16:07:29Z"
+  "as_of": "2026-10-22T17:07:04Z"
 }
