@@ -1,12 +1,12 @@
 {
-  "geopolitica": "CNBC/Reuters reportan (citando NYT) que EEUU e Israel finalizaron planes para renovar ataques contra Iran, elevando el riesgo geopolitico y presionando al NQ a la baja en la sesion.",
-  "petroleo": "El Brent subio hacia 112 USD/barril (futuros dic.) y el WTI se acerco a 100 USD por las tensiones Iran-Israel y temores de disrupcion en el Estrecho de Ormuz, encareciendo el costo energetico y lastrando al Nasdaq.",
-  "catalizador": "Los resultados trimestrales de Meta y Tesla dispararon temor por el gasto en IA: Meta cayo cerca de 8% pese a superar ingresos, arrastrando a semiconductoras (AMD, Micron, Nvidia) y hundiendo al Nasdaq Composite mas de 2% intradia.",
+  "geopolitica": "EE.UU. retiro personal diplomatico no esencial de Arabia Saudita mientras Washington e Israel preparan planes de nuevos ataques contra Iran tras las elecciones de medio termino de noviembre, elevando la aversion al riesgo que pesa sobre el NQ.",
+  "petroleo": "El Brent subio cerca de 4% y supero los 113 USD/barril (maximo desde mayo) y el WTI avanzo cerca de 2.4% hasta casi 99.5 USD, impulsados por el temor a una escalada EEUU/Israel-Iran y ataques huties contra instalaciones petroleras sauditas, presionando al NQ por mayor aversion al riesgo.",
+  "catalizador": "El Nasdaq-100 cayo cerca de 2.7%-2.9% en la sesion del 22 de octubre, su peor jornada desde julio, tras resultados de Meta que generaron temor por el gasto en IA (accion -6% a -8%) y un desplome de 6.2% en el indice de semiconductores de Filadelfia (Lam Research -11.5%).",
   "sources": [
-    "Reuters 02:26 ET",
-    "Yahoo Finance 10:41 ET",
-    "Yahoo Finance 15:00 ET",
-    "CNBC (citando NYT)"
+    "CNBC 22/10 - US pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms",
+    "CNBC 22/10 - Oil prices today: WTI, Brent, Saudi Arabia",
+    "Bloomberg 13:11 ET 22/10 - Stocks Extend Drop as Risk-Off Dominates With Oil Up, Meta Down",
+    "CNBC 21/10 - Nasdaq tumbles nearly 3% on AI spending concerns and jump in oil prices"
   ],
-  "as_of": "2026-10-22T19:06:26Z"
+  "as_of": "2026-10-22T20:06:09Z"
 }
