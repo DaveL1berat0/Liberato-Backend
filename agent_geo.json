@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los hutíes atacaron infraestructura saudí (aeropuerto de Dammam y un campo petrolero) y Washington ordenó evacuar personal diplomático de Arabia Saudí, disparando la demanda de refugio y presionando a la baja al NQ (Reuters/RTE, 22 oct, ~tarde ET).",
-  "petroleo": "El Brent subió 2.9% hasta 112.01 USD/barril (máximo de 5 meses, llegó a tocar 112.68) y el WTI avanzó 2.5% a 99.56 USD, por la escalada de ataques hutíes contra instalaciones sauditas, lo que eleva el riesgo inflacionario y lastra al Nasdaq (Reuters vía RTE / CNBC, 22 oct).",
-  "catalizador": "La venta masiva de semiconductores (SOXX -6%, AMD y Marvell -8%, Intel -7%) por dudas sobre el gasto en IA, agravada por la reacción a los resultados de Meta y Tesla, golpea directamente al NQ (CNBC / Yahoo Finance, 22 oct).",
+  "geopolitica": "CNBC/Reuters reportan (citando NYT) que EEUU e Israel finalizaron planes para renovar ataques contra Iran, elevando el riesgo geopolitico y presionando al NQ a la baja en la sesion.",
+  "petroleo": "El Brent subio hacia 112 USD/barril (futuros dic.) y el WTI se acerco a 100 USD por las tensiones Iran-Israel y temores de disrupcion en el Estrecho de Ormuz, encareciendo el costo energetico y lastrando al Nasdaq.",
+  "catalizador": "Los resultados trimestrales de Meta y Tesla dispararon temor por el gasto en IA: Meta cayo cerca de 8% pese a superar ingresos, arrastrando a semiconductoras (AMD, Micron, Nvidia) y hundiendo al Nasdaq Composite mas de 2% intradia.",
   "sources": [
-    "Reuters/RTE 22 oct (Brent 112.01 USD, +2.9%, ataques hutíes)",
-    "CNBC 22 oct (oil price today: WTI, Brent rise on Middle East worries)",
-    "CNBC/Yahoo Finance 22 oct (chip stocks selloff, SOXX -6%)"
+    "Reuters 02:26 ET",
+    "Yahoo Finance 10:41 ET",
+    "Yahoo Finance 15:00 ET",
+    "CNBC (citando NYT)"
   ],
-  "as_of": "2026-10-22T18:07:07Z"
+  "as_of": "2026-10-22T19:06:26Z"
 }
