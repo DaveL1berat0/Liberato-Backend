@@ -1,13 +1,12 @@
 {
-  "geopolitica": "La Guardia Revolucionaria de Iran ataco buques cerca del Estrecho de Ormuz y un dron impacto el yacimiento Shaybah de Saudi Aramco, elevando el riesgo geopolitico en Medio Oriente y presionando a la baja los futuros del NQ por aversion al riesgo (Rigzone, Voice of Emirates, 22-oct).",
-  "petroleo": "El Brent cotiza cerca de 110-112 USD/barril (+1.6-3%), rozando maximos de cinco meses, impulsado por las tensiones en el Estrecho de Ormuz y el ataque a instalaciones petroleras sauditas, lo que añade presion inflacionaria y lastra al NQ (Rigzone, Voice of Emirates, Stocktwits, 22-oct).",
-  "catalizador": "Los futuros del Nasdaq 100 caen hasta 1.9% en la premarket por la rotacion fuera del trade de IA tras los resultados de Meta y Tesla, sumado a la escalada petrolera, con el rendimiento a 10 años cerca de 5.07% (CNBC 21/22-oct, Stocktwits 22-oct).",
+  "geopolitica": "EE.UU. retira personal no esencial de Arabia Saudita y, segun el NYT, EE.UU. e Israel prepararon planes para nuevos ataques contra Iran tras las elecciones de medio termino; Trump dice que no negociara con Iran y que 'algo pasara pronto', lo que eleva la aversion al riesgo y presiona al NQ (CNBC, ~10:00 ET).",
+  "petroleo": "El Brent sube 3.3% hasta 112.37 USD/barril y el WTI avanza 2.8% a 99.88 USD por temor a una escalada EE.UU.-Israel-Iran tras ataques a infraestructura saudi; el salto del crudo alimenta la narrativa de mayor inflacion y pesa sobre el NQ (CNBC, 09:15 ET).",
+  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.7-1.9% en premarket tras resultados decepcionantes de Meta y Tesla que reavivan dudas sobre la operacion de IA, mientras los rendimientos del Tesoro bajan al esperarse datos de empleo (jobless claims); combinacion bajista para el NQ en la apertura (Bloomberg/CNBC, 07:29 ET).",
   "sources": [
-    "Rigzone 22-oct-2026",
-    "Voice of Emirates 22-oct-2026",
-    "CNBC 21/22-oct-2026",
-    "Stocktwits 22-oct-2026",
-    "Newsquawk US Opening News 22-oct-2026"
+    "CNBC 10:00 ET - us-iran-trump-hormuz",
+    "CNBC 09:15 ET - oil-prices-today-wti-brent-saudi-arabia",
+    "Bloomberg 07:29 ET - us-futures-slip-as-risk-off-sentiment-dominates-with-oil-rising",
+    "CNBC - treasurys-bonds-ai-yields"
   ],
-  "as_of": "2026-10-22T13:40:45Z"
+  "as_of": "2026-10-22T14:07:49Z"
 }
