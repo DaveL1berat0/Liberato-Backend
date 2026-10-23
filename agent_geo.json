@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El Departamento de Estado de EE.UU. ordeno la salida de diplomaticos no esenciales y sus familias de Arabia Saudi (y otras misiones del Golfo) citando los ataques hutíes, en el marco de la escalada del conflicto EE.UU.-Israel-Iran, lo que eleva el riesgo geopolitico y la aversion al riesgo que puede pesar sobre el NQ (Reuters, 21 oct).",
-  "petroleo": "El Brent cerro el jueves en 113.17 USD/barril (+4%) y el WTI en 99.47 USD/barril (+2.4%), su nivel mas alto desde mayo, por los ataques hutíes a infraestructura petrolera saudi (Shaybah, Yanbu) y el temor a una mayor escalada EE.UU.-Israel-Iran; el viernes el Brent operaba cerca de 113-114 USD, presionando al NQ por el riesgo de mayor inflacion (Reuters/CNBC, 22-23 oct, ~06:00 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 operan mixtos/presionados en el premarket tras el desplome del jueves (Nasdaq Composite -2.6%, peor sesion desde junio) por temores al gasto en IA, con telecos cayendo mas de 3% por los planes inalambricos de SpaceX, mientras el mercado aguarda la reunion de la Fed del 27-28 de octubre (CNBC/Stocktwits/Benzinga, ~06:00 ET).",
+  "geopolitica": "Irán afirma que 7 petroleros fueron atacados en el Estrecho de Ormuz; Trump rechaza la acusación y acusa a Teherán de inflar precios, mientras EE.UU. refuerza la zona con un tercer portaaviones, lo que mantiene la prima de riesgo geopolítico sobre el NQ.",
+  "petroleo": "Brent opera por encima de 113 USD/barril y WTI cerca de 100-101 USD/barril, impulsados por los ataques a petroleros y el temor a una escalada bélica entre EE.UU. e Irán, presionando a la baja al NQ vía mayores costos y aversión al riesgo.",
+  "catalizador": "El Nasdaq Composite cayó 2.6% el jueves (peor sesión desde junio) por dudas sobre el retorno de la inversión en IA tras los resultados de Meta; los futuros del Nasdaq-100 operan mixtos/planos esta mañana, dejando al NQ vulnerable a nueva volatilidad intradía.",
   "sources": [
-    "Reuters 21 oct - U.S. orders diplomats to depart Saudi Arabia amid Houthi strikes",
-    "CNBC 22 oct - Oil prices today: WTI, Brent, Saudi Arabia",
-    "Stocktwits ~05:57 ET - Nasdaq futures slide premarket as AI spending worries resurface, oil tops $112 on Iran tensions",
-    "Benzinga ~06:00 ET - Wall Street futures dip after AI rout, telecoms slide"
+    "CNBC 22/10 (Nasdaq -2.6%, peor sesión desde junio, dudas de gasto en IA)",
+    "Washington Times 22/10 (Trump rechaza acusación iraní de ataques a petroleros en Ormuz)",
+    "CBC 22/10 (Irán reporta 7 petroleros golpeados en el Estrecho de Ormuz)",
+    "CNBC TV18 23/10 (Brent por encima de 113 USD/barril)",
+    "Yahoo Finance 23/10 (futuros Dow/S&P/Nasdaq mixtos tras selloff tecnológico)"
   ],
-  "as_of": "2026-10-23T11:40:34Z"
+  "as_of": "2026-10-23T12:11:54Z"
 }
