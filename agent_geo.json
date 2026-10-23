@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. retiró personal no esencial de su embajada en Arabia Saudita y, junto a Israel, prepara nuevos ataques contra Irán tras las elecciones de mitad de período del 3 de noviembre, alimentando una rotación hacia activos refugio que presiona al NQ (CNBC, 22-23 oct, ~14:00 ET).",
-  "petroleo": "El Brent cotiza en torno a 114-117 USD/barril y el WTI sobre 100-103 USD/barril, en máximos de varios meses por el riesgo de una escalada EE.UU.-Irán tras las midterms, lo que encarece insumos y pesa sobre las tecnológicas del NQ (CNBC, 23 oct, ~14:00 ET).",
-  "catalizador": "El rendimiento del Treasury a 10 años retrocedió hacia el 5% esta semana ante la búsqueda de refugio por dudas sobre el gasto en IA, sumando presión vendedora sobre las megacaps del NQ (CNBC, 23 oct).",
+  "geopolitica": "Trump advirtio por segundo dia consecutivo una posible escalada militar contra Iran tras las elecciones de medio mandato, con el Estrecho de Ormuz como foco de tension, lo que presiona al NQ a la baja por aversion al riesgo (CBS News, 11:50 ET).",
+  "petroleo": "El Brent sube ~1.6% hasta unos USD 114-116 y el WTI supera los USD 103 por barril, maximos de varios meses por la escalada en Medio Oriente, encareciendo costos de insumos y alimentando ventas en tecnologia dentro del NQ (CP24 / Fortune, 07:15 ET).",
+  "catalizador": "",
   "sources": [
-    "CNBC 22-23 oct ~14:00 ET (US-Iran, Saudi embassy)",
-    "CNBC 23 oct ~14:00 ET (oil prices today)",
-    "CNBC 23 oct (10-year Treasury yield / AI spending worries)"
+    "CBS News 11:50 ET",
+    "Fortune 07:15 ET",
+    "CP24 (Brent +1.6% a USD 114.92)",
+    "Yahoo Finance 14:49 ET"
   ],
-  "as_of": "2026-10-23T18:07:07Z"
+  "as_of": "2026-10-23T19:06:32Z"
 }
