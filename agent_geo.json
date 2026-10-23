@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Medios reportan que EE.UU. e Israel preparan posibles nuevos ataques contra Iran tras las elecciones de medio termino de EE.UU.; Washington retiro personal diplomatico de Arabia Saudita por riesgo de escalada, y hubo nuevos ataques con drones hutíes contra instalaciones sauditas (Shaybah), lo que mantiene la aversion al riesgo y presiona al NQ (CNBC, 22 oct, cierre 16:00 ET).",
-  "petroleo": "El petroleo sigue firme por la escalada en Medio Oriente: segun datos de Reuters a las 06:39 GMT (02:39 ET) el Brent cotizaba en 114.47 USD/barril y el WTI en 100.84 USD/barril, tras un cierre del Brent el jueves en 113.17 USD (+4%, maximo desde el 4 de mayo), impulsado por los ataques hutíes a Arabia Saudita y menor produccion en Libia, lo que añade presion inflacionaria sobre el NQ.",
-  "catalizador": "No hay reunion de la Fed hoy (la proxima FOMC es el 27-28 de octubre); el rendimiento del Treasury a 10 anos cayo mas de 17 puntos basicos a 4.972% el jueves (su mayor caida diaria desde marzo 2023) en una rotacion hacia refugio tras el flujo de caja libre negativo reportado por Meta y los temores sobre el gasto en IA; el Nasdaq Composite cerro -2.6% el jueves y los futuros seguian bajo presion el viernes en premarket (CNBC, 22-23 oct).",
+  "geopolitica": "Los huthies atacaron con drones el aeropuerto de Dammam (1 muerto, 8 heridos) y un campo petrolero en Arabia Saudita (2 muertos), y la Guardia Revolucionaria irani reporto minas cerca del Estrecho de Ormuz; la escalada en Medio Oriente eleva la aversion al riesgo y presiona al NQ a la baja (Reuters, 22-23 oct).",
+  "petroleo": "El Brent toco 114.47 USD/barril y el WTI 100.84 USD segun datos de Reuters a las 06:39 GMT (02:39 ET), tras un cierre del jueves con un salto de ~4% a maximo de 5 meses por los ataques huthies en Arabia Saudita y menor produccion en Libia, lo que reaviva el temor a inflacion y pesa sobre el NQ.",
+  "catalizador": "El Nasdaq Composite cerro -2.6% el jueves (peor sesion desde junio) y el S&P 500 -1.2% a 7663.43 (peor desde julio) por dudas sobre el gasto en IA/semiconductores; los futuros del NQ siguen mixtos el viernes previo a datos PMI globales, con la reunion de la Fed del 27-28 de octubre como proximo catalizador (Reuters/Yahoo Finance, cierre 22 oct).",
   "sources": [
-    "CNBC 22 oct 16:00 ET - stock market today live updates (Nasdaq -2.6%, cierre)",
-    "CNBC 22 oct - U.S. pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms",
-    "CNBC 22 oct - treasurys bonds AI yields (10Y a 4.972%, -17pb)",
-    "Reuters 06:39 GMT (02:39 ET) 23 oct - Brent 114.47 USD, WTI 100.84 USD",
-    "CNBC 23 oct premarket ET - stock futures remain under pressure amid AI trade worries, oil above 100"
+    "Reuters 06:39 GMT (02:39 ET) - Brent 114.47 USD, WTI 100.84 USD",
+    "Reuters/Japan Times 22-23 oct - ataques huthies Dammam y campo petrolero saudi",
+    "Yahoo Finance/Reuters 22 oct cierre - Nasdaq Composite -2.6%, S&P 500 -1.2%"
   ],
-  "as_of": "2026-10-23T14:39:33Z"
+  "as_of": "2026-10-23T15:09:08Z"
 }
