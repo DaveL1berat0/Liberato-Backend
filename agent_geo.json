@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Iran asegura que 7 petroleros fueron atacados en el Estrecho de Ormuz y advierte una respuesta mas amplia contra EE.UU.; Trump desmiente los hechos, pero la escalada belica en Medio Oriente eleva la aversion al riesgo y presiona al NQ a la baja.",
-  "petroleo": "El Brent supera los 113 USD/barril y el WTI ronda los 100.57 USD tras la escalada de ataques en el Estrecho de Ormuz, encareciendo insumos energeticos y anadiendo presion bajista sobre el NQ intradia.",
-  "catalizador": "El Nasdaq se desplomo 2.6% el 22/10 (peor sesion desde junio) tras resultados de Meta que reavivaron el temor al gasto excesivo en IA y una fuerte caida de semiconductores (Intel, AMD, Marvell), catalizador que sigue lastrando al NQ en la apertura de hoy.",
+  "geopolitica": "Los hutíes intensifican ataques contra infraestructura petrolera saudí y Aramco evacúa personal mientras suben las tensiones en Oriente Medio, lo que eleva la aversión al riesgo y presiona al NQ a la baja (Bloomberg, CNBC).",
+  "petroleo": "El WTI sube cerca de 1.3% hasta ~101 USD/barril por el conflicto en Arabia Saudita, encareciendo insumos y añadiendo presión bajista sobre el sector tech del NQ (Bloomberg).",
+  "catalizador": "",
   "sources": [
-    "Al Jazeera 22-10-2026",
-    "CNBC 22-10-2026",
-    "Yahoo Finance 09:44 ET 23-10-2026",
-    "Star-Advertiser/Reuters 22-10-2026"
+    "Bloomberg 07:55 ET",
+    "CNBC 12:04 ET"
   ],
-  "as_of": "2026-10-23T15:39:54Z"
+  "as_of": "2026-10-23T16:06:45Z"
 }
