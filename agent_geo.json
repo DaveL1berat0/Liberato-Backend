@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los huthies atacaron con drones el aeropuerto de Dammam (1 muerto, 8 heridos) y un campo petrolero en Arabia Saudita (2 muertos), y la Guardia Revolucionaria irani reporto minas cerca del Estrecho de Ormuz; la escalada en Medio Oriente eleva la aversion al riesgo y presiona al NQ a la baja (Reuters, 22-23 oct).",
-  "petroleo": "El Brent toco 114.47 USD/barril y el WTI 100.84 USD segun datos de Reuters a las 06:39 GMT (02:39 ET), tras un cierre del jueves con un salto de ~4% a maximo de 5 meses por los ataques huthies en Arabia Saudita y menor produccion en Libia, lo que reaviva el temor a inflacion y pesa sobre el NQ.",
-  "catalizador": "El Nasdaq Composite cerro -2.6% el jueves (peor sesion desde junio) y el S&P 500 -1.2% a 7663.43 (peor desde julio) por dudas sobre el gasto en IA/semiconductores; los futuros del NQ siguen mixtos el viernes previo a datos PMI globales, con la reunion de la Fed del 27-28 de octubre como proximo catalizador (Reuters/Yahoo Finance, cierre 22 oct).",
+  "geopolitica": "Iran asegura que 7 petroleros fueron atacados en el Estrecho de Ormuz y advierte una respuesta mas amplia contra EE.UU.; Trump desmiente los hechos, pero la escalada belica en Medio Oriente eleva la aversion al riesgo y presiona al NQ a la baja.",
+  "petroleo": "El Brent supera los 113 USD/barril y el WTI ronda los 100.57 USD tras la escalada de ataques en el Estrecho de Ormuz, encareciendo insumos energeticos y anadiendo presion bajista sobre el NQ intradia.",
+  "catalizador": "El Nasdaq se desplomo 2.6% el 22/10 (peor sesion desde junio) tras resultados de Meta que reavivaron el temor al gasto excesivo en IA y una fuerte caida de semiconductores (Intel, AMD, Marvell), catalizador que sigue lastrando al NQ en la apertura de hoy.",
   "sources": [
-    "Reuters 06:39 GMT (02:39 ET) - Brent 114.47 USD, WTI 100.84 USD",
-    "Reuters/Japan Times 22-23 oct - ataques huthies Dammam y campo petrolero saudi",
-    "Yahoo Finance/Reuters 22 oct cierre - Nasdaq Composite -2.6%, S&P 500 -1.2%"
+    "Al Jazeera 22-10-2026",
+    "CNBC 22-10-2026",
+    "Yahoo Finance 09:44 ET 23-10-2026",
+    "Star-Advertiser/Reuters 22-10-2026"
   ],
-  "as_of": "2026-10-23T15:09:08Z"
+  "as_of": "2026-10-23T15:39:54Z"
 }
