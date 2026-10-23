@@ -1,12 +1,16 @@
 {
-  "geopolitica": "Trump advirtio por segundo dia consecutivo una posible escalada militar contra Iran tras las elecciones de medio mandato, con el Estrecho de Ormuz como foco de tension, lo que presiona al NQ a la baja por aversion al riesgo (CBS News, 11:50 ET).",
-  "petroleo": "El Brent sube ~1.6% hasta unos USD 114-116 y el WTI supera los USD 103 por barril, maximos de varios meses por la escalada en Medio Oriente, encareciendo costos de insumos y alimentando ventas en tecnologia dentro del NQ (CP24 / Fortune, 07:15 ET).",
-  "catalizador": "",
+  "geopolitica": "Trump advirtio que una escalada militar contra Iran podria llegar 'fairly soon' tras los ataques hutíes (alineados con Iran) contra Arabia Saudita (aeropuerto civil de Dammam, 2 muertos y 8 heridos) y reportes de planes EEUU-Israel de nuevos ataques tras las elecciones de medio mandato, lo que presiona al NQ a la baja por aversion al riesgo (CBS News 11:50 ET; NBC News/CNBC, cierre jueves 22-oct).",
+  "petroleo": "El Brent opera en torno a USD 113-116 y el WTI supero los USD 100-103 por barril, maximos desde mayo por la escalada Iran-Arabia Saudita y temor a un cierre del Estrecho de Ormuz, encareciendo insumos y alimentando ventas en tecnologia dentro del NQ (CP24/Fortune 07:15 ET; Bloomberg, cierre jueves 22-oct).",
+  "catalizador": "Las tecnologicas de IA siguen presionadas por el temor a exceso de gasto en infraestructura (capex), que ya provoco la peor sesion del Nasdaq desde junio el jueves (-2.6%); el viernes el Dow cayo ~653 puntos (-1.2%) mientras el Nasdaq amortiguo la caida (-0.2%), sin catalizador de la Fed hoy (proxima reunion FOMC 27-28 oct) (CNBC, cierre jueves 22-oct; Yahoo Finance, cierre viernes 23-oct).",
   "sources": [
     "CBS News 11:50 ET",
     "Fortune 07:15 ET",
     "CP24 (Brent +1.6% a USD 114.92)",
-    "Yahoo Finance 14:49 ET"
+    "Yahoo Finance 14:49 ET",
+    "CNBC 22-oct (cierre, AI spending woes, Nasdaq -2.6%)",
+    "Bloomberg 22-oct (Nasdaq 100 -3%, oil rising)",
+    "NBC News 22-oct (Iran war / AI spending selloff)",
+    "Yahoo Finance 23-oct (cierre, Dow -653pts, oil surge)"
   ],
-  "as_of": "2026-10-23T19:06:32Z"
+  "as_of": "2026-10-23T20:07:40Z"
 }
