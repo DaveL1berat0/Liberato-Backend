@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La tension en Oriente Medio escala: los inversores anticipan que EE.UU. reanude ataques contra Iran, lo que alimenta un sesgo de aversion al riesgo que presiona al NQ intradia (CNBC, 23 oct).",
-  "petroleo": "El Brent supera los 116 USD/barril (maximo de 6 meses) y el WTI rebasa los 100 USD/barril, impulsados por el temor a una escalada militar EE.UU.-Iran en Oriente Medio, lo que encarece insumos y pesa sobre tecnologicas sensibles a costos energeticos (CNBC, 23 oct).",
-  "catalizador": "El mercado sigue presionado por el temor al gasto masivo en IA de las grandes tecnologicas, tras la peor sesion del Nasdaq desde junio (-2.6% el miercoles) por preocupaciones sobre el capex de Meta, tema que continua pesando sobre el NQ hoy (CNBC Daily Open, 23 oct).",
+  "geopolitica": "EE.UU. retiró personal no esencial de su embajada en Arabia Saudita y, junto a Israel, prepara nuevos ataques contra Irán tras las elecciones de mitad de período del 3 de noviembre, alimentando una rotación hacia activos refugio que presiona al NQ (CNBC, 22-23 oct, ~14:00 ET).",
+  "petroleo": "El Brent cotiza en torno a 114-117 USD/barril y el WTI sobre 100-103 USD/barril, en máximos de varios meses por el riesgo de una escalada EE.UU.-Irán tras las midterms, lo que encarece insumos y pesa sobre las tecnológicas del NQ (CNBC, 23 oct, ~14:00 ET).",
+  "catalizador": "El rendimiento del Treasury a 10 años retrocedió hacia el 5% esta semana ante la búsqueda de refugio por dudas sobre el gasto en IA, sumando presión vendedora sobre las megacaps del NQ (CNBC, 23 oct).",
   "sources": [
-    "CNBC 23-Oct-2026 (oil-price-brent-wti-iran-war-saudi-arabia)",
-    "CNBC Daily Open 23-Oct-2026 (AI spending fears haunt markets before Halloween)",
-    "CNBC 21-Oct-2026 (stock-market-today-live-updates, Nasdaq -2.6%)"
+    "CNBC 22-23 oct ~14:00 ET (US-Iran, Saudi embassy)",
+    "CNBC 23 oct ~14:00 ET (oil prices today)",
+    "CNBC 23 oct (10-year Treasury yield / AI spending worries)"
   ],
-  "as_of": "2026-10-23T17:07:37Z"
+  "as_of": "2026-10-23T18:07:07Z"
 }
