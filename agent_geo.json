@@ -1,13 +1,15 @@
 {
-  "geopolitica": "Irán afirma que 7 petroleros fueron atacados en el Estrecho de Ormuz; Trump rechaza la acusación y acusa a Teherán de inflar precios, mientras EE.UU. refuerza la zona con un tercer portaaviones, lo que mantiene la prima de riesgo geopolítico sobre el NQ.",
-  "petroleo": "Brent opera por encima de 113 USD/barril y WTI cerca de 100-101 USD/barril, impulsados por los ataques a petroleros y el temor a una escalada bélica entre EE.UU. e Irán, presionando a la baja al NQ vía mayores costos y aversión al riesgo.",
-  "catalizador": "El Nasdaq Composite cayó 2.6% el jueves (peor sesión desde junio) por dudas sobre el retorno de la inversión en IA tras los resultados de Meta; los futuros del Nasdaq-100 operan mixtos/planos esta mañana, dejando al NQ vulnerable a nueva volatilidad intradía.",
+  "geopolitica": "Iran afirma que 7 petroleros fueron atacados durante la noche en el Estrecho de Ormuz (4 incendiados, 3 por minas); EE.UU. (CENTCOM) disputa la version de las minas y dice que el estrecho sigue operativo; Trump acusa a Teheran de inflar el precio del petroleo antes de las elecciones de mitad de mandato en EE.UU.; la Guardia Revolucionaria iraní amenaza bases de EE.UU. en la region si continua la escolta naval, lo que mantiene elevada la prima de riesgo geopolitico sobre el NQ (Al Jazeera, Washington Post, The Hill, 22-oct-2026).",
+  "petroleo": "Brent cotiza en torno a 113-114 USD/barril y WTI cerca de 100 USD/barril, cerca de maximos recientes por los supuestos ataques a petroleros en el Estrecho de Ormuz y el riesgo de una escalada belica EEUU-Iran; el crudo mas caro presiona costos de insumos y el sentimiento de riesgo global (OilPrice.com ~01:33 ET; CNBC TV18, 23-oct-2026).",
+  "catalizador": "El Nasdaq Composite cerro el jueves con una caida de 2.6%, su peor sesion desde el 5 de junio, por dudas sobre el retorno del gasto masivo en IA tras el anuncio de Meta de buscar mas financiamiento para infraestructura de IA; los futuros de Wall Street abren mixtos este viernes, dejando al NQ expuesto a nueva volatilidad intradia en la apertura (TheStreet; Yahoo Finance, 23-oct-2026).",
   "sources": [
-    "CNBC 22/10 (Nasdaq -2.6%, peor sesión desde junio, dudas de gasto en IA)",
-    "Washington Times 22/10 (Trump rechaza acusación iraní de ataques a petroleros en Ormuz)",
-    "CBC 22/10 (Irán reporta 7 petroleros golpeados en el Estrecho de Ormuz)",
-    "CNBC TV18 23/10 (Brent por encima de 113 USD/barril)",
-    "Yahoo Finance 23/10 (futuros Dow/S&P/Nasdaq mixtos tras selloff tecnológico)"
+    "Al Jazeera 22-oct-2026 (Iran dice 7 barcos atacados en Ormuz)",
+    "Washington Post 22-oct-2026 (Iran-EEUU, temor a guerra)",
+    "The Hill 22-oct-2026 (Iran reporta 7 petroleros danados)",
+    "OilPrice.com ~01:33 ET 23-oct-2026 (Brent ~114, WTI ~100.40)",
+    "CNBC TV18 23-oct-2026 (Brent por encima de 113 USD/barril)",
+    "TheStreet 23-oct-2026 (Nasdaq -2.6% jueves, peor sesion desde junio)",
+    "Yahoo Finance 23-oct-2026 (futuros Dow/S&P/Nasdaq mixtos)"
   ],
-  "as_of": "2026-10-23T12:11:54Z"
+  "as_of": "2026-10-23T12:41:17Z"
 }
