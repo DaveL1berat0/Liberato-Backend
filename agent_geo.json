@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EE.UU. retiro personal diplomatico no esencial de Arabia Saudita mientras Washington e Israel preparan, segun un reporte del NYT, nuevos ataques contra Iran tras las elecciones de medio termino de noviembre, elevando la aversion al riesgo que pesa sobre el NQ.",
-  "petroleo": "El Brent cerro con un salto de ~4% y supero los 113 USD/barril (maximo desde mayo) y el WTI avanzo ~2.4% hasta cerca de 99.5 USD, impulsados por el temor a una escalada EEUU/Israel-Iran y ataques huties contra instalaciones petroleras sauditas, presionando al NQ por mayor aversion al riesgo y costos de energia.",
-  "catalizador": "El Nasdaq Composite cerro hoy 22-oct con una caida de ~2.6% a 26,008.86 (peor sesion desde junio) por el temor al gasto en IA tras la guia de capex de Meta (accion -7%), con AMD -8%, Micron -6% y Nvidia -4%, mientras el bono del Tesoro a 10 anios cayo por debajo de 5% en una huida hacia activos refugio.",
+  "geopolitica": "EE.UU. e Israel habrian preparado planes para nuevos ataques contra Iran tras las elecciones de medio mandato del 3 de noviembre, segun el NYT citado por CNBC, lo que eleva el riesgo geopolitico y presiona al NQ via aversion al riesgo.",
+  "petroleo": "El Brent cerro el jueves en 113.17 USD/barril (+4%) y el WTI en 99.47 USD/barril (+2.4%), su nivel mas alto desde mayo, por temor a una escalada EE.UU.-Israel-Iran; el viernes el Brent operaba en torno a 114 USD (+0.75%), presionando al NQ por el riesgo de mayor inflacion.",
+  "catalizador": "",
   "sources": [
-    "CNBC 22/10 - US pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms",
-    "CNBC 22/10 - Oil prices today: WTI, Brent, Saudi Arabia",
-    "Bloomberg 13:11 ET 22/10 - Stocks Extend Drop as Risk-Off Dominates With Oil Up, Meta Down",
-    "CNBC 16:00 ET 22/10 - Nasdaq falls more than 2% for worst day since June as AI spending woes, oil prices spark sell-off"
+    "CNBC 22 oct 2026 - Oil prices today: WTI, Brent, Saudi Arabia",
+    "CNBC 22 oct 2026 - U.S. pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms",
+    "CNBC 23 oct 2026 - CNBC Daily Open: AI spending fears haunt markets before Halloween"
   ],
-  "as_of": "2026-10-22T21:06:15Z"
+  "as_of": "2026-10-23T11:11:42Z"
 }
