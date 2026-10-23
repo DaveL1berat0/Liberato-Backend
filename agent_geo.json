@@ -1,13 +1,14 @@
 {
-  "geopolitica": "Medios reportan que EE.UU. e Israel preparan posibles nuevos ataques contra Irán tras las elecciones de medio término de EE.UU., mientras Irán dice estar \"preparado para la guerra\", lo que eleva la aversión al riesgo y presiona al NQ vía rotación hacia refugio (CNBC, 22 oct, cierre 16:00 ET).",
-  "petroleo": "El Brent subió ~4% el jueves y liquidó en 113.17 USD/barril (máximo de 5 meses), con el WTI cerca de 100 USD/barril, impulsados por el riesgo de guerra Irán-Israel y tensión en el Estrecho de Ormuz, lo que añade presión inflacionaria sobre el NQ (CNBC, 22 oct, cierre 16:00 ET).",
-  "catalizador": "El rendimiento del Treasury a 10 años cayó más de 17 puntos básicos a 4.972% el jueves (su mayor caída diaria desde marzo 2023) en una rotación hacia refugio tras el flujo de caja libre negativo reportado por Meta y temores sobre el gasto en IA; el Nasdaq Composite cerró -2.6%, y los futuros seguían bajo presión el viernes en premarket (CNBC, 22-23 oct).",
+  "geopolitica": "Medios reportan que EE.UU. e Israel preparan posibles nuevos ataques contra Irán tras las elecciones de medio término de EE.UU., mientras EE.UU. retiró personal diplomático de Arabia Saudita por el riesgo de escalada, lo que mantiene la aversión al riesgo y la rotación hacia refugio que presiona al NQ (CNBC, 22 oct, cierre 16:00 ET).",
+  "petroleo": "El Brent subió ~4% el jueves y liquidó en 113.17 USD/barril (máximo de 5 meses), con el WTI cerca de 100 USD/barril, impulsados por un ataque con drones a la planta de Saudi Aramco en Shaybah y la tensión en el Estrecho de Ormuz, lo que añade presión inflacionaria sobre el NQ (CNBC, 22 oct, cierre 16:00 ET).",
+  "catalizador": "No hay reunión de la Fed hoy (la próxima FOMC es el 27-28 de octubre); el rendimiento del Treasury a 10 años cayó más de 17 puntos básicos a 4.972% el jueves (su mayor caída diaria desde marzo 2023) en una rotación hacia refugio tras el flujo de caja libre negativo reportado por Meta y los temores sobre el gasto en IA; el Nasdaq Composite cerró -2.6% el jueves y los futuros seguían bajo presión el viernes en premarket (CNBC, 22-23 oct).",
   "sources": [
     "CNBC 22 oct 16:00 ET - stock market today live updates (Nasdaq -2.6%, cierre)",
     "CNBC 22 oct 16:00 ET - oil price today WTI Brent Saudi Arabia (Brent 113.17 USD, +4%)",
     "CNBC 22 oct - treasurys bonds AI yields (10Y a 4.972%, -17pb)",
+    "CNBC 22 oct - U.S. pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms",
     "CNBC 23 oct premarket ET - stock futures remain under pressure amid AI trade worries, oil above 100",
     "CNBC 23 oct premarket ET - safe haven search is on Friday as investors keep rotating"
   ],
-  "as_of": "2026-10-23T13:16:37Z"
+  "as_of": "2026-10-23T13:40:03Z"
 }
