@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Lula gano la segunda vuelta presidencial de Brasil y Bolsonaro se nego a reconocer el resultado, lo que desato una venta masiva en activos brasilenos (el real cayo ~10.5% y el ETF de Brasil se desplomo mas de 20%), un shock de aversion al riesgo que podria contagiar a los futuros del NQ en la apertura.",
-  "petroleo": "El WTI cae ~1.2% a 102.05 USD y el Brent ~0.7% a 115.86 USD hacia las 9:19 ET, retrocediendo desde los maximos de abril (alcanzados el viernes) tras ataques hutíes a infraestructura petrolera saudi, mientras el mercado pondera el riesgo de oferta frente a temores de menor demanda, lo que podria aliviar algo de presion inflacionaria para el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 suben ~0.5% hacia las 8:38 ET, impulsados por el entusiasmo del S-1 de la OPI de Anthropic y la antesala de resultados de Big Tech, de cara a la decision de tasas de la Fed el miercoles (ahora liderada por Kevin Warsh, con el mercado descontando mas de 90% de probabilidad de mantenerlas en 3.75%-4%), lo que da un sesgo alcista de corto plazo al NQ antes de la apertura.",
+  "geopolitica": "Arabia Saudí envió a su ministro de Defensa a Teherán para dialogar sobre la guerra con Irán mientras persisten reportes no verificados de ataques hutíes contra infraestructura petrolera saudí, sosteniendo un sesgo de aversión al riesgo que puede limitar rallies del NQ si la escalada se confirma (CNBC).",
+  "petroleo": "El Brent cae 0.2% hasta 116.49 USD/barril en la mañana de hoy (CNBC) tras el repunte de la semana pasada por la guerra EEUU/Israel-Irán y ataques hutíes a infraestructura saudí; la prima de riesgo geopolítico de unos 20 USD/barril (Axios) mantiene presión inflacionaria que pesa sobre el NQ intradía.",
+  "catalizador": "Los mercados operan hoy a la espera de la decisión de la Fed del miércoles 28-oct (se espera que mantenga tasas en 3.75%-4.00% según CME FedWatch) y de los resultados tecnológicos de la semana, lo que mantiene al NQ en modo de espera cauteloso (Yahoo Finance/TheStreet).",
   "sources": [
-    "CNBC 09:19 ET (oil prices today: WTI, Brent)",
-    "CNBC 26/10 (Brazil Lula win presidential election runoff)",
-    "Bloomberg 08:38 ET (US stock futures gain ahead of Big Tech earnings, Fed decision)",
-    "CNBC 26/10 (US Treasury yields ahead of Fed rate decision)"
+    "CNBC 26-oct (media mañana) ET",
+    "Axios 26-oct ET",
+    "Yahoo Finance/TheStreet 26-oct ET",
+    "Bloomberg 25-oct ET (Markets Wrap)"
   ],
-  "as_of": "2026-10-26T15:40:06Z"
+  "as_of": "2026-10-26T16:09:59Z"
 }
