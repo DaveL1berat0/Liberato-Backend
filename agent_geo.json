@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Arabia Saudita, Turquia y Pakistan enviaron a altos funcionarios de seguridad a Teheran para calmar la escalada con Iran mientras Trump evalua si cerrar un acuerdo o reanudar ataques militares, lo que mantiene la aversion al riesgo latente sobre el NQ a pesar del rally de IA.",
-  "petroleo": "El Brent cerro el lunes en 115.81 USD/barril (-0.91, tras tocar brevemente 117, maximo de 6 meses) y el WTI en 101.76 USD (-1.51) al relajarse por las conversaciones Arabia Saudita-Iran en Teheran, un alivio de presion inflacionaria que favorece al Nasdaq.",
-  "catalizador": "La Fed, ahora presidida por Kevin Warsh, concluye su reunion de tasas el miercoles 28 de octubre con el mercado asignando mas de 90% de probabilidad a mantener el rango en 3.75%-4%, mientras los futuros del Nasdaq-100 suben cerca de 1.4% impulsados por la presentacion de la IPO de Anthropic.",
+  "geopolitica": "Trump evalua entre cerrar un acuerdo con Iran o intensificar ataques (CENTCOM tendria planes listos), pero descarto atacar antes de las midterms del 3 de noviembre, lo que limita el riesgo geopolitico inmediato sobre el NQ (CNBC, 26/10).",
+  "petroleo": "El Brent cotiza cerca de 114,5 USD/barril (-1,9%) y el WTI en torno a 103 USD (-0,3%), aliviando presion inflacionaria tras comentarios de Trump que redujeron el temor a una escalada inmediata con Iran, lo que favorece al NQ (Trading Economics, 26/10).",
+  "catalizador": "El repunte del Nasdaq (+0,8% al cierre) fue impulsado por el filing de IPO de Anthropic que reactivo el trade de IA, mientras el mercado se posiciona de cara a la decision de la Fed el miercoles 28/10 a las 14:00 ET (TheStreet/CNBC, 26/10).",
   "sources": [
-    "CNBC 26-Oct-2026",
-    "Bloomberg 26-Oct-2026"
+    "CNBC 26/10 (us-iran-war-hormuz)",
+    "Trading Economics 26/10 (Brent/WTI)",
+    "TheStreet 26/10 (cierre ~16:00 ET)"
   ],
-  "as_of": "2026-10-26T20:06:58Z"
+  "as_of": "2026-10-26T21:08:18Z"
 }
