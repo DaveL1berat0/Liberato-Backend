@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Los hutíes y ataques iraníes a petroleros mantienen la tensión en el Golfo Pérsico pese al viaje del ministro de Defensa saudí a Irán para desescalar (CNBC, 12:05 ET), lo que añade cautela al NQ por el riesgo energético.",
-  "petroleo": "El Brent cotiza en 117,08 USD (+0,36) y el WTI en 102,83 USD (-0,44) hacia las 12:05 ET por la tensión en el Golfo Pérsico (CNBC), presionando al NQ vía temores de inflación y costos.",
-  "catalizador": "La presentación del S-1 para la IPO de Anthropic reavivó el apetito por IA y semiconductores, con el Nasdaq 100 subiendo 1,4% hacia las 11:31 ET (Bloomberg), mientras el mercado asigna 90% de probabilidad a que la Fed mantenga tasas el miércoles.",
+  "geopolitica": "El ministro de Defensa saudí, Khalid bin Salman, se reunió hoy en Teherán con el presidente iraní Pezeshkian y el secretario del Consejo de Seguridad, Mohsen Rezaei, en un esfuerzo diplomático por rebajar la tensión Arabia Saudí-Irán, lo que alivia la prima de riesgo geopolítico y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cede a unos 116,52 USD/b (-0,2%) tras tocar brevemente 117 USD, y el WTI retrocede a 102,48 USD (-0,77%), ante las conversaciones de distensión Arabia Saudí-Irán en Teherán; el crudo acumula +12% en el mes, lo que sigue presionando el sentimiento de riesgo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (S&P500 +0,9% y Nasdaq-100 +1,4% hacia las 11:31 ET) impulsados por la presentación de la IPO de Anthropic (ticker ANT), que reactivó el rally de semiconductores (SOXX +3%, Nvidia +2,6%), mientras el mercado mira la decisión de la Fed del miércoles (~90% de probabilidad de mantener tasas) y los resultados de grandes tecnológicas esta semana.",
   "sources": [
-    "CNBC 12:05 ET",
-    "Bloomberg 11:31 ET"
+    "CNBC 26-Oct (AM ET) - oil-prices-today-wti-brent",
+    "Bloomberg 11:31 ET - US equity futures / Anthropic IPO filing",
+    "CNBC 25/26-Oct - stock-market-today-live-updates"
   ],
-  "as_of": "2026-10-26T17:07:38Z"
+  "as_of": "2026-10-26T18:07:38Z"
 }
