@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump descarto un ataque inminente contra Iran, lo que impulso los futuros de EE.UU. en premarket, mientras persisten los ataques en infraestructura de Arabia Saudita y avanzan gestiones diplomaticas de Catar para rebajar la tension en el Golfo (Benzinga/TradingView, premarket 26/10).",
-  "petroleo": "El Brent cae cerca de 2.1% a unos 114.3 USD/barril y el WTI baja cerca de 2.2% a unos 101 USD/barril tras la distension en la narrativa sobre Iran, aunque los ataques en Arabia Saudita siguen dando piso al precio (Fortune 08:15 ET; HDFC Sky 26/10).",
-  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28/10 a las 14:00 ET, justo en la semana mas cargada de resultados del Q3, lo que mantiene cautelosos a los futuros del Nasdaq-100 antes de la apertura de hoy (Admiral Markets/Robinhood, 26/10).",
+  "geopolitica": "El triunfo electoral de Lula en Brasil y el rechazo de Bolsonaro a reconocer el resultado desplomaron las acciones brasilenas (iShares MSCI Brazil ETF -25% premarket) y forzaron un corte de circuito en la bolsa de Sao Paulo, alimentando aversion al riesgo global que pesa sobre el NQ.",
+  "petroleo": "El Brent cae 0.7% a 115.86 USD/barril y el WTI cae 1.2% a 102.05 USD/barril hacia las 9:19 ET, retrocediendo tras el repunte del viernes por nuevos ataques huties a infraestructura energetica saudi, que reaviva temores de oferta frente al riesgo de destruccion de demanda por precios altos.",
+  "catalizador": "Elon Musk advirtio que mas de 200 'neoclouds' de IA enfrentan una 'muerte de pez chico', lo que hundio a CoreWeave, Nebius e Iren cerca de 4% en premarket y presiona el sentimiento de IA que domina el NQ, mientras Meta anuncio una ronda de financiamiento de 35.000M USD en acciones mas 60.000M USD via programa ATM.",
   "sources": [
-    "Benzinga/TradingView premarket 26/10 ET",
-    "Fortune 08:15 ET",
-    "HDFC Sky 26/10",
-    "Admiral Markets 26/10"
+    "CNBC 09:19 ET - Oil prices today: WTI, Brent",
+    "CNBC premarket ET - Brazilian stocks rocked as Lula wins presidential election",
+    "CNBC premarket ET - Neocloud stocks fall as Elon Musk says more than 200 of them face 'guppy-level death'",
+    "CNBC premarket ET - Stocks making the biggest moves premarket: Verizon, Tesla, Moderna & more"
   ],
-  "as_of": "2026-10-26T13:44:38Z"
+  "as_of": "2026-10-26T14:25:46Z"
 }
