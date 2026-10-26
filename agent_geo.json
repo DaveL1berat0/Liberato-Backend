@@ -1,14 +1,11 @@
 {
-  "geopolitica": "Arabia Saudita intercepto misiles y drones hutíes (respaldados por Iran) sobre Riad, Khamis Mushait y el sur el 25-oct, mientras EEUU retiro personal diplomatico no esencial y EEUU/Israel preparan posibles nuevos ataques a Iran tras las elecciones legislativas del 3-nov; la escalada en Medio Oriente eleva la aversion al riesgo y puede presionar al NQ en la apertura.",
-  "petroleo": "El WTI cae 2.19% a 101 USD/barril y el Brent cae 1.89% a 114.51 USD/barril este lunes 26-oct, tras el repunte del viernes (Brent toco maximos de 6 meses sobre 116 USD) por temor a mas ataques a infraestructura energetica saudi; el retroceso del crudo alivia algo la presion inflacionaria, ligeramente positivo para el NQ.",
-  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28-oct (futuros prician ~90-92% de probabilidad de mantener en 3.75%-4%, con Bank of America como outlier esperando un alza), y esta semana llegan resultados de Microsoft y Alphabet; ambos catalizadores son claves para el NQ tras la caida de 2.6% del Nasdaq el jueves por temores de gasto en IA y el petroleo al alza.",
+  "geopolitica": "Lula ganó la segunda vuelta en Brasil y Bolsonaro no reconoce el resultado, desatando una venta masiva en activos brasileños (EWZ cae mas de 20%, Petrobras -24%) que eleva la aversion al riesgo global y presiona levemente los futuros del NQ (CNBC, 26 oct).",
+  "petroleo": "El Brent retrocede a unos 114.5 USD/barril (-1.4%) y el WTI a unos 101 USD/barril (-2%) tras el rally del viernes por ataques hutíes a Arabia Saudita, mientras el mercado evalua posibles ataques de EE.UU./Israel a Iran; la baja del crudo alivia presion inflacionaria y resulta ligeramente favorable para el NQ (CNBC, 26 oct).",
+  "catalizador": "La Fed inicia su reunion del FOMC el 27-28 de octubre con decision el miercoles a las 2pm ET; los futuros de fondos federales asignan cerca de 90% de probabilidad a mantener tasas, lo que mantiene a los traders cautelosos y limita el apetito por riesgo en el NQ antes del anuncio (CNBC).",
   "sources": [
-    "CNBC - Saudi Arabia says it intercepted missiles and drones from Iran-backed Houthis (25 Oct 2026)",
-    "CNBC - Oil prices today: WTI, Brent (26 Oct 2026)",
-    "CNBC - Stock futures tick higher as oil prices drop to begin the week (26 Oct 2026)",
-    "CNBC - Nasdaq falls more than 2% for worst day since June as AI spending woes, oil prices spark sell-off (21 Oct 2026)",
-    "Bloomberg - Fed set to lead G7 trio in hawkish rate pause: Eco Week Ahead (24 Oct 2026)",
-    "CNBC - U.S. pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms (22 Oct 2026)"
+    "CNBC 26-oct (premarket/live updates)",
+    "CNBC 26-oct (oil prices today: WTI, Brent)",
+    "CNBC (FOMC meeting schedule Oct 27-28 2026)"
   ],
-  "as_of": "2026-10-26T11:39:47Z"
+  "as_of": "2026-10-26T12:21:07Z"
 }
