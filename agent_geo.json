@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Lula ganó la segunda vuelta en Brasil y Bolsonaro no reconoce el resultado, desatando una venta masiva en activos brasileños (EWZ cae mas de 20%, Petrobras -24%) que eleva la aversion al riesgo global y presiona levemente los futuros del NQ (CNBC, 26 oct).",
-  "petroleo": "El Brent retrocede a unos 114.5 USD/barril (-1.4%) y el WTI a unos 101 USD/barril (-2%) tras el rally del viernes por ataques hutíes a Arabia Saudita, mientras el mercado evalua posibles ataques de EE.UU./Israel a Iran; la baja del crudo alivia presion inflacionaria y resulta ligeramente favorable para el NQ (CNBC, 26 oct).",
-  "catalizador": "La Fed inicia su reunion del FOMC el 27-28 de octubre con decision el miercoles a las 2pm ET; los futuros de fondos federales asignan cerca de 90% de probabilidad a mantener tasas, lo que mantiene a los traders cautelosos y limita el apetito por riesgo en el NQ antes del anuncio (CNBC).",
+  "geopolitica": "Trump descarto un ataque inmediato a Iran ('no habra ataque hoy'), apenas 48h despues de advertir sobre 'otra operacion', lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ en la apertura (Benzinga / FXStreet, domingo 25 oct. noche - lunes 26 oct.).",
+  "petroleo": "WTI retrocede cerca de 2% a 101.14 USD y Brent cae cerca de 1.8% a 114.62 USD tras la distension Trump-Iran, lo que alivia la presion inflacionaria y es ligeramente positivo para el NQ (FXStreet, 26 oct 01:02).",
+  "catalizador": "Las apuestas de pausa de tasas de la Fed (decision el miercoles 28 oct a las 14:00 ET) junto con la distension en Medio Oriente impulsan los futuros del Dow y Nasdaq esta mañana, sesgo alcista para la apertura del NQ (FXStreet, 26 oct 08:46).",
   "sources": [
-    "CNBC 26-oct (premarket/live updates)",
-    "CNBC 26-oct (oil prices today: WTI, Brent)",
-    "CNBC (FOMC meeting schedule Oct 27-28 2026)"
+    "Benzinga 25 oct (noche)",
+    "FXStreet 26 oct 01:02",
+    "FXStreet 26 oct 08:46",
+    "Bloomberg 25 oct"
   ],
-  "as_of": "2026-10-26T12:21:07Z"
+  "as_of": "2026-10-26T12:44:58Z"
 }
