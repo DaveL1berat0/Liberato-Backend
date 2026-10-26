@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump descarto un ataque inmediato a Iran ('no habra ataque hoy'), apenas 48h despues de advertir sobre 'otra operacion', lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ en la apertura (Benzinga / FXStreet, domingo 25 oct. noche - lunes 26 oct.).",
-  "petroleo": "WTI retrocede cerca de 2% a 101.14 USD y Brent cae cerca de 1.8% a 114.62 USD tras la distension Trump-Iran, lo que alivia la presion inflacionaria y es ligeramente positivo para el NQ (FXStreet, 26 oct 01:02).",
-  "catalizador": "Las apuestas de pausa de tasas de la Fed (decision el miercoles 28 oct a las 14:00 ET) junto con la distension en Medio Oriente impulsan los futuros del Dow y Nasdaq esta mañana, sesgo alcista para la apertura del NQ (FXStreet, 26 oct 08:46).",
+  "geopolitica": "Arabia Saudita informo el domingo que intercepto misiles y drones lanzados por los hutíes respaldados por Iran, tras ataques previos a su aeropuerto principal y al oleoducto Este-Oeste hacia el Mar Rojo, y Trump sugirio la semana pasada nuevos ataques de EEUU e Israel contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que eleva la aversion al riesgo global y puede presionar al NQ via mayor incertidumbre y correlacion con el petroleo.",
+  "petroleo": "El Brent cae cerca de 1.9% a unos 114.5 USD/barril y el WTI cae cerca de 2.2% a unos 101 USD/barril este lunes, corrigiendo tras el fuerte repunte de la semana pasada por los ataques a infraestructura saudi, lo que alivia algo la presion inflacionaria y es marginalmente positivo para el NQ en el margen.",
+  "catalizador": "La decision de tasas de la Fed del miercoles 28 de octubre y los resultados de las Big Tech esta semana son el catalizador dominante que mantiene a los futuros del Nasdaq en modo de espera/consolidacion antes de su publicacion.",
   "sources": [
-    "Benzinga 25 oct (noche)",
-    "FXStreet 26 oct 01:02",
-    "FXStreet 26 oct 08:46",
-    "Bloomberg 25 oct"
+    "CNBC 2026-10-26 (oil-prices-today-wti-brent)",
+    "CNBC 2026-10-25 (saudi-arabia-houthi-missile-drone-interceptions)",
+    "Bloomberg 2026-10-26 (us-stock-futures-gain-ahead-of-big-tech-earnings-fed-decision)"
   ],
-  "as_of": "2026-10-26T12:44:58Z"
+  "as_of": "2026-10-26T13:23:22Z"
 }
