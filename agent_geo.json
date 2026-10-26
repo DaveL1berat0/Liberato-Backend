@@ -1,10 +1,14 @@
 {
-  "geopolitica": "Los ataques hutíes contra infraestructura energética y el aeropuerto de Riad en Arabia Saudita mantienen elevada la prima de riesgo geopolítico en Oriente Medio, un factor de fondo que puede frenar el apetito por riesgo en el NQ (CNBC, 26 oct 2026).",
-  "petroleo": "El WTI cae 2.19% a unos 101 USD/barril y el Brent 1.89% a unos 114.51 USD/barril este lunes, al sopesar el mercado el riesgo de nuevos ataques a instalaciones sauditas frente al riesgo de destrucción de demanda por precios elevados (CNBC, 26 oct 2026); el retroceso del crudo alivia algo la presión inflacionaria y es marginalmente positivo para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Arabia Saudita intercepto misiles y drones hutíes (respaldados por Iran) sobre Riad, Khamis Mushait y el sur el 25-oct, mientras EEUU retiro personal diplomatico no esencial y EEUU/Israel preparan posibles nuevos ataques a Iran tras las elecciones legislativas del 3-nov; la escalada en Medio Oriente eleva la aversion al riesgo y puede presionar al NQ en la apertura.",
+  "petroleo": "El WTI cae 2.19% a 101 USD/barril y el Brent cae 1.89% a 114.51 USD/barril este lunes 26-oct, tras el repunte del viernes (Brent toco maximos de 6 meses sobre 116 USD) por temor a mas ataques a infraestructura energetica saudi; el retroceso del crudo alivia algo la presion inflacionaria, ligeramente positivo para el NQ.",
+  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28-oct (futuros prician ~90-92% de probabilidad de mantener en 3.75%-4%, con Bank of America como outlier esperando un alza), y esta semana llegan resultados de Microsoft y Alphabet; ambos catalizadores son claves para el NQ tras la caida de 2.6% del Nasdaq el jueves por temores de gasto en IA y el petroleo al alza.",
   "sources": [
-    "CNBC 26 oct 2026 - Oil prices today WTI Brent",
-    "Al Jazeera - cobertura de ataques hutíes en Riad (contexto, oct 2026)"
+    "CNBC - Saudi Arabia says it intercepted missiles and drones from Iran-backed Houthis (25 Oct 2026)",
+    "CNBC - Oil prices today: WTI, Brent (26 Oct 2026)",
+    "CNBC - Stock futures tick higher as oil prices drop to begin the week (26 Oct 2026)",
+    "CNBC - Nasdaq falls more than 2% for worst day since June as AI spending woes, oil prices spark sell-off (21 Oct 2026)",
+    "Bloomberg - Fed set to lead G7 trio in hawkish rate pause: Eco Week Ahead (24 Oct 2026)",
+    "CNBC - U.S. pulls diplomats from Saudi Arabia as it reportedly readies Iran strikes after midterms (22 Oct 2026)"
   ],
-  "as_of": "2026-10-26T11:18:55Z"
+  "as_of": "2026-10-26T11:39:47Z"
 }
