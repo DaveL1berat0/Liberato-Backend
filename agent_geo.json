@@ -1,11 +1,10 @@
 {
-  "geopolitica": "EEUU retiro personal diplomatico no esencial de Arabia Saudita y, segun NYT, prepara junto a Israel nuevos ataques contra Iran tras las elecciones de medio mandato del 3 de noviembre, reavivando el temor a una escalada de la guerra Iran-Israel y presionando el apetito de riesgo en el NQ (CNBC 22-oct).",
-  "petroleo": "El Brent cerro el viernes 23-oct en USD 116.72 (+3.1%), su nivel mas alto desde abril, y el WTI en USD 103.27 (+3.8%), maximos impulsados por el temor a una reescalada del conflicto EEUU-Iran y ataques a al menos 18 petroleros en las ultimas dos semanas segun Kpler, encareciendo insumos y presionando a la baja al NQ (CNBC, cierre 16:00 ET).",
-  "catalizador": "Wall Street cerro en rojo el viernes (Dow -652.82 ptos/-1.23% a 52,215.16; S&P 500 -0.52% a 7,623.68; Nasdaq Composite -0.21% a 25,955.34) tras el recorte de empleo anunciado por American Express (-5% de su plantilla global) y en medio de dudas persistentes sobre el gasto en IA; sin sorpresas de la Fed hoy, el proximo catalizador es la reunion del FOMC del 27-28 de octubre (CNBC, cierre 16:00 ET).",
+  "geopolitica": "Los ataques hutíes contra infraestructura energética y el aeropuerto de Riad en Arabia Saudita mantienen elevada la prima de riesgo geopolítico en Oriente Medio, un factor de fondo que puede frenar el apetito por riesgo en el NQ (CNBC, 26 oct 2026).",
+  "petroleo": "El WTI cae 2.19% a unos 101 USD/barril y el Brent 1.89% a unos 114.51 USD/barril este lunes, al sopesar el mercado el riesgo de nuevos ataques a instalaciones sauditas frente al riesgo de destrucción de demanda por precios elevados (CNBC, 26 oct 2026); el retroceso del crudo alivia algo la presión inflacionaria y es marginalmente positivo para el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 22-oct (US pulls diplomats from Saudi Arabia, Iran strikes)",
-    "CNBC 23-oct, cierre 16:00 ET (Oil prices today: WTI, Brent)",
-    "CNBC 23-oct, cierre 16:00 ET (Stock market news for Oct. 23, 2026)"
+    "CNBC 26 oct 2026 - Oil prices today WTI Brent",
+    "Al Jazeera - cobertura de ataques hutíes en Riad (contexto, oct 2026)"
   ],
-  "as_of": "2026-10-23T21:08:22Z"
+  "as_of": "2026-10-26T11:18:55Z"
 }
