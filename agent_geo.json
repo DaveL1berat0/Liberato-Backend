@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Bloomberg (24-oct) reporta que Trump prepara una posible reanudacion de ataques contra Iran tras las elecciones de medio termino del 3 de noviembre, manteniendo una prima de riesgo geopolitico que puede generar volatilidad intradia en el NQ.",
-  "petroleo": "El Brent cotiza en 116.52 USD/barril (-0.2%) y el WTI en 102.48 USD/barril (-0.8%) este 26 de octubre, con el crudo aun elevado por las tensiones en Oriente Medio, lo que presiona el sentimiento de riesgo para el NQ (CNBC).",
-  "catalizador": "La Fed anuncia su decision de tasas el 28 de octubre, con el mercado descontando mas de 90% de probabilidad de mantener el rango en 3.75%-4%; la rueda de prensa del presidente Kevin Warsh sera clave para el tono que podria mover al NQ (CNBC, 26-oct).",
+  "geopolitica": "Arabia Saudita, Turquia y Pakistan enviaron a altos funcionarios de seguridad a Teheran para calmar la escalada con Iran mientras Trump evalua si cerrar un acuerdo o reanudar ataques militares, lo que mantiene la aversion al riesgo latente sobre el NQ a pesar del rally de IA.",
+  "petroleo": "El Brent cerro el lunes en 115.81 USD/barril (-0.91, tras tocar brevemente 117, maximo de 6 meses) y el WTI en 101.76 USD (-1.51) al relajarse por las conversaciones Arabia Saudita-Iran en Teheran, un alivio de presion inflacionaria que favorece al Nasdaq.",
+  "catalizador": "La Fed, ahora presidida por Kevin Warsh, concluye su reunion de tasas el miercoles 28 de octubre con el mercado asignando mas de 90% de probabilidad a mantener el rango en 3.75%-4%, mientras los futuros del Nasdaq-100 suben cerca de 1.4% impulsados por la presentacion de la IPO de Anthropic.",
   "sources": [
-    "Bloomberg 24-oct",
-    "CNBC 26-oct",
-    "CNBC 26-oct"
+    "CNBC 26-Oct-2026",
+    "Bloomberg 26-Oct-2026"
   ],
-  "as_of": "2026-10-26T19:07:01Z"
+  "as_of": "2026-10-26T20:06:58Z"
 }
