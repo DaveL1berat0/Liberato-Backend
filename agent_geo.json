@@ -1,12 +1,12 @@
 {
-  "geopolitica": "El ministro de Defensa saudi, Khalid bin Salman, viajo este lunes a Teheran para negociaciones de distension con Iran tras los ataques hutíes a infraestructura saudi, lo que reduce la prima de riesgo geopolitico y resta algo de presion alcista sobre el petroleo, un alivio marginal para el NQ al bajar el riesgo de un shock de oferta (CNBC/Bloomberg, 26/10).",
-  "petroleo": "El Brent cae 0.7% a 115.86 USD y el WTI 1.2% a 102.05 USD esta mañana tras el acercamiento diplomatico Arabia Saudi-Iran, aunque ambos se mantienen cerca de maximos de seis meses, por lo que el riesgo inflacionario sobre el NQ persiste aunque algo menos tenso que el viernes (CNBC, 26/10).",
-  "catalizador": "La presentacion publica del IPO de Anthropic (listara en Nasdaq como 'ANT') reavivo el entusiasmo por el trade de IA e impulso a semiconductores, con futuros del Nasdaq 100 subiendo 0.5% en premarket (~08:38 ET), de cara a la decision de la Fed del miercoles y resultados de Big Tech esta semana, un viento de cola para el NQ intradia (Bloomberg/CNBC, 26/10).",
+  "geopolitica": "Lula gano la segunda vuelta presidencial de Brasil y Bolsonaro se nego a reconocer el resultado, lo que desato una venta masiva en activos brasilenos (el real cayo ~10.5% y el ETF de Brasil se desplomo mas de 20%), un shock de aversion al riesgo que podria contagiar a los futuros del NQ en la apertura.",
+  "petroleo": "El WTI cae ~1.2% a 102.05 USD y el Brent ~0.7% a 115.86 USD hacia las 9:19 ET, retrocediendo desde los maximos de abril (alcanzados el viernes) tras ataques hutíes a infraestructura petrolera saudi, mientras el mercado pondera el riesgo de oferta frente a temores de menor demanda, lo que podria aliviar algo de presion inflacionaria para el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 suben ~0.5% hacia las 8:38 ET, impulsados por el entusiasmo del S-1 de la OPI de Anthropic y la antesala de resultados de Big Tech, de cara a la decision de tasas de la Fed el miercoles (ahora liderada por Kevin Warsh, con el mercado descontando mas de 90% de probabilidad de mantenerlas en 3.75%-4%), lo que da un sesgo alcista de corto plazo al NQ antes de la apertura.",
   "sources": [
-    "CNBC 2026-10-26 (oil-prices-today-wti-brent)",
-    "Bloomberg 2026-10-26 08:38 ET (US stock futures gain ahead of Big Tech earnings, Fed decision)",
-    "Bloomberg 2026-10-26 (Top Saudi, Turkish officials travel to Iran to quell war tension)",
-    "CNBC 2026-10-26 (Anthropic IPO live updates: AI lab's S-1 filing)"
+    "CNBC 09:19 ET (oil prices today: WTI, Brent)",
+    "CNBC 26/10 (Brazil Lula win presidential election runoff)",
+    "Bloomberg 08:38 ET (US stock futures gain ahead of Big Tech earnings, Fed decision)",
+    "CNBC 26/10 (US Treasury yields ahead of Fed rate decision)"
   ],
-  "as_of": "2026-10-26T15:07:58Z"
+  "as_of": "2026-10-26T15:40:06Z"
 }
