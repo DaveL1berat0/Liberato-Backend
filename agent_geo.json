@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Arabia Saudí envió a su ministro de Defensa a Teherán para dialogar sobre la guerra con Irán mientras persisten reportes no verificados de ataques hutíes contra infraestructura petrolera saudí, sosteniendo un sesgo de aversión al riesgo que puede limitar rallies del NQ si la escalada se confirma (CNBC).",
-  "petroleo": "El Brent cae 0.2% hasta 116.49 USD/barril en la mañana de hoy (CNBC) tras el repunte de la semana pasada por la guerra EEUU/Israel-Irán y ataques hutíes a infraestructura saudí; la prima de riesgo geopolítico de unos 20 USD/barril (Axios) mantiene presión inflacionaria que pesa sobre el NQ intradía.",
-  "catalizador": "Los mercados operan hoy a la espera de la decisión de la Fed del miércoles 28-oct (se espera que mantenga tasas en 3.75%-4.00% según CME FedWatch) y de los resultados tecnológicos de la semana, lo que mantiene al NQ en modo de espera cauteloso (Yahoo Finance/TheStreet).",
+  "geopolitica": "Los hutíes y ataques iraníes a petroleros mantienen la tensión en el Golfo Pérsico pese al viaje del ministro de Defensa saudí a Irán para desescalar (CNBC, 12:05 ET), lo que añade cautela al NQ por el riesgo energético.",
+  "petroleo": "El Brent cotiza en 117,08 USD (+0,36) y el WTI en 102,83 USD (-0,44) hacia las 12:05 ET por la tensión en el Golfo Pérsico (CNBC), presionando al NQ vía temores de inflación y costos.",
+  "catalizador": "La presentación del S-1 para la IPO de Anthropic reavivó el apetito por IA y semiconductores, con el Nasdaq 100 subiendo 1,4% hacia las 11:31 ET (Bloomberg), mientras el mercado asigna 90% de probabilidad a que la Fed mantenga tasas el miércoles.",
   "sources": [
-    "CNBC 26-oct (media mañana) ET",
-    "Axios 26-oct ET",
-    "Yahoo Finance/TheStreet 26-oct ET",
-    "Bloomberg 25-oct ET (Markets Wrap)"
+    "CNBC 12:05 ET",
+    "Bloomberg 11:31 ET"
   ],
-  "as_of": "2026-10-26T16:09:59Z"
+  "as_of": "2026-10-26T17:07:38Z"
 }
