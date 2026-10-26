@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Arabia Saudita informo el domingo que intercepto misiles y drones lanzados por los hutíes respaldados por Iran, tras ataques previos a su aeropuerto principal y al oleoducto Este-Oeste hacia el Mar Rojo, y Trump sugirio la semana pasada nuevos ataques de EEUU e Israel contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que eleva la aversion al riesgo global y puede presionar al NQ via mayor incertidumbre y correlacion con el petroleo.",
-  "petroleo": "El Brent cae cerca de 1.9% a unos 114.5 USD/barril y el WTI cae cerca de 2.2% a unos 101 USD/barril este lunes, corrigiendo tras el fuerte repunte de la semana pasada por los ataques a infraestructura saudi, lo que alivia algo la presion inflacionaria y es marginalmente positivo para el NQ en el margen.",
-  "catalizador": "La decision de tasas de la Fed del miercoles 28 de octubre y los resultados de las Big Tech esta semana son el catalizador dominante que mantiene a los futuros del Nasdaq en modo de espera/consolidacion antes de su publicacion.",
+  "geopolitica": "Trump descarto un ataque inminente contra Iran, lo que impulso los futuros de EE.UU. en premarket, mientras persisten los ataques en infraestructura de Arabia Saudita y avanzan gestiones diplomaticas de Catar para rebajar la tension en el Golfo (Benzinga/TradingView, premarket 26/10).",
+  "petroleo": "El Brent cae cerca de 2.1% a unos 114.3 USD/barril y el WTI baja cerca de 2.2% a unos 101 USD/barril tras la distension en la narrativa sobre Iran, aunque los ataques en Arabia Saudita siguen dando piso al precio (Fortune 08:15 ET; HDFC Sky 26/10).",
+  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28/10 a las 14:00 ET, justo en la semana mas cargada de resultados del Q3, lo que mantiene cautelosos a los futuros del Nasdaq-100 antes de la apertura de hoy (Admiral Markets/Robinhood, 26/10).",
   "sources": [
-    "CNBC 2026-10-26 (oil-prices-today-wti-brent)",
-    "CNBC 2026-10-25 (saudi-arabia-houthi-missile-drone-interceptions)",
-    "Bloomberg 2026-10-26 (us-stock-futures-gain-ahead-of-big-tech-earnings-fed-decision)"
+    "Benzinga/TradingView premarket 26/10 ET",
+    "Fortune 08:15 ET",
+    "HDFC Sky 26/10",
+    "Admiral Markets 26/10"
   ],
-  "as_of": "2026-10-26T13:23:22Z"
+  "as_of": "2026-10-26T13:44:38Z"
 }
