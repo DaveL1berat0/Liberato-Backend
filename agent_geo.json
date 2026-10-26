@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El triunfo electoral de Lula en Brasil y el rechazo de Bolsonaro a reconocer el resultado desplomaron las acciones brasilenas (iShares MSCI Brazil ETF -25% premarket) y forzaron un corte de circuito en la bolsa de Sao Paulo, alimentando aversion al riesgo global que pesa sobre el NQ.",
-  "petroleo": "El Brent cae 0.7% a 115.86 USD/barril y el WTI cae 1.2% a 102.05 USD/barril hacia las 9:19 ET, retrocediendo tras el repunte del viernes por nuevos ataques huties a infraestructura energetica saudi, que reaviva temores de oferta frente al riesgo de destruccion de demanda por precios altos.",
-  "catalizador": "Elon Musk advirtio que mas de 200 'neoclouds' de IA enfrentan una 'muerte de pez chico', lo que hundio a CoreWeave, Nebius e Iren cerca de 4% en premarket y presiona el sentimiento de IA que domina el NQ, mientras Meta anuncio una ronda de financiamiento de 35.000M USD en acciones mas 60.000M USD via programa ATM.",
+  "geopolitica": "EE.UU. descarta por ahora un ataque inmediato a Iran pero Israel y EE.UU. ya tienen listos planes para golpes conjuntos tras las elecciones de medio termino en EE.UU., y los huties reivindicaron un nuevo ataque contra el aeropuerto de Riad interceptado por Arabia Saudita, lo que mantiene elevada la prima de riesgo geopolitico y favorece un sesgo risk-off puntual en el NQ.",
+  "petroleo": "El Brent cae a 114,53 USD/barril (-1,87%) y el WTI a 101,22 USD/barril (-1,98%) este 26-oct tras moderarse el temor a un ataque inminente contra Iran, lo que alivia la prima de riesgo energetico y resulta levemente positivo para el NQ al reducir la presion inflacionaria.",
+  "catalizador": "El Nasdaq abre la semana al alza impulsado por el entusiasmo ante la presentacion de la IPO de Anthropic y una semana cargada de resultados tecnologicos, mientras la Fed se reune el 27-28 de octubre (decision 2:00pm ET) y los semiconductores siguen en mercado bajista (SOXX -14% en el mes), factor que podria limitar el impulso alcista del NQ.",
   "sources": [
-    "CNBC 09:19 ET - Oil prices today: WTI, Brent",
-    "CNBC premarket ET - Brazilian stocks rocked as Lula wins presidential election",
-    "CNBC premarket ET - Neocloud stocks fall as Elon Musk says more than 200 of them face 'guppy-level death'",
-    "CNBC premarket ET - Stocks making the biggest moves premarket: Verizon, Tesla, Moderna & more"
+    "Bloomberg 2026-10-25 (Oil Edges Lower From Six-Month High as Traders Assess Iran Risks)",
+    "CNBC 2026-10-25 (live blog, stock market today)",
+    "Yahoo Finance 2026-10-26 (stock market today, Anthropic IPO filing)",
+    "ABC News 2026-10-25/26 (Iran live updates, Houthi attack on Riyadh airport)",
+    "Trading Economics 2026-10-26 (Brent/WTI spot)"
   ],
-  "as_of": "2026-10-26T14:25:46Z"
+  "as_of": "2026-10-26T14:40:24Z"
 }
