@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Un misil balístico hutí impactó la refinería saudí de Ras Tanura (550.000 bpd), provocando un incendio que Riad dice haber contenido; junto con las negociaciones en curso sobre Irán, mantiene elevada la prima de riesgo geopolítico, un viento en contra para el apetito de riesgo del NQ.",
-  "petroleo": "Brent sube ~0.5% a 116.38 USD/barril (WTI en torno a 102.35 USD) hacia las 04:10 ET tras el ataque hutí a Ras Tanura, encareciendo insumos y presionando a la baja al Nasdaq por el canal de costos/inflación.",
-  "catalizador": "La Fed inicia hoy su reunión del FOMC, con decisión el miércoles 28 de octubre a las 14:00 ET; el mercado descuenta ~90% de probabilidad de mantener tasas, lo que mantiene a los operadores del NQ cautelosos y con posicionamiento ligero antes del anuncio.",
+  "geopolitica": "Los hutíes afirmaron el martes haber lanzado un misil balístico contra la refinería saudí de Ras Tanura, la mayor del país, provocando un incendio en el complejo; la coalición liderada por Arabia Saudí dijo haber interceptado 3 misiles y 4 drones, lo que eleva el riesgo geopolítico y favorece ventas de risk-off en el NQ intradía.",
+  "petroleo": "El Brent subió un 0,6% hasta 116,50 USD/barril tras el ataque a Ras Tanura, repunte que reaviva las presiones inflacionarias y tiende a pesar sobre el NQ al endurecer las expectativas de tasas de la Fed.",
+  "catalizador": "",
   "sources": [
-    "Oilprice.com / Newsquawk 27 oct 2026 (ataque Ras Tanura, madrugada ET)",
-    "ADVFN/Oilprice.com 04:10 ET (Brent 116.38 USD)",
-    "CME FedWatch via fedratecalc.com 27 oct 2026 (probabilidad FOMC)"
+    "Reuters 14:49 ET",
+    "Rigzone (wire) 14:49 ET"
   ],
-  "as_of": "2026-10-27T18:06:47Z"
+  "as_of": "2026-10-27T19:07:33Z"
 }
