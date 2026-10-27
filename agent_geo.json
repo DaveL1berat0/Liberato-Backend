@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Arabia Saudita sigue bajo ataques de los huties y el Estrecho de Ormuz continúa con el tránsito restringido, manteniendo una prima de riesgo geopolítico que presiona la volatilidad y limita el apetito por riesgo en el NQ (Reuters, 05:59 ET, 26 oct).",
-  "petroleo": "El Brent cae a unos 115,15 USD/barril (-0,57%) y el WTI a 101,32 USD (-0,43%) por expectativas de una tregua en Medio Oriente, aunque persisten los ataques a Arabia Saudita; el retroceso del crudo alivia presión de costos y favorece el sesgo alcista del NQ (Voice of Emirates, 27 oct).",
-  "catalizador": "Los futuros del Nasdaq 100 suben 0,11% en la premercado de las 05:30 ET mientras la Fed permanece en blackout de comunicaciones hasta la decisión del FOMC del 29 de octubre, por lo que no se esperan sorpresas de Powell hoy y el mercado opera a la espera de la reunión (TradingView/Kiplinger, 05:30 ET).",
+  "geopolitica": "Tension geopolitica en Oriente Medio con senales mixtas: Trump nego negociaciones directas con Iran mientras Arabia Saudita, Turquia y Pakistan mediaron el lunes en Teheran para bajar la tension en el estrecho de Ormuz, lo que reduce momentaneamente la prima de riesgo que venia presionando al NQ via energia e inflacion.",
+  "petroleo": "El Brent cotiza hoy cerca de 114-115 USD/barril, con una baja de entre 0.7% y 1% tras el repunte por ataques iranies a petroleros cerca de Ormuz (que lo habian llevado por encima de 117 USD, maximo desde abril); el alivio por la diplomacia con Iran reduce el riesgo inflacionario y es moderadamente positivo para el NQ intradia.",
+  "catalizador": "Hoy arranca la reunion de dos dias del FOMC (decision mañana 28-oct a las 14:00 ET), con el mercado descontando en ~90% que la Fed mantendra tasas sin cambios; esto deja a los futuros del Nasdaq 100 practicamente planos y cautelosos tras las fuertes subidas del lunes, a la espera del tono de Powell.",
   "sources": [
-    "Reuters 05:59 ET",
-    "VoiceOfEmirates 27 oct",
-    "TradingView 05:30 ET",
-    "Kiplinger 27 oct"
+    "Bloomberg - Stock Market Today: Dow, S&P Live Updates for October 27",
+    "Nordfx Market Pulse (27 oct 2026)",
+    "Tickmill Daily Market Outlook (27 oct 2026)",
+    "FinanceFeeds - Brent Crude Price Tuesday FOMC day one (27 oct 2026)",
+    "Outlook India - Trump Denies US-Iran Talks as Brent Crude Oil Price Tops $111"
   ],
-  "as_of": "2026-10-27T11:08:10Z"
+  "as_of": "2026-10-27T11:38:45Z"
 }
