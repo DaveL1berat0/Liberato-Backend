@@ -3922,7 +3922,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
         // ¿el evento YA pasó su hora HOY pero la fuente aún no publicó el dato? En ese caso
         // NO es "Upcoming" (contradice a la hora pasada y hace desconfiar): es "Esperando
         // publicación…". El dato real llega cuando la fuente lo reporte (Regla #1: no se inventa).
-        var isPastNoData=false;
+        var isPastNoData=false, isStale=false;
         if(e.noNumericData){
           actualPlaceholder='No aplica';
         } else if(e.time&&e.time.indexOf(':')>0){
@@ -3931,7 +3931,14 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
           var _etn={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).forEach(function(x){_etn[x.type]=x.value;});
           var nowM=parseInt(_etn.hour==='24'?'0':_etn.hour)*60+parseInt(_etn.minute);
           var isToday2=day&&day.label&&day.label.indexOf('Hoy')>=0;
-          if(isToday2&&evMins<=nowM&&!e.result&&!isDone){isPastNoData=true;actualPlaceholder='Esperando dato…';}
+          if(isToday2&&evMins<=nowM&&!e.result&&!isDone){
+            // Margen tras la hora: "Esperando dato…" un rato razonable; si la fuente sigue sin
+            // publicar pasado el margen, "— No publicado" (no quedarse esperando eternamente un
+            // evento que ya pasó hace horas). Regla #1: muestra "—", no inventa.
+            var _grace=(e.impact==='high'?75:120);
+            if((nowM-evMins)>_grace){isStale=true;actualPlaceholder='— No publicado';}
+            else{isPastNoData=true;actualPlaceholder='Esperando dato…';}
+          }
         }
         // Día PASADO (no hoy), evento numérico que NUNCA se publicó → 'No publicado'
         // (antes caía en 'Pendiente', que sugiere que aún puede salir — engañoso).
@@ -3946,7 +3953,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
         return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
           +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'TODO EL DÍA':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
-          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status'+(isPastNoData?' waiting':'')+'">'+(isDone?'✓ Publicado':(isPastNoData?'◷ Esperando publicación…':e.status))+'</div>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status'+(isPastNoData?' waiting':'')+'">'+(isDone?'✓ Publicado':(isStale?'Sin publicación':(isPastNoData?'◷ Esperando publicación…':e.status)))+'</div>'
           +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
           +'</div>'
           +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'
