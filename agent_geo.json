@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Arabia Saudita informó haber interceptado misiles y drones hutíes cerca de Riad y el sur del país tras ataques hutíes (no verificados) contra el aeropuerto King Khalid y Aramco en Yanbu, mientras Arabia Saudita, Turquía y Pakistán dialogaban con Irán en Teherán el lunes, lo que reduce algo el temor a escalada pero mantiene la prima de riesgo que presiona el sentimiento de riesgo del NQ.",
-  "petroleo": "Brent cotiza cerca de 115,15 USD/barril (-0,57%) y WTI en 101,32 USD/barril (-0,43%) hacia las 00:00 GMT del 27-oct, cediendo por esperanzas de diplomacia en Medio Oriente aunque los ataques hutíes a Arabia Saudita sostienen el temor de oferta, manteniendo un piso elevado de crudo que resta margen a sectores sensibles a energía dentro del NQ.",
-  "catalizador": "La Fed cierra su reunión del FOMC el miércoles 28-oct con la decisión de tasas a las 14:00 ET y conferencia de prensa a las 14:30 ET, con el mercado asignando ~80-90% de probabilidad a mantener el rango en 3,75%-4,00%, por lo que el posicionamiento previo a la Fed es el principal catalizador de corto plazo para el NQ hoy.",
+  "geopolitica": "Arabia Saudita, Turquia y Pakistan negocian con Iran en Teheran para frenar el conflicto, pero los huties siguen atacando instalaciones sauditas, lo que mantiene una prima de riesgo geopolitico que puede generar volatilidad intradia en el NQ.",
+  "petroleo": "Brent cotiza cerca de maximos de seis meses (~114-115 USD/barril, tras llegar a superar los 117 USD) y WTI ronda 101 USD/barril, por ataques a refinerias sauditas (incluida Ras Tanura) pese a la tregua diplomatica en curso; una escalada energetica presiona al NQ via expectativas de inflacion y tasas.",
+  "catalizador": "La Fed se reune el miercoles y se espera que mantenga las tasas sin cambios, mientras el mercado afronta una semana cargada de resultados de Big Tech (Microsoft, Alphabet, Meta), lo que condiciona el apetito por riesgo del NQ en la apertura.",
   "sources": [
-    "CNBC 20:00 ET (26-oct, oil-eases-on-mideast-diplomacy-hopes)",
-    "CNBC 25-oct (saudi-arabia-houthi-missile-drone-interceptions)",
-    "CNBC 26-oct (stock-market-today-live-updates, FOMC decision Oct 28)"
+    "Reuters (via CNBC/Yahoo Finance) 06:56 ET",
+    "Reuters (via Investing.com) 05:17 ET",
+    "CNBC 2026-10-27 (Oil eases on Middle East diplomacy hopes, Saudi attacks keep supply worries alive)"
   ],
-  "as_of": "2026-10-27T12:08:34Z"
+  "as_of": "2026-10-27T12:41:24Z"
 }
