@@ -1,14 +1,11 @@
 {
-  "geopolitica": "Escalada en Medio Oriente: misiles y drones Houthi interceptados sobre Riad y un petrolero danado por minas navales cerca del Estrecho de Ormuz elevan la aversion al riesgo y presionan al NQ a la baja pese a conversaciones diplomaticas en paralelo.",
-  "petroleo": "Brent ronda los 115-116 USD/barril y WTI cerca de 101-102 USD, sosteniendose cerca de maximos de seis meses por los ataques en el Estrecho de Ormuz y el bloqueo hutí en Bab el-Mandeb, lo que encarece insumos y pesa sobre el apetito por riesgo en el NQ.",
-  "catalizador": "La Fed celebra su reunion del FOMC el 27-28 de octubre, con decision de tasas el miercoles a las 14:00 ET; el mercado descuenta una pausa, lo que mantiene a los operadores del NQ cautelosos antes del anuncio.",
+  "geopolitica": "Arabia Saudi e Iran mantienen conversaciones diplomaticas en Teheran (reunion del lunes 26/10) para rebajar la tension en Oriente Medio, mientras Trump e Israel estudian nuevos ataques contra Iran tras las elecciones de mitad de mandato, lo que limita el apetito por riesgo pleno en el NQ hoy (CNBC, 27/10 ~03:05 ET).",
+  "petroleo": "El Brent cotiza casi plano en torno a 115.84 USD/barril (~03:05 ET) y el WTI cerca de 101.65 USD, cediendo desde el techo de 117 USD del lunes por esperanzas de distension Arabia-Iran, aunque nuevos ataques en infraestructura saudi mantienen vivo el riesgo de oferta y presionan los costes energeticos que pesan sobre el NQ (CNBC, 27/10, 03:05 ET).",
+  "catalizador": "La Fed inicia hoy su reunion de dos dias (decision miercoles 28/10) con el mercado descontando con mas del 90% de probabilidad una pausa en 3.75%-4%, en una semana cargada de bancos centrales (BoJ, BCE, RBNZ, BoC) que añade volatilidad previa al NQ; el repunte tecnologico por la OPI de Anthropic y el plan de capital de 95.000 millones de Meta da soporte adicional (CNBC, 27/10).",
   "sources": [
-    "CBS News 27-Oct-2026",
-    "Gulf News 27-Oct-2026",
-    "CP24 27-Oct-2026",
-    "PBS NewsHour 27-Oct-2026",
-    "Reuters via Investing.com 26/27-Oct-2026",
-    "FedRateCalc/Octagon AI 27-Oct-2026"
+    "CNBC 03:05 ET (27/10) - Oil eases on Mideast diplomacy hopes, Saudi attacks stoke supply woes",
+    "CNBC (27/10) - Yen slips ahead of central bank bonanza, dollar firms on tech rebound",
+    "CNBC (26/10) - Fed decision: What to expect from October rate-setting meeting"
   ],
-  "as_of": "2026-10-27T16:08:17Z"
+  "as_of": "2026-10-27T17:07:54Z"
 }
