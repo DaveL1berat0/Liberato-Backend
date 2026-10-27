@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Tension geopolitica en Oriente Medio con senales mixtas: Trump nego negociaciones directas con Iran mientras Arabia Saudita, Turquia y Pakistan mediaron el lunes en Teheran para bajar la tension en el estrecho de Ormuz, lo que reduce momentaneamente la prima de riesgo que venia presionando al NQ via energia e inflacion.",
-  "petroleo": "El Brent cotiza hoy cerca de 114-115 USD/barril, con una baja de entre 0.7% y 1% tras el repunte por ataques iranies a petroleros cerca de Ormuz (que lo habian llevado por encima de 117 USD, maximo desde abril); el alivio por la diplomacia con Iran reduce el riesgo inflacionario y es moderadamente positivo para el NQ intradia.",
-  "catalizador": "Hoy arranca la reunion de dos dias del FOMC (decision mañana 28-oct a las 14:00 ET), con el mercado descontando en ~90% que la Fed mantendra tasas sin cambios; esto deja a los futuros del Nasdaq 100 practicamente planos y cautelosos tras las fuertes subidas del lunes, a la espera del tono de Powell.",
+  "geopolitica": "Arabia Saudita informó haber interceptado misiles y drones hutíes cerca de Riad y el sur del país tras ataques hutíes (no verificados) contra el aeropuerto King Khalid y Aramco en Yanbu, mientras Arabia Saudita, Turquía y Pakistán dialogaban con Irán en Teherán el lunes, lo que reduce algo el temor a escalada pero mantiene la prima de riesgo que presiona el sentimiento de riesgo del NQ.",
+  "petroleo": "Brent cotiza cerca de 115,15 USD/barril (-0,57%) y WTI en 101,32 USD/barril (-0,43%) hacia las 00:00 GMT del 27-oct, cediendo por esperanzas de diplomacia en Medio Oriente aunque los ataques hutíes a Arabia Saudita sostienen el temor de oferta, manteniendo un piso elevado de crudo que resta margen a sectores sensibles a energía dentro del NQ.",
+  "catalizador": "La Fed cierra su reunión del FOMC el miércoles 28-oct con la decisión de tasas a las 14:00 ET y conferencia de prensa a las 14:30 ET, con el mercado asignando ~80-90% de probabilidad a mantener el rango en 3,75%-4,00%, por lo que el posicionamiento previo a la Fed es el principal catalizador de corto plazo para el NQ hoy.",
   "sources": [
-    "Bloomberg - Stock Market Today: Dow, S&P Live Updates for October 27",
-    "Nordfx Market Pulse (27 oct 2026)",
-    "Tickmill Daily Market Outlook (27 oct 2026)",
-    "FinanceFeeds - Brent Crude Price Tuesday FOMC day one (27 oct 2026)",
-    "Outlook India - Trump Denies US-Iran Talks as Brent Crude Oil Price Tops $111"
+    "CNBC 20:00 ET (26-oct, oil-eases-on-mideast-diplomacy-hopes)",
+    "CNBC 25-oct (saudi-arabia-houthi-missile-drone-interceptions)",
+    "CNBC 26-oct (stock-market-today-live-updates, FOMC decision Oct 28)"
   ],
-  "as_of": "2026-10-27T11:38:45Z"
+  "as_of": "2026-10-27T12:08:34Z"
 }
