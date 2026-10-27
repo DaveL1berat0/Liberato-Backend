@@ -8752,6 +8752,9 @@ def _whop_extract_email(d):
 # M1: allowlist OPCIONAL de productos Whop que dan premium. Vacía = se comporta como antes
 # (cualquier compra concede). Configúrala en Railway: WHOP_PRODUCT_IDS=prod_xxx,prod_yyy
 WHOP_PRODUCT_IDS = {x.strip() for x in (os.getenv("WHOP_PRODUCT_IDS", "") or "").split(",") if x.strip()}
+# Diag: últimos product_id/plan_id vistos en webhooks → /api/admin/whop-products los muestra
+# para saber qué valor EXACTO poner en WHOP_PRODUCT_IDS (sin adivinar en el panel de Whop).
+_whop_recent_products = []
 
 def _whop_product_id(d):
     """Extrae el product_id/plan_id del payload de Whop (varias variantes)."""
@@ -8811,6 +8814,15 @@ async def whop_webhook(request: Request):
     if plan is None:
         print(f"[whop] evento no accionable: {evt} ({email})")
         return {"ok": True, "note": f"evento {evt} ignorado"}
+    # Diag: recuerda el product_id/plan_id de este evento accionable (lo EXACTO que compara
+    # la allowlist) para poder leerlo luego en /api/admin/whop-products sin adivinar.
+    try:
+        _whop_recent_products.insert(0, {"id": _whop_product_id(d), "evento": evt,
+                                         "email": email, "plan": plan,
+                                         "ts": datetime.now(NY).isoformat()})
+        del _whop_recent_products[20:]
+    except Exception:
+        pass
     # M1: con allowlist configurada, solo el/los producto(s) correctos conceden premium
     # (evita que CUALQUIER compra del Whop conectado dé acceso completo). Si no se puede leer
     # el product_id, se concede igual (no bloquear compras legítimas) pero se avisa en el log.
@@ -11519,6 +11531,25 @@ async def diag_calendar(key: str = ""):
             out["sources"]["fmp"] = {"error": str(e)}
     return out
 
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  WHOP — últimos product_id/plan_id vistos (para fijar WHOP_PRODUCT_IDS)
+# ═══════════════════════════════════════════════════════════════════════════
+@app.get("/api/admin/whop-products")
+async def admin_whop_products(key: str = ""):
+    """Muestra los últimos product_id/plan_id que Whop envió por webhook, para saber
+    qué valor EXACTO poner en WHOP_PRODUCT_IDS. Haz una compra (o mira una reciente),
+    abre esta URL y copia el 'id' del plan de $199. Uso: ?key=<ADMIN_KEY>."""
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
+        raise HTTPException(403, "Clave incorrecta")
+    return {
+        "allowlist_actual": (sorted(WHOP_PRODUCT_IDS) or
+                             "(vacía → CUALQUIER compra de Whop concede premium)"),
+        "ultimos_ids_vistos": _whop_recent_products,
+        "como_usar": ("Copia el 'id' del evento de pago de tu plan de $199 y ponlo en "
+                      "Railway como WHOP_PRODUCT_IDS (separa por comas si hay varios). "
+                      "Si 'id' sale null, el payload no trae product_id/plan_id legible."),
+    }
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  DIAGNÓSTICO DE VARIABLES — verifica qué keys están configuradas en Railway
