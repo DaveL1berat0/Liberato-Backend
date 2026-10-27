@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El ministro de Defensa saudi y el presidente iraní Pezeshkian mantuvieron conversaciones directas en Teherán el lunes para intentar desescalar, pero los hutíes respaldados por Irán siguieron atacando Arabia Saudita durante el fin de semana, lo que mantiene la prima de riesgo geopolítico y la cautela en el NQ.",
-  "petroleo": "El Brent cotiza cerca de 115.04 USD/barril (-0.77, aprox. -0.7%) y el WTI cerca de 101.06 USD/barril (-0.70, aprox. -0.7%) hacia las 08:55 ET, cediendo por las esperanzas de diplomacia saudí-iraní, aunque los ataques hutíes en curso limitan la caída y sostienen el riesgo inflacionario que pesa sobre el NQ.",
-  "catalizador": "El repunte tecnológico impulsado por la presentación del S-1 de Anthropic (IPO bajo el ticker 'ANT') sigue empujando a los semiconductores (Broadcom, AMD, Nvidia) de cara a la decision de la Fed del miercoles, en la que se espera que mantenga tasas con un tono hawkish del presidente Kevin Warsh.",
+  "geopolitica": "Arabia Saudita e Iran avanzan en conversaciones de desescalada (el ministro de Defensa saudi se reunio con el presidente irani en Teheran) mientras persisten ataques huties contra Arabia Saudita y Trump descarto un ataque inmediato a Iran, reduciendo la prima de riesgo geopolitico y dando soporte moderado al NQ intradia.",
+  "petroleo": "El Brent cae 1.3% a 114.28 USD/barril y el WTI cae 1.2% a 100.53 USD/barril por la desescalada diplomatica Arabia Saudita-Iran, aliviando la presion de costos de energia y favoreciendo al NQ.",
+  "catalizador": "La Fed inicio el lunes su reunion de dos dias (decision el miercoles 28 a las 14:00 ET) con los futuros de fondos federales descontando cerca de 90% de probabilidad de mantener tasas sin cambios, lo que mantiene al NQ en modo cauteloso de posicionamiento previo al anuncio.",
   "sources": [
-    "CNBC 08:55 ET - Oil today: Iran, US, crude, WTI, brent, Trump",
-    "CNBC 10:07 ET - Tech's relief rally extends as attention turns to tough decisions for the Fed",
-    "CNBC 27 oct - Wall Street sees this chip stock as the big winner from the Anthropic IPO",
-    "CNBC 26 oct - Fed decision: What to expect from October rate-setting meeting"
+    "CNBC 10:32 ET",
+    "CNBC (FOMC reunion dos dias)",
+    "Benzinga/Samaa (Trump descarta ataque a Iran)"
   ],
-  "as_of": "2026-10-27T14:08:57Z"
+  "as_of": "2026-10-27T15:13:01Z"
 }
