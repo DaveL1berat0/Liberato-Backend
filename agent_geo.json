@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Los hutíes afirmaron el martes haber lanzado un misil balístico contra la refinería saudí de Ras Tanura, la mayor del país, provocando un incendio en el complejo; la coalición liderada por Arabia Saudí dijo haber interceptado 3 misiles y 4 drones, lo que eleva el riesgo geopolítico y favorece ventas de risk-off en el NQ intradía.",
-  "petroleo": "El Brent subió un 0,6% hasta 116,50 USD/barril tras el ataque a Ras Tanura, repunte que reaviva las presiones inflacionarias y tiende a pesar sobre el NQ al endurecer las expectativas de tasas de la Fed.",
-  "catalizador": "",
+  "geopolitica": "Continua la tension en Oriente Medio: Huties mantienen ataques contra infraestructura energetica saudi mientras crecen los reportes de que EE.UU. e Israel preparan posibles nuevos ataques a Iran tras las elecciones de medio mandato del 3 de noviembre, lo que sostiene la aversion al riesgo y presiona al NQ.",
+  "petroleo": "Brent cotiza en torno a 114.85 USD/barril y WTI en torno a 100.87 USD, retrocediendo desde los maximos de la semana pasada (Brent habia superado 117 USD) por esperanzas de diplomacia en Oriente Medio, lo que alivia algo la presion inflacionaria sobre el NQ.",
+  "catalizador": "La Fed inicio hoy 27 de octubre su reunion FOMC de dos dias, con decision prevista para el miercoles 28; el mercado espera que mantenga tasas sin cambios pero vigila si el presidente Kevin Warsh senala una posible subida en diciembre, catalizador clave para el NQ en las proximas horas.",
   "sources": [
-    "Reuters 14:49 ET",
-    "Rigzone (wire) 14:49 ET"
+    "CNBC (27 oct 2026) - Federal Reserve expected to hold rates, but Kevin Warsh may point to more hikes",
+    "Oilprice.com (27 oct 2026) - Oil Prices Drop Despite Threat of New U.S. Strikes on Iran",
+    "CNBC (26 oct 2026) - Israel election puts Netanyahu's wartime leadership on the line as Trump urges voters to return him to power"
   ],
-  "as_of": "2026-10-27T19:07:33Z"
+  "as_of": "2026-10-27T20:07:35Z"
 }
