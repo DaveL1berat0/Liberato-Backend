@@ -1,11 +1,14 @@
 {
-  "geopolitica": "Los hutíes mantienen ataques contra infraestructura saudí (oleoducto y aeropuerto de Riad) mientras Irán, Arabia Saudí, Pakistán y Turquía acordaron en Teherán continuar el diálogo para una desescalación, lo que reduce parcialmente la prima de riesgo sobre activos de riesgo como el NQ.",
-  "petroleo": "El Brent cotiza cerca de 115,15 USD (-0,57%) y el WTI cerca de 101,32 USD (-0,43%) este martes, a la baja por las esperanzas de distensión diplomática en el Golfo, aunque los ataques hutíes limitan la caída; el crudo elevado sigue presionando márgenes y expectativas de inflación, un viento en contra para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Escalada en Medio Oriente: misiles y drones Houthi interceptados sobre Riad y un petrolero danado por minas navales cerca del Estrecho de Ormuz elevan la aversion al riesgo y presionan al NQ a la baja pese a conversaciones diplomaticas en paralelo.",
+  "petroleo": "Brent ronda los 115-116 USD/barril y WTI cerca de 101-102 USD, sosteniendose cerca de maximos de seis meses por los ataques en el Estrecho de Ormuz y el bloqueo hutí en Bab el-Mandeb, lo que encarece insumos y pesa sobre el apetito por riesgo en el NQ.",
+  "catalizador": "La Fed celebra su reunion del FOMC el 27-28 de octubre, con decision de tasas el miercoles a las 14:00 ET; el mercado descuenta una pausa, lo que mantiene a los operadores del NQ cautelosos antes del anuncio.",
   "sources": [
-    "Bloomberg 27-oct (oil market news for Oct 27)",
-    "Voice of Emirates 27-oct (Brent/WTI intradía)",
-    "CNBC premarket 27-oct (stocks making biggest moves)"
+    "CBS News 27-Oct-2026",
+    "Gulf News 27-Oct-2026",
+    "CP24 27-Oct-2026",
+    "PBS NewsHour 27-Oct-2026",
+    "Reuters via Investing.com 26/27-Oct-2026",
+    "FedRateCalc/Octagon AI 27-Oct-2026"
   ],
-  "as_of": "2026-10-27T15:52:45Z"
+  "as_of": "2026-10-27T16:08:17Z"
 }
