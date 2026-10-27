@@ -3965,7 +3965,16 @@ async def _fill_actuals_bls(events):
         need.setdefault(sid, []).append((e, tf, exp_month))
     if not need:
         return
-    if now_ts - _bls_last_fetch < 120:   # throttle (respeta límite free sin key)
+    # Ventana caliente (evento venció hace ≤20 min) → aprieta a 40s SOLO si hay key
+    # (sin key el límite es 25/día; apretar lo gastaría). Con key gratis sube a 500/día.
+    def _mins_since_b(e):
+        try:
+            return (now_ts - datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp()) / 60.0
+        except Exception:
+            return 999.0
+    _hot_b = any(0 <= _mins_since_b(ev) <= 20 for lst in need.values() for ev, _tf, _m in lst)
+    _gap_b = 40 if (_hot_b and BLS_API_KEY) else 120
+    if now_ts - _bls_last_fetch < _gap_b:   # throttle (respeta límite free sin key)
         return
     _bls_last_fetch = now_ts
     data = await _bls_fetch(need.keys())
@@ -3998,6 +4007,15 @@ FRED_SERIES = [
     (["cpi m/m", "cpi mom"],                          "CPIAUCSL",        "mom"),
     (["unemployment rate"],                           "UNRATE",          "value"),
     (["nonfarm payrolls", "non-farm payrolls"],       "PAYEMS",          "chg_k"),
+    # ── Census/BEA: lo que a ForexFactory le llega HORAS tarde y TradingEconomics no
+    #    cubre. FRED (oficial, gratis) los ingiere el mismo día del release. CORE antes
+    #    que la base para no colisionar. Unidades iguales a como las muestra la card. ──
+    (["core durable goods"],                          "ADXTNO",          "mom"),       # durable goods ex-transporte → %
+    (["durable goods orders m/m", "durable goods orders mom", "durable goods"], "DGORDER", "mom"),  # → %
+    (["factory orders m/m", "factory orders mom"],    "AMTMNO",          "mom"),       # → %
+    (["new home sales"],                              "HSN1F",           "level_k"),   # miles SAAR → "651K"
+    (["core pce price index m/m", "core pce m/m", "core pce mom"], "PCEPILFE", "mom"), # Core PCE (gauge Fed) → %
+    (["pce price index m/m", "pce m/m", "pce mom"],   "PCEPI",           "mom"),       # → %
 ]
 
 def _fred_match(title):
@@ -4023,7 +4041,17 @@ async def _fill_actuals_fred(events):
     pend = [e for e in pend if _past(e)]
     if not pend:
         return
-    if now_ts - _fred_last_fetch < 180:
+    # Ventana caliente: si algún pendiente venció hace ≤20 min, el dato está por salir
+    # AHORA → aprieta el throttle a 20s para atraparlo casi al instante. Fuera de ventana,
+    # 90s (FRED con key aguanta 120 req/min, así que apretar en la ventana es seguro).
+    def _mins_since(e):
+        try:
+            return (now_ts - datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00")).timestamp()) / 60.0
+        except Exception:
+            return 999.0
+    hot = any(0 <= _mins_since(e) <= 20 for e in pend)
+    gap = 20 if hot else 90
+    if now_ts - _fred_last_fetch < gap:
         return
     _fred_last_fetch = now_ts
     filled = 0
@@ -4048,6 +4076,8 @@ async def _fill_actuals_fred(events):
                         val = f"{((a - b) / b * 100):.1f}%"
                     elif tf == "chg_k" and len(obs) >= 2:
                         val = f"{int(round(float(obs[0]['value']) - float(obs[1]['value'])))}K"
+                    elif tf == "level_k":
+                        val = f"{int(round(float(obs[0]['value'])))}K"   # nivel en miles → "651K"
                 except Exception:
                     val = None
                 if val:
@@ -11493,6 +11523,12 @@ async def diag_env(key: str = ""):
             "FINNHUB": mask(FINNHUB_KEY),
             "TWELVEDATA": mask(TWELVEDATA_KEY),
             "GROQ": mask(GROQ_KEY),
+            "FRED": mask(os.getenv("FRED_API_KEY")),
+            "BLS": mask(os.getenv("BLS_API_KEY")),
+        },
+        "CALENDARIO_RAPIDO": {
+            "FRED_API_KEY": ("✅ puesta" if os.getenv("FRED_API_KEY") else "❌ FALTA (gratis en fred.stlouisfed.org → Durable Goods, Factory Orders, New Home Sales, PCE casi al instante)"),
+            "BLS_API_KEY": ("✅ puesta" if os.getenv("BLS_API_KEY") else "⚠️ sin key (BLS funciona igual pero limitado a 25 req/día; con key gratis sube a 500)"),
         },
         "ayuda": "Si '_detectada_por_codigo' es null, el código NO está leyendo esa key. Revisa el nombre de la variable en Railway.",
         "ADVERTENCIAS": {
