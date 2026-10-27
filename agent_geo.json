@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Arabia Saudi e Iran mantienen conversaciones diplomaticas en Teheran (reunion del lunes 26/10) para rebajar la tension en Oriente Medio, mientras Trump e Israel estudian nuevos ataques contra Iran tras las elecciones de mitad de mandato, lo que limita el apetito por riesgo pleno en el NQ hoy (CNBC, 27/10 ~03:05 ET).",
-  "petroleo": "El Brent cotiza casi plano en torno a 115.84 USD/barril (~03:05 ET) y el WTI cerca de 101.65 USD, cediendo desde el techo de 117 USD del lunes por esperanzas de distension Arabia-Iran, aunque nuevos ataques en infraestructura saudi mantienen vivo el riesgo de oferta y presionan los costes energeticos que pesan sobre el NQ (CNBC, 27/10, 03:05 ET).",
-  "catalizador": "La Fed inicia hoy su reunion de dos dias (decision miercoles 28/10) con el mercado descontando con mas del 90% de probabilidad una pausa en 3.75%-4%, en una semana cargada de bancos centrales (BoJ, BCE, RBNZ, BoC) que añade volatilidad previa al NQ; el repunte tecnologico por la OPI de Anthropic y el plan de capital de 95.000 millones de Meta da soporte adicional (CNBC, 27/10).",
+  "geopolitica": "Un misil balístico hutí impactó la refinería saudí de Ras Tanura (550.000 bpd), provocando un incendio que Riad dice haber contenido; junto con las negociaciones en curso sobre Irán, mantiene elevada la prima de riesgo geopolítico, un viento en contra para el apetito de riesgo del NQ.",
+  "petroleo": "Brent sube ~0.5% a 116.38 USD/barril (WTI en torno a 102.35 USD) hacia las 04:10 ET tras el ataque hutí a Ras Tanura, encareciendo insumos y presionando a la baja al Nasdaq por el canal de costos/inflación.",
+  "catalizador": "La Fed inicia hoy su reunión del FOMC, con decisión el miércoles 28 de octubre a las 14:00 ET; el mercado descuenta ~90% de probabilidad de mantener tasas, lo que mantiene a los operadores del NQ cautelosos y con posicionamiento ligero antes del anuncio.",
   "sources": [
-    "CNBC 03:05 ET (27/10) - Oil eases on Mideast diplomacy hopes, Saudi attacks stoke supply woes",
-    "CNBC (27/10) - Yen slips ahead of central bank bonanza, dollar firms on tech rebound",
-    "CNBC (26/10) - Fed decision: What to expect from October rate-setting meeting"
+    "Oilprice.com / Newsquawk 27 oct 2026 (ataque Ras Tanura, madrugada ET)",
+    "ADVFN/Oilprice.com 04:10 ET (Brent 116.38 USD)",
+    "CME FedWatch via fedratecalc.com 27 oct 2026 (probabilidad FOMC)"
   ],
-  "as_of": "2026-10-27T17:07:54Z"
+  "as_of": "2026-10-27T18:06:47Z"
 }
