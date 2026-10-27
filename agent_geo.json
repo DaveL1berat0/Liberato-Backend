@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump evalua entre cerrar un acuerdo con Iran o intensificar ataques (CENTCOM tendria planes listos), pero descarto atacar antes de las midterms del 3 de noviembre, lo que limita el riesgo geopolitico inmediato sobre el NQ (CNBC, 26/10).",
-  "petroleo": "El Brent cotiza cerca de 114,5 USD/barril (-1,9%) y el WTI en torno a 103 USD (-0,3%), aliviando presion inflacionaria tras comentarios de Trump que redujeron el temor a una escalada inmediata con Iran, lo que favorece al NQ (Trading Economics, 26/10).",
-  "catalizador": "El repunte del Nasdaq (+0,8% al cierre) fue impulsado por el filing de IPO de Anthropic que reactivo el trade de IA, mientras el mercado se posiciona de cara a la decision de la Fed el miercoles 28/10 a las 14:00 ET (TheStreet/CNBC, 26/10).",
+  "geopolitica": "Arabia Saudita sigue bajo ataques de los huties y el Estrecho de Ormuz continúa con el tránsito restringido, manteniendo una prima de riesgo geopolítico que presiona la volatilidad y limita el apetito por riesgo en el NQ (Reuters, 05:59 ET, 26 oct).",
+  "petroleo": "El Brent cae a unos 115,15 USD/barril (-0,57%) y el WTI a 101,32 USD (-0,43%) por expectativas de una tregua en Medio Oriente, aunque persisten los ataques a Arabia Saudita; el retroceso del crudo alivia presión de costos y favorece el sesgo alcista del NQ (Voice of Emirates, 27 oct).",
+  "catalizador": "Los futuros del Nasdaq 100 suben 0,11% en la premercado de las 05:30 ET mientras la Fed permanece en blackout de comunicaciones hasta la decisión del FOMC del 29 de octubre, por lo que no se esperan sorpresas de Powell hoy y el mercado opera a la espera de la reunión (TradingView/Kiplinger, 05:30 ET).",
   "sources": [
-    "CNBC 26/10 (us-iran-war-hormuz)",
-    "Trading Economics 26/10 (Brent/WTI)",
-    "TheStreet 26/10 (cierre ~16:00 ET)"
+    "Reuters 05:59 ET",
+    "VoiceOfEmirates 27 oct",
+    "TradingView 05:30 ET",
+    "Kiplinger 27 oct"
   ],
-  "as_of": "2026-10-26T21:08:18Z"
+  "as_of": "2026-10-27T11:08:10Z"
 }
