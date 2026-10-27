@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Continua la guerra Israel-EEUU-Iran con conversaciones diplomaticas entre Arabia Saudita, Turquia, Pakistan e Iran para evitar una escalada, mientras persisten ataques sobre territorio saudi y tension en el estrecho de Ormuz, factores que explican el repunte de las acciones de semiconductores por segunda sesion y dan soporte al NQ.",
-  "petroleo": "El Brent cotiza cerca de 115 USD y el WTI en torno a 101 USD, bajando alrededor de 0.5%-1% el martes ante esperanzas de una resolucion diplomatica con Iran, aunque se mantienen cerca de maximos de seis meses por los ataques a Arabia Saudita, lo que limita el apetito de riesgo en el NQ.",
-  "catalizador": "La Fed inicia hoy la reunion del FOMC (27-28 de octubre), con la decision de tasas y la conferencia de prensa de Powell previstas para el miercoles a las 14:00 ET, lo que mantiene cautela entre los operadores del NQ antes del anuncio.",
+  "geopolitica": "Arabia Saudita e Iran sostuvieron conversaciones diplomaticas en Teheran el 26 de octubre buscando evitar una escalada militar, pero los huties atacaron de nuevo Arabia Saudita durante el fin de semana, por lo que el riesgo geopolitico sigue latente y limita el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae a unos 115.04 USD/bbl y el WTI a unos 101.06 USD/bbl (-0.7% cada uno, CNBC 08:55 ET) por expectativas de una posible distension diplomatica Arabia Saudita-Iran, lo que alivia la prima de riesgo energetico y es moderadamente positivo para el NQ.",
+  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28 de octubre; el mercado asigna mas de 90% de probabilidad de mantener tasas sin cambios, con los rendimientos del Tesoro planos hoy a la espera del tono de Kevin Warsh, lo que mantiene al NQ en modo de espera antes de la apertura.",
   "sources": [
-    "Reuters (via Yahoo Finance), 27 oct AM ET",
-    "Reuters (via Investing.com), 26-27 oct",
-    "CNBC, 26 oct",
-    "Federal Reserve - calendario oficial FOMC octubre 2026"
+    "CNBC 08:55 ET - Oil today: Iran, US, crude, WTI, brent, Trump",
+    "CNBC 25-oct - Saudi Arabia says it intercepted missiles and drones from Iran-backed Houthis",
+    "CNBC 27-oct - Federal Reserve expected to hold rates, but Kevin Warsh may point to more hikes",
+    "CNBC 27-oct - U.S. Treasury yields are flat ahead of the Federal Reserve's monetary policy meeting"
   ],
-  "as_of": "2026-10-27T13:08:05Z"
+  "as_of": "2026-10-27T13:48:23Z"
 }
