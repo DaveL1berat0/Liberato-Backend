@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Arabia Saudita e Iran sostuvieron conversaciones diplomaticas en Teheran el 26 de octubre buscando evitar una escalada militar, pero los huties atacaron de nuevo Arabia Saudita durante el fin de semana, por lo que el riesgo geopolitico sigue latente y limita el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cae a unos 115.04 USD/bbl y el WTI a unos 101.06 USD/bbl (-0.7% cada uno, CNBC 08:55 ET) por expectativas de una posible distension diplomatica Arabia Saudita-Iran, lo que alivia la prima de riesgo energetico y es moderadamente positivo para el NQ.",
-  "catalizador": "La Fed anuncia su decision de tasas el miercoles 28 de octubre; el mercado asigna mas de 90% de probabilidad de mantener tasas sin cambios, con los rendimientos del Tesoro planos hoy a la espera del tono de Kevin Warsh, lo que mantiene al NQ en modo de espera antes de la apertura.",
+  "geopolitica": "El ministro de Defensa saudi y el presidente iraní Pezeshkian mantuvieron conversaciones directas en Teherán el lunes para intentar desescalar, pero los hutíes respaldados por Irán siguieron atacando Arabia Saudita durante el fin de semana, lo que mantiene la prima de riesgo geopolítico y la cautela en el NQ.",
+  "petroleo": "El Brent cotiza cerca de 115.04 USD/barril (-0.77, aprox. -0.7%) y el WTI cerca de 101.06 USD/barril (-0.70, aprox. -0.7%) hacia las 08:55 ET, cediendo por las esperanzas de diplomacia saudí-iraní, aunque los ataques hutíes en curso limitan la caída y sostienen el riesgo inflacionario que pesa sobre el NQ.",
+  "catalizador": "El repunte tecnológico impulsado por la presentación del S-1 de Anthropic (IPO bajo el ticker 'ANT') sigue empujando a los semiconductores (Broadcom, AMD, Nvidia) de cara a la decision de la Fed del miercoles, en la que se espera que mantenga tasas con un tono hawkish del presidente Kevin Warsh.",
   "sources": [
     "CNBC 08:55 ET - Oil today: Iran, US, crude, WTI, brent, Trump",
-    "CNBC 25-oct - Saudi Arabia says it intercepted missiles and drones from Iran-backed Houthis",
-    "CNBC 27-oct - Federal Reserve expected to hold rates, but Kevin Warsh may point to more hikes",
-    "CNBC 27-oct - U.S. Treasury yields are flat ahead of the Federal Reserve's monetary policy meeting"
+    "CNBC 10:07 ET - Tech's relief rally extends as attention turns to tough decisions for the Fed",
+    "CNBC 27 oct - Wall Street sees this chip stock as the big winner from the Anthropic IPO",
+    "CNBC 26 oct - Fed decision: What to expect from October rate-setting meeting"
   ],
-  "as_of": "2026-10-27T13:48:23Z"
+  "as_of": "2026-10-27T14:08:57Z"
 }
