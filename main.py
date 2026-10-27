@@ -4067,6 +4067,30 @@ async def _fill_actuals_fred(events):
                 obs = [o for o in r.json().get("observations", []) if o.get("value") not in (".", None, "")]
                 if not obs:
                     continue
+                # ── Guardia de periodo (Regla #1, análoga a la de BLS) ───────────
+                # La observación MÁS reciente de FRED debe corresponder al periodo
+                # que ESTE release reporta (mes del evento − 1; o el trimestre previo
+                # para GDP). Si FRED aún no ingirió el periodo nuevo, obs[0] es el
+                # mes/trimestre ANTERIOR → NO estampar: mejor "—" que mostrar el dato
+                # del mes pasado como si fuera el resultado de hoy.
+                try:
+                    _od = str(obs[0].get("date", ""))
+                    _oy, _om = int(_od[:4]), int(_od[5:7])
+                    _ev = datetime.fromisoformat(str(e.get("time", "")).replace("Z", "+00:00"))
+                except Exception:
+                    continue   # sin fecha fiable, no arriesgar un 'actual' erróneo
+                if sid == "A191RL1Q225SBEA":            # GDP: serie trimestral
+                    _xq, _xy = (_ev.month - 1) // 3, _ev.year   # trimestre PREVIO al del evento
+                    if _xq == 0:
+                        _xq, _xy = 4, _ev.year - 1
+                    if (_oy, (_om - 1) // 3 + 1) != (_xy, _xq):
+                        continue
+                else:                                   # series mensuales
+                    _xm, _xy = _ev.month - 1, _ev.year
+                    if _xm == 0:
+                        _xm, _xy = 12, _ev.year - 1
+                    if (_oy, _om) != (_xy, _xm):
+                        continue
                 val = None
                 try:
                     if tf == "value":
@@ -5727,6 +5751,11 @@ def health():
     is_rth       = 9 <= now.hour < 16 and not is_weekend
     gex_data     = cache["gex"].get(FA_ASSET, {})
     gex_age_h    = round((time.time() - gex_data.get("_ts",0)) / 3600, 1) if gex_data.get("_ts") else None
+    # TwelveData: el WebSocket va APAGADO por defecto (plan gratis quemaba créditos).
+    # El precio NQ sale por REST (QQQ×ratio ~4s) + Finnhub. El health debe reflejar ESO,
+    # no un WS inexistente "reconectando". Freshness real = heatmap REST fresco.
+    _td_ws_on    = os.getenv("TD_WEBSOCKET", "off").lower() == "on"
+    _px_fresh    = cache["heatmap"]["status"] == "fresh"
 
     def svc(status, ok_msg, off_msg, extra=None):
         online = status not in ("offline","offline-no-key","error","error-503",
@@ -5755,20 +5784,26 @@ def health():
                 "gex_present":      bool(gex_data),
             }
         ),
-        # ── TwelveData WebSocket ────────────────────────────────────────────────
+        # ── TwelveData (precio) ──────────────────────────────────────────────────
+        # Si el WS está ON, se reporta su estado real. Si está OFF (por defecto, plan
+        # gratis), el precio va por REST y el estado se deriva de la frescura REST,
+        # con mensaje honesto en vez de "reconectando" un WS que nunca se enciende.
         "twelvedata": svc(
-            cache["health"]["twelvedata"],
-            ok_msg  = "WebSocket activo — precios en tiempo real",
-            off_msg = "WebSocket desconectado — reconectando automáticamente",
+            (cache["health"]["twelvedata"] if _td_ws_on
+             else ("online" if (_px_fresh or is_weekend or not is_rth) else "stale")),
+            ok_msg  = ("WebSocket activo — precios en tiempo real" if _td_ws_on
+                       else "Precios por REST (QQQ×ratio ~4s + Finnhub) — WebSocket apagado en plan gratis"),
+            off_msg = ("WebSocket desconectado — reconectando automáticamente" if _td_ws_on
+                       else "Sin precios REST frescos — fuera de RTH o Finnhub sin responder"),
             extra   = {
-                "type":             "WebSocket persistente (única conexión)",
-                "realtime_symbols": WS_SYMBOLS + ["AAPL","MSFT","NVDA","META","AMZN","TSLA","GOOGL"],
-                "rest_symbols":     "13 ETF macro cada 15 min (batch = 13 créditos/llamada)",
-                "credits_rest":     "~350/800 créditos día en horario de mercado",
-                "weekend_behavior": "WebSocket conectado pero sin precios (mercado cerrado)",
+                "modo":             ("WebSocket persistente (única conexión)" if _td_ws_on
+                                     else "REST — WebSocket apagado para no gastar créditos (plan gratis)"),
+                "precio_nq":        "QQQ real-time × ratio, refresco ~4s (refresh_nq_spot_fast + Finnhub)",
+                "rest_symbols":     "13 ETF macro cada 1 min en RTH (vía Finnhub)",
                 "heatmap_count":    len(cache["heatmap"]["data"]),
                 "heatmap_status":   cache["heatmap"]["status"],
-                "note":             "Precios vía WS llegan desde 9:30 AM ET lun-vie" if (is_weekend or not is_rth) else "Recibiendo precios en tiempo real",
+                "note":             ("Fuera de RTH: precios se congelan hasta 9:30 AM ET lun-vie"
+                                     if (is_weekend or not is_rth) else "Precios frescos vía REST/Finnhub"),
             }
         ),
         # ── Finnhub ─────────────────────────────────────────────────────────────
@@ -5815,7 +5850,8 @@ def health():
             "finnhub_calendar":  cache["calendar"]["status"] == "fresh",
             "finnhub_movers":    cache["movers"]["status"]   == "fresh",
             "finnhub_earnings":  cache["earnings"]["status"] == "fresh",
-            "twelvedata_ws":     cache["health"]["twelvedata"] == "online",
+            "precio_rest_fresco": bool(_px_fresh or is_weekend or not is_rth),
+            "twelvedata_ws":     (cache["health"]["twelvedata"] == "online") if _td_ws_on else "apagado (plan gratis — precio por REST)",
             "disk_persistence":  bool(cache["gex"].get(FA_ASSET) or cache["institutional"]["text"] or cache["earnings"]["data"]),
         },
     }
@@ -11032,7 +11068,7 @@ _OWNER_EMAIL = "liberatoceo@gmail.com"
 ADMIN_EMAILS = {e.strip().lower() for e in os.getenv("ADMIN_EMAILS", _OWNER_EMAIL).split(",") if e.strip()} | {_OWNER_EMAIL}
 def _is_admin(key="", authorization=""):
     """True si trae la ADMIN_KEY correcta O un JWT válido de un email admin."""
-    if key and ADMIN_KEY and not ADMIN_KEY.startswith("disabled-") and key == ADMIN_KEY:
+    if key and ADMIN_KEY and not ADMIN_KEY.startswith("disabled-") and hmac.compare_digest(key, ADMIN_KEY):
         return True
     tok = (authorization or "").replace("Bearer ", "").strip()
     if tok:

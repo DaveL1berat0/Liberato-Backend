@@ -1119,7 +1119,7 @@ input:focus,textarea:focus,select:focus{ box-shadow:0 0 0 3px rgba(201,168,76,0.
 
 /* ── AI FAQ CHAT WIDGET ── */
 .lc-fab{position:fixed;bottom:88px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
-@media(max-width:600px){.lc-fab{bottom:72px;right:12px;}.lc-btn{width:46px!important;height:46px!important;font-size:19px!important;}}
+@media(max-width:600px){.lc-fab{bottom:72px;right:12px;}.lc-btn{width:46px!important;height:46px!important;font-size:19px!important;}.lc-tooltip{display:none!important;}}
 .lc-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#9a7d2e);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 28px -8px rgba(201,168,76,0.6),0 4px 16px rgba(0,0,0,0.3);transition:transform .25s cubic-bezier(.34,1.4,.64,1),box-shadow .3s ease;position:relative;}
 .lc-btn:hover{transform:scale(1.1);box-shadow:0 12px 36px -8px rgba(201,168,76,0.7);}
 .lc-btn:active{transform:scale(0.95);}
@@ -2580,7 +2580,7 @@ function updateCD(){
   document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
   document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   try{
-    var d=target.getDate(),mn=MES[target.getMonth()],yr=target.getFullYear();
+    var d=target.getDate(),mn=MES[target.getMonth()].toLowerCase(),yr=target.getFullYear();  // meses en minúscula (RAE)
     var tEl=document.querySelector('.cd-title'); if(tEl)tEl.innerHTML='El acceso abre el <em>'+d+' de '+mn+'</em>';
   }catch(e){}
 }
@@ -2636,7 +2636,7 @@ function getFAQReply(q){
 
   // Precio / costo
   if(/precio|costo|cuesta|cuánto|cuanto|valor|pagar|inversión|inversion|cuánto.*mes|mes.*cuánto/i.test(Q))
-    return 'La membresía <strong>Pro es $199/mes</strong>. Sin contratos anuales obligatorios — cancelas cuando quieras. También hay una <strong>Comunidad Libre gratuita</strong> con Discord, análisis diario y noticias de mercado.';
+    return 'El plan <strong>Acceso Completo es $199/mes</strong>. Sin contratos anuales obligatorios — cancelas cuando quieras. También hay una <strong>Comunidad Libre gratuita</strong> con Discord, análisis diario y noticias de mercado.';
 
   // Qué incluye
   if(/incluye|contiene|tiene|funciona|acceso|qué es|que es|ofrece|beneficio|todo/i.test(Q))
@@ -2660,7 +2660,7 @@ function getFAQReply(q){
 
   // Garantía / reembolso
   if(/garantía|garantia|devolucion|reembolso|riesgo|prueba|probar|gratis/i.test(Q))
-    return 'Puedes empezar por la <strong>Comunidad Libre (gratis)</strong> para conocernos, y subir a Pro cuando estés listo. Sin contratos: cancelas cuando quieras.';
+    return 'Puedes empezar por la <strong>Comunidad Libre (gratis)</strong> para conocernos, y subir a Acceso Completo cuando estés listo. Sin contratos: cancelas cuando quieras.';
 
   // NQ / Nasdaq / futuros
   if(/nq|nasdaq|futuros|futures|contrato|emini|mnq/i.test(Q))

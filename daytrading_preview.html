@@ -3732,15 +3732,21 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
   // El impacto de un evento NO lo decide la etiqueta de la fuente sino cuánto MOVIÓ el
   // NQ alrededor del release, medido de las velas 1-min REALES (Regla #1: si no hay
   // velas o no salió el dato, se DECLARA el estado, nunca se inventa un número).
-  var _nqBars={}, _nqFetching={};   // cache {dateKey:{ok,interval,bars}} y set de fetching
+  var _nqBars={}, _nqFetching={}, _nqFetchedAt={};   // cache {dateKey:{ok,interval,bars}}, set de fetching, y ts de último fetch
   function _nqMedian(a){ if(!a.length)return 0; var s=a.slice().sort(function(x,y){return x-y;}); var m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; }
   function nqFetchDay(dk){
-    if(!dk||_nqBars[dk]||_nqFetching[dk])return;
+    if(!dk||_nqFetching[dk])return;
+    // Días pasados son inmutables → caché permanente. HOY crece mientras transcurre
+    // la sesión → TTL 45s para re-pedir velas y que la reacción EN VIVO se complete
+    // (el backend sirve HOY fresco cada 60s). Sin esto, la celda se congelaba en
+    // "Midiendo reacción…" en el snapshot del primer fetch hasta recargar a mano.
+    var _isToday=(dk===_nqTodayKey());
+    if(_nqBars[dk] && !(_isToday && (Date.now()-(_nqFetchedAt[dk]||0))>45000)) return;
     _nqFetching[dk]=1;
     fetch(BACKEND_URL+'/api/ohlc/NQ?date='+encodeURIComponent(dk))
       .then(function(r){return r.ok?r.json():{ok:false};})
-      .then(function(d){ _nqBars[dk]=(d&&d.ok&&d.bars&&d.bars.length)?{ok:true,interval:d.interval||'1m',bars:d.bars}:{ok:false,interval:(d&&d.interval)||''}; delete _nqFetching[dk]; try{renderLegacy();}catch(e){} })
-      .catch(function(){ _nqBars[dk]={ok:false,interval:''}; delete _nqFetching[dk]; try{renderLegacy();}catch(e){} });
+      .then(function(d){ _nqBars[dk]=(d&&d.ok&&d.bars&&d.bars.length)?{ok:true,interval:d.interval||'1m',bars:d.bars}:{ok:false,interval:(d&&d.interval)||''}; _nqFetchedAt[dk]=Date.now(); delete _nqFetching[dk]; try{renderLegacy();}catch(e){} })
+      .catch(function(){ _nqBars[dk]={ok:false,interval:''}; _nqFetchedAt[dk]=Date.now(); delete _nqFetching[dk]; try{renderLegacy();}catch(e){} });
   }
   // Fórmula EXACTA (diseñada por workflow multi-agente): ventana W10 desde la barra de
   // release, ancla P0 causal (cierre previo), baseline = mediana del rango de las 30
