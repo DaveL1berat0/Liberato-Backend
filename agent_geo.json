@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Arabia Saudita, Turquia y Pakistan negocian con Iran en Teheran para frenar el conflicto, pero los huties siguen atacando instalaciones sauditas, lo que mantiene una prima de riesgo geopolitico que puede generar volatilidad intradia en el NQ.",
-  "petroleo": "Brent cotiza cerca de maximos de seis meses (~114-115 USD/barril, tras llegar a superar los 117 USD) y WTI ronda 101 USD/barril, por ataques a refinerias sauditas (incluida Ras Tanura) pese a la tregua diplomatica en curso; una escalada energetica presiona al NQ via expectativas de inflacion y tasas.",
-  "catalizador": "La Fed se reune el miercoles y se espera que mantenga las tasas sin cambios, mientras el mercado afronta una semana cargada de resultados de Big Tech (Microsoft, Alphabet, Meta), lo que condiciona el apetito por riesgo del NQ en la apertura.",
+  "geopolitica": "Continua la guerra Israel-EEUU-Iran con conversaciones diplomaticas entre Arabia Saudita, Turquia, Pakistan e Iran para evitar una escalada, mientras persisten ataques sobre territorio saudi y tension en el estrecho de Ormuz, factores que explican el repunte de las acciones de semiconductores por segunda sesion y dan soporte al NQ.",
+  "petroleo": "El Brent cotiza cerca de 115 USD y el WTI en torno a 101 USD, bajando alrededor de 0.5%-1% el martes ante esperanzas de una resolucion diplomatica con Iran, aunque se mantienen cerca de maximos de seis meses por los ataques a Arabia Saudita, lo que limita el apetito de riesgo en el NQ.",
+  "catalizador": "La Fed inicia hoy la reunion del FOMC (27-28 de octubre), con la decision de tasas y la conferencia de prensa de Powell previstas para el miercoles a las 14:00 ET, lo que mantiene cautela entre los operadores del NQ antes del anuncio.",
   "sources": [
-    "Reuters (via CNBC/Yahoo Finance) 06:56 ET",
-    "Reuters (via Investing.com) 05:17 ET",
-    "CNBC 2026-10-27 (Oil eases on Middle East diplomacy hopes, Saudi attacks keep supply worries alive)"
+    "Reuters (via Yahoo Finance), 27 oct AM ET",
+    "Reuters (via Investing.com), 26-27 oct",
+    "CNBC, 26 oct",
+    "Federal Reserve - calendario oficial FOMC octubre 2026"
   ],
-  "as_of": "2026-10-27T12:41:24Z"
+  "as_of": "2026-10-27T13:08:05Z"
 }
