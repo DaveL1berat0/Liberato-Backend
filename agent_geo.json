@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Continua la tension en Oriente Medio: Huties mantienen ataques contra infraestructura energetica saudi mientras crecen los reportes de que EE.UU. e Israel preparan posibles nuevos ataques a Iran tras las elecciones de medio mandato del 3 de noviembre, lo que sostiene la aversion al riesgo y presiona al NQ.",
-  "petroleo": "Brent cotiza en torno a 114.85 USD/barril y WTI en torno a 100.87 USD, retrocediendo desde los maximos de la semana pasada (Brent habia superado 117 USD) por esperanzas de diplomacia en Oriente Medio, lo que alivia algo la presion inflacionaria sobre el NQ.",
-  "catalizador": "La Fed inicio hoy 27 de octubre su reunion FOMC de dos dias, con decision prevista para el miercoles 28; el mercado espera que mantenga tasas sin cambios pero vigila si el presidente Kevin Warsh senala una posible subida en diciembre, catalizador clave para el NQ en las proximas horas.",
+  "geopolitica": "Persiste la tensión Irán-Israel-EEUU tras la amenaza de Trump de autorizar un ataque a Irán en un plazo de 96 horas, pero conversaciones de paz en curso con Arabia Saudita, Turquía y Pakistán como mediadores moderan el temor a escalada inmediata, limitando el impacto bajista sobre el NQ.",
+  "petroleo": "Brent cede levemente a unos 115 USD/barril y WTI a unos 101 USD/barril (cerca de máximos de 6 meses) por esperanzas de diplomacia en Medio Oriente que alivian el temor a disrupción de oferta en el Estrecho de Ormuz, reduciendo la presión inflacionaria que pesa sobre el NQ.",
+  "catalizador": "Hoy arranca la reunión de dos días de la Fed (decisión de tasas mañana miércoles 28-oct a las 2:00pm ET, la primera bajo el nuevo presidente Kevin Warsh); la cautela previa a la decisión añade volatilidad intradía al NQ, mientras los chips suben por segunda sesión consecutiva impulsando al Nasdaq.",
   "sources": [
-    "CNBC (27 oct 2026) - Federal Reserve expected to hold rates, but Kevin Warsh may point to more hikes",
-    "Oilprice.com (27 oct 2026) - Oil Prices Drop Despite Threat of New U.S. Strikes on Iran",
-    "CNBC (26 oct 2026) - Israel election puts Netanyahu's wartime leadership on the line as Trump urges voters to return him to power"
+    "Reuters via AOL ~09:11 ET",
+    "MarineLink 09:11 ET",
+    "Fox News (live blog) 26-oct",
+    "Yahoo Finance 27-oct",
+    "CNBC 27-oct"
   ],
-  "as_of": "2026-10-27T20:07:35Z"
+  "as_of": "2026-10-27T21:08:16Z"
 }
