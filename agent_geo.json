@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los hutíes reivindicaron un ataque con misil balístico contra la refinería saudí de Ras Tanura (Aramco), con un incendio confirmado en la terminal adyacente y la coalición saudí interceptando misiles dirigidos a Riad, lo que eleva la prima de riesgo geopolítico que presiona al NQ intradía.",
-  "petroleo": "El Brent sube hacia 111-116 USD/barril y el WTI ronda 100-102 USD tras el ataque hutí a Ras Tanura, un repunte energético que alimenta temores de inflación y lastra al NQ.",
-  "catalizador": "La Fed mantuvo los tipos sin cambios en 3.75%-4.00% con una votación dividida 10-2 (Cook y Hammack pidieron una subida) y el presidente Kevin Warsh reiteró que la inflación sigue elevada, generando cautela de última hora en el NQ.",
+  "geopolitica": "Los hutíes reivindicaron un ataque con misil contra la refinería saudí de Ras Tanura (la mayor del país), con incendio reportado y sin confirmación oficial de Riad, lo que eleva la prima de riesgo geopolítico en Oriente Medio y presiona a la baja al NQ por aversión al riesgo.",
+  "petroleo": "El Brent sube cerca de 1.4% hacia 115-116 USD/barril y el WTI ronda 101-102 USD tras el ataque hutí a la refinería saudí de Ras Tanura, lo que reaviva el temor por oferta y presiona al NQ al encarecer insumos y elevar expectativas de inflación.",
+  "catalizador": "La Fed mantuvo las tasas sin cambios en la decisión de hoy con una votación 10-2 (Hammack y Cook disintiendo a favor de una subida), lo que genera cautela en el NQ ante un sesgo potencialmente más hawkish de lo esperado.",
   "sources": [
-    "Reuters vía The Star 2026-10-27",
-    "Investing.com/Oilprice.com 2026-10-28",
-    "CNBC 14:00 ET 2026-10-28"
+    "Reuters (via oilprice.com/marineinsight) 27-28 oct - ataque hutí a refinería Ras Tanura",
+    "CNBC 28 oct - oil-price-today-wti-brent-hormuz",
+    "Yahoo Finance 28 oct - FOMC decision 10-2, Fed holds rates"
   ],
-  "as_of": "2026-10-28T19:06:31Z"
+  "as_of": "2026-10-28T20:06:01Z"
 }
