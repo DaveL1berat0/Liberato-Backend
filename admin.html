@@ -260,6 +260,19 @@
       <button class="btn btn-sm" id="btn-settings" onclick="saveSettings()">Guardar configuración</button>
     </div>
     <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">💳 Productos de Whop que dan Premium</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:12px;">
+        Lista de IDs de producto de Whop (<b>prod_…</b> o <b>plan_…</b>) que conceden el acceso completo, separados por coma.
+        <b>Déjalo vacío</b> y CUALQUIER compra de Whop da premium (ok si vendes un solo producto).
+        <b>Rellénalo</b> y solo esos productos dan premium — así un producto barato que vendas en el futuro NO regala el dashboard.
+        Para saber el ID exacto: tras una compra, los últimos vistos aparecen abajo (o en <code>/api/admin/whop-products</code>).</div>
+      <div id="whop-state" style="font-family:var(--mono);font-size:11px;margin-bottom:10px;"></div>
+      <div class="form-g" style="margin-bottom:10px;"><label>IDs que dan Premium (coma-separado; vacío = cualquier compra)</label>
+        <input class="field-input" id="s-whop-ids" placeholder="prod_xxxxxxxx, plan_yyyyyyyy"></div>
+      <div id="whop-seen" style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:12px;"></div>
+      <button class="btn btn-sm" id="btn-whop" onclick="saveWhop()">Guardar allowlist de Whop</button>
+    </div>
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Brief diario a Discord</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">FREE (Discord, sin GEX) se envía <b>8:00 y 9:30 ET</b> lun-vie (apertura). PREMIUM (con GEX) usa el webhook premium cuando lo pongas arriba.</div>
       <div id="daily-msg"></div>
@@ -389,7 +402,24 @@
       $('s-invite').value=d.discord_free_invite||'';
       $('s-free-wh').placeholder = d.discord_free_webhook_set ? (d.discord_free_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
       $('s-prem-wh').placeholder = d.discord_premium_webhook_set ? (d.discord_premium_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
+      // ── Estado de la allowlist de Whop ──
+      var ids=d.whop_product_ids||[];
+      $('s-whop-ids').value = ids.join(', ');
+      $('whop-state').innerHTML = d.whop_allowlist_active
+        ? '<span style="color:#5fb87a;">✓ Activa</span> — solo estos productos dan premium: <b>'+ids.join(', ')+'</b>'
+        : '<span style="color:#d9a441;">○ Vacía</span> — cualquier compra de Whop concede premium (ok con un solo producto).';
+      var seen=(d.whop_recent_ids||[]).filter(Boolean);
+      $('whop-seen').innerHTML = seen.length
+        ? 'Últimos IDs que Whop envió (clic para copiar): '+seen.map(function(x){return '<a href="#" onclick="var e=document.getElementById(\'s-whop-ids\');e.value=e.value?e.value+\', \'+this.textContent:this.textContent;return false;" style="color:#7aa7d9;">'+x+'</a>';}).join(' · ')
+        : 'Aún no se ha visto ningún ID (aparecen aquí tras una compra).';
     }catch(e){ /* silencioso: la vista puede abrir sin settings */ }
+  }
+  async function saveWhop(){
+    var raw=$('s-whop-ids').value.trim();
+    $('btn-whop').disabled=true;
+    try{ var r=await apiPost('/api/admin/settings',{whop_product_ids:raw});
+      msg('settings-msg','Allowlist de Whop guardada ✓ '+JSON.stringify(r.changed),'ok'); loadSettings();
+    }catch(e){ msg('settings-msg',e.message,'err'); } finally{ $('btn-whop').disabled=false; }
   }
   async function saveSettings(){
     var body={}, inv=$('s-invite').value.trim(), fw=$('s-free-wh').value.trim(), pw=$('s-prem-wh').value.trim();

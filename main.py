@@ -8024,10 +8024,10 @@ async def admin_daily_send(key: str = "", authorization: str = Header("")):
 # Los links/webhooks de Discord se pueden pegar en el panel admin y viven en Supabase
 # (app_config). Así Dave NO necesita variables de entorno de Railway. La env var, si
 # existe, es solo el valor inicial; el guardado en Supabase manda.
-_SETTING_KEYS = ("discord_free_invite", "discord_free_webhook", "discord_premium_webhook")
+_SETTING_KEYS = ("discord_free_invite", "discord_free_webhook", "discord_premium_webhook", "whop_product_ids")
 async def _load_settings_overrides():
     """Al arrancar, si hay valores guardados en Supabase, sobrescriben los de entorno."""
-    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL
+    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL, WHOP_PRODUCT_IDS
     try:
         v = await _sb_get_config("cfg::discord_free_invite")
         if v: DISCORD_FREE_INVITE = v.strip()
@@ -8035,6 +8035,11 @@ async def _load_settings_overrides():
         if v: DISCORD_WEBHOOK_URL = v.strip()
         v = await _sb_get_config("cfg::discord_premium_webhook")
         if v: DISCORD_PREMIUM_WEBHOOK_URL = v.strip()
+        # Allowlist de productos Whop editable desde el panel (manda sobre la env var).
+        # Cadena vacía guardada = allowlist vacía a propósito (NO vuelve a la env var).
+        v = await _sb_get_config("cfg::whop_product_ids")
+        if v is not None:
+            WHOP_PRODUCT_IDS = {x.strip() for x in v.split(",") if x.strip()}
     except Exception as e:
         print(f"[settings] load: {e}")
 
@@ -8051,14 +8056,18 @@ async def admin_get_settings(key: str = "", authorization: str = Header("")):
             "discord_free_webhook": _mask_url(DISCORD_WEBHOOK_URL),
             "discord_premium_webhook": _mask_url(DISCORD_PREMIUM_WEBHOOK_URL),
             "discord_free_webhook_set": bool(DISCORD_WEBHOOK_URL),
-            "discord_premium_webhook_set": bool(DISCORD_PREMIUM_WEBHOOK_URL)}
+            "discord_premium_webhook_set": bool(DISCORD_PREMIUM_WEBHOOK_URL),
+            # Allowlist de productos Whop que conceden premium (vacía = CUALQUIER compra concede)
+            "whop_product_ids": sorted(WHOP_PRODUCT_IDS),
+            "whop_allowlist_active": bool(WHOP_PRODUCT_IDS),
+            "whop_recent_ids": [p.get("id") for p in _whop_recent_products[:8] if p.get("id")]}
 
 @app.post("/api/admin/settings")
 async def admin_set_settings(request: Request, key: str = "", authorization: str = Header("")):
     """Guarda ajustes editables en Supabase y los aplica EN VIVO (sin redeploy). Body:
     {discord_free_invite?, discord_free_webhook?, discord_premium_webhook?}. Envía solo los
     que quieras cambiar. Cadena vacía = borrar. Valida un mínimo de forma para no romper."""
-    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL
+    global DISCORD_FREE_INVITE, DISCORD_WEBHOOK_URL, DISCORD_PREMIUM_WEBHOOK_URL, WHOP_PRODUCT_IDS
     if not _is_admin(key, authorization):
         raise HTTPException(403, "acceso denegado")
     try:
@@ -8066,6 +8075,20 @@ async def admin_set_settings(request: Request, key: str = "", authorization: str
     except Exception:
         raise HTTPException(400, "JSON inválido")
     changed = {}
+    if "whop_product_ids" in d:
+        raw = d.get("whop_product_ids")
+        ids = ({str(x).strip() for x in raw if str(x).strip()} if isinstance(raw, list)
+               else {x.strip() for x in str(raw or "").split(",") if x.strip()})
+        # Validación de forma: un ID de Whop es prefijo_alfa + "_" + alfanumérico (prod_… / plan_…).
+        # Si lo que pegan no tiene esa forma, se rechaza para no dejar la allowlist en basura
+        # (que bloquearía TODO premium). Vacío = allowlist vacía a propósito (cualquier compra concede).
+        bad = [x for x in ids if not (("_" in x) and len(x) >= 8 and x.replace("_", "").isalnum())]
+        if bad:
+            raise HTTPException(400, f"IDs con forma inválida (deben ser tipo prod_xxxx o plan_xxxx): {bad}. "
+                                     f"Míralos en /api/admin/whop-products tras una compra.")
+        WHOP_PRODUCT_IDS = ids
+        await _sb_set_config("cfg::whop_product_ids", ",".join(sorted(ids)))
+        changed["whop_product_ids"] = sorted(ids)
     if "discord_free_invite" in d:
         val = (d.get("discord_free_invite") or "").strip()
         if val and "discord.gg/" not in val and "discord.com/invite/" not in val:
