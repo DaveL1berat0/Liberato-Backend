@@ -1,13 +1,12 @@
 {
-  "geopolitica": "",
-  "petroleo": "Brent sube hacia 114-115 USD/barril y WTI hacia 100-101 USD/barril, cerca de maximos de varios meses, por los ataques Houthi a infraestructura petrolera saudi y el bloqueo persistente del Estrecho de Ormuz, lo que presiona al alza la aversion al riesgo que pesa sobre el NQ intradia.",
-  "catalizador": "La Fed anuncia hoy su decision de tasas a las 14:00 ET, con el mercado descontando mantener el rango en 3.75%-4% tras la inflacion mas alta de lo esperado en septiembre; la rueda de prensa del presidente Kevin Warsh es el catalizador clave para la volatilidad intradia del NQ, junto a los resultados de Alphabet y Microsoft tras el cierre.",
+  "geopolitica": "Los hutíes lanzaron misiles contra la refinería Ras Tanura de Saudi Aramco y la sede del ministerio de Defensa saudí, mientras Washington evalúa nuevos ataques contra Irán tras el fallido alto el fuego, lo que eleva la aversión al riesgo y presiona al NQ a la baja antes de la apertura.",
+  "petroleo": "El Brent cotiza cerca de 115 USD/barril y el WTI en torno a 101 USD, cerca de máximos de varios meses, impulsados por los ataques hutíes a infraestructura petrolera saudí y el riesgo de disrupción en el Estrecho de Ormuz, lo que añade presión de costos sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "La Fed anuncia su decisión de tasas hoy a las 14:00 ET (rueda de prensa del presidente Kevin Warsh a las 14:30 ET), con el mercado descontando ~92% de probabilidad de mantener el rango en 3.75%-4.00%; el tono sobre una posible subida en diciembre será el catalizador clave para el NQ en la apertura.",
   "sources": [
-    "Business Standard 08:00 ET",
-    "oilpriceapi.com 20:51 ET (27 oct)",
-    "FXStreet 03:02 ET",
-    "Yahoo Finance 04:06 ET",
-    "CNBC 00:00 ET (26 oct, preview Fed)"
+    "Bloomberg 2026-10-27 (Aramco contiene incendio cerca de Ras Tanura tras ataque)",
+    "The National 2026-10-28 ~06:00 ET (Brent ~114.9, WTI ~101.5 por ataques hutíes y riesgo de guerra con Irán)",
+    "Yahoo Finance 2026-10-28 08:06 ET (futuros mixtos ante decisión de la Fed y resultados de Big Tech)",
+    "CNBC 2026-10-27 (futuros del Nasdaq suben tras resultados de SK Hynix; decisión de la Fed en foco)"
   ],
-  "as_of": "2026-10-28T12:08:31Z"
+  "as_of": "2026-10-28T12:41:09Z"
 }
