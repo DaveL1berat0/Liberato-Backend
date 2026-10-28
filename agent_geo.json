@@ -1,12 +1,15 @@
 {
-  "geopolitica": "El conflicto entre los hutíes y Arabia Saudí, enmarcado en la guerra más amplia entre EEUU e Irán tras el colapso de la tregua regional en julio, sigue activo con ataques a infraestructura petrolera saudí (última escalada confirmada el 8 de septiembre con 73 heridos), lo que mantiene elevada la aversión al riesgo global y presiona al NQ en la apertura.",
-  "petroleo": "El Brent se mantiene por encima de 110 USD/barril tras el salto de casi 4% del 22 de octubre hasta máximos de cinco meses (~113 USD), sostenido por los ataques hutíes a instalaciones petroleras sauditas; el riesgo geopolítico sigue dominando sobre la mejora de la oferta física, lo que añade presión de costos sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "La Fed anuncia hoy su decisión de tasas a las 14:00 ET, con el mercado descontando ~90-93% de probabilidad de mantener el rango en 3.75%-4.00%; el tono del presidente Kevin Warsh sobre una posible pausa en diciembre será el catalizador clave para el NQ en la sesión de hoy.",
+  "geopolitica": "Los hutíes reivindicaron un ataque con misil balístico contra la refinería saudí de Ras Tanura (la mayor del reino) el martes 27-oct; Riad dice haber interceptado misiles y no confirma daños, lo que mantiene elevada la prima de riesgo geopolítico y el apetito por aversión al riesgo que puede pesar sobre el NQ en la apertura.",
+  "petroleo": "Brent sube a ~115 USD/b y WTI a ~101 USD/b (+1-2%) este miércoles 28-oct en operaciones asiáticas/europeas tras la reivindicación hutí del ataque a Ras Tanura, revirtiendo la caída de casi 2 USD del martes que habían provocado las esperanzas de distensión Irán-Arabia Saudí-Turquía-Pakistán.",
+  "catalizador": "La Fed, ya bajo la presidencia de Kevin Warsh (confirmado por el Senado en mayo-2026 en sustitución de Powell), anuncia hoy miércoles 28-oct su decisión de tasas a las 14:00 ET (reunión sin proyecciones económicas ni dot plot), con el mercado dividido entre mantener y recortar, lo que puede generar volatilidad en el NQ en torno a la apertura y, sobre todo, tras el anuncio.",
   "sources": [
-    "The Star 2026-10-22 (Brent sube a máximo de 5 meses, ~113 USD, por ataques hutíes)",
-    "Khaleej Times 2026-10-22 (Brent ~111 USD intradía por temores de suministro saudí)",
-    "Al-Monitor / Malay Mail 2026-09-08 (ataques hutíes a instalaciones de Aramco, 73 heridos)",
-    "Reuters via Investing.com 2026-10-28 ~07:00 ET (Fed probablemente entra en modo de espera sobre tasas)"
+    "EnergyNow.com 28-oct-2026",
+    "The Free Press Journal 28-oct-2026",
+    "Karmactive 28-oct-2026",
+    "Türkiye Today 28-oct-2026",
+    "The National (thenationalnews.com) 28-oct-2026 ~06:00 ET",
+    "FinanceCalendar.com (calendario FOMC) — decisión 14:00 ET",
+    "Fox4News / InsuranceNewsNet — confirmación Senado Kevin Warsh, mayo-2026"
   ],
-  "as_of": "2026-10-28T13:13:10Z"
+  "as_of": "2026-10-28T13:42:15Z"
 }
