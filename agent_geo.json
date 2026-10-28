@@ -1,17 +1,12 @@
 {
-  "geopolitica": "Los hutíes reivindicaron un ataque con misil balístico contra la refinería saudí de Ras Tanura (la mayor del reino) el martes 27-oct; Riad dice haber interceptado misiles y no confirma daños, lo que mantiene elevada la prima de riesgo geopolítico y el apetito por aversión al riesgo que puede pesar sobre el NQ en la apertura.",
-  "petroleo": "Brent sube a ~115 USD/b y WTI a ~101 USD/b (+1-2%) este miércoles 28-oct en operaciones asiáticas/europeas tras la reivindicación hutí del ataque a Ras Tanura, revirtiendo la caída de casi 2 USD del martes que habían provocado las esperanzas de distensión Irán-Arabia Saudí-Turquía-Pakistán.",
-  "catalizador": "La Fed, ya bajo la presidencia de Kevin Warsh (confirmado por el Senado en mayo-2026 en sustitución de Powell), anuncia hoy miércoles 28-oct su decisión de tasas a las 14:00 ET (reunión sin proyecciones económicas ni dot plot), con el mercado dividido entre mantener y recortar, lo que puede generar volatilidad en el NQ en torno a la apertura y, sobre todo, tras el anuncio.",
+  "geopolitica": "Hutíes atacaron con un misil balístico la refinería saudí de Ras Tanura y EE.UU. prepararía una campaña militar corta contra Irán tras las elecciones de medio mandato (CNBC/Bloomberg, 28/10/2026), lo que eleva la aversión al riesgo y puede presionar al NQ en la apertura.",
+  "petroleo": "Brent sube ~1% a 115.07 USD y WTI sube 1.8% a 101.72 USD (CNBC, 28/10/2026) por la escalada EE.UU.-Irán; un petróleo más caro suele pesar sobre el Nasdaq al encarecer costos y reducir el apetito por riesgo.",
+  "catalizador": "La Fed anuncia hoy su decisión de tasas (CNBC/Bloomberg, 28/10/2026): se espera que mantenga el rango en 3.75%-4%, con el foco en la conferencia de prensa del presidente Kevin Warsh, catalizador clave de volatilidad para el NQ en el racimo del open.",
   "sources": [
-    "EnergyNow.com 28-oct-2026",
-    "The Free Press Journal 28-oct-2026",
-    "Karmactive 28-oct-2026",
-    "Türkiye Today 28-oct-2026",
-    "The National (thenationalnews.com) 28-oct-2026 ~06:00 ET",
-    "FinanceCalendar.com (calendario FOMC) — decisión 14:00 ET",
-    "Fox4News / InsuranceNewsNet — confirmación Senado Kevin Warsh, mayo-2026",
-    "CNBC (oil-price-today-wti-brent-hormuz) 28-oct-2026 — Brent +1% a 115.07 USD/b, WTI +1.8% a 101.72 USD/b",
-    "Bloomberg — Stock Market Today live updates, 27/28-oct-2026"
+    "CNBC 28/10/2026 - Oil price today: WTI, Brent rise",
+    "Bloomberg 28/10/2026 - Oil Holds Decline as Traders Track Result of Israeli Election",
+    "CNBC 28/10/2026 - Fed meeting today: live updates",
+    "Bloomberg 27/10/2026 - Fed Seen Holding Rates With Nod to December: Decision-Day Guide"
   ],
-  "as_of": "2026-10-28T14:10:50Z"
+  "as_of": "2026-10-28T14:41:07Z"
 }
