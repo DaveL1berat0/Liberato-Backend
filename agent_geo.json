@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) reivindicaron un ataque con misiles contra la refinería saudí de Ras Tanura (27-28 oct), en el marco de la guerra que desde hace meses enfrenta a Irán y Arabia Saudita en el Golfo/Mar Rojo, lo que eleva la prima de riesgo geopolítico y puede presionar al NQ por aversión al riesgo en la apertura.",
-  "petroleo": "El Brent sube cerca de 0.7% hasta ~114.68 USD/barril (WTI ~101.5 USD) tras el ataque hutí a la refinería de Ras Tanura y los temores sobre el Estrecho de Hormuz, un crudo más caro que encarece insumos y puede pesar sobre márgenes de tech/consumo, negativo para el NQ.",
-  "catalizador": "La Fed anuncia hoy su decisión de tasas a las 14:00 ET, con el mercado descontando mayoritariamente una pausa en 3.75%-4.00% (según CME FedWatch); una sorpresa hawkish o dovish en el comunicado y la rueda de prensa será el principal catalizador intradía del NQ en la tarde.",
+  "geopolitica": "",
+  "petroleo": "Brent sube hacia 114-115 USD/barril y WTI hacia 100-101 USD/barril, cerca de maximos de varios meses, por los ataques Houthi a infraestructura petrolera saudi y el bloqueo persistente del Estrecho de Ormuz, lo que presiona al alza la aversion al riesgo que pesa sobre el NQ intradia.",
+  "catalizador": "La Fed anuncia hoy su decision de tasas a las 14:00 ET, con el mercado descontando mantener el rango en 3.75%-4% tras la inflacion mas alta de lo esperado en septiembre; la rueda de prensa del presidente Kevin Warsh es el catalizador clave para la volatilidad intradia del NQ, junto a los resultados de Alphabet y Microsoft tras el cierre.",
   "sources": [
-    "Washington Post / Bloomberg 27-28 oct 2026 (ataque hutí a Ras Tanura)",
-    "CNBC 28 oct 2026 (oil-price-today-wti-brent-hormuz)",
-    "Previas de mercado citando CME FedWatch - decisión Fed 14:00 ET, 28 oct 2026"
+    "Business Standard 08:00 ET",
+    "oilpriceapi.com 20:51 ET (27 oct)",
+    "FXStreet 03:02 ET",
+    "Yahoo Finance 04:06 ET",
+    "CNBC 00:00 ET (26 oct, preview Fed)"
   ],
-  "as_of": "2026-10-28T11:40:54Z"
+  "as_of": "2026-10-28T12:08:31Z"
 }
