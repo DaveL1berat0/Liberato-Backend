@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. advirtio a paises del Golfo que se preparen para posibles ataques de Iran tras las elecciones de medio mandato del 3 de noviembre, en medio de la escalada belica en el estrecho de Ormuz; el riesgo geopolitico elevado favorece aversion al riesgo y puede presionar al NQ intradia.",
-  "petroleo": "El Brent sube ~1% a 115.02 USD y el WTI avanza 1.7% a 101.61 USD tras un ataque hutí (aun sin confirmar por Riad) contra la mayor refineria de Arabia Saudita, lo que reaviva temores de oferta y puede pesar sobre el NQ via mayores costos e inflacion.",
-  "catalizador": "La Fed anuncia hoy su decision de tasas (se espera mantener en 3.75%-4.00%, ~92% de probabilidad segun CME FedWatch) y tras el cierre reportan resultados Microsoft y Alphabet, dos catalizadores clave que marcaran la direccion del NQ en las proximas horas.",
+  "geopolitica": "Los Huthies afirmaron haber atacado con un misil balistico la refineria de Ras Tanura de Saudi Aramco (sin confirmacion de Riad) mientras EEUU advirtio a paises del Golfo que se preparen para posibles nuevos ataques contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que eleva la aversion al riesgo y puede presionar al NQ intradia.",
+  "petroleo": "El Brent cotiza cerca de 115-116 USD/barril (~+1%) y el WTI en torno a 101-103 USD/barril (~+1.7%), al alza por el temor a una escalada EEUU-Iran en el estrecho de Ormuz y el ataque huti a infraestructura saudi, lo que reaviva temores de oferta/inflacion y resta soporte a las tecnologicas del NQ.",
+  "catalizador": "La Fed confirmo hoy (28 oct) mantener su tasa en 3.75%-4.00% con dos disidencias (Cook y Hammack) a favor de subir, y tras el cierre reportan resultados Microsoft (fiscal Q1'27, foco en Azure/capex IA) y Alphabet (Q3, foco en cloud y gasto en IA), catalizadores clave para el NQ en las proximas horas.",
   "sources": [
-    "CNBC 13:08 ET",
-    "Reuters (via CNBC) 13:08 ET",
-    "CME FedWatch / Yahoo Finance 13:08 ET"
+    "CNBC 28-Oct-2026 (fed-meeting-today-live-updates)",
+    "CNBC 28-Oct-2026 (oil-price-today-wti-brent-hormuz)",
+    "CNBC 28-Oct-2026 (microsoft-msft-q1-earnings-report-2027)",
+    "CNBC 28-Oct-2026 (alphabet-googl-earnings-q3-2026)"
   ],
-  "as_of": "2026-10-28T17:08:44Z"
+  "as_of": "2026-10-28T18:07:25Z"
 }
