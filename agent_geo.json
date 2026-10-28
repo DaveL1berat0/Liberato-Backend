@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los hutíes reivindicaron un ataque con misil contra la refinería saudí de Ras Tanura (la mayor del país), con incendio reportado y sin confirmación oficial de Riad, lo que eleva la prima de riesgo geopolítico en Oriente Medio y presiona a la baja al NQ por aversión al riesgo.",
-  "petroleo": "El Brent sube cerca de 1.4% hacia 115-116 USD/barril y el WTI ronda 101-102 USD tras el ataque hutí a la refinería saudí de Ras Tanura, lo que reaviva el temor por oferta y presiona al NQ al encarecer insumos y elevar expectativas de inflación.",
-  "catalizador": "La Fed mantuvo las tasas sin cambios en la decisión de hoy con una votación 10-2 (Hammack y Cook disintiendo a favor de una subida), lo que genera cautela en el NQ ante un sesgo potencialmente más hawkish de lo esperado.",
+  "geopolitica": "Hutíes atacaron la refinería/terminal de exportación de Ras Tanura en Arabia Saudí y medios reportan que EE.UU. pidió a países del Golfo prepararse para una campaña militar contra Irán tras las elecciones de medio mandato del 3 de noviembre, lo que eleva el riesgo geopolítico y presiona el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent sube ~1.3% a unos 115.3 USD/barril y el WTI ~2.9% a unos 102.8 USD/barril por el ataque a la refinería saudí de Ras Tanura y la escalada de tensión en el Golfo/Estrecho de Ormuz, lo que encarece insumos y puede lastrar al Nasdaq vía mayor costo energético y presión inflacionaria.",
+  "catalizador": "La Fed mantuvo sin cambios su tasa en el rango 3.75%-4% el 28 de octubre (dos disidencias pidiendo alza), y el presidente Kevin Warsh insistió en el enfoque en estabilidad de precios; el Nasdaq Composite cerró con una subida modesta de +0.27% a 26,549.85, reflejando una reacción contenida del NQ tras la decisión.",
   "sources": [
-    "Reuters (via oilprice.com/marineinsight) 27-28 oct - ataque hutí a refinería Ras Tanura",
-    "CNBC 28 oct - oil-price-today-wti-brent-hormuz",
-    "Yahoo Finance 28 oct - FOMC decision 10-2, Fed holds rates"
+    "CNBC ~14:00 ET (decisión de la Fed, 28 oct 2026)",
+    "CNBC ~16:30 ET (cierre petróleo, 28 oct 2026)",
+    "Bloomberg (28 oct 2026, ataque a Ras Tanura y aviso a países del Golfo)"
   ],
-  "as_of": "2026-10-28T20:06:01Z"
+  "as_of": "2026-10-28T21:05:46Z"
 }
