@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Hutíes atacaron con un misil balístico la refinería saudí de Ras Tanura y EE.UU. prepararía una campaña militar corta contra Irán tras las elecciones de medio mandato (CNBC/Bloomberg, 28/10/2026), lo que eleva la aversión al riesgo y puede presionar al NQ en la apertura.",
-  "petroleo": "Brent sube ~1% a 115.07 USD y WTI sube 1.8% a 101.72 USD (CNBC, 28/10/2026) por la escalada EE.UU.-Irán; un petróleo más caro suele pesar sobre el Nasdaq al encarecer costos y reducir el apetito por riesgo.",
-  "catalizador": "La Fed anuncia hoy su decisión de tasas (CNBC/Bloomberg, 28/10/2026): se espera que mantenga el rango en 3.75%-4%, con el foco en la conferencia de prensa del presidente Kevin Warsh, catalizador clave de volatilidad para el NQ en el racimo del open.",
+  "geopolitica": "EE.UU. prepararía nuevos ataques contra Irán tras las elecciones de medio término mientras los hutíes reivindican un ataque a la refinería saudí de Ras Tanura, elevando la aversión al riesgo que presiona al NQ (CNBC, ~10:30 ET).",
+  "petroleo": "El Brent sube ~1% a 115,07 USD y el WTI +1,8% a 101,72 USD por el riesgo de suministro tras el ataque hutí a Ras Tanura y la amenaza de nuevos ataques de EE.UU. a Irán, presionando el sentimiento de riesgo sobre el NQ (CNBC, ~10:30 ET).",
+  "catalizador": "La Fed anuncia hoy su decisión de tasas a las 14:00 ET (se espera mantener el rango en 3,75%-4%), con la conferencia del presidente Kevin Warsh a las 14:30 ET, mientras el mercado también espera los resultados de Alphabet y Microsoft tras el cierre, claves para el apetito tecnológico del NQ (CNBC).",
   "sources": [
-    "CNBC 28/10/2026 - Oil price today: WTI, Brent rise",
-    "Bloomberg 28/10/2026 - Oil Holds Decline as Traders Track Result of Israeli Election",
-    "CNBC 28/10/2026 - Fed meeting today: live updates",
-    "Bloomberg 27/10/2026 - Fed Seen Holding Rates With Nod to December: Decision-Day Guide"
+    "CNBC ~10:27 ET",
+    "CNBC (Oil price today: WTI, Brent rise) 28-oct",
+    "Reuters 21:40 ET (27-oct, ataque a refinería)"
   ],
-  "as_of": "2026-10-28T14:41:07Z"
+  "as_of": "2026-10-28T15:11:31Z"
 }
