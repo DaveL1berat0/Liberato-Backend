@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los Huthies afirmaron haber atacado con un misil balistico la refineria de Ras Tanura de Saudi Aramco (sin confirmacion de Riad) mientras EEUU advirtio a paises del Golfo que se preparen para posibles nuevos ataques contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que eleva la aversion al riesgo y puede presionar al NQ intradia.",
-  "petroleo": "El Brent cotiza cerca de 115-116 USD/barril (~+1%) y el WTI en torno a 101-103 USD/barril (~+1.7%), al alza por el temor a una escalada EEUU-Iran en el estrecho de Ormuz y el ataque huti a infraestructura saudi, lo que reaviva temores de oferta/inflacion y resta soporte a las tecnologicas del NQ.",
-  "catalizador": "La Fed confirmo hoy (28 oct) mantener su tasa en 3.75%-4.00% con dos disidencias (Cook y Hammack) a favor de subir, y tras el cierre reportan resultados Microsoft (fiscal Q1'27, foco en Azure/capex IA) y Alphabet (Q3, foco en cloud y gasto en IA), catalizadores clave para el NQ en las proximas horas.",
+  "geopolitica": "Los hutíes reivindicaron un ataque con misil balístico contra la refinería saudí de Ras Tanura (Aramco), con un incendio confirmado en la terminal adyacente y la coalición saudí interceptando misiles dirigidos a Riad, lo que eleva la prima de riesgo geopolítico que presiona al NQ intradía.",
+  "petroleo": "El Brent sube hacia 111-116 USD/barril y el WTI ronda 100-102 USD tras el ataque hutí a Ras Tanura, un repunte energético que alimenta temores de inflación y lastra al NQ.",
+  "catalizador": "La Fed mantuvo los tipos sin cambios en 3.75%-4.00% con una votación dividida 10-2 (Cook y Hammack pidieron una subida) y el presidente Kevin Warsh reiteró que la inflación sigue elevada, generando cautela de última hora en el NQ.",
   "sources": [
-    "CNBC 28-Oct-2026 (fed-meeting-today-live-updates)",
-    "CNBC 28-Oct-2026 (oil-price-today-wti-brent-hormuz)",
-    "CNBC 28-Oct-2026 (microsoft-msft-q1-earnings-report-2027)",
-    "CNBC 28-Oct-2026 (alphabet-googl-earnings-q3-2026)"
+    "Reuters vía The Star 2026-10-27",
+    "Investing.com/Oilprice.com 2026-10-28",
+    "CNBC 14:00 ET 2026-10-28"
   ],
-  "as_of": "2026-10-28T18:07:25Z"
+  "as_of": "2026-10-28T19:06:31Z"
 }
