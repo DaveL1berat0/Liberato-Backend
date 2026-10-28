@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Los hutíes lanzaron misiles contra la refinería Ras Tanura de Saudi Aramco y la sede del ministerio de Defensa saudí, mientras Washington evalúa nuevos ataques contra Irán tras el fallido alto el fuego, lo que eleva la aversión al riesgo y presiona al NQ a la baja antes de la apertura.",
-  "petroleo": "El Brent cotiza cerca de 115 USD/barril y el WTI en torno a 101 USD, cerca de máximos de varios meses, impulsados por los ataques hutíes a infraestructura petrolera saudí y el riesgo de disrupción en el Estrecho de Ormuz, lo que añade presión de costos sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "La Fed anuncia su decisión de tasas hoy a las 14:00 ET (rueda de prensa del presidente Kevin Warsh a las 14:30 ET), con el mercado descontando ~92% de probabilidad de mantener el rango en 3.75%-4.00%; el tono sobre una posible subida en diciembre será el catalizador clave para el NQ en la apertura.",
+  "geopolitica": "El conflicto entre los hutíes y Arabia Saudí, enmarcado en la guerra más amplia entre EEUU e Irán tras el colapso de la tregua regional en julio, sigue activo con ataques a infraestructura petrolera saudí (última escalada confirmada el 8 de septiembre con 73 heridos), lo que mantiene elevada la aversión al riesgo global y presiona al NQ en la apertura.",
+  "petroleo": "El Brent se mantiene por encima de 110 USD/barril tras el salto de casi 4% del 22 de octubre hasta máximos de cinco meses (~113 USD), sostenido por los ataques hutíes a instalaciones petroleras sauditas; el riesgo geopolítico sigue dominando sobre la mejora de la oferta física, lo que añade presión de costos sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "La Fed anuncia hoy su decisión de tasas a las 14:00 ET, con el mercado descontando ~90-93% de probabilidad de mantener el rango en 3.75%-4.00%; el tono del presidente Kevin Warsh sobre una posible pausa en diciembre será el catalizador clave para el NQ en la sesión de hoy.",
   "sources": [
-    "Bloomberg 2026-10-27 (Aramco contiene incendio cerca de Ras Tanura tras ataque)",
-    "The National 2026-10-28 ~06:00 ET (Brent ~114.9, WTI ~101.5 por ataques hutíes y riesgo de guerra con Irán)",
-    "Yahoo Finance 2026-10-28 08:06 ET (futuros mixtos ante decisión de la Fed y resultados de Big Tech)",
-    "CNBC 2026-10-27 (futuros del Nasdaq suben tras resultados de SK Hynix; decisión de la Fed en foco)"
+    "The Star 2026-10-22 (Brent sube a máximo de 5 meses, ~113 USD, por ataques hutíes)",
+    "Khaleej Times 2026-10-22 (Brent ~111 USD intradía por temores de suministro saudí)",
+    "Al-Monitor / Malay Mail 2026-09-08 (ataques hutíes a instalaciones de Aramco, 73 heridos)",
+    "Reuters via Investing.com 2026-10-28 ~07:00 ET (Fed probablemente entra en modo de espera sobre tasas)"
   ],
-  "as_of": "2026-10-28T12:41:09Z"
+  "as_of": "2026-10-28T13:13:10Z"
 }
