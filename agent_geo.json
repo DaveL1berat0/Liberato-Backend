@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Persiste la tensión Irán-Israel-EEUU tras la amenaza de Trump de autorizar un ataque a Irán en un plazo de 96 horas, pero conversaciones de paz en curso con Arabia Saudita, Turquía y Pakistán como mediadores moderan el temor a escalada inmediata, limitando el impacto bajista sobre el NQ.",
-  "petroleo": "Brent cede levemente a unos 115 USD/barril y WTI a unos 101 USD/barril (cerca de máximos de 6 meses) por esperanzas de diplomacia en Medio Oriente que alivian el temor a disrupción de oferta en el Estrecho de Ormuz, reduciendo la presión inflacionaria que pesa sobre el NQ.",
-  "catalizador": "Hoy arranca la reunión de dos días de la Fed (decisión de tasas mañana miércoles 28-oct a las 2:00pm ET, la primera bajo el nuevo presidente Kevin Warsh); la cautela previa a la decisión añade volatilidad intradía al NQ, mientras los chips suben por segunda sesión consecutiva impulsando al Nasdaq.",
+  "geopolitica": "La presion geopolitica sobre Venezuela (bloqueo de Trump a petroleros sancionados y sanciones de EEUU a Rusia por sus vinculos petroleros con Maduro) sigue elevando la prima de riesgo que pesa sobre el apetito por activos de riesgo esta mañana (Bloomberg, 08:06 ET).",
+  "petroleo": "El Brent se mantiene por encima de 110 USD/barril, con el riesgo geopolitico (sanciones a Venezuela y Rusia) superando la relajacion del estres fisico del mercado, lo que introduce cautela en los futuros bursatiles de hoy (Bloomberg/Business Standard, 08:06 ET).",
+  "catalizador": "La Fed (bajo el nuevo presidente Kevin Warsh) anuncia su decision de tasas hoy a las 14:00 ET, con el mercado esperando mantener el rango 3.75%-4.00%; tras el cierre reportan resultados Alphabet y Microsoft, claves para el sentimiento de IA en el NQ (Yahoo Finance/TipRanks, 08:06 ET).",
   "sources": [
-    "Reuters via AOL ~09:11 ET",
-    "MarineLink 09:11 ET",
-    "Fox News (live blog) 26-oct",
-    "Yahoo Finance 27-oct",
-    "CNBC 27-oct"
+    "Bloomberg 08:06 ET",
+    "Yahoo Finance 08:06 ET",
+    "TipRanks 08:06 ET"
   ],
-  "as_of": "2026-10-27T21:08:16Z"
+  "as_of": "2026-10-28T11:12:04Z"
 }
