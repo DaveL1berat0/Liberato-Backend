@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La presion geopolitica sobre Venezuela (bloqueo de Trump a petroleros sancionados y sanciones de EEUU a Rusia por sus vinculos petroleros con Maduro) sigue elevando la prima de riesgo que pesa sobre el apetito por activos de riesgo esta mañana (Bloomberg, 08:06 ET).",
-  "petroleo": "El Brent se mantiene por encima de 110 USD/barril, con el riesgo geopolitico (sanciones a Venezuela y Rusia) superando la relajacion del estres fisico del mercado, lo que introduce cautela en los futuros bursatiles de hoy (Bloomberg/Business Standard, 08:06 ET).",
-  "catalizador": "La Fed (bajo el nuevo presidente Kevin Warsh) anuncia su decision de tasas hoy a las 14:00 ET, con el mercado esperando mantener el rango 3.75%-4.00%; tras el cierre reportan resultados Alphabet y Microsoft, claves para el sentimiento de IA en el NQ (Yahoo Finance/TipRanks, 08:06 ET).",
+  "geopolitica": "Los hutíes (respaldados por Irán) reivindicaron un ataque con misiles contra la refinería saudí de Ras Tanura (27-28 oct), en el marco de la guerra que desde hace meses enfrenta a Irán y Arabia Saudita en el Golfo/Mar Rojo, lo que eleva la prima de riesgo geopolítico y puede presionar al NQ por aversión al riesgo en la apertura.",
+  "petroleo": "El Brent sube cerca de 0.7% hasta ~114.68 USD/barril (WTI ~101.5 USD) tras el ataque hutí a la refinería de Ras Tanura y los temores sobre el Estrecho de Hormuz, un crudo más caro que encarece insumos y puede pesar sobre márgenes de tech/consumo, negativo para el NQ.",
+  "catalizador": "La Fed anuncia hoy su decisión de tasas a las 14:00 ET, con el mercado descontando mayoritariamente una pausa en 3.75%-4.00% (según CME FedWatch); una sorpresa hawkish o dovish en el comunicado y la rueda de prensa será el principal catalizador intradía del NQ en la tarde.",
   "sources": [
-    "Bloomberg 08:06 ET",
-    "Yahoo Finance 08:06 ET",
-    "TipRanks 08:06 ET"
+    "Washington Post / Bloomberg 27-28 oct 2026 (ataque hutí a Ras Tanura)",
+    "CNBC 28 oct 2026 (oil-price-today-wti-brent-hormuz)",
+    "Previas de mercado citando CME FedWatch - decisión Fed 14:00 ET, 28 oct 2026"
   ],
-  "as_of": "2026-10-28T11:12:04Z"
+  "as_of": "2026-10-28T11:40:54Z"
 }
