@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Tensión EEUU-Irán: el vicepresidente JD Vance contactó al jefe del Consejo de Seguridad iraní, Mohsen Rezaei, para intentar reabrir negociaciones de paz, reduciendo la percepción de riesgo geopolítico y favoreciendo el apetito por riesgo del NQ intradía.",
-  "petroleo": "Brent cae 2% a USD 112.99 y WTI cae 2.8% a USD 99.91 este jueves, tras subir el miércoles a USD 115.32 y USD 102.78 respectivamente, por las esperanzas de retomar el diálogo EEUU-Irán, lo que alivia la presión inflacionaria que pesa sobre el NQ.",
-  "catalizador": "Alphabet se desploma hasta 13% (su mayor caída post-resultados) por un flujo de caja libre peor al esperado, reavivando dudas sobre el retorno del gasto en IA y arrastrando al Nasdaq-100 (~-1.5%); la Fed, ya bajo Kevin Warsh, mantuvo tasas en 3.75%-4% (voto 10-2, dividido) el miércoles sin señal clara de alza en diciembre, dejando incertidumbre sobre el próximo movimiento.",
+  "geopolitica": "Reportes de que el vicepresidente JD Vance contacto al jefe del Consejo de Seguridad de Iran, Mohsen Rezaei, para reanudar negociaciones alimentan apetito por riesgo y apoyan al NQ, pero Iran rechazo la ultima propuesta de mediadores catalies y persiste el riesgo de nuevos ataques hutíes y de una posible accion militar de EE.UU. contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que limita el optimismo (CNBC, 29 oct).",
+  "petroleo": "El Brent cae cerca de 2% a unos USD 113 por barril y el WTI baja cerca de 2.8% a unos USD 99.91, por esperanzas de un acuerdo diplomatico EE.UU.-Iran que reduce la prima de riesgo geopolitico tras el repunte del miercoles ligado al ataque hutí a la refineria saudi de Ras Tanura; el alivio en crudo favorece un tono de risk-on para el NQ en la sesion (CNBC, 29 oct).",
+  "catalizador": "Alphabet se desploma hasta 13% tras resultados por un flujo de caja libre peor al esperado, arrastrando al Nasdaq-100 cerca de -1.5% junto con caidas fuertes en Intel y ServiceNow, lo que reaviva dudas sobre el retorno del gasto en IA; esto ocurre un dia despues de que la Fed mantuviera la tasa en 3.75%-4% con un voto dividido, sin senal clara sobre diciembre (CNBC, 29 oct).",
   "sources": [
-    "CNBC 21:32 ET (29 oct)",
-    "Bloomberg 14:00 ET (28 oct)",
-    "CNBC (29 oct)"
+    "CNBC 29-oct (Alphabet, Google, Microsoft shares today earnings)",
+    "CNBC 29-oct (Oil prices fall as peace hopes offset fears of growing Middle East conflict)",
+    "CNBC 28-oct (Fed meeting today live updates)"
   ],
-  "as_of": "2026-10-29T20:08:27Z"
+  "as_of": "2026-10-29T21:08:02Z"
 }
