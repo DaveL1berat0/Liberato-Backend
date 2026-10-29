@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Oriente Medio/Irán: un misil hutí impactó la refinería saudí de Ras Tanura y el vicepresidente Vance envió una carta a Irán (consejero Rezaei) para reabrir negociaciones de paz, mientras Trump amenaza con reanudar ataques tras las elecciones del 3 de noviembre, lo que mantiene una prima de riesgo geopolítico que limita el apetito por riesgo en el NQ.",
-  "petroleo": "Brent cae ~1% a 114,2 USD/barril y WTI ~1,4% a 101,4 USD tras la carta de Vance buscando desescalar con Irán, aunque los ataques hutíes frenan una baja mayor; el retroceso del crudo alivia algo la presión inflacionaria sobre el NQ intradía.",
-  "catalizador": "",
+  "geopolitica": "Los hutíes (alineados con Irán) reivindicaron un ataque con misil balístico contra la refinería saudí de Ras Tanura (27-oct, sin confirmar por Riad), mientras el jefe del Consejo de Seguridad iraní, Mohsen Rezaei, se reunió con el líder supremo Khamenei tras contactos con Arabia Saudí, Turquía y Pakistán, abriendo señales de desescalación en la guerra EE.UU.-Irán; la prima de riesgo geopolítico sigue viva pero con esperanza de alivio, lo que genera un sesgo mixto/cauteloso para el NQ intradía.",
+  "petroleo": "Brent cayó a ~113,7 USD/barril (-1,8%) y WTI a ~99,8 USD (-1,9%) el 27-oct, retrocediendo desde máximos de 6 meses por las esperanzas de desescalación diplomática Irán-Arabia Saudí, aunque los ataques hutíes continúan; el alivio del crudo reduce algo la presión inflacionaria y es ligeramente positivo para el NQ.",
+  "catalizador": "La Fed (bajo el nuevo presidente Kevin Warsh) mantuvo su tasa en 3,75%-4,00% el 28-oct con inflación en 3,7% y un tono que los mercados de predicción interpretan como hawkish, asignando ~71-72% de probabilidad a una subida en diciembre; ese sesgo restrictivo presiona los múltiplos de crecimiento y pesa sobre el NQ.",
   "sources": [
-    "CNBC 29-oct (madrugada ET) - oil-prices-fall-as-peace-hopes-offset-fears-of-growing-middle-east-conflict",
-    "Bloomberg 28-oct (noche ET) - Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran",
-    "The National 29-oct - Oil prices decline after diplomatic push in Iran war"
+    "Reuters (via GVWire) 27-oct - oil falls ~2% as Middle East talks ease supply worries",
+    "CNBC (via Biztoc) 27-oct - oil prices fall as peace hopes offset fears of growing Middle East conflict",
+    "Reuters (via KSL/Internazionale) 27-oct - Houthis say they hit Saudi Ras Tanura oil refinery with missile",
+    "CNBC / Federal Reserve press release 28-oct - Fed holds rates at 3.75%-4.00%, Chair Warsh press conference",
+    "DeFi Rate Fed Decision odds snapshot 22-oct - December hike priced ~71-72%"
   ],
-  "as_of": "2026-10-29T11:11:41Z"
+  "as_of": "2026-10-29T11:39:47Z"
 }
