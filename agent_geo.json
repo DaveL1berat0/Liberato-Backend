@@ -1,13 +1,11 @@
 {
-  "geopolitica": "La guerra Iran-Israel-EEUU sigue activa pero con un impulso diplomatico hacia conversaciones Iran-EEUU que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia (The National, 29-oct-2026).",
-  "petroleo": "Brent cotiza en torno a 114-115 USD/barril y WTI en 101-103 USD/barril, cediendo tras el repunte de octubre (~+11% Brent) ante senales de acercamiento diplomatico EEUU-Iran, lo que alivia presion inflacionaria y es marginalmente positivo para el NQ (The National / UNN, 29-oct-2026).",
-  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.1% este jueves por resultados mixtos de Big Tech: Alphabet se desploma tras resultados decepcionantes mientras Microsoft sube por un fuerte flujo de caja, un dia despues de que la Fed (bajo el presidente Kevin Warsh) mantuviera tasas sin cambios el 28-oct con enfoque en estabilidad de precios, lo que genera presion bajista de corto plazo en el NQ (Reuters via Investing.com / Bloomberg, 29-oct-2026).",
+  "geopolitica": "Tensión EEUU-Irán: el vicepresidente JD Vance contactó al jefe del Consejo de Seguridad iraní, Mohsen Rezaei, para intentar reabrir negociaciones de paz, reduciendo la percepción de riesgo geopolítico y favoreciendo el apetito por riesgo del NQ intradía.",
+  "petroleo": "Brent cae 2% a USD 112.99 y WTI cae 2.8% a USD 99.91 este jueves, tras subir el miércoles a USD 115.32 y USD 102.78 respectivamente, por las esperanzas de retomar el diálogo EEUU-Irán, lo que alivia la presión inflacionaria que pesa sobre el NQ.",
+  "catalizador": "Alphabet se desploma hasta 13% (su mayor caída post-resultados) por un flujo de caja libre peor al esperado, reavivando dudas sobre el retorno del gasto en IA y arrastrando al Nasdaq-100 (~-1.5%); la Fed, ya bajo Kevin Warsh, mantuvo tasas en 3.75%-4% (voto 10-2, dividido) el miércoles sin señal clara de alza en diciembre, dejando incertidumbre sobre el próximo movimiento.",
   "sources": [
-    "The National 29-oct-2026",
-    "UNN 29-oct-2026",
-    "Reuters via Investing.com 29-oct-2026",
-    "Bloomberg 29-oct-2026",
-    "Federal Reserve (FOMC statement) 28-oct-2026"
+    "CNBC 21:32 ET (29 oct)",
+    "Bloomberg 14:00 ET (28 oct)",
+    "CNBC (29 oct)"
   ],
-  "as_of": "2026-10-29T19:06:20Z"
+  "as_of": "2026-10-29T20:08:27Z"
 }
