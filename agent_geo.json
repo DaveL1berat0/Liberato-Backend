@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El vicepresidente JD Vance envio una carta buscando reanudar negociaciones de paz con Iran (al funcionario Mohsen Rezaei), lo que reduce la prima de riesgo geopolitico pese a que persisten ataques Houthi en la region, un contexto levemente favorable al apetito por riesgo del NQ (Reuters via The National, 23:51 ET).",
-  "petroleo": "Brent cae a cerca de 114.1 USD/barril y WTI a cerca de 101.4 USD (-1.3%/-1.6%) por esperanzas de distension diplomatica EE.UU.-Iran, lo que alivia el temor a disrupcion de suministro y reduce presion inflacionaria, un factor mixto a levemente positivo para el NQ al moderar expectativas de tasas mas altas (Reuters via Global Banking & Finance, 23:51 ET).",
-  "catalizador": "Los futuros del Nasdaq caen cerca de 1% en premarket tras resultados mixtos de Big Tech: Alphabet se desploma cerca de 10% por mayor gasto en IA y publicidad mas debil de lo esperado, mientras Microsoft sube por flujo de caja y guia de nube solidos; el mercado tambien espera un dato de inflacion, un dia despues de que la Fed mantuviera tasas sin cambios en una votacion dividida 10-2, presion bajista directa sobre el NQ en la apertura (Reuters via TipRanks, 05:34 ET).",
+  "geopolitica": "",
+  "petroleo": "Brent cede a ~115 USD (-0.9%) y WTI ronda 102 USD tras un retiro de 1.9 millones de barriles en inventarios de crudo de EE.UU.; el repliegue moderado del petroleo reduce presion inflacionaria y es ligeramente favorable para el sentimiento de riesgo del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.9% en premarket tras el desplome de Alphabet (-10%) por temores de gasto en IA, un dia despues de que la Fed mantuviera tasas en 3.75%-4% (voto 10-2); a las 08:30 ET se publica el PCE de septiembre y el PIB preliminar del 3T, dato clave para el tono de apertura del NQ.",
   "sources": [
-    "Reuters via The National 23:51 ET",
-    "Reuters via Global Banking & Finance 23:51 ET",
-    "Reuters via TipRanks 05:34 ET",
-    "CNBC/Yahoo Finance 28-Oct (decision de la Fed)"
+    "Invezz 29-oct premarket",
+    "The Globe and Mail 29-oct premarket",
+    "Vantage Markets 28-oct 21:55 ET",
+    "Federal Reserve 28-oct 14:00 ET",
+    "BEA calendar 29-oct 08:30 ET"
   ],
-  "as_of": "2026-10-29T13:23:08Z"
+  "as_of": "2026-10-29T13:41:51Z"
 }
