@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El vicepresidente JD Vance envió una carta al jefe del Consejo de Seguridad de Irán, Mohsen Rezaei, para reactivar las negociaciones de paz, pero persiste el riesgo de ataques hutíes y de una acción militar de EE.UU. contra Irán tras las elecciones de medio término del 3 de noviembre, lo que mantiene cierta prima de riesgo geopolítico sobre el NQ en la apertura.",
-  "petroleo": "El Brent cae 0.7% a 114.50 USD/barril y el WTI baja 1.0% a 101.74 USD (Reuters vía CNBC, 29-oct) por las renovadas esperanzas de un acuerdo EE.UU.-Irán, lo que alivia la presión inflacionaria y es marginalmente positivo para el NQ.",
-  "catalizador": "La Fed mantuvo la tasa en 3.75%-4% el 28-oct (voto 10-2, el presidente Warsh evitó dar guía futura) y hoy el oro cae 1% a la espera del dato de inflación de EE.UU., mientras los futuros del Nasdaq-100 cayeron 1.3% el jueves tras resultados débiles de Alphabet y Caterpillar, lo que añade cautela a la apertura del NQ.",
+  "geopolitica": "El vicepresidente JD Vance contacto al jefe del Consejo de Seguridad de Iran, Mohsen Rezaei, para reactivar negociaciones de paz, lo que reduce la prima de riesgo en Medio Oriente, aunque persiste el riesgo de ataques huties y de una posible accion militar de EEUU contra Iran tras las elecciones de medio termino del 3 de noviembre.",
+  "petroleo": "El Brent cae 1.73% a 113.32 USD/barril y el WTI baja 2.06% a 100.66 USD en la sesion del 29-oct por las esperanzas de reanudar el dialogo EEUU-Iran, lo que alivia la presion inflacionaria y es marginalmente positivo para el NQ.",
+  "catalizador": "La Fed mantuvo la tasa en 3.75%-4% el 28-oct (voto 10-2, sin guia clara del presidente Warsh) con el dato de inflacion PCE previsto a las 08:30 ET de hoy, mientras Alphabet se desploma cerca de 12% y Caterpillar un 10% tras resultados, arrastrando al Nasdaq Composite -1.4% y añadiendo presion bajista al NQ en la apertura.",
   "sources": [
-    "CNBC 29-oct (Oil prices fall as peace hopes offset fears of growing Middle East conflict)",
-    "CNBC 29-oct (Gold slides 1% as Fed hike bets linger ahead of U.S. inflation data)",
-    "CNBC 28-oct (Fed interest rate decision October 2026: Fed holds rates steady)",
-    "CNBC 28-oct (S&P 500 heads for first loss in four days as Alphabet, Caterpillar crack after earnings)"
+    "CNBC 29-oct - Oil prices fall as peace hopes offset fears of growing Middle East conflict",
+    "CNBC 29-oct - Alphabet falls 13%, putting it on course for its biggest ever post-earnings drop",
+    "CNBC 29-oct - Stocks making the biggest moves premarket: Alphabet, Caterpillar, Eli Lilly, DoorDash",
+    "CNBC 29-oct - Gold slides 1% as Fed hike bets linger ahead of U.S. inflation data (PCE 08:30 ET)",
+    "CNBC 28-oct - Fed interest rate decision October 2026: Fed holds rates steady"
   ],
-  "as_of": "2026-10-29T14:43:48Z"
+  "as_of": "2026-10-29T15:17:42Z"
 }
