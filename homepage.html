@@ -1909,8 +1909,8 @@ nav { max-width: 100%; }
   
 
   <div class="countdown">
-    <div class="cd-eyebrow"><div class="cd-dot"></div>Próximo ciclo Q4</div>
-    <h3 class="cd-title">El acceso abre el <em>1 de noviembre</em></h3>
+    <div class="cd-eyebrow"><div class="cd-dot"></div>Próximo ciclo · Enero 2027</div>
+    <h3 class="cd-title">El acceso abre el <em>4 de enero</em></h3>
     <p class="cd-sub">Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.</p>
     <div class="cd-timer">
       <div class="cd-unit"><span class="cd-num" id="cdd">00</span><span class="cd-lbl">Días</span></div>
@@ -1941,7 +1941,7 @@ nav { max-width: 100%; }
   <div class="sticky-cta-inner">
     <div class="sticky-cta-text">
       <span class="sticky-cta-dot"></span>
-      <span><strong id="sticky-spots">20</strong> spots para el ciclo de noviembre</span>
+      <span><strong id="sticky-spots">20</strong> spots para el ciclo de enero</span>
     </div>
     <button class="sticky-cta-btn" onclick="window.open('https://whop.com/dave-liberato-group/live-day-trading-52/','_blank')">Reservar mi lugar &#8594;</button>
   </div>
@@ -2568,13 +2568,12 @@ document.querySelectorAll('.block').forEach(function(b){
 
 // COUNTDOWN
 function updateCD(){
-  // Fecha REAL de apertura: 1 de noviembre 2026, 00:00 ET. Con protección: si algún día pasa,
-  // rueda al 1 del siguiente mes para no congelarse nunca en 00:00:00.
+  // Fecha REAL de inicio: lunes 4 de enero 2027, 00:00 ET (EST, -05:00) — primer día que abre el mercado en 2027.
+  // Fija (no recurrente): si la fecha pasa, el contador se queda en 0 y NO rueda a otro mes.
   var MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   var now=new Date();
-  var target=new Date('2026-11-01T00:00:00-04:00');                          // 1 nov 2026, medianoche ET
-  while(target-now<=0)target=new Date(target.getFullYear(),target.getMonth()+1,1,0,0,0); // ya pasó → 1 del próximo mes
-  var diff=target-now;
+  var target=new Date('2027-01-04T00:00:00-05:00');                          // lun 4 ene 2027, 00:00 ET (EST)
+  var diff=target-now; if(diff<0)diff=0;                                     // fija: tras la apertura se queda en 00:00:00:00 (no rueda de mes)
   document.getElementById('cdd').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
   document.getElementById('cdh').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
   document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
@@ -3054,7 +3053,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Rendimiento anual': 'Annual return',
     'TradeStation — Regulado SEC': 'TradeStation — SEC Regulated',
     'Broker regulado por SEC, FINRA y SIPC. Cuenta real. No simulada.': 'Broker regulated by SEC, FINRA and SIPC. Real account. Not simulated.',
-    'Próximo ciclo Q4': 'Next cycle Q4',
+    'Próximo ciclo · Enero 2027': 'Next cycle · January 2027',
     'El acceso abre el': 'Access opens on',
     'Spots limitados. Una vez llenos el acceso cierra hasta el siguiente ciclo.': 'Limited spots. Once full, access closes until the next cycle.',
     'Días': 'Days',
