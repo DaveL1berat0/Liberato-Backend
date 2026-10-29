@@ -1,12 +1,13 @@
 {
   "geopolitica": "Tensiones EE.UU.-Iran se suavizan tras contactos del vicepresidente Vance para reactivar negociaciones de paz, aunque persisten ataques huties a infraestructura saudi y riesgo de accion militar tras las elecciones del 3-nov, lo que reduce momentaneamente la prima de riesgo pero deja al NQ expuesto a sorpresas si la diplomacia fracasa.",
-  "petroleo": "El Brent cae a unos 113.3 USD (-1.7%) y el WTI a unos 100.7 USD (-2.1%) este jueves por expectativas de nuevas conversaciones de paz EE.UU.-Iran, lo que alivia presion inflacionaria y es marginalmente favorable para el NQ al reducir costos energeticos.",
-  "catalizador": "La Fed mantuvo la tasa en 3.75%-4% el 28-oct (voto 10-2) y hoy el mercado digiere resultados mixtos de Big Tech: Alphabet cae con fuerza en premarket por debilidad en busqueda/publicidad mientras Microsoft sube por el flujo de caja y la nube, generando volatilidad direccional en el NQ dado el peso de ambas en el indice.",
+  "petroleo": "El Brent cae a unos 113-115 USD (-1.7%) y el WTI a unos 100.7-102 USD (-2.1%) este jueves por expectativas de nuevas conversaciones de paz EE.UU.-Iran, lo que alivia presion inflacionaria y es marginalmente favorable para el NQ al reducir costos energeticos.",
+  "catalizador": "La Fed mantuvo la tasa en 3.75%-4% el 28-oct (voto 10-2) y hoy el mercado digiere resultados mixtos de Big Tech: Alphabet cae con fuerza en premarket (ingresos de servicios/busqueda por debajo de lo esperado) mientras Microsoft sube por flujo de caja y nube, generando volatilidad direccional en el NQ dado el peso de ambas en el indice.",
   "sources": [
     "CNBC 29-oct (oil price today: WTI, Brent)",
     "CNBC 29-oct (Fed interest rate decision October 2026)",
     "Reuters/Investing.com 29-oct (Nasdaq futures slide as mixed Big Tech results test AI trade)",
-    "Bloomberg 28-oct (Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran)"
+    "Bloomberg 28-oct (Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran)",
+    "Fortune 29-oct 08:45 ET (current price of oil)"
   ],
-  "as_of": "2026-10-29T16:06:50Z"
+  "as_of": "2026-10-29T17:07:30Z"
 }
