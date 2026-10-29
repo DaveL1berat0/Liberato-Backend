@@ -8,9 +8,8 @@
 (function(){
   var BACKEND='https://web-production-33671.up.railway.app';
   function showPaywall(){
-    document.addEventListener('DOMContentLoaded',function(){
-      var el=document.getElementById('lbc-paywall'); if(el)el.style.display='flex';
-    });
+    function s(){var el=document.getElementById('lbc-paywall'); if(el)el.style.display='flex';}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',s);else s();  // FIX: si el DOM ya cargó (caso del .catch del fetch), mostrar el paywall ya
   }
   var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
   if(!token){ showPaywall(); return; }
@@ -2988,7 +2987,7 @@ function bySetup(arr){
 }
 function pnlPeriod(arr,period){
   var now=new Date();
-  if(period==='today'){var d=now.toISOString().split('T')[0];return arr.filter(function(t){return t.date===d;}).reduce(function(s,t){return s+t.pnl;},0);}
+  if(period==='today'){var d=(typeof todayET==='function')?todayET():now.toISOString().split('T')[0];return arr.filter(function(t){return t.date===d;}).reduce(function(s,t){return s+t.pnl;},0);}  // FIX: fecha ET (los trades se fechan en ET); antes UTC daba $0 al revisar de noche
   if(period==='week'){var day=now.getDay(),diff=now.getDate()-(day===0?6:day-1),mon=new Date(now);mon.setDate(diff);mon.setHours(0,0,0,0);return arr.filter(function(t){return new Date(t.date+'T00:00:00')>=mon;}).reduce(function(s,t){return s+t.pnl;},0);}
   if(period==='month'){return arr.filter(function(t){var d=new Date(t.date+'T00:00:00');return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).reduce(function(s,t){return s+t.pnl;},0);}
 }

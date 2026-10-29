@@ -3,8 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="description" content="Liberato Community — Plataforma profesional de trading NQ Futures. Order Flow, Gamma, Live Sessions y Journal con IA.">
-<meta property="og:title" content="Liberato Community">
+<meta property="og:title" content="Liberato Community — Trading NQ en vivo">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Liberato Community">
+<meta property="og:url" content="https://liberatocommunity.com/">
+<meta property="og:description" content="Plataforma profesional de trading de futuros NQ en español: Order Flow, Gamma/GEX, lives diarios y journal con IA. Acceso por ciclos.">
+<meta property="og:image" content="https://liberatocommunity.com/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Liberato Community — Trading NQ en vivo">
+<meta name="twitter:description" content="Trading de futuros NQ en español: Order Flow, Gamma/GEX, lives y journal con IA.">
+<meta name="twitter:image" content="https://liberatocommunity.com/og-cover.jpg">
+<meta name="theme-color" content="#06070D">
+<link rel="canonical" href="https://liberatocommunity.com/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2306070D'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='19' fill='%23C9A84C' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Liberato Community — Trading NQ en vivo</title>
 <link rel="stylesheet" href="theme.css">
@@ -2599,8 +2612,17 @@ function updateCD(){
   document.getElementById('cdm').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
   document.getElementById('cds').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   try{
-    var d=target.getDate(),mn=MES[target.getMonth()].toLowerCase(),yr=target.getFullYear();  // meses en minúscula (RAE)
-    var tEl=document.querySelector('.cd-title'); if(tEl)tEl.innerHTML='El acceso abre el <em>'+d+' de '+mn+'</em>';
+    var lang='es';try{lang=localStorage.getItem('lbc_lang')||'es';}catch(e){}  // FIX i18n: antes el título volvía a español cada segundo en modo EN
+    var d=target.getDate();
+    var tEl=document.querySelector('.cd-title');
+    if(tEl){
+      if(lang==='en'){
+        var MES_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+        tEl.innerHTML='Access opens on <em>'+MES_EN[target.getMonth()]+' '+d+'</em>';
+      }else{
+        tEl.innerHTML='El acceso abre el <em>'+d+' de '+MES[target.getMonth()].toLowerCase()+'</em>';
+      }
+    }
   }catch(e){}
 }
 updateCD();setInterval(updateCD,1000);
@@ -2960,19 +2982,25 @@ function submitNewsletter(){
   // Guarda localmente + envía al backend de soporte (mismo endpoint que Contacto)
   var subs=JSON.parse(localStorage.getItem('lbc_subs')||'[]');
   if(!subs.includes(email)){subs.push(email);localStorage.setItem('lbc_subs',JSON.stringify(subs));}
+  msg.style.color='rgba(239,236,227,0.55)';msg.textContent='Enviando…';
+  // FIX auditoría: antes faltaba el campo 'email' -> el backend devolvía 400 y se perdían TODOS los leads;
+  // y el éxito se pintaba SIEMPRE (mensaje falso). Ahora enviamos payload válido y confirmamos con r.ok.
   fetch('https://web-production-33671.up.railway.app/api/contact',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:'Newsletter',subject:'Nueva inscripción newsletter',description:email,to:'SupportLiberatoCommunity@gmail.com'})
-  }).then(function(){}).catch(function(){});
-  // Show success
-  document.getElementById('nl-form').innerHTML=
-    '<div style="text-align:center;padding:20px 0;">'+
-    '<div style="font-size:36px;margin-bottom:12px;">✅</div>'+
-    '<div style="color:#2EE8A4;font-size:16px;font-weight:600;margin-bottom:8px;">¡Listo! Ya estás en la lista.</div>'+
-    '<div style="color:rgba(239,236,227,0.5);font-size:12px;">Te escribiremos a <strong style="color:#C9A84C;">'+email+'</strong> cuando abramos.</div>'+
-    '</div>';
-  setTimeout(closeNewsletter,3500);
+    body:JSON.stringify({name:'Waitlist lanzamiento',email:email,subject:'Nueva inscripción waitlist',description:'Alta waitlist (notificarme cuando abra): '+email})
+  }).then(function(r){
+    if(!r.ok) throw new Error('http '+r.status);
+    document.getElementById('nl-form').innerHTML=
+      '<div style="text-align:center;padding:20px 0;">'+
+      '<div style="font-size:36px;margin-bottom:12px;">✅</div>'+
+      '<div style="color:#2EE8A4;font-size:16px;font-weight:600;margin-bottom:8px;">¡Listo! Ya estás en la lista.</div>'+
+      '<div style="color:rgba(239,236,227,0.5);font-size:12px;">Te escribiremos a <strong style="color:#C9A84C;">'+email+'</strong> cuando abramos.</div>'+
+      '</div>';
+    setTimeout(closeNewsletter,3500);
+  }).catch(function(){
+    msg.style.color='#FF6B81';msg.textContent='No se pudo registrar tu correo. Intenta de nuevo o escríbenos por WhatsApp.';
+  });
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewsletter();});
 </script>

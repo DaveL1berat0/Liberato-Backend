@@ -8,9 +8,8 @@
 (function(){
   var BACKEND='https://web-production-33671.up.railway.app';
   function showPaywall(){
-    document.addEventListener('DOMContentLoaded',function(){
-      var el=document.getElementById('lbc-paywall'); if(el)el.style.display='flex';
-    });
+    function s(){var el=document.getElementById('lbc-paywall'); if(el)el.style.display='flex';}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',s);else s();  // FIX: si el DOM ya cargó (caso del .catch del fetch), mostrar el paywall ya
   }
   var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
   if(!token){ showPaywall(); return; }

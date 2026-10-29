@@ -178,6 +178,10 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <input class="field-input" id="reg-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
     </div>
     <button class="btn btn-gold" id="btn-register" onclick="doRegister()" data-es="Crear cuenta" data-en="Create account">Crear cuenta</button>
+    <div class="legal-accept" style="font-size:11px;line-height:1.5;color:rgba(232,228,217,0.55);margin-top:10px;text-align:center;">
+      <span data-es="Al crear tu cuenta aceptas nuestras" data-en="By creating your account you accept our">Al crear tu cuenta aceptas nuestras</span>
+      <a class="link" href="politicas.html" target="_blank" data-es="Políticas y Avisos Legales" data-en="Terms &amp; Legal Notices">Políticas y Avisos Legales</a>.
+    </div>
     <div class="foot-link">
       <span data-es="¿Ya tienes cuenta?" data-en="Already have an account?">¿Ya tienes cuenta?</span>
       <a class="link" onclick="goScreen('login')" data-es="Inicia sesión" data-en="Sign in">Inicia sesión</a>
@@ -400,8 +404,8 @@ async function api(path, method, body){
   if(state.token) opts.headers['Authorization'] = 'Bearer '+state.token;
   if(body) opts.body = JSON.stringify(body);
   var r = await fetch(API_URL+path, opts);
-  var data = await r.json();
-  if(!r.ok) throw new Error(data.detail || 'Error');
+  var data = await r.json().catch(function(){return {};});  // FIX: respuesta no-JSON (500/502/504) ya no revienta con 'Unexpected token'; mostramos estado claro
+  if(!r.ok) throw new Error(data.detail || ('Error '+r.status));
   return data;
 }
 
@@ -416,6 +420,10 @@ async function doRegister(){
   var password = document.getElementById('reg-password').value;
   if(!name || !email || !password){
     showMsg('reg-msg', state.lang==='es'?'Completa todos los campos':'Fill all fields', 'error');
+    return;
+  }
+  if(password.length < 8){
+    showMsg('reg-msg', state.lang==='es'?'La contraseña debe tener al menos 8 caracteres':'Password must be at least 8 characters', 'error');
     return;
   }
   setLoading('btn-register', true);

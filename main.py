@@ -518,6 +518,20 @@ NY      = ZoneInfo("America/New_York")
 app = FastAPI(title="Liberato Backend v3.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
+@app.exception_handler(Exception)
+async def _unhandled_exc(request, exc):
+    # FIX auditoría: un 500 no capturado debe llevar cabecera CORS, si no el navegador lo
+    # reporta como "CORS error" en vez de un 500 depurable (trampa conocida del proyecto).
+    # Fijamos la cabecera a mano porque este handler corre por fuera de CORSMiddleware.
+    import traceback
+    try:
+        print(f"[500] {request.method} {request.url.path}: {exc}\n{traceback.format_exc()}")
+    except Exception:
+        pass
+    r = JSONResponse({"detail": "server_error", "code": "server_error"}, status_code=500)
+    r.headers["Access-Control-Allow-Origin"] = "*"
+    return r
+
 # ══ GATE PREMIUM (server-side paywall) ═══════════════════════════════════════
 # Regla (Dave, 7-sep): un NO-pagador solo ve el home + elegir/pagar plan. TODA la
 # data del dashboard exige token válido + plan premium. Antes TODO era abierto por
@@ -579,12 +593,17 @@ async def _gate_check(payload):
 
 @app.middleware("http")
 async def _premium_gate(request, call_next):
+    # FIX auditoría: el call_next (ejecutar el endpoint) va FUERA del try. Antes el except del
+    # gate re-invocaba call_next → el endpoint corría DOS veces ante cualquier 500 (efectos
+    # secundarios duplicados) y el 500 escapaba sin cabecera CORS. Ahora el try solo envuelve
+    # la LÓGICA del gate (sigue fail-open si el propio gate falla); los errores del endpoint
+    # suben al @app.exception_handler(Exception), que responde 500 con CORS.
     try:
         path = request.url.path
         # No-API (home/estáticos) y preflight CORS pasan siempre.
         if request.method == "OPTIONS" or not path.startswith("/api/"):
-            return await call_next(request)
-        if path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
+            pass
+        elif path in _PUBLIC_API_EXACT or path.startswith(_PUBLIC_API_PREFIX):
             # Rate-limit extra para /api/admin/* y los /api/auth/* que usan ADMIN_KEY
             # (fuerza bruta de ADMIN_KEY): 30/5min por IP.
             if path.startswith("/api/admin/") or path in _ADMIN_KEY_AUTH_PATHS:
@@ -596,27 +615,26 @@ async def _premium_gate(request, call_next):
                     _rr.headers["Access-Control-Allow-Origin"] = "*"
                     return _rr
                 _arr.append(_now); _rl_hits[_k] = _arr
-            return await call_next(request)
-        # Endpoint de datos → exige token + premium + sesión viva.
-        tok = (request.headers.get("authorization", "") or "").replace("Bearer ", "").strip()
-        p = _verify_jwt(tok) if tok else None
-        if not p:
-            r = JSONResponse({"detail": "auth_required", "code": "auth_required"}, status_code=401)
-            r.headers["Access-Control-Allow-Origin"] = "*"
-            return r
-        ok, reason = await _gate_check(p)
-        if not ok:
-            if reason == "premium":
-                r = JSONResponse({"detail": "premium_required", "code": "premium_required"}, status_code=402)
-            else:
-                r = JSONResponse({"detail": "session_invalid", "code": "session_invalid"}, status_code=401)
-            r.headers["Access-Control-Allow-Origin"] = "*"
-            return r
-        return await call_next(request)
+        else:
+            # Endpoint de datos → exige token + premium + sesión viva.
+            tok = (request.headers.get("authorization", "") or "").replace("Bearer ", "").strip()
+            p = _verify_jwt(tok) if tok else None
+            if not p:
+                r = JSONResponse({"detail": "auth_required", "code": "auth_required"}, status_code=401)
+                r.headers["Access-Control-Allow-Origin"] = "*"
+                return r
+            ok, reason = await _gate_check(p)
+            if not ok:
+                if reason == "premium":
+                    r = JSONResponse({"detail": "premium_required", "code": "premium_required"}, status_code=402)
+                else:
+                    r = JSONResponse({"detail": "session_invalid", "code": "session_invalid"}, status_code=401)
+                r.headers["Access-Control-Allow-Origin"] = "*"
+                return r
     except Exception as e:
-        # Nunca tumbar toda la API por un bug del gate: registrar y dejar pasar.
+        # Error del PROPIO gate (no del endpoint): registrar y dejar pasar (fail-open intencional).
         print(f"[gate] error inesperado, fail-open: {e}")
-        return await call_next(request)
+    return await call_next(request)
 
 # Tope de tamaño de cuerpo: rechaza (413) peticiones enormes ANTES de bufferizarlas en RAM,
 # para que un POST anónimo de cientos de MB no agote la memoria del proceso (DoS). Se registra
@@ -9380,7 +9398,7 @@ async def journal_coach(request: Request):
     except Exception:
         raise HTTPException(400, "JSON inválido")
     # Tope por estudiante/día + presupuesto global de Groq (contabilización real).
-    uid = str(data.get("app_user_id") or "anon").strip() or "anon"
+    uid = _broker_uid(request.headers.get("authorization"))  # FIX: cuota por uid del JWT (no por app_user_id del body, que el cliente podía rotar para saltar el tope y drenar Groq/Gemini)
     if not _coach_quota_ok(uid):
         return {"ok": True, "answer": f"Llegaste a tu límite diario de {COACH_DAILY_PER_USER} consultas al Coach. "
                 "Vuelve mañana — mientras tanto, tus estadísticas y patrones ya están en el dashboard."}

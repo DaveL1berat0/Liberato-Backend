@@ -1941,14 +1941,20 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
   function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
   function withTimeout(url,ms){return new Promise(function(res,rej){var d=false,t=setTimeout(function(){if(!d){d=true;rej(new Error('to'));}},ms||6000);fetch(url,{cache:'no-store'}).then(function(r){if(!d){d=true;clearTimeout(t);res(r);}}).catch(function(e){if(!d){d=true;clearTimeout(t);rej(e);}});});}
 
-  // NYSE Holidays 2025 + 2026 (official)
+  // NYSE Holidays 2025–2028 (fechas observadas oficiales). FIX auditoría: faltaba 2027+ (la web lanza ene-2027).
   var NYSE_HOLIDAYS={
     '2025-01-01':1,'2025-01-20':1,'2025-02-17':1,'2025-04-18':1,
     '2025-05-26':1,'2025-06-19':1,'2025-07-04':1,'2025-09-01':1,
     '2025-11-27':1,'2025-12-25':1,
     '2026-01-01':1,'2026-01-19':1,'2026-02-16':1,'2026-04-03':1,
     '2026-05-25':1,'2026-06-19':1,'2026-07-03':1,'2026-09-07':1,
-    '2026-11-26':1,'2026-12-25':1
+    '2026-11-26':1,'2026-12-25':1,
+    '2027-01-01':1,'2027-01-18':1,'2027-02-15':1,'2027-03-26':1,
+    '2027-05-31':1,'2027-06-18':1,'2027-07-05':1,'2027-09-06':1,
+    '2027-11-25':1,'2027-12-24':1,
+    '2028-01-17':1,'2028-02-21':1,'2028-04-14':1,'2028-05-29':1,
+    '2028-06-19':1,'2028-07-04':1,'2028-09-04':1,'2028-11-23':1,
+    '2028-12-25':1
   };
   function isHoliday(d){
     var pad=function(n){return String(n).padStart(2,'0');};
@@ -4400,17 +4406,17 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       var alert=m.alert_level||'HIGH';
       var score=m.impact_score?m.impact_score.toFixed(1):'—';
       var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🟣':'⬜';
-      return '<div data-url="'+(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+(SENT_ITEM_BG[sent]||SENT_ITEM_BG.Neutral)+'">'
+      return '<div data-url="'+esc(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+(SENT_ITEM_BG[sent]||SENT_ITEM_BG.Neutral)+'">'
         +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
-        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+alert+' ALERTA</span>'
+        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+esc(alert)+' ALERTA</span>'
         +'<span style="font-size:10px;">'+sentIcon+'</span>'
-        +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+({Bullish:'ALCISTA',Bearish:'BAJISTA',Neutral:'NEUTRAL'}[sent]||sent.toUpperCase())+'</span>'
+        +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+({Bullish:'ALCISTA',Bearish:'BAJISTA',Neutral:'NEUTRAL'}[sent]||esc(sent.toUpperCase()))+'</span>'
         +'</div>'
-        +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+(m.headline||m.title||'')+'</div>'
+        +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+esc(m.headline||m.title||'')+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impacto <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+(m.scope||'—')+'</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Fuente <span style="color:rgba(239,236,227,0.7);">'+(m.source||'—')+' ('+( m.source_confidence||'—')+')</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+esc(m.scope||'—')+'</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Fuente <span style="color:rgba(239,236,227,0.7);">'+esc(m.source||'—')+' ('+esc(m.source_confidence||'—')+')</span></div>'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Hora <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
         +'</div>'
         +'</div>';
@@ -4669,13 +4675,13 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       +'<div class="mover-alert-hd">'
       +'<span class="mover-alert-pulse"></span>'
       +'<span class="mover-alert-tag">Nuevo Catalizador de Mercado</span>'
-      +'<span class="mover-alert-lvl" style="background:'+sentBg+';color:'+sentColor+';">'+alert+'</span>'
+      +'<span class="mover-alert-lvl" style="background:'+sentBg+';color:'+sentColor+';">'+esc(alert)+'</span>'
       +'</div>'
-      +'<div class="mover-alert-hl">'+(mover.headline||mover.title||'')+'</div>'
+      +'<div class="mover-alert-hl">'+esc(mover.headline||mover.title||'')+'</div>'
       +'<div class="mover-alert-meta">'
       +'<span>Impacto <span style="color:var(--ink);">'+score+'/10</span></span>'
-      +'<span>Sesgo <span style="color:'+sentColor+';">'+({Bullish:'Alcista',Bearish:'Bajista',Neutral:'Neutral'}[sent]||sent)+'</span></span>'
-      +'<span>'+(mover.scope||'')+'</span>'
+      +'<span>Sesgo <span style="color:'+sentColor+';">'+({Bullish:'Alcista',Bearish:'Bajista',Neutral:'Neutral'}[sent]||esc(sent))+'</span></span>'
+      +'<span>'+esc(mover.scope||'')+'</span>'
       +'</div>';
     document.body.appendChild(el);
     _moverAlertEl=el;
@@ -4685,7 +4691,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
     // Click para abrir noticia
     el.onclick=function(e){
       if(e.target.className==='mover-alert-x'){el.classList.remove('show');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},500);return;}
-      if(mover.url)window.open(mover.url,'_blank');
+      if(mover.url && /^https?:\/\//i.test(mover.url))window.open(mover.url,'_blank');  // FIX XSS: solo http(s), bloquea javascript:/data:
     };
     // Auto-ocultar tras 20 segundos (más tiempo para que el usuario lo vea)
     setTimeout(function(){
