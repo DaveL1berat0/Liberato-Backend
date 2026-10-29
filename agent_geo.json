@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Hutíes atacaron la refinería/terminal de exportación de Ras Tanura en Arabia Saudí y medios reportan que EE.UU. pidió a países del Golfo prepararse para una campaña militar contra Irán tras las elecciones de medio mandato del 3 de noviembre, lo que eleva el riesgo geopolítico y presiona el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent sube ~1.3% a unos 115.3 USD/barril y el WTI ~2.9% a unos 102.8 USD/barril por el ataque a la refinería saudí de Ras Tanura y la escalada de tensión en el Golfo/Estrecho de Ormuz, lo que encarece insumos y puede lastrar al Nasdaq vía mayor costo energético y presión inflacionaria.",
-  "catalizador": "La Fed mantuvo sin cambios su tasa en el rango 3.75%-4% el 28 de octubre (dos disidencias pidiendo alza), y el presidente Kevin Warsh insistió en el enfoque en estabilidad de precios; el Nasdaq Composite cerró con una subida modesta de +0.27% a 26,549.85, reflejando una reacción contenida del NQ tras la decisión.",
+  "geopolitica": "Oriente Medio/Irán: un misil hutí impactó la refinería saudí de Ras Tanura y el vicepresidente Vance envió una carta a Irán (consejero Rezaei) para reabrir negociaciones de paz, mientras Trump amenaza con reanudar ataques tras las elecciones del 3 de noviembre, lo que mantiene una prima de riesgo geopolítico que limita el apetito por riesgo en el NQ.",
+  "petroleo": "Brent cae ~1% a 114,2 USD/barril y WTI ~1,4% a 101,4 USD tras la carta de Vance buscando desescalar con Irán, aunque los ataques hutíes frenan una baja mayor; el retroceso del crudo alivia algo la presión inflacionaria sobre el NQ intradía.",
+  "catalizador": "",
   "sources": [
-    "CNBC ~14:00 ET (decisión de la Fed, 28 oct 2026)",
-    "CNBC ~16:30 ET (cierre petróleo, 28 oct 2026)",
-    "Bloomberg (28 oct 2026, ataque a Ras Tanura y aviso a países del Golfo)"
+    "CNBC 29-oct (madrugada ET) - oil-prices-fall-as-peace-hopes-offset-fears-of-growing-middle-east-conflict",
+    "Bloomberg 28-oct (noche ET) - Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran",
+    "The National 29-oct - Oil prices decline after diplomatic push in Iran war"
   ],
-  "as_of": "2026-10-28T21:05:46Z"
+  "as_of": "2026-10-29T11:11:41Z"
 }
