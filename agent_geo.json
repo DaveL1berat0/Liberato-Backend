@@ -1,13 +1,12 @@
 {
-  "geopolitica": "",
-  "petroleo": "Brent cede a ~115 USD (-0.9%) y WTI ronda 102 USD tras un retiro de 1.9 millones de barriles en inventarios de crudo de EE.UU.; el repliegue moderado del petroleo reduce presion inflacionaria y es ligeramente favorable para el sentimiento de riesgo del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.9% en premarket tras el desplome de Alphabet (-10%) por temores de gasto en IA, un dia despues de que la Fed mantuviera tasas en 3.75%-4% (voto 10-2); a las 08:30 ET se publica el PCE de septiembre y el PIB preliminar del 3T, dato clave para el tono de apertura del NQ.",
+  "geopolitica": "Los hutíes atacaron el martes la refinería saudí de Ras Tanura (550.000 bpd) en medio de la escalada del conflicto Irán-Israel, lo que eleva la aversión al riesgo y presiona al NQ pese a los intentos diplomáticos entre EE.UU. e Irán (Bloomberg, 27 oct).",
+  "petroleo": "El Brent cotiza en torno a 114-115 USD y el WTI en 101-103 USD, al alza por el riesgo de suministro tras los ataques hutíes a infraestructura saudí, lo que encarece insumos y pesa sobre el sentimiento de riesgo del NQ (CNBC; oilpriceapi.com, ~21:55 ET 28 oct).",
+  "catalizador": "La Fed mantuvo las tasas en 3.75%-4.00% el 28 de octubre en una votación dividida 10-2 (Cook y Hammack a favor de subir), y los futuros del Nasdaq 100 caen ~1.1% hoy tras resultados decepcionantes de grandes tecnológicas que reavivan dudas sobre el gasto en IA, catalizador directo para el NQ intradía (Federal Reserve/CNBC 14:00 ET 28 oct; Bloomberg 29 oct premercado).",
   "sources": [
-    "Invezz 29-oct premarket",
-    "The Globe and Mail 29-oct premarket",
-    "Vantage Markets 28-oct 21:55 ET",
-    "Federal Reserve 28-oct 14:00 ET",
-    "BEA calendar 29-oct 08:30 ET"
+    "Bloomberg 27 oct (ataque hutí a Ras Tanura)",
+    "CNBC / oilpriceapi.com ~21:55 ET 28 oct (Brent/WTI)",
+    "Federal Reserve/CNBC 14:00 ET 28 oct (decision FOMC)",
+    "Bloomberg 29 oct premercado (futuros NQ, resultados IA)"
   ],
-  "as_of": "2026-10-29T13:41:51Z"
+  "as_of": "2026-10-29T14:26:29Z"
 }
