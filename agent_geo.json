@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Distension geopolitica real: el vicepresidente de EEUU, JD Vance, contacto al jefe del Consejo de Seguridad de Iran para reactivar negociaciones, reduciendo la prima de riesgo belico en Oriente Medio y dando un sesgo levemente positivo de sentimiento de riesgo para el NQ intradia (CNBC, 29-oct).",
-  "petroleo": "El Brent cae ~2% a 112.99 USD/barril y el WTI retrocede 2.8% a 99.91 USD/barril tras la distension diplomatica EEUU-Iran, lo que alivia la presion inflacionaria por energia y resulta ligeramente favorable para el NQ (CNBC, 29-oct).",
-  "catalizador": "Alphabet se desploma cerca de 12% en la sesion tras reportar flujo de caja libre negativo y ventas de busqueda por debajo de lo esperado, arrastrando a los futuros del Nasdaq-100 y presionando al NQ a la baja (CNBC, 29-oct).",
+  "geopolitica": "La guerra Iran-Israel-EEUU sigue activa pero con un impulso diplomatico hacia conversaciones Iran-EEUU que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ intradia (The National, 29-oct-2026).",
+  "petroleo": "Brent cotiza en torno a 114-115 USD/barril y WTI en 101-103 USD/barril, cediendo tras el repunte de octubre (~+11% Brent) ante senales de acercamiento diplomatico EEUU-Iran, lo que alivia presion inflacionaria y es marginalmente positivo para el NQ (The National / UNN, 29-oct-2026).",
+  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.1% este jueves por resultados mixtos de Big Tech: Alphabet se desploma tras resultados decepcionantes mientras Microsoft sube por un fuerte flujo de caja, un dia despues de que la Fed (bajo el presidente Kevin Warsh) mantuviera tasas sin cambios el 28-oct con enfoque en estabilidad de precios, lo que genera presion bajista de corto plazo en el NQ (Reuters via Investing.com / Bloomberg, 29-oct-2026).",
   "sources": [
-    "CNBC 29-oct-2026 (sesion) - oil-price-today-wti-brent",
-    "CNBC 29-oct-2026 (sesion) - alphabet-nasdaq-futures-record-post-earnings-loss",
-    "CNBC 29-oct-2026 (premarket) - stocks-making-the-biggest-moves-premarket"
+    "The National 29-oct-2026",
+    "UNN 29-oct-2026",
+    "Reuters via Investing.com 29-oct-2026",
+    "Bloomberg 29-oct-2026",
+    "Federal Reserve (FOMC statement) 28-oct-2026"
   ],
-  "as_of": "2026-10-29T18:08:15Z"
+  "as_of": "2026-10-29T19:06:20Z"
 }
