@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Tensiones EE.UU.-Iran se suavizan tras contactos del vicepresidente Vance para reactivar negociaciones de paz, aunque persisten ataques huties a infraestructura saudi y riesgo de accion militar tras las elecciones del 3-nov, lo que reduce momentaneamente la prima de riesgo pero deja al NQ expuesto a sorpresas si la diplomacia fracasa.",
-  "petroleo": "El Brent cae a unos 113-115 USD (-1.7%) y el WTI a unos 100.7-102 USD (-2.1%) este jueves por expectativas de nuevas conversaciones de paz EE.UU.-Iran, lo que alivia presion inflacionaria y es marginalmente favorable para el NQ al reducir costos energeticos.",
-  "catalizador": "La Fed mantuvo la tasa en 3.75%-4% el 28-oct (voto 10-2) y hoy el mercado digiere resultados mixtos de Big Tech: Alphabet cae con fuerza en premarket (ingresos de servicios/busqueda por debajo de lo esperado) mientras Microsoft sube por flujo de caja y nube, generando volatilidad direccional en el NQ dado el peso de ambas en el indice.",
+  "geopolitica": "Distension geopolitica real: el vicepresidente de EEUU, JD Vance, contacto al jefe del Consejo de Seguridad de Iran para reactivar negociaciones, reduciendo la prima de riesgo belico en Oriente Medio y dando un sesgo levemente positivo de sentimiento de riesgo para el NQ intradia (CNBC, 29-oct).",
+  "petroleo": "El Brent cae ~2% a 112.99 USD/barril y el WTI retrocede 2.8% a 99.91 USD/barril tras la distension diplomatica EEUU-Iran, lo que alivia la presion inflacionaria por energia y resulta ligeramente favorable para el NQ (CNBC, 29-oct).",
+  "catalizador": "Alphabet se desploma cerca de 12% en la sesion tras reportar flujo de caja libre negativo y ventas de busqueda por debajo de lo esperado, arrastrando a los futuros del Nasdaq-100 y presionando al NQ a la baja (CNBC, 29-oct).",
   "sources": [
-    "CNBC 29-oct (oil price today: WTI, Brent)",
-    "CNBC 29-oct (Fed interest rate decision October 2026)",
-    "Reuters/Investing.com 29-oct (Nasdaq futures slide as mixed Big Tech results test AI trade)",
-    "Bloomberg 28-oct (Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran)",
-    "Fortune 29-oct 08:45 ET (current price of oil)"
+    "CNBC 29-oct-2026 (sesion) - oil-price-today-wti-brent",
+    "CNBC 29-oct-2026 (sesion) - alphabet-nasdaq-futures-record-post-earnings-loss",
+    "CNBC 29-oct-2026 (premarket) - stocks-making-the-biggest-moves-premarket"
   ],
-  "as_of": "2026-10-29T17:07:30Z"
+  "as_of": "2026-10-29T18:08:15Z"
 }
