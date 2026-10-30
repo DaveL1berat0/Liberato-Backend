@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Escalada en Oriente Medio: ataques de los Houthi contra instalaciones energéticas sauditas y señales de que EE.UU. podría reanudar ataques contra Irán tras las elecciones de medio mandato están elevando el riesgo geopolítico global, presionando el apetito por riesgo del NQ (Bloomberg, 29 oct).",
-  "petroleo": "Brent sube ~1% por encima de 116 USD/barril y WTI +1.3% sobre 103 USD/barril (02:21 ET, 30 oct), impulsados por los ataques Houthi a infraestructura saudita y temores de interrupción del suministro vía el Estrecho de Ormuz, lo que añade presión inflacionaria y lastra al NQ (CNBC/Bloomberg).",
-  "catalizador": "Los futuros del Nasdaq-100 caen más de 2% en premarket tras resultados decepcionantes de Amazon (-7%) e Intel (-26%), golpeando el sentimiento tech justo antes de la apertura (CNBC, Yahoo Finance 08:32 ET, 30 oct).",
+  "geopolitica": "Los huthíes atacaron el 24 de octubre instalaciones de Aramco en Yanbu, la refinería de Rabigh y aeropuertos sauditas, mientras EE.UU. e Israel preparan una posible campaña militar contra Irán tras las elecciones de medio mandato del 3 de noviembre (WSJ, 28 oct), elevando la prima de riesgo geopolítico que pesa sobre el apetito por riesgo del NQ.",
+  "petroleo": "Brent sube a ~113-118 USD/barril (+2.3% a +2.5%) hacia las 08:15 ET del 30 oct, impulsado por los ataques huthíes a infraestructura energética saudita y el riesgo de interrupción del suministro vía el Estrecho de Ormuz, lo que añade presión inflacionaria y lastra al NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 cayeron ~2% hacia las 05:15 ET del 30 oct tras resultados de Amazon por debajo de lo esperado y una guía de ventas débil de Intel, según CNBC/Yahoo Finance, presionando el open del NQ a la baja.",
   "sources": [
-    "Bloomberg 29 oct - oil market analysis Iran/Houthi tensions",
-    "CNBC 28 oct - oil price WTI Brent Hormuz",
-    "CNBC 29 oct - Nasdaq futures fall 2% Amazon Intel earnings",
-    "Yahoo Finance 08:32 ET 30 oct - stock market today live updates"
+    "WSJ 28 oct - US/Israel Iran strike plans post-midterms",
+    "Reuters/political.org 24 oct - Houthi attacks Aramco Yanbu Rabigh",
+    "Trading Economics 30 oct - Brent 113.44 +2.38%",
+    "BizToc 08:15 ET 30 oct - oil price $118.07/bbl",
+    "Yahoo Finance/CNBC 05:15 ET 30 oct - Nasdaq-100 futures -2% Amazon Intel"
   ],
-  "as_of": "2026-10-30T13:12:59Z"
+  "as_of": "2026-10-30T14:05:06Z"
 }
