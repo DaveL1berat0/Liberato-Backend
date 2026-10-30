@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Los hutíes intensifican ataques con misiles y drones contra refinerías y instalaciones de Aramco en Arabia Saudita (Ras Tanura, Rabigh, Abqaiq) y aeropuertos de Riad y Dammam, mientras Trump no descarta sumar a EE.UU. a los ataques sauditas contra los hutíes ('We may'), lo que eleva la prima de riesgo geopolítico y presiona al NQ hacia la apertura.",
-  "petroleo": "El Brent sube ~1% y supera los 116 USD/barril y el WTI avanza ~1.3% por encima de 103 USD/barril, impulsados por los ataques hutíes a infraestructura petrolera saudí, un viento en contra para el apetito de riesgo en el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 2.5% en el premercado de Nueva York tras resultados decepcionantes de Amazon (mayor capex de IA y crecimiento mas lento del e-commerce en 3 anos) e Intel (-26%), que reavivan las dudas sobre el gasto en IA antes de la apertura de 9:30 ET.",
+  "geopolitica": "Los hutíes intensifican ataques a infraestructura petrolera saudí (refinería de Ras Tanura y sede de Aramco), ampliando el frente de la guerra respaldada por Irán y elevando la prima de riesgo geopolítico que presiona al NQ al alza en volatilidad.",
+  "petroleo": "Brent sube cerca de 1% por encima de 116 USD/barril y WTI avanza 1.3% hacia 103 USD, impulsados por los ataques hutíes a instalaciones sauditas y la incertidumbre sobre el Estrecho de Ormuz, lo que presiona al NQ vía mayor aversión al riesgo y costos de insumos.",
+  "catalizador": "Los futuros del Nasdaq caen más de 2% en premarket tras resultados decepcionantes de Amazon (-7%) e Intel (-26%), el mayor lastre puntual para el NQ en el racimo de apertura de hoy.",
   "sources": [
-    "Reuters 04:04 ET (futuros Nasdaq 100, Amazon/Intel)",
-    "Reuters/Business Recorder 21:22 ET (petróleo, ataques hutíes)",
-    "CBS News 29 oct (live updates, Trump/hutíes/Arabia Saudita)",
-    "Bloomberg 30 oct (premercado NY, Amazon capex/Intel -26%)"
+    "Bloomberg — Stock Market Today: Dow, S&P Live Updates for Oct 30, 2026",
+    "CNBC — Nasdaq futures fall more than 2% as Amazon and Intel tumble after earnings: Live updates (29-30 Oct 2026)",
+    "TheStreet (cita a Reuters) — Stock Market Today Oct. 30, 2026: Nasdaq futures fall as Amazon, Intel losses shake Wall Street",
+    "CNBC — Oil price today: WTI, Brent rise (28 Oct 2026)",
+    "Reuters — Houthis claim missile strike on Saudi Ras Tanura refinery (27 Oct 2026)"
   ],
-  "as_of": "2026-10-30T12:15:23Z"
+  "as_of": "2026-10-30T13:09:11Z"
 }
