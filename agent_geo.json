@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Un ataque a un petrolero en el Estrecho de Ormuz (atacante aun no identificado) se suma a nuevos reclamos huties de ataques a instalaciones energeticas sauditas, elevando el riesgo geopolitico en Medio Oriente y presionando el sentimiento de riesgo sobre el NQ intradia.",
-  "petroleo": "El Brent sube mas de 2% y supera los 116-118 USD/barril (cuarto mes consecutivo de alzas) tras el ataque al petrolero en Ormuz y los reclamos huties contra Arabia Saudita, un viento en contra para el NQ por mayor presion inflacionaria/de costos.",
-  "catalizador": "El Nasdaq Composite cae entre 2.2% y 2.6% y el Nasdaq 100 baja hasta 3.4% (borrando mas de 1 billon de USD) tras resultados e indicaciones de capex de Amazon e Intel que reavivan dudas sobre el gasto en IA; Intel se desploma cerca de 29%, su peor caida diaria historica.",
+  "geopolitica": "Un petrolero fue atacado con explosivos en el Estrecho de Ormuz el 30-oct, en medio del octavo mes de la guerra EE.UU./Israel-Iran y de nuevos reclamos huties de ataques a instalaciones petroleras sauditas (Ras Tanura, Rabigh, Abqaiq), lo que eleva la aversion al riesgo y presiona al NQ a la baja.",
+  "petroleo": "El Brent sube cerca de +1.5-2% hacia los 116-118 USD/barril (cuarto mes consecutivo de alzas) y el WTI sube a unos 103-104 USD tras el ataque al petrolero en Ormuz, encareciendo insumos energeticos y lastrando al sector tech del NQ.",
+  "catalizador": "Intel se desplomo cerca de 30% (su peor caida diaria historica) tras una guia debil para el cuarto trimestre, y Amazon tambien cayo pese a resultados, arrastrando a los futuros y luego a la sesion del Nasdaq-100 con caidas de varios puntos porcentuales el 30-oct por dudas sobre el capex en IA.",
   "sources": [
-    "Yahoo Finance/oilprice.com/Kitco 30 oct - ataque a petrolero en Estrecho de Ormuz, Brent ~116-118 USD",
-    "EnergyNow.com 30 oct - oil jumps more than 2% tras ataque en Ormuz",
-    "Business Standard/The Globe and Mail 30 oct - Nasdaq Composite -2.2% a -2.5%, Nasdaq 100 -3.4%, Intel -29%",
-    "NBC News 30 oct - tech stocks borran mas de 1 billon USD por temores sobre el boom de IA"
+    "Bloomberg 07:46 ET 30-oct - futuros S&P500/Nasdaq tras resultados de Amazon e Intel",
+    "Reuters (early trade) 30-oct - ataque a petrolero en Estrecho de Ormuz y precios de crudo",
+    "Schaeffer's Investment Research 30-oct - Nasdaq futures selloff 758 puntos por Intel/Amazon",
+    "StockTitan 30-oct - Intel cae cerca de 30% intradia tras resultados",
+    "CNBC/Yahoo Finance 30-oct - petroleo camino a cuarta alza mensual por Ormuz y hutíes"
   ],
-  "as_of": "2026-10-30T18:06:39Z"
+  "as_of": "2026-10-30T19:06:09Z"
 }
