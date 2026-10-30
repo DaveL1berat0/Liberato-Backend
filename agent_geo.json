@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Los hutíes intensifican ataques a infraestructura petrolera saudí (refinería de Ras Tanura y sede de Aramco), ampliando el frente de la guerra respaldada por Irán y elevando la prima de riesgo geopolítico que presiona al NQ al alza en volatilidad.",
-  "petroleo": "Brent sube cerca de 1% por encima de 116 USD/barril y WTI avanza 1.3% hacia 103 USD, impulsados por los ataques hutíes a instalaciones sauditas y la incertidumbre sobre el Estrecho de Ormuz, lo que presiona al NQ vía mayor aversión al riesgo y costos de insumos.",
-  "catalizador": "Los futuros del Nasdaq caen más de 2% en premarket tras resultados decepcionantes de Amazon (-7%) e Intel (-26%), el mayor lastre puntual para el NQ en el racimo de apertura de hoy.",
+  "geopolitica": "Escalada en Oriente Medio: ataques de los Houthi contra instalaciones energéticas sauditas y señales de que EE.UU. podría reanudar ataques contra Irán tras las elecciones de medio mandato están elevando el riesgo geopolítico global, presionando el apetito por riesgo del NQ (Bloomberg, 29 oct).",
+  "petroleo": "Brent sube ~1% por encima de 116 USD/barril y WTI +1.3% sobre 103 USD/barril (02:21 ET, 30 oct), impulsados por los ataques Houthi a infraestructura saudita y temores de interrupción del suministro vía el Estrecho de Ormuz, lo que añade presión inflacionaria y lastra al NQ (CNBC/Bloomberg).",
+  "catalizador": "Los futuros del Nasdaq-100 caen más de 2% en premarket tras resultados decepcionantes de Amazon (-7%) e Intel (-26%), golpeando el sentimiento tech justo antes de la apertura (CNBC, Yahoo Finance 08:32 ET, 30 oct).",
   "sources": [
-    "Bloomberg — Stock Market Today: Dow, S&P Live Updates for Oct 30, 2026",
-    "CNBC — Nasdaq futures fall more than 2% as Amazon and Intel tumble after earnings: Live updates (29-30 Oct 2026)",
-    "TheStreet (cita a Reuters) — Stock Market Today Oct. 30, 2026: Nasdaq futures fall as Amazon, Intel losses shake Wall Street",
-    "CNBC — Oil price today: WTI, Brent rise (28 Oct 2026)",
-    "Reuters — Houthis claim missile strike on Saudi Ras Tanura refinery (27 Oct 2026)"
+    "Bloomberg 29 oct - oil market analysis Iran/Houthi tensions",
+    "CNBC 28 oct - oil price WTI Brent Hormuz",
+    "CNBC 29 oct - Nasdaq futures fall 2% Amazon Intel earnings",
+    "Yahoo Finance 08:32 ET 30 oct - stock market today live updates"
   ],
-  "as_of": "2026-10-30T13:09:11Z"
+  "as_of": "2026-10-30T13:12:59Z"
 }
