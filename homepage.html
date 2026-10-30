@@ -2103,10 +2103,12 @@ async function handleSubmit(){
       document.getElementById('m-email').style.borderColor='rgba(220,80,80,0.5)';
       return;
     }
+    try{ if(window.fbq) fbq('track','Lead'); }catch(e){}  // Meta Pixel: cuenta creada
     // Verificación por correo: te enviamos un código. Completa en la página de acceso.
     if(d.needs_verification){
       try{ localStorage.setItem('lbc_pending_verify',email); }catch(e){}
-      window.location.href='auth.html?verify='+encodeURIComponent(email);
+      // pequeña espera para que el evento del pixel salga antes de navegar
+      setTimeout(function(){ window.location.href='auth.html?verify='+encodeURIComponent(email); }, 300);
       return;
     }
     // (Fallback) sesión con token directo
@@ -2118,6 +2120,7 @@ async function handleSubmit(){
         localStorage.setItem('lbc_user_email',d.user.email);
       }
     }catch(e){}
+    try{ if(window.fbq) fbq('track','CompleteRegistration'); }catch(e){}
     document.getElementById('modal-form').style.display='none';
     document.getElementById('modal-success').style.display='block';
     if(d.user)showWelcome(d.user.name);

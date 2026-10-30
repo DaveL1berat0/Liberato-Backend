@@ -405,6 +405,9 @@ async function api(path, method, body){
   return data;
 }
 
+// Meta Pixel: eventos de conversión (no rompe si el pixel está bloqueado)
+function pxTrack(ev){ try{ if(window.fbq) fbq('track', ev); }catch(e){} }
+
 // ═══ REGISTRO ═══
 async function doRegister(){
   clearMsg('reg-msg');
@@ -420,6 +423,7 @@ async function doRegister(){
     var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
     var data = await api('/api/auth/register', 'POST', {name:name, email:email, password:password, language:state.lang, trial_code:_trial});
     state.email = email; state.name = name;
+    pxTrack('Lead');  // cuenta creada en el backend
     // Verificación por correo: no viene token; hay que ingresar el código.
     if(data && data.needs_verification){
       var sub = document.getElementById('verify-sub');
@@ -433,9 +437,11 @@ async function doRegister(){
     if(data && data.token){
       state.token = data.token;
       localStorage.setItem('lbc_token', data.token);
+      pxTrack('CompleteRegistration');
       loadAccount();
       return;
     }
+    pxTrack('CompleteRegistration');
     showMsg('reg-msg', state.lang==='es'?'Cuenta creada. Inicia sesión.':'Account created. Sign in.', 'success');
     setTimeout(function(){ goScreen('login'); }, 1200);
   }catch(e){
@@ -459,6 +465,7 @@ async function doVerify(){
     if(data && data.token){
       state.token = data.token;
       localStorage.setItem('lbc_token', data.token);
+      pxTrack('CompleteRegistration');  // correo verificado = registro completo
       showMsg('verify-msg', state.lang==='es'?'¡Cuenta verificada!':'Account verified!', 'success');
       setTimeout(function(){ loadAccount(true); }, 700);
     }
