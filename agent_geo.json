@@ -1,16 +1,13 @@
 {
-  "geopolitica": "Un petrolero (Louise 1) fue atacado con minas/explosivos en el Estrecho de Ormuz el 29-30 oct (UKMTO/Reuters), Iran afirma que otros tanqueros golpearon minas (negado por EEUU), y los huties reivindicaron nuevos ataques contra instalaciones petroleras sauditas (Ras Tanura, Rabigh, Abqaiq) sin confirmacion oficial saudita; EEUU e Israel preparan ademas planes para reanudar ataques contra Iran tras las elecciones de medio termino del 3-nov, elevando la prima de riesgo geopolitico y presionando al NQ a la baja.",
-  "petroleo": "El Brent sube hacia los 115-118 USD/barril y el WTI hacia 102-104 USD (cuarto mes consecutivo de alzas, +14-15% en octubre) tras el ataque al petrolero en el Estrecho de Ormuz y los ataques huties a infraestructura petrolera saudita, encareciendo insumos energeticos y lastrando el sentimiento de riesgo que pesa sobre el NQ.",
-  "catalizador": "Intel se desplomo entre 21% y 26% (tras el cierre del 29-oct y en premarket del 30-oct) tras emitir una guia de Q4 muy por debajo de lo esperado (15.000-16.000 MUSD vs ~17.000 MUSD estimados) por la debilidad en PCs, arrastrando a pares como AMD (-10%) y Dell (-13%) y presionando a los futuros del Nasdaq-100 a la baja.",
+  "geopolitica": "Los hutíes intensificaron ataques contra instalaciones petroleras sauditas (refinerías de Ras Tanura y Rabigh, planta de Abqaiq) e Irán denunció que varios petroleros fueron minados en el estrecho de Ormuz, elevando el riesgo de una respuesta militar de EEUU tras las elecciones de medio término, lo que presiona al NQ vía aversión al riesgo y temor a un shock de inflación por el crudo (CNBC, 30 oct).",
+  "petroleo": "El Brent cotiza en torno a 115 USD/barril y el WTI cerca de 102 USD, al alza en la apertura del viernes por los ataques hutíes a Arabia Saudita y el reclamo de minado en Ormuz, camino a un cuarto mes consecutivo de alzas (Brent +13%, WTI +15% en octubre), lo que eleva las expectativas de inflación y presiona al NQ a la baja (CNBC, 30 oct; Bloomberg 18:02 ET 29 oct).",
+  "catalizador": "La Fed mantuvo las tasas sin cambios el miércoles bajo el nuevo presidente Kevin Warsh y el mercado ya descuenta un escenario de tasas altas por más tiempo (oro en mínimo de un año), lo que limita el apetito por growth/tech y resta soporte al NQ (CNBC, 28-29 oct).",
   "sources": [
-    "CNBC 29-30 oct 2026 - guia debil de Intel y caida de la accion",
-    "Investing.com/Seeking Alpha 30 oct 2026 - Intel cae 21-26% en after-hours/premarket",
-    "Benzinga 30 oct 2026 - Intel, peor caida diaria desde 1974",
-    "247wallst.com 30 oct 2026 - Intel -25%, AMD -10%, Dell -13%",
-    "Reuters/UKMTO (via Ynetnews/Arab News) 30 oct 2026 - ataque al petrolero Louise 1 en Estrecho de Ormuz",
-    "Gulf News/CBS News 30 oct 2026 - Iran afirma minas en tanqueros, EEUU lo niega",
-    "Business Standard/Reuters 30 oct 2026 - huties reivindican ataques a instalaciones petroleras sauditas",
-    "CNBC 28 oct 2026 - la Fed mantiene tasas sin cambios con disidencias hawkish"
+    "CNBC 30 oct 2026 (oil-rises-on-supply-concerns-as-houthis-attack-saudi-arabia)",
+    "CNBC 30 oct 2026 (iran-trump-hormuz-oil-middle-east)",
+    "Bloomberg 18:02 ET 29 oct 2026 (latest-oil-market-news-and-analysis-for-oct-30)",
+    "CNBC 29 oct 2026 (gold-slips-as-markets-assess-fed-signals-await-us-inflation-data)",
+    "CNBC 28 oct 2026 (oil-price-today-wti-brent-hormuz)"
   ],
-  "as_of": "2026-10-30T20:07:40Z"
+  "as_of": "2026-10-30T21:07:52Z"
 }
