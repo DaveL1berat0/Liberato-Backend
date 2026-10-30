@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Los huthíes atacaron el 24 de octubre instalaciones de Aramco en Yanbu, la refinería de Rabigh y aeropuertos sauditas, mientras EE.UU. e Israel preparan una posible campaña militar contra Irán tras las elecciones de medio mandato del 3 de noviembre (WSJ, 28 oct), elevando la prima de riesgo geopolítico que pesa sobre el apetito por riesgo del NQ.",
-  "petroleo": "Brent sube a ~113-118 USD/barril (+2.3% a +2.5%) hacia las 08:15 ET del 30 oct, impulsado por los ataques huthíes a infraestructura energética saudita y el riesgo de interrupción del suministro vía el Estrecho de Ormuz, lo que añade presión inflacionaria y lastra al NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 cayeron ~2% hacia las 05:15 ET del 30 oct tras resultados de Amazon por debajo de lo esperado y una guía de ventas débil de Intel, según CNBC/Yahoo Finance, presionando el open del NQ a la baja.",
+  "geopolitica": "Los hutíes intensificaron ataques con misiles y drones contra refinerías e instalaciones petroleras de Arabia Saudita (Ras Tanura, Rabigh y la planta de Aramco en Abqaiq), elevando la prima de riesgo geopolítico que puede presionar al NQ vía mayor aversión al riesgo (Reuters/CNBC, 30 oct).",
+  "petroleo": "El Brent subió a USD 115.74 (+0.75%) en la madrugada de hoy por temores de suministro tras los ataques hutíes a instalaciones saudíes, un encarecimiento energético que suele restar apetito por tecnológicas de alto crecimiento como las del NQ (Reuters, ~21:22 ET del 29 oct).",
+  "catalizador": "Los futuros del Nasdaq-100 cayeron cerca de 2% en la premarket de hoy tras el desplome de Intel (-26%) pese a resultados mejores de lo esperado y la caída de Amazon, en medio de dudas sobre el retorno del gasto en IA, el principal catalizador bajista intradía para el NQ (Benzinga/Schaeffer's, premarket 30 oct).",
   "sources": [
-    "WSJ 28 oct - US/Israel Iran strike plans post-midterms",
-    "Reuters/political.org 24 oct - Houthi attacks Aramco Yanbu Rabigh",
-    "Trading Economics 30 oct - Brent 113.44 +2.38%",
-    "BizToc 08:15 ET 30 oct - oil price $118.07/bbl",
-    "Yahoo Finance/CNBC 05:15 ET 30 oct - Nasdaq-100 futures -2% Amazon Intel"
+    "Reuters ~21:22 ET (29 oct) - Brent crude futures rose 0.75% to $115.74 a barrel on Houthi attacks on Saudi Arabia",
+    "CNBC 30 oct - Oil rises on supply concerns as Houthis attack Saudi Arabia",
+    "Benzinga 30 oct (premarket) - Dow Jones, S&P 500 futures trade mixed as AMZN, INTC slide after Q3 earnings",
+    "Schaeffer's Investment Research 30 oct (premarket) - Nasdaq futures sell off 758 points as big tech extends tumble"
   ],
-  "as_of": "2026-10-30T14:05:06Z"
+  "as_of": "2026-10-30T14:07:24Z"
 }
