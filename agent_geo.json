@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Irán afirma que cuatro petroleros fueron alcanzados por minas en el Estrecho de Ormuz y crecen los temores de nuevos ataques de EE.UU. tras las elecciones de medio término, mientras los hutíes atacan refinerías e infraestructura en Arabia Saudita, elevando la aversión al riesgo que puede pesar sobre el NQ en la apertura.",
-  "petroleo": "El WTI sube cerca de 2% hasta unos 104 USD/barril y el Brent avanza 2.3% a unos 117.5 USD/barril por los ataques a petroleros en Ormuz y a refinerías sauditas, presionando el sentimiento de riesgo que puede lastrar al NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen entre 1.5% y 2% tras resultados decepcionantes de Amazon e Intel (Intel se desplomó hasta 29%) y crecientes dudas sobre el gasto en IA, un catalizador bajista directo para el NQ en la apertura.",
+  "geopolitica": "Los Houthis lanzaron una nueva ola de ataques contra Arabia Saudita (seis operaciones contra aeropuertos e instalaciones petroleras) e Iran afirma que varios petroleros chocaron con minas en el Estrecho de Hormuz, negando que las rutas de navegacion esten despejadas, lo que reaviva el temor a una escalada belica tras las elecciones legislativas de EE.UU. del 3 de noviembre y presiona al riesgo global que pesa sobre el NQ.",
+  "petroleo": "El Brent cotiza cerca de 115-116 USD/barril (+0.75% aprox.) y el WTI en torno a 102-103 USD/barril, al alza por los temores de oferta derivados de los ataques Houthi a instalaciones sauditas y la tension en Hormuz, lo que eleva el costo energetico y presiona el apetito por riesgo en acciones tech del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 cayeron cerca de 2% en la premarket tras resultados decepcionantes de Amazon e Intel, que reavivaron dudas sobre el ritmo de retorno de las inversiones en IA, catalizador bajista inmediato para el NQ en la apertura de hoy.",
   "sources": [
-    "CNBC 10:30 ET - Oil rises on supply concerns as Houthis attack Saudi Arabia",
-    "CNBC 10:33 ET - Oil price today: WTI, Brent",
-    "CNBC 10:06 ET - Nasdaq-100 futures fall 2% as Amazon and Intel tumble after earnings",
-    "CNBC - Amazon falls 2%, Intel dives 29%, as tech stocks sell off in post-earnings rout",
-    "CNBC - Iran claims four tankers struck mines in Hormuz as strike fears grow after U.S. midterms"
+    "CNBC 30-Oct-2026 (Iran-Hormuz-tankers)",
+    "Reuters/CNBC ~21:22 ET 29-Oct-2026 (Brent crude supply concerns)",
+    "TipRanks/AOL ~05:36 ET 30-Oct-2026 (Nasdaq-100 futures, Amazon/Intel earnings)"
   ],
-  "as_of": "2026-10-30T14:57:54Z"
+  "as_of": "2026-10-30T15:08:12Z"
 }
