@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Reportes de que el vicepresidente JD Vance contacto al jefe del Consejo de Seguridad de Iran, Mohsen Rezaei, para reanudar negociaciones alimentan apetito por riesgo y apoyan al NQ, pero Iran rechazo la ultima propuesta de mediadores catalies y persiste el riesgo de nuevos ataques hutíes y de una posible accion militar de EE.UU. contra Iran tras las elecciones de medio termino del 3 de noviembre, lo que limita el optimismo (CNBC, 29 oct).",
-  "petroleo": "El Brent cae cerca de 2% a unos USD 113 por barril y el WTI baja cerca de 2.8% a unos USD 99.91, por esperanzas de un acuerdo diplomatico EE.UU.-Iran que reduce la prima de riesgo geopolitico tras el repunte del miercoles ligado al ataque hutí a la refineria saudi de Ras Tanura; el alivio en crudo favorece un tono de risk-on para el NQ en la sesion (CNBC, 29 oct).",
-  "catalizador": "Alphabet se desploma hasta 13% tras resultados por un flujo de caja libre peor al esperado, arrastrando al Nasdaq-100 cerca de -1.5% junto con caidas fuertes en Intel y ServiceNow, lo que reaviva dudas sobre el retorno del gasto en IA; esto ocurre un dia despues de que la Fed mantuviera la tasa en 3.75%-4% con un voto dividido, sin senal clara sobre diciembre (CNBC, 29 oct).",
+  "geopolitica": "Los hutíes atacaron instalaciones petroleras clave de Arabia Saudita (refinerías Ras Tanura y Rabigh, planta Aramco en Abqaiq), elevando la prima de riesgo geopolítico en Oriente Medio y el sentimiento de aversión al riesgo que pesa sobre el NQ (Reuters/CNBC, 21:22 ET).",
+  "petroleo": "El Brent sube 0.75% a 115.74 USD y el WTI 0.71% a 102.72 USD por los ataques hutíes a infraestructura petrolera saudita, lo que presiona márgenes y el apetito por riesgo del NQ (Reuters/CNBC, 21:22 ET).",
+  "catalizador": "Los resultados decepcionantes de Amazon e Intel reavivaron el temor al gasto en IA y hundieron los futuros del Nasdaq 100 cerca de 2.4% en premarket (Amazon -7%, Intel -25%), agravado por un hackeo cripto histórico en Binance (CNBC, 06:30 ET).",
   "sources": [
-    "CNBC 29-oct (Alphabet, Google, Microsoft shares today earnings)",
-    "CNBC 29-oct (Oil prices fall as peace hopes offset fears of growing Middle East conflict)",
-    "CNBC 28-oct (Fed meeting today live updates)"
+    "CNBC 06:30 ET",
+    "Reuters/CNBC 21:22 ET",
+    "Bloomberg 06:30 ET"
   ],
-  "as_of": "2026-10-29T21:08:02Z"
+  "as_of": "2026-10-30T11:08:37Z"
 }
