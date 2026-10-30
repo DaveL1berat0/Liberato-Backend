@@ -1,14 +1,11 @@
 {
-  "geopolitica": "EE.UU. advirtio a estados del Golfo que se preparen para posibles nuevos ataques contra Iran tras las elecciones de mitad de mandato del 3 de noviembre, y hutíes atacaron este viernes refinerías e instalaciones petroleras saudíes (incluida Aramco), elevando el riesgo geopolitico que presiona al NQ a la baja.",
-  "petroleo": "El Brent sube cerca de 0.75% hasta ~115.74 USD/barril y el WTI ronda los ~102.72 USD, impulsados por los ataques hutíes a instalaciones petroleras saudíes, con el crudo camino a cerrar octubre con fuertes alzas mensuales, un viento en contra para el NQ por presion inflacionaria.",
-  "catalizador": "Los futuros del Nasdaq operan mixtos/a la baja tras los resultados de Amazon e Intel, mientras el hackeo de 6.3 mil millones de USD a Binance -el mayor robo cripto registrado- dispara una ola de aversion al riesgo que contagia el sentimiento tech.",
+  "geopolitica": "Los huties intensifican ataques contra Arabia Saudita (incluyendo objetivos petroleros) y hubo un nuevo ataque a un petrolero en el Estrecho de Ormuz en medio de la guerra Israel-EEUU-Iran, elevando el riesgo geopolitico que presiona el sentimiento de riesgo sobre el NQ intradia.",
+  "petroleo": "El Brent sube cerca de 2.4% hasta unos 117.62 USD/barril y el WTI sube cerca de 2.1% hasta unos 104.18 USD, impulsados por el ataque a un petrolero en el Estrecho de Ormuz y los ataques huties a Arabia Saudita, un viento en contra para el NQ por presion inflacionaria.",
+  "catalizador": "Los futuros/indices del Nasdaq caen con fuerza (Nasdaq Composite baja en torno a 2.5-2.6%, Nasdaq 100 cerca de -3%) tras resultados peores a lo esperado de Amazon e Intel (Intel se desploma cerca de 30%), reavivando dudas sobre el retorno del gasto en IA.",
   "sources": [
-    "CNBC 2026-10-30 (oil/Houthi attacks)",
-    "Business Standard/Reuters 2026-10-30 (oil prices)",
-    "WSJ via Hromadske 2026-10-28 (US warns Gulf states on Iran)",
-    "Benzinga 2026-10-30 (Dow/S&P/Nasdaq futures, AMZN/INTC)",
-    "CNBC 2026-10-30 (Binance hack, Bitcoin/Ether)",
-    "CoinDesk 2026-10-30 (Binance hack liquidations)"
+    "Reuters via AOL ~06:45 ET (ataque a petrolero en Ormuz, precios Brent/WTI)",
+    "Business Standard/Reuters (ataques huties a Arabia Saudita)",
+    "Yahoo Finance/Bloomberg (selloff Nasdaq por resultados Amazon e Intel)"
   ],
-  "as_of": "2026-10-30T16:07:29Z"
+  "as_of": "2026-10-30T17:09:30Z"
 }
