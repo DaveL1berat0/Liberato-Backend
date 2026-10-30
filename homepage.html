@@ -2985,17 +2985,21 @@ function submitNewsletter(){
   msg.style.color='rgba(239,236,227,0.55)';msg.textContent='Enviando…';
   // FIX auditoría: antes faltaba el campo 'email' -> el backend devolvía 400 y se perdían TODOS los leads;
   // y el éxito se pintaba SIEMPRE (mensaje falso). Ahora enviamos payload válido y confirmamos con r.ok.
-  fetch('https://web-production-33671.up.railway.app/api/contact',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:'Waitlist lanzamiento',email:email,subject:'Nueva inscripción waitlist',description:'Alta waitlist (notificarme cuando abra): '+email})
+  // Lista de espera: se guarda en Supabase y el usuario recibe correo de confirmación (/api/waitlist).
+  // Respaldo: si ese endpoint no responde (p.ej. backend redeployando), cae al aviso por /api/contact.
+  var _api='https://web-production-33671.up.railway.app';
+  var _post=function(path,payload){return fetch(_api+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});};
+  _post('/api/waitlist',{email:email,source:'homepage'}).then(function(r){
+    if(r.ok||r.status===400||r.status===429) return r;
+    return _post('/api/contact',{name:'Waitlist lanzamiento',email:email,subject:'Nueva inscripción waitlist',description:'Alta waitlist (notificarme cuando abra): '+email});
   }).then(function(r){
     if(!r.ok) throw new Error('http '+r.status);
+    try{ if(window.fbq) fbq('track','Lead',{content_name:'waitlist'}); }catch(e){}
     document.getElementById('nl-form').innerHTML=
       '<div style="text-align:center;padding:20px 0;">'+
       '<div style="font-size:36px;margin-bottom:12px;">✅</div>'+
       '<div style="color:#2EE8A4;font-size:16px;font-weight:600;margin-bottom:8px;">¡Listo! Ya estás en la lista.</div>'+
-      '<div style="color:rgba(239,236,227,0.5);font-size:12px;">Te escribiremos a <strong style="color:#C9A84C;">'+email+'</strong> cuando abramos.</div>'+
+      '<div style="color:rgba(239,236,227,0.5);font-size:12px;">Te enviamos la confirmación a <strong style="color:#C9A84C;">'+email+'</strong> y te avisaremos cuando abramos.</div>'+
       '</div>';
     setTimeout(closeNewsletter,3500);
   }).catch(function(){

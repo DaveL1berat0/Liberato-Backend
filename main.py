@@ -540,7 +540,7 @@ async def _unhandled_exc(request, exc):
 # webhooks, callback OAuth, contacto y community/access (self-gate por plan).
 _PUBLIC_API_EXACT = {
     "/", "/health", "/api/version", "/api/health/feeds", "/api/auth/health",
-    "/api/email/health", "/api/contact", "/api/community/access",
+    "/api/email/health", "/api/contact", "/api/waitlist", "/api/community/access",
     "/api/whop/webhook", "/api/broker/tradestation/callback",
     "/api/email/unsubscribe",   # baja pública desde el pie del correo (token firmado)
 }
@@ -11098,6 +11098,74 @@ async def contact_form(request: Request):
         print(f"[contact] ✓ Mensaje de {name} enviado a {SUPPORT_EMAIL}")
         return {"success": True}
     raise HTTPException(500, "No se pudo enviar el mensaje. Intenta más tarde.")
+
+
+# ══ LISTA DE ESPERA ("Notificarme cuando abra" de la homepage) ════════════════
+# Antes iba a /api/contact: el usuario no recibía nada y los correos no quedaban
+# guardados. Ahora se guardan en Supabase (tabla `waitlist`) y se confirma por correo.
+WAITLIST_OPEN_TEXT = os.getenv("WAITLIST_OPEN_TEXT", "el 4 de enero de 2027").strip()
+_waitlist_rate = {}
+
+async def send_waitlist_confirm(email):
+    body = (f"<p>Hola 👊</p>"
+            f"<p>Ya estás en la lista. El acceso al <b>Live</b> — la sesión del New York Open, operando "
+            f"en vivo conmigo — abre <b>{WAITLIST_OPEN_TEXT}</b>, y vas a ser de los primeros en enterarte.</p>"
+            f"<p>Te voy a ser directo: la mayoría intenta aprender sola o con gurús que no operan, y por eso "
+            f"se rinde. Aquí no hay promesas de ganancias: hay proceso, operaciones reales en un bróker "
+            f"regulado y una comunidad de traders que se lo toman en serio.</p>"
+            f"<p>Mientras abre, no esperes sentado: crea tu cuenta gratis, entra al Discord y empieza a ver "
+            f"cada día cómo leo el mercado.</p>"
+            f"<p>Nos vemos adentro,<br><b>Dave Liberato</b></p>"
+            f"<p style='color:#9a9aa2;font-size:12px;'>El trading conlleva riesgo sustancial de pérdida. "
+            f"Contenido educativo; no es asesoría financiera.</p>")
+    return await _send_email(email, "Estás en la lista — Liberato Community ⏳",
+                             _email_shell("Ya tienes tu lugar en la lista", body,
+                                          "Crear mi cuenta gratis →", f"{SITE_URL}/auth.html"),
+                             list_unsub=True)
+
+@app.post("/api/waitlist")
+async def waitlist_join(request: Request):
+    ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    bucket = [t for t in _waitlist_rate.get(ip, []) if now - t < 600]
+    if len(bucket) >= 5:
+        raise HTTPException(429, "Demasiados intentos. Espera unos minutos.")
+    bucket.append(now)
+    _waitlist_rate[ip] = bucket
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "Datos inválidos")
+    email = (body.get("email") or "").strip().lower()
+    source = (body.get("source") or "homepage").strip()[:40]
+    if len(email) > 200 or "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(400, "Correo inválido")
+    if not _sb_on():
+        print(f"[waitlist] ⚠️ Supabase no configurado — alta solo en logs: {email}")
+        return {"ok": True, "new": True}
+    try:
+        async with httpx.AsyncClient(timeout=10) as c:
+            r = await c.post(f"{SUPABASE_URL}/rest/v1/waitlist",
+                             json={"email": email, "source": source},
+                             headers=_sb_h({"Prefer": "resolution=ignore-duplicates,return=representation"}))
+        if r.status_code >= 300:
+            print(f"[waitlist] ✗ supabase {r.status_code}: {r.text[:200]}")
+            raise HTTPException(500, "No se pudo registrar. Intenta más tarde.")
+        is_new = bool(r.json())   # [] = ya estaba en la lista
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[waitlist] ✗ {e}")
+        raise HTTPException(500, "No se pudo registrar. Intenta más tarde.")
+    if is_new:
+        print(f"[waitlist] ✓ alta {email} ({source})")
+        try:
+            asyncio.create_task(send_waitlist_confirm(email))
+            asyncio.create_task(_send_email(SUPPORT_EMAIL, "[Contacto Liberato] Nueva inscripción waitlist",
+                                            f"<p>Alta en la lista de espera: <b>{_ename(email)}</b> ({_ename(source)})</p>"))
+        except Exception:
+            pass
+    return {"ok": True, "new": is_new}
 
 
 # ═══════════════════════════════════════════════════════════════════════════
