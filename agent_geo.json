@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los huties intensifican ataques contra Arabia Saudita (incluyendo objetivos petroleros) y hubo un nuevo ataque a un petrolero en el Estrecho de Ormuz en medio de la guerra Israel-EEUU-Iran, elevando el riesgo geopolitico que presiona el sentimiento de riesgo sobre el NQ intradia.",
-  "petroleo": "El Brent sube cerca de 2.4% hasta unos 117.62 USD/barril y el WTI sube cerca de 2.1% hasta unos 104.18 USD, impulsados por el ataque a un petrolero en el Estrecho de Ormuz y los ataques huties a Arabia Saudita, un viento en contra para el NQ por presion inflacionaria.",
-  "catalizador": "Los futuros/indices del Nasdaq caen con fuerza (Nasdaq Composite baja en torno a 2.5-2.6%, Nasdaq 100 cerca de -3%) tras resultados peores a lo esperado de Amazon e Intel (Intel se desploma cerca de 30%), reavivando dudas sobre el retorno del gasto en IA.",
+  "geopolitica": "Un ataque a un petrolero en el Estrecho de Ormuz (atacante aun no identificado) se suma a nuevos reclamos huties de ataques a instalaciones energeticas sauditas, elevando el riesgo geopolitico en Medio Oriente y presionando el sentimiento de riesgo sobre el NQ intradia.",
+  "petroleo": "El Brent sube mas de 2% y supera los 116-118 USD/barril (cuarto mes consecutivo de alzas) tras el ataque al petrolero en Ormuz y los reclamos huties contra Arabia Saudita, un viento en contra para el NQ por mayor presion inflacionaria/de costos.",
+  "catalizador": "El Nasdaq Composite cae entre 2.2% y 2.6% y el Nasdaq 100 baja hasta 3.4% (borrando mas de 1 billon de USD) tras resultados e indicaciones de capex de Amazon e Intel que reavivan dudas sobre el gasto en IA; Intel se desploma cerca de 29%, su peor caida diaria historica.",
   "sources": [
-    "Reuters via AOL ~06:45 ET (ataque a petrolero en Ormuz, precios Brent/WTI)",
-    "Business Standard/Reuters (ataques huties a Arabia Saudita)",
-    "Yahoo Finance/Bloomberg (selloff Nasdaq por resultados Amazon e Intel)"
+    "Yahoo Finance/oilprice.com/Kitco 30 oct - ataque a petrolero en Estrecho de Ormuz, Brent ~116-118 USD",
+    "EnergyNow.com 30 oct - oil jumps more than 2% tras ataque en Ormuz",
+    "Business Standard/The Globe and Mail 30 oct - Nasdaq Composite -2.2% a -2.5%, Nasdaq 100 -3.4%, Intel -29%",
+    "NBC News 30 oct - tech stocks borran mas de 1 billon USD por temores sobre el boom de IA"
   ],
-  "as_of": "2026-10-30T17:09:30Z"
+  "as_of": "2026-10-30T18:06:39Z"
 }
