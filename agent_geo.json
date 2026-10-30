@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Los hutíes intensificaron ataques con misiles y drones contra refinerías e instalaciones petroleras de Arabia Saudita (Ras Tanura, Rabigh y la planta de Aramco en Abqaiq), elevando la prima de riesgo geopolítico que puede presionar al NQ vía mayor aversión al riesgo (Reuters/CNBC, 30 oct).",
-  "petroleo": "El Brent subió a USD 115.74 (+0.75%) en la madrugada de hoy por temores de suministro tras los ataques hutíes a instalaciones saudíes, un encarecimiento energético que suele restar apetito por tecnológicas de alto crecimiento como las del NQ (Reuters, ~21:22 ET del 29 oct).",
-  "catalizador": "Los futuros del Nasdaq-100 cayeron cerca de 2% en la premarket de hoy tras el desplome de Intel (-26%) pese a resultados mejores de lo esperado y la caída de Amazon, en medio de dudas sobre el retorno del gasto en IA, el principal catalizador bajista intradía para el NQ (Benzinga/Schaeffer's, premarket 30 oct).",
+  "geopolitica": "Irán afirma que cuatro petroleros fueron alcanzados por minas en el Estrecho de Ormuz y crecen los temores de nuevos ataques de EE.UU. tras las elecciones de medio término, mientras los hutíes atacan refinerías e infraestructura en Arabia Saudita, elevando la aversión al riesgo que puede pesar sobre el NQ en la apertura.",
+  "petroleo": "El WTI sube cerca de 2% hasta unos 104 USD/barril y el Brent avanza 2.3% a unos 117.5 USD/barril por los ataques a petroleros en Ormuz y a refinerías sauditas, presionando el sentimiento de riesgo que puede lastrar al NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 caen entre 1.5% y 2% tras resultados decepcionantes de Amazon e Intel (Intel se desplomó hasta 29%) y crecientes dudas sobre el gasto en IA, un catalizador bajista directo para el NQ en la apertura.",
   "sources": [
-    "Reuters ~21:22 ET (29 oct) - Brent crude futures rose 0.75% to $115.74 a barrel on Houthi attacks on Saudi Arabia",
-    "CNBC 30 oct - Oil rises on supply concerns as Houthis attack Saudi Arabia",
-    "Benzinga 30 oct (premarket) - Dow Jones, S&P 500 futures trade mixed as AMZN, INTC slide after Q3 earnings",
-    "Schaeffer's Investment Research 30 oct (premarket) - Nasdaq futures sell off 758 points as big tech extends tumble"
+    "CNBC 10:30 ET - Oil rises on supply concerns as Houthis attack Saudi Arabia",
+    "CNBC 10:33 ET - Oil price today: WTI, Brent",
+    "CNBC 10:06 ET - Nasdaq-100 futures fall 2% as Amazon and Intel tumble after earnings",
+    "CNBC - Amazon falls 2%, Intel dives 29%, as tech stocks sell off in post-earnings rout",
+    "CNBC - Iran claims four tankers struck mines in Hormuz as strike fears grow after U.S. midterms"
   ],
-  "as_of": "2026-10-30T14:07:24Z"
+  "as_of": "2026-10-30T14:57:54Z"
 }
