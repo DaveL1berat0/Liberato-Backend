@@ -7610,9 +7610,13 @@ def _ename(n):
 def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
     cta = ""
     if cta_text and cta_url:
-        cta = (f'<a href="{cta_url}" style="display:inline-block;margin-top:22px;background:#CCA94F;'
-               f'color:#05060C;text-decoration:none;font-weight:700;padding:13px 26px;border-radius:10px;'
-               f'font-family:Arial,sans-serif;font-size:15px;">{cta_text}</a>')
+        # Botón "bulletproof" (tabla + bgcolor): Gmail/Outlook, incl. modo oscuro, le quitan el
+        # background a un <a> suelto → el botón quedaba sin fondo dorado. El bgcolor del <td> sí sobrevive.
+        cta = (f'<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:24px;">'
+               f'<tr><td align="center" bgcolor="#CCA94F" style="background-color:#CCA94F;border-radius:10px;">'
+               f'<a href="{cta_url}" style="display:inline-block;padding:14px 28px;color:#05060C;'
+               f'text-decoration:none;font-weight:700;font-family:Arial,Helvetica,sans-serif;font-size:15px;'
+               f'border-radius:10px;">{cta_text}</a></td></tr></table>')
     return (f'<div style="background:#0B0B12;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">'
             f'<div style="max-width:520px;margin:0 auto;background:#12121C;border:1px solid rgba(204,169,79,0.25);'
             f'border-radius:16px;padding:32px;">'
