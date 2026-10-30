@@ -1,14 +1,14 @@
 {
-  "geopolitica": "Los ataques de los hutíes a infraestructura energética saudí y la tensión renovada entre EE.UU. e Irán mantienen alta la prima de riesgo geopolítico en Oriente Medio, lo que presiona el apetito por activos de riesgo como el NQ (Reuters/CNBC, 30 oct 2026).",
-  "petroleo": "El Brent sube cerca de 1-2% y supera los 116 USD/barril (camino a un alza mensual de ~13-14%), mientras el WTI avanza por encima de 103 USD, impulsados por los ataques hutíes a instalaciones sauditas y el temor a escalada con Irán, lo que añade presión bajista sobre el NQ vía mayores costos y rendimientos (HDFC Sky/Reuters, 30 oct 2026).",
-  "catalizador": "El hackeo de ~6.3 mil millones de dólares a Binance -vinculado preliminarmente a actores norcoreanos- desató ventas en cripto que se suman a la liquidación tecnológica tras las débiles guías de Intel (-21%) y Amazon, deteriorando el sentimiento de riesgo en los futuros del NQ antes de la apertura (CNBC/Axios/CoinDesk, 29-30 oct 2026).",
+  "geopolitica": "EE.UU. advirtio a estados del Golfo que se preparen para posibles nuevos ataques contra Iran tras las elecciones de mitad de mandato del 3 de noviembre, y hutíes atacaron este viernes refinerías e instalaciones petroleras saudíes (incluida Aramco), elevando el riesgo geopolitico que presiona al NQ a la baja.",
+  "petroleo": "El Brent sube cerca de 0.75% hasta ~115.74 USD/barril y el WTI ronda los ~102.72 USD, impulsados por los ataques hutíes a instalaciones petroleras saudíes, con el crudo camino a cerrar octubre con fuertes alzas mensuales, un viento en contra para el NQ por presion inflacionaria.",
+  "catalizador": "Los futuros del Nasdaq operan mixtos/a la baja tras los resultados de Amazon e Intel, mientras el hackeo de 6.3 mil millones de USD a Binance -el mayor robo cripto registrado- dispara una ola de aversion al riesgo que contagia el sentimiento tech.",
   "sources": [
-    "CNBC 30 oct 2026 - Binance hack rattles crypto markets",
-    "Axios 29 oct 2026 - Binance halts trading after biggest-ever crypto hack",
-    "CoinDesk 30 oct 2026 - $1.57B en liquidaciones tras hackeo a Binance",
-    "CNBC TV18 30 oct 2026 - US stock futures fall after weak Amazon, Intel outlooks",
-    "HDFC Sky/Reuters 30 oct 2026 - Brent sobre 116 USD, WTI sobre 103 USD por ataques hutíes",
-    "ABC News 30 oct 2026 - Crypto assets lose value after major global attack"
+    "CNBC 2026-10-30 (oil/Houthi attacks)",
+    "Business Standard/Reuters 2026-10-30 (oil prices)",
+    "WSJ via Hromadske 2026-10-28 (US warns Gulf states on Iran)",
+    "Benzinga 2026-10-30 (Dow/S&P/Nasdaq futures, AMZN/INTC)",
+    "CNBC 2026-10-30 (Binance hack, Bitcoin/Ether)",
+    "CoinDesk 2026-10-30 (Binance hack liquidations)"
   ],
-  "as_of": "2026-10-30T15:56:15Z"
+  "as_of": "2026-10-30T16:07:29Z"
 }
