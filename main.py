@@ -7617,15 +7617,21 @@ def _email_shell(titulo, cuerpo_html, cta_text=None, cta_url=None):
                f'<a href="{cta_url}" style="display:inline-block;padding:14px 28px;color:#05060C;'
                f'text-decoration:none;font-weight:700;font-family:Arial,Helvetica,sans-serif;font-size:15px;'
                f'border-radius:10px;">{cta_text}</a></td></tr></table>')
-    return (f'<div style="background:#0B0B12;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">'
-            f'<div style="max-width:520px;margin:0 auto;background:#12121C;border:1px solid rgba(204,169,79,0.25);'
-            f'border-radius:16px;padding:32px;">'
+    # Estructura de TABLA con bgcolor (no <div style=background>): Gmail/Outlook, incl. modo oscuro,
+    # le quitan el background a un <div> suelto y el correo quedaba plano, sin la tarjeta azulada.
+    # El bgcolor de un <td>/<table> sí sobrevive → se recupera el fondo #0B0B12 + tarjeta #12121C.
+    return (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0B0B12" '
+            f'style="background-color:#0B0B12;margin:0;padding:0;width:100%;"><tr>'
+            f'<td align="center" style="padding:32px 12px;">'
+            f'<table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" bgcolor="#12121C" '
+            f'style="background-color:#12121C;max-width:520px;width:100%;border:1px solid rgba(204,169,79,0.25);border-radius:16px;">'
+            f'<tr><td style="padding:32px;font-family:Arial,Helvetica,sans-serif;">'
             f'<div style="font-family:Georgia,serif;font-size:24px;color:#CCA94F;margin-bottom:6px;">Liberato Community</div>'
             f'<h1 style="color:#F2EFE8;font-size:20px;margin:14px 0;">{titulo}</h1>'
             f'<div style="color:#C9C6BE;font-size:15px;line-height:1.6;">{cuerpo_html}</div>{cta}'
             f'<div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;'
             f'color:#7A7870;font-size:12px;">Recibiste este correo porque creaste una cuenta en Liberato Community.</div>'
-            f'</div></div>')
+            f'</td></tr></table></td></tr></table>')
 
 async def _send_email(to, subject, html, reply_to=None, list_unsub=False):
     """Envía un correo transaccional (no bloqueante). reply_to = correo al que
