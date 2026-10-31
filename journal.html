@@ -1973,6 +1973,15 @@ function lbcApi(path, body){
   return fetch(LBC_AUTH+path,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)})
     .then(function(r){return r.json().catch(function(){return {};}).then(function(d){ if(!r.ok) throw new Error(d.detail||'Error'); return d; }); });
 }
+// jbFetch: fetch para broker/coach que SIEMPRE manda el JWT en el header. FIX auditoría: el backend exige
+// el token en Authorization (no app_user_id), así que sin esto /api/broker/* y /api/journal/coach daban 401 a TODOS.
+function jbFetch(u, o){
+  o = o || {};
+  var h = o.headers || {};
+  try{ h['Authorization'] = 'Bearer ' + (localStorage.getItem('lbc_token')||''); }catch(e){}
+  o.headers = h;
+  return fetch(u, o);
+}
 function pdMsg(id,text,ok){var e=document.getElementById(id);if(!e)return;e.textContent=text;e.className='pd-msg '+(ok?'ok':'err');}
 function pdSyncLang(){var cur='es';try{cur=localStorage.getItem('lbc_lang')||'es';}catch(e){}var es=document.getElementById('pd-lang-es'),en=document.getElementById('pd-lang-en');if(es)es.classList.toggle('active',cur==='es');if(en)en.classList.toggle('active',cur==='en');}
 function openProfileDrawer(){
@@ -2889,7 +2898,7 @@ function migrateAnonToUser(){
       try{var src=localStorage.getItem(b+'::'+anon);
         if(src!=null && localStorage.getItem(b+'::'+stable)==null)localStorage.setItem(b+'::'+stable,src);}catch(e){}
     });
-    try{fetch(JOURNAL_BACKEND+'/api/broker/tradestation/claim?from_uid='+encodeURIComponent(anon)+'&app_user_id='+encodeURIComponent(stable)).catch(function(){});}catch(e){}
+    try{jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/claim?from_uid='+encodeURIComponent(anon)+'&app_user_id='+encodeURIComponent(stable)).catch(function(){});}catch(e){}
     try{localStorage.setItem(flag,'1');}catch(e){}
   }catch(e){}
 }
@@ -3108,7 +3117,7 @@ function setAcctSize(v){try{if(v>0)localStorage.setItem(userKey('lbc_acct_size')
 // había caído a '$' por falta de tamaño, la restaura ahora que ya hay equity real.
 function syncBalances(){
   try{
-    fetch(JOURNAL_BACKEND+'/api/broker/tradestation/balances?app_user_id='+encodeURIComponent(currentUserId()))
+    jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/balances?app_user_id='+encodeURIComponent(currentUserId()))
       .then(function(r){return r.json();})
       .then(function(d){
         if(d&&d.ok&&d.balances&&Object.keys(d.balances).length){
@@ -3479,7 +3488,7 @@ function renderDashAI(){
   _dashCoachSig=sig;
   el.innerHTML=head+'<div class="acc-text"><span class="ai-spinner"></span> Analizando '+FT.length+' trade'+(FT.length!==1?'s':'')+' del periodo…</div>'+btn;
   var q='Analiza EXCLUSIVAMENTE los trades de este periodo (ver context, incluye el rango de fechas) y dame la recomendación más importante y accionable para mejorar mi trading. Máximo 2-4 frases, concreto, en español, sin saludos ni preámbulos.';
-  fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
+  jbFetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({question:q,context:dashCoachContext(FT,_dfShared),app_user_id:currentUserId()})})
     .then(function(r){return r.json();})
     .then(function(d){
@@ -4052,7 +4061,7 @@ function twsExtractLevels(dataUrl, manual){
   // AbortController: la IA (Gemini 3.x) piensa; peor caso ~90s. No dejamos al usuario colgado.
   var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
   var to=ctrl?setTimeout(function(){try{ctrl.abort();}catch(e){}},95000):null;
-  return fetch(JOURNAL_BACKEND+'/api/journal/extract-levels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl}),signal:ctrl?ctrl.signal:undefined})
+  return jbFetch(JOURNAL_BACKEND+'/api/journal/extract-levels',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:dataUrl}),signal:ctrl?ctrl.signal:undefined})
     .then(function(r){return r.json();})
     .then(function(d){
       if(to){clearTimeout(to);to=null;}
@@ -5654,7 +5663,7 @@ function connectBroker(broker){
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Conectando…</div>';
   // TradeStation DIRECTO (OAuth propio) — trae FUTUROS que SnapTrade no expone.
   if(broker==='tradestation'){
-    fetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?app_user_id='+encodeURIComponent(currentUserId()))
+    jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?app_user_id='+encodeURIComponent(currentUserId()))
       .then(function(r){return r.json();})
       .then(function(d){
         if(d.configured&&d.auth_url){ window.location.href=d.auth_url; }  // redirige al login de TradeStation
@@ -5666,7 +5675,7 @@ function connectBroker(broker){
   // SnapTrade (portal multi-broker; incluye Tradovate y prop firms). app_user_id
   // identifica al estudiante en modo commercial (en personal se ignora).
   var body={app_user_id:currentUserId()};
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/portal',{
+  jbFetch(JOURNAL_BACKEND+'/api/broker/snaptrade/portal',{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
     .then(function(r){return r.json();})
     .then(function(d){
@@ -5865,11 +5874,11 @@ function fetchAccountsMap(){
   var m={};try{m=acctMap()||{};}catch(e){m={};}
   function persist(){try{localStorage.setItem(userKey('lbc_accounts'),JSON.stringify(m));}catch(e){}try{renderTrAccounts();}catch(e){}}
   // SnapTrade (acciones/opciones)
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){if(d&&d.ok)(d.accounts||[]).forEach(function(a){if(a.number)m[String(a.number)]={name:a.name,institution:a.institution};});persist();}).catch(function(){});
   // TradeStation directo (incluye futuros)
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/accounts?app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/accounts?app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){var arr=(d&&(d.accounts||d.Accounts))||[];arr.forEach(function(a){var num=a.number||a.AccountID||a.account;if(num)m[String(num)]={name:a.name||('TradeStation '+(a.AccountType||a.type||'')).trim(),institution:'TradeStation'};});persist();}).catch(function(){});
 }
@@ -5880,7 +5889,7 @@ function syncFills(force){
   // force=1 → el backend empuja a SnapTrade a re-sincronizar con el broker ANTES de
   // leer (RESYNC). Sin esto, SnapTrade devuelve lo cacheado y un trade recién hecho
   // puede no aparecer. Aun forzando, el broker puede tardar unos segundos.
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120'+(force?'&refresh=1':'')+'&app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/snaptrade/fills?days=120'+(force?'&refresh=1':'')+'&app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar.')+'</div>';return;}
@@ -5902,7 +5911,7 @@ function syncFills(force){
 // Usa el redirect localhost pre-aprobado; el usuario copia el code de la URL y lo pega.
 function connectTradestationManual(){
   var st=document.getElementById('broker-status');
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?manual=1&app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/connect?manual=1&app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();}).then(function(d){
       if(!d||!d.configured||!d.auth_url){if(st)st.innerHTML='<div style="font-size:11px;color:var(--gold);">'+_esc((d&&d.message)||'No disponible')+'</div>';return;}
       window.open(d.auth_url,'_blank','noopener');
@@ -5918,7 +5927,7 @@ function submitTradestationCode(){
   var v=(document.getElementById('ts-code')||{}).value||''; var st=document.getElementById('broker-status');
   if(!v.trim()){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">Pega la URL o el código.</div>';return;}
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Canjeando código…</div>';
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_user_id:currentUserId(),code:v.trim()})})
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_user_id:currentUserId(),code:v.trim()})})
     .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
     .then(function(x){
       if(x.ok&&x.j&&x.j.ok){if(st)st.innerHTML='<div style="font-size:12px;color:var(--green);">✓ TradeStation conectado. Sincronizando futuros…</div>';try{updateBrokerButtons();refreshTsState();syncTradestation();}catch(e){}}
@@ -5932,7 +5941,7 @@ function syncAllBrokers(force){ try{syncTradestation();}catch(e){} try{syncBalan
 // "✓ Conectado · Desconectar" en vez de ofrecer conectar de nuevo.
 function refreshTsState(){
   var slot=document.getElementById('ts-connect-slot'); if(!slot)return;
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){
       if(d&&d.connected){
@@ -5952,7 +5961,7 @@ function disconnectTradestation(){
     onYes:function(){
       var st=document.getElementById('broker-status');
       if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;"><span class="ai-spinner"></span> Desconectando…</div>';
-      fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
+      jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'})
         .then(function(r){return r.json();})
         .then(function(){ refreshTsState();try{updateBrokerButtons();}catch(e){} if(st)st.innerHTML='<div style="font-size:11.5px;color:var(--text2);">TradeStation desconectado. Tus trades ya importados se conservan.</div>'; })
         .catch(function(){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;text-align:center;">No se pudo desconectar.</div>';});
@@ -6001,10 +6010,10 @@ function updateBrokerButtons(){
   // Rehidrata contra el backend, que PERSISTE la conexión: TradeStation (token) y
   // SnapTrade (usuario/cuentas registradas). Si cualquiera responde conectado, se
   // marca CONECTADO de forma durable y ya no se vuelve a pedir conexión.
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+uid)
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+uid)
     .then(function(r){return r.json();})
     .then(function(d){ if(d&&d.connected){_setBrokerConnFlag(true);_applyBrokerBtn(true);try{refreshBrokerSyncRow();}catch(e){}} }).catch(function(){});
-  fetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+uid)
+  jbFetch(JOURNAL_BACKEND+'/api/broker/snaptrade/accounts?app_user_id='+uid)
     .then(function(r){return r.json();})
     .then(function(d){ if(d&&d.ok&&d.accounts&&d.accounts.length){_setBrokerConnFlag(true);_applyBrokerBtn(true);try{refreshBrokerSyncRow();}catch(e){}} }).catch(function(){});
 }
@@ -6034,7 +6043,7 @@ function brokerBtnDisconnect(){
     okText:'Desconectar y resetear',cancelText:'Cancelar',danger:true,
     onYes:function(){
       // Borra tokens en el servidor (TradeStation) y limpia los marcadores locales.
-      fetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
+      jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/disconnect?app_user_id='+encodeURIComponent(currentUserId()),{method:'POST'}).catch(function(){});
       try{localStorage.removeItem(userKey('lbc_accounts'));}catch(e){}
       try{localStorage.removeItem(userKey('lbc_broker_fills'));}catch(e){}
       _setBrokerConnFlag(false);            // "Desconectar" es la ÚNICA forma de perder la conexión
@@ -6050,7 +6059,7 @@ function brokerBtnDisconnect(){
 function syncTradestation(){
   var st=document.getElementById('broker-status');
   if(st)st.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;font-family:\'DM Mono\',monospace;"><span class="ai-spinner"></span> Sincronizando TradeStation (futuros)…</div>';
-  fetch(JOURNAL_BACKEND+'/api/broker/tradestation/fills?days=120&app_user_id='+encodeURIComponent(currentUserId()))
+  jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/fills?days=120&app_user_id='+encodeURIComponent(currentUserId()))
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d.ok){if(st)st.innerHTML='<div style="font-size:11px;color:#ef4444;">'+_esc(d.detail||'No se pudo sincronizar TradeStation.')+'</div>';return;}
@@ -6077,7 +6086,7 @@ function openCsvImport(){
   if(sr){
     var connected=false; try{connected=_hasLocalBroker();}catch(e){}
     sr.style.display=connected?'block':'none';
-    fetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
+    jbFetch(JOURNAL_BACKEND+'/api/broker/tradestation/status?app_user_id='+encodeURIComponent(currentUserId()))
       .then(function(r){return r.json();}).then(function(d){if(d&&d.connected)sr.style.display='block';}).catch(function(){});
   }
 }
@@ -6154,7 +6163,7 @@ function analyzeCsvWithAI(sample, totalRows, fullText){
 
   // El parseo con IA se hace en el BACKEND (la key vive en el servidor, nunca en
   // el navegador). Antes esto llamaba a api.anthropic.com sin key -> 401 + CORS.
-  fetch(JOURNAL_BACKEND+'/api/journal/parse-csv',{
+  jbFetch(JOURNAL_BACKEND+'/api/journal/parse-csv',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({sample:sample,totalRows:totalRows})
@@ -6331,7 +6340,7 @@ function sendAIMsg(){
   var inp=document.getElementById('acm-input'),msg=inp.value.trim();if(!msg)return;
   inp.value='';addChatMsg('user',_esc(msg));chatHistory.push({role:'user',content:msg});
   var sendBtn=document.getElementById('acm-send');sendBtn.disabled=true;sendBtn.textContent='...';
-  fetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
+  jbFetch(JOURNAL_BACKEND+'/api/journal/coach',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({question:msg,context:coachContext(),app_user_id:currentUserId()})})
   .then(function(r){return r.json();})
   .then(function(d){var ok=(d&&d.ok&&d.answer);var reply=ok?d.answer:genFallbackReply(msg);chatHistory.push({role:'assistant',content:reply});addChatMsg('ai',ok?_esc(reply):reply);sendBtn.disabled=false;sendBtn.innerHTML='&rsaquo;';})
