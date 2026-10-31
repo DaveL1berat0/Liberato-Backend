@@ -574,8 +574,11 @@ async function loadAccount(goDash){
       document.getElementById('upgrade-box').style.display = 'none';
       document.getElementById('platform-access').style.display = 'block';
       if(u.plan_expires){
+        // plan_expires llega en SEGUNDOS epoch; Date() espera milisegundos → *1000
+        // (si viniera ya en ms, >10^12, no lo multiplicamos para no desbordar)
+        var _pe = Number(u.plan_expires);
+        var d = new Date(_pe > 1e11 ? _pe : _pe * 1000);
         document.getElementById('acct-expires-row').style.display = 'flex';
-        var d = new Date(u.plan_expires);
         document.getElementById('acct-expires').textContent = d.toLocaleDateString(state.lang==='es'?'es-ES':'en-US', {day:'numeric',month:'short',year:'numeric'});
       }
     } else {

@@ -1267,6 +1267,13 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <script>
 var LBC_AUTH='https://web-production-33671.up.railway.app';
 function lbcLogout(){
+  // Avisa al backend para LIBERAR el slot de dispositivo (jti) antes de salir.
+  // keepalive:true deja que la petición sobreviva a la redirección.
+  var _t=''; try{_t=localStorage.getItem('lbc_token')||'';}catch(e){}
+  try{
+    fetch(LBC_AUTH+'/api/auth/logout',{method:'POST',keepalive:true,
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_t},body:'{}'}).catch(function(){});
+  }catch(e){}
   try{
     localStorage.removeItem('lbc_token');
     localStorage.removeItem('lbc_session');
@@ -1290,7 +1297,7 @@ function openProfileDrawer(){
   var plan=(s&&s.plan)||'';
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
-  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Premium 👑':(plan?'Comunidad Libre':'—');
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo 👑':(plan?'Comunidad Libre':'—');
   ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
   lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
@@ -1307,7 +1314,7 @@ function openProfileDrawer(){
         if(!u)return;
         if(pn&&u.name)pn.textContent=u.name;
         if(pe&&u.email)pe.textContent=u.email;
-        if(pp)pp.textContent=u.is_premium?'Acceso Premium 👑':'Comunidad Libre';
+        if(pp)pp.textContent=u.is_premium?'Acceso Completo 👑':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
         var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
         lbcApplyAvatar(av||null,(u.name||nm));

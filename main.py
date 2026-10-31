@@ -7306,11 +7306,13 @@ def _make_jwt(payload, days=30):
     sig = _b64u(hmac.new(AUTH_SECRET.encode(), seg.encode(), hashlib.sha256).digest())
     return seg + "." + sig
 
-# ── SESIONES / LÍMITE DE DISPOSITIVOS (Fase 2, Dave: 2 dispositivos, expulsa el más viejo) ──
+# ── SESIONES / LÍMITE DE DISPOSITIVOS (Fase 2, Dave 31-oct: 1 sesión por cuenta) ──
 # Las sesiones activas de cada cuenta viven en app_config bajo 'sessions:<email>' (sin
 # migración de tabla). Cada login/verify emite un token con 'jti' y registra la sesión;
-# si ya hay 2, se descarta la MÁS ANTIGUA. El gate valida que el jti del token siga vivo.
-LBC_MAX_DEVICES = 2
+# si ya hay 1, se descarta la MÁS ANTIGUA → al entrar en un 2º dispositivo (mismo IP o no)
+# el 1º se desconecta al instante. El gate valida que el jti del token siga vivo.
+# NO se bloquea por IP entre cuentas distintas (evita tumbar a clientes que comparten WiFi).
+LBC_MAX_DEVICES = 1
 async def _sessions_get(email):
     try:
         raw = await _sb_get_config("sessions:" + (email or "").lower())
@@ -11176,6 +11178,46 @@ async def waitlist_join(request: Request):
         except Exception:
             pass
     return {"ok": True, "new": is_new}
+
+
+@app.get("/api/admin/waitlist")
+async def admin_waitlist_export(key: str = "", format: str = "json"):
+    """Lista/exporta la lista de espera (Supabase). Read-only, protegido con ADMIN_KEY.
+    Uso: /api/admin/waitlist?key=<ADMIN_KEY>  (añade &format=csv para descargar CSV).
+    Sirve para avisar a TODOS los inscritos cuando abra el lanzamiento."""
+    if not hmac.compare_digest(key or "", ADMIN_KEY):
+        raise HTTPException(403, "Clave incorrecta")
+    if not _sb_on():
+        raise HTTPException(503, "Supabase no configurado")
+    try:
+        async with httpx.AsyncClient(timeout=15) as c:
+            r = await c.get(f"{SUPABASE_URL}/rest/v1/waitlist",
+                            params={"select": "*"}, headers=_sb_h())
+        if r.status_code >= 300:
+            raise HTTPException(502, f"supabase {r.status_code}: {r.text[:160]}")
+        rows = r.json()
+        if not isinstance(rows, list):
+            rows = []
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f"No se pudo leer la lista: {e}")
+    # Orden más nuevo→viejo si hay created_at; si no, por correo.
+    try:
+        rows.sort(key=lambda x: (x.get("created_at") or ""), reverse=True)
+    except Exception:
+        pass
+    if (format or "").lower() == "csv":
+        import io as _io, csv as _csv
+        from fastapi.responses import PlainTextResponse
+        buf = _io.StringIO()
+        w = _csv.writer(buf)
+        w.writerow(["email", "source", "created_at"])
+        for row in rows:
+            w.writerow([row.get("email", ""), row.get("source", ""), row.get("created_at", "")])
+        return PlainTextResponse(buf.getvalue(), media_type="text/csv",
+                                 headers={"Content-Disposition": "attachment; filename=waitlist.csv"})
+    return {"ok": True, "count": len(rows), "waitlist": rows}
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -14,9 +14,13 @@
   var token=''; try{token=localStorage.getItem('lbc_token')||'';}catch(e){}
   if(!token){ showPaywall(); return; }
   fetch(BACKEND+'/api/auth/me',{headers:{'Authorization':'Bearer '+token}})
-    .then(function(r){return r.ok?r.json():null;})
-    .then(function(d){ if(!(d&&d.is_premium)) showPaywall(); })
-    .catch(function(){ showPaywall(); });
+    .then(function(r){ if(r.status===401||r.status===403){ showPaywall(); return null; } return r.ok?r.json():'neterr'; })
+    .then(function(d){ if(d==='neterr'){ if(!_lbcCachedPrem()) showPaywall(); return; } if(d && !d.is_premium){ showPaywall(); } })
+    .catch(function(){ if(!_lbcCachedPrem()) showPaywall(); });
+  // Fail-open ante 500/red transitorio: NO expulsar a un premium ya confirmado en caché.
+  // Solo 401/403 (auth real) o ausencia de caché-premium muestran el paywall. El backend
+  // vuelve a validar cada endpoint server-side, así que esto no es un bypass del muro.
+  function _lbcCachedPrem(){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');return !!(s&&s.is_premium===true);}catch(e){return false;} }
 })();
 
 function lbcToggleAdmin(){ window.location.href='auth.html'; }
@@ -1960,6 +1964,13 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <script>
 var LBC_AUTH='https://web-production-33671.up.railway.app';
 function lbcLogout(){
+  // Avisa al backend para LIBERAR el slot de dispositivo (jti) antes de salir.
+  // keepalive:true deja que la petición sobreviva a la redirección.
+  var _t=''; try{_t=localStorage.getItem('lbc_token')||'';}catch(e){}
+  try{
+    fetch(LBC_AUTH+'/api/auth/logout',{method:'POST',keepalive:true,
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_t},body:'{}'}).catch(function(){});
+  }catch(e){}
   try{
     localStorage.removeItem('lbc_token');
     localStorage.removeItem('lbc_session');
@@ -1992,7 +2003,7 @@ function openProfileDrawer(){
   var plan=(s&&s.plan)||'';
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
-  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Premium 👑':(plan?'Comunidad Libre':'—');
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo 👑':(plan?'Comunidad Libre':'—');
   ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
   lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
@@ -2009,7 +2020,7 @@ function openProfileDrawer(){
         if(!u)return;
         if(pn&&u.name)pn.textContent=u.name;
         if(pe&&u.email)pe.textContent=u.email;
-        if(pp)pp.textContent=u.is_premium?'Acceso Premium 👑':'Comunidad Libre';
+        if(pp)pp.textContent=u.is_premium?'Acceso Completo 👑':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
         var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
         lbcApplyAvatar(av||null,(u.name||nm));

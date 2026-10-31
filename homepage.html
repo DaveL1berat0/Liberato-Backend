@@ -1743,7 +1743,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <div class="modal-field"><label class="modal-label" for="m-pass">Contraseña</label><input class="modal-input" id="m-pass" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/></div>
       <div id="modal-reg-err" style="font-size:11px;color:#ef4444;min-height:16px;margin-bottom:6px;font-family:monospace;"></div>
       <button class="modal-btn" onclick="handleSubmit()">Crear mi cuenta gratis &#8594;</button>
-      <p class="modal-privacy">Sin spam. Cancela cuando quieras. <span style="color:rgba(201,168,76,0.4);">|</span> <span style="cursor:pointer;color:rgba(201,168,76,0.55);" onclick="closeModal();openLoginModal();">Ya tengo cuenta →</span></p>
+      <p class="modal-privacy">Al crear tu cuenta aceptas las <a href="politicas.html" target="_blank" rel="noopener" style="color:rgba(201,168,76,0.75);text-decoration:underline;" data-es="Políticas y avisos legales" data-en="Policies &amp; legal">Políticas y avisos legales</a>. Sin spam, cancela cuando quieras. <span style="color:rgba(201,168,76,0.4);">|</span> <span style="cursor:pointer;color:rgba(201,168,76,0.55);" onclick="closeModal();openLoginModal();">Ya tengo cuenta →</span></p>
     </div>
     <div class="modal-success" id="modal-success">
       <div class="modal-success-icon" style="font-size:24px;color:#C9A84C;">&#10003;</div>
@@ -2097,23 +2097,24 @@ async function handleSubmit(){
     document.getElementById('m-name').style.borderColor=!name?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
     document.getElementById('m-email').style.borderColor=!email?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
     document.getElementById('m-pass').style.borderColor=!pass?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
-    if(errEl)errEl.textContent='Completa todos los campos.';
+    if(errEl){errEl.style.color='#ef4444';errEl.textContent='Completa todos los campos.';}
     return;
   }
   if(pass.length<8){
     document.getElementById('m-pass').style.borderColor='rgba(220,80,80,0.5)';
-    if(errEl)errEl.textContent='La contraseña debe tener al menos 8 caracteres.';
+    if(errEl){errEl.style.color='#ef4444';errEl.textContent='La contraseña debe tener al menos 8 caracteres.';}
     return;
   }
-  if(errEl)errEl.textContent='Creando tu cuenta…';
+  if(errEl){errEl.style.color='rgba(239,236,227,0.6)';errEl.textContent='Creando tu cuenta…';}  // progreso en tono neutro, no rojo de error
   try{
     var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
+    var _lang=''; try{_lang=(localStorage.getItem('lbc_lang')||'es');}catch(e){_lang='es';}  // idioma actual → correos/UI del usuario
     var r=await fetch(LBC_AUTH+'/api/auth/register',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:name,email:email,password:pass,trial_code:_trial})});
+      body:JSON.stringify({name:name,email:email,password:pass,trial_code:_trial,language:_lang})});
     var d=await r.json().catch(function(){return {};});
     if(!r.ok){
-      if(errEl)errEl.textContent=d.detail||'No se pudo crear la cuenta.';
+      if(errEl){errEl.style.color='#ef4444';errEl.textContent=d.detail||'No se pudo crear la cuenta.';}
       document.getElementById('m-email').style.borderColor='rgba(220,80,80,0.5)';
       return;
     }
@@ -2309,7 +2310,7 @@ function openProfileDrawer(){
   var plan=(s&&s.plan)||'';
   var pn=document.getElementById('pd-name'),pe=document.getElementById('pd-email'),pp=document.getElementById('pd-plan');
   if(pn)pn.textContent=nm; if(pe)pe.textContent=em;
-  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Premium 👑':(plan?'Comunidad Libre':'—');
+  if(pp)pp.textContent=(plan==='pro'||plan==='premium'||plan==='admin')?'Acceso Completo 👑':(plan?'Comunidad Libre':'—');
   ['pd-lang-msg','pd-pw-msg','pd-em-msg','pd-avatar-msg'].forEach(function(id){var e=document.getElementById(id);if(e){e.textContent='';e.className='pd-msg';}});
   pdSyncLang();
   lbcApplyAvatar(lbcAvatarFromSession(), nm);   // pinta la foto cacheada al instante
@@ -2326,7 +2327,7 @@ function openProfileDrawer(){
         if(!u)return;
         if(pn&&u.name)pn.textContent=u.name;
         if(pe&&u.email)pe.textContent=u.email;
-        if(pp)pp.textContent=u.is_premium?'Acceso Premium 👑':'Comunidad Libre';
+        if(pp)pp.textContent=u.is_premium?'Acceso Completo 👑':'Comunidad Libre';
         if(u.language){try{localStorage.setItem('lbc_lang',u.language);}catch(e){}pdSyncLang();}
         var av=(u.avatar!==undefined?u.avatar:(u.user&&u.user.avatar));
         lbcApplyAvatar(av||null,(u.name||nm));
@@ -2545,6 +2546,13 @@ window.profileSetLang=profileSetLang; window.profileChangePassword=profileChange
 
 // Cierra sesión: limpia el token y las claves de sesión, y recarga la home.
 function lbcLogout(){
+  // Avisa al backend para LIBERAR el slot de dispositivo (jti) antes de salir.
+  // keepalive:true deja que la petición sobreviva a la redirección.
+  var _t=''; try{_t=localStorage.getItem('lbc_token')||'';}catch(e){}
+  try{
+    fetch(LBC_AUTH+'/api/auth/logout',{method:'POST',keepalive:true,
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_t},body:'{}'}).catch(function(){});
+  }catch(e){}
   try{
     localStorage.removeItem('lbc_token');
     localStorage.removeItem('lbc_session');
