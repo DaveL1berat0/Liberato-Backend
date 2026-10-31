@@ -1743,7 +1743,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <div class="modal-field"><label class="modal-label" for="m-pass">Contraseña</label><input class="modal-input" id="m-pass" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/></div>
       <div id="modal-reg-err" style="font-size:11px;color:#ef4444;min-height:16px;margin-bottom:6px;font-family:monospace;"></div>
       <button class="modal-btn" onclick="handleSubmit()">Crear mi cuenta gratis &#8594;</button>
-      <p class="modal-privacy">Al crear tu cuenta aceptas las <a href="politicas.html" target="_blank" rel="noopener" style="color:rgba(201,168,76,0.75);text-decoration:underline;" data-es="Políticas y avisos legales" data-en="Policies &amp; legal">Políticas y avisos legales</a>. Sin spam, cancela cuando quieras. <span style="color:rgba(201,168,76,0.4);">|</span> <span style="cursor:pointer;color:rgba(201,168,76,0.55);" onclick="closeModal();openLoginModal();">Ya tengo cuenta →</span></p>
+      <p class="modal-privacy">Al crear tu cuenta aceptas las <a href="politicas.html" target="_blank" rel="noopener" style="color:rgba(201,168,76,0.75);text-decoration:underline;">Políticas y avisos legales</a>. <span>Sin spam. Cancela cuando quieras.</span> <span style="color:rgba(201,168,76,0.4);">|</span> <span style="cursor:pointer;color:rgba(201,168,76,0.55);" onclick="closeModal();openLoginModal();">Ya tengo cuenta →</span></p>
     </div>
     <div class="modal-success" id="modal-success">
       <div class="modal-success-icon" style="font-size:24px;color:#C9A84C;">&#10003;</div>
@@ -2097,15 +2097,15 @@ async function handleSubmit(){
     document.getElementById('m-name').style.borderColor=!name?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
     document.getElementById('m-email').style.borderColor=!email?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
     document.getElementById('m-pass').style.borderColor=!pass?'rgba(220,80,80,0.5)':'rgba(201,168,76,0.25)';
-    if(errEl){errEl.style.color='#ef4444';errEl.textContent='Completa todos los campos.';}
+    if(errEl){errEl.style.color='#ef4444';errEl.textContent=lbcT('Completa todos los campos.');}
     return;
   }
   if(pass.length<8){
     document.getElementById('m-pass').style.borderColor='rgba(220,80,80,0.5)';
-    if(errEl){errEl.style.color='#ef4444';errEl.textContent='La contraseña debe tener al menos 8 caracteres.';}
+    if(errEl){errEl.style.color='#ef4444';errEl.textContent=lbcT('La contraseña debe tener al menos 8 caracteres.');}
     return;
   }
-  if(errEl){errEl.style.color='rgba(239,236,227,0.6)';errEl.textContent='Creando tu cuenta…';}  // progreso en tono neutro, no rojo de error
+  if(errEl){errEl.style.color='rgba(239,236,227,0.6)';errEl.textContent=lbcT('Creando tu cuenta…');}  // progreso en tono neutro, no rojo de error
   try{
     var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
     var _lang=''; try{_lang=(localStorage.getItem('lbc_lang')||'es');}catch(e){_lang='es';}  // idioma actual → correos/UI del usuario
@@ -2114,7 +2114,7 @@ async function handleSubmit(){
       body:JSON.stringify({name:name,email:email,password:pass,trial_code:_trial,language:_lang})});
     var d=await r.json().catch(function(){return {};});
     if(!r.ok){
-      if(errEl){errEl.style.color='#ef4444';errEl.textContent=d.detail||'No se pudo crear la cuenta.';}
+      if(errEl){errEl.style.color='#ef4444';errEl.textContent=d.detail||lbcT('No se pudo crear la cuenta.');}
       document.getElementById('m-email').style.borderColor='rgba(220,80,80,0.5)';
       return;
     }
@@ -2986,12 +2986,12 @@ function submitNewsletter(){
   var email=document.getElementById('nl-email').value.trim();
   var msg=document.getElementById('nl-msg');
   if(!email||!email.includes('@')||!email.includes('.')){
-    msg.style.color='#FF6B81';msg.textContent='Por favor ingresa un correo válido.';return;
+    msg.style.color='#FF6B81';msg.textContent=lbcT('Por favor ingresa un correo válido.');return;
   }
   // Guarda localmente + envía al backend de soporte (mismo endpoint que Contacto)
   var subs=JSON.parse(localStorage.getItem('lbc_subs')||'[]');
   if(!subs.includes(email)){subs.push(email);localStorage.setItem('lbc_subs',JSON.stringify(subs));}
-  msg.style.color='rgba(239,236,227,0.55)';msg.textContent='Enviando…';
+  msg.style.color='rgba(239,236,227,0.55)';msg.textContent=lbcT('Enviando…');
   // FIX auditoría: antes faltaba el campo 'email' -> el backend devolvía 400 y se perdían TODOS los leads;
   // y el éxito se pintaba SIEMPRE (mensaje falso). Ahora enviamos payload válido y confirmamos con r.ok.
   // Lista de espera: se guarda en Supabase y el usuario recibe correo de confirmación (/api/waitlist).
@@ -3007,12 +3007,12 @@ function submitNewsletter(){
     document.getElementById('nl-form').innerHTML=
       '<div style="text-align:center;padding:20px 0;">'+
       '<div style="font-size:36px;margin-bottom:12px;">✅</div>'+
-      '<div style="color:#2EE8A4;font-size:16px;font-weight:600;margin-bottom:8px;">¡Listo! Ya estás en la lista.</div>'+
-      '<div style="color:rgba(239,236,227,0.5);font-size:12px;">Te enviamos la confirmación a <strong style="color:#C9A84C;">'+email+'</strong> y te avisaremos cuando abramos.</div>'+
+      '<div style="color:#2EE8A4;font-size:16px;font-weight:600;margin-bottom:8px;">'+lbcT('¡Listo! Ya estás en la lista.')+'</div>'+
+      '<div style="color:rgba(239,236,227,0.5);font-size:12px;">'+lbcT('Te enviamos la confirmación a')+' <strong style="color:#C9A84C;">'+email+'</strong> '+lbcT('y te avisaremos cuando abramos.')+'</div>'+
       '</div>';
     setTimeout(closeNewsletter,3500);
   }).catch(function(){
-    msg.style.color='#FF6B81';msg.textContent='No se pudo registrar tu correo. Intenta de nuevo o escríbenos por WhatsApp.';
+    msg.style.color='#FF6B81';msg.textContent=lbcT('No se pudo registrar tu correo. Intenta de nuevo o escríbenos por WhatsApp.');
   });
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewsletter();});
@@ -3050,7 +3050,26 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Contraseña': 'Password',
     'Crear mi cuenta gratis →': 'Create my free account →',
     'Sin spam. Cancela cuando quieras.': 'No spam. Cancel anytime.',
+    'Al crear tu cuenta aceptas las': 'By creating your account you accept the',
+    'Políticas y avisos legales': 'Policies & legal',
+    '¿Ya tienes cuenta? Inicia sesión': 'Already have an account? Sign in',
+    'Tu cuenta está lista. Ya puedes iniciar sesión.': 'Your account is ready. You can now sign in.',
+    'Ir a mi cuenta →': 'Go to my account →',
+    '— Sesión del New York Market Open': '— New York Market Open session',
+    'Discord Premium con análisis del mercado y lecturas de Order Flow en tiempo real (educativo, sin señales)': 'Premium Discord with market analysis and real-time Order Flow reads (educational, no signals)',
+    'Período 2025–2026 · cuenta real, no simulada · el rendimiento pasado no garantiza resultados futuros.': 'Period 2025–2026 · real account, not simulated · past performance does not guarantee future results.',
     'Ya tengo cuenta →': 'I already have an account →',
+    '¿Aún no?': 'Not yet?',
+    'Completa todos los campos.': 'Complete all fields.',
+    'La contraseña debe tener al menos 8 caracteres.': 'Password must be at least 8 characters.',
+    'Creando tu cuenta…': 'Creating your account…',
+    'No se pudo crear la cuenta.': 'Could not create the account.',
+    'Enviando…': 'Sending…',
+    'Por favor ingresa un correo válido.': 'Please enter a valid email.',
+    'No se pudo registrar tu correo. Intenta de nuevo o escríbenos por WhatsApp.': 'We could not register your email. Try again or message us on WhatsApp.',
+    '¡Listo! Ya estás en la lista.': 'Done! You\'re on the list.',
+    'Te enviamos la confirmación a': 'We sent the confirmation to',
+    'y te avisaremos cuando abramos.': 'and we\'ll notify you when we open.',
     'Bienvenido.': 'Welcome.',
     'Ya eres parte de Liberato Community.': 'You\'re now part of Liberato Community.',
     'Revisa tu correo para el acceso.': 'Check your email for access.',
@@ -3155,6 +3174,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
   // Construir el diccionario inverso (inglés → español) para volver
   var reverse = {};
   for(var k in translations){ reverse[translations[k]] = k; }
+
+  // Helper para traducir mensajes que pone el JS dinámicamente (no pasan por el
+  // walker automático): devuelve la versión EN si el idioma activo es inglés.
+  window.lbcT = function(es){ try{ return (localStorage.getItem('lbc_lang') === 'en' && translations[es]) ? translations[es] : es; }catch(e){ return es; } };
 
   // Recorre los nodos de texto y traduce
   function translatePage(toLang){
