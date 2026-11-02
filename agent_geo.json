@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Los hutíes intensificaron ataques contra instalaciones petroleras sauditas (refinerías de Ras Tanura y Rabigh, planta de Abqaiq) e Irán denunció que varios petroleros fueron minados en el estrecho de Ormuz, elevando el riesgo de una respuesta militar de EEUU tras las elecciones de medio término, lo que presiona al NQ vía aversión al riesgo y temor a un shock de inflación por el crudo (CNBC, 30 oct).",
-  "petroleo": "El Brent cotiza en torno a 115 USD/barril y el WTI cerca de 102 USD, al alza en la apertura del viernes por los ataques hutíes a Arabia Saudita y el reclamo de minado en Ormuz, camino a un cuarto mes consecutivo de alzas (Brent +13%, WTI +15% en octubre), lo que eleva las expectativas de inflación y presiona al NQ a la baja (CNBC, 30 oct; Bloomberg 18:02 ET 29 oct).",
-  "catalizador": "La Fed mantuvo las tasas sin cambios el miércoles bajo el nuevo presidente Kevin Warsh y el mercado ya descuenta un escenario de tasas altas por más tiempo (oro en mínimo de un año), lo que limita el apetito por growth/tech y resta soporte al NQ (CNBC, 28-29 oct).",
+  "geopolitica": "Catar e Iran mantienen por tercer dia consecutivo conversaciones mediadas para poner fin a la guerra EEUU-Israel-Iran, sin acuerdo aun segun el canciller irani Araghchi, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ, con el mercado atento a un posible repunte de tension tras las elecciones de medio termino del martes.",
+  "petroleo": "El Brent cae cerca de 3% a unos 110 USD y el WTI baja alrededor de 3% a unos 101 USD por el optimismo generado por las negociaciones Iran-Catar, lo que alivia los costos energeticos y da soporte marginal a las tecnologicas del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.83% en el premarket del lunes de cara a las elecciones de medio termino del martes y los resultados de Apple tras el cierre de hoy, con el mercado tambien atento al informe de empleo de octubre que se publica el viernes.",
   "sources": [
-    "CNBC 30 oct 2026 (oil-rises-on-supply-concerns-as-houthis-attack-saudi-arabia)",
-    "CNBC 30 oct 2026 (iran-trump-hormuz-oil-middle-east)",
-    "Bloomberg 18:02 ET 29 oct 2026 (latest-oil-market-news-and-analysis-for-oct-30)",
-    "CNBC 29 oct 2026 (gold-slips-as-markets-assess-fed-signals-await-us-inflation-data)",
-    "CNBC 28 oct 2026 (oil-price-today-wti-brent-hormuz)"
+    "Reuters via Angel One/HDFC Sky - oil Iran-Qatar talks, 02-Nov",
+    "Reuters via Discovery Alert/Political Economist - oil Iran-Qatar talks, 02-Nov",
+    "Yahoo Finance - US stock futures premarket, 02-Nov",
+    "CNBC - stock market live updates, 02-Nov"
   ],
-  "as_of": "2026-10-30T21:07:52Z"
+  "as_of": "2026-11-02T11:07:52Z"
 }
