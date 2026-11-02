@@ -1,7 +1,11 @@
 {
-  "geopolitica": "El secretario de Estado Rubio dijo que Trump prefiere evitar la fuerza militar contra Iran, mientras Khamenei advirtio que Teheran respondera a cualquier amenaza, alimentando apuestas de desescalacion antes de las midterms y favoreciendo el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cae 7.7% a 104.66 USD y el WTI cae 7.3% a 96.50 USD al mediodia ET por esperanzas de diplomacia EEUU-Iran, aliviando presiones inflacionarias y dando soporte al NQ via expectativas de tasas mas bajas.",
-  "catalizador": "El ISM manufacturero de octubre sorprendio al alza en 55.5 frente a 54.5 esperado, dato que podria moderar apuestas de recorte de tasas y generar volatilidad de corto plazo en el NQ.",
-  "sources": ["CNBC 10:00 ET", "CNBC 12:00 ET"],
-  "as_of": "2026-11-02T18:16:14Z"
+  "geopolitica": "EEUU e Iran circulan un borrador para terminar la guerra tras la salida de negociadores iranies de Doha el 1-nov; Rubio dice que Trump prefiere una salida pacifica y no ha decidido atacar Iran, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ (CNBC, 02-nov).",
+  "petroleo": "Brent cae 7.47% a 104.96 USD/barril y WTI cae 7.2% a 96.62 USD/barril hacia las 12:24 ET por esperanzas de dialogo diplomatico EEUU-Iran, aliviando la presion inflacionaria y siendo positivo para el NQ intradia (CNBC/Oilprice.com, 02-nov 12:24 ET).",
+  "catalizador": "Mercados cautelosos de cara a las elecciones de medio termino del 3-nov, historicamente el periodo mas debil para acciones en anos de midterms, lo que puede limitar el upside del NQ en la sesion previa al voto (CNBC, 01-nov).",
+  "sources": [
+    "CNBC 12:24 ET",
+    "Oilprice.com 02-nov",
+    "CNBC 01-nov"
+  ],
+  "as_of": "2026-11-02T19:06:35Z"
 }
