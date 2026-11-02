@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Irán y Qatar reanudaron negociaciones para poner fin a la guerra EEUU-Irán tras conceder el líder supremo iraní 'ciertas facultades' de negociación al gobierno y circular un borrador de acuerdo; esto reduce la prima de riesgo geopolítico y favorece el apetito por riesgo en el NQ intradía (Reuters, 02-nov).",
-  "petroleo": "El Brent se desplomó un 7.47% (-8.47 USD) hasta 104.96 USD/barril hacia las 12:24 ET del lunes ante las expectativas de avance en las conversaciones de paz EEUU-Irán, lo que alivia los temores de inflación energética y actúa como viento de cola para el NQ (Reuters, 02-nov 12:24 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 operan con cautela de cara a las elecciones de medio término del 3-nov en EEUU y a la espera del informe de empleo (NFP) de esta semana, lo que mantiene a los operadores atentos al rumbo de la política de la Fed (FX Leaders, 01-nov).",
+  "geopolitica": "Señales de distensión diplomática entre EE.UU. e Irán (declaraciones de Rubio indicando que Trump prefiere terminar la guerra por vía pacífica) redujeron la prima de riesgo geopolítico, lo que favorece el apetito por riesgo en el NQ intradía.",
+  "petroleo": "WTI se desplomó cerca de -7.3% hasta ~96.5 USD/barril y Brent cayó a ~105-106 USD/barril tras las señales de acercamiento EE.UU.-Irán; la caída abrupta del crudo alivia presión inflacionaria y suele ser positivo para el NQ.",
+  "catalizador": "Rotación de capital fuera de tecnología: Nasdaq y S&P 500 revirtieron ganancias y cerraron en negativo (~-1%) lastrados por semiconductores, mientras el Dow subió ~0.4%; la debilidad de semis pesa directamente sobre el NQ.",
   "sources": [
-    "Reuters 12:24 ET",
-    "Reuters/Kitco 02-nov",
-    "FX Leaders 01-nov"
+    "Invezz 14:56 ET",
+    "OilPrice.com 14:56 ET",
+    "CNBC/Yahoo Finance 16:00 ET"
   ],
-  "as_of": "2026-11-02T20:07:29Z"
+  "as_of": "2026-11-02T21:06:19Z"
 }
