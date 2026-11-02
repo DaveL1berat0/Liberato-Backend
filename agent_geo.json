@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trascienden informes del WSJ y NYT de que EE.UU. prepara una posible accion militar contra Iran tras las elecciones de medio mandato del 3-nov, pese a que Washington y Teheran retoman contactos diplomaticos; el riesgo geopolitico latente limita el apetito por riesgo del NQ en el premarket.",
-  "petroleo": "El Brent se desploma cerca de 4.4-4.6% hasta ~108 USD/barril y el WTI cae por debajo de 100 USD (CNBC, 02-nov) ante el optimismo por el acercamiento diplomatico EE.UU.-Iran, un alivio de costos energeticos que favorece el apetito por riesgo en el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.6% en el premarket (CNBC, 02-nov) con el rebote de tecnologicas tras la venta de la semana pasada por temores a burbuja de IA, impulsados ademas por la adquisicion de Lumentum por Marvell (115,000 millones USD) y mientras el dolar se mantiene lateral de cara a las elecciones de medio mandato del martes.",
+  "geopolitica": "Trump senaliza mas tiempo para la diplomacia con Iran sobre la reapertura del Estrecho de Hormuz, reduciendo la prima de riesgo geopolitico y favoreciendo el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae mas de 3% hasta unos 109-110 USD/barril y el WTI hasta unos 100-101 USD/barril tras senales de progreso en las conversaciones EEUU-Iran sobre Hormuz; el abaratamiento del crudo alivia presiones inflacionarias, un viento de cola para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en premarket de cara a las elecciones de medio termino del martes y a resultados de Apple y Palantir esta semana, con el informe de empleo del viernes como siguiente catalizador macro.",
   "sources": [
-    "CNBC 02-nov (premarket) - Crude prices crater, investors brace for big week",
-    "CNBC 02-nov - Stocks making the biggest moves premarket: CrowdStrike, Rivian, Micron",
-    "CNBC 01-nov - Stock futures rise to start busy week"
+    "StockTitan 06:25 ET",
+    "TipRanks (Stock Market Today, Nov. 2)",
+    "The National News (Nov 2, 2026)",
+    "TradingKey (Nov 2, 2026)"
   ],
-  "as_of": "2026-11-02T13:39:13Z"
+  "as_of": "2026-11-02T14:40:41Z"
 }
