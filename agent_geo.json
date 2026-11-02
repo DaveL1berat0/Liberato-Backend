@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El petroleo cae con fuerza tras reportes de avances en la diplomacia EEUU-Iran para poner fin a su conflicto, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
-  "petroleo": "WTI ronda 97.5 USD/barril (-6.4%) y Brent cerca de 109 USD/barril (-3.9%) tras el reporte de posible acuerdo diplomatico EEUU-Iran; el desplome del crudo alivia presion inflacionaria y es positivo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en la premarket del lunes, impulsados por la caida del petroleo y a la espera de resultados de Apple y Palantir, tras un octubre debil para el indice.",
+  "geopolitica": "Las conversaciones Iran-Qatar avanzan hacia un plan para reabrir el Estrecho de Ormuz en 2 dias y poner fin a la guerra EE.UU.-Israel-Iran, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ en el premarket (Reuters, 08:57 ET).",
+  "petroleo": "El Brent cae alrededor de 6% hasta unos 106,65 USD/barril ante el avance de las negociaciones Iran-Qatar para poner fin al conflicto, aliviando el temor por el suministro y apoyando a los futuros tecnologicos del NQ (Reuters, 08:57 ET).",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1% en el premarket tras el desplome del viernes por el gasto en IA de Amazon y Alphabet y el hundimiento de Intel (-29%); el informe de resultados de Apple tras el cierre de hoy es el proximo catalizador clave para el NQ (CNBC, 08:47 ET).",
   "sources": [
-    "CNBC ~08:00 ET",
-    "Stocktitan/CNBC ~08:00 ET",
-    "Trading Economics ~09:00 ET",
-    "Yahoo Finance ~07:00 ET"
+    "Reuters 08:57 ET",
+    "Reuters 05:20 ET",
+    "CNBC 08:47 ET"
   ],
-  "as_of": "2026-11-02T14:45:37Z"
+  "as_of": "2026-11-02T15:56:51Z"
 }
