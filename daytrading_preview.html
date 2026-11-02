@@ -4273,8 +4273,15 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       // programada coincida con cuándo aparece el 'actual'. Antes se mostraba el
       // UTC crudo (ej. 13:45 para un evento de 9:45 ET) → "resultado antes de hora".
       function _etFromRaw(raw){
-        var t=Date.parse(String(raw).replace(' ','T')+'Z');   // raw es UTC
-        if(isNaN(t))return {dateKey:String(raw).substring(0,10),time:(String(raw).length>=16?String(raw).substring(11,16):''),ts:0};
+        // El backend puede enviar la hora de 2 formas: UTC naive ("YYYY-MM-DD HH:MM:SS")
+        // o ISO con offset de zona ("YYYY-MM-DDTHH:MM:SS-05:00"). Si ya trae zona (Z o
+        // ±HH:MM) se parsea TAL CUAL; si no, es UTC naive y se le añade 'Z'. ANTES se
+        // añadía 'Z' siempre → "...-05:00Z" = fecha inválida → ts:0 → el motor NQ nunca
+        // pedía velas y TODO quedaba en "Midiendo reacción…".
+        var s=String(raw).trim();
+        var hasTZ=/([zZ]|[+\-]\d{2}:?\d{2})$/.test(s);
+        var t=Date.parse(hasTZ ? s.replace(' ','T') : (s.replace(' ','T')+'Z'));
+        if(isNaN(t))return {dateKey:s.substring(0,10),time:(s.length>=16?s.substring(11,16):''),ts:0};
         var o={};new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(t)).forEach(function(x){o[x.type]=x.value;});
         return {dateKey:o.year+'-'+o.month+'-'+o.day,time:(o.hour==='24'?'00':o.hour)+':'+o.minute,ts:t};
       }

@@ -2411,6 +2411,14 @@ _EVENT_ALIASES = [
     ("core_retail_sales",  ["core retail sales", "retail sales ex autos", "retail sales ex auto", "retail sales control group"]),
     ("retail_sales",       ["retail sales"]),
     # ── Actividad / sentimiento ──
+    # IMPORTANTE: los sub-índices de PRECIOS y los PMI "Final/S&P Global" van ANTES que
+    # el PMI base (gana el primer match). Antes "ISM Manufacturing Prices" y "Final
+    # Manufacturing PMI" caían en 'ism_manufacturing' por substring → el merge de
+    # TradingEconomics les PISABA el valor real con el actual del PMI (bug 55.5 en los 3).
+    ("ism_mfg_prices",     ["ism manufacturing prices", "manufacturing prices"]),
+    ("ism_svc_prices",     ["ism services prices", "ism non-manufacturing prices", "services prices"]),
+    ("final_mfg_pmi",      ["final manufacturing pmi", "s&p global manufacturing", "sp global manufacturing", "markit manufacturing"]),
+    ("final_svc_pmi",      ["final services pmi", "s&p global services", "sp global services", "markit services"]),
     ("ism_services",       ["ism services pmi", "ism non-manufacturing pmi", "ism services", "services pmi"]),
     ("ism_manufacturing",  ["ism manufacturing pmi", "ism manufacturing", "manufacturing pmi"]),
     ("gdp",                ["gdp growth rate", "gross domestic product", "advance gdp", "gdp"]),
