@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Las conversaciones Iran-Qatar avanzan hacia un plan para reabrir el Estrecho de Ormuz en 2 dias y poner fin a la guerra EE.UU.-Israel-Iran, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ en el premarket (Reuters, 08:57 ET).",
-  "petroleo": "El Brent cae alrededor de 6% hasta unos 106,65 USD/barril ante el avance de las negociaciones Iran-Qatar para poner fin al conflicto, aliviando el temor por el suministro y apoyando a los futuros tecnologicos del NQ (Reuters, 08:57 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1% en el premarket tras el desplome del viernes por el gasto en IA de Amazon y Alphabet y el hundimiento de Intel (-29%); el informe de resultados de Apple tras el cierre de hoy es el proximo catalizador clave para el NQ (CNBC, 08:47 ET).",
+  "geopolitica": "Mediadores de Qatar e Iran mantienen un tercer dia de conversaciones con EEUU con una propuesta de alto el fuego de 48h y reapertura del Estrecho de Hormuz; Trump descarto nuevos ataques antes de las midterms del 3-nov, lo que reduce la prima de riesgo y favorece el apetito por activos de riesgo como el NQ (CNBC, 01-nov).",
+  "petroleo": "Brent cae a 106.54 USD (-6.07%) y WTI a 97.65 USD (-6.2%) hacia las 08:55 ET por optimismo en las negociaciones EEUU-Iran, aliviando presion inflacionaria y apoyando al NQ en la apertura (CNBC, 08:55 ET).",
+  "catalizador": "El NQ rebota tras el desplome del viernes (Nasdaq -2.9%) ligado al gasto en IA de Amazon y Alphabet y al hundimiento de Intel (-29%); hoy el mercado mira las elecciones de medio termino del 3-nov y el reporte de resultados de Apple tras el cierre, proximos catalizadores de corto plazo para el NQ (CNBC/Yahoo Finance, 02-nov).",
   "sources": [
-    "Reuters 08:57 ET",
-    "Reuters 05:20 ET",
-    "CNBC 08:47 ET"
+    "CNBC 01-nov: Iran, Qatari mediators hold third day of talks to end U.S.-Iran war",
+    "CNBC 08:55 ET: Oil prices fall as Iran-U.S pursue diplomacy",
+    "CNBC 02-nov: Oil slips more than 1% as talks continue on ending Iran war",
+    "Yahoo Finance 02-nov: Stock market today - Dow, S&P 500, Nasdaq recover from bruising sell-off as oil prices fall",
+    "CNBC 08:47 ET (sesion previa): futuros NQ +1% premarket tras desplome por IA/Intel"
   ],
-  "as_of": "2026-11-02T15:56:51Z"
+  "as_of": "2026-11-02T16:58:25Z"
 }
