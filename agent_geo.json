@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Catar e Iran mantienen por tercer dia consecutivo conversaciones mediadas para poner fin a la guerra EEUU-Israel-Iran, sin acuerdo aun segun el canciller irani Araghchi, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ, con el mercado atento a un posible repunte de tension tras las elecciones de medio termino del martes.",
-  "petroleo": "El Brent cae cerca de 3% a unos 110 USD y el WTI baja alrededor de 3% a unos 101 USD por el optimismo generado por las negociaciones Iran-Catar, lo que alivia los costos energeticos y da soporte marginal a las tecnologicas del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.83% en el premarket del lunes de cara a las elecciones de medio termino del martes y los resultados de Apple tras el cierre de hoy, con el mercado tambien atento al informe de empleo de octubre que se publica el viernes.",
+  "geopolitica": "Las conversaciones mediadas por Catar entre Iran y EEUU para poner fin a la guerra continuan sin acuerdo pero con tono constructivo segun el canciller irani Araghchi, lo que reduce la prima de riesgo geopolitico, aunque el mercado vigila un posible repunte de tension tras las elecciones de medio termino del martes.",
+  "petroleo": "El Brent cae cerca de 3% a unos 109-110 USD/barril y el WTI baja alrededor de 3% a unos 100-101 USD/barril por el optimismo de las negociaciones Iran-Catar, lo que alivia costos energeticos y da soporte marginal a las tecnologicas del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8-0.9% en el premarket del lunes tras el fuerte selloff tecnologico de octubre, de cara a las elecciones de medio termino del martes y los resultados de Apple (primer reporte bajo el CEO John Ternus) y Palantir tras el cierre de hoy.",
   "sources": [
-    "Reuters via Angel One/HDFC Sky - oil Iran-Qatar talks, 02-Nov",
-    "Reuters via Discovery Alert/Political Economist - oil Iran-Qatar talks, 02-Nov",
-    "Yahoo Finance - US stock futures premarket, 02-Nov",
-    "CNBC - stock market live updates, 02-Nov"
+    "HDFC Sky/Discovery Alert - Brent/WTI caen por conversaciones Iran-Catar, 02-Nov premarket",
+    "Arab News - oil prices ease 3% on Qatar-led Iran talks optimism, 02-Nov",
+    "TradingView News - Nasdaq futures rebound with Apple earnings, midterms ahead, 02-Nov premarket",
+    "Yahoo Finance/Investing.com - US stock futures rise after October selloff, earnings and elections in focus, 02-Nov premarket"
   ],
-  "as_of": "2026-11-02T11:07:52Z"
+  "as_of": "2026-11-02T11:40:11Z"
 }
