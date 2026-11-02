@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump senaliza mas tiempo para la diplomacia con Iran sobre la reapertura del Estrecho de Hormuz, reduciendo la prima de riesgo geopolitico y favoreciendo el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent cae mas de 3% hasta unos 109-110 USD/barril y el WTI hasta unos 100-101 USD/barril tras senales de progreso en las conversaciones EEUU-Iran sobre Hormuz; el abaratamiento del crudo alivia presiones inflacionarias, un viento de cola para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en premarket de cara a las elecciones de medio termino del martes y a resultados de Apple y Palantir esta semana, con el informe de empleo del viernes como siguiente catalizador macro.",
+  "geopolitica": "El petroleo cae con fuerza tras reportes de avances en la diplomacia EEUU-Iran para poner fin a su conflicto, lo que reduce la prima de riesgo geopolitico y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "WTI ronda 97.5 USD/barril (-6.4%) y Brent cerca de 109 USD/barril (-3.9%) tras el reporte de posible acuerdo diplomatico EEUU-Iran; el desplome del crudo alivia presion inflacionaria y es positivo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en la premarket del lunes, impulsados por la caida del petroleo y a la espera de resultados de Apple y Palantir, tras un octubre debil para el indice.",
   "sources": [
-    "StockTitan 06:25 ET",
-    "TipRanks (Stock Market Today, Nov. 2)",
-    "The National News (Nov 2, 2026)",
-    "TradingKey (Nov 2, 2026)"
+    "CNBC ~08:00 ET",
+    "Stocktitan/CNBC ~08:00 ET",
+    "Trading Economics ~09:00 ET",
+    "Yahoo Finance ~07:00 ET"
   ],
-  "as_of": "2026-11-02T14:40:41Z"
+  "as_of": "2026-11-02T14:45:37Z"
 }
