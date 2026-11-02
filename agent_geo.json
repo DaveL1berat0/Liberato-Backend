@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Continúa la guerra EE.UU./Israel-Irán con ataques a petroleros en el estrecho de Ormuz, pero avanzan las conversaciones de paz Irán-Catar, lo que reduce la prima de riesgo geopolítico y favorece el apetito por riesgo en el premarket del NQ.",
-  "petroleo": "El WTI cae cerca de 3-4% hoy hasta ~100-101 USD/barril (Brent ~108-110 USD) tras que la OPEP+ mantuviera sin cambios su cuota de producción para diciembre y por el optimismo en las conversaciones Irán-Catar, un alivio de costos que suele apoyar al Nasdaq.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% en el premarket (7:23 ET) impulsados por el rebote de semiconductores (Micron, SanDisk, Western Digital +2%) tras la fuerte caída de la semana pasada por temores a una burbuja de IA.",
+  "geopolitica": "Trascienden informes del WSJ y NYT de que EE.UU. prepara una posible accion militar contra Iran tras las elecciones de medio mandato del 3-nov, pese a que Washington y Teheran retoman contactos diplomaticos; el riesgo geopolitico latente limita el apetito por riesgo del NQ en el premarket.",
+  "petroleo": "El Brent se desploma cerca de 4.4-4.6% hasta ~108 USD/barril y el WTI cae por debajo de 100 USD (CNBC, 02-nov) ante el optimismo por el acercamiento diplomatico EE.UU.-Iran, un alivio de costos energeticos que favorece el apetito por riesgo en el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.6% en el premarket (CNBC, 02-nov) con el rebote de tecnologicas tras la venta de la semana pasada por temores a burbuja de IA, impulsados ademas por la adquisicion de Lumentum por Marvell (115,000 millones USD) y mientras el dolar se mantiene lateral de cara a las elecciones de medio mandato del martes.",
   "sources": [
-    "CNBC 07:23 ET",
-    "FXStreet 00:59 ET",
-    "mediabias.news / grafa.com"
+    "CNBC 02-nov (premarket) - Crude prices crater, investors brace for big week",
+    "CNBC 02-nov - Stocks making the biggest moves premarket: CrowdStrike, Rivian, Micron",
+    "CNBC 01-nov - Stock futures rise to start busy week"
   ],
-  "as_of": "2026-11-02T12:46:10Z"
+  "as_of": "2026-11-02T13:39:13Z"
 }
