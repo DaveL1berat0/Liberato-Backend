@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Las conversaciones mediadas por Catar entre Iran y EEUU para poner fin a la guerra continuan sin acuerdo pero con tono constructivo segun el canciller irani Araghchi, lo que reduce la prima de riesgo geopolitico, aunque el mercado vigila un posible repunte de tension tras las elecciones de medio termino del martes.",
-  "petroleo": "El Brent cae cerca de 3% a unos 109-110 USD/barril y el WTI baja alrededor de 3% a unos 100-101 USD/barril por el optimismo de las negociaciones Iran-Catar, lo que alivia costos energeticos y da soporte marginal a las tecnologicas del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8-0.9% en el premarket del lunes tras el fuerte selloff tecnologico de octubre, de cara a las elecciones de medio termino del martes y los resultados de Apple (primer reporte bajo el CEO John Ternus) y Palantir tras el cierre de hoy.",
+  "geopolitica": "Trump senala que dara mas tiempo a la diplomacia con Iran tras los recientes ataques con minas a petroleros en el Estrecho de Ormuz y la mediacion de Qatar, lo que reduce la prima de riesgo geopolitico percibida por los mercados y favorece el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae cerca de 3% a 110.01 USD y el WTI baja cerca de 3.3% a 100.65 USD (01:20 ET) por el alivio de la tension en Ormuz ante senales de diplomacia Iran-EEUU; la caida del crudo reduce presion inflacionaria y es favorable para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 0.8% mientras el mercado digiere resultados mixtos de Amazon e Intel tras sus reportes del tercer trimestre, que presionan a la baja a ambas acciones y generan volatilidad intradia en el NQ.",
   "sources": [
-    "HDFC Sky/Discovery Alert - Brent/WTI caen por conversaciones Iran-Catar, 02-Nov premarket",
-    "Arab News - oil prices ease 3% on Qatar-led Iran talks optimism, 02-Nov",
-    "TradingView News - Nasdaq futures rebound with Apple earnings, midterms ahead, 02-Nov premarket",
-    "Yahoo Finance/Investing.com - US stock futures rise after October selloff, earnings and elections in focus, 02-Nov premarket"
+    "CNBC 01:20 ET",
+    "The National 02 nov",
+    "Reuters/MSN premarket 02 nov"
   ],
-  "as_of": "2026-11-02T11:40:11Z"
+  "as_of": "2026-11-02T12:08:39Z"
 }
