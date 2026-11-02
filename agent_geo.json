@@ -1,12 +1,7 @@
 {
-  "geopolitica": "Irán y mediadores de Catar mantienen conversaciones para poner fin al conflicto EE.UU.-Irán y la disputa por el Estrecho de Ormuz, con el líder supremo iraní autorizando a su gobierno a negociar; esto reduce la prima de riesgo geopolítico y favorece el apetito por riesgo en el NQ de cara a las elecciones de medio término del 3-nov (CNBC/Yahoo Finance, 01-02 nov).",
-  "petroleo": "El Brent cae a unos 106.5 USD (-6%) y el WTI a unos 97.6 USD (-6%) hacia las 08:55 ET por el optimismo en las negociaciones EE.UU.-Irán, lo que alivia la presión inflacionaria y resulta favorable para el NQ intradía (CNBC, 08:55 ET).",
-  "catalizador": "El NQ intenta rebotar tras el desplome del viernes (Nasdaq ~-2.5/-3%) provocado por el temor al gasto en IA de Amazon y Alphabet (capex 2026 ~725.000 M USD) y el hundimiento de Intel (-29%) tras su guía débil; hoy el mercado mira el reporte de Apple tras el cierre y las elecciones de medio término del 3-nov como próximos catalizadores de corto plazo (CNBC/Reuters, 30-oct a 02-nov).",
-  "sources": [
-    "CNBC 08:55 ET: Oil prices fall as Iran-U.S. pursue diplomacy",
-    "Yahoo Finance 02-nov (ET matutino): Dow, S&P 500, Nasdaq recover from bruising sell-off as oil prices fall",
-    "CNBC/Reuters 30-oct: Nasdaq hits near three-month low as Amazon, Intel deepen AI capex concerns",
-    "Reuters (vía NewsBeep) ~08:00 ET: Nasdaq-100 futures +0.8% premarket"
-  ],
-  "as_of": "2026-11-02T17:34:30Z"
+  "geopolitica": "El secretario de Estado Rubio dijo que Trump prefiere evitar la fuerza militar contra Iran, mientras Khamenei advirtio que Teheran respondera a cualquier amenaza, alimentando apuestas de desescalacion antes de las midterms y favoreciendo el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cae 7.7% a 104.66 USD y el WTI cae 7.3% a 96.50 USD al mediodia ET por esperanzas de diplomacia EEUU-Iran, aliviando presiones inflacionarias y dando soporte al NQ via expectativas de tasas mas bajas.",
+  "catalizador": "El ISM manufacturero de octubre sorprendio al alza en 55.5 frente a 54.5 esperado, dato que podria moderar apuestas de recorte de tasas y generar volatilidad de corto plazo en el NQ.",
+  "sources": ["CNBC 10:00 ET", "CNBC 12:00 ET"],
+  "as_of": "2026-11-02T18:16:14Z"
 }
