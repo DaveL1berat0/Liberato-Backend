@@ -4038,28 +4038,34 @@ async def _fill_actuals_bls(events):
 
 # ── FRED: respaldo (requiere FRED_API_KEY gratis). Cubre lo que BLS no trae fácil
 #    (GDP, retail sales) además de reforzar los de empleo/inflación. ──
+# (frases, series_id, tf, lag_meses). lag = cuántos meses atrás reporta el release:
+# CPI/NFP/Retail/Durable/PCE reportan el mes ANTERIOR (lag 1); Construction Spending y
+# Factory Orders reportan DOS meses atrás (lag 2). La guardia de periodo usa este lag
+# para exigir que la observación más reciente de FRED sea EXACTAMENTE la que este release
+# reporta (si no, mejor "—" que el dato de otro mes). Verificado contra FRED (3-nov-2026).
 FRED_SERIES = [
-    (["gdp q/q", "gdp annualized", "gdp growth"],     "A191RL1Q225SBEA", "value"),   # GDP real % anualizado
-    (["retail sales m/m", "retail sales mom"],        "RSAFS",           "mom"),
-    (["cpi m/m", "cpi mom"],                          "CPIAUCSL",        "mom"),
-    (["unemployment rate"],                           "UNRATE",          "value"),
-    (["nonfarm payrolls", "non-farm payrolls"],       "PAYEMS",          "chg_k"),
+    (["gdp q/q", "gdp annualized", "gdp growth"],     "A191RL1Q225SBEA", "value", 1),   # GDP real % anualizado (guardia trimestral propia)
+    (["retail sales m/m", "retail sales mom"],        "RSAFS",           "mom", 1),
+    (["cpi m/m", "cpi mom"],                          "CPIAUCSL",        "mom", 1),
+    (["unemployment rate"],                           "UNRATE",          "value", 1),
+    (["nonfarm payrolls", "non-farm payrolls"],       "PAYEMS",          "chg_k", 1),
     # ── Census/BEA: lo que a ForexFactory le llega HORAS tarde y TradingEconomics no
     #    cubre. FRED (oficial, gratis) los ingiere el mismo día del release. CORE antes
     #    que la base para no colisionar. Unidades iguales a como las muestra la card. ──
-    (["core durable goods"],                          "ADXTNO",          "mom"),       # durable goods ex-transporte → %
-    (["durable goods orders m/m", "durable goods orders mom", "durable goods"], "DGORDER", "mom"),  # → %
-    (["factory orders m/m", "factory orders mom"],    "AMTMNO",          "mom"),       # → %
-    (["new home sales"],                              "HSN1F",           "level_k"),   # miles SAAR → "651K"
-    (["core pce price index m/m", "core pce m/m", "core pce mom"], "PCEPILFE", "mom"), # Core PCE (gauge Fed) → %
-    (["pce price index m/m", "pce m/m", "pce mom"],   "PCEPI",           "mom"),       # → %
+    (["core durable goods"],                          "ADXTNO",          "mom", 1),       # durable goods ex-transporte → %
+    (["durable goods orders m/m", "durable goods orders mom", "durable goods"], "DGORDER", "mom", 1),  # → %
+    (["factory orders m/m", "factory orders mom"],    "AMTMNO",          "mom", 2),       # FIX: reporta mes−2 (antes lag 1 → no rellenaba nunca)
+    (["construction spending m/m", "construction spending mom", "construction spending"], "TTLCONS", "mom", 2),  # Census (Value in Place) vía FRED; reporta mes−2
+    (["new home sales"],                              "HSN1F",           "level_k", 1),   # miles SAAR → "651K"
+    (["core pce price index m/m", "core pce m/m", "core pce mom"], "PCEPILFE", "mom", 1), # Core PCE (gauge Fed) → %
+    (["pce price index m/m", "pce m/m", "pce mom"],   "PCEPI",           "mom", 1),       # → %
 ]
 
 def _fred_match(title):
     tl = (title or "").lower()
-    for phrases, sid, tf in FRED_SERIES:
+    for phrases, sid, tf, lag in FRED_SERIES:
         if any(p in tl for p in phrases):
-            return sid, tf
+            return sid, tf, lag
     return None
 
 async def _fill_actuals_fred(events):
@@ -4095,7 +4101,7 @@ async def _fill_actuals_fred(events):
     try:
         async with httpx.AsyncClient(timeout=10) as c:
             for e in pend:
-                sid, tf = _fred_match(e.get("title", ""))
+                sid, tf, lag = _fred_match(e.get("title", ""))
                 r = await c.get("https://api.stlouisfed.org/fred/series/observations",
                                 params={"series_id": sid, "api_key": FRED_API_KEY,
                                         "file_type": "json", "sort_order": "desc", "limit": 13})
@@ -4122,10 +4128,10 @@ async def _fill_actuals_fred(events):
                         _xq, _xy = 4, _ev.year - 1
                     if (_oy, (_om - 1) // 3 + 1) != (_xy, _xq):
                         continue
-                else:                                   # series mensuales
-                    _xm, _xy = _ev.month - 1, _ev.year
-                    if _xm == 0:
-                        _xm, _xy = 12, _ev.year - 1
+                else:                                   # series mensuales (lag por serie)
+                    _xm, _xy = _ev.month - lag, _ev.year
+                    while _xm <= 0:
+                        _xm += 12; _xy -= 1
                     if (_oy, _om) != (_xy, _xm):
                         continue
                 val = None
