@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Estados Unidos ataco la isla irani de Qeshm en el Estrecho de Ormuz (ataque descrito por funcionarios de EEUU como defensivo, segun WSJ/CNBC), elevando el riesgo de escalada en el conflicto de ocho meses con Iran justo el dia de las elecciones legislativas de EEUU, lo que reaviva la prima de riesgo geopolitico que pesa sobre el NQ.",
-  "petroleo": "Brent sube cerca de 1.7% hasta ~105-107 USD/barril y WTI ~1% hasta ~97-98 USD/barril, recuperando parte del desplome de mas del 7% del lunes (por esperanzas de diplomacia EEUU-Iran) tras el ataque a Qeshm; el repunte del crudo es viento en contra para el NQ por mayor costo de insumos y menor apetito de riesgo.",
-  "catalizador": "Jornada de elecciones legislativas de medio termino en EEUU (mercados de prediccion asignan mas de 75% de probabilidad a un barrido democrata del Congreso) se suma a la caida de ~4-4.5% de Apple en premarket tras advertir sobre mayores costos de chips de memoria que presionaran sus margenes, lastrando a un Nasdaq-100 que ya cerro el lunes en correccion (mas de 10% bajo su maximo).",
+  "geopolitica": "EE.UU. atacó la isla iraní de Qeshm (reportado por WSJ y confirmado por funcionarios estadounidenses como una acción defensiva en el Estrecho de Ormuz), mientras un alto funcionario iraní dijo a Reuters que Teherán y Washington siguen lejos de un acuerdo para terminar la guerra, lo que mantiene elevada la prima de riesgo geopolítico y añade volatilidad al NQ.",
+  "petroleo": "El Brent sube hoy hacia los 105-106 USD/barril y el WTI hacia 97-98 USD/barril (+0.3% a +1.8%) tras el reporte del ataque a Qeshm, rebotando parcialmente del desplome de más del 7% del lunes impulsado por esperanzas de un acuerdo Irán-EE.UU.; el repunte del crudo presiona los costos energéticos y pesa sobre el apetito por riesgo en el Nasdaq.",
+  "catalizador": "Apple cae en premarket tras advertir que su margen bruto podría estrecharse a 45-46% por el alto costo de los chips de memoria, mientras el mercado opera cauteloso con la jornada de elecciones de medio término en curso y temores de una burbuja de IA, generando presión selectiva sobre el Nasdaq-100.",
   "sources": [
-    "CNBC 03-nov (oil rises after report of US strike on Iran's Qeshm Island)",
-    "CNBC 03-nov (stock market today live updates)",
-    "Reuters via Global Banking & Finance 02:44 ET",
-    "The National News 03-nov",
-    "FXStreet 03:39 ET (Dow Jones futures slip ahead of US midterm election)"
+    "Reuters 02:44 ET",
+    "CNBC 03-Nov",
+    "Bloomberg 03-Nov"
   ],
-  "as_of": "2026-11-03T15:39:20Z"
+  "as_of": "2026-11-03T16:07:22Z"
 }
