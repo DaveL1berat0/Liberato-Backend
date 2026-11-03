@@ -1,12 +1,10 @@
 {
-  "geopolitica": "EE.UU. realizo ataques \"defensivos\" en la isla irani de Qeshm (Estrecho de Ormuz) el 2-nov, y hoy Trump insinua progreso hacia un acuerdo con Iran tras las elecciones de medio termino, lo que reduce la prima de riesgo geopolitico percibida y es un leve viento de cola para el NQ.",
-  "petroleo": "Brent cayo mas de 7% el 2-nov (minimo intradia ~104.5 USD; WTI ~96.4 USD) tras senales de Iran y Qatar de apertura a negociaciones de paz, aliviando el temor a una interrupcion de suministro en el Estrecho de Ormuz, lo que reduce presion de costos sobre el NQ.",
-  "catalizador": "El Nasdaq-100 cerro el 2-nov en correccion tecnica (-10.4% desde el maximo de octubre) por dudas sobre el retorno de la inversion en IA, y hoy AMD reporta resultados tras el cierre (llamada 17:00 ET) en plena jornada de elecciones de medio termino en EE.UU., manteniendo elevada la volatilidad implicita del NQ.",
+  "geopolitica": "El conflicto EEUU-Iran sigue activo: CNBC reporta un ataque de EEUU a la isla iraní de Qeshm que reavivó las tensiones en el Estrecho de Ormuz, mientras Bloomberg señala simultáneamente esperanzas de un acercamiento diplomático EEUU-Iran, generando una señal mixta de riesgo que puede traducirse en volatilidad intradía para el NQ.",
+  "petroleo": "Brent cotiza en torno a 106,1 USD/barril (+1,3%) y WTI en torno a 97,9 USD/barril (+1,5%) en la sesión del 3-nov tras conocerse el ataque a Qeshm, revirtiendo parte de la fuerte caída del lunes (-7,63% en Brent) ligada al optimismo por conversaciones EEUU-Iran, según CNBC y Bloomberg; un petróleo al alza por riesgo geopolítico suele presionar al NQ via mayores costos/inflación.",
+  "catalizador": "Hoy es el Election Day de medio mandato en EEUU y CNBC reporta futuros del Dow cayendo cerca de 400 puntos, lastrados por un guidance de margen débil de Apple y el salto del petróleo, lo que añade presión bajista de última hora sobre un Nasdaq-100 que ya cerró el lunes en territorio de corrección (más de 10% bajo su máximo del 6 de octubre).",
   "sources": [
-    "Reuters/WSJ 02-Nov (ataques en Qeshm)",
-    "CNBC 02-Nov (petroleo cae 7% por conversaciones Iran-Qatar)",
-    "Bloomberg 02-Nov (Nasdaq-100 entra en correccion por dudas de gasto en IA)",
-    "Benzinga 03-Nov (futuros mixtos; Trump senala progreso con Iran; AMD en foco)"
+    "CNBC 07:07 ET",
+    "Bloomberg 07:07 ET"
   ],
-  "as_of": "2026-11-03T11:39:43Z"
+  "as_of": "2026-11-03T12:07:58Z"
 }
