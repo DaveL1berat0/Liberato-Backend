@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Medios reportan un ataque de EE.UU. a la isla iraní de Qeshm, lo que reaviva el riesgo de escalada en Oriente Medio y presiona el apetito por riesgo en los futuros tecnológicos del Nasdaq (CNBC, 3 nov 2026).",
-  "petroleo": "El WTI retrocede cerca de 2% intradía hasta ~$94/barril, revirtiendo el salto inicial tras el reporte de ataque en Irán, en un día volátil que sigue al desplome de 7.4% del lunes por esperanzas de diálogo diplomático EE.UU.-Irán (CNBC, 3 nov 2026).",
-  "catalizador": "La débil guía de márgenes de Apple (acción cae ~4% tras resultados, ventas de iPad por debajo de lo esperado) y una pérdida récord post-resultados de Alphabet arrastran a los futuros del Nasdaq-100 esta mañana (CNBC, 3 nov 2026).",
+  "geopolitica": "El Wall Street Journal informo (citando funcionarios de EEUU) que fuerzas estadounidenses atacaron la isla irani de Qeshm en el Estrecho de Ormuz la noche del lunes; Iran rechazo las exigencias de Washington, lo que redujo las expectativas de un acuerdo de paz y reavivo la prima de riesgo geopolitico que presiona al NQ junto con la incertidumbre de las elecciones legislativas de EEUU de hoy.",
+  "petroleo": "Brent subio hacia 106-107 USD/barril y WTI a unos 98 USD/barril (+1.7% aprox.), recuperandose tras el desplome de ~7% del lunes, luego de que el ataque a Qeshm reavivara la prima de riesgo en el crudo (viento en contra para el NQ por mayor costo de insumos y menor apetito de riesgo).",
+  "catalizador": "Las acciones de Apple cayeron tras una guia de margenes mas debil de lo esperado (pese a superar ingresos), lastrando al Nasdaq-100 en la apertura; el mercado tambien vigila como catalizador de corto plazo las elecciones legislativas de EEUU que se celebran hoy.",
   "sources": [
-    "CNBC 3 nov 2026 - oil-rises-after-report-of-us-strike-on-irans-qeshm-island",
-    "CNBC 3 nov 2026 - apple-margin-oil-iran",
-    "CNBC 2 nov 2026 (live updates Election Day) - stock-market-today-live-updates",
-    "Investing.com 3 nov 2026 (Brent intradia ~106.61, +1.8%, confirma volatilidad tras ataque a Qeshm)"
+    "CNBC (stock market today live updates) 09:41 ET",
+    "StockTitan 09:00 ET",
+    "Reuters via The Globe and Mail / NTD 03-nov",
+    "WSJ (via CNBC) 03-nov"
   ],
-  "as_of": "2026-11-03T14:41:59Z"
+  "as_of": "2026-11-03T15:07:24Z"
 }
