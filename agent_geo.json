@@ -1,12 +1,12 @@
 {
-  "geopolitica": "El crudo rebota el martes tras reportes de que Trump evalua nuevos ataques de gran escala contra Iran y Teheran amenaza represalias, revirtiendo el alivio del lunes por esperanzas de negociaciones de paz EEUU-Iran, lo que reintroduce prima de riesgo geopolitico y presiona al NQ (Invezz, 03 Nov 2026).",
-  "petroleo": "Brent sube a USD 105.96 (+1.13%) y WTI ronda USD 96.93 en la mañana del martes, revirtiendo parte del desplome del lunes (Brent -7% a USD 104.77, WTI -7.36% a USD 96.46) ligado a esperanzas de un acuerdo EEUU-Iran; el vaiven del crudo mantiene volatilidad en el NQ via sector energia e inflacion (FinanceFeeds/Invezz, 03 Nov 2026).",
-  "catalizador": "Dia de elecciones legislativas (midterms) en EEUU: futuros del Nasdaq 100 suben apenas +0.40% hacia las 05:40 ET mientras mercados de prediccion dan ~75% de probabilidad a que los democratas tomen el Senado, generando cautela y rango acotado en el NQ antes de la apertura (Goodreturns, 03 Nov 2026).",
+  "geopolitica": "EE.UU. realizo ataques \"defensivos\" en la isla irani de Qeshm (Estrecho de Ormuz) el 2-nov, y hoy Trump insinua progreso hacia un acuerdo con Iran tras las elecciones de medio termino, lo que reduce la prima de riesgo geopolitico percibida y es un leve viento de cola para el NQ.",
+  "petroleo": "Brent cayo mas de 7% el 2-nov (minimo intradia ~104.5 USD; WTI ~96.4 USD) tras senales de Iran y Qatar de apertura a negociaciones de paz, aliviando el temor a una interrupcion de suministro en el Estrecho de Ormuz, lo que reduce presion de costos sobre el NQ.",
+  "catalizador": "El Nasdaq-100 cerro el 2-nov en correccion tecnica (-10.4% desde el maximo de octubre) por dudas sobre el retorno de la inversion en IA, y hoy AMD reporta resultados tras el cierre (llamada 17:00 ET) en plena jornada de elecciones de medio termino en EE.UU., manteniendo elevada la volatilidad implicita del NQ.",
   "sources": [
-    "Invezz 03 Nov 2026",
-    "FinanceFeeds 03 Nov 2026",
-    "Goodreturns 05:40 ET",
-    "TipRanks 03 Nov 2026"
+    "Reuters/WSJ 02-Nov (ataques en Qeshm)",
+    "CNBC 02-Nov (petroleo cae 7% por conversaciones Iran-Qatar)",
+    "Bloomberg 02-Nov (Nasdaq-100 entra en correccion por dudas de gasto en IA)",
+    "Benzinga 03-Nov (futuros mixtos; Trump senala progreso con Iran; AMD en foco)"
   ],
-  "as_of": "2026-11-03T11:06:33Z"
+  "as_of": "2026-11-03T11:39:43Z"
 }
