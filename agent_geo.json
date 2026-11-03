@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EEUU ejecuto un ataque reportado, descrito por fuentes oficiales como de baja escala y defensivo, contra la isla irani de Qeshm para limitar la capacidad de Iran de amenazar el trafico naviero en el Estrecho de Ormuz, lo que eleva la prima de riesgo geopolitico y genera cautela de riesgo que pesa sobre el NQ.",
-  "petroleo": "El crudo repunta tras el reportado ataque de EEUU a Qeshm (Iran), revirtiendo parte de la caida de mas del 7% del lunes cuando Washington y Teheran senalaron apertura a una solucion diplomatica, con el Brent operando en la zona de 105-106 USD/barril; la suba del petroleo añade presion inflacionaria que resta apetito por riesgo en el NQ.",
-  "catalizador": "La guia de margen bruto de Apple (45-46%) por la escasez de chips de memoria decepciono y presiona a la tecnologia en premarket (Apple caia cerca de 4% hacia las 08:00 ET), mientras el mercado tambien sigue de cerca las elecciones de medio termino en EEUU, sumando incertidumbre de corto plazo al NQ antes de la apertura.",
+  "geopolitica": "Medios reportan un ataque de EE.UU. a la isla iraní de Qeshm, lo que reaviva el riesgo de escalada en Oriente Medio y presiona el apetito por riesgo en los futuros tecnológicos del Nasdaq (CNBC, 3 nov 2026).",
+  "petroleo": "El WTI retrocede cerca de 2% intradía hasta ~$94/barril, revirtiendo el salto inicial tras el reporte de ataque en Irán, en un día volátil que sigue al desplome de 7.4% del lunes por esperanzas de diálogo diplomático EE.UU.-Irán (CNBC, 3 nov 2026).",
+  "catalizador": "La débil guía de márgenes de Apple (acción cae ~4% tras resultados, ventas de iPad por debajo de lo esperado) y una pérdida récord post-resultados de Alphabet arrastran a los futuros del Nasdaq-100 esta mañana (CNBC, 3 nov 2026).",
   "sources": [
-    "CNBC 2026-11-03 (apple-margin-oil-iran)",
-    "Bloomberg 07:30 ET",
-    "CNBC 07:56 ET",
-    "ZeroHedge 2026-11-03"
+    "CNBC 3 nov 2026 - oil-rises-after-report-of-us-strike-on-irans-qeshm-island",
+    "CNBC 3 nov 2026 - apple-margin-oil-iran",
+    "CNBC 2 nov 2026 (live updates Election Day) - stock-market-today-live-updates"
   ],
-  "as_of": "2026-11-03T13:40:10Z"
+  "as_of": "2026-11-03T14:06:07Z"
 }
