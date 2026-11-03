@@ -1,11 +1,14 @@
 {
-  "geopolitica": "EE.UU. atacó la isla iraní de Qeshm (reportado por WSJ y confirmado por funcionarios estadounidenses como una acción defensiva en el Estrecho de Ormuz), mientras un alto funcionario iraní dijo a Reuters que Teherán y Washington siguen lejos de un acuerdo para terminar la guerra, lo que mantiene elevada la prima de riesgo geopolítico y añade volatilidad al NQ.",
-  "petroleo": "El Brent sube hoy hacia los 105-106 USD/barril y el WTI hacia 97-98 USD/barril (+0.3% a +1.8%) tras el reporte del ataque a Qeshm, rebotando parcialmente del desplome de más del 7% del lunes impulsado por esperanzas de un acuerdo Irán-EE.UU.; el repunte del crudo presiona los costos energéticos y pesa sobre el apetito por riesgo en el Nasdaq.",
-  "catalizador": "Apple cae en premarket tras advertir que su margen bruto podría estrecharse a 45-46% por el alto costo de los chips de memoria, mientras el mercado opera cauteloso con la jornada de elecciones de medio término en curso y temores de una burbuja de IA, generando presión selectiva sobre el Nasdaq-100.",
+  "geopolitica": "EE.UU. atacó la isla iraní de Qeshm en la noche del lunes para impedir que Irán bloquee el estrecho de Ormuz, mientras hoy es el día de elecciones legislativas en EE.UU. y Goldman Sachs advierte que midterms y tensión en Oriente Medio pueden añadir volatilidad al NQ.",
+  "petroleo": "El Brent cotiza en torno a 105-106 USD y el WTI cerca de 97 USD, repuntando tras el desplome de más del 7% del lunes ante señales de diplomacia EE.UU.-Irán; un petróleo más caro presiona márgenes tecnológicos y es viento en contra para el NQ.",
+  "catalizador": "Los rendimientos del Tesoro suben mientras el mercado digiere las elecciones de medio término, datos de empleo y la tensión con Irán, y Apple cae ~2% tras una guía de margen débil por la escasez de chips de memoria, aunque semiconductores (AMD, Broadcom, Nvidia, Micron, Intel) suben con fuerza y amortiguan al NQ.",
   "sources": [
-    "Reuters 02:44 ET",
-    "CNBC 03-Nov",
-    "Bloomberg 03-Nov"
+    "CNBC (oil-prices-climb-after-us-reportedly-strikes-irans-qeshm-island) 03-Nov",
+    "CNBC (apple-margin-oil-iran) 03-Nov",
+    "CNBC (goldman-sachs-stocks-cash-outlook) 03-Nov",
+    "CNBC (us-treasury-yields-bonds) 03-Nov",
+    "CNBC (midterm-election-stock-market) 03-Nov",
+    "CNBC quotes snapshot ~11:47 ET 03-Nov"
   ],
-  "as_of": "2026-11-03T16:07:22Z"
+  "as_of": "2026-11-03T17:07:07Z"
 }
