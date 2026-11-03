@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Señales de distensión diplomática entre EE.UU. e Irán (declaraciones de Rubio indicando que Trump prefiere terminar la guerra por vía pacífica) redujeron la prima de riesgo geopolítico, lo que favorece el apetito por riesgo en el NQ intradía.",
-  "petroleo": "WTI se desplomó cerca de -7.3% hasta ~96.5 USD/barril y Brent cayó a ~105-106 USD/barril tras las señales de acercamiento EE.UU.-Irán; la caída abrupta del crudo alivia presión inflacionaria y suele ser positivo para el NQ.",
-  "catalizador": "Rotación de capital fuera de tecnología: Nasdaq y S&P 500 revirtieron ganancias y cerraron en negativo (~-1%) lastrados por semiconductores, mientras el Dow subió ~0.4%; la debilidad de semis pesa directamente sobre el NQ.",
+  "geopolitica": "El crudo rebota el martes tras reportes de que Trump evalua nuevos ataques de gran escala contra Iran y Teheran amenaza represalias, revirtiendo el alivio del lunes por esperanzas de negociaciones de paz EEUU-Iran, lo que reintroduce prima de riesgo geopolitico y presiona al NQ (Invezz, 03 Nov 2026).",
+  "petroleo": "Brent sube a USD 105.96 (+1.13%) y WTI ronda USD 96.93 en la mañana del martes, revirtiendo parte del desplome del lunes (Brent -7% a USD 104.77, WTI -7.36% a USD 96.46) ligado a esperanzas de un acuerdo EEUU-Iran; el vaiven del crudo mantiene volatilidad en el NQ via sector energia e inflacion (FinanceFeeds/Invezz, 03 Nov 2026).",
+  "catalizador": "Dia de elecciones legislativas (midterms) en EEUU: futuros del Nasdaq 100 suben apenas +0.40% hacia las 05:40 ET mientras mercados de prediccion dan ~75% de probabilidad a que los democratas tomen el Senado, generando cautela y rango acotado en el NQ antes de la apertura (Goodreturns, 03 Nov 2026).",
   "sources": [
-    "Invezz 14:56 ET",
-    "OilPrice.com 14:56 ET",
-    "CNBC/Yahoo Finance 16:00 ET"
+    "Invezz 03 Nov 2026",
+    "FinanceFeeds 03 Nov 2026",
+    "Goodreturns 05:40 ET",
+    "TipRanks 03 Nov 2026"
   ],
-  "as_of": "2026-11-02T21:06:19Z"
+  "as_of": "2026-11-03T11:06:33Z"
 }
