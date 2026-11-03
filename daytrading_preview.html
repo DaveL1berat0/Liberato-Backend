@@ -3606,6 +3606,10 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 
   /* ════ BLOCK 5 · INSTITUTIONAL CONTEXT (briefing paragraph, NO playbook) ════ */
     function renderSummary(){
+    // Si el brief RICO del backend (Groq/Gemini/Claude, en español) ya está en pantalla,
+    // NO lo pisamos con este resumen local: así NUNCA parpadea entre dos formatos. El
+    // resumen local solo cubre el arranque en frío, hasta que el backend responde.
+    if(window._smBackendActive) return;
     // Fallback local del Institutional Context. SIEMPRE debe cubrir todo lo que
     // tenemos (Macro · Catalizador/Movers · GEX · Técnico), degradando con
     // elegancia clausula a clausula — nunca dejar el bloque casi vacío ni con "—".
@@ -3636,8 +3640,13 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
     if(mv.length){
       var m0=mv[0], sent=m0.sentiment||'Neutral';
       var scls=sent==='Bullish'?'hl-up':sent==='Bearish'?'hl-dn':'hl-gold';
-      var hl=String(m0.headline||m0.title||'').replace(/[<>]/g,'').slice(0,140);
-      parts.push('<strong>Catalizador:</strong> <span class="'+scls+'">'+(m0.impact_score||'?')+'/10 '+sent+'</span> — '+hl+(m0.source?' ('+m0.source+')':'')+'.');
+      var sentEs=sent==='Bullish'?'Alcista':sent==='Bearish'?'Bajista':'Neutral';
+      // NO insertamos el titular CRUDO: viene en inglés de la fuente (Reuters, etc.).
+      // Describimos el catalizador en español; el brief completo del backend ya lo
+      // reescribe en español cuando responde (este es solo el arranque en frío).
+      var esMacro=(m0.kind==='macro'||m0.is_macro||m0.type==='macro');
+      var tipo=esMacro?'dato macro de alto impacto':'titular de alto impacto';
+      parts.push('<strong>Catalizador:</strong> <span class="'+scls+'">'+(m0.impact_score||'?')+'/10 '+sentEs+'</span> — '+tipo+(m0.source?' ('+m0.source+')':'')+'.');
     } else {
       var hev=(S.events||[]).filter(function(e){return e.impact==='extreme'||e.impact==='high';});
       if(hev.length) parts.push('<strong>Catalizador:</strong> '+(hev[0].symbol||hev[0].name||'evento')+' de alto impacto hoy'+(hev[0].time?' ('+hev[0].time+' ET)':'')+'.');
@@ -4749,6 +4758,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
           // frase entre la columna izquierda y la derecha (rompe solo ENTRE líneas).
           el.innerHTML=_brief.split(/\n+/).map(function(s){return s.trim();}).filter(Boolean)
             .map(function(ln){return '<div class="sm-line">'+ln+'</div>';}).join('');
+          window._smBackendActive=true;   // el brief del backend manda: el resumen local ya no lo pisa
           setHealth('summary','connected','real',null);
           // Fresco → ocultamos el badge. STALE → sello "actualizado HH:MM ET" para que sus
           // niveles gamma incrustados NO se confundan con los del Gamma Chart en vivo (antes se
