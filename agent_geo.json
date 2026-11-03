@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. realizo un ataque reportado contra la isla irani de Qeshm como parte de una campana de 'ataques limitados' contra Iran por amenazas en el Estrecho de Hormuz, y el riesgo geopolitico se suma a la incertidumbre de las elecciones legislativas (midterms) de hoy en EE.UU., lo que puede presionar al NQ via mayor aversion al riesgo.",
-  "petroleo": "El Brent sube ~1.75% a 106.60 USD/barril y el WTI ~1.7% a 98.10 USD/barril, rebotando tras el desplome del 7.6% del lunes, impulsados por el reportado ataque de EE.UU. a la isla iraní de Qeshm que revivio la prima de riesgo geopolitico; una subida sostenida del crudo presiona margenes y el sentimiento de riesgo en el NQ.",
-  "catalizador": "Apple dio una guia de margen bruto debil (45%-46% vs 46.3% esperado por el mercado, por mayores costos de memoria y el ramp de Siri AI) y cae ~4% en premarket, arrastrando al sector tecnologico y al NQ; ademas el rendimiento del Treasury a 10 anos sube a 4.935% por las midterms, datos de empleo y tensiones con Iran, presionando multiplos tecnologicos.",
+  "geopolitica": "EE.UU. atacó el lunes la isla iraní de Qeshm, en la boca del estrecho de Ormuz, y Trump anunció que terminará unos $4,000M anuales de ayuda militar a Israel a fin de 2026, elevando la incertidumbre geopolítica justo el día de las elecciones de medio término en EE.UU.; el riesgo de escalada con Irán añade presión bajista para activos de riesgo como el NQ.",
+  "petroleo": "El Brent cayó cerca de 3.3% hasta unos $101.32/barril (WTI cerca de $94.30) hacia las 08:50 ET tras el anuncio de Trump sobre la ayuda a Israel, revirtiendo el salto previo provocado por el ataque a Qeshm; la caída del crudo alivia presión inflacionaria pero refleja aversión al riesgo que puede pesar sobre el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC 03-nov-2026 (apple-margin-oil-iran.html)",
-    "CNBC 03-nov-2026 (oil-rises-after-report-of-us-strike-on-irans-qeshm-island.html)",
-    "CNBC 03-nov-2026 (us-treasury-yields-bonds.html)"
+    "Reuters (via GV Wire) 08:50 ET",
+    "CNN 03-Nov-2026",
+    "Jerusalem Post 03-Nov-2026"
   ],
-  "as_of": "2026-11-03T20:06:27Z"
+  "as_of": "2026-11-03T21:06:07Z"
 }
