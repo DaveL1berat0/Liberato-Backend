@@ -1,12 +1,13 @@
 {
-  "geopolitica": "El Wall Street Journal informo (citando funcionarios de EEUU) que fuerzas estadounidenses atacaron la isla irani de Qeshm en el Estrecho de Ormuz la noche del lunes; Iran rechazo las exigencias de Washington, lo que redujo las expectativas de un acuerdo de paz y reavivo la prima de riesgo geopolitico que presiona al NQ junto con la incertidumbre de las elecciones legislativas de EEUU de hoy.",
-  "petroleo": "Brent subio hacia 106-107 USD/barril y WTI a unos 98 USD/barril (+1.7% aprox.), recuperandose tras el desplome de ~7% del lunes, luego de que el ataque a Qeshm reavivara la prima de riesgo en el crudo (viento en contra para el NQ por mayor costo de insumos y menor apetito de riesgo).",
-  "catalizador": "Las acciones de Apple cayeron tras una guia de margenes mas debil de lo esperado (pese a superar ingresos), lastrando al Nasdaq-100 en la apertura; el mercado tambien vigila como catalizador de corto plazo las elecciones legislativas de EEUU que se celebran hoy.",
+  "geopolitica": "Estados Unidos ataco la isla irani de Qeshm en el Estrecho de Ormuz (ataque descrito por funcionarios de EEUU como defensivo, segun WSJ/CNBC), elevando el riesgo de escalada en el conflicto de ocho meses con Iran justo el dia de las elecciones legislativas de EEUU, lo que reaviva la prima de riesgo geopolitico que pesa sobre el NQ.",
+  "petroleo": "Brent sube cerca de 1.7% hasta ~105-107 USD/barril y WTI ~1% hasta ~97-98 USD/barril, recuperando parte del desplome de mas del 7% del lunes (por esperanzas de diplomacia EEUU-Iran) tras el ataque a Qeshm; el repunte del crudo es viento en contra para el NQ por mayor costo de insumos y menor apetito de riesgo.",
+  "catalizador": "Jornada de elecciones legislativas de medio termino en EEUU (mercados de prediccion asignan mas de 75% de probabilidad a un barrido democrata del Congreso) se suma a la caida de ~4-4.5% de Apple en premarket tras advertir sobre mayores costos de chips de memoria que presionaran sus margenes, lastrando a un Nasdaq-100 que ya cerro el lunes en correccion (mas de 10% bajo su maximo).",
   "sources": [
-    "CNBC (stock market today live updates) 09:41 ET",
-    "StockTitan 09:00 ET",
-    "Reuters via The Globe and Mail / NTD 03-nov",
-    "WSJ (via CNBC) 03-nov"
+    "CNBC 03-nov (oil rises after report of US strike on Iran's Qeshm Island)",
+    "CNBC 03-nov (stock market today live updates)",
+    "Reuters via Global Banking & Finance 02:44 ET",
+    "The National News 03-nov",
+    "FXStreet 03:39 ET (Dow Jones futures slip ahead of US midterm election)"
   ],
-  "as_of": "2026-11-03T15:07:24Z"
+  "as_of": "2026-11-03T15:39:20Z"
 }
