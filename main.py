@@ -2182,6 +2182,7 @@ _RT_RELEVANT = [
     "jolts","adp","jobless claims","initial claims","unemployment","michigan",
     "consumer confidence","consumer sentiment","durable goods","building permits",
     "housing starts","trade balance","factory orders","industrial production",
+    "construction spending","construction",
 ]
 
 def _rt_relevant(name):
@@ -2347,9 +2348,19 @@ async def _fetch_rapidapi_actuals(client):
     }
     try:
         url = f"https://{RAPIDAPI_HOST}/calendar"
-        # (A) RESUELTOS últimos 7 días → traen el 'actual' (NFP ya publicado, etc.)
+        # (A) RESUELTOS últimos 7 días → traen el 'actual' (NFP ya publicado, etc.).
+        # Pedimos Medium+High para capturar TAMBIÉN los datos de impacto medio (Construction
+        # Spending, Factory Orders, etc.) tan rápido como los de alto impacto. Si la API no
+        # acepta el filtro combinado (status != 200), se reintenta SOLO con High para no
+        # romper nunca el camino rápido de los grandes (CPI/NFP/FOMC). limit 100 evita que
+        # un día cargado trunque los releases US recientes.
         rp = await client.get(url, headers=headers, timeout=10, params={
-            **base_params, "daysBehind": "7", "daysAhead": "0", "resolved": "true"})
+            **base_params, "daysBehind": "7", "daysAhead": "0", "resolved": "true",
+            "impact": "Medium,High", "limit": "100"})
+        if rp.status_code != 200:
+            print(f"[rt-calendar] Medium,High dio {rp.status_code} → reintento solo High")
+            rp = await client.get(url, headers=headers, timeout=10, params={
+                **base_params, "daysBehind": "7", "daysAhead": "0", "resolved": "true"})
         # (B) PRÓXIMOS 3 días → traen forecast/previous ANTES del release, así el
         #     NFP de hoy muestra previo/forecast desde temprano (no "Esperando").
         ru = await client.get(url, headers=headers, timeout=10, params={
