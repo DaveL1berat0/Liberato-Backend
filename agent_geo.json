@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Los democratas se llevaron el control de ambas camaras (Senado y Camara) en las midterms del 3-nov, lo que disparo los futuros de EE.UU. (Dow +800 pts) al despejarse la incertidumbre politica, aunque Tesla y SpaceX cayeron cerca de 4% por su vinculo con Musk, lo que puede generar divergencia dentro de las megacaps del NQ.",
-  "petroleo": "El Brent cerro el 3-nov en 103.60 USD (-1.1%) y el WTI en 96.09 USD (-0.4%), su segunda caida consecutiva ante esperanzas de un acuerdo diplomatico EE.UU.-Iran via mediacion de Qatar, lo que reduce la prima de riesgo geopolitico y alivia presion inflacionaria sobre las tasas que pesan en el NQ.",
-  "catalizador": "AMD reporto resultados del Q3 FY2026 tras el cierre del 3-nov con ingresos de 13.4B USD (por encima de su guia de 12.7-13.3B) y BPA no-GAAP de 2.09 USD, con el segmento Data Center casi duplicando ingresos interanuales, un catalizador positivo para semiconductores que puede dar soporte al NQ en la apertura.",
+  "geopolitica": "Los democratas confirmaron el control del Congreso (Camara y Senado) en las midterms, lo que disparo temores de mayor regulacion a la IA y freno a la construccion de centros de datos: Nvidia y Micron cayeron mas de 1% en premercado, lastrando el segmento de semis del NQ, aunque el indice se recupera tras comentarios de Trump aceptando el resultado.",
+  "petroleo": "El Brent cae a 102.11 USD (-1.44%) y el WTI a 95.20 USD (-0.93%) hacia las 06:55 ET, tras comentarios de Trump de que EE.UU. no tiene planes inmediatos de nuevos ataques a Iran, lo que reduce la prima de riesgo geopolitico y resta presion inflacionaria sobre las tasas, un leve viento de cola para el NQ.",
+  "catalizador": "El reporte ADP de empleo privado de octubre sorprendio al alza con +86,000 vs +75,000 esperado (publicado 08:15 ET), un dato mas fuerte de lo previsto que podria moderar las apuestas de recorte de tasas de la Fed antes del NFP del viernes, un viento en contra de corto plazo para el NQ.",
   "sources": [
-    "CNBC 03-nov (cierre, midterm elections live updates)",
-    "CNBC 04-nov premercado (Dow futures surge 800 points after Democrats win)",
-    "CNBC 03-nov (cierre, oil prices climb/fall Iran war updates)",
-    "AMD 8-K / comunicado de resultados, 03-nov (tras cierre)",
-    "CNBC 04-nov (SpaceX, Tesla fall around 4% on Democrats' big win)"
+    "CNBC 08:15 ET (ADP October +86,000 vs +75,000 esperado)",
+    "Reuters/MarketScreener 06:55 ET (Brent 102.11, WTI 95.20)",
+    "Bloomberg/Yahoo Finance 08:00 ET (Nasdaq futures, temores regulacion IA/data centers tras midterms)"
   ],
-  "as_of": "2026-11-04T13:07:54Z"
+  "as_of": "2026-11-04T13:39:08Z"
 }
