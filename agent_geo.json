@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los demócratas logran mayoría en el Congreso tras las elecciones de medio mandato del 3-nov, reduciendo incertidumbre política y disparando un rally de risk-on que llevó al Nasdaq a subir entre +1.2% y +1.9% intradía el 4-nov (TheStreet, StockTitan).",
-  "petroleo": "El Brent se desploma más de $10/barril y perfora los $100 por primera vez en semanas (tras cerrar el lunes en $103.60 y el WTI en $96.09) ante señales de distensión EE.UU.-Irán sobre el Estrecho de Ormuz, aliviando la presión inflacionaria que pesaba sobre el NQ (CNBC, TheStreet).",
-  "catalizador": "El barrido demócrata en el Congreso funciona como catalizador de última hora: el mercado interpreta un freno a la escalada bélica con Irán y una menor prima de riesgo geopolítico, lo que impulsa compras en tech/Nasdaq durante la sesión del 4-nov (StockTitan, TheStreet).",
+  "geopolitica": "Los demócratas arrasan en las elecciones de medio término (Cámara y Senado) y el vicepresidente Vance culpa a la guerra con Irán de la derrota republicana, alimentando apuestas de un acercamiento diplomático con Teherán que impulsa el apetito por riesgo y el rally del Nasdaq (CNBC, 15:00 ET).",
+  "petroleo": "El WTI se desploma cerca de 9% a 87,59 USD/barril y el Brent cae más de 9% a 93,91 USD tras los comentarios de Vance sobre la guerra con Irán, reduciendo la prima de riesgo geopolítico en el crudo y apoyando el sentimiento alcista en tech/NQ (CNBC, 12:36 ET).",
+  "catalizador": "El barrido demócrata en el Congreso dispara un rally histórico: Dow +1.500 puntos (mejor sesión en 18 meses), S&P 500 +1,8% y Nasdaq Composite +1,9% (25.802 puntos), arrastrando con fuerza al Nasdaq-100 (NQ) en la sesión de la tarde (CNBC, 15:04 ET).",
   "sources": [
-    "CNBC 03-Nov-2026",
-    "TheStreet 04-Nov-2026",
-    "StockTitan 04-Nov-2026",
-    "Al Jazeera 03-Nov-2026"
+    "CNBC 12:36 ET",
+    "CNBC 15:00 ET",
+    "CNBC 15:04 ET"
   ],
-  "as_of": "2026-11-04T19:06:27Z"
+  "as_of": "2026-11-04T20:06:53Z"
 }
