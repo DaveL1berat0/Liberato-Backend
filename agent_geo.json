@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los demócratas se hicieron con el control del Senado y la Cámara en las elecciones de medio mandato de EE.UU.; Trump aceptó los resultados, lo que redujo la incertidumbre política y ayudó a los futuros del Nasdaq-100 a revertir una caída de hasta 2.4% durante la madrugada (CNBC, Bloomberg, 04-Nov).",
-  "petroleo": "El WTI cerró en 96.09 USD/barril y el Brent en 103.60 USD/barril el martes, tras un repunte por un ataque reportado de EE.UU. a la isla iraní de Qeshm que reavivó la prima de riesgo del Golfo Pérsico, aunque Washington y Teherán siguen revisando propuestas diplomáticas para evitar una escalada (CNBC, Bloomberg, 03-Nov).",
-  "catalizador": "Los futuros del Nasdaq-100 pasaron de caer hasta 2.4% a subir cerca de 1% en la madrugada del miércoles tras confirmarse la barrida demócrata en el Congreso, el principal catalizador de última hora para el NQ hoy (CNBC, 04-Nov).",
+  "geopolitica": "Los democratas lograron un barrido en las elecciones de medio termino (Camara y Senado) y Trump reconocio que la guerra en Iran peso en las perdidas republicanas, lo que disparo fuerte volatilidad nocturna: los futuros del Nasdaq-100 llegaron a caer 2.4% antes de recuperarse hacia la apertura, generando riesgo de gaps y reversals en el NQ.",
+  "petroleo": "El petroleo retrocede (Brent en torno a 103-106 USD, WTI en torno a 95-97 USD) tras circular un borrador de propuesta mediado por Qatar para poner fin a la guerra EE.UU.-Iran, lo que reduce la prima de riesgo geopolitico y podria aliviar la presion inflacionaria sobre las expectativas de tasas que afectan al NQ.",
+  "catalizador": "AMD subio cerca de 6% en premarket tras superar expectativas de ganancias del Q3, impulsando al sector de semiconductores, mientras los futuros del Nasdaq-100 recuperan terreno (de -2.4% a +0.5% aprox.) tras digerir el resultado electoral, lo que puede dar soporte al NQ en la apertura de las 9:30 ET.",
   "sources": [
-    "CNBC 04-Nov-2026",
-    "Bloomberg 04-Nov-2026",
-    "CNBC 03-Nov-2026"
+    "CNBC (live blog) 04:22 ET, 03-04 nov 2026",
+    "Yahoo Finance / oilprice.com, 04 nov 2026",
+    "Fox Business / The Globe and Mail (via wires), 04 nov 2026"
   ],
-  "as_of": "2026-11-04T12:05:52Z"
+  "as_of": "2026-11-04T12:38:27Z"
 }
