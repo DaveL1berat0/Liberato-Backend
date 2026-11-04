@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los democratas confirmaron el control del Congreso (Camara y Senado) en las midterms, lo que disparo temores de mayor regulacion a la IA y freno a la construccion de centros de datos: Nvidia y Micron cayeron mas de 1% en premercado, lastrando el segmento de semis del NQ, aunque el indice se recupera tras comentarios de Trump aceptando el resultado.",
-  "petroleo": "El Brent cae a 102.11 USD (-1.44%) y el WTI a 95.20 USD (-0.93%) hacia las 06:55 ET, tras comentarios de Trump de que EE.UU. no tiene planes inmediatos de nuevos ataques a Iran, lo que reduce la prima de riesgo geopolitico y resta presion inflacionaria sobre las tasas, un leve viento de cola para el NQ.",
-  "catalizador": "El reporte ADP de empleo privado de octubre sorprendio al alza con +86,000 vs +75,000 esperado (publicado 08:15 ET), un dato mas fuerte de lo previsto que podria moderar las apuestas de recorte de tasas de la Fed antes del NFP del viernes, un viento en contra de corto plazo para el NQ.",
+  "geopolitica": "EE.UU. atacó la isla iraní de Qeshm, cerca del Estrecho de Hormuz, reavivando el riesgo geopolítico sobre el suministro de crudo justo cuando Irán dice que un acuerdo de paz sigue \"lejano\" (Reuters/WSJ, ~02:44 ET 3-nov).",
+  "petroleo": "Brent sube ~1.8% a 106.61 USD y WTI ronda 98 USD tras los ataques a Qeshm, revirtiendo parte del desplome de más del 7% del lunes por las esperanzas de un acuerdo Irán-EE.UU. (Reuters, 02:44 ET 3-nov); presión alcista moderada sobre energéticos que puede frenar al NQ si persiste.",
+  "catalizador": "Los futuros del Nasdaq-100 cayeron hasta un 2.4% tras el barrido demócrata en el Congreso en las elecciones de mitad de mandato, por temor a mayor regulación de la IA, antes de recortar pérdidas hacia las 03:13 ET (InvestingLive/NBC News, 04-nov); catalizador clave de volatilidad para el NQ en la apertura.",
   "sources": [
-    "CNBC 08:15 ET (ADP October +86,000 vs +75,000 esperado)",
-    "Reuters/MarketScreener 06:55 ET (Brent 102.11, WTI 95.20)",
-    "Bloomberg/Yahoo Finance 08:00 ET (Nasdaq futures, temores regulacion IA/data centers tras midterms)"
+    "Reuters 02:44 ET",
+    "WSJ (vía Reuters) 03-nov",
+    "CNBC 03-nov",
+    "InvestingLive 03:13 ET",
+    "NBC News 04-nov"
   ],
-  "as_of": "2026-11-04T13:39:08Z"
+  "as_of": "2026-11-04T14:09:05Z"
 }
