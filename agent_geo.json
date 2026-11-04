@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. atacó el lunes la isla iraní de Qeshm, en la boca del estrecho de Ormuz, y Trump anunció que terminará unos $4,000M anuales de ayuda militar a Israel a fin de 2026, elevando la incertidumbre geopolítica justo el día de las elecciones de medio término en EE.UU.; el riesgo de escalada con Irán añade presión bajista para activos de riesgo como el NQ.",
-  "petroleo": "El Brent cayó cerca de 3.3% hasta unos $101.32/barril (WTI cerca de $94.30) hacia las 08:50 ET tras el anuncio de Trump sobre la ayuda a Israel, revirtiendo el salto previo provocado por el ataque a Qeshm; la caída del crudo alivia presión inflacionaria pero refleja aversión al riesgo que puede pesar sobre el NQ.",
-  "catalizador": "",
+  "geopolitica": "Los demócratas se hicieron con el control del Senado y la Cámara en las elecciones de medio mandato de EE.UU.; Trump aceptó los resultados, lo que redujo la incertidumbre política y ayudó a los futuros del Nasdaq-100 a revertir una caída de hasta 2.4% durante la madrugada (CNBC, Bloomberg, 04-Nov).",
+  "petroleo": "El WTI cerró en 96.09 USD/barril y el Brent en 103.60 USD/barril el martes, tras un repunte por un ataque reportado de EE.UU. a la isla iraní de Qeshm que reavivó la prima de riesgo del Golfo Pérsico, aunque Washington y Teherán siguen revisando propuestas diplomáticas para evitar una escalada (CNBC, Bloomberg, 03-Nov).",
+  "catalizador": "Los futuros del Nasdaq-100 pasaron de caer hasta 2.4% a subir cerca de 1% en la madrugada del miércoles tras confirmarse la barrida demócrata en el Congreso, el principal catalizador de última hora para el NQ hoy (CNBC, 04-Nov).",
   "sources": [
-    "Reuters (via GV Wire) 08:50 ET",
-    "CNN 03-Nov-2026",
-    "Jerusalem Post 03-Nov-2026"
+    "CNBC 04-Nov-2026",
+    "Bloomberg 04-Nov-2026",
+    "CNBC 03-Nov-2026"
   ],
-  "as_of": "2026-11-03T21:06:07Z"
+  "as_of": "2026-11-04T12:05:52Z"
 }
