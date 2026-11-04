@@ -4424,22 +4424,29 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       var hrs=Math.floor(mins/60); if(hrs<24)return 'hace '+hrs+(hrs===1?' hora':' horas');
       var days=Math.floor(hrs/24); return 'hace '+days+(days===1?' día':' días');
     }
+    // Etiquetas enum → español (el titular ya llega en español del backend)
+    var ALERT_ES={CRITICAL:'CRÍTICA',HIGH:'ALTA',ELEVATED:'ELEVADA'};
+    var CONF_ES={High:'Alta',Medium:'Media',Standard:'Estándar'};
+    var SCOPE_ES={'Entire Market':'Todo el mercado','Technology':'Tecnología','AI Sector':'Sector IA','Auto/Tech':'Autos/Tech','Tech/Market':'Tech/Mercado'};
     return items.map(function(m){
       var sent=m.sentiment||'Neutral';
       var alert=m.alert_level||'HIGH';
+      var alertEs=ALERT_ES[alert]||alert;
+      var scopeEs=m.scope?(SCOPE_ES[m.scope]||m.scope):'—';
+      var confEs=m.source_confidence?(CONF_ES[m.source_confidence]||m.source_confidence):'—';
       var score=m.impact_score?m.impact_score.toFixed(1):'—';
       var sentIcon=sent==='Bullish'?'🟢':sent==='Bearish'?'🟣':'⬜';
       return '<div data-url="'+esc(m.url||'')+'" style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;background:'+(SENT_ITEM_BG[sent]||SENT_ITEM_BG.Neutral)+'">'
         +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">'
-        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">'+esc(alert)+' ALERTA</span>'
+        +'<span style="font-family:var(--mono);font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;background:'+SENT_BG[sent]+';color:'+SENT_COLOR[sent]+';">ALERTA '+esc(alertEs)+'</span>'
         +'<span style="font-size:10px;">'+sentIcon+'</span>'
         +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+({Bullish:'ALCISTA',Bearish:'BAJISTA',Neutral:'NEUTRAL'}[sent]||esc(sent.toUpperCase()))+'</span>'
         +'</div>'
         +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+esc(m.headline||m.title||'')+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impacto <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+esc(m.scope||'—')+'</span></div>'
-        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Fuente <span style="color:rgba(239,236,227,0.7);">'+esc(m.source||'—')+' ('+esc(m.source_confidence||'—')+')</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+esc(scopeEs)+'</span></div>'
+        +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Fuente <span style="color:rgba(239,236,227,0.7);">'+esc(m.source||'—')+' ('+esc(confEs)+')</span></div>'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Hora <span style="color:rgba(239,236,227,0.7);">'+relTime(m)+'</span></div>'
         +'</div>'
         +'</div>';

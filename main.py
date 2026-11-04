@@ -4843,6 +4843,72 @@ def _macro_news_from_calendar():
     return out
 
 _movers_inflight = False   # candado: evita ráfagas concurrentes (spawn on-read por usuario)
+# ── Traducción de titulares al español (Finnhub los entrega en INGLÉS) ─────────
+# El producto es en español: los titulares del panel "Noticias de Alto Impacto" deben
+# ir en español. Se cachea por titular para no retraducir (ahorra IA). Los ítems del
+# calendario macro ya vienen en español. Si la IA no está disponible o falla, se
+# conserva el titular original en inglés (Regla #1: mejor el dato real que nada).
+_news_tx_cache = {}
+
+async def _ai_translate_list(items):
+    """Traduce una lista de titulares EN→ES. Devuelve lista de la MISMA longitud o None."""
+    if not items:
+        return None
+    numbered = "\n".join(f"{i+1}. {h}" for i, h in enumerate(items))
+    sys_msg = ("Eres un traductor financiero profesional. Traduce titulares de noticias del "
+               "inglés al español neutro, natural y preciso, con la terminología de mercados "
+               "correcta. No añadas comentarios ni numeración.")
+    usr_msg = ("Traduce al español estos titulares. Devuelve EXCLUSIVAMENTE un array JSON de "
+               "strings, en el MISMO orden y con la MISMA cantidad de elementos, sin texto "
+               "extra ni numeración:\n" + numbered)
+    try:
+        txt = await _gemini_chat(sys_msg, usr_msg, max_tokens=700, temperature=0.2)
+    except Exception as e:
+        print(f"[news-tx] gemini: {e}"); return None
+    if not txt:
+        return None
+    try:
+        mt = re.search(r"\[.*\]", txt, re.S)
+        if not mt:
+            return None
+        arr = json.loads(mt.group(0))
+        if isinstance(arr, list) and len(arr) == len(items):
+            return [str(x).strip() for x in arr]
+    except Exception as e:
+        print(f"[news-tx] parse: {e}")
+    return None
+
+async def _translate_movers_es(items):
+    """Pone 'headline' en español (guardando el original en 'headline_en'). Cachea por
+    titular. Omite los del calendario macro (ya en español). Nunca inventa: si la IA
+    no traduce, deja el titular original."""
+    need = []
+    for it in items:
+        if it.get("source") == "Calendario macro":
+            continue
+        h = (it.get("headline") or "").strip()
+        if not h or h.lower() in _news_tx_cache:
+            continue
+        need.append(h)
+    need = list(dict.fromkeys(need))            # únicos, preservando orden
+    if need:
+        es = await _ai_translate_list(need)
+        if es:
+            for en_h, es_h in zip(need, es):
+                if es_h:
+                    _news_tx_cache[en_h.lower()] = es_h
+    for it in items:
+        if it.get("source") == "Calendario macro":
+            continue
+        h = (it.get("headline") or "").strip()
+        tx = _news_tx_cache.get(h.lower())
+        if tx and tx != h:
+            it["headline_en"] = h
+            it["headline"] = tx
+    if len(_news_tx_cache) > 400:               # poda anti-crecimiento
+        for k in list(_news_tx_cache)[:150]:
+            _news_tx_cache.pop(k, None)
+
 async def refresh_movers():
     """Ultra High Impact News — market-moving events only. No stock gainers/losers."""
     global _movers_inflight
@@ -4951,6 +5017,13 @@ async def refresh_movers():
                     it["time_et"] = datetime.fromtimestamp(float(_ts), NY).strftime("%H:%M ET")
                 except Exception:
                     pass
+
+        # Titulares al ESPAÑOL (Finnhub los da en inglés). Cacheado por titular; si la IA
+        # falla, se conserva el inglés. Los del calendario macro ya están en español.
+        try:
+            await _translate_movers_es(out)
+        except Exception as e:
+            print(f"[movers] traducción ES falló (no crítico): {e}")
 
         if out:
             cache["movers"]["data"]        = out
