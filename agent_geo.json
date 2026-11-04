@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump senalo que no hay planes inmediatos de nuevos ataques contra Iran tras la victoria demócrata en el Congreso en las elecciones de medio término, lo que redujo la prima de riesgo geopolítico y impulsó un fuerte rally en acciones tecnológicas, incluido el Nasdaq-100.",
-  "petroleo": "El Brent cotiza cerca de 102 USD/barril y el WTI cerca de 95 USD/barril, ambos a la baja, por señales de deshielo diplomático EE.UU.-Irán y la reducción del riesgo electoral, lo que alivia la presión inflacionaria y favorece al NQ intradía.",
-  "catalizador": "",
+  "geopolitica": "Los demócratas logran mayoría en el Congreso tras las elecciones de medio mandato del 3-nov, reduciendo incertidumbre política y disparando un rally de risk-on que llevó al Nasdaq a subir entre +1.2% y +1.9% intradía el 4-nov (TheStreet, StockTitan).",
+  "petroleo": "El Brent se desploma más de $10/barril y perfora los $100 por primera vez en semanas (tras cerrar el lunes en $103.60 y el WTI en $96.09) ante señales de distensión EE.UU.-Irán sobre el Estrecho de Ormuz, aliviando la presión inflacionaria que pesaba sobre el NQ (CNBC, TheStreet).",
+  "catalizador": "El barrido demócrata en el Congreso funciona como catalizador de última hora: el mercado interpreta un freno a la escalada bélica con Irán y una menor prima de riesgo geopolítico, lo que impulsa compras en tech/Nasdaq durante la sesión del 4-nov (StockTitan, TheStreet).",
   "sources": [
-    "CNBC 2026-11-04 (midterm/market live updates)",
-    "StockTitan 11:57 ET",
-    "Reuters (via ADVFN) ~06:55 ET"
+    "CNBC 03-Nov-2026",
+    "TheStreet 04-Nov-2026",
+    "StockTitan 04-Nov-2026",
+    "Al Jazeera 03-Nov-2026"
   ],
-  "as_of": "2026-11-04T18:05:44Z"
+  "as_of": "2026-11-04T19:06:27Z"
 }
