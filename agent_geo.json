@@ -1,13 +1,11 @@
 {
-  "geopolitica": "EE.UU. atacó la isla iraní de Qeshm, cerca del Estrecho de Hormuz, reavivando el riesgo geopolítico sobre el suministro de crudo justo cuando Irán dice que un acuerdo de paz sigue \"lejano\" (Reuters/WSJ, ~02:44 ET 3-nov).",
-  "petroleo": "Brent sube ~1.8% a 106.61 USD y WTI ronda 98 USD tras los ataques a Qeshm, revirtiendo parte del desplome de más del 7% del lunes por las esperanzas de un acuerdo Irán-EE.UU. (Reuters, 02:44 ET 3-nov); presión alcista moderada sobre energéticos que puede frenar al NQ si persiste.",
-  "catalizador": "Los futuros del Nasdaq-100 cayeron hasta un 2.4% tras el barrido demócrata en el Congreso en las elecciones de mitad de mandato, por temor a mayor regulación de la IA, antes de recortar pérdidas hacia las 03:13 ET (InvestingLive/NBC News, 04-nov); catalizador clave de volatilidad para el NQ en la apertura.",
+  "geopolitica": "La guerra EE.UU.-Iran sigue sin resolverse y el vicepresidente JD Vance culpo el conflicto por la derrota republicana en las elecciones de medio mandato, lo que mantiene la incertidumbre geopolitica y afecta el apetito por riesgo del NQ (CNBC, 11:57 ET).",
+  "petroleo": "El WTI cae cerca de 7% a 89,40 USD/barril y el Brent cerca de 8% a 95,41 USD/barril tras los comentarios de Vance sobre la guerra con Iran y expectativas de desescalada, lo que alivia presion inflacionaria y favorece a las tecnologicas del NQ (CNBC, 11:57 ET).",
+  "catalizador": "La barrida demócrata en ambas camaras del Congreso en las midterms elimino incertidumbre politica y dispara un rally de acciones: Dow +2,9%, S&P 500 +1,7% y Nasdaq Composite +1,9%, impulsando al NQ en el intradia (CNBC, 11:57 ET).",
   "sources": [
-    "Reuters 02:44 ET",
-    "WSJ (vía Reuters) 03-nov",
-    "CNBC 03-nov",
-    "InvestingLive 03:13 ET",
-    "NBC News 04-nov"
+    "CNBC 11:57 ET",
+    "CNBC 10:02 ET",
+    "CNBC 12:04 ET"
   ],
-  "as_of": "2026-11-04T14:09:05Z"
+  "as_of": "2026-11-04T17:05:38Z"
 }
