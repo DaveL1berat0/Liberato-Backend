@@ -4861,10 +4861,31 @@ async def _ai_translate_list(items):
     usr_msg = ("Traduce al español estos titulares. Devuelve EXCLUSIVAMENTE un array JSON de "
                "strings, en el MISMO orden y con la MISMA cantidad de elementos, sin texto "
                "extra ni numeración:\n" + numbered)
-    try:
-        txt = await _gemini_chat(sys_msg, usr_msg, max_tokens=700, temperature=0.2)
-    except Exception as e:
-        print(f"[news-tx] gemini: {e}"); return None
+    txt = None
+    # Groq primero (rápido y fiable). Gemini de respaldo (a veces da 503 por alta demanda).
+    if GROQ_KEY and budget_ok("groq", 1):
+        try:
+            budget_charge("groq", 1)
+            payload = {"model": GROQ_COMMITTEE_MODEL, "max_tokens": 900, "temperature": 0.2,
+                       "messages": [{"role": "system", "content": sys_msg},
+                                    {"role": "user", "content": usr_msg}]}
+            if GROQ_COMMITTEE_MODEL.startswith("qwen"):
+                payload["reasoning_effort"] = "none"
+            async with httpx.AsyncClient(timeout=15) as c:
+                r = await c.post("https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+                    json=payload)
+            if r.status_code == 200:
+                txt = r.json()["choices"][0]["message"]["content"]
+            else:
+                print(f"[news-tx] groq {r.status_code} — probando Gemini")
+        except Exception as e:
+            print(f"[news-tx] groq: {e}")
+    if not txt:
+        try:
+            txt = await _gemini_chat(sys_msg, usr_msg, max_tokens=700, temperature=0.2)
+        except Exception as e:
+            print(f"[news-tx] gemini: {e}")
     if not txt:
         return None
     try:
