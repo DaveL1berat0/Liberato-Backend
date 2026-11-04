@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los democratas lograron un barrido en las elecciones de medio termino (Camara y Senado) y Trump reconocio que la guerra en Iran peso en las perdidas republicanas, lo que disparo fuerte volatilidad nocturna: los futuros del Nasdaq-100 llegaron a caer 2.4% antes de recuperarse hacia la apertura, generando riesgo de gaps y reversals en el NQ.",
-  "petroleo": "El petroleo retrocede (Brent en torno a 103-106 USD, WTI en torno a 95-97 USD) tras circular un borrador de propuesta mediado por Qatar para poner fin a la guerra EE.UU.-Iran, lo que reduce la prima de riesgo geopolitico y podria aliviar la presion inflacionaria sobre las expectativas de tasas que afectan al NQ.",
-  "catalizador": "AMD subio cerca de 6% en premarket tras superar expectativas de ganancias del Q3, impulsando al sector de semiconductores, mientras los futuros del Nasdaq-100 recuperan terreno (de -2.4% a +0.5% aprox.) tras digerir el resultado electoral, lo que puede dar soporte al NQ en la apertura de las 9:30 ET.",
+  "geopolitica": "Los democratas se llevaron el control de ambas camaras (Senado y Camara) en las midterms del 3-nov, lo que disparo los futuros de EE.UU. (Dow +800 pts) al despejarse la incertidumbre politica, aunque Tesla y SpaceX cayeron cerca de 4% por su vinculo con Musk, lo que puede generar divergencia dentro de las megacaps del NQ.",
+  "petroleo": "El Brent cerro el 3-nov en 103.60 USD (-1.1%) y el WTI en 96.09 USD (-0.4%), su segunda caida consecutiva ante esperanzas de un acuerdo diplomatico EE.UU.-Iran via mediacion de Qatar, lo que reduce la prima de riesgo geopolitico y alivia presion inflacionaria sobre las tasas que pesan en el NQ.",
+  "catalizador": "AMD reporto resultados del Q3 FY2026 tras el cierre del 3-nov con ingresos de 13.4B USD (por encima de su guia de 12.7-13.3B) y BPA no-GAAP de 2.09 USD, con el segmento Data Center casi duplicando ingresos interanuales, un catalizador positivo para semiconductores que puede dar soporte al NQ en la apertura.",
   "sources": [
-    "CNBC (live blog) 04:22 ET, 03-04 nov 2026",
-    "Yahoo Finance / oilprice.com, 04 nov 2026",
-    "Fox Business / The Globe and Mail (via wires), 04 nov 2026"
+    "CNBC 03-nov (cierre, midterm elections live updates)",
+    "CNBC 04-nov premercado (Dow futures surge 800 points after Democrats win)",
+    "CNBC 03-nov (cierre, oil prices climb/fall Iran war updates)",
+    "AMD 8-K / comunicado de resultados, 03-nov (tras cierre)",
+    "CNBC 04-nov (SpaceX, Tesla fall around 4% on Democrats' big win)"
   ],
-  "as_of": "2026-11-04T12:38:27Z"
+  "as_of": "2026-11-04T13:07:54Z"
 }
