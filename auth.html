@@ -649,6 +649,11 @@ function startAccessPolling(){
 
 // ═══ LOGOUT ═══
 function doLogout(){
+  var _t=''; try{_t=localStorage.getItem('lbc_token')||'';}catch(e){}
+  // Avisa al backend para LIBERAR el slot de dispositivo (coherente con 1 sesión),
+  // igual que homepage/daytrading. keepalive deja vivir la petición tras redirigir.
+  try{ fetch(API_URL+'/api/auth/logout',{method:'POST',keepalive:true,
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+_t},body:'{}'}).catch(function(){}); }catch(e){}
   try{
     localStorage.removeItem('lbc_token');
     localStorage.removeItem('lbc_session');
@@ -744,6 +749,7 @@ async function doChangeEmail(){
 
 // ═══ INIT ═══
 (function init(){
+  try{ state.lang = localStorage.getItem('lbc_lang') || state.lang; }catch(e){}  // restaura idioma guardado
   applyLang();
   var params = new URLSearchParams(window.location.search);
   // Si viene a restablecer contraseña (?forgot=1)
