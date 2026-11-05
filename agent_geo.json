@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Las esperanzas de que la derrota republicana en las elecciones de medio termino reduzca el riesgo de nuevos ataques de EEUU contra Iran impulsan el apetito por riesgo, aunque Eurasia Group aun estima 60% de probabilidad de ataques renovados, lo que deja al NQ expuesto a un giro brusco si escala el conflicto (CNBC, 05-nov-2026).",
-  "petroleo": "El Brent sube 1.6% a 96.15 USD/barril y el WTI 0.6% a 88.64 USD/barril este jueves, tras desplomarse mas de 8% el miercoles por expectativas de desescalada en la guerra Iran-EEUU, lo que alivia la presion inflacionaria que pesaba sobre el NQ (CNBC, 05-nov-2026).",
-  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.8%-1% en premarket, lastrados por un desplome de casi 4% en el ETF de semiconductores tras una guia debil de Qualcomm y ventas en CoreWeave y Nebius, senal de rotacion fuera de tech que puede presionar al NQ en la apertura (CNBC/Bloomberg, 05-nov-2026).",
+  "geopolitica": "El triunfo democrata en ambas camaras del Congreso en las elecciones de medio termino del 3-nov dispara temores de mayor regulacion a los centros de datos de IA; el Nasdaq Composite caia cerca de 3% hacia las 10:00 ET del jueves, en camino a confirmar una correccion tecnica (CNBC, 05-nov 10:00 ET).",
+  "petroleo": "El Brent cerro el miercoles con una caida del 8.7% a 94.62 USD/barril y el WTI del 8.3% a 88.12 USD, tras el barrido democrata en las midterms que alimenta expectativas de un fin mas rapido de la guerra EE.UU.-Iran, con la caida extendiendose el jueves (Reuters/NBC News, 04-nov cierre).",
+  "catalizador": "Qualcomm se desplomo mas de 11% tras reportar una caida del 26% en ventas de handsets y guidance debil, amplificando la ola de ventas en semiconductores (AMD -13%, Nvidia -7%, Intel -8%) que arrastra al Nasdaq-100 (24/7 Wall St/Invezz, 05-nov premarket).",
   "sources": [
-    "CNBC - Markets cool after the monster midterm rally with Musk's stocks under pressure (05-nov-2026)",
-    "CNBC - Oil falls for a fourth day on expectations for lower risk of Iran war escalation (05-nov-2026)",
-    "Bloomberg - US equity futures inch higher, Nasdaq 100 futures down ~0.8% premarket (04/05-nov-2026)",
-    "CNBC - The rotation out of tech is becoming a risk for the broader market (05-nov-2026)",
-    "CNBC - Jim Cramer's top 10 things to watch Thursday (05-nov-2026)"
+    "CNBC 05-nov 10:00 ET",
+    "Reuters/NBC News 04-nov cierre",
+    "24/7 Wall St 05-nov",
+    "Invezz 05-nov premarket"
   ],
-  "as_of": "2026-11-05T15:38:14Z"
+  "as_of": "2026-11-05T16:06:39Z"
 }
