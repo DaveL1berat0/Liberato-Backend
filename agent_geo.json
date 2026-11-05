@@ -1,13 +1,13 @@
 {
-  "geopolitica": "La barrida demócrata en las elecciones de medio término (resultado confirmado el 03-nov) y las esperanzas de un acuerdo negociado con Irán tras el ataque de EE.UU. a la isla de Qeshm presionan a la baja las futuras del Nasdaq-100, mientras en Asia los chips (SK Hynix -9%, Samsung -6,65%) caen por temor a mayores restricciones de un Congreso demócrata a los centros de datos de IA.",
-  "petroleo": "WTI cotiza cerca de 88 USD/barril (prácticamente plano la mañana del jueves) tras desplomarse un 8% el miércoles, y Brent ronda 95 USD/barril, ambos por las expectativas de una resolución diplomática de la guerra EE.UU.-Irán; un retroceso en esas expectativas podría revertir la caída y presionar al NQ via mayores costos.",
-  "catalizador": "Los futuros del Nasdaq-100 caen un 0,8% en premercado del jueves (S&P 500 -0,1%) ante la profundización de la venta de 'neoclouds' y chips, con Qualcomm cayendo cerca de 10% a pesar de superar expectativas de ganancias.",
+  "geopolitica": "Los demócratas arrasaron en las elecciones de medio término (Cámara y Senado) y el vicepresidente Vance atribuyó la derrota republicana al desgaste por la guerra con Irán, mientras Trump evalúa entre nuevos ataques o un acuerdo negociado; la perspectiva de desescalada reduce la prima de riesgo geopolítico y favorece un rally de alivio en el NQ.",
+  "petroleo": "El Brent se desplomó cerca de 9% desde unos 104 USD hasta ~94-95 USD/barril y el WTI cayó a ~88-91 USD, tras la barrida demócrata que alimenta expectativas de fin de la guerra EE.UU.-Irán; la caída de crudo reduce presión inflacionaria y es favorable para el NQ al bajar rendimientos de bonos.",
+  "catalizador": "Los futuros del Nasdaq-100 operan mixtos/a la baja en premercado del jueves pese al alivio político, lastrados por Arm Holdings y Qualcomm tras resultados con guías débiles y caída en ingresos de handsets; la debilidad en semiconductores contrarresta parte del rally post-elecciones.",
   "sources": [
-    "CNBC - Stock market today: Live updates (04/05-nov-2026)",
-    "CNBC - Oil steadies after 8% plunge / Crude oil prices (04-nov-2026)",
-    "CNBC - U.S. strikes Iran's Qeshm Island as Vance hopes for 'negotiated settlement' (03-nov-2026)",
-    "CNBC - Stock futures mixed, neocloud slump deepens after Democrats' midterm win rally (04-nov-2026)",
-    "Bloomberg - Oil Steadies After 8% Plunge on Hopes for End to US-Iran War (04-nov-2026)"
+    "CNBC 04-nov-2026 - Oil falls on Iran war uncertainty after Trump's Republicans vote rout",
+    "Axios 04-nov-2026 - Oil prices plunge after Vance post on Iran war",
+    "Oilprice.com 04-nov-2026 - Oil Crashes 9% as Trump and Vance Blame Iran War for Midterm Rout",
+    "Yahoo Finance/AOL 04:05 ET 05-nov-2026 - Stock market today: Dow, S&P 500, Nasdaq trade mixed as post-election relief rally cools, oil falls",
+    "Benzinga 05-nov-2026 - premarket Nasdaq-100 futures move on chip earnings (Arm, Qualcomm)"
   ],
-  "as_of": "2026-11-05T11:07:34Z"
+  "as_of": "2026-11-05T11:40:32Z"
 }
