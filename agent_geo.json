@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Tras el barrido democrata en las legislativas del 3-nov, Wall Street repunto con fuerza pero el Kospi coreano cae ~6% por una liquidacion en semiconductores y crecen las dudas sobre mayor escrutinio regulatorio a la infraestructura de IA, lo que pesa sobre el sentimiento tecnologico del NQ (CNBC, Investing.com, 07:37 ET).",
-  "petroleo": "El Brent cae a USD 96.11 y el WTI a USD 88.68 (retroceso superior al 8%) ante expectativas de distension en Oriente Medio con Iran tras las elecciones de EE.UU., lo que alivia presion inflacionaria y es marginalmente positivo para el NQ (OilPriceAPI, 06:52 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.8% (-229 puntos, en torno a 28,300) en la apertura por rotacion fuera de los semiconductores (SMH -2.25% premarket) tras el resultado electoral, con los datos semanales de solicitudes de desempleo publicandose mas tarde en la sesion (Investing.com, 07:37 ET).",
+  "geopolitica": "La venta de semiconductores (ETF SOXX cae mas de 3% en premarket) se extiende por segunda sesion consecutiva pese al rally post-electoral, mientras persisten dudas sobre el fin de la guerra EE.UU.-Iran tras el barrido democrata en el Congreso, lo que presiona al NQ antes de la apertura (Bloomberg, CNBC, mañana ET 05-nov).",
+  "petroleo": "El Brent rebota ~1.6% a USD 96.15 y el WTI ~0.6% a USD 88.64 este jueves, tras desplomarse mas de 8% el miercoles a su minimo desde el 31 de agosto por expectativas de menor riesgo de escalada Iran-EE.UU.; el repunte reduce el alivio inflacionario y es marginalmente negativo para el NQ (CNBC, mañana ET 05-nov).",
+  "catalizador": "El rendimiento del Treasury a 10 anos se mantiene casi sin cambios mientras los operadores esperan el informe de empleo de octubre (se publica el viernes 6-nov), dejando a los futuros del NQ en un rango mixto esta mañana sin un catalizador macro inmediato (CNBC, mañana ET 05-nov).",
   "sources": [
-    "Investing.com 07:37 ET",
-    "OilPriceAPI 06:52 ET",
-    "CNBC 04-Nov"
+    "Bloomberg 05-nov (premarket)",
+    "CNBC 05-nov (premarket)",
+    "CNBC 05-nov oil report",
+    "CNBC 05-nov treasury yields"
   ],
-  "as_of": "2026-11-05T13:40:15Z"
+  "as_of": "2026-11-05T14:11:44Z"
 }
