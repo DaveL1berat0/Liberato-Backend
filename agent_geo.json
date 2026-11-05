@@ -1,12 +1,13 @@
 {
-  "geopolitica": "La barrida democrata en las elecciones de medio mandato del Congreso de EE.UU. dispara temores a mayor regulacion de IA y centros de datos, hundiendo a los semiconductores (Nvidia, Intel, AMD, Broadcom) y presionando a la baja los futuros del Nasdaq-100 justo en la apertura (Reuters, 07:04 ET).",
-  "petroleo": "El Brent cotiza cerca de 93,65 USD y el WTI en 86,98 USD, tras un desplome superior al 8% en la sesion previa por expectativas de un acuerdo de paz con Iran luego de que Trump descartara ataques inmediatos; un petroleo mas barato alivia presion inflacionaria y favorece el sentimiento de riesgo para el NQ (Reuters, 21:11 ET).",
-  "catalizador": "Qualcomm se desploma un 9,6% en premarket tras fallar en sus previsiones de ventas de chips para smartphones, arrastrando al sector tech del Nasdaq-100; el mercado tambien digiere el solido reporte ADP del miercoles (86.000 empleos privados en octubre, por encima de lo esperado), que eleva las probabilidades de una decision relevante de la Fed en diciembre (Barchart/Invezz, premarket).",
+  "geopolitica": "La guerra EE.UU.-Iran sigue activa (ataque reportado en la isla de Qeshm el 3-nov y buques en llamas en el Estrecho de Hormuz), pero el mercado redujo el riesgo de escalada tras la derrota republicana en las elecciones legislativas del 3-nov, lo que alivia el sentimiento de riesgo para el NQ (CNBC).",
+  "petroleo": "El Brent sube 1.6% a 96.15 USD y el WTI sube 0.6% a 88.64 USD, rebotando tras desplomarse mas de 8% en la sesion previa a minimos desde el 31-ago por expectativas de un acuerdo de paz con Iran; el petroleo mas barato en la semana alivia presion inflacionaria para el NQ (CNBC).",
+  "catalizador": "Qualcomm cae mas de 9% en premarket tras un pronostico debil de ventas de chips para smartphones, presionando al sector tech del Nasdaq-100; el mercado tambien digiere el reporte ADP del miercoles (86.000 empleos privados en octubre, por encima de lo esperado), que eleva las probabilidades de una decision relevante de la Fed en diciembre (CNBC).",
   "sources": [
-    "Reuters 07:04 ET",
-    "Reuters 21:11 ET",
-    "Invezz premarket",
-    "Barchart premarket"
+    "CNBC 05-nov-2026 (qualcomm-qcom-earnings-report-q4-2026)",
+    "CNBC 05-nov-2026 (oil-falls-for-a-fourth-day-on-expectations-for-lower-risk-of-iran-war-escalation)",
+    "CNBC 05-nov-2026 (markets-cool-midterm-musk-stocks-under-pressure)",
+    "CNBC 04-nov-2026 (private-companies-added-86000-jobs-in-october)",
+    "CNBC 03-nov-2026 (iran-us-vance-trump-strikes)"
   ],
-  "as_of": "2026-11-05T14:39:48Z"
+  "as_of": "2026-11-05T15:07:12Z"
 }
