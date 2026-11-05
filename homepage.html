@@ -212,7 +212,7 @@ button.nav-member{display:inline-flex;align-items:center;gap:6px;}
 .nav-cta{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#C9A84C;border:0.5px solid rgba(201,168,76,0.4);padding:8px 14px;border-radius:6px;background:transparent;min-height:36px;white-space:nowrap;transition:all 0.25s ease;cursor:pointer;}
   .nav-lang{display:flex;align-items:center;gap:5px;font-size:11px;letter-spacing:0.06em;color:rgba(232,228,217,0.65);border:0.5px solid rgba(232,228,217,0.18);background:transparent;border-radius:6px;padding:6px 10px;cursor:pointer;transition:all 0.2s;font-family:inherit;}
   .nav-lang:hover{color:#C9A84C;border-color:rgba(201,168,76,0.4);}
-  .nav-lang .lang-flag{font-size:13px;line-height:1;}
+  .nav-lang .lang-flag{font-size:18px;line-height:1;}
   .nav-lang .lang-code{font-weight:600;letter-spacing:0.08em;}
 .nav-cta:active{background:rgba(201,168,76,0.1);}
 /* HAMBURGER — 3 lines real SVG */
@@ -1517,7 +1517,7 @@ nav { max-width: 100%; }
 @media (max-width: 767px){
   .nav-right{gap:0.45rem!important;}
   .nav-lang{padding:5px 7px!important;gap:3px!important;}
-  .nav-lang .lang-flag{display:none!important;}  /* solo código ES/EN en móvil */
+  .nav-lang .lang-flag{font-size:17px!important;}  /* solo la bandera, también en móvil */
   .nav-login{padding:6px 10px!important;font-size:10px!important;}
   .nav-cta{padding:6px 10px!important;font-size:10px!important;}
 }
@@ -1694,7 +1694,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <div class="pd-sec-t" data-es="Idioma" data-en="Language">Idioma</div>
       <div class="pd-lang">
         <button type="button" class="pd-lang-btn" id="pd-lang-es" onclick="profileSetLang('es')">🇪🇸 Español</button>
-        <button type="button" class="pd-lang-btn" id="pd-lang-en" onclick="profileSetLang('en')">🇬🇧 English</button>
+        <button type="button" class="pd-lang-btn" id="pd-lang-en" onclick="profileSetLang('en')">🇺🇸 English</button>
       </div>
       <div class="pd-msg" id="pd-lang-msg"></div>
     </div>
@@ -1765,7 +1765,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   </ul>
   <div class="nav-right">
     <button class="nav-lang" onclick="toggleLang()" aria-label="Cambiar idioma" title="Español / English">
-      <span class="lang-flag">🇪🇸</span><span class="lang-code" id="lang-code">ES</span>
+      <span class="lang-flag" id="lang-flag">🇪🇸</span>
     </button>
     <button class="nav-login" id="nav-login-btn" onclick="openLoginModal()">Login</button>
     <button class="nav-cta" id="nav-join-btn" onclick="openModal()">Unirse &#8594;</button>
@@ -3208,7 +3208,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     var codeEl = document.getElementById('lang-code');
     var flagEl = document.querySelector('.lang-flag');
     if(codeEl) codeEl.textContent = newLang.toUpperCase();
-    if(flagEl) flagEl.textContent = newLang === 'es' ? '🇪🇸' : '🇬🇧';
+    if(flagEl) flagEl.textContent = newLang === 'es' ? '🇪🇸' : '🇺🇸';  // ES=España · EN=USA
   };
 
   // Al cargar: si el idioma guardado es inglés, traducir automáticamente
@@ -3218,7 +3218,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
       var codeEl = document.getElementById('lang-code');
       var flagEl = document.querySelector('.lang-flag');
       if(codeEl) codeEl.textContent = 'EN';
-      if(flagEl) flagEl.textContent = '🇬🇧';
+      if(flagEl) flagEl.textContent = '🇺🇸';
     }
   });
 })();
