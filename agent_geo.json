@@ -1,12 +1,7 @@
 {
-  "geopolitica": "El triunfo democrata en ambas camaras del Congreso en las elecciones de medio termino del 3-nov dispara temores de mayor regulacion a los centros de datos de IA; el Nasdaq Composite caia cerca de 3% hacia las 10:00 ET del jueves, en camino a confirmar una correccion tecnica (CNBC, 05-nov 10:00 ET).",
-  "petroleo": "El Brent cerro el miercoles con una caida del 8.7% a 94.62 USD/barril y el WTI del 8.3% a 88.12 USD, tras el barrido democrata en las midterms que alimenta expectativas de un fin mas rapido de la guerra EE.UU.-Iran, con la caida extendiendose el jueves (Reuters/NBC News, 04-nov cierre).",
-  "catalizador": "Qualcomm se desplomo mas de 11% tras reportar una caida del 26% en ventas de handsets y guidance debil, amplificando la ola de ventas en semiconductores (AMD -13%, Nvidia -7%, Intel -8%) que arrastra al Nasdaq-100 (24/7 Wall St/Invezz, 05-nov premarket).",
-  "sources": [
-    "CNBC 05-nov 10:00 ET",
-    "Reuters/NBC News 04-nov cierre",
-    "24/7 Wall St 05-nov",
-    "Invezz 05-nov premarket"
-  ],
-  "as_of": "2026-11-05T16:06:39Z"
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "",
+  "sources": [],
+  "as_of": "2026-11-05T17:07:20Z"
 }
