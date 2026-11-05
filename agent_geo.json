@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Los demócratas arrasaron en las elecciones de medio término (Cámara y Senado) y el vicepresidente Vance atribuyó la derrota republicana al desgaste por la guerra con Irán, mientras Trump evalúa entre nuevos ataques o un acuerdo negociado; la perspectiva de desescalada reduce la prima de riesgo geopolítico y favorece un rally de alivio en el NQ.",
-  "petroleo": "El Brent se desplomó cerca de 9% desde unos 104 USD hasta ~94-95 USD/barril y el WTI cayó a ~88-91 USD, tras la barrida demócrata que alimenta expectativas de fin de la guerra EE.UU.-Irán; la caída de crudo reduce presión inflacionaria y es favorable para el NQ al bajar rendimientos de bonos.",
-  "catalizador": "Los futuros del Nasdaq-100 operan mixtos/a la baja en premercado del jueves pese al alivio político, lastrados por Arm Holdings y Qualcomm tras resultados con guías débiles y caída en ingresos de handsets; la debilidad en semiconductores contrarresta parte del rally post-elecciones.",
+  "geopolitica": "Los mercados tecnologicos se desploman tras la barrida democrata en las elecciones de mitad de mandato en EEUU, por temor a una regulacion mas estricta de los centros de datos de IA: las acciones de chips asiaticas (Advantest, Lasertec, SK Hynix, Samsung) cayeron entre 6% y 12% y el Kospi se hundio cerca de 5%, arrastrando a la baja los futuros del Nasdaq-100 en premarket.",
+  "petroleo": "El petroleo cae por cuarto dia consecutivo: el Brent ronda los 93,65 USD/barril (-1,03%) y el WTI los 86,98 USD/barril (-1,29%), ante expectativas de menor riesgo de escalada en la guerra EEUU-Iran tras los resultados de las elecciones de mitad de mandato, lo que reduce la prima de riesgo geopolitica que venia sosteniendo el crudo.",
+  "catalizador": "Qualcomm se desplomo cerca de 8% en after-hours tras emitir una guia de beneficios debil (2,15-2,35 USD/accion vs 2,32 USD esperado) por la debilidad en el negocio de smartphones, mientras Arm Holdings supero estimaciones de EPS pero cayo casi 2%, dejando mixtos a los futuros del Nasdaq-100.",
   "sources": [
-    "CNBC 04-nov-2026 - Oil falls on Iran war uncertainty after Trump's Republicans vote rout",
-    "Axios 04-nov-2026 - Oil prices plunge after Vance post on Iran war",
-    "Oilprice.com 04-nov-2026 - Oil Crashes 9% as Trump and Vance Blame Iran War for Midterm Rout",
-    "Yahoo Finance/AOL 04:05 ET 05-nov-2026 - Stock market today: Dow, S&P 500, Nasdaq trade mixed as post-election relief rally cools, oil falls",
-    "Benzinga 05-nov-2026 - premarket Nasdaq-100 futures move on chip earnings (Arm, Qualcomm)"
+    "CNBC 06:34 ET",
+    "CNBC 21:11 ET (04-Nov)",
+    "Bloomberg 04-Nov"
   ],
-  "as_of": "2026-11-05T11:40:32Z"
+  "as_of": "2026-11-05T12:08:16Z"
 }
