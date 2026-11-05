@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EEUU realizó ataques limitados en la isla iraní de Qeshm (2-3 nov, confirmados por funcionarios a CNN/CNBC), reavivando la prima de riesgo geopolítico sobre el crudo y el sentimiento de riesgo que presiona al NQ.",
-  "petroleo": "El Brent rebotó a ~105 USD y el WTI a ~97 USD tras los ataques a Qeshm, revirtiendo parte de una caída previa del 7% por expectativas diplomáticas (CNBC, 03-nov); un crudo más alto eleva el riesgo inflacionario y pesa sobre las valuaciones tech del NQ.",
-  "catalizador": "Los demócratas arrasaron en las midterms del 3 de noviembre y Trump aceptó el resultado, impulsando un rally generalizado (Dow +3%, mejor sesión post-midterm en 44 años) pero Nvidia y semiconductores cayeron más del 3% y neoclouds más del 7% (CNBC/CNN, 04-nov), lo que limita la fortaleza del NQ pese al alivio macro.",
+  "geopolitica": "Tras el barrido democrata en las legislativas del 3-nov, Wall Street repunto con fuerza pero el Kospi coreano cae ~6% por una liquidacion en semiconductores y crecen las dudas sobre mayor escrutinio regulatorio a la infraestructura de IA, lo que pesa sobre el sentimiento tecnologico del NQ (CNBC, Investing.com, 07:37 ET).",
+  "petroleo": "El Brent cae a USD 96.11 y el WTI a USD 88.68 (retroceso superior al 8%) ante expectativas de distension en Oriente Medio con Iran tras las elecciones de EE.UU., lo que alivia presion inflacionaria y es marginalmente positivo para el NQ (OilPriceAPI, 06:52 ET).",
+  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.8% (-229 puntos, en torno a 28,300) en la apertura por rotacion fuera de los semiconductores (SMH -2.25% premarket) tras el resultado electoral, con los datos semanales de solicitudes de desempleo publicandose mas tarde en la sesion (Investing.com, 07:37 ET).",
   "sources": [
-    "CNN 02-nov (ataques a Qeshm Island)",
-    "CNBC 03-nov (oil rises after Qeshm strike report)",
-    "CNBC 04-nov (stocks rally, Trump accepts midterm sweep)",
-    "CNN 04-nov (Dow best post-midterm day in 44 years)"
+    "Investing.com 07:37 ET",
+    "OilPriceAPI 06:52 ET",
+    "CNBC 04-Nov"
   ],
-  "as_of": "2026-11-05T12:40:42Z"
+  "as_of": "2026-11-05T13:40:15Z"
 }
