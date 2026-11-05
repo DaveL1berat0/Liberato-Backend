@@ -1791,6 +1791,57 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
 <script>
 // Escapa texto de origen remoto antes de meterlo en innerHTML (anti DOM-XSS). Global.
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+/* ── Nombres de eventos económicos EN→ES (sitio español-first). Diccionario fijo
+   (fiable, sin IA). Se usa para el calendario (nombre completo) y para los titulares
+   del panel de noticias (reemplazo en el sitio, preservando cifras). Las frases más
+   largas van primero para no dejar restos (p.ej. "ism manufacturing pmi" antes que
+   "ism manufacturing"). Lo que no esté en el diccionario se deja igual (Regla #1). */
+var LBC_EV_ES = {
+  "adp non-farm employment change":"Cambio de empleo ADP","adp nonfarm employment change":"Cambio de empleo ADP","adp employment change":"Cambio de empleo ADP",
+  "non-farm payrolls":"Nóminas no agrícolas","nonfarm payrolls":"Nóminas no agrícolas","nonfarm employment change":"Cambio de empleo no agrícola",
+  "average hourly earnings":"Salario medio por hora","unemployment rate":"Tasa de desempleo","participation rate":"Tasa de participación",
+  "continuing jobless claims":"Peticiones continuas de subsidio","continued jobless claims":"Peticiones continuas de subsidio","initial jobless claims":"Peticiones iniciales de subsidio","unemployment claims":"Peticiones de subsidio","jobless claims":"Peticiones de subsidio",
+  "core cpi":"IPC subyacente","cpi":"IPC","core inflation rate":"Tasa de inflación subyacente","inflation rate":"Tasa de inflación",
+  "core ppi":"IPP subyacente","ppi":"IPP","producer price index":"Índice de precios al productor",
+  "core pce price index":"Índice de precios PCE subyacente","pce price index":"Índice de precios PCE","core pce":"PCE subyacente","pce":"PCE",
+  "core retail sales":"Ventas minoristas subyacentes","retail sales":"Ventas minoristas",
+  "core durable goods orders":"Pedidos de bienes duraderos subyacentes","durable goods orders":"Pedidos de bienes duraderos","core durable goods":"Bienes duraderos subyacentes","durable goods":"Bienes duraderos",
+  "factory orders":"Pedidos de fábrica","construction spending":"Gasto en construcción",
+  "ism manufacturing prices":"Precios de manufactura ISM","ism manufacturing pmi":"PMI manufacturero ISM","ism manufacturing":"Manufactura ISM",
+  "ism services prices":"Precios de servicios ISM","ism non-manufacturing pmi":"PMI no manufacturero ISM","ism services pmi":"PMI de servicios ISM","ism services":"Servicios ISM",
+  "s&p global manufacturing pmi":"PMI manufacturero S&P Global","final manufacturing pmi":"PMI manufacturero final","manufacturing pmi":"PMI manufacturero",
+  "s&p global services pmi":"PMI de servicios S&P Global","final services pmi":"PMI de servicios final","services pmi":"PMI de servicios",
+  "gdp growth rate":"Tasa de crecimiento del PIB","gdp price index":"Deflactor del PIB","gross domestic product":"Producto interior bruto","gdp":"PIB",
+  "building permits":"Permisos de construcción","housing starts":"Inicios de vivienda","new home sales":"Ventas de vivienda nueva","existing home sales":"Ventas de vivienda usada","pending home sales":"Ventas pendientes de vivienda",
+  "cb consumer confidence":"Confianza del consumidor (CB)","consumer confidence":"Confianza del consumidor","michigan consumer sentiment":"Confianza del consumidor (Michigan)","consumer sentiment":"Confianza del consumidor",
+  "jolts job openings":"Ofertas de empleo (JOLTS)","job openings":"Ofertas de empleo","jolts":"JOLTS",
+  "trade balance":"Balanza comercial","industrial production":"Producción industrial","capacity utilization":"Utilización de capacidad",
+  "fed interest rate decision":"Decisión de tipos de la Fed","interest rate decision":"Decisión de tipos","federal funds rate":"Tipo de los fondos federales","fomc economic projections":"Proyecciones económicas del FOMC","fomc statement":"Comunicado del FOMC","fomc meeting minutes":"Actas de la reunión del FOMC","fomc":"FOMC",
+  "fed chair powell speaks":"Comparece el presidente de la Fed, Powell","fed chair powell testifies":"Testimonio del presidente de la Fed, Powell","powell speaks":"Comparece Powell",
+  "midterm elections":"Elecciones de medio término","nahb housing market index":"Índice del mercado de vivienda NAHB","chicago pmi":"PMI de Chicago","philadelphia fed manufacturing index":"Índice manufacturero de la Fed de Filadelfia","empire state manufacturing index":"Índice manufacturero Empire State"
+};
+var LBC_EV_KEYS = Object.keys(LBC_EV_ES).sort(function(a,b){return b.length-a.length;});
+function lbcEvNameEs(name){
+  if(!name) return name;
+  var s=String(name), low=s.toLowerCase();
+  // sufijo de periodo → español
+  var suf='', mm=low.match(/\b(m\/m|mom|y\/y|yoy|q\/q|qoq)\b/);
+  if(mm) suf = /(y\/y|yoy)/.test(mm[1]) ? ' (interanual)' : /(q\/q|qoq)/.test(mm[1]) ? ' (trimestral)' : ' (mensual)';
+  var base=low.replace(/\b(m\/m|mom|y\/y|yoy|q\/q|qoq)\b/g,'').replace(/\([^)]*\)/g,'').trim();
+  for(var i=0;i<LBC_EV_KEYS.length;i++){ if(base.indexOf(LBC_EV_KEYS[i])>-1) return LBC_EV_ES[LBC_EV_KEYS[i]]+suf; }
+  return s;
+}
+function lbcHeadlineEs(h){
+  if(!h) return h;
+  var out=String(h);
+  // reemplazo IN SITU del nombre del evento conservando cifras ("55.5 vs 54.5 esp")
+  for(var i=0;i<LBC_EV_KEYS.length;i++){
+    var k=LBC_EV_KEYS[i];
+    var re=new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i');
+    if(re.test(out)) out=out.replace(re, LBC_EV_ES[k]);
+  }
+  return out;
+}
 /* ════════════════════════════════════════════════════════════════
    LIBERATO · INSTITUTIONAL TERMINAL — LIVING ENGINE
    Market Regime (CHOP/RANGE/TREND + Expected Volatility)
@@ -3998,7 +4049,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
         return '<div class="lg-ev '+bcl+(isDone?' done':'')+(isNext?' is-next':'')+'">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
           +'<span class="lg-ev-time'+(e.soon?' upcoming':'')+'">'+(e.time==='All Day'?'TODO EL DÍA':(e.time?e.time+'<span style="font-size:10px;opacity:0.55;font-weight:600;margin-left:2px;">ET</span>':'—'))+'</span>'
-          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+clsLabel+nextBadge+'</div><div class="lg-ev-status'+(isPastNoData?' waiting':'')+'">'+(isDone?'✓ Publicado':(isStale?'Sin publicación':(isPastNoData?'◷ Esperando publicación…':e.status)))+'</div>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+esc(lbcEvNameEs(e.name))+clsLabel+nextBadge+'</div><div class="lg-ev-status'+(isPastNoData?' waiting':'')+'">'+(isDone?'✓ Publicado':(isStale?'Sin publicación':(isPastNoData?'◷ Esperando publicación…':e.status)))+'</div>'
           +(e.soon?'<div class="lg-ev-soon"><span class="d"></span>'+e.soon+'</div>':'')
           +'</div>'
           +'<span class="lg-ev-badge '+bcl+'">'+blbl+'</span>'
@@ -4442,7 +4493,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
         +'<span style="font-size:10px;">'+sentIcon+'</span>'
         +'<span style="font-family:var(--mono);font-size:9px;color:'+SENT_COLOR[sent]+';font-weight:700;">'+({Bullish:'ALCISTA',Bearish:'BAJISTA',Neutral:'NEUTRAL'}[sent]||esc(sent.toUpperCase()))+'</span>'
         +'</div>'
-        +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+esc(m.headline||m.title||'')+'</div>'
+        +'<div style="font-size:12px;color:rgba(239,236,227,0.88);line-height:1.45;margin-bottom:7px;font-weight:500;">'+esc(lbcHeadlineEs(m.headline||m.title||''))+'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Impacto <span style="color:rgba(239,236,227,0.7);">'+score+'/10</span></div>'
         +'<div style="font-family:var(--mono);font-size:9px;color:rgba(239,236,227,0.38);">Alcance <span style="color:rgba(239,236,227,0.7);">'+esc(scopeEs)+'</span></div>'
@@ -4707,7 +4758,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
       +'<span class="mover-alert-tag">Nuevo Catalizador de Mercado</span>'
       +'<span class="mover-alert-lvl" style="background:'+sentBg+';color:'+sentColor+';">'+esc(alert)+'</span>'
       +'</div>'
-      +'<div class="mover-alert-hl">'+esc(mover.headline||mover.title||'')+'</div>'
+      +'<div class="mover-alert-hl">'+esc(lbcHeadlineEs(mover.headline||mover.title||''))+'</div>'
       +'<div class="mover-alert-meta">'
       +'<span>Impacto <span style="color:var(--ink);">'+score+'/10</span></span>'
       +'<span>Sesgo <span style="color:'+sentColor+';">'+({Bullish:'Alcista',Bearish:'Bajista',Neutral:'Neutral'}[sent]||esc(sent))+'</span></span>'
@@ -5106,7 +5157,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
         h+='<div class="lg-ev '+(hi?'high':'med')+'" style="cursor:default;">'
           +'<div class="lg-ev-inner"><div class="lg-ev-top">'
           +'<span class="lg-ev-time">'+e.time+'</span>'
-          +'<div class="lg-ev-body"><div class="lg-ev-name">'+e.name+'</div>'
+          +'<div class="lg-ev-body"><div class="lg-ev-name">'+esc(lbcEvNameEs(e.name))+'</div>'
           +'<div class="lg-ev-status">'+e.status+'</div></div>'
           +'<span class="lg-ev-badge '+(hi?'high':'med')+'">'+(hi?'Alto':'Med')+'</span>'
           +'</div></div></div>';
