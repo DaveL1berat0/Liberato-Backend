@@ -1,13 +1,13 @@
 {
-  "geopolitica": "La guerra EE.UU.-Iran sigue activa (ataque reportado en la isla de Qeshm el 3-nov y buques en llamas en el Estrecho de Hormuz), pero el mercado redujo el riesgo de escalada tras la derrota republicana en las elecciones legislativas del 3-nov, lo que alivia el sentimiento de riesgo para el NQ (CNBC).",
-  "petroleo": "El Brent sube 1.6% a 96.15 USD y el WTI sube 0.6% a 88.64 USD, rebotando tras desplomarse mas de 8% en la sesion previa a minimos desde el 31-ago por expectativas de un acuerdo de paz con Iran; el petroleo mas barato en la semana alivia presion inflacionaria para el NQ (CNBC).",
-  "catalizador": "Qualcomm cae mas de 9% en premarket tras un pronostico debil de ventas de chips para smartphones, presionando al sector tech del Nasdaq-100; el mercado tambien digiere el reporte ADP del miercoles (86.000 empleos privados en octubre, por encima de lo esperado), que eleva las probabilidades de una decision relevante de la Fed en diciembre (CNBC).",
+  "geopolitica": "Las esperanzas de que la derrota republicana en las elecciones de medio termino reduzca el riesgo de nuevos ataques de EEUU contra Iran impulsan el apetito por riesgo, aunque Eurasia Group aun estima 60% de probabilidad de ataques renovados, lo que deja al NQ expuesto a un giro brusco si escala el conflicto (CNBC, 05-nov-2026).",
+  "petroleo": "El Brent sube 1.6% a 96.15 USD/barril y el WTI 0.6% a 88.64 USD/barril este jueves, tras desplomarse mas de 8% el miercoles por expectativas de desescalada en la guerra Iran-EEUU, lo que alivia la presion inflacionaria que pesaba sobre el NQ (CNBC, 05-nov-2026).",
+  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 0.8%-1% en premarket, lastrados por un desplome de casi 4% en el ETF de semiconductores tras una guia debil de Qualcomm y ventas en CoreWeave y Nebius, senal de rotacion fuera de tech que puede presionar al NQ en la apertura (CNBC/Bloomberg, 05-nov-2026).",
   "sources": [
-    "CNBC 05-nov-2026 (qualcomm-qcom-earnings-report-q4-2026)",
-    "CNBC 05-nov-2026 (oil-falls-for-a-fourth-day-on-expectations-for-lower-risk-of-iran-war-escalation)",
-    "CNBC 05-nov-2026 (markets-cool-midterm-musk-stocks-under-pressure)",
-    "CNBC 04-nov-2026 (private-companies-added-86000-jobs-in-october)",
-    "CNBC 03-nov-2026 (iran-us-vance-trump-strikes)"
+    "CNBC - Markets cool after the monster midterm rally with Musk's stocks under pressure (05-nov-2026)",
+    "CNBC - Oil falls for a fourth day on expectations for lower risk of Iran war escalation (05-nov-2026)",
+    "Bloomberg - US equity futures inch higher, Nasdaq 100 futures down ~0.8% premarket (04/05-nov-2026)",
+    "CNBC - The rotation out of tech is becoming a risk for the broader market (05-nov-2026)",
+    "CNBC - Jim Cramer's top 10 things to watch Thursday (05-nov-2026)"
   ],
-  "as_of": "2026-11-05T15:07:12Z"
+  "as_of": "2026-11-05T15:38:14Z"
 }
