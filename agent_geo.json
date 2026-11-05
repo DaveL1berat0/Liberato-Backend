@@ -1,13 +1,13 @@
 {
-  "geopolitica": "El vicepresidente JD Vance culpó públicamente a la guerra con Irán por la derrota republicana en las elecciones de medio término (\"la razón por la que perdimos es la guerra\"), tras el barrido demócrata en el Congreso; Trump evita nuevos ataques inminentes a Irán, lo que reduce el riesgo de escalada militar y favorece el apetito por riesgo en el NQ.",
-  "petroleo": "WTI y Brent se desploman con fuerza (caída cercana al 7-9%, WTI por debajo de 90 USD/barril) al salir del precio la prima de riesgo geopolítico de la guerra con Irán tras el barrido demócrata, lo que alivia presión inflacionaria y apoya el sentimiento alcista en tech/NQ.",
-  "catalizador": "El triunfo demócrata en el Congreso dispara un fuerte rally en Wall Street (Dow con avance de varios cientos de puntos, S&P 500 y Nasdaq al alza) al despejarse incertidumbre electoral, impulsando con fuerza al Nasdaq-100 (NQ) en la sesión.",
+  "geopolitica": "La barrida demócrata en las elecciones de medio término (resultado confirmado el 03-nov) y las esperanzas de un acuerdo negociado con Irán tras el ataque de EE.UU. a la isla de Qeshm presionan a la baja las futuras del Nasdaq-100, mientras en Asia los chips (SK Hynix -9%, Samsung -6,65%) caen por temor a mayores restricciones de un Congreso demócrata a los centros de datos de IA.",
+  "petroleo": "WTI cotiza cerca de 88 USD/barril (prácticamente plano la mañana del jueves) tras desplomarse un 8% el miércoles, y Brent ronda 95 USD/barril, ambos por las expectativas de una resolución diplomática de la guerra EE.UU.-Irán; un retroceso en esas expectativas podría revertir la caída y presionar al NQ via mayores costos.",
+  "catalizador": "Los futuros del Nasdaq-100 caen un 0,8% en premercado del jueves (S&P 500 -0,1%) ante la profundización de la venta de 'neoclouds' y chips, con Qualcomm cayendo cerca de 10% a pesar de superar expectativas de ganancias.",
   "sources": [
-    "NBC News 04-Nov",
-    "The Hill 04-Nov",
-    "Forbes 04-Nov",
-    "oilprice.com 04-Nov",
-    "Yahoo Finance 04-Nov"
+    "CNBC - Stock market today: Live updates (04/05-nov-2026)",
+    "CNBC - Oil steadies after 8% plunge / Crude oil prices (04-nov-2026)",
+    "CNBC - U.S. strikes Iran's Qeshm Island as Vance hopes for 'negotiated settlement' (03-nov-2026)",
+    "CNBC - Stock futures mixed, neocloud slump deepens after Democrats' midterm win rally (04-nov-2026)",
+    "Bloomberg - Oil Steadies After 8% Plunge on Hopes for End to US-Iran War (04-nov-2026)"
   ],
-  "as_of": "2026-11-04T21:05:47Z"
+  "as_of": "2026-11-05T11:07:34Z"
 }
