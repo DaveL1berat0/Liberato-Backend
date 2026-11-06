@@ -1,11 +1,12 @@
 {
-  "geopolitica": "El vicepresidente Vance admitió que la guerra con Iran costo a los republicanos las elecciones de medio termino, alimentando esperanzas de desescalada tras los comicios, aunque Iran reporto tres nuevos ataques a petroleros en el estrecho de Ormuz el jueves, manteniendo vivo el riesgo geopolitico para el apetito de riesgo del NQ (CNBC, 04:38 ET).",
-  "petroleo": "El Brent cae 1.38% a 96.93 USD/barril y el WTI 1.49% a 89.17 USD/barril hacia las 04:38 ET, muy por debajo de los mas de 110 USD de inicios de semana, por expectativas de un acuerdo Trump-Iran tras las elecciones, lo que alivia la presion inflacionaria sobre el NQ (CNBC).",
-  "catalizador": "El informe de empleo de octubre (nominas no agricolas) se publica hoy a las 8:30 ET con consenso de +59,000 empleos y desempleo en 4.2%, justo tras el desplome tecnologico del jueves (Nasdaq Composite -5.5%, en correccion) que borro mas de 1 billon de dolares en las Magnificent 7; los futuros del NQ rebotan +1.7% en la premarket a la espera del dato (CNBC).",
+  "geopolitica": "Los futuros del Nasdaq 100 rebotan hoy mientras los chips se estabilizan (AMD, Intel, Broadcom, Micron +5-8% premarket), tras el peor dia del Nasdaq desde abril 2025 (Nvidia y Qualcomm -9%) causado por el barrido democrata en las midterms, que elevo el riesgo regulatorio sobre los centros de datos de IA.",
+  "petroleo": "Brent cae a unos 96.93 USD (-1.38%) y WTI ronda 89 USD en la madrugada ET, camino a su mayor caida semanal, ante expectativas de menor riesgo de escalada de la guerra EEUU-Iran tras las elecciones de medio termino.",
+  "catalizador": "El informe de empleo (nonfarm payrolls) del Departamento de Trabajo de EEUU se publica hoy a las 8:30 ET, dato clave que el mercado seguira de cerca tras el selloff de IA y en medio de la incertidumbre por el conflicto con Iran.",
   "sources": [
-    "CNBC 04:38 ET",
-    "CNBC 05:54 ET",
-    "CNBC 2026-11-05"
+    "Reuters 06-Nov premarket - Nasdaq futures rise after steep AI selloff as chip stocks stabilize",
+    "CNBC 05-Nov - AI meltdown: Nvidia and Qualcomm drop more than 9%, pushing Nasdaq to worst day since April 2025",
+    "CNBC 04:38 ET 06-Nov - Oil prices set for sharp weekly fall after midterm elections as investors weigh Iran conflict risk",
+    "Yahoo Finance 06-Nov - Stock market today: Dow, S&P 500, Nasdaq futures wobble after brutal sell-off, with key jobs report on deck"
   ],
-  "as_of": "2026-11-06T11:06:18Z"
+  "as_of": "2026-11-06T11:39:51Z"
 }
