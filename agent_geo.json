@@ -1,11 +1,12 @@
 {
   "geopolitica": "Iran ha intensificado ataques a petroleros en el Estrecho de Ormuz en los ultimos dias (varios buques incendiados o impactados entre el 30-oct y 1-nov), en el marco de la guerra EEUU-Israel-Iran activa desde febrero de 2026; esto mantiene elevada la prima de riesgo geopolitico, un factor de cautela para el apetito de riesgo que pesa sobre el NQ (Shafaq News/UKMTO, 01-nov-2026).",
-  "petroleo": "El Brent cotiza en torno a 98 USD/barril y el WTI cerca de 90-91 USD; el crudo revierte parte de la caida semanal (~15% en la semana, la peor desde abril de 2020) ante titulares mixtos entre senales diplomaticas de desescalada EEUU-Iran (Bloomberg) y nuevos ataques a petroleros en Ormuz (Shafaq/UKMTO), lo que genera volatilidad en la prima de riesgo que puede trasladarse al sentimiento de riesgo del NQ (Bloomberg, 06-nov-2026).",
-  "catalizador": "La nomina no agricola de octubre sorprendio al alza (+165,000 vs. ~59,000 esperado), dato citado como soporte detras del intento de rebote de las acciones tecnologicas este viernes tras el fuerte selloff del jueves ('tech wreck', Nasdaq -5.5%, SOXX -12%); un dato de empleo fuerte tambien alimenta apuestas de una Fed menos proclive a recortar, lo que anade presion sobre las valoraciones de crecimiento del NQ (CNBC, 06-nov-2026).",
+  "petroleo": "El Brent cotiza en torno a 98 USD/barril (-4% intradia) y el WTI cerca de 90-91 USD; el crudo revierte parte de la caida semanal (~12-15%, la peor desde abril de 2020) ante titulares mixtos entre senales diplomaticas de desescalada EEUU-Iran y nuevos ataques a petroleros en Ormuz, lo que genera volatilidad en la prima de riesgo que puede trasladarse al sentimiento de riesgo del NQ (OilPriceAPI.com 06:16 ET; Bloomberg 06-nov-2026).",
+  "catalizador": "La nomina no agricola de octubre sorprendio al alza (+165,000 vs. ~59,000 esperado, desempleo en 4.1%), dato citado como soporte detras del intento de rebote de las acciones tecnologicas este viernes tras el fuerte selloff del jueves ('tech wreck', Nasdaq -5.5%); el dato fuerte elevo la probabilidad de una subida de tasas de la Fed en diciembre a ~75-77% segun CME FedWatch (vs ~68% antes del reporte), lo que anade presion bajista sobre las valoraciones de crecimiento del NQ (CNBC/FXStreet 10:48 ET, 06-nov-2026).",
   "sources": [
     "CNBC 06-nov-2026 (morning squawk, premarket Nasdaq/chips)",
-    "Bloomberg 06-nov-2026 (oil market report, Gulf de-escalation)",
+    "CNBC/FXStreet 10:48 ET (jobs-report-october-2026, CME FedWatch odds)",
+    "OilPriceAPI.com 06:16 ET (Brent/WTI levels)",
     "Shafaq News/UKMTO 01-nov-2026 (ataques a petroleros en Ormuz)"
   ],
-  "as_of": "2026-11-06T15:41:31Z"
+  "as_of": "2026-11-06T16:09:17Z"
 }
