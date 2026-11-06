@@ -1,11 +1,11 @@
 {
-  "geopolitica": "El Nasdaq cayo 5.52% el jueves y entro en correccion ante el temor de que un Congreso con mayoria democrata endurezca la regulacion de IA, lo que mantiene presionado al NQ en la apertura del viernes.",
-  "petroleo": "El Brent sube 1.30% a 99.57 USD y el WTI avanza 0.95% a 91.38 USD por el riesgo de que Trump retome operaciones militares de gran escala contra Iran, lo que añade presion inflacionaria y resta soporte al NQ.",
-  "catalizador": "El informe de empleo de octubre en EE.UU. se publica hoy a las 8:30 ET, con consenso de Bloomberg en +65,000 empleos vs +29,000 de septiembre, dato clave para las expectativas de la Fed que puede mover al NQ en la apertura.",
+  "geopolitica": "Tras el triunfo demócrata en las midterms, el vicepresidente Vance culpó a la guerra con Irán de la derrota republicana y crecen las expectativas de presión para terminarla, pero nuevos ataques a petroleros en el Estrecho de Ormuz mantienen la tensión geopolítica elevada, factor que añade volatilidad de riesgo al NQ en la apertura.",
+  "petroleo": "El Brent cae 1.38% a 96.93 USD y el WTI 1.49% a 89.17 USD hacia las 04:38 ET tras el desplome post-midterms por esperanzas de diplomacia con Irán, aunque Eurasia Group advierte que una escalada podría llevar al Brent a 110-125 USD, lo que podría presionar el sentimiento de riesgo del NQ si el crudo repunta con fuerza.",
+  "catalizador": "El informe de empleo de octubre (nóminas no agrícolas) se publica hoy a las 8:30 ET con consenso de 59,000-65,000 empleos y desempleo estable en 4.2%, justo después del peor selloff tecnológico desde abril de 2025 (Nasdaq 100 -6.4% el jueves por temores regulatorios a centros de datos de IA), por lo que un dato fuerte o débil puede amplificar la volatilidad del NQ en la apertura.",
   "sources": [
-    "Reuters via Yahoo Finance 05-Nov (correccion Nasdaq / regulacion IA)",
-    "Yahoo Finance 06-Nov premarket (Brent/WTI)",
-    "Bloomberg survey via Yahoo Finance 06-Nov 08:30 ET (payrolls)"
+    "CNBC 06-Nov 04:38 ET (oil)",
+    "CNBC 05-Nov (Iran war / midterms)",
+    "CNBC 06-Nov (payrolls preview, dato a las 08:30 ET)"
   ],
-  "as_of": "2026-11-06T12:06:33Z"
+  "as_of": "2026-11-06T12:39:38Z"
 }
