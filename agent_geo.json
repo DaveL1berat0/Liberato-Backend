@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Los ataques a petroleros se intensifican en el estrecho de Ormuz (al menos 10 buques atacados en tres dias segun UKMTO, el peor registro desde el inicio de la guerra EEUU-Israel-Iran de febrero de 2026), y el mercado duda de que el resultado de las elecciones de medio mandato en EEUU acelere el fin del conflicto, lo que sostiene la prima de riesgo geopolitico sobre el NQ.",
-  "petroleo": "WTI sube cerca de 1% a 91.38 dolares y Brent se mantiene cerca de 100 dolares pero encamina una caida semanal de en torno al 12%, por renovados temores de suministro tras los ataques a petroleros cerca de Ormuz, mientras JPMorgan advierte de un superavit que limita un repunte sostenido, un crudo mas firme presiona margenes y sentimiento de riesgo para el NQ.",
-  "catalizador": "El informe de empleo de octubre (nominas no agricolas) se publico hoy a las 8:30 ET; un dato mas fuerte de lo esperado impulso los rendimientos del Tesoro y frena el apetito por riesgo, aunque los futuros del Nasdaq 100 repuntan con fuerza liderados por semiconductores tras el peor dia de Wall Street en 19 meses el jueves.",
+  "geopolitica": "El resultado de las elecciones de medio mandato en EEUU (el Congreso queda bajo control democrata) dispara dudas sobre el gasto en centros de datos de IA, lo que hundio a semiconductores y tecnologicas el jueves (Nasdaq -5.5%, Broadcom -10%, Nvidia -9%) y mantiene nervioso al NQ pese al rebote de futuros (~+1.5%) este viernes; en paralelo, los ataques a petroleros en el estrecho de Ormuz (al menos 5 incidentes desde el domingo segun Reuters/UKMTO) sostienen la prima de riesgo geopolitico.",
+  "petroleo": "Brent cotiza cerca de 98-99 dolares por barril (camino a una caida semanal de ~12-13%) y WTI en torno a 90-92 dolares, con un repunte intradia moderado tras nuevos ataques a petroleros en el Golfo Persico/Ormuz que compensan en parte las esperanzas de desescalada del conflicto Iran-EEUU tras las elecciones, presionando el sentimiento de riesgo para el NQ.",
+  "catalizador": "El informe de nominas no agricolas de octubre se publico hoy a las 8:30 ET con un dato mas fuerte de lo esperado (~165,000 empleos segun Yahoo Finance), elevando los rendimientos del Tesoro y frenando el apetito por riesgo, aunque los futuros del Nasdaq 100 repuntan con fuerza liderados por semiconductores tras el peor dia de Wall Street en 19 meses el jueves.",
   "sources": [
-    "Shafaq News / UKMTO - ataques a petroleros en el estrecho de Ormuz (semana del 02-06 nov 2026)",
-    "Reuters via Invezz - oil prices today, 06-nov-2026",
-    "CNBC Stock Market Today live blog - premercado 06-nov-2026, informe de empleo 8:30 ET"
+    "CNBC - selloff IA tras elecciones de medio mandato, 06-nov-2026",
+    "Reuters/UKMTO - ataques a petroleros estrecho de Ormuz, semana 02-06 nov 2026",
+    "OilPriceAPI 06:16 ET - Brent 98.41 USD",
+    "Yahoo Finance / BLS 08:30 ET - informe de empleo octubre"
   ],
-  "as_of": "2026-11-06T13:40:14Z"
+  "as_of": "2026-11-06T14:07:42Z"
 }
