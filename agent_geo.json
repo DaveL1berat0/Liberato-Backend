@@ -1,11 +1,13 @@
 {
-  "geopolitica": "La guerra Israel-Iran se intensifica tras nuevos ataques a petroleros en el Estrecho de Ormuz y declaraciones de Trump de que el alto el fuego con Iran esta 'en soporte vital', lo que eleva la aversion al riesgo y puede pesar sobre el NQ intradia.",
-  "petroleo": "El Brent cerro el 5 de noviembre en 98.29 dolares (+3.88%) y el WTI en 90.52 dolares (+2.72%) por los ataques a petroleros vinculados al conflicto Iran-Israel, un repunte que tiende a presionar el apetito por riesgo del Nasdaq.",
-  "catalizador": "Los futuros del Nasdaq repuntan este viernes liderados por semiconductores (Micron, AMD y Marvell con fuertes alzas en premarket) tras el severo selloff tecnologico de la semana, dando soporte tecnico al NQ en la apertura.",
+  "geopolitica": "Nuevos ataques a petroleros en el estrecho de Ormuz y el Golfo Pérsico mantienen elevada la prima de riesgo del conflicto EEUU-Irán, sosteniendo el apetito por refugio y presionando levemente el sentimiento de riesgo que pesa sobre el NQ.",
+  "petroleo": "Brent ronda 98-100 USD y WTI 90-91 USD, rebotando cerca de 1% tras los nuevos ataques a petroleros aunque camino a una caída semanal de 12-16%; el repunte del crudo añade presión moderada sobre el apetito por riesgo del NQ.",
+  "catalizador": "El informe de empleo de octubre (BLS) sorprendió al alza con +165.000 nóminas frente a ~60.000 esperadas y desempleo en 4.1%, lo que disparó los rendimientos del Treasury y reduce expectativas de recortes de tasas de la Fed, un viento en contra para el NQ intradía.",
   "sources": [
-    "Reuters 05-Nov",
-    "CNBC 06-Nov",
-    "MarketScreener 05-Nov"
+    "BLS/CNBC 08:30 ET - October jobs report +165k, unemployment 4.1%",
+    "Reuters (via Investing.com) - US job growth beats expectations in October",
+    "CNBC 2026-11-05 - Oil jumps as investors assess Iran war future, tanker attacks",
+    "Angelone 2026-11-06 - Crude oil prices rise after fresh tanker attacks",
+    "OilPriceAPI 06:16 ET - Brent/WTI live quotes"
   ],
-  "as_of": "2026-11-06T17:06:08Z"
+  "as_of": "2026-11-06T18:06:39Z"
 }
