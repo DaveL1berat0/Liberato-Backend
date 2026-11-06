@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Irán atacó al menos dos petroleros en el Estrecho de Ormuz y EE.UU. confirmó bombardeos sobre una isla iraní tras calificar Teherán de 'poco convincente' la respuesta estadounidense, lo que reaviva la aversión al riesgo que pesa sobre el NQ (Al Jazeera, 05-06 Nov).",
-  "petroleo": "El Brent cotiza en torno a 98-99 USD/barril y el WTI cerca de 90-91 USD, rebotando tras los nuevos ataques a petroleros en Ormuz y revirtiendo parte de la caída semanal de ~12% que había descontado una distensión en Medio Oriente (agregadores de mercado, 06-Nov 10:16 ET aprox.).",
-  "catalizador": "El informe de empleo de octubre, publicado hoy, sorprendió al alza con +165.000 nóminas vs +65.000 esperadas y desempleo en 4.1%, elevando a ~72-78% las apuestas de una subida de tasas de la Fed en diciembre y empujando el rendimiento del Treasury a 10 años +6.4 pb a 4.894%, presión bajista adicional sobre el NQ (CNBC/Reuters via Coindesk, 06-Nov).",
+  "geopolitica": "Iran ha intensificado ataques a petroleros en el Estrecho de Ormuz en los ultimos dias (varios buques incendiados o impactados entre el 30-oct y 1-nov), en el marco de la guerra EEUU-Israel-Iran activa desde febrero de 2026; esto mantiene elevada la prima de riesgo geopolitico, un factor de cautela para el apetito de riesgo que pesa sobre el NQ (Shafaq News/UKMTO, 01-nov-2026).",
+  "petroleo": "El Brent cotiza en torno a 98 USD/barril y el WTI cerca de 90-91 USD; el crudo revierte parte de la caida semanal (~15% en la semana, la peor desde abril de 2020) ante titulares mixtos entre senales diplomaticas de desescalada EEUU-Iran (Bloomberg) y nuevos ataques a petroleros en Ormuz (Shafaq/UKMTO), lo que genera volatilidad en la prima de riesgo que puede trasladarse al sentimiento de riesgo del NQ (Bloomberg, 06-nov-2026).",
+  "catalizador": "La nomina no agricola de octubre sorprendio al alza (+165,000 vs. ~59,000 esperado), dato citado como soporte detras del intento de rebote de las acciones tecnologicas este viernes tras el fuerte selloff del jueves ('tech wreck', Nasdaq -5.5%, SOXX -12%); un dato de empleo fuerte tambien alimenta apuestas de una Fed menos proclive a recortar, lo que anade presion sobre las valoraciones de crecimiento del NQ (CNBC, 06-nov-2026).",
   "sources": [
-    "Al Jazeera 05-Nov (ataques a petroleros en Hormuz)",
-    "CNBC 05/06-Nov (selloff Nasdaq, datos Fed/datacenters)",
-    "Coindesk 06-Nov (nonfarm payrolls octubre)",
-    "Agregadores de mercado (OneValor/Vantage) 06-Nov (precios Brent/WTI)"
+    "CNBC 06-nov-2026 (morning squawk, premarket Nasdaq/chips)",
+    "Bloomberg 06-nov-2026 (oil market report, Gulf de-escalation)",
+    "Shafaq News/UKMTO 01-nov-2026 (ataques a petroleros en Ormuz)"
   ],
-  "as_of": "2026-11-06T15:06:08Z"
+  "as_of": "2026-11-06T15:41:31Z"
 }
