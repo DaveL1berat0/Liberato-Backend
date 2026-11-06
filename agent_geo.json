@@ -1,12 +1,12 @@
 {
-  "geopolitica": "El resultado de las elecciones de medio mandato en EEUU (el Congreso queda bajo control democrata) dispara dudas sobre el gasto en centros de datos de IA, lo que hundio a semiconductores y tecnologicas el jueves (Nasdaq -5.5%, Broadcom -10%, Nvidia -9%) y mantiene nervioso al NQ pese al rebote de futuros (~+1.5%) este viernes; en paralelo, los ataques a petroleros en el estrecho de Ormuz (al menos 5 incidentes desde el domingo segun Reuters/UKMTO) sostienen la prima de riesgo geopolitico.",
-  "petroleo": "Brent cotiza cerca de 98-99 dolares por barril (camino a una caida semanal de ~12-13%) y WTI en torno a 90-92 dolares, con un repunte intradia moderado tras nuevos ataques a petroleros en el Golfo Persico/Ormuz que compensan en parte las esperanzas de desescalada del conflicto Iran-EEUU tras las elecciones, presionando el sentimiento de riesgo para el NQ.",
-  "catalizador": "El informe de nominas no agricolas de octubre se publico hoy a las 8:30 ET con un dato mas fuerte de lo esperado (~165,000 empleos segun Yahoo Finance), elevando los rendimientos del Tesoro y frenando el apetito por riesgo, aunque los futuros del Nasdaq 100 repuntan con fuerza liderados por semiconductores tras el peor dia de Wall Street en 19 meses el jueves.",
+  "geopolitica": "UKMTO confirmo nuevos incidentes contra petroleros en el estrecho de Ormuz (30-oct y 01-nov), lo que mantiene elevada la prima de riesgo geopolitico en el Golfo Persico; el resultado de las elecciones de medio mandato en EEUU (3-nov) aun no ha sido llamado oficialmente por AP, añadiendo incertidumbre sobre el rumbo fiscal que pesa sobre el NQ.",
+  "petroleo": "Brent cotiza cerca de 97-98 USD/barril y WTI en torno a 90 USD/barril, camino a una caida semanal de ~12-13%, con repuntes intradia por los nuevos ataques a petroleros en el estrecho de Ormuz reportados por UKMTO, lo que introduce volatilidad para el NQ via precios de energia (OilPriceAPI/OneValor, 06:16 ET).",
+  "catalizador": "El informe de nominas no agricolas de octubre se publico hoy a las 8:30 ET con +165,000 empleos vs +59,000 esperado y tasa de desempleo en 4.1% (desde 4.2%); los futuros del Nasdaq 100 rebotan tras el peor desplome en 19 meses del jueves, cuando las 'Magnificent Seven' perdieron mas de 1 billon USD en capitalizacion (Nvidia -9%, -440.000 millones USD) por temores al gasto en IA (CNBC, 08:30 ET).",
   "sources": [
-    "CNBC - selloff IA tras elecciones de medio mandato, 06-nov-2026",
-    "Reuters/UKMTO - ataques a petroleros estrecho de Ormuz, semana 02-06 nov 2026",
-    "OilPriceAPI 06:16 ET - Brent 98.41 USD",
-    "Yahoo Finance / BLS 08:30 ET - informe de empleo octubre"
+    "CNBC 08:30 ET - informe de empleo y rebote del Nasdaq tras selloff de IA",
+    "UKMTO - incidentes contra petroleros en estrecho de Ormuz, 30-oct y 01-nov-2026",
+    "OilPriceAPI/OneValor 06:16 ET - precios Brent/WTI",
+    "Manifold/AP race-call tracker - resultado de midterms 2026 pendiente de llamado oficial"
   ],
-  "as_of": "2026-11-06T14:07:42Z"
+  "as_of": "2026-11-06T14:41:09Z"
 }
