@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Tras el triunfo demócrata en las midterms, el vicepresidente Vance culpó a la guerra con Irán de la derrota republicana y crecen las expectativas de presión para terminarla, pero nuevos ataques a petroleros en el Estrecho de Ormuz mantienen la tensión geopolítica elevada, factor que añade volatilidad de riesgo al NQ en la apertura.",
-  "petroleo": "El Brent cae 1.38% a 96.93 USD y el WTI 1.49% a 89.17 USD hacia las 04:38 ET tras el desplome post-midterms por esperanzas de diplomacia con Irán, aunque Eurasia Group advierte que una escalada podría llevar al Brent a 110-125 USD, lo que podría presionar el sentimiento de riesgo del NQ si el crudo repunta con fuerza.",
-  "catalizador": "El informe de empleo de octubre (nóminas no agrícolas) se publica hoy a las 8:30 ET con consenso de 59,000-65,000 empleos y desempleo estable en 4.2%, justo después del peor selloff tecnológico desde abril de 2025 (Nasdaq 100 -6.4% el jueves por temores regulatorios a centros de datos de IA), por lo que un dato fuerte o débil puede amplificar la volatilidad del NQ en la apertura.",
+  "geopolitica": "Tras el triunfo demócrata en las midterms, el vicepresidente Vance culpó a la guerra con Irán de la derrota republicana y crecen las expectativas de un acercamiento diplomático, pero Rapidan Energy (Bob McNally) eleva a 80% la probabilidad de que EEUU reanude ataques militares contra Irán durante el periodo de transición legislativa, lo que mantiene la tensión geopolítica elevada y añade volatilidad de riesgo al NQ en la apertura.",
+  "petroleo": "El Brent cae 1.38% a 96.93 USD y el WTI 1.49% a 89.17 USD hacia las 04:38 ET tras el desplome post-midterms por esperanzas de diplomacia con Irán (Teherán habría enviado una propuesta nuclear vía Qatar), aunque Eurasia Group advierte que una escalada podría llevar al Brent a 110-125 USD, lo que podría presionar el sentimiento de riesgo del NQ si el crudo repunta con fuerza.",
+  "catalizador": "El informe de empleo de octubre (nóminas no agrícolas) se publica hoy a las 8:30 ET con consenso de 59,000-65,000 empleos y desempleo estable en 4.2%, justo después del peor selloff tecnológico desde abril de 2025 (Nasdaq cayó 5.52% el jueves, cierre en 24,315, por temores a que un barrido demócrata frene la inversión en centros de datos de IA), por lo que un dato fuerte o débil puede amplificar la volatilidad del NQ en la apertura.",
   "sources": [
-    "CNBC 06-Nov 04:38 ET (oil)",
-    "CNBC 05-Nov (Iran war / midterms)",
-    "CNBC 06-Nov (payrolls preview, dato a las 08:30 ET)"
+    "CNBC 06-Nov 04:38 ET (oil-price-today-brent-wti)",
+    "CNBC 06-Nov (us-iran-war-trump-hormuz-oil-midterms, Rapidan Energy 80%)",
+    "CNBC 04-Nov (Vance blames Iran war for GOP defeat)",
+    "CNBC 05-Nov (Nasdaq -5.52%, stock-market-selloff-ai-fears)",
+    "CNBC 06-Nov (October jobs report preview, dato a las 08:30 ET)"
   ],
-  "as_of": "2026-11-06T12:39:38Z"
+  "as_of": "2026-11-06T13:11:46Z"
 }
