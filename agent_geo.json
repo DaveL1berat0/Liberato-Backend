@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El barrido democrata en las midterms aviva el temor a mayor regulacion de IA y desaceleracion del gasto en centros de datos, mientras Trump descarto ataques inmediatos a Iran y Eurasia Group bajo a 60% (desde 65%) la probabilidad de nuevos ataques de EEUU (Bloomberg, 4 nov), combinacion que pesa sobre el sentimiento de riesgo tecnologico del NQ.",
-  "petroleo": "El Brent sube cerca de 4% a 98,44 USD y el WTI cerca de 2,9% a 90,71 USD este jueves, rebotando tras el desplome de mas del 8% del miercoles, por ataques a petroleros en Oriente Medio que mantienen la prima de riesgo pese a la menor probabilidad de escalada con Iran (CNBC, 5 nov), lo que anade presion inflacionaria marginal sobre el NQ.",
-  "catalizador": "La probabilidad de una nueva subida de tasas de la Fed en diciembre cayo a 66% el jueves segun CME FedWatch (Bloomberg, 5 nov), mientras el mercado digiere el desplome de semiconductores tras resultados debiles de Qualcomm, llevando al Nasdaq a su peor sesion desde abril de 2025.",
+  "geopolitica": "El vicepresidente Vance admitió que la guerra con Iran costo a los republicanos las elecciones de medio termino, alimentando esperanzas de desescalada tras los comicios, aunque Iran reporto tres nuevos ataques a petroleros en el estrecho de Ormuz el jueves, manteniendo vivo el riesgo geopolitico para el apetito de riesgo del NQ (CNBC, 04:38 ET).",
+  "petroleo": "El Brent cae 1.38% a 96.93 USD/barril y el WTI 1.49% a 89.17 USD/barril hacia las 04:38 ET, muy por debajo de los mas de 110 USD de inicios de semana, por expectativas de un acuerdo Trump-Iran tras las elecciones, lo que alivia la presion inflacionaria sobre el NQ (CNBC).",
+  "catalizador": "El informe de empleo de octubre (nominas no agricolas) se publica hoy a las 8:30 ET con consenso de +59,000 empleos y desempleo en 4.2%, justo tras el desplome tecnologico del jueves (Nasdaq Composite -5.5%, en correccion) que borro mas de 1 billon de dolares en las Magnificent 7; los futuros del NQ rebotan +1.7% en la premarket a la espera del dato (CNBC).",
   "sources": [
-    "Bloomberg 04-Nov (Trump Plays Down Prospect of Iran Strikes After Midterm Rout)",
-    "CNBC 05-Nov (oil-falls-for-a-fourth-day... / afternoon crude rebound)",
-    "CNBC 05-Nov (AI meltdown: Chip stocks and neoclouds plunge, pushing Nasdaq to worst day since April 2025)",
-    "Bloomberg 05-Nov (US Jobs Pickup May Keep Fed on Track to Hike Rates Again)"
+    "CNBC 04:38 ET",
+    "CNBC 05:54 ET",
+    "CNBC 2026-11-05"
   ],
-  "as_of": "2026-11-05T21:06:52Z"
+  "as_of": "2026-11-06T11:06:18Z"
 }
