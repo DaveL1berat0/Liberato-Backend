@@ -1,13 +1,13 @@
 {
-  "geopolitica": "Nvidia cae cerca de 5% en premarket tras abrirse una investigacion de la junta directiva sobre los vinculos de su CEO Jensen Huang con una presunta espia china (perdida de mercado ~225.000 millones USD), presionando los futuros del Nasdaq pese al rebote de chips asiaticos (CNBC y Bloomberg, 09 nov, premarket).",
-  "petroleo": "El Brent cae mas de 3% hacia los 95-97 USD/barril y el WTI baja a ~90.5 USD tras un reporte no confirmado de que Iran flexibilizo sus exigencias sobre el estrecho de Ormuz y declaraciones de Trump de que nuevos ataques son 'altamente improbables' si avanzan las negociaciones (CNBC, 09 nov, ~05:25 ET).",
-  "catalizador": "Los mercados esperan el dato de inflacion (CPI) de EE.UU. del martes 10 de noviembre como catalizador clave para la trayectoria de tasas de la Fed; el oro sube mas de 1% al bajar el petroleo, lo que alivia temores inflacionarios de corto plazo (CNBC, 09 nov, premarket).",
+  "geopolitica": "Nvidia se desploma ~5-6% en premarket tras admitir el CEO Jensen Huang una relacion con una mujer senalada por inteligencia de EE.UU. como posible espia china, lo que reabre la tension tecnologica EE.UU.-China sobre semiconductores y presiona a todo el sector chip dentro del NQ.",
+  "petroleo": "El petroleo cae (Brent en torno a 96.9 USD, -1.5%; WTI en torno a 89.9 USD, -1%) despues de que Trump senalara que es muy poco probable que ordene nuevos ataques contra Iran mientras continuan las negociaciones, lo que reduce la prima de riesgo geopolitico.",
+  "catalizador": "",
   "sources": [
-    "CNBC 09 Nov, premarket - Nvidia stock falls 5% as scrutiny turns to Jensen Huang's relationship with alleged Chinese spy",
-    "Bloomberg 08 Nov, noche ET - Nvidia Board to Probe Spying Case After CEO Jensen Huang Admits Infidelity",
-    "CNBC 09 Nov, ~05:25 ET - Oil falls as Trump says new Iran attacks 'unlikely'",
-    "CNBC 09 Nov, premarket - Rubio says Iran war breakthrough unlikely amid 'outrageous' demands",
-    "CNBC 09 Nov, premarket - Gold gains as lower oil prices temper inflation fears; US inflation in focus"
+    "CNBC 08:08 ET - Nvidia stock falls 5% as scrutiny turns to Jensen Huang's relationship with alleged Chinese spy",
+    "Bloomberg 08:08 ET - Nvidia Board to Probe Spying Case After CEO Jensen Huang Admits Infidelity",
+    "Washington Post 08:08 ET - Nvidia shares fall as company investigates CEO relationship with suspected spy",
+    "RTE 08:08 ET - Oil falls as Trump signals restraint on Iran amid fresh Hormuz attacks",
+    "FXStreet 08:08 ET - WTI Oil extends losses nearing $87.00 amid efforts to resume US-Iran negotiations"
   ],
-  "as_of": "2026-11-09T12:41:01Z"
+  "as_of": "2026-11-09T13:08:23Z"
 }
