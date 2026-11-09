@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los Houthis reclamaron un ataque con dron contra oficinas de Saudi Aramco en Riad (dano a un edificio administrativo, sin heridos) mientras ambas partes reportan nuevos impactos a buques cerca del Estrecho de Hormuz, manteniendo la prima de riesgo geopolitico que presiona el sentimiento de riesgo global para el NQ.",
-  "petroleo": "Brent cae -0.85% a 97.48 USD/barril (WTI en torno a 91.24 USD) tras declaraciones de Trump de que nuevos ataques a Iran son 'improbables', lo que reduce la prima de riesgo de suministro y resta presion inflacionaria sobre el NQ intradia.",
-  "catalizador": "Nvidia cae -4% en premarket luego de que su directorio abriera una investigacion independiente sobre el vinculo de Jensen Huang con una presunta agente de inteligencia china, lastrando el futuro del NQ100 por su alta ponderacion en semiconductores.",
+  "geopolitica": "Nvidia cae cerca de 5% en premarket tras conocerse que la compañía investiga una presunta relación de su CEO Jensen Huang con un espía chino, reavivando la tensión tecnológica EEUU-China que pesa sobre el NQ por su alto peso en semiconductores.",
+  "petroleo": "El petróleo cotiza en niveles moderados (Brent cerca de 98 USD/b, WTI cerca de 91 USD/b) tras el repunte del jueves que corrigió el desplome de más de 8% del miércoles, cuando el mercado había descontado un fin rápido de la guerra Irán-EEUU tras los resultados de las elecciones de medio término; el petróleo más barato venía dando soporte a las acciones.",
+  "catalizador": "Esta semana el mercado espera el IPC (martes) y el IPP (viernes) como claves para la decisión de la Fed del 8-9 de diciembre; el mercado de futuros (CME FedWatch) descuenta cerca de 70% de probabilidad de una SUBIDA de tasas (no un recorte), bajando desde 82.7% el miércoles pasado, tras un reporte de empleo de octubre más fuerte de lo esperado y comentarios de la gobernadora de la Fed Mary Daly advirtiendo que son probables más subidas de tasas.",
   "sources": [
-    "CNBC (premarket ET) - Oil falls as Trump says new Iran attacks 'unlikely'",
-    "CNBC (premarket ET) - Nvidia stock falls 4% as scrutiny turns to Jensen Huang's relationship with alleged Chinese spy",
-    "CNBC (premarket ET) - Asian chip stocks in South Korea and Taiwan gain despite Nvidia scrutiny"
+    "CNBC (stock-market-today-live-updates, 09 nov 2026, premarket)",
+    "CNBC (jobs-report-october-2026, 06 nov 2026)",
+    "CNBC (fed-daly-interest-rates-inflation, 06 nov 2026)",
+    "Oilprice.com (Oil Prices Rebound Sharply After Brutal Midweek Rout, semana del 09 nov 2026)",
+    "Bloomberg (fed-seen-holding-rates-with-nod-to-december, 27 oct 2026)"
   ],
-  "as_of": "2026-11-09T11:10:26Z"
+  "as_of": "2026-11-09T11:38:38Z"
 }
