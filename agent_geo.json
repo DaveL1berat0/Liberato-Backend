@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Nvidia cae cerca de 5% en premarket tras conocerse que la compañía investiga una presunta relación de su CEO Jensen Huang con un espía chino, reavivando la tensión tecnológica EEUU-China que pesa sobre el NQ por su alto peso en semiconductores.",
-  "petroleo": "El petróleo cotiza en niveles moderados (Brent cerca de 98 USD/b, WTI cerca de 91 USD/b) tras el repunte del jueves que corrigió el desplome de más de 8% del miércoles, cuando el mercado había descontado un fin rápido de la guerra Irán-EEUU tras los resultados de las elecciones de medio término; el petróleo más barato venía dando soporte a las acciones.",
-  "catalizador": "Esta semana el mercado espera el IPC (martes) y el IPP (viernes) como claves para la decisión de la Fed del 8-9 de diciembre; el mercado de futuros (CME FedWatch) descuenta cerca de 70% de probabilidad de una SUBIDA de tasas (no un recorte), bajando desde 82.7% el miércoles pasado, tras un reporte de empleo de octubre más fuerte de lo esperado y comentarios de la gobernadora de la Fed Mary Daly advirtiendo que son probables más subidas de tasas.",
+  "geopolitica": "Nvidia cae cerca de 5% en premarket tras abrirse una investigacion de la junta directiva sobre los vinculos de su CEO Jensen Huang con una presunta espia china, presionando los futuros del Nasdaq pese al rally de chips asiaticos como TSMC (CNBC, 09 nov, premarket).",
+  "petroleo": "El Brent cae mas de 3% a cerca de 95 USD/barril y el WTI baja a 88.17 USD (-3%) tras un reporte no confirmado de que Iran flexibilizo sus exigencias sobre el estrecho de Ormuz, sumado a declaraciones de Trump de que nuevos ataques son poco probables (Bloomberg 06:34 ET).",
+  "catalizador": "",
   "sources": [
-    "CNBC (stock-market-today-live-updates, 09 nov 2026, premarket)",
-    "CNBC (jobs-report-october-2026, 06 nov 2026)",
-    "CNBC (fed-daly-interest-rates-inflation, 06 nov 2026)",
-    "Oilprice.com (Oil Prices Rebound Sharply After Brutal Midweek Rout, semana del 09 nov 2026)",
-    "Bloomberg (fed-seen-holding-rates-with-nod-to-december, 27 oct 2026)"
+    "CNBC 09 Nov (premarket) - Nvidia/Jensen Huang investigation",
+    "Bloomberg 06:34 ET - Oil falls on unconfirmed Iran Hormuz report",
+    "CNBC 09 Nov - Rubio: Iran demands 'outrageous', breakthrough unlikely"
   ],
-  "as_of": "2026-11-09T11:38:38Z"
+  "as_of": "2026-11-09T12:08:47Z"
 }
