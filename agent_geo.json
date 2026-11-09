@@ -1,7 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-06T21:05:24Z"
+  "geopolitica": "Los Houthis reclamaron un ataque con dron contra oficinas de Saudi Aramco en Riad (dano a un edificio administrativo, sin heridos) mientras ambas partes reportan nuevos impactos a buques cerca del Estrecho de Hormuz, manteniendo la prima de riesgo geopolitico que presiona el sentimiento de riesgo global para el NQ.",
+  "petroleo": "Brent cae -0.85% a 97.48 USD/barril (WTI en torno a 91.24 USD) tras declaraciones de Trump de que nuevos ataques a Iran son 'improbables', lo que reduce la prima de riesgo de suministro y resta presion inflacionaria sobre el NQ intradia.",
+  "catalizador": "Nvidia cae -4% en premarket luego de que su directorio abriera una investigacion independiente sobre el vinculo de Jensen Huang con una presunta agente de inteligencia china, lastrando el futuro del NQ100 por su alta ponderacion en semiconductores.",
+  "sources": [
+    "CNBC (premarket ET) - Oil falls as Trump says new Iran attacks 'unlikely'",
+    "CNBC (premarket ET) - Nvidia stock falls 4% as scrutiny turns to Jensen Huang's relationship with alleged Chinese spy",
+    "CNBC (premarket ET) - Asian chip stocks in South Korea and Taiwan gain despite Nvidia scrutiny"
+  ],
+  "as_of": "2026-11-09T11:10:26Z"
 }
