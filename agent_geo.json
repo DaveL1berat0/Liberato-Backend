@@ -1,15 +1,12 @@
 {
-  "geopolitica": "Arrancaron en Abu Dabi las negociaciones de paz Rusia-Ucrania mediadas por EE.UU. (Witkoff y Kushner), con Trump expresando una 'fuerte inclinacion' a cerrar el conflicto, lo que favorece el apetito por riesgo y podria dar soporte al NQ si hay senales de avance.",
-  "petroleo": "El Brent perforo los USD 90 por primera vez desde agosto (minimo intradia USD 89.03, -0.6% a ~92.03) y el WTI cayo a ~86.52, tras comentarios de Trump que descartan una escalada con Iran; la baja de energia alivia algo la presion inflacionaria pero no compensa el golpe del IPC caliente sobre el NQ.",
-  "catalizador": "El IPC de octubre subio 0.4% m/m y el nucleo 0.3% (vs 0.2% esperado, dato publicado 08:30 ET), reforzando apuestas por una suba de tasas de la Fed en la reunion del 8-9 de diciembre (Waller y Logan sugieren incluso 50pb); el Treasury a 10 anos salto a 5.00% y el Nasdaq 100 llego a caer 1.5%, presionando al NQ a la baja.",
+  "geopolitica": "El CEO de Nvidia, Jensen Huang, sigue bajo investigacion por un presunto vinculo de espionaje chino (via la empresaria Alice Huang), lo que mantiene presionado al sentimiento tech dentro del Nasdaq pese al rebote reciente del indice (CNBC, 9 nov).",
+  "petroleo": "El Brent cae a unos 90.2 USD/barril (-1.4%) y el WTI a cerca de 85 USD/barril (-2.4%), su nivel mas bajo desde agosto, por expectativas de un acercamiento diplomatico con Iran que reduce la prima de riesgo geopolitico, lo que alivia presion inflacionaria para el Nasdaq (Forbes 07:17 ET).",
+  "catalizador": "El IPC de octubre, publicado hoy a las 8:30 ET, subio 0.4% mensual (vs ~0.3% esperado) con el nucleo en 0.3% por tercer mes consecutivo, superando el umbral citado por el gobernador de la Fed Waller para considerar una subida de 50 pb, lo que presiona a la baja a los futuros del NQ (CBS News 08:30 ET).",
   "sources": [
-    "CNBC 08:30 ET - CPI inflation report: October 2026",
-    "Bloomberg - US Core CPI Rises More-Than-Forecast 0.3%, Supporting Rate Hike",
-    "CNBC - Market spooked because now the Fed may need a supersized hike in December",
-    "CNBC - Oil falls as Trump downplays prospect of escalation with Iran",
-    "CNBC - Brent crude dips below $90 for first time since August on Iran war de-escalation hopes",
-    "CNBC - Trump sees 'strong inclination' to end Russia-Ukraine war ahead of U.S.-brokered peace talks",
-    "Bloomberg - US-Led Peace Talks With Russia and Ukraine Start in Abu Dhabi"
+    "CNBC 09-nov (Huang espionage probe)",
+    "CBS News 08:30 ET (October CPI)",
+    "Forbes 07:17 ET (oil prices)",
+    "Middle East Observer 09:30 GMT (oil below $90)"
   ],
-  "as_of": "2026-11-10T19:09:52Z"
+  "as_of": "2026-11-10T20:06:16Z"
 }
