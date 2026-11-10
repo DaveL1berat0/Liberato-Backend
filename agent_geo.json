@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El CEO de Nvidia, Jensen Huang, sigue bajo investigacion por un presunto vinculo de espionaje chino (via la empresaria Alice Huang), lo que mantiene presionado al sentimiento tech dentro del Nasdaq pese al rebote reciente del indice (CNBC, 9 nov).",
-  "petroleo": "El Brent cae a unos 90.2 USD/barril (-1.4%) y el WTI a cerca de 85 USD/barril (-2.4%), su nivel mas bajo desde agosto, por expectativas de un acercamiento diplomatico con Iran que reduce la prima de riesgo geopolitico, lo que alivia presion inflacionaria para el Nasdaq (Forbes 07:17 ET).",
-  "catalizador": "El IPC de octubre, publicado hoy a las 8:30 ET, subio 0.4% mensual (vs ~0.3% esperado) con el nucleo en 0.3% por tercer mes consecutivo, superando el umbral citado por el gobernador de la Fed Waller para considerar una subida de 50 pb, lo que presiona a la baja a los futuros del NQ (CBS News 08:30 ET).",
+  "geopolitica": "Nvidia investiga a su CEO Jensen Huang por una presunta relacion con una mujer identificada por inteligencia de EEUU como posible espia china; el Congreso (Rep. Moolenaar, en Squawk Box) exige saber si China tuvo acceso preferencial a chips, lo que mantiene presion sobre semiconductores pese al rebote tecnologico y añade riesgo a los valores de IA dentro del NQ.",
+  "petroleo": "El Brent cayo 1.17% a 91.49 USD/barril (minimo intradia 89.16, primera vez bajo 90 desde agosto) y el WTI bajo 0.93% a 86.04 USD, tras comentarios de Trump señalando que una accion militar contra Iran 'no es necesaria por ahora', lo que reduce la prima de riesgo geopolitico y alivia la presion inflacionaria que afecta al sentimiento de riesgo en el NQ.",
+  "catalizador": "El Nasdaq cerro con una caida de 0.7% (CNBC, 16:02 ET) tras un dato de inflacion CPI de octubre mas caliente de lo esperado y comentarios de un funcionario de la Fed que insinuo un posible alza de tasas de hasta 50 pb en la proxima reunion, lo que presiono al NQ por expectativas de politica monetaria mas restrictiva.",
   "sources": [
-    "CNBC 09-nov (Huang espionage probe)",
-    "CBS News 08:30 ET (October CPI)",
-    "Forbes 07:17 ET (oil prices)",
-    "Middle East Observer 09:30 GMT (oil below $90)"
+    "CNBC 10-nov-2026 (oil-prices-trump-iran)",
+    "CNBC 10-nov-2026 (moolenaar-nvidia-jensen-huang-affair-chinese-spy)",
+    "CNBC 16:02 ET 10-nov-2026 (stock-market-today-live-updates)"
   ],
-  "as_of": "2026-11-10T20:06:16Z"
+  "as_of": "2026-11-10T21:06:04Z"
 }
