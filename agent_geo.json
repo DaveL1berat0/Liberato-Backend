@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Nuevos ataques a petroleros en el Estrecho de Ormuz (buque vinculado a ADNOC danado y UKMTO reportando impactos cerca de Oman en los ultimos dias) reavivan la tension Iran-EEUU a pesar de la tregua vigente, lo que presiona el apetito por riesgo y puede pesar sobre el NQ en la apertura.",
-  "petroleo": "El Brent cotiza cerca de 92-93 USD/barril y el WTI en torno a 86-87 USD, cerca de minimos de varias semanas: cayo fuerte a inicios de noviembre por esperanzas de paz EEUU-Iran, pero repunta por los nuevos ataques en el Estrecho de Ormuz que erosionan esa distension; el vaiven en el costo energetico añade presion sobre el sentimiento de riesgo que mueve al NQ.",
-  "catalizador": "El IPC de octubre en EEUU salio mas caliente de lo esperado (dato del 10-nov), elevando a ~88-92% la probabilidad de una subida de tasas de la Fed en diciembre tras comentarios hawkish de Waller; Nvidia cayo y el Nasdaq retrocedio tras el dato, aunque futuros del Nasdaq-100 rebotan hoy impulsados por fortaleza premarket en semiconductores (Intel, Nvidia), limitando las perdidas en tecnologia.",
+  "geopolitica": "Reuters (via Saxo Market Quick Take, 11 nov 2026) reportó que el funcionario iraní Mohsen Rezaei dijo que Teherán no negocia con Washington mientras EE.UU. mantiene el bloqueo naval pero suspende nuevos ataques, dejando la tensión en Medio Oriente como riesgo latente sin escalada aguda para el NQ en las últimas horas.",
+  "petroleo": "El Brent cerró el martes en 91.49 USD/barril (-1.17%) y el WTI en 86.04 USD/barril (-0.93%), con el Brent bajo 90 USD por primera vez desde agosto por esperanzas de distensión con Irán (CNBC, 10 nov 2026), lo que alivia la presión inflacionaria y resulta levemente favorable para el NQ.",
+  "catalizador": "Un CPI más caliente de lo esperado y comentarios hawkish de la Fed dispararon los rendimientos del Tesoro (el de 10 años superó brevemente el 5%), presionando a tech, aunque los futuros del Nasdaq rebotaron tras resultados de CoreWeave que calmaron temores de gasto en IA (Reuters vía Saxo Market Quick Take / SRN News, 11 nov 2026).",
   "sources": [
-    "Maritime Executive / UKMTO nov-2026 (ataques en el Estrecho de Ormuz)",
-    "Trading Economics / 5paisa 11-nov-2026 (Brent ~92-93 USD, WTI ~86-87 USD)",
-    "Investing.com / CME FedWatch 10-nov-2026 (IPC caliente, probabilidad hike diciembre ~88%)",
-    "TokenPost / TradingView 11-nov-2026 04:11 ET (futuros Nasdaq-100 premarket +1.6-2%, Intel y Nvidia)"
+    "Reuters/Saxo Market Quick Take, 11 nov 2026",
+    "CNBC, 10 nov 2026",
+    "SRN News (Reuters), 11 nov 2026",
+    "Benzinga, 11 nov 2026"
   ],
-  "as_of": "2026-11-11T13:09:00Z"
+  "as_of": "2026-11-11T13:40:32Z"
 }
