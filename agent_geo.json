@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Reuters (via Saxo Market Quick Take, 11 nov 2026) reportó que el funcionario iraní Mohsen Rezaei dijo que Teherán no negocia con Washington mientras EE.UU. mantiene el bloqueo naval pero suspende nuevos ataques, dejando la tensión en Medio Oriente como riesgo latente sin escalada aguda para el NQ en las últimas horas.",
-  "petroleo": "El Brent cerró el martes en 91.49 USD/barril (-1.17%) y el WTI en 86.04 USD/barril (-0.93%), con el Brent bajo 90 USD por primera vez desde agosto por esperanzas de distensión con Irán (CNBC, 10 nov 2026), lo que alivia la presión inflacionaria y resulta levemente favorable para el NQ.",
-  "catalizador": "Un CPI más caliente de lo esperado y comentarios hawkish de la Fed dispararon los rendimientos del Tesoro (el de 10 años superó brevemente el 5%), presionando a tech, aunque los futuros del Nasdaq rebotaron tras resultados de CoreWeave que calmaron temores de gasto en IA (Reuters vía Saxo Market Quick Take / SRN News, 11 nov 2026).",
+  "geopolitica": "Iran ha intensificado ataques a petroleros en el Estrecho de Hormuz durante los ultimos dias (UKMTO, Seatrade Maritime), sosteniendo una prima de riesgo geopolitico que limita el apetito por riesgo del NQ en el premercado de hoy.",
+  "petroleo": "El Brent cotiza en torno a 92-93.5 dolares por barril (+-1.1%) y el WTI cerca de 86-87 dolares (5paisa, ~05:47 ET), impulsados por los ataques a petroleros en Hormuz, lo que anade cautela al sentimiento de riesgo del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1.9-2% en el premercado de hoy (StockTitan/CurrentLogic, ~08:30 ET) tras la mejora de guia 2026 de CoreWeave que reaviva el 'trade de IA' en NVDA, MU, INTC y AMD, aunque el mercado ya descuenta cerca de 85% de probabilidad de una subida de la Fed en diciembre tras el CPI caliente del martes, lo que podria limitar el rally si el tono vira hawkish.",
   "sources": [
-    "Reuters/Saxo Market Quick Take, 11 nov 2026",
-    "CNBC, 10 nov 2026",
-    "SRN News (Reuters), 11 nov 2026",
-    "Benzinga, 11 nov 2026"
+    "HDFC Sky hoy (Brent +1.14% a 92.5 por ataques en Hormuz)",
+    "5paisa 05:47 ET (Brent 93.49 / WTI 87.28)",
+    "StockTitan/CurrentLogic ~08:30 ET (futuros Nasdaq-100 +1.9-2% premercado)",
+    "Roic.ai citando Russell Investments 09-nov (CME FedWatch ~85% hike diciembre)"
   ],
-  "as_of": "2026-11-11T13:40:32Z"
+  "as_of": "2026-11-11T14:07:52Z"
 }
