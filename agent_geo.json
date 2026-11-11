@@ -1,12 +1,12 @@
 {
-  "geopolitica": "China extendió por dos meses (desde el 10/11) la suspensión del arancel adicional del 24% a EE.UU. y mantiene solo el 10%, aliviando la tensión comercial y dando soporte al apetito por riesgo en tech/semis que favorece al NQ.",
-  "petroleo": "El Brent cotiza en torno a 92-93 USD y el WTI cerca de 86-87 USD, revirtiendo parte de la caída por esperanzas de un acuerdo de paz EE.UU.-Irán que ahora se diluyen, lo que reaviva la prima de riesgo geopolítico y presiona el sentimiento de riesgo del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 saltaron +1.9% en la premarket tras los resultados de CoreWeave (ingresos +168% interanual, backlog de 132.500 M USD), reavivando el optimismo por el gasto en IA que sostiene al NQ hoy.",
+  "geopolitica": "Los ataques a petroleros persisten esta semana en el Estrecho de Ormuz y Teheran nego avances en las negociaciones con EEUU, manteniendo una prima de riesgo geopolitico que presiona al NQ via aversion al riesgo (Bloomberg, 11-nov).",
+  "petroleo": "El Brent cotiza cerca de USD 92/barril (-7% en la semana) y el WTI por debajo de USD 87, tras caer el martes a minimos desde agosto por expectativas de tregua con Iran, lo que alivia la presion inflacionaria y resulta levemente positivo para el NQ (Bloomberg/CNBC, 10-11 nov).",
+  "catalizador": "Los futuros del Nasdaq 100 suben 1.9% hacia las 06:27 ET impulsados por resultados de CoreWeave, pero el presidente de la Fed de Chicago Goolsbee califico la inflacion de octubre de 'borderline disturbing' y el mercado ya descuenta una subida de tasas en diciembre, un catalizador mixto para el NQ (CNBC/Bloomberg, 11-nov).",
   "sources": [
-    "Reuters 09-nov",
-    "CNBC 10-nov",
-    "FXStreet 11-nov",
-    "Investing.com 09:01 ET"
+    "Bloomberg 11-nov (Oil Gains After Two-Day Drop With Focus on US-Iran War Outlook)",
+    "CNBC 10-nov (Brent crude briefly dips below $90 for first time since August on Iran hopes)",
+    "CNBC 11-nov (Fed's Goolsbee calls inflation report 'borderline disturbing')",
+    "Bloomberg 06:27 ET (US Stock Index Futures Rise as CoreWeave Helps Tech Rebound)"
   ],
-  "as_of": "2026-11-11T17:06:34Z"
+  "as_of": "2026-11-11T18:06:11Z"
 }
