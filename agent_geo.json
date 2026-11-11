@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. trasladó al secretario del Tesoro, Scott Bessent, a una base militar por amenazas de muerte de Iran, y el Departamento de Justicia acuso a tres ciudadanos iranies de terrorismo por ataques planeados en Europa y EE.UU.; la escalada de riesgo geopolitico con Iran presiona el apetito por riesgo en el NQ intradia.",
-  "petroleo": "El Brent sube cerca de 0.8% hacia 92 USD/barril y el WTI cerca de 0.6% hacia 86.5 USD/barril en la sesion del miercoles, tras ataques a buques en el Estrecho de Ormuz que contrarrestan las esperanzas de una tregua EEUU-Iran; el repunte del riesgo de oferta petrolera añade presion bajista sobre el sentimiento de riesgo que mueve al NQ.",
-  "catalizador": "Las acciones de CoreWeave subian cerca de 10.8% y las de Nvidia cerca de 3% en premercado (CNBC, 05:08 ET) tras resultados de CoreWeave que superaron expectativas, lo que impulsa el apetito por riesgo en Nasdaq-100 antes de la apertura.",
+  "geopolitica": "Nuevos ataques a petroleros en el Estrecho de Ormuz (buque de ADNOC danado y UKMTO reportando un impacto cerca de Oman) reavivan la tension Iran-EEUU a pesar de la tregua vigente, lo que presiona el apetito por riesgo y puede pesar sobre el NQ en la apertura.",
+  "petroleo": "El Brent sube cerca de 1.14% hacia los 92.5 USD/barril (WTI en torno a 87 USD) por los nuevos ataques en el Estrecho de Ormuz que erosionan las esperanzas de distension EEUU-Iran; el repunte de costos energeticos añade presion bajista sobre el sentimiento de riesgo que mueve al NQ.",
+  "catalizador": "El IPC de octubre en EEUU salio mas caliente de lo esperado (dato publicado 08:30 ET), elevando las apuestas de una subida de tasas de la Fed en diciembre; Nvidia cayo y el Nasdaq retrocedio tras el dato, aunque resultados de CoreWeave por encima de lo esperado limitaron las perdidas en tecnologia.",
   "sources": [
-    "CBS News 04:23 ET",
-    "CNBC 05:08 ET",
-    "CNBC (sesion asiatica) 11-nov-2026"
+    "The National / UKMTO 10-nov-2026 (ataques en el Estrecho de Ormuz)",
+    "hdfcsky 11-nov-2026 (Brent +1.14% a 92.5 USD)",
+    "CNBC / Investing.com 10-nov-2026 08:30 ET (IPC caliente, Nasdaq y Nvidia)"
   ],
-  "as_of": "2026-11-11T12:08:09Z"
+  "as_of": "2026-11-11T12:41:30Z"
 }
