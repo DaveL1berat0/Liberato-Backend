@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Las esperanzas de que el conflicto Iran-EEUU llegue a su fin redujeron la prima de riesgo geopolitico que presionaba a los mercados, un alivio que favorece el apetito por riesgo y es positivo para el NQ en la apertura (CNBC, 10-Nov-2026).",
-  "petroleo": "El Brent cayo brevemente por debajo de 90 USD (minimo desde agosto) y el WTI cerro el martes en 86.04 USD (-0.93%) por la distension con Iran; hoy cotizan cerca de 92-93 USD y 86-87 USD respectivamente, lo que reduce el riesgo inflacionario para las tecnologicas del NQ (CNBC / 5paisa, 10/11-Nov-2026).",
-  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (+1.6%/+1.9%) en el premercado del miercoles, liderados por Intel (+5%) y Nvidia (+3%) tras dos sesiones de caida combinada del 9.5%, y CoreWeave dispara +15%/+17% tras superar estimados y elevar su guia anual, catalizador alcista de ultima hora para el NQ tras el dato de inflacion caliente que habia hundido al Nasdaq el martes (TokenPost / CNBC, premercado 11-Nov-2026).",
+  "geopolitica": "EE.UU. trasladó al secretario del Tesoro, Scott Bessent, a una base militar por amenazas de muerte de Iran, y el Departamento de Justicia acuso a tres ciudadanos iranies de terrorismo por ataques planeados en Europa y EE.UU.; la escalada de riesgo geopolitico con Iran presiona el apetito por riesgo en el NQ intradia.",
+  "petroleo": "El Brent sube cerca de 0.8% hacia 92 USD/barril y el WTI cerca de 0.6% hacia 86.5 USD/barril en la sesion del miercoles, tras ataques a buques en el Estrecho de Ormuz que contrarrestan las esperanzas de una tregua EEUU-Iran; el repunte del riesgo de oferta petrolera añade presion bajista sobre el sentimiento de riesgo que mueve al NQ.",
+  "catalizador": "Las acciones de CoreWeave subian cerca de 10.8% y las de Nvidia cerca de 3% en premercado (CNBC, 05:08 ET) tras resultados de CoreWeave que superaron expectativas, lo que impulsa el apetito por riesgo en Nasdaq-100 antes de la apertura.",
   "sources": [
-    "CNBC 10-Nov-2026 - Brent crude briefly dips below $90 on Iran hopes",
-    "CNBC / TheStreet 10-Nov-2026 - Nasdaq falls 0.74% after hot October CPI",
-    "5paisa 11-Nov-2026 - Crude Oil Price Today: Brent/WTI",
-    "TokenPost 11-Nov-2026 - Nasdaq-100 futures rise 1.67% as Intel gains 5% premarket"
+    "CBS News 04:23 ET",
+    "CNBC 05:08 ET",
+    "CNBC (sesion asiatica) 11-nov-2026"
   ],
-  "as_of": "2026-11-11T11:39:10Z"
+  "as_of": "2026-11-11T12:08:09Z"
 }
