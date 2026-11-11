@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Ataques con minas e incendios en varios petroleros en el Estrecho de Ormuz (noche del 10 al 11 de noviembre, reportados por la Guardia Revolucionaria iraní) reducen las esperanzas de una tregua EEUU-Irán, lo que añade prima de riesgo geopolítico y puede frenar el apetito por riesgo en el NQ.",
-  "petroleo": "El Brent sube ~1.1% hasta 92.5 USD/barril y el WTI ~0.8% hasta 86.7 USD/barril (madrugada ET del 11-nov), rebotando desde mínimos de dos meses por los ataques en Ormuz que reviven temores de oferta; si el repunte se sostiene, presiona costos y sentimiento de riesgo sobre el NQ.",
-  "catalizador": "El Nasdaq Composite cerró el 10-nov (16:00 ET) con una caída de 0.74% a 25,065.87 tras un dato de inflación más caliente de lo esperado que elevó las apuestas de una subida de tasas de la Fed en diciembre, golpeando a tecnológicas como Nvidia (-5% a -6%); este catalizador mantiene presión bajista de fondo sobre el NQ.",
+  "geopolitica": "Las esperanzas de que el conflicto Iran-EEUU llegue a su fin redujeron la prima de riesgo geopolitico que presionaba a los mercados, un alivio que favorece el apetito por riesgo y es positivo para el NQ en la apertura (CNBC, 10-Nov-2026).",
+  "petroleo": "El Brent cayo brevemente por debajo de 90 USD (minimo desde agosto) y el WTI cerro el martes en 86.04 USD (-0.93%) por la distension con Iran; hoy cotizan cerca de 92-93 USD y 86-87 USD respectivamente, lo que reduce el riesgo inflacionario para las tecnologicas del NQ (CNBC / 5paisa, 10/11-Nov-2026).",
+  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (+1.6%/+1.9%) en el premercado del miercoles, liderados por Intel (+5%) y Nvidia (+3%) tras dos sesiones de caida combinada del 9.5%, y CoreWeave dispara +15%/+17% tras superar estimados y elevar su guia anual, catalizador alcista de ultima hora para el NQ tras el dato de inflacion caliente que habia hundido al Nasdaq el martes (TokenPost / CNBC, premercado 11-Nov-2026).",
   "sources": [
-    "NordFX Market Pulse 11-nov (cierre Wall Street 10-nov)",
-    "CNBC 10-nov 16:00 ET (oil prices, Trump-Iran)",
-    "Business Recorder 11-nov (ataques Estrecho de Ormuz)",
-    "HDFC Sky 11-nov (Brent/WTI intradía)"
+    "CNBC 10-Nov-2026 - Brent crude briefly dips below $90 on Iran hopes",
+    "CNBC / TheStreet 10-Nov-2026 - Nasdaq falls 0.74% after hot October CPI",
+    "5paisa 11-Nov-2026 - Crude Oil Price Today: Brent/WTI",
+    "TokenPost 11-Nov-2026 - Nasdaq-100 futures rise 1.67% as Intel gains 5% premarket"
   ],
-  "as_of": "2026-11-11T11:13:47Z"
+  "as_of": "2026-11-11T11:39:10Z"
 }
