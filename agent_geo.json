@@ -1,13 +1,13 @@
 {
-  "geopolitica": "La Casa Blanca mantiene los aranceles pese al rechazo mostrado en las elecciones de medio mandato, mientras la guerra EEUU-Iran sigue sin resolverse (ataques a petroleros en el Estrecho de Ormuz a fin de octubre y mediacion qatari en curso), sosteniendo una prima de riesgo que pesa sobre el NQ via aversion al riesgo (CNBC, 10-nov).",
-  "petroleo": "El Brent ronda los USD 92/barril, mas de USD 12 por debajo del nivel de la semana pasada, tras caer el martes a minimos desde agosto por expectativas de distension en la guerra con Iran, lo que alivia la presion inflacionaria y resulta levemente positivo para el NQ (CNBC, 10-nov; OilPrice.com, 11-nov 16:24 ET).",
-  "catalizador": "El IPC de octubre mostro precios subyacentes al alza otra vez, elevando las apuestas de una suba de tasas de la Fed en diciembre -catalizador bajista para el NQ-, compensado parcialmente por el salto de CoreWeave que impulsa a las tecnologicas y a los futuros del Nasdaq 100 (StockTitan/CNBC, 10-nov; TradersUnion, 11-nov).",
+  "geopolitica": "El secretario del Tesoro Bessent fue trasladado a una base militar por 'amenazas crecientes' de Iran en medio del estancamiento belico EEUU-Iran, mientras se amplia la investigacion de espionaje/contrabando de chips de Nvidia hacia China, sosteniendo una prima de riesgo geopolitico que pesa sobre el sentimiento tech del NQ (CNBC, 11-nov).",
+  "petroleo": "El Brent cotiza en torno a USD 92/barril y el WTI cerca de USD 86 en la sesion asiatica del miercoles, tras un cierre del martes en USD 91.49 (-1.17%) y USD 86.04 (-0.93%) respectivamente, oscilando entre esperanzas de distension con Iran y temores por ataques a buques en el Estrecho de Ormuz, lo que resulta mixto/levemente favorable para el NQ al aliviar presion inflacionaria (CNBC, 11-nov).",
+  "catalizador": "El IPC subyacente de octubre subio 0.3% (vs 0.2% esperado, dato publicado por el BLS el martes 8:30 ET), elevando las apuestas de una suba de tasas de la Fed en diciembre -el gobernador Waller no descarta 50pb-, un catalizador bajista para el NQ parcialmente compensado por el salto premarket de los futuros del Nasdaq 100 (+1.9% a las 6:27 ET de hoy) impulsado por los resultados de CoreWeave (CNBC/Bloomberg, 10 y 11-nov).",
   "sources": [
-    "CNBC 10-nov (White House vows to press ahead with tariffs despite midterm backlash over rising prices)",
-    "CNBC 10-nov (Brent crude briefly dips below $90 for first time since August on Iran hopes)",
-    "OilPrice.com 11-nov 16:24 ET (Brent at $91.96/bbl)",
-    "StockTitan 10-nov (Stock market closed lower as BLS data show core prices rising again)",
-    "TradersUnion 11-nov (Nasdaq futures surge as CoreWeave results revive AI stocks despite Fed concerns)"
+    "CNBC 11-nov (Bessent moved to military base amid 'growing threats' from Iran)",
+    "CNBC 11-nov (Oil rises from two-month low as Hormuz shipping attacks offset Iran truce hopes)",
+    "CNBC 10-nov 08:30 ET (CPI inflation report: October 2026 - core CPI +0.3% vs +0.2% esperado)",
+    "CNBC 10-nov (Fed Governor Waller sees December hike likely, opens door to possible half-point increase)",
+    "Bloomberg 11-nov 06:27 ET (US Stock Index Futures Rise as CoreWeave Helps Tech Rebound)"
   ],
-  "as_of": "2026-11-11T20:07:53Z"
+  "as_of": "2026-11-11T21:05:57Z"
 }
