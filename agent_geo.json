@@ -1,12 +1,12 @@
 {
-  "geopolitica": "EE.UU. trasladó al secretario del Tesoro Bessent a una base militar por amenazas iraníes contra su vida en medio de la guerra con Irán, un foco de riesgo geopolítico que puede favorecer activos refugio frente al NQ si la escalada se confirma (CNBC, 11-nov).",
-  "petroleo": "El Brent sube hacia 92 USD/barril y el WTI ronda 86 USD, rebotando desde mínimos de dos meses, tras ataques a buques en el estrecho de Ormuz que contrarrestan las esperanzas de tregua Irán-EE.UU.; energía más cara es moderadamente negativo para el NQ (CNBC, 11-nov).",
-  "catalizador": "Los futuros del Nasdaq 100 suben cerca de +1.9%/+2% impulsados por el resultado de CoreWeave (ingresos +168% interanual, guía elevada), que reaviva el apetito por IA y compensa el dato de inflación subyacente (CPI +0.3%) que había elevado las expectativas de una Fed más dura (Bloomberg, 06:27 ET).",
+  "geopolitica": "China extendió por dos meses (desde el 10/11) la suspensión del arancel adicional del 24% a EE.UU. y mantiene solo el 10%, aliviando la tensión comercial y dando soporte al apetito por riesgo en tech/semis que favorece al NQ.",
+  "petroleo": "El Brent cotiza en torno a 92-93 USD y el WTI cerca de 86-87 USD, revirtiendo parte de la caída por esperanzas de un acuerdo de paz EE.UU.-Irán que ahora se diluyen, lo que reaviva la prima de riesgo geopolítico y presiona el sentimiento de riesgo del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 saltaron +1.9% en la premarket tras los resultados de CoreWeave (ingresos +168% interanual, backlog de 132.500 M USD), reavivando el optimismo por el gasto en IA que sostiene al NQ hoy.",
   "sources": [
-    "Bloomberg 06:27 ET - US Stock Index Futures Rise as CoreWeave Helps Tech Rebound",
-    "CNBC 11-nov - CoreWeave stock pops after outlook raise eases AI slowdown concerns",
-    "CNBC 11-nov - Oil rises from two-month low as Hormuz shipping attacks offset Iran truce hopes",
-    "CNBC 11-nov - Bessent reportedly moved to military base over Iranian threats on his life"
+    "Reuters 09-nov",
+    "CNBC 10-nov",
+    "FXStreet 11-nov",
+    "Investing.com 09:01 ET"
   ],
-  "as_of": "2026-11-11T14:39:57Z"
+  "as_of": "2026-11-11T17:06:34Z"
 }
