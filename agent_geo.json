@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Iran ha intensificado ataques a petroleros en el Estrecho de Hormuz durante los ultimos dias (UKMTO, Seatrade Maritime), sosteniendo una prima de riesgo geopolitico que limita el apetito por riesgo del NQ en el premercado de hoy.",
-  "petroleo": "El Brent cotiza en torno a 92-93.5 dolares por barril (+-1.1%) y el WTI cerca de 86-87 dolares (5paisa, ~05:47 ET), impulsados por los ataques a petroleros en Hormuz, lo que anade cautela al sentimiento de riesgo del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1.9-2% en el premercado de hoy (StockTitan/CurrentLogic, ~08:30 ET) tras la mejora de guia 2026 de CoreWeave que reaviva el 'trade de IA' en NVDA, MU, INTC y AMD, aunque el mercado ya descuenta cerca de 85% de probabilidad de una subida de la Fed en diciembre tras el CPI caliente del martes, lo que podria limitar el rally si el tono vira hawkish.",
+  "geopolitica": "EE.UU. trasladó al secretario del Tesoro Bessent a una base militar por amenazas iraníes contra su vida en medio de la guerra con Irán, un foco de riesgo geopolítico que puede favorecer activos refugio frente al NQ si la escalada se confirma (CNBC, 11-nov).",
+  "petroleo": "El Brent sube hacia 92 USD/barril y el WTI ronda 86 USD, rebotando desde mínimos de dos meses, tras ataques a buques en el estrecho de Ormuz que contrarrestan las esperanzas de tregua Irán-EE.UU.; energía más cara es moderadamente negativo para el NQ (CNBC, 11-nov).",
+  "catalizador": "Los futuros del Nasdaq 100 suben cerca de +1.9%/+2% impulsados por el resultado de CoreWeave (ingresos +168% interanual, guía elevada), que reaviva el apetito por IA y compensa el dato de inflación subyacente (CPI +0.3%) que había elevado las expectativas de una Fed más dura (Bloomberg, 06:27 ET).",
   "sources": [
-    "HDFC Sky hoy (Brent +1.14% a 92.5 por ataques en Hormuz)",
-    "5paisa 05:47 ET (Brent 93.49 / WTI 87.28)",
-    "StockTitan/CurrentLogic ~08:30 ET (futuros Nasdaq-100 +1.9-2% premercado)",
-    "Roic.ai citando Russell Investments 09-nov (CME FedWatch ~85% hike diciembre)"
+    "Bloomberg 06:27 ET - US Stock Index Futures Rise as CoreWeave Helps Tech Rebound",
+    "CNBC 11-nov - CoreWeave stock pops after outlook raise eases AI slowdown concerns",
+    "CNBC 11-nov - Oil rises from two-month low as Hormuz shipping attacks offset Iran truce hopes",
+    "CNBC 11-nov - Bessent reportedly moved to military base over Iranian threats on his life"
   ],
-  "as_of": "2026-11-11T14:07:52Z"
+  "as_of": "2026-11-11T14:39:57Z"
 }
