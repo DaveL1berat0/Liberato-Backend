@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Nuevos ataques a petroleros en el Estrecho de Ormuz (buque de ADNOC danado y UKMTO reportando un impacto cerca de Oman) reavivan la tension Iran-EEUU a pesar de la tregua vigente, lo que presiona el apetito por riesgo y puede pesar sobre el NQ en la apertura.",
-  "petroleo": "El Brent sube cerca de 1.14% hacia los 92.5 USD/barril (WTI en torno a 87 USD) por los nuevos ataques en el Estrecho de Ormuz que erosionan las esperanzas de distension EEUU-Iran; el repunte de costos energeticos añade presion bajista sobre el sentimiento de riesgo que mueve al NQ.",
-  "catalizador": "El IPC de octubre en EEUU salio mas caliente de lo esperado (dato publicado 08:30 ET), elevando las apuestas de una subida de tasas de la Fed en diciembre; Nvidia cayo y el Nasdaq retrocedio tras el dato, aunque resultados de CoreWeave por encima de lo esperado limitaron las perdidas en tecnologia.",
+  "geopolitica": "Nuevos ataques a petroleros en el Estrecho de Ormuz (buque vinculado a ADNOC danado y UKMTO reportando impactos cerca de Oman en los ultimos dias) reavivan la tension Iran-EEUU a pesar de la tregua vigente, lo que presiona el apetito por riesgo y puede pesar sobre el NQ en la apertura.",
+  "petroleo": "El Brent cotiza cerca de 92-93 USD/barril y el WTI en torno a 86-87 USD, cerca de minimos de varias semanas: cayo fuerte a inicios de noviembre por esperanzas de paz EEUU-Iran, pero repunta por los nuevos ataques en el Estrecho de Ormuz que erosionan esa distension; el vaiven en el costo energetico añade presion sobre el sentimiento de riesgo que mueve al NQ.",
+  "catalizador": "El IPC de octubre en EEUU salio mas caliente de lo esperado (dato del 10-nov), elevando a ~88-92% la probabilidad de una subida de tasas de la Fed en diciembre tras comentarios hawkish de Waller; Nvidia cayo y el Nasdaq retrocedio tras el dato, aunque futuros del Nasdaq-100 rebotan hoy impulsados por fortaleza premarket en semiconductores (Intel, Nvidia), limitando las perdidas en tecnologia.",
   "sources": [
-    "The National / UKMTO 10-nov-2026 (ataques en el Estrecho de Ormuz)",
-    "hdfcsky 11-nov-2026 (Brent +1.14% a 92.5 USD)",
-    "CNBC / Investing.com 10-nov-2026 08:30 ET (IPC caliente, Nasdaq y Nvidia)"
+    "Maritime Executive / UKMTO nov-2026 (ataques en el Estrecho de Ormuz)",
+    "Trading Economics / 5paisa 11-nov-2026 (Brent ~92-93 USD, WTI ~86-87 USD)",
+    "Investing.com / CME FedWatch 10-nov-2026 (IPC caliente, probabilidad hike diciembre ~88%)",
+    "TokenPost / TradingView 11-nov-2026 04:11 ET (futuros Nasdaq-100 premarket +1.6-2%, Intel y Nvidia)"
   ],
-  "as_of": "2026-11-11T12:41:30Z"
+  "as_of": "2026-11-11T13:09:00Z"
 }
