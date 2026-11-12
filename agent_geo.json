@@ -1,12 +1,11 @@
 {
-  "geopolitica": "El Cuerpo de Guardianes de la Revolucion (IRGC) de Iran reporta que dos superpetroleros con mas de 4 millones de barriles impactaron minas y explotaron en el Estrecho de Ormuz la noche del miercoles, el tercer dia consecutivo de incidentes (al menos 10 tanqueros afectados desde el domingo) sin confirmacion independiente, lo que mantiene elevada la prima de riesgo geopolitico sobre el NQ.",
-  "petroleo": "El Brent cerro el miercoles en 92.76 USD (+1.39%) y el WTI en 86.53 USD (+0.57%), cotizando el jueves en torno a 91-93 USD, sostenido por el rechazo de Iran a ceder su uranio enriquecido y los reportes de minas en Ormuz, lo que presiona el sentimiento de riesgo del NQ.",
-  "catalizador": "Nvidia cae cerca de 6-8% en premarket y arrastra los futuros del Nasdaq-100 unos 239 puntos (-0.8%) por la crisis de gobierno corporativo en torno a la posible salida del CEO Jensen Huang, tras admitir una relacion con una presunta espia china; el directorio abrio una investigacion independiente y sostiene que Huang continua como CEO, pero es el mayor lastre puntual para el NQ hoy.",
+  "geopolitica": "Rusia y Ucrania avanzaron en un intercambio de prisioneros tras conversaciones en Abu Dhabi, pero EE.UU. advierte que persisten diferencias clave como el territorio, mientras Iran descarta sacar material nuclear enriquecido del pais y advierte represalias ante posibles ataques de EE.UU., manteniendo el riesgo sobre el Estrecho de Ormuz; el alivio parcial de tensiones reduce la prima de riesgo y favorece el apetito por activos de riesgo como el NQ.",
+  "petroleo": "Brent cae cerca de 1.2% a unos 91.6 dolares por barril y WTI retrocede cerca de 1.2% a unos 85.5 dolares, tocando minimos de dos meses, presionados por las esperanzas de paz en Ucrania e Iran, mayor oferta de la OPEP+ liderada por Arabia Saudita y un aumento de cerca de 9 millones de barriles en inventarios de EE.UU. segun datos del API; la caida del crudo alivia presiones inflacionarias y resulta levemente positiva para el NQ.",
+  "catalizador": "Nvidia se desploma hasta cerca de 8% en premarket (07:05 ET) tras reportes de una segunda relacion extramatrimonial del CEO Jensen Huang, mientras la junta directiva evalua removerlo tras una reunion de emergencia el miercoles por la noche; Bernstein recorto su precio objetivo a 200 dolares desde 400; dado el enorme peso de NVDA en el Nasdaq-100, esto arrastra con fuerza a los futuros del NQ a la baja.",
   "sources": [
-    "IRGC Navy via TASS / Iran Wire / Marine Link, 12-nov-2026 (superpetroleros minados en Ormuz, tercer dia de incidentes)",
-    "Reuters via The Star Malaysia / oilprice.com, 11/12-nov-2026 (Brent +1.39% a 92.76 USD, WTI +0.57% a 86.53 USD)",
-    "CNBC / Yahoo Finance / Benzinga, premarket 12-nov-2026 (futuros Nasdaq-100 -0.8%, Nvidia -6 a -8%)",
-    "Investor.nvidia.com (comunicado oficial del directorio) / CNBC / ABC News, 08/12-nov-2026 (investigacion independiente sobre Jensen Huang, directorio confirma que continua como CEO)"
+    "NBC News 07:05 ET - Nvidia board crisis, Jensen Huang",
+    "CNBC 12-nov-2026 - Oil prices Brent/WTI fall on Iran-Ukraine peace hopes",
+    "oilprice.com (via Reuters data) 12-nov-2026 - Iran/Ukraine peace talks"
   ],
-  "as_of": "2026-11-12T12:40:29Z"
+  "as_of": "2026-11-12T13:07:47Z"
 }
