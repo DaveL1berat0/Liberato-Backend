@@ -1,13 +1,15 @@
 {
-  "geopolitica": "El secretario del Tesoro Bessent fue trasladado a una base militar por 'amenazas crecientes' de Iran en medio del estancamiento belico EEUU-Iran, mientras se amplia la investigacion de espionaje/contrabando de chips de Nvidia hacia China, sosteniendo una prima de riesgo geopolitico que pesa sobre el sentimiento tech del NQ (CNBC, 11-nov).",
-  "petroleo": "El Brent cotiza en torno a USD 92/barril y el WTI cerca de USD 86 en la sesion asiatica del miercoles, tras un cierre del martes en USD 91.49 (-1.17%) y USD 86.04 (-0.93%) respectivamente, oscilando entre esperanzas de distension con Iran y temores por ataques a buques en el Estrecho de Ormuz, lo que resulta mixto/levemente favorable para el NQ al aliviar presion inflacionaria (CNBC, 11-nov).",
-  "catalizador": "El IPC subyacente de octubre subio 0.3% (vs 0.2% esperado, dato publicado por el BLS el martes 8:30 ET), elevando las apuestas de una suba de tasas de la Fed en diciembre -el gobernador Waller no descarta 50pb-, un catalizador bajista para el NQ parcialmente compensado por el salto premarket de los futuros del Nasdaq 100 (+1.9% a las 6:27 ET de hoy) impulsado por los resultados de CoreWeave (CNBC/Bloomberg, 10 y 11-nov).",
+  "geopolitica": "La junta de Nvidia evaluaria destituir al CEO Jensen Huang tras reportes de una relacion con una mujer que funcionarios de EE.UU. consideran una presunta espia china (CBS News, Fortune, Daily Caller ~19:51 ET del 11 nov), lo que hundio la accion mas de 9% en after-hours y arrastra a la baja a todo el complejo de semis/IA que domina el NQ.",
+  "petroleo": "El Brent cotiza cerca de 92-93 USD/barril y el WTI en 86-87 USD (fxstreet, 07:06 ET del 11 nov; oilprice.com, cotizacion en vivo), retrocediendo por el optimismo en torno a una posible paz en Medio Oriente/Ucrania, lo que reduce la prima de riesgo energetico y resta presion inflacionaria para el NQ.",
+  "catalizador": "El IPC de octubre salio mas caliente de lo esperado (Yahoo Finance, 12 nov, resumen premercado), elevando a cerca de 80-85% la probabilidad de una subida de tasas de la Fed en diciembre segun CME FedWatch, lo que presiona a la baja a las tecnologicas de alta valoracion en el NQ.",
   "sources": [
-    "CNBC 11-nov (Bessent moved to military base amid 'growing threats' from Iran)",
-    "CNBC 11-nov (Oil rises from two-month low as Hormuz shipping attacks offset Iran truce hopes)",
-    "CNBC 10-nov 08:30 ET (CPI inflation report: October 2026 - core CPI +0.3% vs +0.2% esperado)",
-    "CNBC 10-nov (Fed Governor Waller sees December hike likely, opens door to possible half-point increase)",
-    "Bloomberg 11-nov 06:27 ET (US Stock Index Futures Rise as CoreWeave Helps Tech Rebound)"
+    "CBS News 11 nov (sin hora exacta)",
+    "Fortune 11 nov (sin hora exacta)",
+    "Daily Caller 19:51 ET 11 nov",
+    "Yahoo Finance 17:44 ET 11 nov (live blog)",
+    "fxstreet 07:06 ET 11 nov",
+    "oilprice.com cotizacion en vivo 12 nov",
+    "Yahoo Finance 12 nov (Stock Market News for Nov 12 2026)"
   ],
-  "as_of": "2026-11-11T21:05:57Z"
+  "as_of": "2026-11-12T11:05:57Z"
 }
