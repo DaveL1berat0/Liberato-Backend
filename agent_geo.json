@@ -1,12 +1,11 @@
 {
-  "geopolitica": "La renuncia inmediata de Jensen Huang como CEO de Nvidia (confirmada en 8-K ante la SEC el 11/11) llega tras una investigacion de la junta por presuntos vinculos con una espia china que ya presionaba a los semiconductores desde el 09/11, reavivando la tension tecnologica EEUU-China y el riesgo sobre el NQ, de alto peso en chips.",
-  "petroleo": "El Brent cae 0.95% a 91.88 USD y el WTI retrocede por debajo de 86 USD (Arbiterz, 12-nov), un abaratamiento del crudo que alivia marginalmente las expectativas de inflacion y resulta neutral a ligeramente favorable para el NQ en la sesion.",
-  "catalizador": "Nvidia se desplomo 10.53% en premarket a las 09:04 ET tras confirmarse la renuncia de Huang y la designacion de Colette Kress como CEO interina (Yahoo Finance), arrastrando al Nasdaq-100 por el enorme peso de la tecnologica en el indice.",
+  "geopolitica": "La junta de Nvidia sigue investigando al CEO Jensen Huang por presuntos vinculos de un ejecutivo con inteligencia china, y hoy se espera el desenlace de la reunion de crisis, lo que mantiene presionados a los futuros del Nasdaq por el peso de NVDA.",
+  "petroleo": "El Brent cae cerca de 1.6% a unos 91 dolares y el WTI baja a unos 85, por la relajacion del temor a una escalada en Medio Oriente y esperanzas de avances en conversaciones de paz Iran-Ucrania, lo que suele acompañar un apetito por riesgo mas firme en el NQ.",
+  "catalizador": "",
   "sources": [
-    "Yahoo Finance 09:04 ET",
-    "SEC 8-K Nvidia 11/11/2026",
-    "Morningstar/Dow Jones Newswires 09/11/2026",
-    "Arbiterz 12/11/2026"
+    "CNBC 12-nov-2026 - Nerves around Nvidia as investors await outcome of board's crisis CEO meeting",
+    "Reuters (via Tribune/CNBC) 12-nov-2026 - Oil falls over $1 on easing geopolitical fears and oversupply worries",
+    "Dow Jones/Morningstar 09-nov-2026 08:25 ET - Nasdaq 100 E-minis move on Nvidia Huang probe news"
   ],
-  "as_of": "2026-11-12T15:06:53Z"
+  "as_of": "2026-11-12T15:40:03Z"
 }
