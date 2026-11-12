@@ -1,15 +1,12 @@
 {
-  "geopolitica": "La junta de Nvidia evaluaria destituir al CEO Jensen Huang tras reportes de una relacion con una mujer que funcionarios de EE.UU. consideran una presunta espia china (CBS News, Fortune, Daily Caller ~19:51 ET del 11 nov), lo que hundio la accion mas de 9% en after-hours y arrastra a la baja a todo el complejo de semis/IA que domina el NQ.",
-  "petroleo": "El Brent cotiza cerca de 92-93 USD/barril y el WTI en 86-87 USD (fxstreet, 07:06 ET del 11 nov; oilprice.com, cotizacion en vivo), retrocediendo por el optimismo en torno a una posible paz en Medio Oriente/Ucrania, lo que reduce la prima de riesgo energetico y resta presion inflacionaria para el NQ.",
-  "catalizador": "El IPC de octubre salio mas caliente de lo esperado (Yahoo Finance, 12 nov, resumen premercado), elevando a cerca de 80-85% la probabilidad de una subida de tasas de la Fed en diciembre segun CME FedWatch, lo que presiona a la baja a las tecnologicas de alta valoracion en el NQ.",
+  "geopolitica": "Dos superpetroleros quedaron inutilizados por explosiones de minas en el Estrecho de Ormuz la noche del miercoles segun la Armada de la Guardia Revolucionaria irani, pero las esperanzas de paz Rusia-Ucrania-Iran diluyen la prima de riesgo, limitando el impacto directo en el apetito de riesgo del NQ (Reuters, via Cornerstone Futures).",
+  "petroleo": "Brent cae cerca de 1% a 91.7-92.9 USD y WTI retrocede a 85.7-86.8 USD en la sesion de hoy por optimismo de paz en Iran/Ucrania que compensa los danos por minas en Ormuz y un alza de inventarios de EEUU de +9M de barriles segun API (Reuters, via 5paisa y Cornerstone Futures, 12 nov).",
+  "catalizador": "Los futuros del Nasdaq-100 caen 0.79% en premarket (04:11 ET, Reuters) tras desplomarse Nvidia cerca de 7% por la investigacion de su directorio sobre el CEO Jensen Huang, senalado en reportes como blanco de una presunta espia china, golpeando la confianza del sector tech/IA que domina el NQ.",
   "sources": [
-    "CBS News 11 nov (sin hora exacta)",
-    "Fortune 11 nov (sin hora exacta)",
-    "Daily Caller 19:51 ET 11 nov",
-    "Yahoo Finance 17:44 ET 11 nov (live blog)",
-    "fxstreet 07:06 ET 11 nov",
-    "oilprice.com cotizacion en vivo 12 nov",
-    "Yahoo Finance 12 nov (Stock Market News for Nov 12 2026)"
+    "Reuters 04:11 ET (premarket futures Nasdaq-100, via Yahoo Finance)",
+    "Reuters via 5paisa, oil prices 12 nov 2026",
+    "Reuters via Cornerstone Futures, Hormuz mine blasts y API inventories",
+    "ABC News 09 nov 2026 (Nvidia board investigation on Jensen Huang)"
   ],
-  "as_of": "2026-11-12T11:05:57Z"
+  "as_of": "2026-11-12T11:39:43Z"
 }
