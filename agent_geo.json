@@ -1,11 +1,11 @@
 {
   "geopolitica": "Crece la presion en EE.UU. para endurecer los controles de exportacion de chips de IA a China antes de la cumbre Trump-Xi (18-19 nov en Shenzhen), lo que anade presion bajista sobre semiconductores y pesa sobre el NQ.",
   "petroleo": "El Brent sube cerca de 1.6% a USD 94.25/barril (WTI +1.3% a USD 87.62) tras un mensaje de Trump en Truth Social descartando un acuerdo con Iran y reclamando control sobre el Estrecho de Ormuz, lo que presiona el sentimiento de riesgo.",
-  "catalizador": "El IPC de octubre sorprendio al alza (+0.4% m/m, nucleo +0.3%) publicado el 10 de noviembre a las 8:30 ET, elevando a 89% la probabilidad de una subida de tasas de la Fed en diciembre (CME FedWatch) y presionando al Nasdaq por temor a tasas mas altas.",
+  "catalizador": "Nvidia cae cerca de 8% en premarket (07:05 ET) mientras el mercado espera el desenlace de la reunion de emergencia de la junta sobre la permanencia del CEO Jensen Huang tras un escandalo de affair; Bernstein recorto su precio objetivo de 400 a 200 dolares, y dado el enorme peso de NVDA en el Nasdaq-100 esto arrastra con fuerza a los futuros del NQ a la baja.",
   "sources": [
+    "CNBC 12-nov-2026 07:05 ET (nvidia-nvda-jensen-huang-second-affair)",
     "CNBC 12-nov-2026 (oil-prices-jump-after-trump-says-no-iran-deal-needed)",
-    "CNBC 12-nov-2026 (nvidia-trump-jensen-chip-export-controls-china-xi)",
-    "CNBC 10-nov-2026 08:30 ET (cpi-inflation-report-october-2026)"
+    "CNBC 12-nov-2026 (nvidia-trump-jensen-chip-export-controls-china-xi)"
   ],
-  "as_of": "2026-11-12T13:40:40Z"
+  "as_of": "2026-11-12T13:41:34Z"
 }
