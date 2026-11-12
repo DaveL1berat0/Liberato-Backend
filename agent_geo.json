@@ -1,12 +1,12 @@
 {
-  "geopolitica": "El Cuerpo de Guardianes de la Revolucion (IRGC) de Iran afirma que dos superpetroleros con mas de 4 millones de barriles explotaron tras impactar minas al este del Estrecho de Ormuz en la noche del miercoles, sin confirmacion independiente aun, lo que sostiene la prima de riesgo geopolitico que pesa sobre el apetito de riesgo del NQ.",
-  "petroleo": "El Brent cerro el miercoles en 92.76 USD (+1.39%) y el WTI en 86.53 USD (+0.57%), cotizando el jueves cerca de 91-93 USD, tras el rechazo de Iran a ceder su uranio enriquecido y los reportes de minas en Ormuz, lo que sostiene el petroleo y presiona el sentimiento de riesgo del NQ.",
-  "catalizador": "Nvidia cae cerca de 6-8% en premarket y arrastra los futuros del Nasdaq-100 unos 239 puntos (-0.8%) por la crisis de gobierno corporativo ante la posible salida del CEO Jensen Huang tras reportes de una aventura extramarital con una presunta espia china, el mayor lastre puntual para el NQ hoy.",
+  "geopolitica": "El Cuerpo de Guardianes de la Revolucion (IRGC) de Iran reporta que dos superpetroleros con mas de 4 millones de barriles impactaron minas y explotaron en el Estrecho de Ormuz la noche del miercoles, el tercer dia consecutivo de incidentes (al menos 10 tanqueros afectados desde el domingo) sin confirmacion independiente, lo que mantiene elevada la prima de riesgo geopolitico sobre el NQ.",
+  "petroleo": "El Brent cerro el miercoles en 92.76 USD (+1.39%) y el WTI en 86.53 USD (+0.57%), cotizando el jueves en torno a 91-93 USD, sostenido por el rechazo de Iran a ceder su uranio enriquecido y los reportes de minas en Ormuz, lo que presiona el sentimiento de riesgo del NQ.",
+  "catalizador": "Nvidia cae cerca de 6-8% en premarket y arrastra los futuros del Nasdaq-100 unos 239 puntos (-0.8%) por la crisis de gobierno corporativo en torno a la posible salida del CEO Jensen Huang, tras admitir una relacion con una presunta espia china; el directorio abrio una investigacion independiente y sostiene que Huang continua como CEO, pero es el mayor lastre puntual para el NQ hoy.",
   "sources": [
-    "IRGC Navy via AA.com.tr / TASS, 12-nov-2026 (superpetroleros minados en Ormuz)",
-    "Reuters via The Star Malaysia / oilprice.com, 11/12-nov-2026 (Brent +1.39% a 92.76 USD)",
-    "CNBC / Yahoo Finance / Benzinga, premarket 12-nov-2026 (futuros Nasdaq-100 -0.8%, Nvidia -7%)",
-    "Washington Post / ABC News / CGTN, 11/12-nov-2026 (directorio de Nvidia evalua futuro de Jensen Huang)"
+    "IRGC Navy via TASS / Iran Wire / Marine Link, 12-nov-2026 (superpetroleros minados en Ormuz, tercer dia de incidentes)",
+    "Reuters via The Star Malaysia / oilprice.com, 11/12-nov-2026 (Brent +1.39% a 92.76 USD, WTI +0.57% a 86.53 USD)",
+    "CNBC / Yahoo Finance / Benzinga, premarket 12-nov-2026 (futuros Nasdaq-100 -0.8%, Nvidia -6 a -8%)",
+    "Investor.nvidia.com (comunicado oficial del directorio) / CNBC / ABC News, 08/12-nov-2026 (investigacion independiente sobre Jensen Huang, directorio confirma que continua como CEO)"
   ],
-  "as_of": "2026-11-12T12:09:07Z"
+  "as_of": "2026-11-12T12:40:29Z"
 }
