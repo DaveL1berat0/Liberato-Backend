@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Dos superpetroleros quedaron inutilizados por explosiones de minas en el Estrecho de Ormuz la noche del miercoles segun la Armada de la Guardia Revolucionaria irani, pero las esperanzas de paz Rusia-Ucrania-Iran diluyen la prima de riesgo, limitando el impacto directo en el apetito de riesgo del NQ (Reuters, via Cornerstone Futures).",
-  "petroleo": "Brent cae cerca de 1% a 91.7-92.9 USD y WTI retrocede a 85.7-86.8 USD en la sesion de hoy por optimismo de paz en Iran/Ucrania que compensa los danos por minas en Ormuz y un alza de inventarios de EEUU de +9M de barriles segun API (Reuters, via 5paisa y Cornerstone Futures, 12 nov).",
-  "catalizador": "Los futuros del Nasdaq-100 caen 0.79% en premarket (04:11 ET, Reuters) tras desplomarse Nvidia cerca de 7% por la investigacion de su directorio sobre el CEO Jensen Huang, senalado en reportes como blanco de una presunta espia china, golpeando la confianza del sector tech/IA que domina el NQ.",
+  "geopolitica": "El Cuerpo de Guardianes de la Revolucion (IRGC) de Iran afirma que dos superpetroleros con mas de 4 millones de barriles explotaron tras impactar minas al este del Estrecho de Ormuz en la noche del miercoles, sin confirmacion independiente aun, lo que sostiene la prima de riesgo geopolitico que pesa sobre el apetito de riesgo del NQ.",
+  "petroleo": "El Brent cerro el miercoles en 92.76 USD (+1.39%) y el WTI en 86.53 USD (+0.57%), cotizando el jueves cerca de 91-93 USD, tras el rechazo de Iran a ceder su uranio enriquecido y los reportes de minas en Ormuz, lo que sostiene el petroleo y presiona el sentimiento de riesgo del NQ.",
+  "catalizador": "Nvidia cae cerca de 6-8% en premarket y arrastra los futuros del Nasdaq-100 unos 239 puntos (-0.8%) por la crisis de gobierno corporativo ante la posible salida del CEO Jensen Huang tras reportes de una aventura extramarital con una presunta espia china, el mayor lastre puntual para el NQ hoy.",
   "sources": [
-    "Reuters 04:11 ET (premarket futures Nasdaq-100, via Yahoo Finance)",
-    "Reuters via 5paisa, oil prices 12 nov 2026",
-    "Reuters via Cornerstone Futures, Hormuz mine blasts y API inventories",
-    "ABC News 09 nov 2026 (Nvidia board investigation on Jensen Huang)"
+    "IRGC Navy via AA.com.tr / TASS, 12-nov-2026 (superpetroleros minados en Ormuz)",
+    "Reuters via The Star Malaysia / oilprice.com, 11/12-nov-2026 (Brent +1.39% a 92.76 USD)",
+    "CNBC / Yahoo Finance / Benzinga, premarket 12-nov-2026 (futuros Nasdaq-100 -0.8%, Nvidia -7%)",
+    "Washington Post / ABC News / CGTN, 11/12-nov-2026 (directorio de Nvidia evalua futuro de Jensen Huang)"
   ],
-  "as_of": "2026-11-12T11:39:43Z"
+  "as_of": "2026-11-12T12:09:07Z"
 }
