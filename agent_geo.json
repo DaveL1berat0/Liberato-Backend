@@ -1,11 +1,12 @@
 {
-  "geopolitica": "La junta de Nvidia sigue investigando al CEO Jensen Huang por presuntos vinculos de un ejecutivo con inteligencia china, y hoy se espera el desenlace de la reunion de crisis, lo que mantiene presionados a los futuros del Nasdaq por el peso de NVDA.",
-  "petroleo": "El Brent cae cerca de 1.6% a unos 91 dolares y el WTI baja a unos 85, por la relajacion del temor a una escalada en Medio Oriente y esperanzas de avances en conversaciones de paz Iran-Ucrania, lo que suele acompañar un apetito por riesgo mas firme en el NQ.",
-  "catalizador": "",
+  "geopolitica": "",
+  "petroleo": "El petroleo sube (Brent cerca de 93.3 USD, WTI cerca de 87-88 USD, +0.6%) tras declaraciones de Trump de que EEUU no necesita un acuerdo con Iran, lo que enfria expectativas de distension en el Golfo y presiona el sentimiento de riesgo que pesa sobre el NQ.",
+  "catalizador": "Jensen Huang renuncio como CEO de Nvidia (acciones -10% en premarket) tras acusaciones de espionaje chino, con la CFO Colette Kress como interina, arrastrando a los futuros del Nasdaq-100 cerca de -1% por el peso de los semiconductores en el indice.",
   "sources": [
-    "CNBC 12-nov-2026 - Nerves around Nvidia as investors await outcome of board's crisis CEO meeting",
-    "Reuters (via Tribune/CNBC) 12-nov-2026 - Oil falls over $1 on easing geopolitical fears and oversupply worries",
-    "Dow Jones/Morningstar 09-nov-2026 08:25 ET - Nasdaq 100 E-minis move on Nvidia Huang probe news"
+    "Schaeffer's Research 09:12 ET",
+    "StockTwits 04:45 ET",
+    "CNBC 12-nov-2026",
+    "TechCrunch 12-nov-2026"
   ],
-  "as_of": "2026-11-12T15:40:03Z"
+  "as_of": "2026-11-12T16:06:57Z"
 }
