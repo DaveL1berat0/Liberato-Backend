@@ -1,12 +1,10 @@
 {
   "geopolitica": "",
-  "petroleo": "El petroleo sube (Brent cerca de 93.3 USD, WTI cerca de 87-88 USD, +0.6%) tras declaraciones de Trump de que EEUU no necesita un acuerdo con Iran, lo que enfria expectativas de distension en el Golfo y presiona el sentimiento de riesgo que pesa sobre el NQ.",
-  "catalizador": "Jensen Huang renuncio como CEO de Nvidia (acciones -10% en premarket) tras acusaciones de espionaje chino, con la CFO Colette Kress como interina, arrastrando a los futuros del Nasdaq-100 cerca de -1% por el peso de los semiconductores en el indice.",
+  "petroleo": "",
+  "catalizador": "Nvidia se desploma ~7-8% en premercado tras reportes de que su consejo evalua la salida del CEO Jensen Huang, arrastrando a los futuros del Nasdaq 100 hasta un 0.79% y presionando al NQ por su peso en el trade de IA.",
   "sources": [
-    "Schaeffer's Research 09:12 ET",
-    "StockTwits 04:45 ET",
-    "CNBC 12-nov-2026",
-    "TechCrunch 12-nov-2026"
+    "Reuters 04:11 ET",
+    "Reuters (via Investing.com) 05:32 ET"
   ],
-  "as_of": "2026-11-12T16:06:57Z"
+  "as_of": "2026-11-12T21:06:42Z"
 }
