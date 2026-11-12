@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Avances en las conversaciones de paz EEUU-Irán y Rusia-Ucrania reducen la percepción de riesgo geopolítico global, lo que favorece el apetito por riesgo en los futuros del NQ (Reuters/oilprice.com, 12-nov).",
-  "petroleo": "El Brent cotiza cerca de $91.8 y el WTI cerca de $85.7 por barril, cayendo cerca de 1% en la sesión por el optimismo de paz EEUU-Irán y Rusia-Ucrania, lo que resta presión inflacionaria y es levemente positivo para el NQ (5paisa, 12-nov).",
-  "catalizador": "El CEO de Nvidia, Jensen Huang, renunció con efecto inmediato tras una investigación por una aventura con una presunta espía china; la acción cae cerca de 10-12% en premercado y arrastra a los futuros del Nasdaq-100 entre -0.7% y -1.2%, siendo el catalizador bajista dominante del NQ en la apertura de hoy (CNBC, 12-nov, premarket).",
+  "geopolitica": "La renuncia inmediata de Jensen Huang como CEO de Nvidia (confirmada en 8-K ante la SEC el 11/11) llega tras una investigacion de la junta por presuntos vinculos con una espia china que ya presionaba a los semiconductores desde el 09/11, reavivando la tension tecnologica EEUU-China y el riesgo sobre el NQ, de alto peso en chips.",
+  "petroleo": "El Brent cae 0.95% a 91.88 USD y el WTI retrocede por debajo de 86 USD (Arbiterz, 12-nov), un abaratamiento del crudo que alivia marginalmente las expectativas de inflacion y resulta neutral a ligeramente favorable para el NQ en la sesion.",
+  "catalizador": "Nvidia se desplomo 10.53% en premarket a las 09:04 ET tras confirmarse la renuncia de Huang y la designacion de Colette Kress como CEO interina (Yahoo Finance), arrastrando al Nasdaq-100 por el enorme peso de la tecnologica en el indice.",
   "sources": [
-    "CNBC 12-nov (premarket)",
-    "Yahoo Finance 12-nov",
-    "5paisa 12-nov (post-market Asia)",
-    "oilprice.com 12-nov"
+    "Yahoo Finance 09:04 ET",
+    "SEC 8-K Nvidia 11/11/2026",
+    "Morningstar/Dow Jones Newswires 09/11/2026",
+    "Arbiterz 12/11/2026"
   ],
-  "as_of": "2026-11-12T14:41:14Z"
+  "as_of": "2026-11-12T15:06:53Z"
 }
