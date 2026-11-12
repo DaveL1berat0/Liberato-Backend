@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Crece la presion en EE.UU. para endurecer los controles de exportacion de chips de IA a China antes de la cumbre Trump-Xi (18-19 nov en Shenzhen), lo que anade presion bajista sobre semiconductores y pesa sobre el NQ.",
-  "petroleo": "El Brent sube cerca de 1.6% a USD 94.25/barril (WTI +1.3% a USD 87.62) tras un mensaje de Trump en Truth Social descartando un acuerdo con Iran y reclamando control sobre el Estrecho de Ormuz, lo que presiona el sentimiento de riesgo.",
-  "catalizador": "Nvidia cae cerca de 8% en premarket (07:05 ET) mientras el mercado espera el desenlace de la reunion de emergencia de la junta sobre la permanencia del CEO Jensen Huang tras un escandalo de affair; Bernstein recorto su precio objetivo de 400 a 200 dolares, y dado el enorme peso de NVDA en el Nasdaq-100 esto arrastra con fuerza a los futuros del NQ a la baja.",
+  "geopolitica": "Trump afirma que no se necesita un acuerdo con Iran y advierte que EEUU 'tiene su Estrecho' (Ormuz), elevando la tension geopolitica en Medio Oriente y presionando el apetito por riesgo.",
+  "petroleo": "El Brent sube 1.6% a 94.25 USD y el WTI avanza 1.3% a 87.62 USD tras los comentarios de Trump sobre Iran, encareciendo el costo energetico y presionando el sentimiento de riesgo del NQ.",
+  "catalizador": "El CEO de Nvidia, Jensen Huang, renuncio en medio de un escandalo por una presunta relacion vinculada a espionaje chino; la CFO Colette Kress asume como CEO interina y NVDA cae cerca de 10%, arrastrando al NQ por su alto peso en el indice.",
   "sources": [
-    "CNBC 12-nov-2026 07:05 ET (nvidia-nvda-jensen-huang-second-affair)",
-    "CNBC 12-nov-2026 (oil-prices-jump-after-trump-says-no-iran-deal-needed)",
-    "CNBC 12-nov-2026 (nvidia-trump-jensen-chip-export-controls-china-xi)"
+    "CNBC (12-nov-2026, premarket ET) - Oil prices jump after Trump says no Iran deal needed: 'We've got their Strait'",
+    "CNBC (12-nov-2026, after-hours ET) - Nvidia stock falls 10% as CEO Jensen Huang announces resignation",
+    "CNBC (12-nov-2026) - Nvidia CEO Jensen Huang resigns, Colette Kress named interim chief: Live updates"
   ],
-  "as_of": "2026-11-12T13:41:34Z"
+  "as_of": "2026-11-12T14:08:50Z"
 }
