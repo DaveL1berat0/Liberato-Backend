@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Rusia y Ucrania avanzaron en un intercambio de prisioneros tras conversaciones en Abu Dhabi, pero EE.UU. advierte que persisten diferencias clave como el territorio, mientras Iran descarta sacar material nuclear enriquecido del pais y advierte represalias ante posibles ataques de EE.UU., manteniendo el riesgo sobre el Estrecho de Ormuz; el alivio parcial de tensiones reduce la prima de riesgo y favorece el apetito por activos de riesgo como el NQ.",
-  "petroleo": "Brent cae cerca de 1.2% a unos 91.6 dolares por barril y WTI retrocede cerca de 1.2% a unos 85.5 dolares, tocando minimos de dos meses, presionados por las esperanzas de paz en Ucrania e Iran, mayor oferta de la OPEP+ liderada por Arabia Saudita y un aumento de cerca de 9 millones de barriles en inventarios de EE.UU. segun datos del API; la caida del crudo alivia presiones inflacionarias y resulta levemente positiva para el NQ.",
-  "catalizador": "Nvidia se desploma hasta cerca de 8% en premarket (07:05 ET) tras reportes de una segunda relacion extramatrimonial del CEO Jensen Huang, mientras la junta directiva evalua removerlo tras una reunion de emergencia el miercoles por la noche; Bernstein recorto su precio objetivo a 200 dolares desde 400; dado el enorme peso de NVDA en el Nasdaq-100, esto arrastra con fuerza a los futuros del NQ a la baja.",
+  "geopolitica": "Crece la presion en EE.UU. para endurecer los controles de exportacion de chips de IA a China antes de la cumbre Trump-Xi (18-19 nov en Shenzhen), lo que anade presion bajista sobre semiconductores y pesa sobre el NQ.",
+  "petroleo": "El Brent sube cerca de 1.6% a USD 94.25/barril (WTI +1.3% a USD 87.62) tras un mensaje de Trump en Truth Social descartando un acuerdo con Iran y reclamando control sobre el Estrecho de Ormuz, lo que presiona el sentimiento de riesgo.",
+  "catalizador": "El IPC de octubre sorprendio al alza (+0.4% m/m, nucleo +0.3%) publicado el 10 de noviembre a las 8:30 ET, elevando a 89% la probabilidad de una subida de tasas de la Fed en diciembre (CME FedWatch) y presionando al Nasdaq por temor a tasas mas altas.",
   "sources": [
-    "NBC News 07:05 ET - Nvidia board crisis, Jensen Huang",
-    "CNBC 12-nov-2026 - Oil prices Brent/WTI fall on Iran-Ukraine peace hopes",
-    "oilprice.com (via Reuters data) 12-nov-2026 - Iran/Ukraine peace talks"
+    "CNBC 12-nov-2026 (oil-prices-jump-after-trump-says-no-iran-deal-needed)",
+    "CNBC 12-nov-2026 (nvidia-trump-jensen-chip-export-controls-china-xi)",
+    "CNBC 10-nov-2026 08:30 ET (cpi-inflation-report-october-2026)"
   ],
-  "as_of": "2026-11-12T13:07:47Z"
+  "as_of": "2026-11-12T13:40:40Z"
 }
