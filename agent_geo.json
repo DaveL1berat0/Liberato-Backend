@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Nvidia sigue bajo presion tras la salida de Jensen Huang por un escandalo vinculado a inteligencia china; Trump lo califico de 'cosa horrible', lo que mantiene la aversion al riesgo en semiconductores y presiona al NQ antes de la apertura (CNBC, 06:28 ET).",
-  "petroleo": "El WTI cotiza estable en 88.63 USD/barril (-0.1%) tras comentarios de Trump sobre el Estrecho de Ormuz diciendo que no se necesita un acuerdo con Iran, lo que reduce la prima de riesgo geopolitico y limita el impacto negativo en el NQ (CNBC, 06:28 ET).",
-  "catalizador": "Los rendimientos del Tesoro suben y el mercado ya descuenta un alza de tasas de la Fed en diciembre (cerca del 100% segun CME FedWatch) tras el dato de inflacion de octubre mas caliente de lo esperado, lo que presiona a la baja al NQ antes de la apertura (CNBC, 13 nov).",
+  "geopolitica": "Trump descarta un acuerdo con Iran ('We've got their Strait') y EE.UU. mantiene el bloqueo del Estrecho de Ormuz, prolongando la prima de riesgo geopolitico que presiona activos de riesgo como el NQ (CNBC, 12-13 nov).",
+  "petroleo": "El Brent subio ~3.3% a 95.82 USD y el WTI ~2.6% a 88.74 USD el 12-nov tras los comentarios de Trump sobre Iran, pero el crudo encamina su segunda caida semanal este 13-nov por el bloqueo a Ormuz, lo que puede alimentar temores de inflacion y pesar sobre el NQ (CNBC).",
+  "catalizador": "Los rendimientos del Tesoro suben este 13-nov mientras se refuerzan las apuestas de una subida de tasas de la Fed de cara al PPI de octubre (8:30 ET), al mismo tiempo que el mercado digiere la renuncia sorpresiva del CEO de Nvidia Jensen Huang (12-nov, accion -4.3%), sumando presion y volatilidad al NQ intradia (CNBC).",
   "sources": [
-    "CNBC 06:28 ET - stock-market-today-live-updates",
-    "CNBC 13 nov - treasury-yields-fed-rates",
-    "CNBC 12 nov - oil-prices-trump-iran (no-iran-deal-needed-weve-got-their-strait)",
-    "CNBC 12 nov - nvidia-jensen-huang-ceo-live-updates"
+    "CNBC 13-nov (Oil prices set for second weekly decline as Trump to stay with Iran blockade)",
+    "CNBC 12-nov (Oil prices jump after Trump says no Iran deal needed)",
+    "CNBC 13-nov (Treasury yields rise as traders strengthen Fed rate hike bets)",
+    "CNBC 12-nov (Nvidia stock closes down over 4% after CEO Jensen Huang announces resignation)"
   ],
-  "as_of": "2026-11-13T11:39:22Z"
+  "as_of": "2026-11-13T12:07:45Z"
 }
