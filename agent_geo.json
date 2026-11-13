@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Nvidia confirmo la renuncia de Jensen Huang como CEO (8-K del 11-nov, comunicado del 12-nov) tras la investigacion sobre su presunto vinculo con una espia china, con Colette Kress como CEO interina; la tension tecnologica EEUU-China sobre semiconductores sigue presionando al NQ por el alto peso de NVDA en el indice.",
-  "petroleo": "Brent ronda USD 96 y WTI USD 88 tras el salto del jueves (+3.3% y +2.6%) por ataques a infraestructura energetica saudi y riesgo de cierre del Estrecho de Ormuz; el viernes opera con leve baja, camino a su segunda caida semanal consecutiva.",
-  "catalizador": "El PPI de octubre, publicado hoy a las 08:30 ET, sorprendio al alza (PPI subyacente interanual 3.4% vs 2.6% esperado; mensual 0.3% vs 0.2% esperado), reavivando dudas sobre el ritmo de recortes de tasas de la Fed y presionando a las acciones growth del NQ.",
+  "geopolitica": "",
+  "petroleo": "El Brent cae a unos 95,5 USD y el WTI a unos 88,3 USD, camino de su segunda caida semanal consecutiva, presionados por la perspectiva de restricciones prolongadas de EEUU al petroleo iraní tras una nueva advertencia de Trump a Iran, lo que mantiene la volatilidad macro que puede filtrarse al NQ via riesgo de inflacion y tasas.",
+  "catalizador": "El CEO de Nvidia, Jensen Huang, renuncio con efecto inmediato (la CFO Colette Kress asume como interina) y la accion cae cerca de 4% hoy, liderando una venta en semiconductores que arrastra al Nasdaq 100 intradia, justo cuando el mercado digiere el dato de PPI de octubre publicado a las 08:30 ET.",
   "sources": [
-    "SEC 8-K / comunicado Nvidia 12-Nov",
-    "Reuters via Invezz/Zeebiz 12-13 Nov",
-    "Newsquawk/BLS PPI 13-Nov 08:30 ET"
+    "SEC Form 8-K Nvidia 12-nov-2026 (transicion de CEO)",
+    "TheStreet / Yahoo Finance 13-nov-2026 (venta de Nvidia y semiconductores)",
+    "Equentis / Zeebiz 13-nov-2026 (Brent/WTI y advertencia de Trump a Iran)",
+    "BLS calendario 13-nov-2026 08:30 ET (publicacion PPI de octubre)"
   ],
-  "as_of": "2026-11-13T17:07:37Z"
+  "as_of": "2026-11-13T18:06:17Z"
 }
