@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Trump emitió una nueva advertencia a Irán reportada hoy 13-nov, manteniendo elevada la tensión en Medio Oriente, lo que puede presionar el apetito por riesgo en el NQ intradía.",
-  "petroleo": "Brent cotiza cerca de 95.5 USD (-0.3%) y WTI sobre 88.3 USD (-0.5%), rumbo a una segunda semana consecutiva de caída pese a la renovada advertencia de Trump a Irán, señal mixta para el sentimiento de riesgo que afecta al NQ.",
-  "catalizador": "Hoy se publica el PPI de octubre en EE.UU. a las 8:30 ET y hablan los funcionarios de la Fed Daly (12:00 ET) y Jefferson (19:00 ET), eventos clave de la sesión que pueden mover la volatilidad del NQ; no se pudo confirmar el resultado real del dato con fuente primaria al momento de este reporte.",
+  "geopolitica": "Nvidia confirmo la renuncia de Jensen Huang como CEO (8-K del 11-nov, comunicado del 12-nov) tras la investigacion sobre su presunto vinculo con una espia china, con Colette Kress como CEO interina; la tension tecnologica EEUU-China sobre semiconductores sigue presionando al NQ por el alto peso de NVDA en el indice.",
+  "petroleo": "Brent ronda USD 96 y WTI USD 88 tras el salto del jueves (+3.3% y +2.6%) por ataques a infraestructura energetica saudi y riesgo de cierre del Estrecho de Ormuz; el viernes opera con leve baja, camino a su segunda caida semanal consecutiva.",
+  "catalizador": "El PPI de octubre, publicado hoy a las 08:30 ET, sorprendio al alza (PPI subyacente interanual 3.4% vs 2.6% esperado; mensual 0.3% vs 0.2% esperado), reavivando dudas sobre el ritmo de recortes de tasas de la Fed y presionando a las acciones growth del NQ.",
   "sources": [
-    "Equentis/Zeebiz (wire) 13 Nov 2026",
-    "TD Economics - calendario semanal 9-13 Nov 2026"
+    "SEC 8-K / comunicado Nvidia 12-Nov",
+    "Reuters via Invezz/Zeebiz 12-13 Nov",
+    "Newsquawk/BLS PPI 13-Nov 08:30 ET"
   ],
-  "as_of": "2026-11-13T16:28:37Z"
+  "as_of": "2026-11-13T17:07:37Z"
 }
