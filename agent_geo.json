@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Iran reivindico un ataque con un radar de alerta temprana de EEUU en Bahrein (el primero desde septiembre) e Israel ordeno a su ejercito intensificar los preparativos ante un posible ataque a Iran, lo que reaviva el riesgo geopolitico y presiona al NQ via aversion al riesgo.",
-  "petroleo": "El Brent cerro con una suba del 3.3% a 95.82 USD/barril y el WTI subio 2.6% a 88.74 USD/barril tras comentarios de Trump que generaron dudas sobre el fin de la guerra con Iran, lo que eleva los costos energeticos y presiona al NQ.",
-  "catalizador": "Jensen Huang renuncio como CEO de Nvidia con efecto inmediato (Colette Kress asume como interina), lo que provoco una caida intradia de hasta 13% en la accion y golpea directamente al NQ por el peso de Nvidia en el Nasdaq-100.",
+  "geopolitica": "Nvidia sigue bajo presion tras la salida de Jensen Huang por un escandalo vinculado a inteligencia china; Trump lo califico de 'cosa horrible', lo que mantiene la aversion al riesgo en semiconductores y presiona al NQ antes de la apertura (CNBC, 06:28 ET).",
+  "petroleo": "El WTI cotiza estable en 88.63 USD/barril (-0.1%) tras comentarios de Trump sobre el Estrecho de Ormuz diciendo que no se necesita un acuerdo con Iran, lo que reduce la prima de riesgo geopolitico y limita el impacto negativo en el NQ (CNBC, 06:28 ET).",
+  "catalizador": "Los rendimientos del Tesoro suben y el mercado ya descuenta un alza de tasas de la Fed en diciembre (cerca del 100% segun CME FedWatch) tras el dato de inflacion de octubre mas caliente de lo esperado, lo que presiona a la baja al NQ antes de la apertura (CNBC, 13 nov).",
   "sources": [
-    "Al Jazeera/Reuters 13-Nov (Iran-Bahrein)",
-    "CNBC 12-Nov (Brent/WTI)",
-    "Axios 12-Nov (Nvidia CEO)",
-    "NBC News 12-Nov (Nvidia CEO)",
-    "SEC 8-K Nvidia 12-Nov"
+    "CNBC 06:28 ET - stock-market-today-live-updates",
+    "CNBC 13 nov - treasury-yields-fed-rates",
+    "CNBC 12 nov - oil-prices-trump-iran (no-iran-deal-needed-weve-got-their-strait)",
+    "CNBC 12 nov - nvidia-jensen-huang-ceo-live-updates"
   ],
-  "as_of": "2026-11-13T11:06:38Z"
+  "as_of": "2026-11-13T11:39:22Z"
 }
