@@ -1,14 +1,10 @@
 {
-  "geopolitica": "Trump reafirmo que EEUU no necesita un acuerdo con Iran ('ya tenemos su Estrecho') y Washington mantiene el bloqueo naval sobre Iran mientras persisten los ataques a petroleros y a infraestructura saudi en el Golfo, sosteniendo la aversion al riesgo que puede pesar sobre el NQ en la apertura (CNBC, 12 nov 2026; Reuters, 13 nov 2026).",
-  "petroleo": "El Brent cae cerca de 0.3% a USD 95.5 y el WTI baja cerca de 0.5% a USD 88.3, camino a su segunda semana consecutiva de perdidas, ya que el aumento de inventarios en EEUU compensa el riesgo por los ataques en el Golfo y limita el traspaso inflacionario que podria presionar al NQ (Reuters / oilprice.com, 13 nov 2026).",
-  "catalizador": "El PPI de octubre subio 0.3% (vs 0.4% esperado) publicado 8:30am ET, lo que impulso inicialmente a los futuros (Dow +212 puntos, Nasdaq-100 cerca de +0.4%), pero la tasa anual en maximo de cuatro anos (6.5%) desato despues una fuerte caida en semiconductores (indice Philadelphia Semiconductor -5%, AMD -10%), añadiendo volatilidad elevada al NQ en el cluster de apertura (TipRanks / Schaeffer's / TradingKey, 13 nov 2026, 8:30am ET).",
+  "geopolitica": "Trump emitió una nueva advertencia a Irán reportada hoy 13-nov, manteniendo elevada la tensión en Medio Oriente, lo que puede presionar el apetito por riesgo en el NQ intradía.",
+  "petroleo": "Brent cotiza cerca de 95.5 USD (-0.3%) y WTI sobre 88.3 USD (-0.5%), rumbo a una segunda semana consecutiva de caída pese a la renovada advertencia de Trump a Irán, señal mixta para el sentimiento de riesgo que afecta al NQ.",
+  "catalizador": "Hoy se publica el PPI de octubre en EE.UU. a las 8:30 ET y hablan los funcionarios de la Fed Daly (12:00 ET) y Jefferson (19:00 ET), eventos clave de la sesión que pueden mover la volatilidad del NQ; no se pudo confirmar el resultado real del dato con fuente primaria al momento de este reporte.",
   "sources": [
-    "CNBC 12 nov 2026 (Trump: 'no Iran deal needed, we've got their Strait')",
-    "Reuters 13 nov 2026 (oil on track for second weekly decline amid Iran blockade)",
-    "oilprice.com 13 nov 2026 (Brent ~$95.5, WTI ~$88.3)",
-    "TipRanks 13 nov 2026 08:30 ET (October PPI +0.3% vs +0.4% esperado)",
-    "Schaeffer's Investment Research 13 nov 2026 (futuros suben tras PPI)",
-    "TradingKey 13 nov 2026 (PPI anual 6.5%, Philadelphia Semiconductor Index -5%, AMD -10%)"
+    "Equentis/Zeebiz (wire) 13 Nov 2026",
+    "TD Economics - calendario semanal 9-13 Nov 2026"
   ],
-  "as_of": "2026-11-13T16:17:12Z"
+  "as_of": "2026-11-13T16:28:37Z"
 }
