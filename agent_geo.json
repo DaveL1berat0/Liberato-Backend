@@ -1,12 +1,12 @@
 {
-  "geopolitica": "",
-  "petroleo": "El Brent cae a unos 95,5 USD y el WTI a unos 88,3 USD, camino de su segunda caida semanal consecutiva, presionados por la perspectiva de restricciones prolongadas de EEUU al petroleo iraní tras una nueva advertencia de Trump a Iran, lo que mantiene la volatilidad macro que puede filtrarse al NQ via riesgo de inflacion y tasas.",
-  "catalizador": "El CEO de Nvidia, Jensen Huang, renuncio con efecto inmediato (la CFO Colette Kress asume como interina) y la accion cae cerca de 4% hoy, liderando una venta en semiconductores que arrastra al Nasdaq 100 intradia, justo cuando el mercado digiere el dato de PPI de octubre publicado a las 08:30 ET.",
+  "geopolitica": "Tres comites de la Camara de Representantes citaron a Jensen Huang a declarar el 1-dic tras reportes de que mantuvo una relacion con una mujer senalada como presunta agente china, lo que reabre la tension EE.UU.-China en torno a la seguridad de la cadena de semiconductores y pesa sobre el sentimiento tech que mueve al NQ.",
+  "petroleo": "Brent cae a unos 95.5 USD y WTI a unos 88.3 USD, camino de su segunda caida semanal consecutiva (~2.4%), presionados por la prolongacion del bloqueo naval de EE.UU. a los puertos iranies tras la ultima advertencia de Trump a Iran y un alza inesperada en inventarios de crudo.",
+  "catalizador": "El PPI de octubre subio 0.3% mensual (vs 0.4% esperado) pero el interanual salto a 6.5% (maximo en casi 4 anos) justo cuando Nvidia cae por la renuncia inmediata de su CEO Jensen Huang (asume la CFO Colette Kress de forma interina), un combo de dato mixto y venta en semis que arrastra al Nasdaq 100 intradia.",
   "sources": [
-    "SEC Form 8-K Nvidia 12-nov-2026 (transicion de CEO)",
-    "TheStreet / Yahoo Finance 13-nov-2026 (venta de Nvidia y semiconductores)",
-    "Equentis / Zeebiz 13-nov-2026 (Brent/WTI y advertencia de Trump a Iran)",
-    "BLS calendario 13-nov-2026 08:30 ET (publicacion PPI de octubre)"
+    "CNBC/BLS 13-nov-2026 08:30 ET (PPI octubre)",
+    "CNN/NBC News/Nvidia 12-nov-2026 (renuncia de Huang y citacion del Congreso)",
+    "Equentis/Zeebiz 13-nov-2026 (Brent/WTI y advertencia de Trump a Iran)",
+    "TheStreet/CNBC 13-nov-2026 (venta en Nvidia y Nasdaq)"
   ],
-  "as_of": "2026-11-13T18:06:17Z"
+  "as_of": "2026-11-13T19:07:45Z"
 }
