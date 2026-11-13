@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Tres comites de la Camara de Representantes citaron a Jensen Huang a declarar el 1-dic tras reportes de que mantuvo una relacion con una mujer senalada como presunta agente china, lo que reabre la tension EE.UU.-China en torno a la seguridad de la cadena de semiconductores y pesa sobre el sentimiento tech que mueve al NQ.",
-  "petroleo": "Brent se mantiene sobre 96 USD y WTI cerca de 89 USD hacia el mediodia, camino de su segunda caida semanal, presionados por la tension persistente en el Estrecho de Ormuz y la advertencia de Trump a Iran, lo que sostiene una prima de riesgo energetico que pesa sobre los costos de insumos del NQ.",
-  "catalizador": "El PPI de octubre sorprendio al alza (interanual ~6.5%, maximo en casi 4 anos) y el mercado ya descuenta casi con certeza una subida de la Fed el 9-dic, con el Treasury a 10 anos en ~5.14%; eso se combina con el desplome de Nvidia (bajo 11:31 ET -1.45% el Nasdaq, chips -3.6%) tras la salida de Jensen Huang como CEO, arrastrando al Nasdaq 100 intradia.",
+  "geopolitica": "Axios/CNBC informan que el secretario de Comercio Lutnick frenó nuevos controles de exportación de chips de EE.UU. a China tras la salida de Jensen Huang como CEO de Nvidia, lo que reduce el riesgo regulatorio sobre semiconductores y es un soporte marginal para el NQ.",
+  "petroleo": "Brent sube ~0.3% a cerca de 96 USD y WTI opera plano en ~88.6 USD (CNBC), con el crudo camino a su segunda caída semanal mientras Trump mantiene el bloqueo a Irán ('nos quedamos con su Estrecho') sin buscar un acuerdo, lo que sostiene la prima de riesgo geopolítico sin presionar aún al NQ.",
+  "catalizador": "El IPP de octubre subió 6.5% interanual, el mayor avance desde 2022, aunque el dato mensual (+0.3%) fue algo más suave de lo esperado; el rendimiento del Treasury a 10 años subió a ~5.15-5.17% (CNBC), presionando a las tecnológicas de alta duración del NQ.",
   "sources": [
-    "CNBC/BLS 13-nov-2026 08:30 ET (PPI octubre)",
-    "CNN/NBC News 12-nov-2026 (renuncia de Huang y citacion del Congreso)",
-    "Yahoo Finance/Fool.com 13-nov-2026 11:31 ET (Nasdaq -1.45%, chips -3.6%)",
-    "CNBC 13-nov-2026 13:02 ET (WTI ~89, Brent ~96, Fed Dec 9 near-certain hike)"
+    "CNBC 08:30 ET (BLS, IPP de octubre)",
+    "CNBC premercado ET (oil prices set for second weekly decline)",
+    "CNBC 12-13 nov ET (Lutnick/Nvidia chip export curbs, via Axios)",
+    "Bloomberg (US wholesale inflation fastest pace since 2022)"
   ],
-  "as_of": "2026-11-13T20:09:00Z"
+  "as_of": "2026-11-13T21:06:24Z"
 }
