@@ -1,14 +1,11 @@
 {
-  "geopolitica": "Nvidia, mayor componente del NQ, queda bajo escrutinio geopolitico: la investigacion sobre presuntos vinculos de su ex CEO Jensen Huang con un espia chino (China lo niega y lo llama calumnia) se suma al rechazo de Trump a un acuerdo con Iran y al mantenimiento del bloqueo en el Estrecho de Ormuz, prolongando la prima de riesgo sobre activos como el NQ.",
-  "petroleo": "El Brent subio ~3.3% el 12-nov a 95.82 USD (WTI ~88.74 USD, +2.6%) tras los comentarios de Trump sobre Iran, pero el crudo encara su segunda caida semanal consecutiva este 13-nov por esperanzas de alto al fuego Rusia-Ucrania pese al bloqueo a Ormuz, un alivio marginal de la presion inflacionaria para el NQ.",
-  "catalizador": "El mercado digiere la renuncia inmediata del CEO de Nvidia Jensen Huang (8-K del 12-nov, accion -4.3%), con la CFO Colette Kress como CEO interina y Harvey Jones como primer presidente del consejo, justo cuando suben los rendimientos del Tesoro ante mayores apuestas de un alza de tasas de la Fed de cara al PPI de octubre (8:30 ET), sumando presion y volatilidad al NQ en la apertura.",
+  "geopolitica": "Trump afirmó que EE.UU. no necesita un acuerdo con Irán ('We've got their Strait'), sosteniendo la tensión en el Estrecho de Ormuz como riesgo de cola que puede frenar el apetito por activos de riesgo como el NQ (CNBC, 12-Nov).",
+  "petroleo": "Brent ronda 95.9 USD y WTI 88.7 USD tras subir más de 1% por los comentarios de Trump sobre Irán, aunque ambos marchan hacia su segunda caída semanal consecutiva (CNBC/Oilprice, 12-13 Nov).",
+  "catalizador": "La renuncia de Jensen Huang como CEO de Nvidia sigue pesando en el sentimiento tech: NVDA sube ~1.7% en premarket (08:13 ET) tras el desplome del jueves, con los futuros del Nasdaq-100 en -0.11% a las 05:03 ET y Microsoft bajo presión por una caída de Outlook (CNBC, 13-Nov).",
   "sources": [
-    "SEC 8-K Nvidia 2026-11-12",
-    "CNBC 2026-11-12 (Nvidia CEO Jensen Huang resigns: Live updates)",
-    "Fox Business 2026-11-12 (Nvidia CEO Jensen Huang resigns amid investigation)",
-    "CNBC 2026-11-12 (Oil prices jump after Trump says no Iran deal needed)",
-    "CNBC 2026-11-13 (Oil prices set for second weekly decline as Trump to stay with Iran blockade)",
-    "CNBC 2026-11-13 (Treasury yields rise as traders strengthen Fed rate hike bets)"
+    "CNBC 08:13 ET",
+    "CNBC 05:03 ET",
+    "CNBC 12-Nov (Iran/oil)"
   ],
-  "as_of": "2026-11-13T12:39:38Z"
+  "as_of": "2026-11-13T13:50:49Z"
 }
