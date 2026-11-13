@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump afirmó que EE.UU. no necesita un acuerdo con Irán ('We've got their Strait'), sosteniendo la tensión en el Estrecho de Ormuz como riesgo de cola que puede frenar el apetito por activos de riesgo como el NQ (CNBC, 12-Nov).",
-  "petroleo": "Brent ronda 95.9 USD y WTI 88.7 USD tras subir más de 1% por los comentarios de Trump sobre Irán, aunque ambos marchan hacia su segunda caída semanal consecutiva (CNBC/Oilprice, 12-13 Nov).",
-  "catalizador": "La renuncia de Jensen Huang como CEO de Nvidia sigue pesando en el sentimiento tech: NVDA sube ~1.7% en premarket (08:13 ET) tras el desplome del jueves, con los futuros del Nasdaq-100 en -0.11% a las 05:03 ET y Microsoft bajo presión por una caída de Outlook (CNBC, 13-Nov).",
+  "geopolitica": "Continúan esta semana en Abu Dhabi las conversaciones trilaterales EE.UU.-Rusia-Ucrania (confirmadas por el Kremlin), cuyo avance o estancamiento mueve el apetito por riesgo y puede presionar al NQ si no hay señales de acuerdo.",
+  "petroleo": "El crudo opera volátil entre tensiones por disrupciones de envío en el Estrecho de Ormuz (Brent ~94 USD, WTI ~87 USD, Reuters) y esperanzas de paz Rusia-Ucrania que presionan a la baja, un repunte fuerte del petróleo suele restar apetito por riesgo al NQ.",
+  "catalizador": "Nvidia confirmó en un Form 8-K ante la SEC que Jensen Huang renunció con efecto inmediato como CEO y la CFO Colette Kress asumió como interina, shock de gobernanza en el mayor componente individual del Nasdaq-100 que añade volatilidad intradía al NQ tras una caída semanal de ~11% en la acción.",
   "sources": [
-    "CNBC 08:13 ET",
-    "CNBC 05:03 ET",
-    "CNBC 12-Nov (Iran/oil)"
+    "Reuters (12 nov, disrupciones en Ormuz y tensión con Rusia elevan el crudo)",
+    "Newsquawk/Kremlin (10-12 nov, confirmación de conversaciones trilaterales en Abu Dhabi)",
+    "SEC Form 8-K - NVIDIA (12 nov, renuncia de Jensen Huang como CEO)",
+    "Reuters vía Investing.com (13 nov, premarket: futuros del Nasdaq 100 y rebote de Nvidia tras turbulencia)"
   ],
-  "as_of": "2026-11-13T13:50:49Z"
+  "as_of": "2026-11-13T14:01:45Z"
 }
