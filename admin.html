@@ -234,6 +234,16 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   </div>
 
   <div id="view-users">
+    <div class="tbl-panel" style="padding:16px 22px;margin-bottom:12px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;">🎟️ Crear cuenta de prueba (pasa a gratis al caducar)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="trial-name" placeholder="Nombre" style="flex:1;min-width:140px;">
+        <input id="trial-email" placeholder="Email (opcional)" style="flex:1;min-width:160px;">
+        <input id="trial-days" type="number" min="1" max="90" value="4" style="width:70px;">
+        <button class="btn" onclick="createTrial()">Crear prueba</button>
+      </div>
+      <div id="trial-msg" style="margin-top:8px;"></div>
+    </div>
     <div class="tabs" style="margin-bottom:12px;">
       <div class="tab active" id="seg-all" onclick="filterSeg('all')">Todos</div>
       <div class="tab" id="seg-free" onclick="filterSeg('free')">Free</div>
@@ -324,6 +334,15 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
     var r=await fetch(API+path,{method:'POST',headers:_hdrs(),body:JSON.stringify(body||{})});
     if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
     return r.json();
+  }
+
+  async function createTrial(){
+    var body={name:$('trial-name').value.trim(),email:$('trial-email').value.trim(),days:parseInt($('trial-days').value,10)||4};
+    try{
+      var r=await apiPost('/api/admin/create-trial',body);
+      var exp=new Date(r.plan_expires*1000).toLocaleString();
+      $('trial-msg').innerHTML='<div class="msg msg-ok">✓ Email: <b>'+esc(r.email)+'</b> · Contraseña: <b>'+esc(r.password)+'</b> · '+r.days+' días (hasta '+esc(exp)+'). Guárdalos: solo se muestran ahora.'+(r.note?'<br>⚠️ '+esc(r.note):'')+'</div>';
+    }catch(e){msg('trial-msg',esc(e.message),'err');}
   }
 
   async function _tryOpen(){

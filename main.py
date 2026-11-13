@@ -8800,6 +8800,23 @@ async def auth_create_trial(request: Request, key: str = ""):
         data = await request.json()
     except Exception:
         data = {}
+    return await _create_trial_account(data)
+
+
+@app.post("/api/admin/create-trial")
+async def admin_create_trial(request: Request, key: str = "", authorization: str = Header("")):
+    """ADMIN (sesión de admin o ADMIN_KEY): igual que /api/auth/create-trial, para el botón
+    «Crear prueba» del panel admin. Body: {email?, name?, days (def. 3)}."""
+    if not _is_admin(key, authorization):
+        raise HTTPException(403, "acceso denegado")
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    return await _create_trial_account(data)
+
+
+async def _create_trial_account(data):
     try:
         days = int(round(float(data.get("days")))) if data.get("days") is not None else 3
     except Exception:
