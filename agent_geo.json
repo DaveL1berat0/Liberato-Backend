@@ -1,10 +1,13 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "Nvidia se desploma ~7-8% en premercado tras reportes de que su consejo evalua la salida del CEO Jensen Huang, arrastrando a los futuros del Nasdaq 100 hasta un 0.79% y presionando al NQ por su peso en el trade de IA.",
+  "geopolitica": "Iran reivindico un ataque con un radar de alerta temprana de EEUU en Bahrein (el primero desde septiembre) e Israel ordeno a su ejercito intensificar los preparativos ante un posible ataque a Iran, lo que reaviva el riesgo geopolitico y presiona al NQ via aversion al riesgo.",
+  "petroleo": "El Brent cerro con una suba del 3.3% a 95.82 USD/barril y el WTI subio 2.6% a 88.74 USD/barril tras comentarios de Trump que generaron dudas sobre el fin de la guerra con Iran, lo que eleva los costos energeticos y presiona al NQ.",
+  "catalizador": "Jensen Huang renuncio como CEO de Nvidia con efecto inmediato (Colette Kress asume como interina), lo que provoco una caida intradia de hasta 13% en la accion y golpea directamente al NQ por el peso de Nvidia en el Nasdaq-100.",
   "sources": [
-    "Reuters 04:11 ET",
-    "Reuters (via Investing.com) 05:32 ET"
+    "Al Jazeera/Reuters 13-Nov (Iran-Bahrein)",
+    "CNBC 12-Nov (Brent/WTI)",
+    "Axios 12-Nov (Nvidia CEO)",
+    "NBC News 12-Nov (Nvidia CEO)",
+    "SEC 8-K Nvidia 12-Nov"
   ],
-  "as_of": "2026-11-12T21:06:42Z"
+  "as_of": "2026-11-13T11:06:38Z"
 }
