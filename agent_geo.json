@@ -1,12 +1,12 @@
 {
   "geopolitica": "Tres comites de la Camara de Representantes citaron a Jensen Huang a declarar el 1-dic tras reportes de que mantuvo una relacion con una mujer senalada como presunta agente china, lo que reabre la tension EE.UU.-China en torno a la seguridad de la cadena de semiconductores y pesa sobre el sentimiento tech que mueve al NQ.",
-  "petroleo": "Brent cae a unos 95.5 USD y WTI a unos 88.3 USD, camino de su segunda caida semanal consecutiva (~2.4%), presionados por la prolongacion del bloqueo naval de EE.UU. a los puertos iranies tras la ultima advertencia de Trump a Iran y un alza inesperada en inventarios de crudo.",
-  "catalizador": "El PPI de octubre subio 0.3% mensual (vs 0.4% esperado) pero el interanual salto a 6.5% (maximo en casi 4 anos) justo cuando Nvidia cae por la renuncia inmediata de su CEO Jensen Huang (asume la CFO Colette Kress de forma interina), un combo de dato mixto y venta en semis que arrastra al Nasdaq 100 intradia.",
+  "petroleo": "Brent se mantiene sobre 96 USD y WTI cerca de 89 USD hacia el mediodia, camino de su segunda caida semanal, presionados por la tension persistente en el Estrecho de Ormuz y la advertencia de Trump a Iran, lo que sostiene una prima de riesgo energetico que pesa sobre los costos de insumos del NQ.",
+  "catalizador": "El PPI de octubre sorprendio al alza (interanual ~6.5%, maximo en casi 4 anos) y el mercado ya descuenta casi con certeza una subida de la Fed el 9-dic, con el Treasury a 10 anos en ~5.14%; eso se combina con el desplome de Nvidia (bajo 11:31 ET -1.45% el Nasdaq, chips -3.6%) tras la salida de Jensen Huang como CEO, arrastrando al Nasdaq 100 intradia.",
   "sources": [
     "CNBC/BLS 13-nov-2026 08:30 ET (PPI octubre)",
-    "CNN/NBC News/Nvidia 12-nov-2026 (renuncia de Huang y citacion del Congreso)",
-    "Equentis/Zeebiz 13-nov-2026 (Brent/WTI y advertencia de Trump a Iran)",
-    "TheStreet/CNBC 13-nov-2026 (venta en Nvidia y Nasdaq)"
+    "CNN/NBC News 12-nov-2026 (renuncia de Huang y citacion del Congreso)",
+    "Yahoo Finance/Fool.com 13-nov-2026 11:31 ET (Nasdaq -1.45%, chips -3.6%)",
+    "CNBC 13-nov-2026 13:02 ET (WTI ~89, Brent ~96, Fed Dec 9 near-certain hike)"
   ],
-  "as_of": "2026-11-13T19:07:45Z"
+  "as_of": "2026-11-13T20:09:00Z"
 }
