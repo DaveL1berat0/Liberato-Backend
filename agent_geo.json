@@ -1,14 +1,14 @@
 {
-  "geopolitica": "Escalada belica EEUU-Iran en el estrecho de Ormuz (minas contra buques, bloqueo naval de EEUU y advertencia de Trump de 'no hesitation' a nuevos ataques, mientras Israel prepara posibles ataques a Iran) mantiene el sentimiento de riesgo bajista para el NQ intradia.",
-  "petroleo": "Brent cotiza en torno a 96.1 USD/barril (+0.3%) tras subir 3.3% el jueves hasta 95.82 USD por los ataques en Ormuz y a infraestructura saudi; WTI ronda 88.6 USD (-0.1%) tras subir 2.6% el jueves; la prima de riesgo geopolitico en el crudo presiona margenes y sentimiento de riesgo, negativo para el NQ.",
-  "catalizador": "El PPI de octubre (publicado hoy) subio 0.3%, por debajo del 0.4% esperado, dando soporte inicial a los futuros del Nasdaq-100 (+0.19% hacia las 8:39 am ET); la renuncia del CEO de Nvidia Jensen Huang (jueves) sigue pesando en el sentimiento tecnologico y aporta volatilidad adicional a semis/tech en el NQ.",
+  "geopolitica": "Trump reafirmo que EEUU no necesita un acuerdo con Iran ('ya tenemos su Estrecho') y Washington mantiene el bloqueo naval sobre Iran mientras persisten los ataques a petroleros y a infraestructura saudi en el Golfo, sosteniendo la aversion al riesgo que puede pesar sobre el NQ en la apertura (CNBC, 12 nov 2026; Reuters, 13 nov 2026).",
+  "petroleo": "El Brent cae cerca de 0.3% a USD 95.5 y el WTI baja cerca de 0.5% a USD 88.3, camino a su segunda semana consecutiva de perdidas, ya que el aumento de inventarios en EEUU compensa el riesgo por los ataques en el Golfo y limita el traspaso inflacionario que podria presionar al NQ (Reuters / oilprice.com, 13 nov 2026).",
+  "catalizador": "El PPI de octubre subio 0.3% (vs 0.4% esperado) publicado 8:30am ET, lo que impulso inicialmente a los futuros (Dow +212 puntos, Nasdaq-100 cerca de +0.4%), pero la tasa anual en maximo de cuatro anos (6.5%) desato despues una fuerte caida en semiconductores (indice Philadelphia Semiconductor -5%, AMD -10%), añadiendo volatilidad elevada al NQ en el cluster de apertura (TipRanks / Schaeffer's / TradingKey, 13 nov 2026, 8:30am ET).",
   "sources": [
-    "CNBC 2026-11-13 (oil prices today: Brent, WTI)",
-    "CNBC 2026-11-13 (10-year Treasury yield / PPI)",
-    "TipRanks 08:39 ET (Stock Market Today, Nov. 13: PPI data)",
-    "Al Jazeera 2026-11-13 (Trump 'no deal necessary' con Iran)",
-    "CBS News (Iran war live updates, estrecho de Ormuz)",
-    "Axios / NBC News 2026-11-12 (renuncia Jensen Huang, Nvidia)"
+    "CNBC 12 nov 2026 (Trump: 'no Iran deal needed, we've got their Strait')",
+    "Reuters 13 nov 2026 (oil on track for second weekly decline amid Iran blockade)",
+    "oilprice.com 13 nov 2026 (Brent ~$95.5, WTI ~$88.3)",
+    "TipRanks 13 nov 2026 08:30 ET (October PPI +0.3% vs +0.4% esperado)",
+    "Schaeffer's Investment Research 13 nov 2026 (futuros suben tras PPI)",
+    "TradingKey 13 nov 2026 (PPI anual 6.5%, Philadelphia Semiconductor Index -5%, AMD -10%)"
   ],
-  "as_of": "2026-11-13T15:45:05Z"
+  "as_of": "2026-11-13T16:17:12Z"
 }
