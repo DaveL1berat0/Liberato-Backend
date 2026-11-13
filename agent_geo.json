@@ -1,11 +1,14 @@
 {
-  "geopolitica": "El secretario del Tesoro Bessent culpo hoy al Departamento de Comercio de Lutnick por permitir la fuga de chips de Nvidia hacia China, intensificando el escrutinio sobre controles de exportacion tech justo tras la salida forzada del CEO Jensen Huang (anunciada ayer), lo que mantiene presion bajista sobre semiconductores y pesa en el NQ dado el gran peso de Nvidia en el indice.",
-  "petroleo": "Brent cotiza en 96.11 USD (+0.3%) y WTI en 88.63 USD (-0.1%) esta mañana, tras comentarios de Trump de que no necesita un acuerdo con Iran porque EEUU ya controla el Estrecho de Ormuz, lo que reduce el riesgo de escalada pero deja al crudo encaminado a su segunda caida semanal consecutiva.",
-  "catalizador": "El rendimiento del Treasury a 10 años subio hoy a 5.15% tras el dato de PPI de octubre (+0.3% m/m, +6.5% a/a, el mayor avance anual desde noviembre 2022), con el mercado descontando 100% de probabilidad de otra subida de tasas de la Fed en la reunion del 9 de diciembre, un escenario hawkish que presiona a la baja al NQ antes de la apertura.",
+  "geopolitica": "Escalada belica EEUU-Iran en el estrecho de Ormuz (minas contra buques, bloqueo naval de EEUU y advertencia de Trump de 'no hesitation' a nuevos ataques, mientras Israel prepara posibles ataques a Iran) mantiene el sentimiento de riesgo bajista para el NQ intradia.",
+  "petroleo": "Brent cotiza en torno a 96.1 USD/barril (+0.3%) tras subir 3.3% el jueves hasta 95.82 USD por los ataques en Ormuz y a infraestructura saudi; WTI ronda 88.6 USD (-0.1%) tras subir 2.6% el jueves; la prima de riesgo geopolitico en el crudo presiona margenes y sentimiento de riesgo, negativo para el NQ.",
+  "catalizador": "El PPI de octubre (publicado hoy) subio 0.3%, por debajo del 0.4% esperado, dando soporte inicial a los futuros del Nasdaq-100 (+0.19% hacia las 8:39 am ET); la renuncia del CEO de Nvidia Jensen Huang (jueves) sigue pesando en el sentimiento tecnologico y aporta volatilidad adicional a semis/tech en el NQ.",
   "sources": [
-    "CNBC (Bessent/Lutnick, chip leakage) 13-nov-2026",
-    "CNBC (Oil prices set for second weekly decline) 13-nov-2026",
-    "CNBC (10-year Treasury yield moves to 5.15% on PPI) 13-nov-2026"
+    "CNBC 2026-11-13 (oil prices today: Brent, WTI)",
+    "CNBC 2026-11-13 (10-year Treasury yield / PPI)",
+    "TipRanks 08:39 ET (Stock Market Today, Nov. 13: PPI data)",
+    "Al Jazeera 2026-11-13 (Trump 'no deal necessary' con Iran)",
+    "CBS News (Iran war live updates, estrecho de Ormuz)",
+    "Axios / NBC News 2026-11-12 (renuncia Jensen Huang, Nvidia)"
   ],
-  "as_of": "2026-11-13T15:38:39Z"
+  "as_of": "2026-11-13T15:45:05Z"
 }
