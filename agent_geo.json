@@ -1,10 +1,13 @@
 {
-  "geopolitica": "EE.UU. amplía las restricciones de acceso remoto a chips de IA avanzados para clientes en China y Pekín advierte represalias, presionando a los semiconductores y lastrando al NQ (Bloomberg Markets Wrap, ~10:43 ET).",
-  "petroleo": "El crudo cede (Brent ~92 USD, WTI ~85 USD) por el pronóstico de sobreoferta de la AIE según Commerzbank, lo que alivia la presión inflacionaria y actúa como viento de cola leve para el NQ (FXStreet/Commerzbank, ~08:18 ET).",
-  "catalizador": "Nvidia presenta resultados trimestrales hoy tras el cierre (~16:20-17:00 ET), su primer reporte sin Jensen Huang como CEO; la cautela previa ya hunde al Nasdaq 100 un 1.6% intradía, siendo el catalizador clave del NQ en la sesión de hoy (Bloomberg Markets Wrap, ~10:43 ET).",
+  "geopolitica": "Persisten tensiones en el Golfo (Oriente Medio) como riesgo de fondo pese a la recuperacion de exportaciones de crudo, lo que mantiene cautela de riesgo sobre tecnologicas del Nasdaq (CNBC, 17 nov).",
+  "petroleo": "Brent cae a unos 92.00 USD/barril (-0.5%) y WTI a unos 85.28 USD/barril (-0.5%) por expectativas de superavit de oferta (AIE) que contrarrestan las tensiones del Golfo, aliviando algo la presion inflacionaria para el NQ (CNBC, 17 nov).",
+  "catalizador": "Nvidia reporta resultados tras el cierre de hoy -accion -24% en noviembre y Jensen Huang rompiendo su silencio ante dudas de liderazgo- mientras el VIX sube a 27.7 y el Nasdaq toca minimos de unos 7 meses, en la mayor salida de exposicion tech desde 2006 (CNBC/Bloomberg, 17 nov).",
   "sources": [
-    "Bloomberg Markets Wrap ~10:43 ET",
-    "FXStreet/Commerzbank ~08:18 ET"
+    "CNBC 17 nov (Wall Street's fear gauge is surging again)",
+    "Bloomberg 12:18 ET (Nasdaq 100 futures / Tech Stocks Sink Before Nvidia Results)",
+    "CNBC 17 nov (Oil slips on supply surplus outlook despite Gulf tensions)",
+    "CNBC 17 nov (Jensen Huang breaks his silence ahead of Nvidia earnings)",
+    "CNBC 17 nov (Investors lower tech stock exposure in biggest exit since 2006)"
   ],
-  "as_of": "2026-11-17T20:07:11Z"
+  "as_of": "2026-11-17T21:05:58Z"
 }
