@@ -1,11 +1,10 @@
 {
-  "geopolitica": "",
-  "petroleo": "WTI cae a cerca de 84 USD/barril y Brent a cerca de 92-93 USD (ambos con caidas cercanas al 20% en noviembre) por expectativas de superavit de oferta tras la recuperacion de exportaciones de Oriente Medio via Hormuz, lo que reduce la prima de riesgo global y favorece el apetito por riesgo en el NQ.",
-  "catalizador": "Wall Street opera a la expectativa del informe de resultados de Nvidia tras el cierre de hoy, tras el desplome del Nasdaq de aproximadamente 2.5% el lunes por la liquidacion de acciones de IA; hacia las 9:40 ET el Dow caia unos 332 puntos (-0.6%) y el Nasdaq se mantenia casi plano, dejando al NQ muy sensible al resultado de Nvidia esta noche.",
+  "geopolitica": "EE.UU. amplía las restricciones de acceso remoto a chips de IA avanzados para clientes en China y Pekín advierte represalias, presionando a los semiconductores y lastrando al NQ (Bloomberg Markets Wrap, ~10:43 ET).",
+  "petroleo": "El crudo cede (Brent ~92 USD, WTI ~85 USD) por el pronóstico de sobreoferta de la AIE según Commerzbank, lo que alivia la presión inflacionaria y actúa como viento de cola leve para el NQ (FXStreet/Commerzbank, ~08:18 ET).",
+  "catalizador": "Nvidia presenta resultados trimestrales hoy tras el cierre (~16:20-17:00 ET), su primer reporte sin Jensen Huang como CEO; la cautela previa ya hunde al Nasdaq 100 un 1.6% intradía, siendo el catalizador clave del NQ en la sesión de hoy (Bloomberg Markets Wrap, ~10:43 ET).",
   "sources": [
-    "FXStreet 02:48 ET",
-    "Reuters/AP 09:40 ET",
-    "TipRanks 17-Nov"
+    "Bloomberg Markets Wrap ~10:43 ET",
+    "FXStreet/Commerzbank ~08:18 ET"
   ],
-  "as_of": "2026-11-17T19:06:17Z"
+  "as_of": "2026-11-17T20:07:11Z"
 }
