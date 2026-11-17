@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Axios/CNBC informan que el secretario de Comercio Lutnick frenó nuevos controles de exportación de chips de EE.UU. a China tras la salida de Jensen Huang como CEO de Nvidia, lo que reduce el riesgo regulatorio sobre semiconductores y es un soporte marginal para el NQ.",
-  "petroleo": "Brent sube ~0.3% a cerca de 96 USD y WTI opera plano en ~88.6 USD (CNBC), con el crudo camino a su segunda caída semanal mientras Trump mantiene el bloqueo a Irán ('nos quedamos con su Estrecho') sin buscar un acuerdo, lo que sostiene la prima de riesgo geopolítico sin presionar aún al NQ.",
-  "catalizador": "El IPP de octubre subió 6.5% interanual, el mayor avance desde 2022, aunque el dato mensual (+0.3%) fue algo más suave de lo esperado; el rendimiento del Treasury a 10 años subió a ~5.15-5.17% (CNBC), presionando a las tecnológicas de alta duración del NQ.",
+  "geopolitica": "",
+  "petroleo": "WTI cae a cerca de 84 USD/barril y Brent a cerca de 92-93 USD (ambos con caidas cercanas al 20% en noviembre) por expectativas de superavit de oferta tras la recuperacion de exportaciones de Oriente Medio via Hormuz, lo que reduce la prima de riesgo global y favorece el apetito por riesgo en el NQ.",
+  "catalizador": "Wall Street opera a la expectativa del informe de resultados de Nvidia tras el cierre de hoy, tras el desplome del Nasdaq de aproximadamente 2.5% el lunes por la liquidacion de acciones de IA; hacia las 9:40 ET el Dow caia unos 332 puntos (-0.6%) y el Nasdaq se mantenia casi plano, dejando al NQ muy sensible al resultado de Nvidia esta noche.",
   "sources": [
-    "CNBC 08:30 ET (BLS, IPP de octubre)",
-    "CNBC premercado ET (oil prices set for second weekly decline)",
-    "CNBC 12-13 nov ET (Lutnick/Nvidia chip export curbs, via Axios)",
-    "Bloomberg (US wholesale inflation fastest pace since 2022)"
+    "FXStreet 02:48 ET",
+    "Reuters/AP 09:40 ET",
+    "TipRanks 17-Nov"
   ],
-  "as_of": "2026-11-13T21:06:24Z"
+  "as_of": "2026-11-17T19:06:17Z"
 }
