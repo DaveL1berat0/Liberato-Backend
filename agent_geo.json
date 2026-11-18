@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump se reúne hoy con Xi Jinping (23:45 ET) y luego junto a Xi y Putin en una cumbre trilateral inédita (01:30 ET, ya de madrugada) al margen del APEC en Shenzhen, con aranceles, controles a semiconductores e Irán/Ucrania en la agenda — el mercado posiciona el NQ a la espera de señales sobre comercio tech y geopolítica.",
-  "petroleo": "Brent cae ~0.5% a ~$92.6 y WTI retrocede ~1.15% a ~$85 por un fuerte aumento de inventarios en EEUU, mientras las señales de acercamiento a la paz en Ucrania e Irán siguen presionando el crudo a la baja — petróleo débil modera la inflación esperada, un viento de cola leve para el NQ.",
-  "catalizador": "Anthropic (ticker ANT) fija hoy el precio de su IPO en Nasdaq (rango guía $70-78/acción, valoración ~$1.3-1.4 billones), con inicio de cotización previsto para el 19 de noviembre — evento de alto perfil en IA que puede generar volatilidad en el NQ por su peso tecnológico.",
+  "geopolitica": "",
+  "petroleo": "El petroleo cae presionado por el fuerte aumento de inventarios en EE.UU. (API: +5.3 millones de barriles en la semana al 13-nov) y expectativas de superavit de oferta (IEA: ~2 millones bpd este trimestre), que compensan las tensiones persistentes en el Estrecho de Ormuz; Brent ronda 91-94 USD/barril y WTI cae cerca de 1.15%, sesgo bajista leve para activos de riesgo ligados a energia.",
+  "catalizador": "La Fed publica hoy las minutas del FOMC a las 14:00 ET, mientras el mercado digiere el resultado de Nvidia (beneficio y guia de ingresos por encima de lo esperado, ~75% de crecimiento anual proyectado) y la fijacion de precio del IPO de Anthropic esta noche antes de su debut en Nasdaq (ticker ANT) el jueves, catalizadores que sostienen hoy el rebote de los futuros del Nasdaq-100 tras las perdidas del martes.",
   "sources": [
-    "Newsquawk (calendario APEC Trump-Xi-Putin) 18-Nov-2026 ET",
-    "HDFC Sky / Oilprice.com (Brent-WTI) 18-Nov-2026",
-    "Nasdaq Trader notice (listado ANT) 11-Nov-2026"
+    "Fortune 06:30 ET (oil price, Nov 18)",
+    "TradingEconomics (Brent -1.57% a 91.68 USD/Bbl, Nov 18)",
+    "Upstox/Invezz (premarket US futures, Nov 18, Nvidia/Anthropic IPO)",
+    "Multiples medios financieros - FOMC minutes 14:00 ET (Nov 18)"
   ],
-  "as_of": "2026-11-18T16:07:32Z"
+  "as_of": "2026-11-18T17:06:16Z"
 }
