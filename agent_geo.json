@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Irán lanzó ataques con drones y misiles contra la base aérea de EE.UU. Ali Al Salem en Kuwait (en represalia por un ataque de EE.UU. a la isla iraní de Qeshm el martes), ampliando el conflicto del Golfo y elevando la prima de riesgo geopolítico que puede presionar al NQ en la apertura.",
-  "petroleo": "El WTI cae cerca de 1.2% hasta ~$84.90/barril y el Brent retrocede ~0.5% hasta ~$92.70, ya que el mercado prioriza la perspectiva de superávit de oferta (AIE) por encima de las tensiones en el Golfo, lo que limita el efecto alcista del riesgo geopolítico sobre los costos y el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 suben tras la apertura mientras los operadores digieren los resultados del tercer trimestre de Nvidia (que superaron estimaciones, con un nuevo buyback de $150.000 millones y guía de cuarto trimestre mejor de lo esperado), el principal catalizador de corto plazo para el NQ en esta sesión.",
+  "geopolitica": "",
+  "petroleo": "El Brent cede alrededor de 0.43% hacia 92.74 USD/barril en la sesion previa a la apertura, un alivio marginal de presion inflacionaria que resulta levemente positivo para el NQ.",
+  "catalizador": "Nvidia supero expectativas en resultados del Q3 (ingresos mas que duplicados) tras el cierre del martes, impulsando a los semiconductores y llevando a los futuros del Nasdaq 100 a subir cerca de 0.9% en premarket, lo que da soporte alcista al NQ en la apertura.",
   "sources": [
-    "CNBC 18 nov 2026 - Iran's army targets U.S. drone and missile sites in Kuwait as Gulf attacks mount",
-    "CNBC 18 nov 2026 - Oil prices today: WTI, Brent (WTI ~$84.90, Brent ~$92.70)",
-    "CNBC 18 nov 2026 - Stock market today: Live updates (apertura, Nasdaq +0.6% tras resultados de Nvidia)"
+    "StockTitan 18-Nov premarket ET",
+    "CurrentLogic Morning Brief 06:48 ET",
+    "Upstox premarket ET"
   ],
-  "as_of": "2026-11-18T14:40:32Z"
+  "as_of": "2026-11-18T15:06:42Z"
 }
