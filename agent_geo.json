@@ -1,11 +1,11 @@
 {
-  "geopolitica": "China's Xi, en la apertura de la cumbre APEC en Shenzhen, llamo a eliminar barreras comerciales y de inversion horas antes de la primera reunion trilateral con Trump y Putin, lo que sostiene el optimismo sobre la tregua comercial EE.UU.-China y da soporte de fondo al NQ.",
-  "petroleo": "El WTI (contrato dic'26) cae cerca de 1.7% hasta ~84.6 USD por temores de sobreoferta tras el informe de la AIE sobre superavit de crudo y el alza de inventarios reportada por la API, lo que relaja presiones inflacionarias y es levemente positivo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1.2% en premarket tras resultados record de Nvidia (ingresos +103% interanual a 115.84 mil millones de USD) y una guia de cuarto trimestre por encima de lo esperado, impulsando el apetito de riesgo en tecnologia antes de la apertura; hoy tambien se publican las minutas de la Fed (FOMC) de la reunion de octubre.",
+  "geopolitica": "EE.UU. amplio el 16-nov los controles de exportacion de chips de IA (reglas de acceso remoto) para frenar el desvio a China, mientras persisten ataques a petroleros en el Estrecho de Ormuz entre EE.UU. e Iran; ambos factores sostienen la aversion al riesgo que pesa sobre el NQ por su alta exposicion a semiconductores.",
+  "petroleo": "El Brent cotiza cerca de 92-93 USD y el WTI en 85-87 USD, retrocediendo pese a la tension en Ormuz por expectativas de superavit de oferta global (CNBC, 16-nov); una caida del crudo alivia la presion inflacionaria y resulta levemente favorable para el NQ.",
+  "catalizador": "La Fed publica hoy a las 14:00 ET las minutas del FOMC de la reunion del 27-28 de octubre (CME Group), catalizador de ultima hora que puede mover la expectativa de recortes de tasas y la volatilidad intradia del NQ.",
   "sources": [
-    "CNBC 18-nov (Xi, cumbre APEC Shenzhen)",
-    "CNBC 05:55 ET (cotizacion WTI dic'26)",
-    "Reuters/Investing.com 05:54 ET (futuros Nasdaq-100 y resultados Nvidia)"
+    "CNBC 16-Nov (oil-prices-brent-wti-latest)",
+    "SCMP 16-Nov (US tightens AI chip export curbs)",
+    "CME Group (calendario minutas FOMC, 18-Nov 14:00 ET)"
   ],
-  "as_of": "2026-11-18T12:41:13Z"
+  "as_of": "2026-11-18T13:07:48Z"
 }
