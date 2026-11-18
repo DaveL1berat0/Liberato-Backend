@@ -1,11 +1,11 @@
 {
-  "geopolitica": "China advirtio represalias (minerales criticos y semiconductores) tras ampliar EE.UU. los controles de exportacion de chips de IA a paises como Indonesia, Malasia, Singapur y Brasil, justo antes de la visita de Trump a Shenzhen para la cumbre APEC; la tension tech/semis mantiene presion sobre el sentimiento de riesgo que pesa en el Nasdaq.",
-  "petroleo": "Brent cae cerca de 1.1% a 92.14 USD y WTI baja cerca de 1.8% a 84.48 USD tras un reporte del API que mostro una acumulacion sorpresa de 5.28 millones de barriles en inventarios de crudo de EE.UU.; el dato oficial de la EIA se publica hoy a las 10:30 ET, lo que mantiene volatilidad en el petroleo que puede trasladarse al sentimiento de riesgo del NQ.",
-  "catalizador": "Nvidia reporto resultados del tercer trimestre tras el cierre del martes con ingresos de 115.8 mil millones de USD y una guia para el cuarto trimestre de 126-134 mil millones de USD, por encima de los ~125 mil millones esperados; la accion sube cerca de 4% en premarket y los futuros del Nasdaq-100 operan al alza esta mañana, consolidandose como el principal catalizador intradia del NQ.",
+  "geopolitica": "China's Xi, en la apertura de la cumbre APEC en Shenzhen, llamo a eliminar barreras comerciales y de inversion horas antes de la primera reunion trilateral con Trump y Putin, lo que sostiene el optimismo sobre la tregua comercial EE.UU.-China y da soporte de fondo al NQ.",
+  "petroleo": "El WTI (contrato dic'26) cae cerca de 1.7% hasta ~84.6 USD por temores de sobreoferta tras el informe de la AIE sobre superavit de crudo y el alza de inventarios reportada por la API, lo que relaja presiones inflacionarias y es levemente positivo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 1.2% en premarket tras resultados record de Nvidia (ingresos +103% interanual a 115.84 mil millones de USD) y una guia de cuarto trimestre por encima de lo esperado, impulsando el apetito de riesgo en tecnologia antes de la apertura; hoy tambien se publican las minutas de la Fed (FOMC) de la reunion de octubre.",
   "sources": [
-    "India TV News / The Tribune 17-Nov (controles de chips EE.UU.-China)",
-    "Invezz 18-Nov (API crude build; EIA 10:30 ET)",
-    "CNBC / Yahoo Finance 17-Nov post-cierre / 18-Nov premarket (resultados Nvidia)"
+    "CNBC 18-nov (Xi, cumbre APEC Shenzhen)",
+    "CNBC 05:55 ET (cotizacion WTI dic'26)",
+    "Reuters/Investing.com 05:54 ET (futuros Nasdaq-100 y resultados Nvidia)"
   ],
-  "as_of": "2026-11-18T12:06:23Z"
+  "as_of": "2026-11-18T12:41:13Z"
 }
