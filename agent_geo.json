@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Iran lanzo misiles y drones contra bases de EE.UU. en Kuwait y Bahrein tras nuevos ataques de EE.UU. sobre la isla de Qeshm en el estrecho de Ormuz, con un tercer portaaviones estadounidense ya en la region; la escalada sostiene la prima de riesgo geopolitico y presiona al NQ a la baja en la apertura.",
-  "petroleo": "El Brent cae 0.4% a 92.73 USD/barril y el WTI baja 1.1% a 85.06 USD (minimo desde finales de agosto) tras un alza de 5.28 millones de barriles en inventarios de EE.UU. (API) que compensa el riesgo del Golfo; el retroceso del crudo alivia la presion inflacionaria y es un leve soporte para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Trump se reúne hoy con Xi Jinping (23:45 ET) y luego junto a Xi y Putin en una cumbre trilateral inédita (01:30 ET, ya de madrugada) al margen del APEC en Shenzhen, con aranceles, controles a semiconductores e Irán/Ucrania en la agenda — el mercado posiciona el NQ a la espera de señales sobre comercio tech y geopolítica.",
+  "petroleo": "Brent cae ~0.5% a ~$92.6 y WTI retrocede ~1.15% a ~$85 por un fuerte aumento de inventarios en EEUU, mientras las señales de acercamiento a la paz en Ucrania e Irán siguen presionando el crudo a la baja — petróleo débil modera la inflación esperada, un viento de cola leve para el NQ.",
+  "catalizador": "Anthropic (ticker ANT) fija hoy el precio de su IPO en Nasdaq (rango guía $70-78/acción, valoración ~$1.3-1.4 billones), con inicio de cotización previsto para el 19 de noviembre — evento de alto perfil en IA que puede generar volatilidad en el NQ por su peso tecnológico.",
   "sources": [
-    "Reuters 06:42 ET",
-    "Reuters 08:10 ET",
-    "CNBC 17 nov (noche ET)",
-    "Al Jazeera 17 nov (noche ET)"
+    "Newsquawk (calendario APEC Trump-Xi-Putin) 18-Nov-2026 ET",
+    "HDFC Sky / Oilprice.com (Brent-WTI) 18-Nov-2026",
+    "Nasdaq Trader notice (listado ANT) 11-Nov-2026"
   ],
-  "as_of": "2026-11-18T15:40:26Z"
+  "as_of": "2026-11-18T16:07:32Z"
 }
