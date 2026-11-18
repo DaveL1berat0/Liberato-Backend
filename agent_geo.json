@@ -1,11 +1,12 @@
 {
-  "geopolitica": "",
-  "petroleo": "El Brent cede alrededor de 0.43% hacia 92.74 USD/barril en la sesion previa a la apertura, un alivio marginal de presion inflacionaria que resulta levemente positivo para el NQ.",
-  "catalizador": "Nvidia supero expectativas en resultados del Q3 (ingresos mas que duplicados) tras el cierre del martes, impulsando a los semiconductores y llevando a los futuros del Nasdaq 100 a subir cerca de 0.9% en premarket, lo que da soporte alcista al NQ en la apertura.",
+  "geopolitica": "Iran lanzo misiles y drones contra bases de EE.UU. en Kuwait y Bahrein tras nuevos ataques de EE.UU. sobre la isla de Qeshm en el estrecho de Ormuz, con un tercer portaaviones estadounidense ya en la region; la escalada sostiene la prima de riesgo geopolitico y presiona al NQ a la baja en la apertura.",
+  "petroleo": "El Brent cae 0.4% a 92.73 USD/barril y el WTI baja 1.1% a 85.06 USD (minimo desde finales de agosto) tras un alza de 5.28 millones de barriles en inventarios de EE.UU. (API) que compensa el riesgo del Golfo; el retroceso del crudo alivia la presion inflacionaria y es un leve soporte para el NQ.",
+  "catalizador": "",
   "sources": [
-    "StockTitan 18-Nov premarket ET",
-    "CurrentLogic Morning Brief 06:48 ET",
-    "Upstox premarket ET"
+    "Reuters 06:42 ET",
+    "Reuters 08:10 ET",
+    "CNBC 17 nov (noche ET)",
+    "Al Jazeera 17 nov (noche ET)"
   ],
-  "as_of": "2026-11-18T15:06:42Z"
+  "as_of": "2026-11-18T15:40:26Z"
 }
