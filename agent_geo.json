@@ -1,11 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "Nvidia superó expectativas de ingresos y elevó su guia para el cuarto trimestre (~130.000 millones de dolares vs 125.100 millones esperados), impulsando los futuros del Nasdaq-100 entre +0.6% y +0.9% en premarket, mientras el mercado espera hoy las minutas de la Fed y pesan declaraciones del gobernador Waller a favor de un recorte de 50 puntos basicos.",
+  "geopolitica": "La tension EE.UU.-Iran se intensifica: Iran afirma que petroleros fueron alcanzados por minas en el Estrecho de Ormuz y EE.UU. realizo ataques aereos contra la isla irani de Qeshm, lo que aumenta la aversion al riesgo y puede presionar al NQ a la baja.",
+  "petroleo": "El Brent cae hacia 92 USD/barril (-1.2%) y el WTI hacia 84 USD/barril (-2%) por el aumento de inventarios en EE.UU. que compensa el temor a una disrupcion de suministro por el conflicto con Iran; el retroceso del crudo alivia presion inflacionaria y resulta levemente positivo para el NQ.",
+  "catalizador": "",
   "sources": [
-    "CNBC premarket live blog 17-18 Nov 2026",
-    "InvestingLive Morning Kickstart 18 Nov 2026",
-    "TradingKey US Pre-Market 18 Nov 2026"
+    "CBS News (live updates) 18-nov",
+    "ABC News (live updates) 18-nov",
+    "Reuters via Yahoo Finance 04:20 ET"
   ],
-  "as_of": "2026-11-18T13:39:49Z"
+  "as_of": "2026-11-18T14:07:32Z"
 }
