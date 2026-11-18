@@ -1,12 +1,16 @@
 {
-  "geopolitica": "",
+  "geopolitica": "Arabia Saudita prevé que su conflicto con los hutíes se extienda hasta 2027 y el BCE evalúa elevar el coeficiente de reservas bancarias del 1% al 2% desde el 25 de noviembre, factores que sostienen la prima de riesgo energético y son un viento en contra leve para el NQ (Newsquawk European Market Wrap, 18 nov).",
   "petroleo": "El petroleo cae presionado por el fuerte aumento de inventarios en EE.UU. (API: +5.3 millones de barriles en la semana al 13-nov) y expectativas de superavit de oferta (IEA: ~2 millones bpd este trimestre), que compensan las tensiones persistentes en el Estrecho de Ormuz; Brent ronda 91-94 USD/barril y WTI cae cerca de 1.15%, sesgo bajista leve para activos de riesgo ligados a energia.",
-  "catalizador": "La Fed publica hoy las minutas del FOMC a las 14:00 ET, mientras el mercado digiere el resultado de Nvidia (beneficio y guia de ingresos por encima de lo esperado, ~75% de crecimiento anual proyectado) y la fijacion de precio del IPO de Anthropic esta noche antes de su debut en Nasdaq (ticker ANT) el jueves, catalizadores que sostienen hoy el rebote de los futuros del Nasdaq-100 tras las perdidas del martes.",
+  "catalizador": "La Fed publica hoy las minutas del FOMC a las 14:00 ET (reunión del 27-28 de octubre, calendario oficial de la Fed), mientras el mercado digiere el guidance de Nvidia (beneficio y proyección de ingresos por encima de lo esperado, ~75% de crecimiento anual proyectado) frente a comentarios hawkish del gobernador Waller sobre una suba de tasas mas agresiva en diciembre, y se espera el pricing esta noche en Nueva York del IPO de Anthropic (rango 70-78 USD, ~1.4 billones de valoracion, debut en Nasdaq bajo el ticker ANT el 19-nov); catalizadores mixtos que generan volatilidad en los futuros del Nasdaq-100 hoy.",
   "sources": [
-    "Fortune 06:30 ET (oil price, Nov 18)",
-    "TradingEconomics (Brent -1.57% a 91.68 USD/Bbl, Nov 18)",
+    "Federal Reserve FOMC calendar (minutas 14:00 ET, 18 nov)",
+    "Newsquawk European Market Wrap, 18 nov 2026",
+    "Bloomberg via Swissinfo, 18 nov 2026 (Nvidia outlook / Waller)",
+    "XTB Morning Wrap, 18 nov 2026",
+    "Nasdaq Trader notice (Anthropic/ANT listing, 18 nov 2026)",
     "Upstox/Invezz (premarket US futures, Nov 18, Nvidia/Anthropic IPO)",
-    "Multiples medios financieros - FOMC minutes 14:00 ET (Nov 18)"
+    "Fortune 06:30 ET (oil price, Nov 18)",
+    "TradingEconomics (Brent -1.57% a 91.68 USD/Bbl, Nov 18)"
   ],
-  "as_of": "2026-11-18T17:06:16Z"
+  "as_of": "2026-11-18T18:08:45Z"
 }
