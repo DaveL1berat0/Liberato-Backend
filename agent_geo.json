@@ -1,10 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 1.2% y los de Nvidia +3.6% en la premarket tras una guia de ingresos para 2028 que calmo los temores de demanda de IA, mientras el mercado tambien sigue de cerca la fijacion de precio del IPO de Anthropic, un soporte alcista para el NQ en la apertura.",
+  "geopolitica": "China advirtio represalias (minerales criticos y semiconductores) tras ampliar EE.UU. los controles de exportacion de chips de IA a paises como Indonesia, Malasia, Singapur y Brasil, justo antes de la visita de Trump a Shenzhen para la cumbre APEC; la tension tech/semis mantiene presion sobre el sentimiento de riesgo que pesa en el Nasdaq.",
+  "petroleo": "Brent cae cerca de 1.1% a 92.14 USD y WTI baja cerca de 1.8% a 84.48 USD tras un reporte del API que mostro una acumulacion sorpresa de 5.28 millones de barriles en inventarios de crudo de EE.UU.; el dato oficial de la EIA se publica hoy a las 10:30 ET, lo que mantiene volatilidad en el petroleo que puede trasladarse al sentimiento de riesgo del NQ.",
+  "catalizador": "Nvidia reporto resultados del tercer trimestre tras el cierre del martes con ingresos de 115.8 mil millones de USD y una guia para el cuarto trimestre de 126-134 mil millones de USD, por encima de los ~125 mil millones esperados; la accion sube cerca de 4% en premarket y los futuros del Nasdaq-100 operan al alza esta mañana, consolidandose como el principal catalizador intradia del NQ.",
   "sources": [
-    "Bloomberg (premarket, 18-nov)",
-    "Yahoo Finance/Reuters (premarket, 18-nov)"
+    "India TV News / The Tribune 17-Nov (controles de chips EE.UU.-China)",
+    "Invezz 18-Nov (API crude build; EIA 10:30 ET)",
+    "CNBC / Yahoo Finance 17-Nov post-cierre / 18-Nov premarket (resultados Nvidia)"
   ],
-  "as_of": "2026-11-18T11:39:00Z"
+  "as_of": "2026-11-18T12:06:23Z"
 }
