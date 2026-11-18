@@ -1,11 +1,11 @@
 {
-  "geopolitica": "La tension EE.UU.-Iran se intensifica: Iran afirma que petroleros fueron alcanzados por minas en el Estrecho de Ormuz y EE.UU. realizo ataques aereos contra la isla irani de Qeshm, lo que aumenta la aversion al riesgo y puede presionar al NQ a la baja.",
-  "petroleo": "El Brent cae hacia 92 USD/barril (-1.2%) y el WTI hacia 84 USD/barril (-2%) por el aumento de inventarios en EE.UU. que compensa el temor a una disrupcion de suministro por el conflicto con Iran; el retroceso del crudo alivia presion inflacionaria y resulta levemente positivo para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Irán lanzó ataques con drones y misiles contra la base aérea de EE.UU. Ali Al Salem en Kuwait (en represalia por un ataque de EE.UU. a la isla iraní de Qeshm el martes), ampliando el conflicto del Golfo y elevando la prima de riesgo geopolítico que puede presionar al NQ en la apertura.",
+  "petroleo": "El WTI cae cerca de 1.2% hasta ~$84.90/barril y el Brent retrocede ~0.5% hasta ~$92.70, ya que el mercado prioriza la perspectiva de superávit de oferta (AIE) por encima de las tensiones en el Golfo, lo que limita el efecto alcista del riesgo geopolítico sobre los costos y el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 suben tras la apertura mientras los operadores digieren los resultados del tercer trimestre de Nvidia (que superaron estimaciones, con un nuevo buyback de $150.000 millones y guía de cuarto trimestre mejor de lo esperado), el principal catalizador de corto plazo para el NQ en esta sesión.",
   "sources": [
-    "CBS News (live updates) 18-nov",
-    "ABC News (live updates) 18-nov",
-    "Reuters via Yahoo Finance 04:20 ET"
+    "CNBC 18 nov 2026 - Iran's army targets U.S. drone and missile sites in Kuwait as Gulf attacks mount",
+    "CNBC 18 nov 2026 - Oil prices today: WTI, Brent (WTI ~$84.90, Brent ~$92.70)",
+    "CNBC 18 nov 2026 - Stock market today: Live updates (apertura, Nasdaq +0.6% tras resultados de Nvidia)"
   ],
-  "as_of": "2026-11-18T14:07:32Z"
+  "as_of": "2026-11-18T14:40:32Z"
 }
