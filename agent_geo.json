@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. amplio el 16-nov los controles de exportacion de chips de IA (reglas de acceso remoto) para frenar el desvio a China, mientras persisten ataques a petroleros en el Estrecho de Ormuz entre EE.UU. e Iran; ambos factores sostienen la aversion al riesgo que pesa sobre el NQ por su alta exposicion a semiconductores.",
-  "petroleo": "El Brent cotiza cerca de 92-93 USD y el WTI en 85-87 USD, retrocediendo pese a la tension en Ormuz por expectativas de superavit de oferta global (CNBC, 16-nov); una caida del crudo alivia la presion inflacionaria y resulta levemente favorable para el NQ.",
-  "catalizador": "La Fed publica hoy a las 14:00 ET las minutas del FOMC de la reunion del 27-28 de octubre (CME Group), catalizador de ultima hora que puede mover la expectativa de recortes de tasas y la volatilidad intradia del NQ.",
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "Nvidia superó expectativas de ingresos y elevó su guia para el cuarto trimestre (~130.000 millones de dolares vs 125.100 millones esperados), impulsando los futuros del Nasdaq-100 entre +0.6% y +0.9% en premarket, mientras el mercado espera hoy las minutas de la Fed y pesan declaraciones del gobernador Waller a favor de un recorte de 50 puntos basicos.",
   "sources": [
-    "CNBC 16-Nov (oil-prices-brent-wti-latest)",
-    "SCMP 16-Nov (US tightens AI chip export curbs)",
-    "CME Group (calendario minutas FOMC, 18-Nov 14:00 ET)"
+    "CNBC premarket live blog 17-18 Nov 2026",
+    "InvestingLive Morning Kickstart 18 Nov 2026",
+    "TradingKey US Pre-Market 18 Nov 2026"
   ],
-  "as_of": "2026-11-18T13:07:48Z"
+  "as_of": "2026-11-18T13:39:49Z"
 }
