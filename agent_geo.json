@@ -1,10 +1,10 @@
 {
   "geopolitica": "",
-  "petroleo": "WTI cae por debajo de 83 USD/barril (minimo desde fines de agosto) y Brent ronda 93 USD por aumento de inventarios de crudo en EE.UU. que calma temores de interrupcion de suministro, un alivio marginal para costos energeticos que es ligeramente favorable para el NQ intradia.",
-  "catalizador": "Futuros del Nasdaq-100 suben cerca de 1% en premarket tras el resultado de Nvidia conocido despues del cierre del martes (BPA 2.68 USD vs 2.48 USD esperado, ingresos +103% interanual), catalizador alcista clave para el NQ hoy, con atencion adicional a la fijacion de precio de la IPO de Anthropic esta noche.",
+  "petroleo": "",
+  "catalizador": "Los futuros del Nasdaq 100 suben cerca de 1.2% y los de Nvidia +3.6% en la premarket tras una guia de ingresos para 2028 que calmo los temores de demanda de IA, mientras el mercado tambien sigue de cerca la fijacion de precio del IPO de Anthropic, un soporte alcista para el NQ en la apertura.",
   "sources": [
-    "FXStreet 03:55 ET",
-    "Yahoo Finance 04:30 ET"
+    "Bloomberg (premarket, 18-nov)",
+    "Yahoo Finance/Reuters (premarket, 18-nov)"
   ],
-  "as_of": "2026-11-18T11:07:11Z"
+  "as_of": "2026-11-18T11:39:00Z"
 }
