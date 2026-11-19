@@ -1,13 +1,14 @@
 {
-  "geopolitica": "Trump y Xi calificaron de \"positiva y constructiva\" su reunion en la cumbre APEC de Shenzhen (18-19 nov), aliviando tension comercial, pero nuevas restricciones de EEUU (regla interina de BIS del 16-nov) a la exportacion de chips de IA hacia centros de datos del Sudeste Asiatico golpean a las tecnologicas asiaticas, un viento mixto para los semiconductores del NQ.",
-  "petroleo": "El Brent cotiza en torno a 92 USD/barril y el WTI en 82-83 USD, cayendo tras un aumento mayor al esperado de inventarios de crudo en EEUU (+3.4M de barriles) y la advertencia de la AIE sobre un superavit global de oferta, senal de demanda debil que resta presion inflacionaria.",
-  "catalizador": "El debut bursatil de Anthropic (ticker ANT, rango de precio 70-78 USD, valoracion cercana a 1 billon de USD) en el Nasdaq hoy reactiva el \"AI trade\" y impulsa los futuros del Nasdaq, siendo el principal catalizador intradia para el NQ.",
+  "geopolitica": "La regla interina de la BIS (16-nov) que restringe la exportacion de chips de IA a centros de datos del Sudeste Asiatico entra en vigor hoy golpeando a semiconductores asiaticos, mientras Trump y Xi calificaron de positiva y constructiva su cumbre APEC en Shenzhen (18-19 nov) sin grandes acuerdos concretos, un saldo mixto para los semiconductores del NQ.",
+  "petroleo": "El Brent cotiza cerca de 92 USD y el WTI en 82-83 USD, presionados a la baja por el aumento de inventarios de crudo en EEUU (+4.7M de barriles segun la EIA) y la advertencia de la AIE de un superavit global en el 4T26, lo que reduce el riesgo inflacionario para el NQ a pesar de los reportes de minas en el Estrecho de Ormuz.",
+  "catalizador": "El debut bursatil de Anthropic (ticker ANT, rango 70-78 USD, valoracion cercana a 1 billon) impulso al Nasdaq mas de 1% en la apertura reactivando el AI trade, mientras el mercado espera a las 14:00 ET las minutas de la Fed para calibrar el ritmo de tasas.",
   "sources": [
-    "Newsquawk - US Market Open: NQ outperforms ahead of the Anthropic IPO; Xi and Trump talks positive and constructive",
-    "ZeroHedge - Futures Rip As Anthropic IPO Frenzy Revives AI Trade, Asian Chips Puke",
-    "SCMP - US tightens AI chip export curbs to close China's overseas data centre loophole",
-    "5paisa 06:26 ET - Crude Oil Price Today: Brent at $92.02, WTI at $83.27",
-    "FXEmpire - Crude Oil Price Forecast: WTI and Brent Slide as US Inventories Rise"
+    "SCMP 17 nov ET - BIS AI chip export curbs Southeast Asia",
+    "Reuters 09:30 ET - Nasdaq rises over 1% at open on Anthropic IPO",
+    "Morningstar/EIA 10 nov ET - EIA crude stock build +4.7M barrels",
+    "S&P Global 13 nov ET - IEA oil market Q4 surplus forecast",
+    "FXStreet 09:15 ET - Fed minutes preview, divided committee",
+    "Invezz 19 nov ET - Brent near $92 on Hormuz mine reports"
   ],
-  "as_of": "2026-11-19T16:06:21Z"
+  "as_of": "2026-11-19T17:05:41Z"
 }
