@@ -1,7 +1,10 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-19T11:05:58Z"
+  "geopolitica": "La guerra entre EE. UU./aliados e Iran mantiene ataques a buques petroleros en el Estrecho de Ormuz, sosteniendo la prima de riesgo geopolitico que presiona el apetito por riesgo global y, por contagio, al NQ (CNBC, 06:37 ET).",
+  "petroleo": "Brent cotiza en 92.12 USD (+0.18%) y WTI en 83.17 USD (-0.11%) hacia las 06:37 ET, estable entre el temor a un superavit de oferta y el soporte de los ataques en el Golfo/Ormuz, segun CNBC.",
+  "catalizador": "El catalizador de la jornada es el debut en Nasdaq de Anthropic (ticker ANT): los futuros del Nasdaq-100 suben cerca de 2% en pre-mercado, impulsando el sentimiento tecnologico antes de la apertura de las 9:30 ET (CNBC/Yahoo Finance).",
+  "sources": [
+    "CNBC 06:37 ET",
+    "CNBC/Yahoo Finance pre-market"
+  ],
+  "as_of": "2026-11-19T11:39:28Z"
 }
