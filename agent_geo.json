@@ -1,10 +1,12 @@
 {
-  "geopolitica": "La guerra entre EE. UU./aliados e Iran mantiene ataques a buques petroleros en el Estrecho de Ormuz, sosteniendo la prima de riesgo geopolitico que presiona el apetito por riesgo global y, por contagio, al NQ (CNBC, 06:37 ET).",
-  "petroleo": "Brent cotiza en 92.12 USD (+0.18%) y WTI en 83.17 USD (-0.11%) hacia las 06:37 ET, estable entre el temor a un superavit de oferta y el soporte de los ataques en el Golfo/Ormuz, segun CNBC.",
-  "catalizador": "El catalizador de la jornada es el debut en Nasdaq de Anthropic (ticker ANT): los futuros del Nasdaq-100 suben cerca de 2% en pre-mercado, impulsando el sentimiento tecnologico antes de la apertura de las 9:30 ET (CNBC/Yahoo Finance).",
+  "geopolitica": "Tension persiste en el Golfo: Houthis reclaman ataques con drones contra el oleoducto Este-Oeste saudi y UKMTO confirmo un ataque a un petrolero en el estrecho de Hormuz, manteniendo una prima de riesgo que puede presionar el apetito por riesgo en el NQ.",
+  "petroleo": "Brent cotiza cerca de 92.12 USD (+0.18%) y WTI cerca de 83.17 USD (-0.11%) tras un aumento de inventarios en EE.UU. mayor al esperado que compenso el riesgo de suministro en Oriente Medio, por lo que el efecto inmediato sobre el NQ es limitado.",
+  "catalizador": "El debut hoy de Anthropic (ANT) en el Nasdaq tras la mayor IPO de la historia (83 USD/accion, 81300 millones recaudados) impulsa los futuros del Nasdaq-100 en el premarket por el fuerte apetito inversor hacia la IA.",
   "sources": [
-    "CNBC 06:37 ET",
-    "CNBC/Yahoo Finance pre-market"
+    "Reuters 21:37 ET (petroleo, dato EIA)",
+    "CNBC 18-nov (IPO Anthropic, precio $83)",
+    "Forbes 19-nov (futuros NQ premarket)",
+    "Reuters/UKMTO 18-nov (tension estrecho de Hormuz)"
   ],
-  "as_of": "2026-11-19T11:39:28Z"
+  "as_of": "2026-11-19T12:07:18Z"
 }
