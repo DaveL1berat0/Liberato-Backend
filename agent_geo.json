@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump y Xi se reunen hoy en Shenzhen (cumbre APEC) sin acuerdo confirmado para extender la tregua arancelaria que vence en enero, en medio de nuevos controles de exportacion de semiconductores propuestos por EE.UU. y amenazas chinas de represalia con tierras raras, lo que mantiene la cautela en tech/NQ.",
-  "petroleo": "El WTI cerro el miercoles en 83,26 USD (-3,2%, minimo desde el 26 de agosto) y el Brent en 91,95 USD tras un dato de la EIA que mostro un aumento de inventarios de crudo muy superior a lo esperado (+3,4M barriles vs ~58.000 previstos), lo que alivia presion inflacionaria y es levemente positivo para el NQ.",
-  "catalizador": "Anthropic (ANT) comienza a cotizar hoy en el Nasdaq tras fijar el precio de su IPO por encima del rango comercializado, impulsando el sentimiento hacia acciones de IA y los futuros del Nasdaq-100 antes de la apertura.",
+  "geopolitica": "Washington avanza nuevas restricciones de exportacion a centros de datos que sirven a clientes vinculados a China (regla de la BIS que cierra el 'loophole' de acceso remoto a GPUs avanzadas), intensificando la guerra tecnologica EE.UU.-China y presionando a los semiconductores dentro del NQ.",
+  "petroleo": "Brent cotiza en 92.12 USD/barril (+0.18%) y WTI en 83.17 USD/barril (-0.11%) en la sesion asiatica del jueves, con el mercado descontando un superavit de oferta y tasas mas firmes, parcialmente compensado por la tension en el Estrecho de Ormuz por la guerra Iran-Israel; nivel de crudo relativamente estable, impacto limitado sobre el NQ.",
+  "catalizador": "Debut bursatil de Anthropic (ticker ANT) hoy en el Nasdaq tras fijar precio de IPO en 70-78 USD/accion, con Nvidia, AMD, Broadcom, Google, Microsoft y TSMC como inversores ancla por 26.000 millones USD; es el catalizador dominante para el NQ al validar el apetito por el trade de IA pese al reciente selloff tecnologico.",
   "sources": [
-    "Fortune 18-Nov (Trump-Xi Shenzhen/APEC)",
-    "CNBC 18-Nov (tregua arancelaria y controles a semiconductores)",
-    "Reuters via Investing.com ~10:30 ET 18-Nov (reporte EIA e inventarios de crudo)",
-    "Benzinga ~08:00 ET 19-Nov (IPO de Anthropic y futuros del Nasdaq)"
+    "CNBC 21:37 ET (18 nov, 0237 GMT 19 nov) - oil-brent-wti-price-hormuz",
+    "Sidley/CNBC 17-18 nov - new export controls data center restrictions",
+    "Reuters/Newsquawk 18-19 nov - Anthropic ANT IPO Nasdaq debut"
   ],
-  "as_of": "2026-11-19T13:40:09Z"
+  "as_of": "2026-11-19T14:06:21Z"
 }
