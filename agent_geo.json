@@ -1,11 +1,7 @@
 {
-  "geopolitica": "Nvidia dejo de enviar chips Hopper/H200 a China tras la salida de Jensen Huang y Beijing advierte represalias, lo que reaviva la tension tech/semis y presiona el sentimiento de riesgo en el Nasdaq.",
-  "petroleo": "El Brent cae 1.2% a 92.02 USD y el WTI cae 1.9% a 84.38 USD (minimo desde agosto) por un aumento de inventarios de crudo en EE.UU. mayor al esperado, aunque las tensiones en el Estrecho de Ormuz limitan la baja.",
-  "catalizador": "La probabilidad de una subida de tasas de la Fed en diciembre sube a cerca de 95.7% segun CME FedWatch tras comentarios hawkish del gobernador Waller sobre una posible subida de 50pb, un catalizador bajista para el NQ.",
-  "sources": [
-    "Reuters 10:46 ET (Brent/WTI e inventarios API/EIA)",
-    "Bloomberg 18-nov (Nvidia detiene envios de chips a China)",
-    "Reuters 18-nov (probabilidad de hike Fed, CME FedWatch)"
-  ],
-  "as_of": "2026-11-18T21:06:49Z"
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "",
+  "sources": [],
+  "as_of": "2026-11-19T11:05:58Z"
 }
