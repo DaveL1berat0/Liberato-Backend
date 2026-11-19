@@ -1,11 +1,12 @@
 {
-  "geopolitica": "EE.UU. amplio el 16 de noviembre las restricciones de exportacion de chips de IA a China (regla BIS que cierra el acceso remoto via terceros paises), lo que eleva la tension tecnologica de cara a la reunion Trump-Xi de esta semana y presiona a la baja a los semiconductores en el NQ.",
-  "petroleo": "El Brent cotiza hoy 19-nov cerca de 91-92 USD/barril (-0.2%) y el WTI cerca de 82-83 USD (-0.7%), con el temor a exceso de oferta por inventarios de EE.UU. compensando el soporte de la guerra en el Golfo/Hormuz, un efecto moderado y mixto para el NQ intradia.",
-  "catalizador": "Los futuros del Nasdaq-100 suben mas de 2% la mañana del jueves 19-nov impulsados por el debut en bolsa de Anthropic, cuya OPV se coloco por encima del rango comercializado, dando soporte alcista de corto plazo al NQ.",
+  "geopolitica": "Trump y Xi se reunen hoy en Shenzhen (cumbre APEC) sin acuerdo confirmado para extender la tregua arancelaria que vence en enero, en medio de nuevos controles de exportacion de semiconductores propuestos por EE.UU. y amenazas chinas de represalia con tierras raras, lo que mantiene la cautela en tech/NQ.",
+  "petroleo": "El WTI cerro el miercoles en 83,26 USD (-3,2%, minimo desde el 26 de agosto) y el Brent en 91,95 USD tras un dato de la EIA que mostro un aumento de inventarios de crudo muy superior a lo esperado (+3,4M barriles vs ~58.000 previstos), lo que alivia presion inflacionaria y es levemente positivo para el NQ.",
+  "catalizador": "Anthropic (ANT) comienza a cotizar hoy en el Nasdaq tras fijar el precio de su IPO por encima del rango comercializado, impulsando el sentimiento hacia acciones de IA y los futuros del Nasdaq-100 antes de la apertura.",
   "sources": [
-    "Al Jazeera 17-Nov ET (restriccion chips IA a China)",
-    "CNBC 19-Nov ET (Brent/WTI, Hormuz vs exceso de oferta)",
-    "JournalArta/Reuters 19-Nov ET (futuros Nasdaq, debut Anthropic)"
+    "Fortune 18-Nov (Trump-Xi Shenzhen/APEC)",
+    "CNBC 18-Nov (tregua arancelaria y controles a semiconductores)",
+    "Reuters via Investing.com ~10:30 ET 18-Nov (reporte EIA e inventarios de crudo)",
+    "Benzinga ~08:00 ET 19-Nov (IPO de Anthropic y futuros del Nasdaq)"
   ],
-  "as_of": "2026-11-19T13:06:02Z"
+  "as_of": "2026-11-19T13:40:09Z"
 }
