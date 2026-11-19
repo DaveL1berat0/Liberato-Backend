@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump se reune hoy jueves en Shenzhen con Xi y Putin en la cumbre de APEC para tratar la guerra de Iran y la guerra en Ucrania, con bajas expectativas de resultados concretos, lo que mantiene cautela en los futuros del NQ ante la incertidumbre geopolitica.",
-  "petroleo": "Brent cotiza en torno a 92,12 USD/barril y WTI en 83,17 USD (contrato dic.) segun datos de 0237 GMT; los precios bajan por expectativas de superavit de oferta y un aumento mayor al esperado en los inventarios de crudo en EE.UU., pese a las tensiones en el Golfo por la guerra de Iran, por lo que el efecto inmediato sobre el NQ es limitado.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 2% impulsados por el debut bursatil de Anthropic (ANT, 83 USD/accion, 81.300 millones de dolares recaudados, la mayor OPI registrada), mientras las actas de la Fed de octubre y los comentarios hawkish de Waller sobre una posible subida de 50 puntos basicos en diciembre generan presion bajista de fondo sobre el NQ.",
+  "geopolitica": "EE.UU. amplio el 16 de noviembre las restricciones de exportacion de chips de IA a China (regla BIS que cierra el acceso remoto via terceros paises), lo que eleva la tension tecnologica de cara a la reunion Trump-Xi de esta semana y presiona a la baja a los semiconductores en el NQ.",
+  "petroleo": "El Brent cotiza hoy 19-nov cerca de 91-92 USD/barril (-0.2%) y el WTI cerca de 82-83 USD (-0.7%), con el temor a exceso de oferta por inventarios de EE.UU. compensando el soporte de la guerra en el Golfo/Hormuz, un efecto moderado y mixto para el NQ intradia.",
+  "catalizador": "Los futuros del Nasdaq-100 suben mas de 2% la mañana del jueves 19-nov impulsados por el debut en bolsa de Anthropic, cuya OPV se coloco por encima del rango comercializado, dando soporte alcista de corto plazo al NQ.",
   "sources": [
-    "CNBC 19 nov 2026 (oil-brent-wti-price-hormuz, cotizacion 0237 GMT / 21:37 ET del 18 nov)",
-    "CNBC 19 nov 2026 (anthropic-ipo-ant-live-updates)",
-    "CNBC 18-19 nov 2026 (fed-minutes-october-2026 / gold-silver-metals-price-treasury, comentarios Waller)",
-    "CNBC 18 nov 2026 (trump-xi-putin-china-apec)"
+    "Al Jazeera 17-Nov ET (restriccion chips IA a China)",
+    "CNBC 19-Nov ET (Brent/WTI, Hormuz vs exceso de oferta)",
+    "JournalArta/Reuters 19-Nov ET (futuros Nasdaq, debut Anthropic)"
   ],
-  "as_of": "2026-11-19T12:40:11Z"
+  "as_of": "2026-11-19T13:06:02Z"
 }
