@@ -1,14 +1,12 @@
 {
-  "geopolitica": "La regla interina de la BIS (16-nov) que restringe la exportacion de chips de IA a centros de datos del Sudeste Asiatico entra en vigor hoy golpeando a semiconductores asiaticos, mientras Trump y Xi calificaron de positiva y constructiva su cumbre APEC en Shenzhen (18-19 nov) sin grandes acuerdos concretos, un saldo mixto para los semiconductores del NQ.",
-  "petroleo": "El Brent cotiza cerca de 92 USD y el WTI en 82-83 USD, presionados a la baja por el aumento de inventarios de crudo en EEUU (+4.7M de barriles segun la EIA) y la advertencia de la AIE de un superavit global en el 4T26, lo que reduce el riesgo inflacionario para el NQ a pesar de los reportes de minas en el Estrecho de Ormuz.",
-  "catalizador": "El debut bursatil de Anthropic (ticker ANT, rango 70-78 USD, valoracion cercana a 1 billon) impulso al Nasdaq mas de 1% en la apertura reactivando el AI trade, mientras el mercado espera a las 14:00 ET las minutas de la Fed para calibrar el ritmo de tasas.",
+  "geopolitica": "La cumbre trilateral Trump-Xi-Putin en Shenzhen (19/11) arrojo compromisos de aumentar la produccion de combustibles y reducir riesgo nuclear, pero la reaccion tibia del mercado limita el impulso alcista para el NQ.",
+  "petroleo": "Brent cotiza en torno a 92 USD/barril (+0.05%) y WTI cerca de 83 USD (-0.31%), con expectativas de superavit de oferta compensando el riesgo geopolitico del Estrecho de Ormuz, lo que resta presion inflacionaria y es neutral/levemente positivo para el NQ.",
+  "catalizador": "El debut en Nasdaq de Anthropic (ticker ANT) alcanzo una capitalizacion cercana a 2 billones de USD, reavivando el apetito por el trade de IA/tecnologia y impulsando al alza los futuros del Nasdaq-100 esta mañana.",
   "sources": [
-    "SCMP 17 nov ET - BIS AI chip export curbs Southeast Asia",
-    "Reuters 09:30 ET - Nasdaq rises over 1% at open on Anthropic IPO",
-    "Morningstar/EIA 10 nov ET - EIA crude stock build +4.7M barrels",
-    "S&P Global 13 nov ET - IEA oil market Q4 surplus forecast",
-    "FXStreet 09:15 ET - Fed minutes preview, divided committee",
-    "Invezz 19 nov ET - Brent near $92 on Hormuz mine reports"
+    "CNBC (Trump-Xi-Putin trilateral) 19/11/2026",
+    "Reuters (via NV.ua, precios de petroleo) 19/11/2026",
+    "CNBC (Anthropic IPO live updates) 19/11/2026",
+    "CNBC Investing Club (Jim Cramer, top 10) 19/11/2026"
   ],
-  "as_of": "2026-11-19T17:05:41Z"
+  "as_of": "2026-11-19T18:06:00Z"
 }
