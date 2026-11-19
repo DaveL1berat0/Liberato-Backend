@@ -1,12 +1,12 @@
 {
-  "geopolitica": "La cumbre trilateral Trump-Xi-Putin en Shenzhen (19/11) arrojo compromisos de aumentar la produccion de combustibles y reducir riesgo nuclear, pero la reaccion tibia del mercado limita el impulso alcista para el NQ.",
-  "petroleo": "Brent cotiza en torno a 92 USD/barril (+0.05%) y WTI cerca de 83 USD (-0.31%), con expectativas de superavit de oferta compensando el riesgo geopolitico del Estrecho de Ormuz, lo que resta presion inflacionaria y es neutral/levemente positivo para el NQ.",
-  "catalizador": "El debut en Nasdaq de Anthropic (ticker ANT) alcanzo una capitalizacion cercana a 2 billones de USD, reavivando el apetito por el trade de IA/tecnologia y impulsando al alza los futuros del Nasdaq-100 esta mañana.",
+  "geopolitica": "Trump dijo que EE.UU. podria permitir en 2-3 anos la venta a China de chips Blackwell de Nvidia tras su reunion con Xi en la cumbre APEC, mientras Alibaba cae por nuevas restricciones de EE.UU. a centros de datos que presten computo avanzado a China; genera volatilidad en semis y optimismo moderado para el NQ intradia.",
+  "petroleo": "Brent cae 0.2% a 91.70 USD y WTI retrocede a 82.70 USD por temores de superavit de inventarios en EE.UU.; menor presion inflacionaria, efecto levemente positivo/neutral para el NQ.",
+  "catalizador": "Peticiones iniciales de desempleo subieron a 203K (vs 197K esperado) y el indice Fed de Filadelfia cayo a 6.3 desde 20.9, mientras las minutas de la Fed muestran sesgo mas restrictivo si la inflacion persiste; datos mixtos que presionan al NQ intradia.",
   "sources": [
-    "CNBC (Trump-Xi-Putin trilateral) 19/11/2026",
-    "Reuters (via NV.ua, precios de petroleo) 19/11/2026",
-    "CNBC (Anthropic IPO live updates) 19/11/2026",
-    "CNBC Investing Club (Jim Cramer, top 10) 19/11/2026"
+    "Yahoo Finance (Reuters) 05:30 ET - futuros Nasdaq-100",
+    "HDFC Sky 19 nov - Brent/WTI",
+    "ZeroHedge 08:30 ET - Jobless claims y Philly Fed",
+    "FXStreet 10:22 ET - minutas Fed"
   ],
-  "as_of": "2026-11-19T18:06:00Z"
+  "as_of": "2026-11-19T19:05:57Z"
 }
