@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Washington avanza nuevas restricciones de exportacion a centros de datos que sirven a clientes vinculados a China (regla de la BIS que cierra el 'loophole' de acceso remoto a GPUs avanzadas), intensificando la guerra tecnologica EE.UU.-China y presionando a los semiconductores dentro del NQ.",
-  "petroleo": "Brent cotiza en 92.12 USD/barril (+0.18%) y WTI en 83.17 USD/barril (-0.11%) en la sesion asiatica del jueves, con el mercado descontando un superavit de oferta y tasas mas firmes, parcialmente compensado por la tension en el Estrecho de Ormuz por la guerra Iran-Israel; nivel de crudo relativamente estable, impacto limitado sobre el NQ.",
-  "catalizador": "Debut bursatil de Anthropic (ticker ANT) hoy en el Nasdaq tras fijar precio de IPO en 70-78 USD/accion, con Nvidia, AMD, Broadcom, Google, Microsoft y TSMC como inversores ancla por 26.000 millones USD; es el catalizador dominante para el NQ al validar el apetito por el trade de IA pese al reciente selloff tecnologico.",
+  "geopolitica": "Escalada bipartidista en EEUU para endurecer controles de exportacion de chips IA a China tras el escandalo de Nvidia, con amenaza de contramedidas de Beijing (tierras raras); negativo para semiconductores y pesa sobre el NQ dado el peso de Nvidia en el Nasdaq-100.",
+  "petroleo": "Brent ~92.1 USD (+0.18%) y WTI ~83.2 USD (-0.11%) en sesion temprana del 19-nov: suben inventarios de crudo en EEUU (+3.4M barriles vs +58k esperado) presionando a la baja, mientras ataques/minas cerca del Estrecho de Hormuz limitan las perdidas; impacto acotado y mixto sobre el NQ.",
+  "catalizador": "El gobernador de la Fed Christopher Waller senalo que podria necesitarse una subida de 50pb en la reunion de diciembre (mercado ya descuenta ~90% de probabilidad de alza de 25pb); giro hawkish que presiona a la baja al NQ por sensibilidad de las tecnologicas a tasas.",
   "sources": [
-    "CNBC 21:37 ET (18 nov, 0237 GMT 19 nov) - oil-brent-wti-price-hormuz",
-    "Sidley/CNBC 17-18 nov - new export controls data center restrictions",
-    "Reuters/Newsquawk 18-19 nov - Anthropic ANT IPO Nasdaq debut"
+    "CNBC 18-nov-2026 (Jensen Huang scandal fuels bipartisan push to block AI chip sales to China)",
+    "CNBC 18-nov-2026 (China's military seeks Nvidia's advanced chips for AI capabilities, commission says)",
+    "CNBC 19-nov-2026 (Oil prices steady as supply surplus softens sentiment though Gulf war supports)",
+    "CNBC 18-nov-2026 (Oil prices fall as higher U.S. crude stocks temper supply risks)",
+    "CNBC 18-nov-2026 (Fed's Waller says central bank may need to 'shock people' with half-point rate hike)"
   ],
-  "as_of": "2026-11-19T14:06:21Z"
+  "as_of": "2026-11-19T14:39:00Z"
 }
