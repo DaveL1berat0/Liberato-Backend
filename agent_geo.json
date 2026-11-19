@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Escalada bipartidista en EEUU para endurecer controles de exportacion de chips IA a China tras el escandalo de Nvidia, con amenaza de contramedidas de Beijing (tierras raras); negativo para semiconductores y pesa sobre el NQ dado el peso de Nvidia en el Nasdaq-100.",
-  "petroleo": "Brent ~92.1 USD (+0.18%) y WTI ~83.2 USD (-0.11%) en sesion temprana del 19-nov: suben inventarios de crudo en EEUU (+3.4M barriles vs +58k esperado) presionando a la baja, mientras ataques/minas cerca del Estrecho de Hormuz limitan las perdidas; impacto acotado y mixto sobre el NQ.",
-  "catalizador": "El gobernador de la Fed Christopher Waller senalo que podria necesitarse una subida de 50pb en la reunion de diciembre (mercado ya descuenta ~90% de probabilidad de alza de 25pb); giro hawkish que presiona a la baja al NQ por sensibilidad de las tecnologicas a tasas.",
+  "geopolitica": "EE.UU. amplio las restricciones de exportacion de chips a China: Nvidia dejo de enviar sus GPU Hopper aprobadas a clientes chinos y TSMC pauso pedidos a clientes chinos sin licencia de exportacion; la tension tecnologica presiona a los semiconductores y pesa sobre el NQ por su alto peso en tech (Reuters/Semafor, 17-18 nov).",
+  "petroleo": "El Brent cotiza en torno a 92 USD/barril (+0,2%) y el WTI cerca de 83 USD (-0,1%) en la madrugada del jueves, con los ataques y minas iranies en el Estrecho de Ormuz compensando el temor a un superavit de oferta tras un fuerte aumento de inventarios de la EIA; viento en contra moderado para el NQ via costos de energia (CNBC, 21:37 ET 18 nov).",
+  "catalizador": "Los futuros del Nasdaq-100 saltan cerca de 2% en el premarket de hoy impulsados por el debut bursatil de Anthropic (IPO fijada en 83 USD, por encima del rango, recaudando 81.000 millones de USD) y un rally en semiconductores liderado por Nvidia (+1,6%); las minutas de la Fed se publican mas tarde hoy y son el proximo catalizador a vigilar (Reuters/NBC News, premarket 19 nov).",
   "sources": [
-    "CNBC 18-nov-2026 (Jensen Huang scandal fuels bipartisan push to block AI chip sales to China)",
-    "CNBC 18-nov-2026 (China's military seeks Nvidia's advanced chips for AI capabilities, commission says)",
-    "CNBC 19-nov-2026 (Oil prices steady as supply surplus softens sentiment though Gulf war supports)",
-    "CNBC 18-nov-2026 (Oil prices fall as higher U.S. crude stocks temper supply risks)",
-    "CNBC 18-nov-2026 (Fed's Waller says central bank may need to 'shock people' with half-point rate hike)"
+    "Reuters/Semafor 17-18 nov - restricciones de chips EE.UU.-China",
+    "CNBC 21:37 ET 18 nov - precios de petroleo Brent/WTI",
+    "Reuters (medios estatales iranies) 19 nov - minas en el Estrecho de Ormuz",
+    "Reuters/NBC News premarket 19 nov - IPO de Anthropic y futuros del Nasdaq"
   ],
-  "as_of": "2026-11-19T14:39:00Z"
+  "as_of": "2026-11-19T15:05:53Z"
 }
