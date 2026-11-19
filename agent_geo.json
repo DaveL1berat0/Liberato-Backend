@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Irán (CGRI) denuncia buques petroleros danados por minas navales en el estrecho de Ormuz, version que EEUU (CENTCOM) rechaza, manteniendo una prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ si la tension escala.",
-  "petroleo": "El Brent cotiza en torno a 91,7-92,4 USD/barril (+0,5%) y el WTI cerca de 82,7-83,7 USD/barril (+0,6%) este jueves, con el alza moderada por el soporte de la tension en Ormuz compensando el excedente de oferta tras el ultimo reporte semanal de inventarios de la EIA.",
-  "catalizador": "Los futuros del Nasdaq-100 suben mas del 2% en premarket del jueves, liderados por semiconductoras y las 'Magnificent Seven', impulsados por el debut bursatil de Anthropic (ANT) en Nasdaq y a la espera de datos economicos y resultados de retail, lo que apunta a una apertura alcista en el NQ a las 9:30 ET.",
+  "geopolitica": "Trump y Xi calificaron de \"positiva y constructiva\" su reunion en la cumbre APEC de Shenzhen (18-19 nov), aliviando tension comercial, pero nuevas restricciones de EEUU (regla interina de BIS del 16-nov) a la exportacion de chips de IA hacia centros de datos del Sudeste Asiatico golpean a las tecnologicas asiaticas, un viento mixto para los semiconductores del NQ.",
+  "petroleo": "El Brent cotiza en torno a 92 USD/barril y el WTI en 82-83 USD, cayendo tras un aumento mayor al esperado de inventarios de crudo en EEUU (+3.4M de barriles) y la advertencia de la AIE sobre un superavit global de oferta, senal de demanda debil que resta presion inflacionaria.",
+  "catalizador": "El debut bursatil de Anthropic (ticker ANT, rango de precio 70-78 USD, valoracion cercana a 1 billon de USD) en el Nasdaq hoy reactiva el \"AI trade\" y impulsa los futuros del Nasdaq, siendo el principal catalizador intradia para el NQ.",
   "sources": [
-    "CNBC - premarket jueves 19-nov-2026 (Nasdaq-100 futures +2%, debut Anthropic)",
-    "Reuters via Investing.com - jueves 19-nov-2026 (oil prices steady, soporte por tension en Golfo/Ormuz)",
-    "Investing.com/HDFC Sky - jueves 19-nov-2026 (niveles Brent/WTI)"
+    "Newsquawk - US Market Open: NQ outperforms ahead of the Anthropic IPO; Xi and Trump talks positive and constructive",
+    "ZeroHedge - Futures Rip As Anthropic IPO Frenzy Revives AI Trade, Asian Chips Puke",
+    "SCMP - US tightens AI chip export curbs to close China's overseas data centre loophole",
+    "5paisa 06:26 ET - Crude Oil Price Today: Brent at $92.02, WTI at $83.27",
+    "FXEmpire - Crude Oil Price Forecast: WTI and Brent Slide as US Inventories Rise"
   ],
-  "as_of": "2026-11-19T15:39:10Z"
+  "as_of": "2026-11-19T16:06:21Z"
 }
