@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Trump dijo que EE.UU. podria permitir en 2-3 anos la venta a China de chips Blackwell de Nvidia tras su reunion con Xi en la cumbre APEC, mientras Alibaba cae por nuevas restricciones de EE.UU. a centros de datos que presten computo avanzado a China; genera volatilidad en semis y optimismo moderado para el NQ intradia.",
-  "petroleo": "Brent cae 0.2% a 91.70 USD y WTI retrocede a 82.70 USD por temores de superavit de inventarios en EE.UU.; menor presion inflacionaria, efecto levemente positivo/neutral para el NQ.",
-  "catalizador": "Peticiones iniciales de desempleo subieron a 203K (vs 197K esperado) y el indice Fed de Filadelfia cayo a 6.3 desde 20.9, mientras las minutas de la Fed muestran sesgo mas restrictivo si la inflacion persiste; datos mixtos que presionan al NQ intradia.",
+  "geopolitica": "",
+  "petroleo": "El Brent cae cerca de 0.2% a 91.70 USD y el WTI baja cerca de 0.7% a 82.70 USD por temores de superavit de oferta global, aunque el riesgo de disrupcion de suministro en Oriente Medio limita las perdidas (Reuters, 19 nov) - presion bajista moderada para el NQ via menor presion inflacionaria.",
+  "catalizador": "El debut bursatil de Anthropic (ANT) en el Nasdaq dispara sus acciones cerca de 34% y su capitalizacion supera los 2 billones de dolares, el mayor IPO de la historia (CNBC, 19 nov) - impulsa el sentimiento alcista en tecnologia y respalda al NQ intradia.",
   "sources": [
-    "Yahoo Finance (Reuters) 05:30 ET - futuros Nasdaq-100",
-    "HDFC Sky 19 nov - Brent/WTI",
-    "ZeroHedge 08:30 ET - Jobless claims y Philly Fed",
-    "FXStreet 10:22 ET - minutas Fed"
+    "CNBC 19 nov 2026",
+    "Reuters (via hdfcsky.com) 19 nov 2026"
   ],
-  "as_of": "2026-11-19T19:05:57Z"
+  "as_of": "2026-11-19T20:06:18Z"
 }
