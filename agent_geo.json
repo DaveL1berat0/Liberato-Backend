@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EE.UU. amplio las restricciones de exportacion de chips a China: Nvidia dejo de enviar sus GPU Hopper aprobadas a clientes chinos y TSMC pauso pedidos a clientes chinos sin licencia de exportacion; la tension tecnologica presiona a los semiconductores y pesa sobre el NQ por su alto peso en tech (Reuters/Semafor, 17-18 nov).",
-  "petroleo": "El Brent cotiza en torno a 92 USD/barril (+0,2%) y el WTI cerca de 83 USD (-0,1%) en la madrugada del jueves, con los ataques y minas iranies en el Estrecho de Ormuz compensando el temor a un superavit de oferta tras un fuerte aumento de inventarios de la EIA; viento en contra moderado para el NQ via costos de energia (CNBC, 21:37 ET 18 nov).",
-  "catalizador": "Los futuros del Nasdaq-100 saltan cerca de 2% en el premarket de hoy impulsados por el debut bursatil de Anthropic (IPO fijada en 83 USD, por encima del rango, recaudando 81.000 millones de USD) y un rally en semiconductores liderado por Nvidia (+1,6%); las minutas de la Fed se publican mas tarde hoy y son el proximo catalizador a vigilar (Reuters/NBC News, premarket 19 nov).",
+  "geopolitica": "Irán (CGRI) denuncia buques petroleros danados por minas navales en el estrecho de Ormuz, version que EEUU (CENTCOM) rechaza, manteniendo una prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ si la tension escala.",
+  "petroleo": "El Brent cotiza en torno a 91,7-92,4 USD/barril (+0,5%) y el WTI cerca de 82,7-83,7 USD/barril (+0,6%) este jueves, con el alza moderada por el soporte de la tension en Ormuz compensando el excedente de oferta tras el ultimo reporte semanal de inventarios de la EIA.",
+  "catalizador": "Los futuros del Nasdaq-100 suben mas del 2% en premarket del jueves, liderados por semiconductoras y las 'Magnificent Seven', impulsados por el debut bursatil de Anthropic (ANT) en Nasdaq y a la espera de datos economicos y resultados de retail, lo que apunta a una apertura alcista en el NQ a las 9:30 ET.",
   "sources": [
-    "Reuters/Semafor 17-18 nov - restricciones de chips EE.UU.-China",
-    "CNBC 21:37 ET 18 nov - precios de petroleo Brent/WTI",
-    "Reuters (medios estatales iranies) 19 nov - minas en el Estrecho de Ormuz",
-    "Reuters/NBC News premarket 19 nov - IPO de Anthropic y futuros del Nasdaq"
+    "CNBC - premarket jueves 19-nov-2026 (Nasdaq-100 futures +2%, debut Anthropic)",
+    "Reuters via Investing.com - jueves 19-nov-2026 (oil prices steady, soporte por tension en Golfo/Ormuz)",
+    "Investing.com/HDFC Sky - jueves 19-nov-2026 (niveles Brent/WTI)"
   ],
-  "as_of": "2026-11-19T15:05:53Z"
+  "as_of": "2026-11-19T15:39:10Z"
 }
