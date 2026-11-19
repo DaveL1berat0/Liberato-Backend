@@ -1,10 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El Brent cae cerca de 0.2% a 91.70 USD y el WTI baja cerca de 0.7% a 82.70 USD por temores de superavit de oferta global, aunque el riesgo de disrupcion de suministro en Oriente Medio limita las perdidas (Reuters, 19 nov) - presion bajista moderada para el NQ via menor presion inflacionaria.",
-  "catalizador": "El debut bursatil de Anthropic (ANT) en el Nasdaq dispara sus acciones cerca de 34% y su capitalizacion supera los 2 billones de dolares, el mayor IPO de la historia (CNBC, 19 nov) - impulsa el sentimiento alcista en tecnologia y respalda al NQ intradia.",
+  "geopolitica": "Persiste la tension geopolitica en el Estrecho de Ormuz: la Guardia Revolucionaria irani (IRGC) reporto nuevos incidentes de petroleros golpeados por minas navales en medio del conflicto no resuelto con EEUU, lo que sostiene una prima de riesgo que podria limitar el apetito por el NQ si escala.",
+  "petroleo": "El Brent cotiza cerca de USD 92 y el WTI cerca de USD 83 tras estabilizarse despues de una fuerte caida, presionados por un aumento de inventarios en EEUU (+3.4 millones de barriles) y expectativas de sobreoferta global para 2027, lo que de momento resta urgencia inflacionaria y es un viento favorable leve para el NQ.",
+  "catalizador": "La SEC abrio una investigacion civil a Nvidia por sus revelaciones tras la salida de Jensen Huang como CEO, con la accion cayendo mas de 10% desde su salida, un riesgo idiosincratico que pesa directamente sobre el NQ por el peso de Nvidia en el indice.",
   "sources": [
-    "CNBC 19 nov 2026",
-    "Reuters (via hdfcsky.com) 19 nov 2026"
+    "Bloomberg 19 nov 2026 (Latest Oil Market News and Analysis for Nov. 19)",
+    "Newsquawk / Qatar Tribune 16 nov 2026 (IRGC: tankers hit mines near Strait of Hormuz)",
+    "WSJ via Newsquawk 17 nov 2026 (SEC investigating Nvidia disclosures after Huang exit)"
   ],
-  "as_of": "2026-11-19T20:06:18Z"
+  "as_of": "2026-11-19T21:06:20Z"
 }
