@@ -1,13 +1,12 @@
 {
-  "geopolitica": "La renuncia repentina del CEO de Nvidia, Jensen Huang, tras una investigacion por su relacion con una presunta espia china, reactiva la tension tecnologica EE.UU.-China y añade incertidumbre sobre el liderazgo del mayor peso del NQ, mientras Iran ataca bases en Bahrein y Kuwait y Trump evalua nuevos ataques, elevando la aversion al riesgo.",
-  "petroleo": "El Brent sube cerca de 0.5% hasta unos 92-93 USD/barril y el WTI ronda los 83 USD, impulsados por nuevos ataques huties contra Riad y ataques a petroleros en el Estrecho de Ormuz, lo que eleva el riesgo de suministro y presiona el sentimiento de riesgo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen alrededor de 1.4-1.6% en la premarket, extendiendo la liquidacion tecnologica tras el debut en Nasdaq de Anthropic (que cede cerca de 6-7% tras su IPO) y senales hawkish de la Fed esta semana, con Nvidia y AMD retrocediendo aun mas tras la salida de Jensen Huang.",
+  "geopolitica": "Trump evalua una decision clave sobre Iran y persisten riesgos geopoliticos sin resolver segun estrategas de Wells Fargo, presionando a la baja los futuros del Nasdaq-100 en el premercado del viernes.",
+  "petroleo": "El Brent cae 1.94% a 90.18 USD y el WTI cae 1.95% a 81.59 USD por barril en operaciones tempranas del viernes, reflejando un apetito de riesgo debil que acompana la caida del NQ.",
+  "catalizador": "El fracaso del IPO de Anthropic para calmar las dudas sobre la IA se suma a una repreciacion hawkish de la Fed (probabilidad de subida de tasas en diciembre cerca de 87-91% segun Kalshi/Polymarket), manteniendo presionados los futuros tecnologicos.",
   "sources": [
-    "Fox Business/CBS News 19-nov-2026 (renuncia Jensen Huang)",
-    "CNBC 20-nov-2026 (Nasdaq futures y selloff Anthropic)",
-    "FXStreet 20-nov-2026 (Anthropic -6% premarket)",
-    "Investing.com/Reuters 19-nov-2026 (Brent cierre ~92 USD)",
-    "Gulf News/AP 19-nov-2026 (ataques Houthi Riad y Ormuz)"
+    "Yahoo Finance 05:40 ET",
+    "CNBC 05:40 ET",
+    "Benzinga 06:00 ET",
+    "Kalshi/Polymarket 16 Nov"
   ],
-  "as_of": "2026-11-20T11:41:09Z"
+  "as_of": "2026-11-20T12:06:14Z"
 }
