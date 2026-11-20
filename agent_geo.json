@@ -1,12 +1,11 @@
 {
-  "geopolitica": "La Oficina de Industria y Seguridad de EE.UU. amplio (semana del 16-19 nov) los controles de exportacion de chips de IA a centros de datos en terceros paises para cerrar el resquicio de acceso chino a semiconductores de Nvidia, mientras el mercado sigue digiriendo la salida de Jensen Huang como CEO (resignacion ratificada por la junta el 17 nov); tension tech/semis que presiona al NQ.",
-  "petroleo": "El Brent cotiza en torno a 92.83 USD/barril (-0.6%, -0.58 USD vs. cierre previo, segun Fortune, 20 nov ~07:15 ET), tras caer mas de 17 USD en el ultimo mes; demanda mas debil que alivia presion inflacionaria y actua como viento de cola moderado para el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.5% en el premarket del 20 de noviembre por un tono hawkish de la Fed de cara a diciembre y dudas de valoracion en IA, segun Investing.com (reportado en la sesion previa a la apertura).",
+  "geopolitica": "Trump regreso de Asia sin resolver las tensiones arancelarias, de Taiwan y tecnologicas tras la cumbre con Xi y Putin en Shenzhen, lo que mantiene la incertidumbre sobre exportaciones de semiconductores a China y pesa sobre el sentimiento tecnologico del NQ (CNBC, 20 nov, ~08:00 ET).",
+  "petroleo": "El WTI cotiza cerca de 83 USD/barril y el Brent cerca de 92 USD, con el crudo camino a su tercera caida semanal por expectativas de superavit de oferta segun la AIE, lo que reduce la prima de riesgo inflacionario y resulta levemente positivo para el NQ (Bloomberg, 19-20 nov).",
+  "catalizador": "Las acciones de Anthropic cayeron mas de 10% en premarket y los futuros del Nasdaq 100 llegaron a bajar 1.8% antes de la apertura, extendiendo la liquidacion del 'AI trade' que ya habia hecho caer el Nasdaq Composite 2.25% el jueves (CNBC/Bloomberg, 20 nov, ~08:26 ET).",
   "sources": [
-    "Fortune ~07:15 ET (20 nov)",
-    "Investing.com / journalarta (20 nov, premarket)",
-    "SCMP / TechRepublic (16-19 nov, regla BIS exportacion chips IA)",
-    "NPR / CNBC (17 nov, junta de Nvidia sobre Jensen Huang)"
+    "CNBC 08:00 ET",
+    "Bloomberg 08:26 ET",
+    "Bloomberg 07:25 ET"
   ],
-  "as_of": "2026-11-20T14:41:36Z"
+  "as_of": "2026-11-20T15:05:57Z"
 }
