@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los huties relanzaron ataques con misiles y drones contra Riad (zona de la torre de Aramco), elevando el riesgo geopolitico en Oriente Medio y sumando presion de aversion al riesgo sobre el NQ en la apertura.",
-  "petroleo": "El WTI retrocede a 82.74 USD/barril (-0.62%, CNBC 06:33 ET) tras un repunte inicial del Brent (+0.9% a 92.77 USD a las 04:04 GMT por el ataque huti a Riad), ya que la recuperacion de los flujos por el Estrecho de Ormuz a niveles cercanos a pre-conflicto y la perspectiva de superavit de la IEA limitan el impulso alcista para el NQ via energia.",
-  "catalizador": "Los futuros del Nasdaq caen cerca de 1.1%-1.2% esta mañana (Bloomberg, 05:28 ET) despues de que el IPO de Anthropic no logro calmar las dudas sobre la rentabilidad de la IA, extendiendo el 'tech wreck' que presiona al NQ.",
+  "geopolitica": "Trump sopesa su decision sobre Iran y los futuros del Dow y el S&P 500 caen esta mañana (Benzinga, 05:09 ET), lo que añade presion bajista al NQ por la incertidumbre geopolitica en Oriente Medio.",
+  "petroleo": "El Brent sube un 0.3% a unos 92.2 USD y el WTI un 0.2% a unos 82.6 USD tras nuevos ataques Houthi contra Riad, aunque ambos siguen camino a un cierre semanal a la baja, lo que limita el impacto inflacionario sobre el NQ (HDFC Sky/Reuters).",
+  "catalizador": "El dolar se mantiene cerca de un maximo de 19 meses y Nvidia cae cerca de 3.8% en premercado pese al IPO de Anthropic, que no logro calmar los temores sobre la burbuja de IA, presionando al NQ por su alto peso tecnologico (Yahoo Finance/Reuters).",
   "sources": [
-    "CNBC 20-nov (Houthi attack / oil)",
-    "CNBC 06:33 ET (WTI quote)",
-    "Bloomberg 05:28 ET (Nasdaq futures)"
+    "Benzinga 05:09 ET",
+    "HDFC Sky/Reuters (20 nov)",
+    "Yahoo Finance/Reuters (20 nov)"
   ],
-  "as_of": "2026-11-20T13:07:30Z"
+  "as_of": "2026-11-20T13:39:44Z"
 }
