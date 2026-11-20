@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Trump evalua una decision clave sobre Iran y persisten riesgos geopoliticos sin resolver segun estrategas de Wells Fargo, presionando a la baja los futuros del Nasdaq-100 en el premercado del viernes.",
-  "petroleo": "El Brent cae 1.94% a 90.18 USD y el WTI cae 1.95% a 81.59 USD por barril en operaciones tempranas del viernes, reflejando un apetito de riesgo debil que acompana la caida del NQ.",
-  "catalizador": "El fracaso del IPO de Anthropic para calmar las dudas sobre la IA se suma a una repreciacion hawkish de la Fed (probabilidad de subida de tasas en diciembre cerca de 87-91% segun Kalshi/Polymarket), manteniendo presionados los futuros tecnologicos.",
+  "geopolitica": "Los huties intensificaron sus ataques con misiles y drones contra Riad (incluyendo danos previos a una torre de Aramco), elevando el riesgo geopolitico en Oriente Medio y sumando presion de aversion al riesgo sobre el NQ en la apertura.",
+  "petroleo": "El Brent cae a 90.33 USD/barril (-1.8%) y el WTI a 81.59 USD/barril (-2%) tras un repunte inicial por los ataques huties a Riad, ya que la recuperacion de los flujos de exportacion por el Estrecho de Ormuz a niveles pre-conflicto domina y limita el impulso alcista para el NQ via energia.",
+  "catalizador": "El NQ extiende la caida de ayer (Dow -1100 pts, Nasdaq -2%) tras el debut fallido de Anthropic en bolsa (-9%) y un tono mas hawkish en las expectativas de recorte de tasas de la Fed, lo que sigue presionando la valoracion del trade de IA en la apertura.",
   "sources": [
-    "Yahoo Finance 05:40 ET",
-    "CNBC 05:40 ET",
-    "Benzinga 06:00 ET",
-    "Kalshi/Polymarket 16 Nov"
+    "Reuters (via Business Recorder/RTE) 05:32 ET",
+    "CNBC 20-nov",
+    "Yahoo Finance 20-nov",
+    "Invezz 20-nov"
   ],
-  "as_of": "2026-11-20T12:06:14Z"
+  "as_of": "2026-11-20T12:39:41Z"
 }
