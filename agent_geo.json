@@ -1,12 +1,7 @@
 {
-  "geopolitica": "Nvidia detuvo envios de chips H200 a China tras el endurecimiento de controles de exportacion de EE.UU. (18 nov) y persiste la tension militar EE.UU.-Iran en el Estrecho de Ormuz con un tercer portaaviones desplegado, presionando a la baja al sector semiconductores que pesa en el NQ.",
-  "petroleo": "WTI opera cerca de 83 USD/barril y Brent cerca de 92 USD (20 nov), en camino a su tercera caida semanal pese a la tension con Iran, tras datos de la AIE que muestran superavit global de oferta.",
-  "catalizador": "Los futuros del Nasdaq-100 caian cerca de 1.1% en el premarket (05:49 ET) tras el fracaso de la salida a bolsa de Anthropic en calmar las dudas sobre una burbuja de IA, golpeando a los semiconductores y lastrando al NQ.",
-  "sources": [
-    "Yahoo Finance 05:49 ET",
-    "Bloomberg 19 nov",
-    "The National 20 nov",
-    "Fox Business 18 nov"
-  ],
-  "as_of": "2026-11-20T17:07:01Z"
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "",
+  "sources": [],
+  "as_of": "2026-11-20T18:06:02Z"
 }
