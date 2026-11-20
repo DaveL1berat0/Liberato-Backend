@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Los huties intensificaron sus ataques con misiles y drones contra Riad (incluyendo danos previos a una torre de Aramco), elevando el riesgo geopolitico en Oriente Medio y sumando presion de aversion al riesgo sobre el NQ en la apertura.",
-  "petroleo": "El Brent cae a 90.33 USD/barril (-1.8%) y el WTI a 81.59 USD/barril (-2%) tras un repunte inicial por los ataques huties a Riad, ya que la recuperacion de los flujos de exportacion por el Estrecho de Ormuz a niveles pre-conflicto domina y limita el impulso alcista para el NQ via energia.",
-  "catalizador": "El NQ extiende la caida de ayer (Dow -1100 pts, Nasdaq -2%) tras el debut fallido de Anthropic en bolsa (-9%) y un tono mas hawkish en las expectativas de recorte de tasas de la Fed, lo que sigue presionando la valoracion del trade de IA en la apertura.",
+  "geopolitica": "Los huties relanzaron ataques con misiles y drones contra Riad (zona de la torre de Aramco), elevando el riesgo geopolitico en Oriente Medio y sumando presion de aversion al riesgo sobre el NQ en la apertura.",
+  "petroleo": "El WTI retrocede a 82.74 USD/barril (-0.62%, CNBC 06:33 ET) tras un repunte inicial del Brent (+0.9% a 92.77 USD a las 04:04 GMT por el ataque huti a Riad), ya que la recuperacion de los flujos por el Estrecho de Ormuz a niveles cercanos a pre-conflicto y la perspectiva de superavit de la IEA limitan el impulso alcista para el NQ via energia.",
+  "catalizador": "Los futuros del Nasdaq caen cerca de 1.1%-1.2% esta mañana (Bloomberg, 05:28 ET) despues de que el IPO de Anthropic no logro calmar las dudas sobre la rentabilidad de la IA, extendiendo el 'tech wreck' que presiona al NQ.",
   "sources": [
-    "Reuters (via Business Recorder/RTE) 05:32 ET",
-    "CNBC 20-nov",
-    "Yahoo Finance 20-nov",
-    "Invezz 20-nov"
+    "CNBC 20-nov (Houthi attack / oil)",
+    "CNBC 06:33 ET (WTI quote)",
+    "Bloomberg 05:28 ET (Nasdaq futures)"
   ],
-  "as_of": "2026-11-20T12:39:41Z"
+  "as_of": "2026-11-20T13:07:30Z"
 }
