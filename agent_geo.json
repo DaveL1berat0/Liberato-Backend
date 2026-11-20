@@ -1,7 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-20T18:06:02Z"
+  "geopolitica": "Los ataques iraníes a petroleros en el Estrecho de Ormuz continúan a un ritmo de ~1 por día en noviembre, pero el flujo de exportación ya volvió a niveles previos a la guerra, moderando la prima de riesgo geopolítico sin escalada inmediata para el NQ.",
+  "petroleo": "El Brent cae 1.8% a 90.33 USD/barril y el WTI ronda 81-83 USD, camino a su tercera caída semanal consecutiva por expectativas de superávit de oferta en 2027 y normalización de envíos por Ormuz, lo que alivia presión inflacionaria y es marginalmente positivo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 caen ~1.1% en premarket arrastrados por el nuevo derrumbe de Anthropic en su segundo día en bolsa, que reaviva las dudas sobre la valoración de la burbuja de IA, en medio de un reposicionamiento hawkish de la Fed tras el giro de Waller (plantea un alza de 50pb en diciembre) luego de la inflación de octubre más caliente de lo esperado.",
+  "sources": [
+    "CNBC 20/11 05:32 ET (Brent/WTI, Hormuz)",
+    "Bloomberg 20/11 05:28 ET (futuros Nasdaq 100 premarket, Anthropic)",
+    "CNBC 18/11 (Waller: alza de 50pb en diciembre)"
+  ],
+  "as_of": "2026-11-20T19:07:33Z"
 }
