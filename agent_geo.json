@@ -1,12 +1,11 @@
 {
-  "geopolitica": "Trump regreso de la cumbre APEC en China sin acuerdos concretos con Xi y Putin sobre aranceles, tierras raras ni controles tecnologicos a semiconductores, dejando sin resolver el riesgo Taiwan/tech que presiona al NQ por su peso en chips (CNBC, 20 nov).",
-  "petroleo": "Brent cae a 90.33 USD (-1.79%) y WTI a 81.59 USD (-1.95%) hacia las 05:32 ET, por recuperacion de exportaciones de Medio Oriente que compensa el temor a disrupcion en Hormuz, con el crudo camino a su tercera caida semanal; el abaratamiento de costos es marginal frente al temor a enfriamiento de demanda ligado al unwind de IA que pesa sobre el sentimiento de riesgo del NQ (CNBC, 05:32 ET).",
-  "catalizador": "Los mercados de prediccion (Polymarket/Kalshi, 18 nov) descartan casi por completo un recorte de la Fed en 2026 y ven mas probable una subida en diciembre, mientras el rendimiento del Treasury a 10 anos subio a 4.992% hacia las 05:59 ET, lo que junto al desplome premarket de chips (AVGO, AMD, MU, NVDA) tras el selloff tecnologico del jueves presiona a la baja a los futuros del NQ antes de la apertura (StockInvest.us, 05:59 ET).",
+  "geopolitica": "Irán golpeó con minas a dos petroleros en el estrecho de Ormuz el 19-nov y advirtió que no reabrirá la ruta hasta que EEUU acepte sus condiciones, tras la llegada de un tercer portaaviones estadounidense al Golfo, lo que mantiene la prima de riesgo geopolítico sobre el sentimiento de riesgo del NQ.",
+  "petroleo": "El Brent cae 1,79% a 90,33 USD y el WTI cae 1,95% a 81,59 USD (CNBC, 10:32 GMT / 05:32 ET), camino a su tercera baja semanal consecutiva por expectativas de superávit de oferta, lo que reduce la presión inflacionaria pero no despeja el riesgo de Ormuz para el NQ.",
+  "catalizador": "La presidenta de la Fed de Filadelfia, Anna Paulson, se sumó a otros funcionarios en señalar riesgos de inflación que justificarían otra subida de tasas en diciembre (99,3% de probabilidad según CME FedWatch), lo que junto a la decepción por el IPO de Anthropic hundió los futuros del Nasdaq 100 un 1,8% hacia las 08:26 ET (Bloomberg).",
   "sources": [
-    "CNBC 20 nov (APEC Trump-Xi-Taiwan)",
-    "CNBC 05:32 ET (Brent/WTI Hormuz)",
-    "StockInvest.us 05:59 ET (futuros NQ y Treasury 10y)",
-    "Polymarket/Kalshi 18 nov (odds Fed)"
+    "CNBC 2026-11-19 (ataque con minas a petroleros en Ormuz)",
+    "CNBC 2026-11-20 05:32 ET (precios Brent/WTI)",
+    "Bloomberg 2026-11-20 08:26 ET (futuros Nasdaq 100 y comentarios Fed)"
   ],
-  "as_of": "2026-11-20T15:38:51Z"
+  "as_of": "2026-11-20T16:05:33Z"
 }
