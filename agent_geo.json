@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Nvidia detuvo envios de chips de IA a China y EE.UU. endurecio reglas para bloquear el acceso remoto chino a chips avanzados via centros de datos extranjeros, con TSMC suspendiendo pedidos chinos segun Reuters, lo que presiona a los semiconductores y pesa sobre el NQ por su alto peso tecnologico.",
-  "petroleo": "El Brent sube cerca de 0.3% a unos 92.2 USD/barril tras ataques Houthi cerca de Riyadh que reavivan el riesgo de suministro en el Mar Rojo, aunque ambos crudos siguen en camino a una tercera caida semanal consecutiva, un contexto que puede sumar cautela de riesgo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.15% (360 puntos) en premercado tras el desplome del jueves (Nasdaq -2.25%), cuando el debut en bolsa de Anthropic no logro revivir el entusiasmo por la IA, extendiendo la presion vendedora sobre el NQ en la apertura.",
+  "geopolitica": "La Oficina de Industria y Seguridad de EE.UU. amplio (semana del 16-19 nov) los controles de exportacion de chips de IA a centros de datos en terceros paises para cerrar el resquicio de acceso chino a semiconductores de Nvidia, mientras el mercado sigue digiriendo la salida de Jensen Huang como CEO (resignacion ratificada por la junta el 17 nov); tension tech/semis que presiona al NQ.",
+  "petroleo": "El Brent cotiza en torno a 92.83 USD/barril (-0.6%, -0.58 USD vs. cierre previo, segun Fortune, 20 nov ~07:15 ET), tras caer mas de 17 USD en el ultimo mes; demanda mas debil que alivia presion inflacionaria y actua como viento de cola moderado para el NQ.",
+  "catalizador": "Los futuros del Nasdaq 100 caen cerca de 1.5% en el premarket del 20 de noviembre por un tono hawkish de la Fed de cara a diciembre y dudas de valoracion en IA, segun Investing.com (reportado en la sesion previa a la apertura).",
   "sources": [
-    "Reuters 20 nov (Shanghai, chips/TSMC)",
-    "HDFC Sky / Livemint 20 nov (Brent/Houthi)",
-    "StockTitan 08:01 ET (futuros Nasdaq)",
-    "CNBC 18-19 nov (selloff Anthropic IPO, Nasdaq -2.25%)"
+    "Fortune ~07:15 ET (20 nov)",
+    "Investing.com / journalarta (20 nov, premarket)",
+    "SCMP / TechRepublic (16-19 nov, regla BIS exportacion chips IA)",
+    "NPR / CNBC (17 nov, junta de Nvidia sobre Jensen Huang)"
   ],
-  "as_of": "2026-11-20T14:05:43Z"
+  "as_of": "2026-11-20T14:41:36Z"
 }
