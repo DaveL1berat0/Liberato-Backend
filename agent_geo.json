@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Irán mantiene tensión latente en el Estrecho de Hormuz tras nuevos incidentes de minas navales en petroleros reportados por su Guardia Revolucionaria (8-nov), sin escalar a ataque directo contra EE.UU.; riesgo geopolítico de fondo pero sin catalizador nuevo confirmado en las últimas horas para el NQ.",
-  "petroleo": "WTI cotiza cerca de 82-83 USD/barril (c. -0.3%) y Brent en torno a 92 USD, presionados a la baja por la recuperación del tráfico de petroleros en Hormuz hacia niveles previos a la guerra, lo que reduce la prima de riesgo de oferta y resulta levemente positivo para el NQ al aliviar temores inflacionarios.",
-  "catalizador": "Los futuros de tasas (CME FedWatch) asignan una probabilidad superior al 90% a una subida de 25 pb en la reunión de la Fed del 10 de diciembre tras un IPC más caliente de lo esperado, un sesgo hawkish que presiona al NQ por mayor costo de capital esperado.",
+  "geopolitica": "Los futuros del Nasdaq-100 caen ~1,6% antes de la apertura tras un selloff de semiconductores en Asia: Taiwan Semiconductor -4,2% y AMD -7%, reflejando tension en el sector tech/semis que presiona al NQ intradia (24/7 Wall St, pre-market de hoy).",
+  "petroleo": "El Brent ronda 91,6 USD/barril y el WTI 82,7 USD (-~2%), presionados por temores de una Fed mas restrictiva y pronosticos de superavit de oferta de la AIE para el 4T; un dolar mas fuerte añade presion bajista, lo que limita el soporte a los indices vinculados a energia (OilPriceAPI 12:26 ET; Reuters via BOE Report 18-nov).",
+  "catalizador": "Las minutas de la Fed del 27-28 de octubre, divulgadas el 18 de noviembre, mostraron que casi todos los funcionarios esperan nuevas subas de tasas (una en diciembre y otra en marzo de 2027) en lugar de recortes, lo que hundio los futuros del Nasdaq-100 cerca de -1,1% a las 05:49 ET de hoy y sostiene el tono risk-off (CNBC; Reuters; Federal Reserve).",
   "sources": [
-    "AFP/Al Jazeera 08-nov (Hormuz, incidentes con minas navales)",
-    "CNBC quote @CL.1, 20-nov premarket (WTI)",
-    "CME FedWatch via Seoul Economic Daily, 19-nov (odds Fed diciembre)"
+    "CNBC 05:49 ET",
+    "24/7 Wall St pre-market (hoy)",
+    "OilPriceAPI 12:26 ET",
+    "Reuters 18-nov (via BOE Report)",
+    "Federal Reserve 18-nov"
   ],
-  "as_of": "2026-11-20T20:07:09Z"
+  "as_of": "2026-11-20T21:06:41Z"
 }
