@@ -1,11 +1,12 @@
 {
-  "geopolitica": "Trump regreso de Asia sin resolver las tensiones arancelarias, de Taiwan y tecnologicas tras la cumbre con Xi y Putin en Shenzhen, lo que mantiene la incertidumbre sobre exportaciones de semiconductores a China y pesa sobre el sentimiento tecnologico del NQ (CNBC, 20 nov, ~08:00 ET).",
-  "petroleo": "El WTI cotiza cerca de 83 USD/barril y el Brent cerca de 92 USD, con el crudo camino a su tercera caida semanal por expectativas de superavit de oferta segun la AIE, lo que reduce la prima de riesgo inflacionario y resulta levemente positivo para el NQ (Bloomberg, 19-20 nov).",
-  "catalizador": "Las acciones de Anthropic cayeron mas de 10% en premarket y los futuros del Nasdaq 100 llegaron a bajar 1.8% antes de la apertura, extendiendo la liquidacion del 'AI trade' que ya habia hecho caer el Nasdaq Composite 2.25% el jueves (CNBC/Bloomberg, 20 nov, ~08:26 ET).",
+  "geopolitica": "Trump regreso de la cumbre APEC en China sin acuerdos concretos con Xi y Putin sobre aranceles, tierras raras ni controles tecnologicos a semiconductores, dejando sin resolver el riesgo Taiwan/tech que presiona al NQ por su peso en chips (CNBC, 20 nov).",
+  "petroleo": "Brent cae a 90.33 USD (-1.79%) y WTI a 81.59 USD (-1.95%) hacia las 05:32 ET, por recuperacion de exportaciones de Medio Oriente que compensa el temor a disrupcion en Hormuz, con el crudo camino a su tercera caida semanal; el abaratamiento de costos es marginal frente al temor a enfriamiento de demanda ligado al unwind de IA que pesa sobre el sentimiento de riesgo del NQ (CNBC, 05:32 ET).",
+  "catalizador": "Los mercados de prediccion (Polymarket/Kalshi, 18 nov) descartan casi por completo un recorte de la Fed en 2026 y ven mas probable una subida en diciembre, mientras el rendimiento del Treasury a 10 anos subio a 4.992% hacia las 05:59 ET, lo que junto al desplome premarket de chips (AVGO, AMD, MU, NVDA) tras el selloff tecnologico del jueves presiona a la baja a los futuros del NQ antes de la apertura (StockInvest.us, 05:59 ET).",
   "sources": [
-    "CNBC 08:00 ET",
-    "Bloomberg 08:26 ET",
-    "Bloomberg 07:25 ET"
+    "CNBC 20 nov (APEC Trump-Xi-Taiwan)",
+    "CNBC 05:32 ET (Brent/WTI Hormuz)",
+    "StockInvest.us 05:59 ET (futuros NQ y Treasury 10y)",
+    "Polymarket/Kalshi 18 nov (odds Fed)"
   ],
-  "as_of": "2026-11-20T15:05:57Z"
+  "as_of": "2026-11-20T15:38:51Z"
 }
