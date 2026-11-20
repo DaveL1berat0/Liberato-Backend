@@ -1,12 +1,13 @@
 {
-  "geopolitica": "La renuncia del CEO de Nvidia, Jensen Huang, en medio de una investigacion del Congreso de EE.UU. por presuntos vinculos con espionaje chino, intensifica la tension tecnologica EE.UU.-China y presiona a los semiconductores, pilar de ponderacion del NQ.",
-  "petroleo": "El Brent sube cerca de 0.55% hasta unos 92.6 USD y el WTI cotiza alrededor de 83.5 USD, impulsados por nuevos ataques huties contra Riad y ataques a petroleros en el Estrecho de Ormuz, lo que eleva el riesgo energetico y presiona el sentimiento de riesgo del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 caen cerca de 1.4% en la premarket, extendiendo la liquidacion tecnologica tras el debut en Nasdaq de Anthropic (ANT), que no logro revertir el sentimiento negativo, con el Nasdaq Composite mas de 10% por debajo de su maximo de hace seis semanas.",
+  "geopolitica": "La renuncia repentina del CEO de Nvidia, Jensen Huang, tras una investigacion por su relacion con una presunta espia china, reactiva la tension tecnologica EE.UU.-China y añade incertidumbre sobre el liderazgo del mayor peso del NQ, mientras Iran ataca bases en Bahrein y Kuwait y Trump evalua nuevos ataques, elevando la aversion al riesgo.",
+  "petroleo": "El Brent sube cerca de 0.5% hasta unos 92-93 USD/barril y el WTI ronda los 83 USD, impulsados por nuevos ataques huties contra Riad y ataques a petroleros en el Estrecho de Ormuz, lo que eleva el riesgo de suministro y presiona el sentimiento de riesgo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 caen alrededor de 1.4-1.6% en la premarket, extendiendo la liquidacion tecnologica tras el debut en Nasdaq de Anthropic (que cede cerca de 6-7% tras su IPO) y senales hawkish de la Fed esta semana, con Nvidia y AMD retrocediendo aun mas tras la salida de Jensen Huang.",
   "sources": [
-    "Stocktwits/AAWSAT (AFP) 19-nov-2026",
-    "Oilprice.com / TradingNews.com 20-nov-2026",
-    "CNBC 19-nov-2026",
-    "FXLeaders 20-nov-2026"
+    "Fox Business/CBS News 19-nov-2026 (renuncia Jensen Huang)",
+    "CNBC 20-nov-2026 (Nasdaq futures y selloff Anthropic)",
+    "FXStreet 20-nov-2026 (Anthropic -6% premarket)",
+    "Investing.com/Reuters 19-nov-2026 (Brent cierre ~92 USD)",
+    "Gulf News/AP 19-nov-2026 (ataques Houthi Riad y Ormuz)"
   ],
-  "as_of": "2026-11-20T11:06:41Z"
+  "as_of": "2026-11-20T11:41:09Z"
 }
