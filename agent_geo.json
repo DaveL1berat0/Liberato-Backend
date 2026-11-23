@@ -1,12 +1,9 @@
 {
-  "geopolitica": "Nvidia reincorporo a Jensen Huang como CEO tras presion de Trump, quien dijo que EE.UU. determino que su regreso no implica riesgo de seguridad nacional pese a las acusaciones sobre vinculos con una presunta espia china (Pekin niega el caso y acusa a Washington de fabricarlo para justificar un bloqueo tecnologico); reduce la incertidumbre regulatoria sobre el mayor peso tecnologico del NQ.",
-  "petroleo": "Brent cotiza cerca de 89.4 USD/barril, con baja intradia de aproximadamente 2% por expectativas de superavit de oferta en el 4T (AIE) que compensan el riesgo persistente de ataques a petroleros en el estrecho de Ormuz; alivio moderado en costos energeticos para las megacaps tech del NQ.",
-  "catalizador": "La junta de Nvidia reincorporo a Huang como presidente y CEO con efecto inmediato tras su salida por la investigacion sobre la presunta espia china; las acciones saltaron mas de 30% en la apertura, impulsando al Nasdaq 100 cerca de +5.8% tras el desplome del viernes (VIX cerca de 40).",
+  "geopolitica": "",
+  "petroleo": "El petroleo cae con fuerza (WTI -3.5% a USD 80.50; Brent -3.6% a USD 89.23, Reuters via Oilprice.com 10:29 ET) porque el retorno de oferta pesa mas que los ataques en el Golfo, lo que relaja presion inflacionaria y resulta levemente positivo para el NQ intradia.",
+  "catalizador": "",
   "sources": [
-    "Fox Business 09:30 ET",
-    "CBS News 09:30 ET",
-    "CNN (live updates) 09:30 ET",
-    "OilPriceAPI 10:26 ET"
+    "Oilprice.com (via Reuters) 10:29 ET"
   ],
-  "as_of": "2026-11-23T17:07:02Z"
+  "as_of": "2026-11-23T18:06:25Z"
 }
