@@ -1,12 +1,11 @@
 {
-  "geopolitica": "EEUU endurecio el 16-nov el control de exportacion de chips de IA a China (cierre de resquicio de acceso remoto) y Pekin amenazo con contramedidas, presionando a semis como TSMC y Samsung, con efecto bajista de arrastre sobre el NQ por su peso tecnologico.",
-  "petroleo": "El WTI cedio a unos 82.70 USD y el Brent a unos 89.30 USD (-3%) el 22-nov tras comentarios del secretario del Tesoro Bessent cuestionando el sesgo hawkish de la Fed, movimiento que suele correlacionar con apetito de riesgo para el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 repuntan con fuerza (+3% aprox.) en la premarket del lunes 23-nov tras la peor semana del Nasdaq desde marzo 2020 (-10%), al calmarse el temor a burbuja de IA en torno a Nvidia y a la espera de senales mas claras de la Fed.",
+  "geopolitica": "El movimiento huti afirmo haber atacado el domingo una refineria petrolera saudi y Trump advirtio que podria ordenar nuevos ataques contra Iran si fracasan las negociaciones, manteniendo una prima de riesgo geopolitico que limita el apetito por riesgo en la apertura del NQ.",
+  "petroleo": "El Brent cae a unos 91.97 USD/barril (-0.65%) y el WTI a 82.92 USD (-0.59%) en la madrugada del lunes, presionados por expectativas de superavit de oferta al normalizarse el flujo por Ormuz pese al riesgo belico con Iran; un crudo mas barato suele ser constructivo para el NQ al aliviar la presion inflacionaria.",
+  "catalizador": "Los futuros del Nasdaq-100 repuntan con fuerza (+2.80% a 25,830 puntos hacia las 19:01 ET del domingo) tras la peor semana del indice desde que entro en correccion, al estabilizarse el temor a una burbuja de IA en torno a Nvidia y Anthropic.",
   "sources": [
-    "StockAnalysis/SCMP 16-nov-2026 (controles de exportacion de chips a China)",
-    "FX Leaders 22-nov-2026 (petroleo cae por comentarios de Bessent)",
-    "Invezz 23-nov-2026 premarket (futuros Nasdaq +3%)",
-    "Seeking Alpha 23-nov-2026 premarket (rebote tras selloff de IA)"
+    "CNBC 23-nov-2026 (Brent -0.65% a 91.97 USD, WTI -0.59% a 82.92 USD; ataque huti a refineria saudi, amenaza de Trump sobre Iran)",
+    "CNBC 19:01 ET 22-nov-2026 (futuros Nasdaq-100 +2.80% a 25,830; S&P 500 futuros +1.99%)",
+    "CNBC/ABC News 20-nov-2026 a 22-nov-2026 (Nasdaq Composite -10% semanal, entrada en correccion)"
   ],
-  "as_of": "2026-11-23T12:06:20Z"
+  "as_of": "2026-11-23T12:40:24Z"
 }
