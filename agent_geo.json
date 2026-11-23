@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Los futuros del Nasdaq-100 caen ~1,6% antes de la apertura tras un selloff de semiconductores en Asia: Taiwan Semiconductor -4,2% y AMD -7%, reflejando tension en el sector tech/semis que presiona al NQ intradia (24/7 Wall St, pre-market de hoy).",
-  "petroleo": "El Brent ronda 91,6 USD/barril y el WTI 82,7 USD (-~2%), presionados por temores de una Fed mas restrictiva y pronosticos de superavit de oferta de la AIE para el 4T; un dolar mas fuerte añade presion bajista, lo que limita el soporte a los indices vinculados a energia (OilPriceAPI 12:26 ET; Reuters via BOE Report 18-nov).",
-  "catalizador": "Las minutas de la Fed del 27-28 de octubre, divulgadas el 18 de noviembre, mostraron que casi todos los funcionarios esperan nuevas subas de tasas (una en diciembre y otra en marzo de 2027) en lugar de recortes, lo que hundio los futuros del Nasdaq-100 cerca de -1,1% a las 05:49 ET de hoy y sostiene el tono risk-off (CNBC; Reuters; Federal Reserve).",
+  "geopolitica": "EEUU endurecio el 16-nov el control de exportacion de chips de IA a China (cierre de resquicio de acceso remoto) y Pekin amenazo con contramedidas, presionando a semis como TSMC y Samsung, con efecto bajista de arrastre sobre el NQ por su peso tecnologico.",
+  "petroleo": "El WTI cedio a unos 82.70 USD y el Brent a unos 89.30 USD (-3%) el 22-nov tras comentarios del secretario del Tesoro Bessent cuestionando el sesgo hawkish de la Fed, movimiento que suele correlacionar con apetito de riesgo para el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 repuntan con fuerza (+3% aprox.) en la premarket del lunes 23-nov tras la peor semana del Nasdaq desde marzo 2020 (-10%), al calmarse el temor a burbuja de IA en torno a Nvidia y a la espera de senales mas claras de la Fed.",
   "sources": [
-    "CNBC 05:49 ET",
-    "24/7 Wall St pre-market (hoy)",
-    "OilPriceAPI 12:26 ET",
-    "Reuters 18-nov (via BOE Report)",
-    "Federal Reserve 18-nov"
+    "StockAnalysis/SCMP 16-nov-2026 (controles de exportacion de chips a China)",
+    "FX Leaders 22-nov-2026 (petroleo cae por comentarios de Bessent)",
+    "Invezz 23-nov-2026 premarket (futuros Nasdaq +3%)",
+    "Seeking Alpha 23-nov-2026 premarket (rebote tras selloff de IA)"
   ],
-  "as_of": "2026-11-20T21:06:41Z"
+  "as_of": "2026-11-23T12:06:20Z"
 }
