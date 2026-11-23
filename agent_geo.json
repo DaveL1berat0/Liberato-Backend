@@ -1,13 +1,7 @@
 {
-  "geopolitica": "Nvidia encabeza un fuerte rebote de las acciones de IA tras la crisis de liderazgo (salida de Jensen Huang el 12-nov, Colette Kress como interina) y en medio de los nuevos controles de EE.UU. a la exportacion de chips de IA a China vigentes desde el 16-nov, lo que mantiene elevada la volatilidad en semiconductores y favorece hoy al NQ tras la correccion de la semana pasada (Reuters, MarketScreener).",
-  "petroleo": "El petroleo opera a la baja -Brent cerca de 90,51 USD y WTI en 81,84 USD (-1,5%) hacia las 09:36 ET- presionado por expectativas de superavit de oferta y dudas sobre el ritmo de recortes de tasas de la Fed, lo que resta soporte a los activos de riesgo como el NQ (OilPriceAPI, FX Leaders).",
+  "geopolitica": "",
+  "petroleo": "",
   "catalizador": "",
-  "sources": [
-    "Reuters ~08:30 ET - futuros del Nasdaq 100 suben ~3.3% tras el selloff de IA",
-    "MarketScreener 23-11-2026 - Wall St se prepara para rebotar con las acciones de IA al alza",
-    "OilPriceAPI 09:36 ET - Brent 90.51 USD / WTI 81.84 USD",
-    "FX Leaders 22-11-2026 - caida del crudo por perspectiva hawkish de la Fed (comentarios de Bessent)",
-    "Business Standard 21-11-2026 - Bessent: no se necesitan mas restricciones a chips de Nvidia hacia China"
-  ],
-  "as_of": "2026-11-23T20:07:26Z"
+  "sources": [],
+  "as_of": "2026-11-23T21:05:44Z"
 }
