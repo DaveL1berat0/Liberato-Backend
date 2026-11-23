@@ -1,9 +1,13 @@
 {
-  "geopolitica": "",
-  "petroleo": "El petroleo cae con fuerza (WTI -3.5% a USD 80.50; Brent -3.6% a USD 89.23, Reuters via Oilprice.com 10:29 ET) porque el retorno de oferta pesa mas que los ataques en el Golfo, lo que relaja presion inflacionaria y resulta levemente positivo para el NQ intradia.",
-  "catalizador": "",
+  "geopolitica": "Los hutíes afirmaron el domingo haber atacado la refinería saudí de Rabigh y una instalación de radar cerca de Riad, y la marina iraní reportó dos petroleros dañados por minas cerca del estrecho de Ormuz (sin confirmación saudí), lo que mantiene una prima de riesgo geopolítico en el crudo pero no frena el rally tecnológico que domina al NQ hoy.",
+  "petroleo": "El Brent cae cerca de 2-4% y perfora los 90 USD/barril (WTI ~82 USD) tras el giro de la AIE hacia un superávit de oferta en el 4T, a pesar de los ataques hutíes del fin de semana; el retroceso del crudo alivia presión inflacionaria y es marginalmente positivo para el NQ intradía.",
+  "catalizador": "Nvidia reincorporó a Jensen Huang como CEO con efecto inmediato (8-K presentado ante la SEC el 23-nov-2026, tras indicaciones del gobierno de EE.UU. de que no hay riesgo de seguridad nacional), lo que disparó los futuros del Nasdaq-100 más de 6% en premarket y activó el circuit breaker de CME, siendo el catalizador dominante que impulsa al NQ tras la corrección de la semana pasada.",
   "sources": [
-    "Oilprice.com (via Reuters) 10:29 ET"
+    "SEC EDGAR 8-K Nvidia 23-Nov-2026",
+    "Reuters via Investing.com 23-Nov-2026",
+    "Gulf News/Reuters 22-Nov-2026",
+    "Trading Economics 23-Nov-2026",
+    "Invezz 23-Nov-2026"
   ],
-  "as_of": "2026-11-23T18:06:25Z"
+  "as_of": "2026-11-23T19:07:33Z"
 }
