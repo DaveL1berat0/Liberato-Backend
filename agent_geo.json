@@ -1,7 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-23T21:05:44Z"
+  "geopolitica": "Israel y EEUU evaluan una nueva ofensiva conjunta contra Iran mientras persiste el bloqueo naval estadounidense y los huthies reivindicaron un ataque a la refineria saudi de Rabigh, lo que mantiene elevado el riesgo geopolitico y presiona el apetito por riesgo en el NQ.",
+  "petroleo": "El Brent cayo cerca de 2.8% hasta 89.99 USD/barril (WTI en 81.06 USD) el lunes hacia las 13:25 ET por el aumento de flujos de crudo de Oriente Medio y la reapertura del oleoducto libio Sharara, aliviando el temor de escasez pese a la guerra Iran-Israel, un alivio que resta presion inflacionaria para el NQ.",
+  "catalizador": "Nvidia retrocede cerca de 1% en premarket este martes tras el salto de 31% del lunes por el regreso de Jensen Huang como CEO, mientras el mercado digiere una investigacion de la SEC sobre su contabilidad, siendo el principal motor intradia de los futuros del Nasdaq-100 hoy.",
+  "sources": [
+    "CNBC 13:25 ET (23-nov)",
+    "CBS News (23-nov)",
+    "investinglive / Schwab (24-nov, apertura europea)"
+  ],
+  "as_of": "2026-11-24T11:06:21Z"
 }
