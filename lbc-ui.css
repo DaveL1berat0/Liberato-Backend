@@ -1,0 +1,359 @@
+/* ══════════════════════════════════════════════════════════════════════
+   LIBERATO COMMUNITY · SISTEMA DE DISEÑO COMPARTIDO  (lbc-ui.css · v101)
+   Un solo lenguaje visual para todas las páginas. Todo va con prefijo
+   `lbc-` (clases) y `--lbc-` (tokens) para no chocar con el CSS propio
+   de cada página. No carga fuentes ni depende de terceros.
+   Tema: oscuro por defecto; claro con <html data-theme="light">.
+   Guía de uso: ~/Projects/liberato-web-capturas/SISTEMA_UI.md
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ─── 1. TOKENS ─────────────────────────────────────────────────────── */
+:root{
+  /* Paleta (la de siempre: no es una paleta nueva) */
+  --lbc-bg:#06070D;            /* lienzo */
+  --lbc-bg-2:#0B0E17;          /* superficie */
+  --lbc-bg-3:#10141F;          /* superficie elevada */
+  --lbc-gold:#CCA94F;          /* oro de marca */
+  --lbc-gold-2:#E7CC74;        /* oro claro (texto y brillos) */
+  --lbc-gold-3:#B8933A;        /* oro profundo (pulsado) */
+  --lbc-gold-dim:rgba(204,169,79,0.12);
+  --lbc-gold-line:rgba(204,169,79,0.28);
+  --lbc-on-gold:#0B0B12;       /* texto sobre oro */
+  --lbc-up:#2EE8A4;            /* alcista */
+  --lbc-down:#B197FC;          /* bajista: morado, nunca rojo */
+  --lbc-cyan:#4FD6E0;          /* informativo */
+  --lbc-up-dim:rgba(46,232,164,0.12);
+  --lbc-down-dim:rgba(177,151,252,0.12);
+  --lbc-cyan-dim:rgba(79,214,224,0.12);
+  --lbc-error:var(--lbc-down); /* errores de formulario: dentro de la paleta */
+  --lbc-error-dim:var(--lbc-down-dim);
+  --lbc-ink:#F3F0E7;                    /* texto principal */
+  --lbc-ink-2:rgba(243,240,231,0.74);   /* texto secundario */
+  --lbc-ink-3:rgba(243,240,231,0.54);   /* texto de apoyo (≥ 4,5:1 sobre el lienzo) */
+  --lbc-ink-4:rgba(243,240,231,0.36);   /* marcadores, deshabilitado */
+  --lbc-line:rgba(255,255,255,0.08);    /* bordes finos */
+  --lbc-line-2:rgba(255,255,255,0.14);  /* bordes con más presencia */
+  --lbc-fill:rgba(255,255,255,0.04);    /* relleno de controles */
+  --lbc-fill-2:rgba(255,255,255,0.07);  /* relleno al pasar por encima */
+  --lbc-glass:rgba(9,11,18,0.72);       /* barras con desenfoque */
+  --lbc-scrim:rgba(3,4,8,0.62);         /* velo detrás de modales */
+
+  /* Tipografía: cada página usa las fuentes que ya carga (no se cargan aquí) */
+  --lbc-font-sans:'Space Grotesk','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --lbc-font-mono:'JetBrains Mono','DM Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --lbc-font-serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --lbc-fs-2xs:10px; --lbc-fs-xs:11px; --lbc-fs-sm:13px; --lbc-fs-md:15px;
+  --lbc-fs-lg:17px;  --lbc-fs-xl:21px; --lbc-fs-2xl:28px; --lbc-fs-3xl:36px;
+  --lbc-lh-tight:1.15; --lbc-lh-snug:1.35; --lbc-lh-body:1.55;
+  --lbc-track-caps:0.12em;     /* interletrado de etiquetas en mayúsculas */
+
+  /* Espaciado (escala única de 4 px) */
+  --lbc-s-1:4px;  --lbc-s-2:8px;  --lbc-s-3:12px; --lbc-s-4:16px; --lbc-s-5:20px;
+  --lbc-s-6:24px; --lbc-s-8:32px; --lbc-s-10:40px; --lbc-s-12:48px; --lbc-s-16:64px;
+
+  /* Radios */
+  --lbc-r-xs:6px; --lbc-r-sm:8px; --lbc-r-md:12px; --lbc-r-lg:16px; --lbc-r-xl:22px; --lbc-r-full:999px;
+
+  /* Alturas de control (táctil ≥ 44 px) */
+  --lbc-h-sm:36px; --lbc-h-md:44px; --lbc-h-lg:52px;
+
+  /* Profundidad */
+  --lbc-sh-1:0 1px 2px rgba(0,0,0,0.35);
+  --lbc-sh-2:0 1px 0 rgba(255,255,255,0.04) inset, 0 10px 28px -14px rgba(0,0,0,0.7);
+  --lbc-sh-3:0 1px 0 rgba(255,255,255,0.05) inset, 0 28px 64px -24px rgba(0,0,0,0.8);
+  --lbc-sh-gold:0 1px 0 rgba(255,255,255,0.28) inset, 0 10px 26px -12px rgba(204,169,79,0.55);
+  --lbc-sh-gold-hi:0 1px 0 rgba(255,255,255,0.34) inset, 0 16px 34px -12px rgba(204,169,79,0.62);
+  --lbc-ring:0 0 0 3px rgba(204,169,79,0.34);            /* foco de teclado */
+  --lbc-ring-error:0 0 0 3px rgba(177,151,252,0.30);
+
+  /* Movimiento */
+  --lbc-ease:cubic-bezier(.2,.8,.2,1);          /* por defecto: sale rápido, frena suave */
+  --lbc-ease-in-out:cubic-bezier(.45,0,.2,1);
+  --lbc-ease-spring:cubic-bezier(.3,1.35,.5,1); /* un punto de rebote, solo en detalles */
+  --lbc-t-1:120ms;  /* pulsación */
+  --lbc-t-2:180ms;  /* hover, foco, color */
+  --lbc-t-3:280ms;  /* aparecer paneles pequeños */
+  --lbc-t-4:420ms;  /* modales y hojas */
+
+  /* Capas */
+  --lbc-z-nav:900; --lbc-z-sticky:950; --lbc-z-modal:10000; --lbc-z-toast:10100;
+
+  /* Márgenes seguros de iOS */
+  --lbc-safe-t:env(safe-area-inset-top,0px);
+  --lbc-safe-b:env(safe-area-inset-bottom,0px);
+  --lbc-gutter:clamp(16px,4vw,32px);            /* margen lateral de página */
+
+  color-scheme:dark;
+}
+[data-theme="light"]{
+  --lbc-bg:#eae6dc; --lbc-bg-2:#ffffff; --lbc-bg-3:#f6f3ed;
+  --lbc-gold:#9c7c2c; --lbc-gold-2:#7e6323; --lbc-gold-3:#6c541c;
+  --lbc-gold-dim:rgba(168,132,47,0.12); --lbc-gold-line:rgba(168,132,47,0.34);
+  --lbc-on-gold:#ffffff;
+  --lbc-up:#15913f; --lbc-down:#6d4bd8; --lbc-cyan:#0e7490;
+  --lbc-up-dim:rgba(21,145,63,0.10); --lbc-down-dim:rgba(109,75,216,0.10); --lbc-cyan-dim:rgba(14,116,144,0.10);
+  --lbc-ink:#211d16; --lbc-ink-2:rgba(33,29,22,0.74); --lbc-ink-3:rgba(33,29,22,0.58); --lbc-ink-4:rgba(33,29,22,0.38);
+  --lbc-line:rgba(33,29,22,0.10); --lbc-line-2:rgba(33,29,22,0.18);
+  --lbc-fill:rgba(33,29,22,0.035); --lbc-fill-2:rgba(33,29,22,0.07);
+  --lbc-glass:rgba(246,243,237,0.78); --lbc-scrim:rgba(33,29,22,0.38);
+  --lbc-sh-1:0 1px 2px rgba(28,22,14,0.06);
+  --lbc-sh-2:0 1px 2px rgba(28,22,14,0.05), 0 10px 24px -12px rgba(28,22,14,0.16);
+  --lbc-sh-3:0 2px 4px rgba(28,22,14,0.06), 0 28px 60px -24px rgba(28,22,14,0.28);
+  --lbc-sh-gold:0 1px 0 rgba(255,255,255,0.25) inset, 0 10px 22px -12px rgba(156,124,44,0.55);
+  --lbc-sh-gold-hi:0 1px 0 rgba(255,255,255,0.3) inset, 0 16px 30px -12px rgba(156,124,44,0.6);
+  --lbc-ring:0 0 0 3px rgba(156,124,44,0.30);
+  --lbc-ring-error:0 0 0 3px rgba(109,75,216,0.24);
+  color-scheme:light;
+}
+
+/* ─── 2. BASE (especificidad cero: el CSS de cada página siempre gana) ── */
+:where(html){-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+:where(body){-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+:where(a,button,input,select,textarea,label,summary,[role="button"],[role="tab"]){-webkit-tap-highlight-color:transparent;}
+:where(a,button,[role="button"],[role="tab"],summary,label){touch-action:manipulation;}   /* sin retardo ni zoom por doble toque */
+:where(a,button,input,select,textarea,summary,[role="button"],[role="tab"],[tabindex]):focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:2px;}
+:where(button:disabled,[aria-disabled="true"]){cursor:not-allowed;}
+:where(.lbc-num,.lbc-table td.lbc-num,.lbc-metric__value){font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+
+/* ─── 3. BOTONES ────────────────────────────────────────────────────── */
+/* .lbc-btn + variante: --primary (una sola por pantalla), --secondary, --ghost, --quiet
+   Tamaños: --sm · (md por defecto) · --lg · --block (ancho completo) · --icon (cuadrado)
+   Estados: :hover · :active · :focus-visible · :disabled / [aria-disabled] · .is-loading / [aria-busy="true"] */
+.lbc-btn{
+  --_h:var(--lbc-h-md); --_px:var(--lbc-s-5); --_fs:var(--lbc-fs-md);
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--lbc-s-2);
+  min-height:var(--_h);padding:0 var(--_px);border:1px solid transparent;border-radius:var(--lbc-r-md);
+  font-family:var(--lbc-font-sans);font-size:var(--_fs);font-weight:600;line-height:1.2;letter-spacing:0.01em;
+  text-decoration:none;text-align:center;white-space:nowrap;cursor:pointer;user-select:none;-webkit-user-select:none;
+  background:var(--lbc-fill);color:var(--lbc-ink);
+  transition:transform var(--lbc-t-1) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),
+             background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),
+             color var(--lbc-t-2) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease);
+  -webkit-appearance:none;appearance:none;
+}
+.lbc-btn:active{transform:scale(0.97);}
+.lbc-btn:focus-visible{outline:none;box-shadow:var(--lbc-ring);}
+.lbc-btn--sm{--_h:var(--lbc-h-sm);--_px:var(--lbc-s-4);--_fs:var(--lbc-fs-sm);border-radius:var(--lbc-r-sm);}
+.lbc-btn--lg{--_h:var(--lbc-h-lg);--_px:var(--lbc-s-8);--_fs:var(--lbc-fs-lg);border-radius:14px;}
+.lbc-btn--block{display:flex;width:100%;}
+.lbc-btn--icon{width:var(--_h);padding:0;}
+.lbc-btn--wrap{white-space:normal;padding-top:var(--lbc-s-3);padding-bottom:var(--lbc-s-3);}
+
+/* Primario: oro. La acción principal de la pantalla. */
+.lbc-btn--primary{
+  background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%);
+  color:var(--lbc-on-gold);border-color:rgba(255,255,255,0.10);box-shadow:var(--lbc-sh-gold);font-weight:700;
+}
+@media (hover:hover){
+  .lbc-btn--primary:hover{transform:translateY(-1px);box-shadow:var(--lbc-sh-gold-hi);filter:brightness(1.05);}
+  .lbc-btn--secondary:hover{background:var(--lbc-gold-dim);border-color:var(--lbc-gold);}
+  .lbc-btn--ghost:hover{background:var(--lbc-fill-2);border-color:var(--lbc-line-2);color:var(--lbc-ink);}
+  .lbc-btn--quiet:hover{background:var(--lbc-fill);color:var(--lbc-ink);}
+}
+.lbc-btn--primary:active{transform:scale(0.97);filter:brightness(0.94);box-shadow:0 1px 0 rgba(255,255,255,0.18) inset,0 4px 12px -8px rgba(204,169,79,0.5);}
+.lbc-btn--primary:focus-visible{box-shadow:var(--lbc-sh-gold),0 0 0 2px var(--lbc-bg),0 0 0 4px var(--lbc-gold-2);}
+/* Secundario: contorno de oro. Acción alternativa junto a un primario. */
+.lbc-btn--secondary{background:transparent;color:var(--lbc-gold-2);border-color:var(--lbc-gold-line);}
+.lbc-btn--secondary:active{background:var(--lbc-gold-dim);}
+/* Fantasma: neutro con borde fino. Acciones de apoyo (cancelar, volver). */
+.lbc-btn--ghost{background:var(--lbc-fill);color:var(--lbc-ink-2);border-color:var(--lbc-line);}
+.lbc-btn--ghost:active{background:var(--lbc-fill-2);}
+/* Silencioso: solo texto. Enlaces de acción dentro de barras y tarjetas. */
+.lbc-btn--quiet{background:transparent;color:var(--lbc-ink-2);padding:0 var(--lbc-s-3);}
+/* Desactivado y cargando */
+.lbc-btn:disabled,.lbc-btn[aria-disabled="true"]{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;filter:none;pointer-events:none;}
+.lbc-btn.is-loading,.lbc-btn[aria-busy="true"]{color:transparent !important;pointer-events:none;}
+.lbc-btn.is-loading>*,.lbc-btn[aria-busy="true"]>*{opacity:0;}
+.lbc-btn.is-loading::after,.lbc-btn[aria-busy="true"]::after{
+  content:"";position:absolute;inset:0;margin:auto;width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--lbc-ink-3);border-top-color:var(--lbc-ink);animation:lbc-spin .7s linear infinite;
+}
+.lbc-btn--primary.is-loading::after,.lbc-btn--primary[aria-busy="true"]::after{border-color:rgba(11,11,18,0.28);border-top-color:var(--lbc-on-gold);}
+@keyframes lbc-spin{to{transform:rotate(360deg);}}
+/* Flecha que acompaña al texto: se adelanta 3 px al pasar por encima */
+.lbc-btn__arrow{display:inline-block;transition:transform var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-btn:hover .lbc-btn__arrow{transform:translateX(3px);}}
+
+/* ─── 4. FORMULARIOS ────────────────────────────────────────────────── */
+/* <div class="lbc-field"> <label class="lbc-label"> <input class="lbc-input"> <p class="lbc-hint"> </div>
+   Estados: :focus · .is-error / [aria-invalid="true"] · .is-ok · :disabled */
+.lbc-field{display:flex;flex-direction:column;gap:var(--lbc-s-2);margin-bottom:var(--lbc-s-4);}
+.lbc-label{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);}
+.lbc-input{
+  width:100%;min-height:var(--lbc-h-lg);padding:0 var(--lbc-s-4);border-radius:var(--lbc-r-md);
+  border:1px solid var(--lbc-line-2);background:var(--lbc-fill);color:var(--lbc-ink);
+  font-family:var(--lbc-font-sans);font-size:16px;line-height:1.3;   /* 16 px: iOS no hace zoom al enfocar */
+  transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);
+  -webkit-appearance:none;appearance:none;
+}
+textarea.lbc-input{padding:var(--lbc-s-3) var(--lbc-s-4);min-height:112px;resize:vertical;line-height:var(--lbc-lh-body);}
+select.lbc-input{padding-right:40px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;}
+.lbc-input::placeholder{color:var(--lbc-ink-4);}
+@media (hover:hover){.lbc-input:hover:not(:focus):not(:disabled){border-color:var(--lbc-gold-line);}}
+.lbc-input:focus{outline:none;border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);background:var(--lbc-fill-2);}
+.lbc-input:disabled{opacity:0.5;cursor:not-allowed;}
+.lbc-input.is-error,.lbc-input[aria-invalid="true"],.lbc-field.is-error .lbc-input{border-color:var(--lbc-error);box-shadow:var(--lbc-ring-error);}
+.lbc-input.is-ok,.lbc-field.is-ok .lbc-input{border-color:var(--lbc-up);}
+.lbc-input:-webkit-autofill{-webkit-text-fill-color:var(--lbc-ink);box-shadow:0 0 0 1000px var(--lbc-bg-3) inset;caret-color:var(--lbc-ink);}
+.lbc-hint{font-size:var(--lbc-fs-sm);line-height:var(--lbc-lh-snug);color:var(--lbc-ink-3);margin:0;}
+.lbc-field.is-error .lbc-hint,.lbc-hint--error{color:var(--lbc-error);}
+.lbc-field.is-ok .lbc-hint,.lbc-hint--ok{color:var(--lbc-up);}
+/* Mensaje de bloque (resultado de un envío). Vacío no ocupa sitio. */
+.lbc-msg{display:flex;align-items:flex-start;gap:var(--lbc-s-2);padding:var(--lbc-s-3) var(--lbc-s-4);border-radius:var(--lbc-r-md);border:1px solid var(--lbc-line);background:var(--lbc-fill);color:var(--lbc-ink-2);font-size:var(--lbc-fs-sm);line-height:var(--lbc-lh-snug);}
+.lbc-msg:empty{display:none;}
+.lbc-msg--error{border-color:color-mix(in srgb,var(--lbc-error) 40%,transparent);background:var(--lbc-error-dim);color:var(--lbc-error);}
+.lbc-msg--ok{border-color:color-mix(in srgb,var(--lbc-up) 40%,transparent);background:var(--lbc-up-dim);color:var(--lbc-up);}
+.lbc-msg--info{border-color:var(--lbc-gold-line);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
+
+/* ─── 5. TARJETAS ───────────────────────────────────────────────────── */
+/* .lbc-card · --raised (más profundidad) · --gold (destacada) · --interactive (responde al toque) · --flush (sin relleno) */
+.lbc-card{
+  position:relative;background:linear-gradient(180deg,var(--lbc-bg-3),var(--lbc-bg-2));
+  border:1px solid var(--lbc-line);border-radius:var(--lbc-r-lg);padding:var(--lbc-s-6);box-shadow:var(--lbc-sh-2);
+}
+.lbc-card--raised{box-shadow:var(--lbc-sh-3);}
+.lbc-card--gold{border-color:var(--lbc-gold-line);background:linear-gradient(180deg,rgba(204,169,79,0.07),rgba(204,169,79,0.015) 42%),linear-gradient(180deg,var(--lbc-bg-3),var(--lbc-bg-2));}
+.lbc-card--flush{padding:0;overflow:hidden;}
+.lbc-card--interactive{cursor:pointer;transition:transform var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-card--interactive:hover{transform:translateY(-2px);border-color:var(--lbc-gold-line);box-shadow:var(--lbc-sh-3);}}
+.lbc-card--interactive:active{transform:scale(0.985);}
+.lbc-card__eyebrow{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);margin-bottom:var(--lbc-s-2);}
+.lbc-card__title{font-size:var(--lbc-fs-lg);font-weight:600;line-height:var(--lbc-lh-snug);color:var(--lbc-ink);margin:0 0 var(--lbc-s-2);}
+.lbc-card__text{font-size:var(--lbc-fs-sm);line-height:var(--lbc-lh-body);color:var(--lbc-ink-2);margin:0;}
+.lbc-divider{height:1px;border:0;background:var(--lbc-line);margin:var(--lbc-s-4) 0;}
+@media (max-width:640px){.lbc-card{padding:var(--lbc-s-5);border-radius:var(--lbc-r-lg);}}
+
+/* ─── 6. DATOS FINANCIEROS: métricas, números, tablas ───────────────── */
+/* Números siempre tabulares (.lbc-num). Sube = .lbc-up (verde) · baja = .lbc-down (morado) · sin dato = «—» con .lbc-nodata */
+.lbc-num{font-family:var(--lbc-font-mono);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-0.01em;}
+.lbc-up{color:var(--lbc-up) !important;} .lbc-down{color:var(--lbc-down) !important;} .lbc-flat{color:var(--lbc-ink-3) !important;}
+.lbc-nodata{color:var(--lbc-ink-4);font-family:var(--lbc-font-mono);}
+.lbc-metric{display:flex;flex-direction:column;gap:var(--lbc-s-1);min-width:0;padding:var(--lbc-s-4);border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-fill);}
+.lbc-metric--bare{padding:0;border:0;background:none;}
+.lbc-metric__label{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lbc-metric__value{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xl);font-weight:600;line-height:var(--lbc-lh-tight);letter-spacing:-0.02em;color:var(--lbc-ink);}
+.lbc-metric__value--lg{font-size:var(--lbc-fs-2xl);}
+.lbc-metric__delta{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:500;color:var(--lbc-ink-3);}
+.lbc-metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:var(--lbc-s-3);}
+@media (max-width:420px){.lbc-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+/* Tabla: envolver en .lbc-table-wrap para que en móvil se deslice dentro de su marco y no la página */
+.lbc-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-bg-2);}
+.lbc-table{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--lbc-fs-sm);color:var(--lbc-ink-2);}
+.lbc-table th{position:sticky;top:0;z-index:1;padding:var(--lbc-s-3) var(--lbc-s-4);text-align:left;white-space:nowrap;font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);background:var(--lbc-bg-3);border-bottom:1px solid var(--lbc-line-2);}
+.lbc-table td{padding:var(--lbc-s-3) var(--lbc-s-4);border-bottom:1px solid var(--lbc-line);vertical-align:middle;}
+.lbc-table tr:last-child td{border-bottom:0;}
+.lbc-table td.lbc-num,.lbc-table th.lbc-num{text-align:right;}
+.lbc-table td.lbc-num{font-family:var(--lbc-font-mono);color:var(--lbc-ink);white-space:nowrap;}
+.lbc-table tbody tr{transition:background-color var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-table tbody tr:hover{background:var(--lbc-fill);}}
+.lbc-table--compact th,.lbc-table--compact td{padding:var(--lbc-s-2) var(--lbc-s-3);}
+
+/* ─── 7. CHIPS, ETIQUETAS, PUNTO EN VIVO ────────────────────────────── */
+.lbc-chip{display:inline-flex;align-items:center;gap:6px;min-height:24px;padding:0 10px;border-radius:var(--lbc-r-full);border:1px solid var(--lbc-line-2);background:var(--lbc-fill);color:var(--lbc-ink-2);font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;line-height:1;}
+.lbc-chip--gold{border-color:var(--lbc-gold-line);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
+.lbc-chip--up{border-color:color-mix(in srgb,var(--lbc-up) 36%,transparent);background:var(--lbc-up-dim);color:var(--lbc-up);}
+.lbc-chip--down{border-color:color-mix(in srgb,var(--lbc-down) 36%,transparent);background:var(--lbc-down-dim);color:var(--lbc-down);}
+.lbc-chip--cyan{border-color:color-mix(in srgb,var(--lbc-cyan) 36%,transparent);background:var(--lbc-cyan-dim);color:var(--lbc-cyan);}
+.lbc-chip--solid{border-color:transparent;background:var(--lbc-gold);color:var(--lbc-on-gold);}
+button.lbc-chip,a.lbc-chip{min-height:32px;padding:0 14px;cursor:pointer;text-decoration:none;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+button.lbc-chip:active,a.lbc-chip:active{transform:scale(0.96);}
+button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="true"]{border-color:var(--lbc-gold);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
+.lbc-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--lbc-up);box-shadow:0 0 0 0 rgba(46,232,164,0.5);animation:lbc-pulse 2.4s var(--lbc-ease-in-out) infinite;flex:none;}
+.lbc-dot--gold{background:var(--lbc-gold);box-shadow:0 0 0 0 rgba(204,169,79,0.5);animation-name:lbc-pulse-gold;}
+.lbc-dot--still{animation:none;}
+@keyframes lbc-pulse{0%{box-shadow:0 0 0 0 rgba(46,232,164,0.45);}70%,100%{box-shadow:0 0 0 7px rgba(46,232,164,0);}}
+@keyframes lbc-pulse-gold{0%{box-shadow:0 0 0 0 rgba(204,169,79,0.45);}70%,100%{box-shadow:0 0 0 7px rgba(204,169,79,0);}}
+
+/* ─── 8. CONTROL SEGMENTADO Y PESTAÑAS ──────────────────────────────── */
+/* <div class="lbc-seg" role="tablist"><button class="lbc-seg__item is-active">…</button>…</div> */
+.lbc-seg{display:inline-flex;gap:2px;padding:3px;border-radius:var(--lbc-r-md);background:var(--lbc-fill);border:1px solid var(--lbc-line);max-width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.lbc-seg::-webkit-scrollbar{display:none;}
+.lbc-seg--block{display:flex;} .lbc-seg--block .lbc-seg__item{flex:1;}
+.lbc-seg__item{min-height:36px;padding:0 var(--lbc-s-4);border:0;border-radius:9px;background:transparent;color:var(--lbc-ink-3);font-family:var(--lbc-font-sans);font-size:var(--lbc-fs-sm);font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+@media (hover:hover){.lbc-seg__item:hover{color:var(--lbc-ink);}}
+.lbc-seg__item:active{transform:scale(0.97);}
+.lbc-seg__item.is-active,.lbc-seg__item[aria-selected="true"]{background:var(--lbc-bg-3);color:var(--lbc-gold-2);box-shadow:0 0 0 1px var(--lbc-gold-line),var(--lbc-sh-1);}
+@media (pointer:coarse){.lbc-seg__item{min-height:40px;}}
+
+/* ─── 9. ESTADOS DE CARGA Y VACÍO ───────────────────────────────────── */
+/* Esqueleto: reserva el hueco exacto del contenido para que nada salte al llegar los datos */
+.lbc-skel{position:relative;display:block;overflow:hidden;border-radius:var(--lbc-r-sm);background:var(--lbc-fill-2);color:transparent !important;user-select:none;pointer-events:none;min-height:1em;}
+.lbc-skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);animation:lbc-shimmer 1.5s var(--lbc-ease-in-out) infinite;}
+[data-theme="light"] .lbc-skel::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,0.7),transparent);}
+.lbc-skel--text{height:0.9em;margin:0.3em 0;border-radius:4px;}
+.lbc-skel--title{height:1.4em;width:60%;}
+.lbc-skel--block{height:120px;border-radius:var(--lbc-r-md);}
+.lbc-skel--circle{border-radius:50%;}
+@keyframes lbc-shimmer{to{transform:translateX(100%);}}
+.lbc-spinner{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid var(--lbc-line-2);border-top-color:var(--lbc-gold);animation:lbc-spin .7s linear infinite;vertical-align:middle;}
+.lbc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--lbc-s-2);padding:var(--lbc-s-8) var(--lbc-s-4);text-align:center;color:var(--lbc-ink-3);font-size:var(--lbc-fs-sm);line-height:var(--lbc-lh-body);}
+.lbc-empty__mark{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xl);color:var(--lbc-ink-4);}
+/* Aparición suave de contenido que llega tarde (solo opacidad: sin desplazamiento ni salto) */
+.lbc-fade-in{animation:lbc-fade var(--lbc-t-3) var(--lbc-ease) both;}
+@keyframes lbc-fade{from{opacity:0;}to{opacity:1;}}
+
+/* ─── 10. CABECERA / NAVEGACIÓN ─────────────────────────────────────── */
+/* <header class="lbc-nav"><a class="lbc-nav__brand">…</a><nav class="lbc-nav__links"><a class="lbc-nav__link is-active">…</a></nav><div class="lbc-nav__actions">…</div></header> */
+.lbc-nav{
+  position:sticky;top:0;z-index:var(--lbc-z-nav);display:flex;align-items:center;gap:var(--lbc-s-4);
+  min-height:calc(56px + var(--lbc-safe-t));padding:var(--lbc-safe-t) var(--lbc-gutter) 0;
+  background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);
+  border-bottom:1px solid transparent;transition:border-color var(--lbc-t-3) var(--lbc-ease),background-color var(--lbc-t-3) var(--lbc-ease);
+}
+.lbc-nav.is-scrolled{border-bottom-color:var(--lbc-line);}
+.lbc-nav--fixed{position:fixed;left:0;right:0;}
+.lbc-nav__brand{flex:none;font-family:var(--lbc-font-serif);font-size:var(--lbc-fs-xl);letter-spacing:0.08em;color:var(--lbc-ink);text-decoration:none;}
+.lbc-nav__brand span,.lbc-nav__brand em{color:var(--lbc-gold-2);font-style:normal;}
+.lbc-nav__links{display:flex;align-items:center;gap:var(--lbc-s-1);flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.lbc-nav__links::-webkit-scrollbar{display:none;}
+.lbc-nav__link{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 var(--lbc-s-3);border-radius:var(--lbc-r-sm);color:var(--lbc-ink-3);font-family:var(--lbc-font-sans);font-size:var(--lbc-fs-sm);font-weight:500;text-decoration:none;white-space:nowrap;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-nav__link:hover{color:var(--lbc-ink);background:var(--lbc-fill);}}
+.lbc-nav__link.is-active,.lbc-nav__link[aria-current="page"]{color:var(--lbc-gold-2);background:var(--lbc-gold-dim);}
+.lbc-nav__actions{display:flex;align-items:center;gap:var(--lbc-s-2);margin-left:auto;flex:none;}
+@media (pointer:coarse){.lbc-nav__link{min-height:44px;}}
+/* Barra inferior de acción (móvil): respeta el margen seguro del iPhone */
+.lbc-actionbar{position:fixed;left:0;right:0;bottom:0;z-index:var(--lbc-z-sticky);display:flex;align-items:center;gap:var(--lbc-s-3);padding:var(--lbc-s-3) var(--lbc-gutter) calc(var(--lbc-s-3) + var(--lbc-safe-b));background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);border-top:1px solid var(--lbc-line);transform:translateY(110%);transition:transform var(--lbc-t-4) var(--lbc-ease);}
+.lbc-actionbar.is-visible{transform:none;}
+
+/* ─── 11. MODAL · HOJA INFERIOR EN MÓVIL ────────────────────────────── */
+/* <div class="lbc-modal-backdrop" id="x"><div class="lbc-modal" role="dialog" aria-modal="true"><button class="lbc-modal__close">×</button>…</div></div>
+   Abrir: clase .is-open en el fondo (o LBCUI.openModal('x')). En móvil sube desde abajo como una hoja de iOS. */
+.lbc-modal-backdrop{position:fixed;inset:0;z-index:var(--lbc-z-modal);display:flex;align-items:center;justify-content:center;padding:var(--lbc-s-6);background:var(--lbc-scrim);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--lbc-t-3) var(--lbc-ease),visibility 0s linear var(--lbc-t-3);overscroll-behavior:contain;}
+.lbc-modal-backdrop.is-open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity var(--lbc-t-3) var(--lbc-ease),visibility 0s;}
+.lbc-modal{position:relative;width:100%;max-width:440px;max-height:calc(100dvh - 48px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:var(--lbc-s-8);border-radius:var(--lbc-r-xl);border:1px solid var(--lbc-line-2);background:linear-gradient(180deg,var(--lbc-bg-3),var(--lbc-bg-2));box-shadow:var(--lbc-sh-3);color:var(--lbc-ink);transform:translateY(12px) scale(0.98);opacity:0;transition:transform var(--lbc-t-4) var(--lbc-ease),opacity var(--lbc-t-3) var(--lbc-ease);}
+.lbc-modal-backdrop.is-open .lbc-modal{transform:none;opacity:1;}
+.lbc-modal--wide{max-width:640px;}
+.lbc-modal__close{position:absolute;top:var(--lbc-s-3);right:var(--lbc-s-3);width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--lbc-ink-3);font-size:18px;line-height:1;cursor:pointer;transition:background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+@media (hover:hover){.lbc-modal__close:hover{background:var(--lbc-fill-2);color:var(--lbc-ink);}}
+.lbc-modal__close:active{transform:scale(0.92);}
+.lbc-modal__title{font-family:var(--lbc-font-serif);font-size:var(--lbc-fs-2xl);font-weight:400;line-height:var(--lbc-lh-tight);margin:0 0 var(--lbc-s-2);padding-right:var(--lbc-s-8);}
+.lbc-modal__text{font-size:var(--lbc-fs-md);line-height:var(--lbc-lh-body);color:var(--lbc-ink-2);margin:0 0 var(--lbc-s-6);}
+@media (max-width:640px){
+  .lbc-modal-backdrop{align-items:flex-end;padding:0;}
+  .lbc-modal{max-width:none;max-height:calc(100dvh - 24px - var(--lbc-safe-t));padding:var(--lbc-s-8) var(--lbc-s-5) calc(var(--lbc-s-6) + var(--lbc-safe-b));border-radius:var(--lbc-r-xl) var(--lbc-r-xl) 0 0;border-bottom:0;transform:translateY(100%);opacity:1;}
+  .lbc-modal::before{content:"";position:absolute;top:8px;left:50%;width:36px;height:5px;margin-left:-18px;border-radius:3px;background:var(--lbc-line-2);}   /* asa de la hoja */
+}
+html.lbc-lock,html.lbc-lock body{overflow:hidden !important;}
+
+/* ─── 12. AVISO BREVE (toast) ───────────────────────────────────────── */
+.lbc-toast{position:fixed;left:50%;bottom:calc(var(--lbc-s-6) + var(--lbc-safe-b));z-index:var(--lbc-z-toast);max-width:min(92vw,420px);padding:var(--lbc-s-3) var(--lbc-s-5);border-radius:var(--lbc-r-full);border:1px solid var(--lbc-line-2);background:var(--lbc-bg-3);color:var(--lbc-ink);font-family:var(--lbc-font-sans);font-size:var(--lbc-fs-sm);box-shadow:var(--lbc-sh-3);transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:transform var(--lbc-t-3) var(--lbc-ease),opacity var(--lbc-t-3) var(--lbc-ease);}
+.lbc-toast.is-visible{transform:translate(-50%,0);opacity:1;}
+
+/* ─── 13. UTILIDADES ────────────────────────────────────────────────── */
+.lbc-sr-only{position:absolute !important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.lbc-eyebrow{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--lbc-gold);}
+.lbc-link{color:var(--lbc-gold-2);text-decoration:underline;text-decoration-color:var(--lbc-gold-line);text-underline-offset:3px;transition:text-decoration-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-link:hover{text-decoration-color:currentColor;}}
+.lbc-stack{display:flex;flex-direction:column;gap:var(--lbc-s-4);}
+.lbc-row{display:flex;align-items:center;gap:var(--lbc-s-3);}
+.lbc-row--between{justify-content:space-between;}
+.lbc-hide-mobile{} .lbc-only-mobile{display:none !important;}
+@media (max-width:640px){.lbc-hide-mobile{display:none !important;} .lbc-only-mobile{display:revert !important;}}
+
+/* ─── 14. MOVIMIENTO REDUCIDO ───────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  .lbc-btn,.lbc-card--interactive,.lbc-modal,.lbc-modal-backdrop,.lbc-toast,.lbc-actionbar,.lbc-seg__item,.lbc-chip,.lbc-btn__arrow{transition-duration:0.01ms !important;}
+  .lbc-btn:active,.lbc-card--interactive:active,.lbc-btn--primary:hover,.lbc-card--interactive:hover{transform:none !important;}
+  .lbc-skel::after,.lbc-dot,.lbc-fade-in{animation:none !important;}
+  .lbc-modal{transform:none !important;}
+}
