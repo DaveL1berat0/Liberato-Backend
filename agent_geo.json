@@ -1,7 +1,14 @@
 {
-  "geopolitica": "",
-  "petroleo": "",
+  "geopolitica": "Los futuros del Nasdaq-100 caen entre 1% y 2% en la premarket de hoy por el recrudecimiento del escrutinio del Congreso de EEUU a Nvidia por posibles exportaciones de chips de IA a China, con comparecencias exigidas a Jensen Huang y al secretario de Comercio Howard Lutnick, presionando al sector tech/semis que domina el indice.",
+  "petroleo": "El Brent cae a unos 87.5 USD/barril (-5.6%) y el WTI ronda los 80 USD/barril (-0.04%) por la distension diplomatica entre EEUU e Iran, que reduce el riesgo de interrupcion de suministro en Oriente Medio y alivia la presion inflacionaria sobre las acciones growth.",
   "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-24T12:05:49Z"
+  "sources": [
+    "Yahoo Finance, hoy (premarket) - futuros Nasdaq/S&P/Dow",
+    "Invezz, hoy - futuros Nasdaq caen por escrutinio a Nvidia",
+    "TradingKey, hoy (premarket) - futuros EEUU, Nvidia, WTI/oro",
+    "Trading Economics, hoy - WTI 80.14 USD (-0.04%)",
+    "TradersUnion, hoy - Brent -5.58% a 87.47 USD",
+    "Roll Call, 12 nov 2026 - comparecencias Huang/Lutnick ante el Congreso"
+  ],
+  "as_of": "2026-11-24T12:39:36Z"
 }
