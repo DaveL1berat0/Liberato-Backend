@@ -1232,6 +1232,23 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 .lg-day-tab{border-width:1px;border-radius:var(--lbc-r-sm);min-height:48px;justify-content:center;gap:4px;}
 .mif{min-height:36px;padding:0 14px;border-width:1px;}
 
+/* Tarjetas de evento: etiquetas legibles y cifras alineadas */
+.lg-ev-cell-k,.lg-ev-status,.lg-ev-diff{font-size:10px;}
+.lg-ev-cell-k{color:var(--ink-3);letter-spacing:0.08em;}
+.lg-ev-badge,.lg-ev-cls,.lg-ev-next-badge{font-size:9.5px;letter-spacing:0.06em;}
+.gf-timestamp{font-size:10px!important;}
+.cx-tag{font-size:10px;}
+.cat-empty-t{font-size:12px;line-height:1.5;}
+
+/* Tema claro: lo que quedaba con colores fijos del oscuro */
+[data-theme="light"] .chart-stage{background:rgba(255,255,255,0.55);}
+[data-theme="light"] .lg-wk-btn{color:var(--ink-2);border-color:var(--hair);}
+[data-theme="light"] .lg-wk-btn:hover{color:var(--ink);border-color:var(--gold);background:var(--gold-faint);}
+[data-theme="light"] .lg-day-tab{border-color:var(--hair);background:rgba(33,29,22,0.02);}
+[data-theme="light"] .lg-day-tab.active .lg-day-tab-n{color:var(--gold);}
+[data-theme="light"] #lbc-sound-btn{background:rgba(255,255,255,0.7)!important;border-color:var(--hair)!important;}
+[data-theme="light"] .cx-tag{background:rgba(255,255,255,0.92);}
+
 /* Fondo de partículas: presente pero por detrás de los datos */
 #particle-canvas{opacity:0.45;}
 
@@ -1243,6 +1260,8 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   .wrap{padding:12px 12px calc(48px + env(safe-area-inset-bottom,0px));gap:14px;}
   .rg-hd{padding:14px 16px 0;}
   .rg-hd-title{letter-spacing:0.14em;flex-wrap:wrap;row-gap:4px;}
+  .rg-meter-stats{max-width:none;}
+  .gf-timestamp{display:flex;flex-wrap:wrap;column-gap:6px;row-gap:2px;padding:5px 10px;}
   .rg-ms{min-height:32px;}
   .rg-ms-k{letter-spacing:0.03em;}
   .gf-0dte{position:relative;min-height:36px;padding:0 14px;}
