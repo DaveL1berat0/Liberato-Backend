@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Iran afirma que 3 petroleros impactaron minas navales y se incendiaron en el Estrecho de Ormuz a pesar de la escolta militar de EE.UU., y el Tesoro de EE.UU. amplia sanciones a decenas de empresas iranies mientras Trump evalua su decision sobre el conflicto, lo que mantiene presion de riesgo geopolitico sobre el NQ en el pre-mercado.",
-  "petroleo": "El Brent cotiza cerca de minimos de tres meses en torno a 88,71 USD (-0,66%) y el WTI en torno a 79,57 USD, ya que el superavit de oferta (reapertura del oleoducto libio Sharara) compensa el riesgo de Ormuz, limitando el impacto inflacionario sobre el NQ.",
-  "catalizador": "",
+  "geopolitica": "Avanzan las negociaciones EE.UU.-Irán y se reducen los temores de interrupción de suministro en el Estrecho de Ormuz, lo que modera la prima de riesgo geopolítico y favorece el apetito por riesgo en el Nasdaq (Kotak Neo, 24-nov, hora no especificada).",
+  "petroleo": "El Brent cae por debajo de los 90 USD/barril (~88 USD, -1%) y el WTI ronda los 79-80 USD, presionados por el acercamiento EE.UU.-Irán y un panorama de superávit de oferta, lo que limita el soporte a las energéticas del Nasdaq (Kotak Neo, 24-nov, hora no especificada).",
+  "catalizador": "Los futuros del Nasdaq-100 retroceden en premarket (-0.79% a 26,595.50 hacia las 04:43 ET) por toma de ganancias en Nvidia y Anthropic en medio de la investigación de la SEC sobre las revelaciones contables de Nvidia, revirtiendo parte del rally del lunes (CNBC, 04:43 ET).",
   "sources": [
-    "CNBC 24-nov-2026 (hora no especificada) - Iran/Ormuz y sanciones del Tesoro",
-    "Oilprice.com 00:10 ET (0510 GMT) - precios de Brent y WTI",
-    "Benzinga/Yahoo Finance 24-nov-2026 (hora no especificada) - futuros caen ante decision pendiente de Trump sobre Iran"
+    "Kotak Neo 24-nov (crudo)",
+    "CNBC 04:43 ET (futuros premarket)",
+    "stockinvest.us digest 24-nov (resumen premarket)"
   ],
-  "as_of": "2026-11-24T13:06:09Z"
+  "as_of": "2026-11-24T13:38:53Z"
 }
