@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Avanzan las negociaciones EE.UU.-Irán y se reducen los temores de interrupción de suministro en el Estrecho de Ormuz, lo que modera la prima de riesgo geopolítico y favorece el apetito por riesgo en el Nasdaq (Kotak Neo, 24-nov, hora no especificada).",
-  "petroleo": "El Brent cae por debajo de los 90 USD/barril (~88 USD, -1%) y el WTI ronda los 79-80 USD, presionados por el acercamiento EE.UU.-Irán y un panorama de superávit de oferta, lo que limita el soporte a las energéticas del Nasdaq (Kotak Neo, 24-nov, hora no especificada).",
-  "catalizador": "Los futuros del Nasdaq-100 retroceden en premarket (-0.79% a 26,595.50 hacia las 04:43 ET) por toma de ganancias en Nvidia y Anthropic en medio de la investigación de la SEC sobre las revelaciones contables de Nvidia, revirtiendo parte del rally del lunes (CNBC, 04:43 ET).",
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "La investigacion abierta por la SEC sobre si Nvidia engano a los inversores en sus divulgaciones (revelada por el WSJ y aun vigente) sigue presionando al sector tecnologico, mientras el mercado descuenta con alta probabilidad (~95%) una subida de tasas de la Fed en diciembre bajo el nuevo presidente Kevin Warsh, lastrando al Nasdaq-100 en la sesion de hoy.",
   "sources": [
-    "Kotak Neo 24-nov (crudo)",
-    "CNBC 04:43 ET (futuros premarket)",
-    "stockinvest.us digest 24-nov (resumen premarket)"
+    "WSJ (sondeo civil de la SEC a Nvidia, difundido desde 17-nov, vigente)",
+    "CME FedWatch / medios financieros (prob. alza Fed en diciembre bajo Warsh)"
   ],
-  "as_of": "2026-11-24T13:38:53Z"
+  "as_of": "2026-11-24T14:07:09Z"
 }
