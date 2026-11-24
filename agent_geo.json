@@ -1,11 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "El crudo cae a minimos de casi tres meses (Brent en torno a 88.7 USD, -0.7%; WTI en torno a 79.6 USD, -0.8%) por expectativas de superavit de oferta, lo que reduce la presion inflacionaria y resulta levemente favorable para el NQ intradia.",
-  "catalizador": "Las acciones de semiconductores (Nvidia y pares) retroceden hoy y presionan al Nasdaq tras el fuerte repunte del lunes, en medio de dudas renovadas sobre el retorno del gasto en IA, actuando como catalizador bajista directo para el NQ.",
+  "geopolitica": "Iran afirma que tres petroleros chocaron con minas en el Estrecho de Ormuz a pesar de la escolta naval de EE.UU., y el Tesoro de EE.UU. amplio las sanciones sobre Iran, elevando la tension geopolitica que presiona el apetito por riesgo del NQ hoy.",
+  "petroleo": "El crudo opera cerca de minimos de tres meses: Brent en torno a 89.2 USD y WTI cerca de 80.1 USD, ya que el aumento de la oferta global compensa el riesgo por los ataques en Ormuz, lo que alivia la presion inflacionaria y resulta levemente positivo para el NQ.",
+  "catalizador": "El Nasdaq 100 caia cerca de 3% hacia las 11:18 ET, liderado por semiconductores, al desvanecerse el rally de Nvidia y ante nuevos aranceles planteados por EE.UU.; el dolar sube por mayores apuestas de alza de tasas de la Fed mientras el mercado espera el dato de inflacion PCE del miercoles, un catalizador bajista inmediato para el NQ intradia.",
   "sources": [
-    "Reuters (via Boe Report/Business Standard) 23-24 nov, sesion asiatica",
-    "Yahoo Finance 24 nov",
-    "TipRanks 24 nov"
+    "CNBC 24 nov 2026 - Iran says tankers hit mines in Hormuz, Treasury widens sanctions",
+    "CNBC 24 nov 2026 - Oil holds near three-month low as rising supply offsets Hormuz threat",
+    "Bloomberg 11:18 ET - Nasdaq 100 Tumbles as Nvidia Euphoria Fades, New Tariffs Floated"
   ],
-  "as_of": "2026-11-24T17:06:39Z"
+  "as_of": "2026-11-24T18:06:37Z"
 }
