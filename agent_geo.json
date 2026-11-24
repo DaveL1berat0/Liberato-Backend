@@ -1,11 +1,7 @@
 {
-  "geopolitica": "Persiste la tensión en el Estrecho de Hormuz tras las advertencias de EEUU a Irán; el vicepresidente JD Vance se reunió con Qatar para destrabar las negociaciones, pero las diferencias clave siguen sin resolver, manteniendo una prima de riesgo geopolítico que puede presionar el sentimiento de riesgo en el NQ (Reuters, vía Business Recorder, 24 nov).",
-  "petroleo": "El Brent cae a mínimos de tres meses, cerca de 88.6-89.1 USD/barril (-0.8%), y el WTI ronda 79.7-80.0 USD, por expectativas de superávit de oferta que compensan el riesgo de bloqueo en Hormuz; el petróleo más barato alivia costos y es moderadamente favorable para el NQ (Reuters, ~04:15 ET).",
-  "catalizador": "Los futuros de fondos federales descuentan ~93-95% de probabilidad de una subida de tasas de 25pb en diciembre (no un recorte) ante presión inflacionaria persistente, con el dato de PCE subyacente de octubre publicándose mañana 25-nov; una sorpresa al alza añadiría presión bajista sobre el NQ en la apertura (CME FedWatch/Cleveland Fed nowcast, vía Coincentral/Benzinga, 24 nov).",
-  "sources": [
-    "Reuters vía Business Recorder 24-nov (Hormuz/Vance-Qatar)",
-    "Reuters vía Kotak Neo ~04:15 ET (petróleo Brent/WTI)",
-    "Coincentral/Benzinga 24-nov (probabilidad de hike Fed, PCE)"
-  ],
-  "as_of": "2026-11-24T11:39:30Z"
+  "geopolitica": "",
+  "petroleo": "",
+  "catalizador": "",
+  "sources": [],
+  "as_of": "2026-11-24T12:05:49Z"
 }
