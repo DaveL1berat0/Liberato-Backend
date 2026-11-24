@@ -1,14 +1,11 @@
 {
-  "geopolitica": "Los futuros del Nasdaq-100 caen entre 1% y 2% en la premarket de hoy por el recrudecimiento del escrutinio del Congreso de EEUU a Nvidia por posibles exportaciones de chips de IA a China, con comparecencias exigidas a Jensen Huang y al secretario de Comercio Howard Lutnick, presionando al sector tech/semis que domina el indice.",
-  "petroleo": "El Brent cae a unos 87.5 USD/barril (-5.6%) y el WTI ronda los 80 USD/barril (-0.04%) por la distension diplomatica entre EEUU e Iran, que reduce el riesgo de interrupcion de suministro en Oriente Medio y alivia la presion inflacionaria sobre las acciones growth.",
+  "geopolitica": "Iran afirma que 3 petroleros impactaron minas navales y se incendiaron en el Estrecho de Ormuz a pesar de la escolta militar de EE.UU., y el Tesoro de EE.UU. amplia sanciones a decenas de empresas iranies mientras Trump evalua su decision sobre el conflicto, lo que mantiene presion de riesgo geopolitico sobre el NQ en el pre-mercado.",
+  "petroleo": "El Brent cotiza cerca de minimos de tres meses en torno a 88,71 USD (-0,66%) y el WTI en torno a 79,57 USD, ya que el superavit de oferta (reapertura del oleoducto libio Sharara) compensa el riesgo de Ormuz, limitando el impacto inflacionario sobre el NQ.",
   "catalizador": "",
   "sources": [
-    "Yahoo Finance, hoy (premarket) - futuros Nasdaq/S&P/Dow",
-    "Invezz, hoy - futuros Nasdaq caen por escrutinio a Nvidia",
-    "TradingKey, hoy (premarket) - futuros EEUU, Nvidia, WTI/oro",
-    "Trading Economics, hoy - WTI 80.14 USD (-0.04%)",
-    "TradersUnion, hoy - Brent -5.58% a 87.47 USD",
-    "Roll Call, 12 nov 2026 - comparecencias Huang/Lutnick ante el Congreso"
+    "CNBC 24-nov-2026 (hora no especificada) - Iran/Ormuz y sanciones del Tesoro",
+    "Oilprice.com 00:10 ET (0510 GMT) - precios de Brent y WTI",
+    "Benzinga/Yahoo Finance 24-nov-2026 (hora no especificada) - futuros caen ante decision pendiente de Trump sobre Iran"
   ],
-  "as_of": "2026-11-24T12:39:36Z"
+  "as_of": "2026-11-24T13:06:09Z"
 }
