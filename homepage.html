@@ -1557,8 +1557,14 @@ nav { max-width: 100%; }
    Regla de texto: las ACCIONES (botones) van en frase; las ETIQUETAS
    (cejas, chips, rótulos) en versalitas.
    ══════════════════════════════════════════════════════════════════════ */
-html.lbc-v101{--lbc-font-sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--lbc-font-mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;}
-html.lbc-v101 body{background:var(--lbc-bg);}
+html.lbc-v101{--lbc-font-sans:'DM Sans','LBC Sans Reserva',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--lbc-font-mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;}
+/* Fuentes de reserva con el mismo ancho que las de marca: mientras llegan Cormorant y DM Sans el texto ocupa
+   lo mismo, así que el título no cambia de líneas ni empuja el vídeo al cargarse la fuente (salto de maquetación). */
+@font-face{font-family:'LBC Serif Reserva';font-style:normal;src:local('Times New Roman'),local('TimesNewRomanPSMT'),local('Georgia');size-adjust:95%;}
+@font-face{font-family:'LBC Serif Reserva';font-style:italic;src:local('Times New Roman Italic'),local('TimesNewRomanPS-ItalicMT'),local('Georgia Italic');size-adjust:85%;}
+@font-face{font-family:'LBC Sans Reserva';src:local('Arial'),local('ArialMT'),local('Helvetica Neue'),local('Roboto');size-adjust:103%;}
+html.lbc-v101 body{background:var(--lbc-bg);font-family:'DM Sans','LBC Sans Reserva',-apple-system,BlinkMacSystemFont,sans-serif;}
+html.lbc-v101 :is(.logo,.hero-title,.hw-text,.sec-title,.card-name-2,.card-name-hero-2,.price-2,.price-hero-2,.stat-num,.live-text,.metric-val,.cd-title,.cd-num,.cd-sep,.footer-logo,.modal-title,.modal-logo,.menu-drawer-logo,.contact-title){font-family:'Cormorant Garamond','LBC Serif Reserva',Georgia,serif;}
 html.lbc-v101 :is(button,input,textarea,select){font-family:inherit;}   /* antes los botones salían en Arial */
 html.lbc-v101 :is(.price-2,.price-hero-2,.stat-num,.live-text,.metric-val,.cd-num,.cd-sep){font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
 html.lbc-v101 [style*="#22c55e"],html.lbc-v101 [style*="rgb(34, 197, 94)"]{color:var(--lbc-up) !important;}   /* un solo verde: el de la paleta */
@@ -1719,6 +1725,17 @@ html.lbc-v101 .lc-btn:hover{transform:scale(1.05);border-color:var(--lbc-gold);b
 html.lbc-v101 .lc-btn:active{transform:scale(0.94);}
 html.lbc-v101.lbc-lock .lc-fab{opacity:0;pointer-events:none;}   /* con un menú o un modal abierto no se cruza por encima */
 html.lbc-v101 .lc-input{font-size:16px;}
+/* Panel del asistente: misma superficie que el resto; en móvil se apoya abajo, encima del botón */
+html.lbc-v101 .lc-window{background:var(--lbc-bg-2);border:1px solid var(--lbc-line-2);border-radius:20px;box-shadow:var(--lbc-sh-3);bottom:calc(92px + var(--lbc-safe-b));}
+html.lbc-v101 .sticky-cta.show ~ .lc-window{bottom:calc(152px + var(--lbc-safe-b));}
+html.lbc-v101 .lc-close{width:44px;height:44px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;margin-right:-8px;}
+html.lbc-v101 .lc-chip{font-size:13px;min-height:36px;padding:0 14px;display:inline-flex;align-items:center;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+html.lbc-v101 .lc-chip:active{transform:scale(0.96);}
+html.lbc-v101 .lc-send{width:44px;height:44px;border-radius:12px;}
+@media (max-width:600px){
+  html.lbc-v101 .lc-window{left:12px;right:12px;width:auto;max-width:none;height:min(62vh,520px);height:min(62svh,520px);bottom:calc(80px + var(--lbc-safe-b));}
+  html.lbc-v101 .sticky-cta.show ~ .lc-window{bottom:calc(140px + var(--lbc-safe-b));}
+}
 
 /* ── Menú lateral (móvil) ── */
 html.lbc-v101 .menu-overlay{background:var(--lbc-scrim);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity var(--lbc-t-3) var(--lbc-ease);}
