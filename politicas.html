@@ -3,60 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#06080D">
+<meta name="theme-color" content="#06070D">
 <title>Liberato Community — Políticas y Avisos Legales</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Políticas (v101): SOLO lectura más cómoda. El texto legal no cambia ni una palabra.
+   Tokens del sistema compartido (lbc-ui.css); --warn y --risk son los de los avisos de este documento. */
 :root{
-  --bg:#06080D; --panel:#0C0F17; --panel-2:#0E121B; --hair:rgba(255,255,255,0.06);
-  --brd:rgba(255,255,255,0.08); --gold:#C9A84C; --gold-2:#E7CC74;
-  --ink:#EFECE3; --ink-2:rgba(239,236,227,0.74); --ink-3:rgba(239,236,227,0.46); --ink-4:rgba(239,236,227,0.28);
+  --bg:var(--lbc-bg); --panel:var(--lbc-bg-2); --panel-2:var(--lbc-bg-3); --hair:var(--lbc-line);
+  --brd:var(--lbc-line-2); --gold:var(--lbc-gold); --gold-2:var(--lbc-gold-2);
+  --ink:var(--lbc-ink); --ink-2:var(--lbc-ink-2); --ink-3:var(--lbc-ink-3); --ink-4:var(--lbc-ink-4);
   --warn:#F5A623; --risk:#FF6B81;
-  --mono:'DM Mono',ui-monospace,Menlo,monospace; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
+  --mono:var(--lbc-font-mono); --sans:var(--lbc-font-sans); --serif:var(--lbc-font-serif);
 }
-/* ── Tema claro (paleta canónica Liberato) ── */
-[data-theme="light"]{
-  --bg:#eae6dc; --panel:#ffffff; --panel-2:#f6f3ed; --hair:rgba(33,29,22,0.09);
-  --brd:rgba(33,29,22,0.12); --gold:#9c7c2c; --gold-2:#7e6323;
-  --ink:#211d16; --ink-2:rgba(33,29,22,0.70); --ink-3:rgba(33,29,22,0.48); --ink-4:rgba(33,29,22,0.30);
-  --warn:#a85a0a; --risk:#d42e2e;
-}
-[data-theme="light"] .top{background:linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0.7)) !important;box-shadow:0 1px 0 rgba(33,29,22,0.06);}
+[data-theme="light"]{ --warn:#a85a0a; --risk:#d42e2e; }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(1100px 560px at 82% -12%,rgba(201,168,76,0.05),transparent 60%);}
-a{color:var(--gold-2);}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 22px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:linear-gradient(180deg,rgba(12,15,23,0.94),rgba(12,15,23,0.6));backdrop-filter:blur(14px);z-index:10;}
-.logo{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--ink-2);white-space:nowrap;cursor:pointer;}
-.logo b{font-style:normal;font-weight:600;color:var(--gold);}
-.back{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);border:0.5px solid var(--brd);border-radius:7px;padding:8px 13px;cursor:pointer;transition:all 0.2s;text-decoration:none;}
-.back:hover{color:var(--gold);border-color:rgba(201,168,76,0.4);}
-.wrap{max-width:820px;margin:0 auto;padding:40px 22px 80px;}
-.doc-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);}
-h1{font-family:var(--serif);font-size:40px;font-weight:600;line-height:1.1;margin:10px 0 6px;letter-spacing:-0.01em;}
-.meta{font-family:var(--mono);font-size:11px;color:var(--ink-4);letter-spacing:0.04em;}
-.lead{color:var(--ink-2);font-size:15.5px;margin:22px 0 8px;padding:16px 18px;border-radius:12px;border:0.5px solid var(--brd);background:var(--panel);}
-.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px;}
-.toc a{font-family:var(--mono);font-size:11px;letter-spacing:0.03em;color:var(--ink-3);border:0.5px solid var(--hair);border-radius:999px;padding:6px 12px;text-decoration:none;transition:all 0.15s;}
-.toc a:hover{color:var(--gold);border-color:rgba(201,168,76,0.4);}
-section.doc{margin-top:34px;padding-top:26px;border-top:1px solid var(--hair);scroll-margin-top:80px;}
-section.doc h2{font-family:var(--sans);font-size:20px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:11px;margin-bottom:14px;}
-section.doc h2 .n{flex:0 0 30px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(201,168,76,0.12);border:0.5px solid rgba(201,168,76,0.35);color:var(--gold);font-family:var(--mono);font-size:13px;font-weight:700;}
-section.doc p{color:var(--ink-2);margin-bottom:12px;}
-section.doc ul{margin:0 0 12px 4px;list-style:none;}
-section.doc li{color:var(--ink-2);padding-left:20px;position:relative;margin-bottom:8px;line-height:1.55;}
-section.doc li::before{content:"—";position:absolute;left:0;color:var(--gold);opacity:0.6;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  background-image:radial-gradient(1100px 560px at 82% -12%,rgba(204,169,79,0.05),transparent 60%);background-repeat:no-repeat;}
+a{color:var(--gold-2);text-underline-offset:3px;text-decoration-color:var(--lbc-gold-line);transition:text-decoration-color var(--lbc-t-2) var(--lbc-ease);}
+/* Barra superior: volver a la izquierda (a la derecha vive el interruptor de tema y lo tapaba) */
+.top{display:flex;align-items:center;gap:var(--lbc-s-2);min-height:calc(56px + var(--lbc-safe-t));padding:var(--lbc-safe-t) 104px 0 8px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);z-index:20;}
+.back{order:-1;--_px:var(--lbc-s-3);border-radius:var(--lbc-r-full);flex:none;}
+.back svg{width:18px;height:18px;flex:none;margin-left:-4px;}
+.logo{font-family:var(--serif);font-size:19px;letter-spacing:0.04em;color:var(--ink-2);white-space:nowrap;cursor:pointer;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-left:var(--lbc-s-2);border-left:1px solid var(--hair);line-height:28px;}
+.logo b{font-weight:600;color:var(--gold-2);}
+/* Composición: índice fijo a la izquierda en pantallas anchas; columna de lectura de ~70 caracteres */
+.wrap{max-width:720px;margin:0 auto;padding:40px var(--lbc-gutter) 96px;}
+.doc-tag{font-family:var(--mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);}
+h1{font-family:var(--serif);font-size:clamp(30px,7vw,40px);font-weight:600;line-height:1.12;margin:10px 0 10px;letter-spacing:-0.01em;text-wrap:balance;}
+.meta{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink-3);letter-spacing:0.02em;}
+.lead{color:var(--ink-2);font-size:16px;margin:24px 0 8px;padding:18px 20px;border-radius:var(--lbc-r-lg);border:1px solid var(--hair);background:var(--panel);box-shadow:var(--lbc-sh-1);}
+/* Índice */
+.toc{display:flex;flex-direction:column;margin:24px 0 8px;border:1px solid var(--hair);border-radius:var(--lbc-r-lg);background:var(--lbc-fill);overflow:hidden;}
+.toc::before{content:"Índice";font-family:var(--mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--ink-3);padding:14px 16px 6px;}
+.toc a{display:flex;align-items:center;min-height:46px;padding:6px 16px;font-size:15px;line-height:1.35;color:var(--ink-2);text-decoration:none;border-top:1px solid var(--hair);transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);font-variant-numeric:tabular-nums;}
+.toc a:first-of-type{border-top:0;}
+.toc a:active{background:var(--lbc-fill-2);}
+.toc a[aria-current="true"]{color:var(--gold-2);}
+section.doc{margin-top:40px;padding-top:32px;border-top:1px solid var(--hair);scroll-margin-top:calc(76px + var(--lbc-safe-t));}
+section.doc h2{font-family:var(--sans);font-size:21px;font-weight:600;line-height:1.3;color:var(--ink);display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;text-wrap:balance;}
+section.doc h2 .n{flex:0 0 30px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:var(--lbc-r-sm);background:var(--lbc-gold-dim);border:1px solid var(--lbc-gold-line);color:var(--gold-2);font-family:var(--mono);font-size:13px;font-weight:500;margin-top:-1px;}
+section.doc p{color:var(--ink-2);margin-bottom:14px;}
+section.doc ul{margin:0 0 14px 2px;list-style:none;}
+section.doc li{color:var(--ink-2);padding-left:22px;position:relative;margin-bottom:10px;line-height:1.65;}
+section.doc li::before{content:"—";position:absolute;left:0;color:var(--gold);opacity:0.7;}
 b,strong{color:var(--ink);font-weight:600;}
-.callout{margin:14px 0;padding:13px 16px;border-radius:10px;border-left:2px solid var(--warn);background:rgba(245,166,35,0.07);color:var(--ink-2);font-size:14px;}
+.callout{margin:18px 0;padding:14px 18px;border-radius:var(--lbc-r-md);border-left:2px solid var(--warn);background:rgba(245,166,35,0.07);color:var(--ink-2);font-size:15px;line-height:1.6;}
 .callout.risk{border-left-color:var(--risk);background:rgba(255,107,129,0.07);}
 .callout b{color:var(--gold-2);}
-.foot{margin-top:44px;padding-top:22px;border-top:1px solid var(--hair);font-size:13px;color:var(--ink-3);}
+.accept{margin-top:40px;padding:16px 18px;border-radius:var(--lbc-r-md);border:1px solid var(--lbc-gold-line);background:var(--lbc-gold-dim);font-size:15px;line-height:1.6;color:var(--ink-2);}
+.foot{margin-top:28px;padding-top:22px;border-top:1px solid var(--hair);font-size:14px;line-height:1.7;color:var(--ink-3);}
 .foot b{color:var(--ink-2);}
-.accept{margin-top:18px;padding:14px 16px;border-radius:12px;border:0.5px solid rgba(201,168,76,0.28);background:rgba(201,168,76,0.05);font-size:13.5px;color:var(--ink-2);}
+p,li,.lead,.callout,.accept{overflow-wrap:break-word;text-wrap:pretty;}
+:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px;border-radius:4px;}
+@media (hover:hover){
+  a:hover{text-decoration-color:currentColor;}
+  .toc a:hover{color:var(--ink);background:var(--lbc-fill);}
+  .toc a[aria-current="true"]:hover{color:var(--gold-2);}
+}
+@media (min-width:1080px){
+  .wrap{max-width:1040px;display:grid;grid-template-columns:232px minmax(0,680px);column-gap:72px;justify-content:center;padding-top:56px;}
+  .wrap > *{grid-column:2;}
+  .toc{grid-column:1;grid-row:1 / span 40;position:sticky;top:calc(88px + var(--lbc-safe-t));align-self:start;margin:6px 0 0;border:0;border-radius:0;background:none;overflow:visible;}
+  .toc::before{padding:0 0 10px 14px;}
+  .toc a{min-height:36px;padding:6px 14px;font-size:14px;border-top:0;border-left:1px solid var(--hair);}
+  .toc a[aria-current="true"]{border-left-color:var(--gold);}
+  .toc a:hover{background:none;}
+}
+@media (max-width:520px){
+  .logo b{display:none;}
+  .wrap{padding-top:28px;}
+  section.doc{margin-top:32px;padding-top:26px;}
+  section.doc h2{font-size:20px;}
+  .lead{padding:16px;}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+@media print{
+  .top,.toc,.theme-fab,#lbc-cc{display:none !important;}
+  body{background:#fff;color:#000;font-size:11pt;}
+  .wrap{display:block;max-width:none;padding:0;}
+  section.doc{break-inside:avoid-page;}
+}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -79,10 +112,10 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <body>
 <header class="top">
   <div class="logo" onclick="location.href='homepage.html'">Liberato <b>Community</b></div>
-  <a class="back" href="homepage.html">← Volver</a>
+  <a class="back lbc-btn lbc-btn--quiet" href="homepage.html"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4.5L7 10l5.5 5.5"/></svg>Volver</a>
 </header>
 
-<div class="wrap">
+<main class="wrap">
   <div class="doc-tag">Documento legal</div>
   <h1>Políticas y Avisos Legales</h1>
   <div class="meta">Vigente desde el 27 de agosto de 2026 · Última actualización: 30 de octubre de 2026</div>
@@ -91,14 +124,14 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
     Liberato Community es una plataforma <b>educativa</b> sobre trading e inversión (futuros, opciones y estrategias LEAPS). Todo el contenido, las herramientas, los análisis y los datos que aquí se muestran tienen fines <b>informativos y educativos</b>. <b>No constituyen asesoría financiera, de inversión, fiscal ni legal personalizada</b>, ni una oferta o recomendación para comprar o vender ningún instrumento. Al usar este sitio aceptas los avisos siguientes.
   </div>
 
-  <div class="toc">
+  <nav class="toc" aria-label="Índice">
     <a href="#resultados">1 · Resultados y rendimiento</a>
     <a href="#trader">2 · Aviso de riesgo (trader)</a>
     <a href="#datos">3 · Aviso sobre los datos</a>
     <a href="#proveedores">4 · Proveedores y terceros</a>
     <a href="#reembolsos">5 · Política de reembolsos</a>
     <a href="#privacidad">6 · Privacidad y cookies</a>
-  </div>
+  </nav>
 
   <!-- 1 -->
   <section class="doc" id="resultados">
@@ -202,7 +235,20 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
     <b>Contacto:</b> para dudas sobre estas políticas, membresía o facturación, escríbenos a <a href="mailto:liberatoceo@gmail.com">liberatoceo@gmail.com</a>.<br>
     © 2026 Liberato Community. Todos los derechos reservados.
   </div>
-</div>
+</main>
+<script>
+/* Índice: marca la sección que se está leyendo (solo orientación; no mueve ni anima el contenido). */
+(function(){
+  var links = document.querySelectorAll('.toc a'), secs = document.querySelectorAll('section.doc');
+  if(!links.length || !('IntersectionObserver' in window)) return;
+  function mark(id){ links.forEach(function(a){ if(a.getAttribute('href') === '#'+id) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current'); }); }
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) mark(e.target.id); });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  secs.forEach(function(sec){ io.observe(sec); });
+})();
+</script>
+<script src="lbc-ui.js" defer></script>
 <script src="consent.js"></script>
 </body>
 </html>
