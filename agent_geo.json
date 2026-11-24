@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Iran afirma que tres petroleros chocaron con minas en el Estrecho de Ormuz a pesar de la escolta naval de EE.UU., y el Tesoro de EE.UU. amplio las sanciones sobre Iran, elevando la tension geopolitica que presiona el apetito por riesgo del NQ hoy.",
-  "petroleo": "El crudo opera cerca de minimos de tres meses: Brent en torno a 89.2 USD y WTI cerca de 80.1 USD, ya que el aumento de la oferta global compensa el riesgo por los ataques en Ormuz, lo que alivia la presion inflacionaria y resulta levemente positivo para el NQ.",
-  "catalizador": "El Nasdaq 100 caia cerca de 3% hacia las 11:18 ET, liderado por semiconductores, al desvanecerse el rally de Nvidia y ante nuevos aranceles planteados por EE.UU.; el dolar sube por mayores apuestas de alza de tasas de la Fed mientras el mercado espera el dato de inflacion PCE del miercoles, un catalizador bajista inmediato para el NQ intradia.",
+  "geopolitica": "Iran afirma que tres petroleros chocaron con minas en el Estrecho de Ormuz a pesar de la escolta naval de EE.UU., mientras el Tesoro de EE.UU. amplia las sanciones sobre la banca en la sombra iraní y Washington prepara nuevos aranceles contra China y la UE, elevando la aversion al riesgo que pesa sobre el NQ hoy.",
+  "petroleo": "El Brent cotiza por debajo de 90 USD/barril y el WTI por debajo de 80 USD, minimos de varios meses, ya que el temor a un exceso de oferta global compensa el riesgo de suministro en Ormuz, lo que relaja algo la presion inflacionaria y da un leve soporte al NQ.",
+  "catalizador": "El mercado sigue descontando una alta probabilidad de subida de tasas de la Fed de 25 pb en la reunion del 8-9 de diciembre tras el CPI y PPI de octubre mas calientes de lo esperado, y espera el dato de inflacion PCE de esta semana como proximo catalizador para el NQ.",
   "sources": [
-    "CNBC 24 nov 2026 - Iran says tankers hit mines in Hormuz, Treasury widens sanctions",
-    "CNBC 24 nov 2026 - Oil holds near three-month low as rising supply offsets Hormuz threat",
-    "Bloomberg 11:18 ET - Nasdaq 100 Tumbles as Nvidia Euphoria Fades, New Tariffs Floated"
+    "CNBC 24-nov-2026 - Iran says three tankers hit mines in Hormuz despite U.S. escort, as Treasury widens sanctions",
+    "Benzinga 24-nov-2026 - Dow, S&P 500, Nasdaq 100 futures fall after Bessent unveils fresh Iran sanctions, Hormuz warnings",
+    "Bloomberg 24-nov-2026 - US Readies Tariff Hike on China, EU Goods as Soon as Tuesday",
+    "Kotak Neo / FinanceFeeds 24-nov-2026 - Brent slips below $90 as US-Iran negotiations shape outlook",
+    "CNBC 13-nov-2026 - PPI inflation report October 2026 (6.5% annual)"
   ],
-  "as_of": "2026-11-24T18:06:37Z"
+  "as_of": "2026-11-24T19:07:21Z"
 }
