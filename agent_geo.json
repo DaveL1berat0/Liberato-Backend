@@ -1,7 +1,10 @@
 {
   "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "",
-  "sources": [],
-  "as_of": "2026-11-24T15:05:25Z"
+  "petroleo": "El Brent cae por debajo de 90 USD/barril y el WTI ronda 79-80 USD, presionados por el desplome tecnologico global y temores de menor demanda, lo que anade presion bajista al apetito por riesgo del NQ.",
+  "catalizador": "Hacia las 10:22 ET el Nasdaq Composite cae cerca de 1.8% y el S&P 500 un 0.81% por dudas sobre el gasto en IA: Nvidia devuelve un cuarto de su alza del lunes (+31.48%) y Micron la mitad de la suya, mientras HPE se desploma 11% a pesar de superar expectativas; catalizador bajista directo para el NQ.",
+  "sources": [
+    "CNBC/Yahoo Finance 10:22 ET",
+    "Kotak Neo 24 Nov"
+  ],
+  "as_of": "2026-11-24T15:40:21Z"
 }
