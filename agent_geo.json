@@ -1,13 +1,13 @@
 {
-  "geopolitica": "Iran afirma que tres petroleros chocaron con minas en el Estrecho de Ormuz a pesar de la escolta naval de EE.UU., mientras el Tesoro de EE.UU. amplia las sanciones sobre la banca en la sombra iraní y Washington prepara nuevos aranceles contra China y la UE, elevando la aversion al riesgo que pesa sobre el NQ hoy.",
-  "petroleo": "El Brent cotiza por debajo de 90 USD/barril y el WTI por debajo de 80 USD, minimos de varios meses, ya que el temor a un exceso de oferta global compensa el riesgo de suministro en Ormuz, lo que relaja algo la presion inflacionaria y da un leve soporte al NQ.",
-  "catalizador": "El mercado sigue descontando una alta probabilidad de subida de tasas de la Fed de 25 pb en la reunion del 8-9 de diciembre tras el CPI y PPI de octubre mas calientes de lo esperado, y espera el dato de inflacion PCE de esta semana como proximo catalizador para el NQ.",
+  "geopolitica": "Nvidia se hunde en premarket (-4% a -7% segun el momento de la sesion) y el Nasdaq-100 retrocede cerca de -2% tras el regreso de Jensen Huang como CEO, con la investigacion del consejo y el escrutinio del Congreso sobre sus controles de exportacion de chips a China aun activos, lo que presiona a todo el sector de semiconductores dentro del NQ (CNBC, 24-nov-2026).",
+  "petroleo": "El Brent cae a unos 88 USD/barril (-1.2%) y el WTI a cerca de 79 USD (-1.2%), ampliando el desplome desde el pico de 117 USD de fines de octubre, pese a los ataques a petroleros vinculados a Iran, lo que reduce el riesgo inflacionario de corto plazo y resta algo de presion sobre las tasas, un alivio marginal para el NQ (Gulf News / Arbiterz, 24-nov-2026).",
+  "catalizador": "Las apuestas de un ajuste de tasas de la Fed en la reunion del 8-9 de diciembre saltaron a cerca del 95% tras el rally impulsado por Nvidia el lunes, sin oradores de la Fed programados para hoy; el mercado seguira de cerca el indice de confianza del consumidor y el Fed de Richmond a las 10:00 ET, datos que podrian anadir volatilidad adicional al NQ (TheStreet / CoinCentral, 24-nov-2026).",
   "sources": [
-    "CNBC 24-nov-2026 - Iran says three tankers hit mines in Hormuz despite U.S. escort, as Treasury widens sanctions",
-    "Benzinga 24-nov-2026 - Dow, S&P 500, Nasdaq 100 futures fall after Bessent unveils fresh Iran sanctions, Hormuz warnings",
-    "Bloomberg 24-nov-2026 - US Readies Tariff Hike on China, EU Goods as Soon as Tuesday",
-    "Kotak Neo / FinanceFeeds 24-nov-2026 - Brent slips below $90 as US-Iran negotiations shape outlook",
-    "CNBC 13-nov-2026 - PPI inflation report October 2026 (6.5% annual)"
+    "CNBC 24-nov-2026",
+    "Gulf News 24-nov-2026",
+    "Arbiterz 24-nov-2026",
+    "TheStreet 24-nov-2026",
+    "CoinCentral 24-nov-2026"
   ],
-  "as_of": "2026-11-24T19:07:21Z"
+  "as_of": "2026-11-24T20:06:23Z"
 }
