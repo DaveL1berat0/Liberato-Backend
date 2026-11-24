@@ -1876,6 +1876,28 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <link rel="stylesheet" href="lbc-tools.css">
 <script src="lbc-tools.js" defer></script>
 <style id="v101-herramientas">
+/* El journal conserva su propio sistema de tema; aquí solo medidas, estados y legibilidad con los tokens compartidos */
+/* Fondo de constelaciones: presente pero por detrás de los datos */
+#pcanvas{opacity:0.45;}
+/* Radar: las etiquetas de los ejes ya no se cortan en el borde del gráfico */
+.radar-svg{overflow:visible;}
+[data-theme="light"] .radar-svg polygon[fill="none"]{stroke:rgba(33,29,22,0.13);}
+[data-theme="light"] .radar-svg line{stroke:rgba(33,29,22,0.10);}
+/* Cifras tabulares */
+.kpi-value,.stat-value,.tz-kpi-value,.dist-val,.pnl-total,.radar-score-num,td,.dfp-seg{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+/* Controles: objetivos táctiles y estados */
+.mob-back,.td-close,.tdm-close,.dfp-seg,.dfp-clr{-webkit-tap-highlight-color:transparent;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.td-close,.tdm-close{width:var(--lbc-h-sm);height:var(--lbc-h-sm);}
+.td-close:active,.tdm-close:active,.mob-back:active{transform:scale(0.95);}
+body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-shadow:var(--lbc-ring);}
+@media(max-width:768px){
+  .mob-back{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;font-size:11px;position:relative;}
+  .mob-back::after{content:'';position:absolute;inset:-4px;}
+  .td-close,.tdm-close{width:var(--lbc-h-md);height:var(--lbc-h-md);}
+  .dfp-seg{min-height:var(--lbc-h-md);}
+  .dfp-clr{min-width:var(--lbc-h-md);min-height:var(--lbc-h-md);}
+}
+@media(prefers-reduced-motion:reduce){.td-close:active,.tdm-close:active,.mob-back:active{transform:none;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>

@@ -44,6 +44,9 @@
 }
 
 /* ─── 2. Panel «Mi perfil» ──────────────────────────────────────────── */
+/* El panel va por encima de la navegación (antes la nav, con z-index 8000, tapaba su título y el botón de cerrar) */
+.profile-overlay{z-index:8990;}
+.profile-drawer{z-index:9000;}
 .profile-overlay{transition:opacity var(--lbc-t-3) var(--lbc-ease),visibility var(--lbc-t-3) var(--lbc-ease);}
 .pd-close{width:var(--lbc-h-md);height:var(--lbc-h-md);border-radius:var(--lbc-r-md);transition:color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
 .pd-close:active{transform:scale(0.95);}
