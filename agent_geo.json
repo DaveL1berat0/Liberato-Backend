@@ -1,10 +1,7 @@
 {
   "geopolitica": "",
-  "petroleo": "El Brent cae a minimos de tres meses (~89,10 USD/barril, -0,3%) y el WTI a ~79,97 USD (-0,3%) por el desarme de coberturas tras senales de Washington de mas margen para la diplomacia con Iran y un superavit de oferta previo a la reunion de la OPEP+ del 29 de noviembre, lo que resta soporte inflacionario, un factor levemente favorable para el NQ.",
-  "catalizador": "El Nasdaq 100 cae con fuerza en futuros (-2,3% hacia las 08:39 ET, CNBC) tras el repunte del 31,5% de Nvidia el lunes por la reincorporacion de Jensen Huang como CEO; Nvidia retrocede hoy mas de 5% en premarket al cuestionarse la durabilidad del rally, arrastrando al NQ en la apertura.",
-  "sources": [
-    "CNBC 08:39 ET (via mlq.ai)",
-    "Reuters 24-nov-2026 (via Sana/Kotak Neo/Invezz, hora exacta no confirmada)"
-  ],
-  "as_of": "2026-11-24T14:40:19Z"
+  "petroleo": "",
+  "catalizador": "",
+  "sources": [],
+  "as_of": "2026-11-24T15:05:25Z"
 }
