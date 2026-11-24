@@ -35,7 +35,10 @@
     var b=el(id); if(!b||b.classList.contains('is-open')) return;
     lastFocus=d.activeElement; b.classList.add('is-open'); b.setAttribute('aria-hidden','false');
     openCount++; root.classList.add('lbc-lock');
-    var f=focusables(b); if(f.length) setTimeout(function(){ try{ (b.querySelector('[autofocus]')||f[0]).focus({preventScroll:true}); }catch(e){} },60);
+    // El foco entra en el propio diálogo (no en la X: evitaría un anillo de foco que nadie pidió); [autofocus] manda si existe.
+    var box=b.querySelector('.lbc-modal')||b, af=b.querySelector('[autofocus]');
+    if(!box.hasAttribute('tabindex')) box.setAttribute('tabindex','-1');
+    setTimeout(function(){ try{ (af||box).focus({preventScroll:true}); }catch(e){} },60);
   }
   function closeModal(id){
     var b=el(id); if(!b||!b.classList.contains('is-open')) return;
