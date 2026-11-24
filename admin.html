@@ -5,27 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liberato · Command Deck</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#050608; --bg-2:#0A0C12; --bg-3:#0E1119; --panel:#0B0E16;
-    --gold:#C9A84C; --gold-2:#E7CC74; --gold-dim:rgba(204,169,79,0.12);
-    --up:#2EE8A4; --down:#B197FC; --cyan:#4FD6E0;
-    --ink:#F3F0E7; --ink-2:#9CA3AF; --ink-3:#6B7280; --ink-4:#3B4252;
-    --brd:rgba(255,255,255,0.05); --brd-gold:rgba(204,169,79,0.22);
+    /* v101: los colores, textos y fuentes salen de los tokens del sistema compartido (lbc-ui.css): oro de marca #CCA94F. */
+    --bg:var(--lbc-bg); --bg-2:var(--lbc-bg-2); --bg-3:var(--lbc-bg-3); --panel:var(--lbc-bg-2);
+    --gold:var(--lbc-gold); --gold-2:var(--lbc-gold-2); --gold-dim:var(--lbc-gold-dim);
+    --up:var(--lbc-up); --down:var(--lbc-down); --cyan:var(--lbc-cyan);
+    --ink:var(--lbc-ink); --ink-2:var(--lbc-ink-2); --ink-3:var(--lbc-ink-3); --ink-4:var(--lbc-ink-4);
+    --brd:var(--lbc-line); --brd-gold:var(--lbc-gold-line);
     --grid:rgba(204,169,79,0.03);
-    --serif:Georgia,'Times New Roman',serif;
-    --sans:'Space Grotesk',-apple-system,sans-serif;
-    --mono:'JetBrains Mono',monospace;
+    --serif:var(--lbc-font-serif);
+    --sans:var(--lbc-font-sans);
+    --mono:var(--lbc-font-mono);
   }
   /* ── Tema claro (paleta canónica Liberato) ── */
   [data-theme="light"]{
-    --bg:#eae6dc; --bg-2:#ffffff; --bg-3:#f6f3ed; --panel:#ffffff;
-    --gold:#9c7c2c; --gold-2:#7e6323; --gold-dim:rgba(168,132,47,0.12);
-    --up:#15913f; --down:#6d4bd8; --cyan:#0e7490;
-    --ink:#211d16; --ink-2:rgba(33,29,22,0.62); --ink-3:rgba(33,29,22,0.42); --ink-4:rgba(33,29,22,0.30);
-    --brd:rgba(33,29,22,0.10); --brd-gold:rgba(168,132,47,0.28); --grid:rgba(168,132,47,0.05);
+    --grid:rgba(168,132,47,0.05);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{-webkit-font-smoothing:antialiased;}
@@ -137,6 +135,30 @@
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
   @keyframes sweep{0%,100%{transform:translateX(-60%);}50%{transform:translateX(60%);}}
   @keyframes draw{to{stroke-dashoffset:0;}}
+
+  /* ── v101 · mismo lenguaje que el resto del producto (solo estilo: ninguna llamada, id ni botón cambia) ── */
+  .field-input{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  .field-input:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  .btn{background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%);color:var(--lbc-on-gold);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);box-shadow:var(--lbc-sh-gold);
+    transition:transform var(--lbc-t-1) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease);}
+  .btn:hover{opacity:1;filter:brightness(1.05);}
+  .btn:active{transform:scale(0.97);filter:brightness(0.94);}
+  .btn:disabled{box-shadow:none;filter:none;}
+  .refresh,.tab{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-sm);transition:color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+  .refresh:active,.tab:active{transform:scale(0.97);}
+  .kpi,.panel,.tbl-panel{border-radius:var(--lbc-r-lg);}
+  .kpi-v{font-variant-numeric:tabular-nums;}
+  :focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:2px;}
+  .field-input:focus-visible{outline:none;}
+  /* Los tres campos de «Crear cuenta de prueba» no tenían estilo (salían con el gris del navegador): mismo campo que el resto. */
+  #trial-name,#trial-email,#trial-days{background:var(--lbc-fill);border:1px solid var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);padding:0 var(--lbc-s-3);color:var(--lbc-ink);font-family:var(--lbc-font-sans);font-size:14px;outline:none;transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  #trial-name:focus,#trial-email:focus,#trial-days:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  #trial-name::placeholder,#trial-email::placeholder{color:var(--lbc-ink-4);}
+  @media (max-width:640px){
+    .deck{padding-top:68px;}   /* deja libre la esquina del interruptor de tema: tapaba «Sincronizar» */
+    input,select,textarea,.field-input{font-size:16px !important;}   /* iOS no hace zoom al enfocar */
+    .refresh,.tab{min-height:44px;}
+  }
 </style>
 <!-- Meta Pixel Code -->
 <script>
