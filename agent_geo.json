@@ -1,10 +1,10 @@
 {
   "geopolitica": "",
-  "petroleo": "",
-  "catalizador": "La investigacion abierta por la SEC sobre si Nvidia engano a los inversores en sus divulgaciones (revelada por el WSJ y aun vigente) sigue presionando al sector tecnologico, mientras el mercado descuenta con alta probabilidad (~95%) una subida de tasas de la Fed en diciembre bajo el nuevo presidente Kevin Warsh, lastrando al Nasdaq-100 en la sesion de hoy.",
+  "petroleo": "El Brent cae a minimos de tres meses (~89,10 USD/barril, -0,3%) y el WTI a ~79,97 USD (-0,3%) por el desarme de coberturas tras senales de Washington de mas margen para la diplomacia con Iran y un superavit de oferta previo a la reunion de la OPEP+ del 29 de noviembre, lo que resta soporte inflacionario, un factor levemente favorable para el NQ.",
+  "catalizador": "El Nasdaq 100 cae con fuerza en futuros (-2,3% hacia las 08:39 ET, CNBC) tras el repunte del 31,5% de Nvidia el lunes por la reincorporacion de Jensen Huang como CEO; Nvidia retrocede hoy mas de 5% en premarket al cuestionarse la durabilidad del rally, arrastrando al NQ en la apertura.",
   "sources": [
-    "WSJ (sondeo civil de la SEC a Nvidia, difundido desde 17-nov, vigente)",
-    "CME FedWatch / medios financieros (prob. alza Fed en diciembre bajo Warsh)"
+    "CNBC 08:39 ET (via mlq.ai)",
+    "Reuters 24-nov-2026 (via Sana/Kotak Neo/Invezz, hora exacta no confirmada)"
   ],
-  "as_of": "2026-11-24T14:07:09Z"
+  "as_of": "2026-11-24T14:40:19Z"
 }
