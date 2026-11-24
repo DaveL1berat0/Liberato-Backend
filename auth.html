@@ -178,7 +178,8 @@ body{
 .msg.error{background:rgba(177,151,252,0.10);border-color:rgba(177,151,252,0.32);color:var(--down);}
 .msg.success{background:rgba(46,232,164,0.10);border-color:rgba(46,232,164,0.30);color:var(--up);}
 .msg.info{background:var(--gold-dim);border-color:var(--brd-gold);color:var(--gold-2);}
-.resend-timer{text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:8px;min-height:18px;font-variant-numeric:tabular-nums;}
+.resend-timer{text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:8px;font-variant-numeric:tabular-nums;}
+.resend-timer:empty{display:none;}
 /* Código de 6 dígitos */
 .code-input{height:64px;text-align:center;font-family:var(--mono);font-size:28px;font-weight:600;letter-spacing:0.38em;padding:0 0 0 0.38em;font-variant-numeric:tabular-nums;color:var(--gold-2);}
 .code-input::placeholder{letter-spacing:0.38em;color:var(--ink-4);font-weight:400;}
@@ -192,8 +193,8 @@ body{
 .seg-wide .seg-btn{flex:1;min-height:44px;font-size:15px;border-radius:10px;}
 /* Cuenta */
 .acct{border:1px solid var(--brd);border-radius:14px;background:var(--field);padding:2px 16px;}
-.acct-row{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:50px;padding:10px 0;border-bottom:1px solid var(--brd);}
-.acct-row:last-child{border-bottom:none;}
+.acct-row{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:50px;padding:10px 0;}
+.acct-row + .acct-row{border-top:1px solid var(--brd);}
 .acct-key{font-size:13.5px;color:var(--ink-3);flex:none;}
 .acct-val{font-size:15px;color:var(--ink);font-weight:500;text-align:right;min-width:0;overflow-wrap:anywhere;}
 .badge{display:inline-block;padding:5px 12px;border-radius:999px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.06em;white-space:nowrap;}
@@ -202,9 +203,10 @@ body{
 .upgrade-box{background:linear-gradient(160deg,rgba(204,169,79,0.09),rgba(204,169,79,0.03));border:1px solid var(--brd-gold);border-radius:16px;padding:22px 20px 20px;margin-top:20px;}
 .upgrade-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--gold-2);margin-bottom:8px;line-height:1.25;text-wrap:balance;}
 .upgrade-text{font-size:14px;color:var(--ink-2);line-height:1.6;margin-bottom:16px;}
+.upgrade-box .btn{font-size:15px;padding:0 10px;text-wrap:balance;line-height:1.25;}
+.coupon-field{margin-top:18px;padding-top:16px;border-top:1px solid var(--brd);}
 .coupon-row{display:flex;gap:8px;}
 .coupon-row .field-input{flex:1;min-width:0;text-transform:uppercase;}
-.coupon-row .field-input::placeholder{text-transform:none;}
 .coupon-feedback{font-size:13px;margin-top:8px;color:var(--gold);min-height:0;}
 /* Ajustes del perfil: se abren al tocarlos; el dorado macizo queda para la acción principal */
 .prof-sec{margin-top:26px;}
@@ -227,7 +229,7 @@ body{
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 /* Foco visible con teclado */
 :focus-visible{outline:2px solid var(--gold-2);outline-offset:3px;}
-.field-input:focus-visible{outline:none;}
+.field-input:focus-visible,.screen-title:focus,.screen-title:focus-visible{outline:none;}
 /* Móvil: sensación de app nativa. La tarjeta deja de «flotar»: el formulario ocupa la pantalla. */
 @media (max-width:520px){
   body{padding-left:20px;padding-right:20px;padding-top:max(64px,calc(env(safe-area-inset-top) + 56px));background-image:radial-gradient(ellipse 120% 38% at 50% -6%,rgba(204,169,79,0.09),transparent);}
@@ -243,6 +245,7 @@ body{
   .pw-toggle{top:5px;right:5px;}
   .code-input{height:66px;}
   .auth-foot{margin-top:28px;}
+  .upgrade-box{padding:20px 16px 18px;}
 }
 @media (max-width:350px){.code-input{font-size:24px;letter-spacing:0.3em;padding-left:0.3em;}}
 @media (prefers-reduced-motion:reduce){
@@ -462,10 +465,10 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <div class="upgrade-text" data-es="Acceso Completo desbloquea trading en vivo, niveles institucionales de Gamma, order flow en tiempo real, journal con IA y la plataforma completa." data-en="Full Access unlocks live trading, institutional Gamma levels, real-time order flow, the AI journal and the full platform.">Acceso Completo desbloquea trading en vivo, niveles institucionales de Gamma, order flow en tiempo real, journal con IA y la plataforma completa.</div>
       <button class="btn btn-gold" id="btn-upgrade" onclick="doUpgrade()" data-es="Mejorar a Acceso Completo · $199/mes" data-en="Upgrade to Full Access · $199/mo">Mejorar a Acceso Completo · $199/mes</button>
       <button class="btn btn-ghost" id="btn-refresh-access" onclick="refreshAccess()" data-es="Ya pagué — actualizar mi acceso" data-en="I already paid — refresh my access">Ya pagué — actualizar mi acceso</button>
-      <div class="coupon-field" style="margin-top:16px;">
-        <label class="sr-only" for="coupon-code" data-es="Código de descuento (opcional)" data-en="Discount code (optional)">Código de descuento (opcional)</label>
+      <div class="coupon-field">
+        <label class="field-label" for="coupon-code" data-es="Código de descuento (opcional)" data-en="Discount code (optional)">Código de descuento (opcional)</label>
         <div class="coupon-row">
-          <input class="field-input" id="coupon-code" placeholder="Código de descuento (opcional)" data-ph-es="Código de descuento (opcional)" data-ph-en="Discount code (optional)" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="done" onkeydown="if(event.key==='Enter')applyCoupon()">
+          <input class="field-input" id="coupon-code" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="done" onkeydown="if(event.key==='Enter')applyCoupon()">
           <button class="btn btn-line btn-sm" id="btn-coupon-apply" onclick="applyCoupon()" data-es="Aplicar" data-en="Apply">Aplicar</button>
         </div>
         <div class="coupon-feedback" id="coupon-feedback" role="status"></div>
