@@ -21,6 +21,7 @@
 <meta name="theme-color" content="#06080D">
 <title>Liberato Community — Inteligencia LEAPS</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -723,6 +724,42 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <body>
 
 <!-- ══ NAVEGACIÓN LIBERATO (idéntica a las demás secciones) ══ -->
+<!-- v101 · capa de herramientas de miembros (nav, perfil) + afinado propio de la página. Solo presentación: no toca datos ni lógica. -->
+<link rel="stylesheet" href="lbc-tools.css">
+<script src="lbc-tools.js" defer></script>
+<style id="v101-herramientas">
+/* Medidas alineadas con el sistema compartido */
+:root{--r-sm:var(--lbc-r-sm);}
+/* Cifras tabulares en calculadora, tabla y lecturas */
+.lc-cell .v,.lc-f input,.scan-tbl td,.yc-spread,.env-hero-meta .cls,.p-sub,.cov{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+/* Estados «sin dato» y de carga: legibles (antes gris al 24 %) */
+.stub,.loading,.lchart-load,.p-sub,.env-hero-meta .cov{color:var(--ink-3);}
+.stub{font-size:12px;line-height:1.5;}
+.loading,.lchart-load{font-size:11.5px;}
+/* Controles: mismos estados que el resto del sistema */
+.chart-tf button,.dtool,.scan-tbl tbody tr,.lc-f input,.scan-search{-webkit-tap-highlight-color:transparent;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.chart-tf button{min-height:var(--lbc-h-sm);min-width:var(--lbc-h-sm);}
+.chart-tf button:active,.dtool:active{transform:scale(0.95);}
+.lc-f input{min-height:var(--lbc-h-md);border-radius:var(--lbc-r-sm);}
+.lc-f input:focus,.scan-search:focus{box-shadow:var(--lbc-ring);}
+.lc-cell{padding:12px 14px;}
+.lc-cell .v{line-height:1.15;}
+.scan-tbl th{white-space:nowrap;}
+.scan-tbl td{padding-top:12px;padding-bottom:12px;}
+.app :is(a,button,[role="button"],[tabindex]):focus-visible,main :is(a,button):focus-visible{outline:none;box-shadow:var(--lbc-ring);}
+.info-i{position:relative;}
+.info-i::after{content:'';position:absolute;inset:-12px;}
+@media(max-width:700px){
+  .chart-tf{gap:6px;}
+  .chart-tf button{min-height:40px;min-width:44px;padding:0 14px;}
+  .dtool{width:36px;height:36px;}
+  .lc-f input{font-size:16px;}            /* iOS no hace zoom al enfocar */
+  .lc-f label{font-size:10.5px;}
+  .scan-search{min-height:var(--lbc-h-md);}
+  .p-hd{min-height:52px;}
+}
+@media(prefers-reduced-motion:reduce){.chart-tf button:active,.dtool:active{transform:none;}}
+</style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
   <div class="lbcn-links">

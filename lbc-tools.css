@@ -30,9 +30,13 @@
   .lbcn{padding:calc(8px + env(safe-area-inset-top,0px)) 14px 8px;gap:8px 10px;flex-wrap:wrap;}
   .lbcn-brand{order:1;width:auto;flex:1 1 auto;min-width:0;margin:0;padding:0;border:none;font-size:15px;min-height:40px;display:inline-flex;align-items:center;gap:0.28em;white-space:nowrap;}
   .lbcn-right{order:2;flex:0 0 auto;margin-left:0;gap:8px;}
-  .lbcn-links{order:3;flex:0 0 calc(100% + 28px);width:calc(100% + 28px);min-width:0;gap:8px;padding:2px 14px 4px;margin:0 -14px;box-sizing:border-box;scroll-snap-type:x proximity;scroll-padding-left:14px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);}
+  .lbcn-links{order:3;flex:0 0 calc(100% + 28px);width:calc(100% + 28px);min-width:0;gap:8px;padding:2px 14px 4px;margin:0 -14px;box-sizing:border-box;scroll-snap-type:none;-webkit-mask-image:none;mask-image:none;}
+  /* El difuminado solo aparece por el lado donde queda algo por ver (lo marca lbc-tools.js) */
+  .lbcn-links.lbcn-mas-der{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);}
+  .lbcn-links.lbcn-mas-izq{-webkit-mask-image:linear-gradient(270deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(270deg,#000 calc(100% - 32px),transparent);}
+  .lbcn-links.lbcn-mas-izq.lbcn-mas-der{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent);}
   .lbcn-item{font-size:11px;letter-spacing:0.06em;gap:6px;}
-  .lbcn-item.lbcn-pill{position:relative;min-height:40px;padding:0 14px;scroll-snap-align:start;}
+  .lbcn-item.lbcn-pill{position:relative;min-height:40px;padding:0 14px;}
   .lbcn-item.lbcn-pill::after{content:'';position:absolute;inset:-2px 0;}   /* zona táctil de 44 px sin engordar la píldora */
   .lbc-lock{width:13px;height:13px;}
   .lbcn-profile{width:40px;height:40px;font-size:16px;}

@@ -43,6 +43,7 @@ function adminUnlock(){lbcToggleAdmin();}
 <meta name="theme-color" content="#06080D">
 <title>Liberato Community — Calendario de Resultados</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1101,6 +1102,33 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 .pdc-btn-save:disabled{opacity:0.55;cursor:not-allowed;}
 .pdc-btn-cancel{border:1px solid rgba(232,228,217,0.2);background:rgba(255,255,255,0.03);color:var(--text2);}
 .pdc-btn-cancel:hover{border-color:rgba(232,228,217,0.4);color:var(--text);}
+</style>
+<!-- v101 · capa de herramientas de miembros (nav, perfil) + afinado propio de la página. Solo presentación: no toca datos ni lógica. -->
+<link rel="stylesheet" href="lbc-tools.css">
+<script src="lbc-tools.js" defer></script>
+<style id="v101-herramientas">
+/* Buscador: un solo marco (el del campo). El input ya no pinta su propio borde ni pulsa por dentro */
+.hero-search-input{animation:none!important;border:none!important;box-shadow:none!important;outline:none;background:transparent;}
+.hero-search-field{border-radius:var(--lbc-r-lg);transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+.hero-search-field:focus-within{box-shadow:var(--lbc-ring);}
+/* Etiquetas mínimas de 10 px */
+.hs-tag-label,.hst-logo,.zone-nav-tag,.ctrl-filter-label{font-size:10px;}
+/* Controles */
+.week-btn,.filter-chip,.hs-ticker,.hst{-webkit-tap-highlight-color:transparent;}
+.week-btn{min-width:var(--lbc-h-md);min-height:var(--lbc-h-md);transition:border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.week-btn:hover{transform:none;}
+.week-btn:active{transform:scale(0.95);}
+.filter-chip{min-height:var(--lbc-h-sm);font-size:10px;transition:border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.filter-chip:active{transform:scale(0.96);}
+body :is(a,button,input,[role="button"],[tabindex]):focus-visible{outline:none;box-shadow:var(--lbc-ring);}
+.hero-search-input:focus-visible{box-shadow:none!important;}
+/* El panel «Navegar semanas» se salía 16 px por la derecha en móvil (ancho 100 % + margen) */
+@media(max-width:767px){.ctrl-zone.zone-nav{width:calc(100% - 16px);box-sizing:border-box;}}
+@media(max-width:640px){
+  .filter-chip{min-height:40px;font-size:10.5px!important;padding:0 14px!important;}
+  .hero-search-input{font-size:16px!important;}   /* iOS no hace zoom al enfocar */
+}
+@media(prefers-reduced-motion:reduce){.week-btn:active,.filter-chip:active{transform:none;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
