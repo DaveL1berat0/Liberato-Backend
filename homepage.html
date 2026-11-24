@@ -1580,13 +1580,15 @@ html.lbc-v101 :is(.hero-cta,.btn-hero-2,.cd-btn,.modal-btn,.sticky-cta-btn,.cont
 html.lbc-v101 :is(.hero-cta,.btn-hero-2,.cd-btn,.modal-btn,.sticky-cta-btn,.contact-submit,.btn-free-2,.nav-login,.nav-cta,.menu-cta button):focus-visible{outline:none !important;box-shadow:0 0 0 2px var(--lbc-bg),0 0 0 4px var(--lbc-gold-2) !important;}
 html.lbc-v101 :is(.modal-btn,.contact-submit,.lbc-btn):disabled{opacity:0.5 !important;cursor:not-allowed;transform:none !important;}
 /* Estado «cargando» (lo pone lbc-ui.js con aria-busy): gira un indicador y no deja enviar dos veces */
-html.lbc-v101 :is(.modal-btn,.contact-submit)[aria-busy="true"]{position:relative;color:transparent !important;pointer-events:none;}
+/* (el atributo va doble a propósito: tiene que ganar en especificidad a la regla del botón primario) */
+html.lbc-v101 :is(.modal-btn,.contact-submit)[aria-busy="true"][aria-busy]{position:relative;color:transparent !important;pointer-events:none;}
 html.lbc-v101 :is(.modal-btn,.contact-submit)[aria-busy="true"]::after{content:"";position:absolute;inset:0;margin:auto;width:18px;height:18px;border-radius:50%;border:2px solid rgba(11,11,18,0.28);border-top-color:var(--lbc-on-gold);animation:lbc-spin .7s linear infinite;}
 html.lbc-v101 .hero-cta{min-height:56px !important;padding:0 34px !important;font-size:17px !important;margin-top:28px;}
 html.lbc-v101 .btn-hero-2{min-height:56px !important;padding:0 20px !important;font-size:17px !important;}
 html.lbc-v101 .cd-btn{min-height:54px !important;padding:0 36px !important;font-size:16px !important;display:inline-flex;align-items:center;justify-content:center;}
 html.lbc-v101 .modal-btn,html.lbc-v101 .contact-submit{min-height:54px !important;padding:0 20px !important;font-size:16px !important;}
-html.lbc-v101 .sticky-cta-btn{min-height:44px !important;padding:0 18px !important;font-size:14px !important;border-radius:12px !important;}
+html.lbc-v101 .sticky-cta-btn{min-height:44px !important;padding:0 18px !important;font-size:14px !important;}
+html.lbc-v101 body .sticky-cta .sticky-cta-btn{border-radius:12px !important;}
 html.lbc-v101 .menu-cta button:not(.menu-cta-alt){min-height:54px !important;font-size:16px !important;}
 /* ── Botón secundario / fantasma ── */
 html.lbc-v101 :is(.btn-free-2,.menu-cta button.menu-cta-alt){
@@ -1730,6 +1732,14 @@ html.lbc-v101 :is(.menu-drawer-close,.modal-close,.contact-close,.lbc-home-x){wi
 html.lbc-v101 .menu-drawer-close{top:calc(14px + var(--lbc-safe-t));right:14px;}
 html.lbc-v101 :is(.modal-close,.contact-close,.lbc-home-x){position:absolute;top:12px;right:12px;z-index:2;}
 @media (hover:hover){html.lbc-v101 :is(.menu-drawer-close,.modal-close,.contact-close,.lbc-home-x):hover{background:var(--lbc-fill-2);color:var(--lbc-ink) !important;}}
+
+/* ── Panel «Mi perfil» (miembros): mismos campos y botones ── */
+html.lbc-v101 .pd-close{width:44px;height:44px;border-radius:50%;border:0;background:var(--lbc-fill);color:rgba(243,240,231,0.62);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
+html.lbc-v101 .pd-close:active{transform:scale(0.96);}
+html.lbc-v101 .pd-input{font-size:16px;min-height:48px;border-radius:12px;}
+html.lbc-v101 :is(.pd-btn,.pd-avatar-btn,.pd-lang-btn,.pd-logout){min-height:44px;border-radius:12px;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease);}
+html.lbc-v101 :is(.pd-btn,.pd-avatar-btn,.pd-lang-btn,.pd-logout):active{transform:scale(0.97);}
+html.lbc-v101 .pd-btn{min-height:48px;font-size:15px;}
 
 /* ── Modales: un solo lenguaje (registro, acceso, aviso, contacto). En móvil suben como hoja. ── */
 html.lbc-v101 :is(.modal-overlay,.contact-overlay,#lc-login,#newsletter-overlay){background:var(--lbc-scrim) !important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px) !important;}
