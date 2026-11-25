@@ -1878,7 +1878,6 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <style id="v101-herramientas">
 /* El journal conserva su propio sistema de tema; aquí solo medidas, estados y legibilidad con los tokens compartidos */
 /* Fondo de constelaciones: presente pero por detrás de los datos */
-#pcanvas{opacity:0.45;}
 /* Radar: las etiquetas de los ejes ya no se cortan en el borde del gráfico */
 .radar-svg{overflow:visible;}
 [data-theme="light"] .radar-svg polygon[fill="none"]{stroke:rgba(33,29,22,0.13);}
@@ -1898,6 +1897,149 @@ body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-sha
   .dfp-clr{min-width:var(--lbc-h-md);min-height:var(--lbc-h-md);}
 }
 @media(prefers-reduced-motion:reduce){.td-close:active,.tdm-close:active,.mob-back:active{transform:none;}}
+
+/* ══════════ v101 · segunda vuelta: el Journal con el lenguaje del sistema ══════════ */
+:root{
+  --jv-ic-inicio:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='3.5' width='7' height='7' rx='1.6'/%3E%3Crect x='13.5' y='3.5' width='7' height='7' rx='1.6'/%3E%3Crect x='3.5' y='13.5' width='7' height='7' rx='1.6'/%3E%3Crect x='13.5' y='13.5' width='7' height='7' rx='1.6'/%3E%3C/svg%3E"); --jv-ic-cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15.5' rx='2.4'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E"); --jv-ic-rep:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20.5h16M7 17v-6M12 17V6M17 17v-9'/%3E%3C/svg%3E"); --jv-ic-trades:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6.5h11M9 12h11M9 17.5h11'/%3E%3Cpath d='M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01'/%3E%3C/svg%3E");
+  --jv-ic-genio:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l2.5 5.4 5.9.7-4.4 4 1.2 5.8L12 16.5l-5.2 2.9L8 13.6l-4.4-4 5.9-.7z'/%3E%3C/svg%3E"); --jv-ic-pb:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z'/%3E%3Cpath d='M5 16.5a3 3 0 0 1 3-3h11M9 8.5h6'/%3E%3C/svg%3E"); --jv-ic-mas:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E"); --jv-ic-vacio:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5h16'/%3E%3Cpath d='M4.5 15l4.2-4.6 3.6 3.2L19.5 6'/%3E%3Cpath d='M15.5 6h4v4'/%3E%3C/svg%3E");
+}
+/* La navegación de miembro no debe tapar hojas ni modales del journal (tenía z-index 8000) */
+.lbcn{z-index:60;}
+/* El fondo no compite con los datos */
+#pcanvas{opacity:0.26;}
+
+/* 1 · Movimiento: solo respuesta al toque, sin elevaciones ni giros decorativos */
+.card:hover,.tz-kpi:hover,.tz-panel:hover,.titem:hover,.pb-select-item:hover,.sb-cta:hover,.view-back:hover,.cal-day:not(.empty):not(.notr):hover,.cal-week-card:hover{transform:none;}
+.sbi:hover .si,.sbi.active .si,.bti:hover .btic,.bti.active .btic{transform:none;text-shadow:none;}
+.card,.tz-kpi,.tz-panel,.donut-card,.cal-outer,.cal-stat,.titem,.fchip,.cal-mode-btn,.unit-opt,.acct-btn,.sb-cta,.btn-save,.acc-btn,.view-back,.cnav,.dbtn,.pb-select-item,.bti,.bt-fab,.sbi,.cal-day{transition:border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);-webkit-tap-highlight-color:transparent;}
+.titem:active,.cal-day:not(.empty):active,.pb-select-item:active{transform:scale(0.985);}
+.fchip:active,.cal-mode-btn:active,.unit-opt:active,.acct-btn:active,.sb-cta:active,.btn-save:active,.acc-btn:active,.view-back:active,.cnav:active,.dbtn:active{transform:scale(0.96);}
+
+/* 2 · Superficies: un solo tipo de tarjeta (radio, borde y profundidad del sistema) */
+.card,.tz-panel,.tz-kpi,.cal-outer,.ai-coach-card{border-width:1px;border-radius:var(--lbc-r-lg);box-shadow:var(--lbc-sh-2);}
+.card,.tz-panel,.cal-outer{padding:20px;}
+.card:hover,.tz-kpi:hover,.tz-panel:hover,.donut-card:hover{box-shadow:var(--lbc-sh-2);}
+.cal-stat,.donut-card,.titem,.cal-week-card,.tr-sum-chip{border-width:1px;border-radius:var(--lbc-r-md);}
+.card .donut-card,.card .titem{box-shadow:none;}
+.card-head{margin-bottom:16px;min-height:24px;}
+
+/* 3 · Jerarquía: página → sección → tarjeta */
+.ph{margin-bottom:20px;}
+.ph-eyebrow{font-size:11px;letter-spacing:0.14em;margin-bottom:8px;}
+.ph-title{font-size:clamp(28px,3.2vw,36px);line-height:1.05;}
+.dash-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;margin:32px 2px 14px;}
+.card-title,.tz-panel-title,.donut-card-title{font-size:11px;letter-spacing:0.12em;}
+
+/* 4 · Métricas: etiqueta pequeña, cifra grande tabular, apoyo debajo */
+.tz-kpi-value,.cal-stat-val,.tr-sum-chip .n,.cd-pnl,.cwc-pnl,.tz-gauge-nums,.tz-kpi-badge,.titem,.dfp-val,.acc-text strong{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+.tz-kpi{padding:16px;min-height:118px;}
+.tz-kpi-head{align-items:flex-start;flex-wrap:wrap;row-gap:6px;}
+.tz-kpi-label{font-size:10.5px;letter-spacing:0.09em;line-height:1.4;}
+.tz-kpi-badge{white-space:nowrap;border-radius:var(--lbc-r-full);padding:2px 8px;font-size:10px;}
+.tz-kpi-body{margin-top:auto;padding-top:10px;}
+.tz-kpi-value{font-size:26px!important;letter-spacing:-0.02em;line-height:1.05;}
+.tz-gauge-nums{font-size:10.5px;margin-top:6px;}
+.cal-stat{padding:14px 16px;}
+.cal-stat-lbl{font-size:10.5px;margin-bottom:8px;}
+.cal-stat-val{font-size:22px;letter-spacing:-0.01em;line-height:1.1;}
+.tr-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:4px 0 16px;}
+.tr-sum-chip{flex-direction:column-reverse;align-items:flex-start;gap:6px;padding:14px 16px;}
+.tr-sum-chip .n{font-size:22px;line-height:1.1;letter-spacing:-0.01em;}
+.tr-sum-chip .l{font-size:10.5px;}
+
+/* 5 · Controles como componentes del sistema */
+.acct-btn{min-height:var(--lbc-h-md);padding:0 14px;border-radius:var(--lbc-r-md);border-width:1px;}
+.dfp-bar{border-radius:var(--lbc-r-md);border-width:1px;overflow:hidden;}
+.fchip,.cal-mode-btn{min-height:var(--lbc-h-sm);padding:0 14px;font-size:10.5px;border-width:1px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.unit-seg{border-radius:var(--lbc-r-md);border-width:1px;}
+.unit-opt{border-radius:var(--lbc-r-sm);}
+.view-back{min-height:var(--lbc-h-sm);padding:0 14px;font-size:11px;border-width:1px;}
+.acc-btn{min-height:var(--lbc-h-sm);padding:0 16px;font-size:11px;border-width:1px;color:var(--text2);}
+.cnav{width:var(--lbc-h-sm);height:var(--lbc-h-sm);border-width:1px;}
+.sb-cta,.btn-save{border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);}
+.sb-cta:hover{box-shadow:var(--lbc-sh-gold);}
+.dbtn,.pb-select-item{border-width:1px;border-radius:var(--lbc-r-md);}
+.dbtn{min-height:var(--lbc-h-md);}
+
+/* 6 · Lista de operaciones */
+.titem{padding:14px 16px;gap:14px;}
+.tdir{width:34px;height:34px;}
+
+/* 7 · Estados vacíos: icono de línea, una frase y una acción clara */
+.empty{padding:40px 20px!important;}
+.empty .ei{font-size:0!important;opacity:1!important;width:52px;height:52px;margin:0 auto 16px;border-radius:var(--lbc-r-lg);border:1px solid var(--border2);background:rgba(201,168,76,0.07);position:relative;}
+.empty .ei::before{content:'';position:absolute;inset:13px;background:var(--gold);-webkit-mask:var(--jv-ic-vacio) center/contain no-repeat;mask:var(--jv-ic-vacio) center/contain no-repeat;}
+.empty p{font-size:13px;line-height:1.55;color:var(--text2);max-width:320px;margin-left:auto;margin-right:auto;}
+.empty button{min-height:var(--lbc-h-md);padding:0 20px!important;border-radius:var(--lbc-r-md)!important;font-size:13px!important;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:transform var(--lbc-t-1) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease);}
+.empty button:active{transform:scale(0.97);}
+.empty button:first-child{box-shadow:var(--lbc-sh-gold);}
+
+/* 8 · Iconos de línea en la barra lateral y en la barra inferior (antes, glifos de texto) */
+.sbi .si,.bti .btic{font-size:0!important;display:inline-flex;align-items:center;justify-content:center;}
+.sbi .si::before,.bti .btic::before{content:'';width:20px;height:20px;background:currentColor;-webkit-mask:var(--jv-ic) center/contain no-repeat;mask:var(--jv-ic) center/contain no-repeat;}
+[data-v="dashboard"]{--jv-ic:var(--jv-ic-inicio);} [data-v="calendar"]{--jv-ic:var(--jv-ic-cal);} [data-v="reports"]{--jv-ic:var(--jv-ic-rep);}
+[data-v="trades"]{--jv-ic:var(--jv-ic-trades);} [data-v="genius"]{--jv-ic:var(--jv-ic-genio);} [data-v="playbooks"]{--jv-ic:var(--jv-ic-pb);}
+.bt-fab{font-size:0;box-shadow:var(--lbc-sh-gold);}
+.bt-fab::before{content:'';width:24px;height:24px;background:currentColor;-webkit-mask:var(--jv-ic-mas) center/contain no-repeat;mask:var(--jv-ic-mas) center/contain no-repeat;}
+.bt-fab:hover{transform:none;}
+.bt-fab:active{transform:scale(0.94);}
+
+/* 9 · Hoja de «Nuevo trade» */
+.tdrawer{border-radius:var(--lbc-r-xl) var(--lbc-r-xl) 0 0;border-top-width:1px;transition:transform var(--lbc-t-4) var(--lbc-ease);overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.doverlay{transition:opacity var(--lbc-t-3) var(--lbc-ease);}
+.td-handle{width:40px;height:5px;border-radius:3px;margin-top:10px;}
+
+/* 10 · Tema claro: textos que quedaban con colores fijos del oscuro */
+[data-theme="light"] .dpll-val{color:var(--text);}
+[data-theme="light"] .acct-btn,[data-theme="light"] .dfp-val{color:var(--text);}
+[data-theme="light"] .acct-caret,[data-theme="light"] .dfp-arrow,[data-theme="light"] .dfp-clr{color:var(--text3);}
+
+/* ── Móvil y tableta (la barra inferior aparece por debajo de 1100 px) ── */
+@media(max-width:1100px){
+  .content{padding:18px 16px calc(108px + var(--safe-bottom,0px));}
+  /* Dashboard: primero el título, después los filtros (cuenta y fechas) en una barra ordenada */
+  #v-dashboard.active{display:flex;flex-direction:column;}
+  #v-dashboard.active>*{min-width:0;flex:0 0 auto;}
+  #v-dashboard .ph{order:-2;margin-bottom:14px;}
+  #dash-dfp-wrap{order:-1;position:static;display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;justify-content:flex-start;margin-bottom:18px;}
+  #dash-dfp-wrap .dfp-instance,#dash-dfp-wrap .acct-picker,#v-calendar .acct-picker,#v-reports .acct-picker{flex:1 1 100%;width:100%;}
+  .acct-picker .acct-btn{width:100%;box-sizing:border-box;justify-content:flex-start;}
+  .acct-picker .acct-btn .acct-caret{margin-left:auto;}
+  .dfp-bar{width:100%;}
+  .dfp-bar .dfp-seg{flex:1 1 0;justify-content:center;}
+  .tz-kpi-row{grid-template-columns:1fr 1fr;gap:10px;}
+  .tz-kpi{min-height:112px;padding:14px;}
+  .tz-kpi-value{font-size:22px!important;}
+  .tz-kpi-plain .tz-kpi-value{font-size:24px!important;}
+  .card,.tz-panel,.cal-outer{padding:16px;}
+  .fchip,.cal-mode-btn{min-height:40px;}
+  .view-back{min-height:40px;margin-bottom:6px;}
+  .cnav{width:var(--lbc-h-md);height:var(--lbc-h-md);}
+  /* Barra inferior: respuesta al toque, icono de línea y nada tapado */
+  .btabs{border-top-width:1px;-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);}
+  .btabs-row{padding:6px 6px 6px;}
+  .bti{min-width:58px;min-height:52px;gap:4px;font-size:10px;letter-spacing:0.04em;}
+  .bti:active{transform:scale(0.94);}
+  .bti .btic{width:52px;height:28px;padding:0;border-radius:var(--lbc-r-full);}
+  .bti .btic::before{width:22px;height:22px;}
+  .bt-fab{width:56px;height:56px;margin-top:-16px;}
+  .dfp-instance{width:100%;}
+  /* Acciones de «Mis Trades»: tres botones de la misma altura */
+  .tr-actions{align-items:stretch;gap:8px;}
+  .tr-actions .sb-cta,.tr-actions .sb-ai-chat-btn{min-height:46px!important;height:46px;margin:0!important;border-radius:var(--lbc-r-md);display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+  /* Gráficos: ejes legibles en pantallas estrechas (el SVG se encoge y dejaba el texto en 4 px) */
+  #equity-curve svg text{font-size:19px;}
+  .daily-bars-svg text[font-size="8.5"]{font-size:15px;}
+  .last30-bars text[font-size="8"]{font-size:14px;}
+  /* Calendario: la cifra del día cabe entera en la celda */
+  .cal-layout{gap:8px;}
+  .cal-day{padding:5px 1px!important;align-items:center;overflow:visible!important;}
+  .cal-pnl,.cd-pnl{font-size:9px!important;letter-spacing:-0.04em;white-space:nowrap;overflow:visible!important;text-overflow:clip!important;max-width:none!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  .titem:active,.cal-day:active,.fchip:active,.cal-mode-btn:active,.unit-opt:active,.acct-btn:active,.sb-cta:active,.btn-save:active,.acc-btn:active,.view-back:active,.cnav:active,.dbtn:active,.bti:active,.bt-fab:active,.empty button:active{transform:none!important;}
+  .tdrawer,.doverlay{transition:none;}
+}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -3641,7 +3783,7 @@ function emptyStateHTML(){
     +'<p style="font-size:15px;color:var(--text);font-weight:700;margin:8px 0 2px;">Aún no tienes operaciones</p>'
     +'<p style="font-size:12px;color:var(--text3);margin-bottom:18px;">Conecta tu broker para traer tus fills reales y empezar tu journal.</p>'
     +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">'
-    +'<button onclick="openCsvImport()" style="padding:12px 20px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">🔗 Conectar broker</button>'
+    +'<button onclick="openCsvImport()" style="padding:12px 20px;border-radius:9px;border:0;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:12.5px;cursor:pointer;">Conectar broker</button>'
     +'<button onclick="openForm()" style="padding:12px 20px;border-radius:9px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12.5px;cursor:pointer;">+ Añadir trade</button>'
     +'</div></div>';
 }
