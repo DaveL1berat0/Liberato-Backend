@@ -759,6 +759,47 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   .p-hd{min-height:52px;}
 }
 @media(prefers-reduced-motion:reduce){.chart-tf button:active,.dtool:active{transform:none;}}
+
+/* ══════════ v101 · segunda vuelta ══════════ */
+:root{--op-ic-vacio:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5h16'/%3E%3Cpath d='M4.5 15l4.2-4.6 3.6 3.2L19.5 6'/%3E%3Cpath d='M15.5 6h4v4'/%3E%3C/svg%3E");}
+/* Paneles con la tarjeta del sistema y cabeceras con más jerarquía */
+.panel{border-radius:var(--lbc-r-lg);box-shadow:var(--lbc-sh-2);}
+.p-hd{padding:14px 18px;min-height:56px;}
+.p-ttl{font-size:12px;letter-spacing:0.12em;gap:10px;}
+.stepn{width:22px;height:22px;font-size:11px;flex:0 0 auto;}
+.flow-arrow{padding:4px 0;opacity:0.6;}
+/* Lecturas: etiqueta pequeña, cifra grande tabular */
+.cstat{padding:12px 16px;}
+.cstat-v,.ptile-v,.lc-cell .v{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+.cstat-v{font-size:18px;margin-top:6px;letter-spacing:-0.01em;}
+.ptile{padding:12px 14px;}
+.ptile-v{font-size:17px;margin-top:6px;}
+.lc-cell .v{font-size:18px;margin-top:6px;}
+.lc-hero .v{font-size:28px;}
+.gcell{border-width:1px;border-radius:var(--lbc-r-md);padding:10px 6px 8px;}
+/* Selector de ticker: campo del sistema, con sitio para leer lo que se escribe */
+.chart-pick input{width:150px;min-height:var(--lbc-h-sm);padding:0 14px;font-size:12px;border-width:1px;}
+.chart-pick button{min-height:var(--lbc-h-sm);min-width:44px;border-width:1px;transition:background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.chart-pick button:active{transform:scale(0.95);}
+.chart-pick input:focus{box-shadow:var(--lbc-ring);}
+/* Tabla del scanner: cabecera fija dentro de su caja, filas cómodas, números a la derecha */
+.scan-tbl thead th{position:sticky;top:0;z-index:1;background:var(--panel);font-size:10.5px;}
+@media(min-width:701px){.scan-tbl td{padding:14px 16px;}}
+.scan-tbl td.r{font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;}
+.scan-tbl tbody tr:active{background:rgba(201,168,76,0.09);}
+/* Estados vacíos: icono de línea y una frase */
+.stub{padding:34px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;font-family:var(--sans,inherit);font-size:13px;letter-spacing:0;color:var(--ink-2);}
+.stub::before{content:'';width:44px;height:44px;flex:0 0 auto;border-radius:var(--lbc-r-md);border:1px solid var(--hair);background-color:var(--gold);-webkit-mask:var(--op-ic-vacio) center/22px no-repeat;mask:var(--op-ic-vacio) center/22px no-repeat;opacity:0.9;}
+.stub b{margin-bottom:0;}
+@media(max-width:700px){
+  .p-hd{padding:14px 16px;}
+  .p-hd{flex-wrap:wrap;row-gap:10px;}
+  .p-ttl{flex-wrap:wrap;row-gap:8px;}
+  .chart-pick input{width:184px;min-height:40px;font-size:16px;}
+  .chart-pick button{min-height:40px;}
+  .cstat-v{font-size:16px;}
+}
+@media(prefers-reduced-motion:reduce){.chart-pick button:active{transform:none;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>

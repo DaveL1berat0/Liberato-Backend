@@ -1129,6 +1129,37 @@ body :is(a,button,input,[role="button"],[tabindex]):focus-visible{outline:none;b
   .hero-search-input{font-size:16px!important;}   /* iOS no hace zoom al enfocar */
 }
 @media(prefers-reduced-motion:reduce){.week-btn:active,.filter-chip:active{transform:none;}}
+
+/* ══════════ v101 · segunda vuelta ══════════ */
+:root{--er-ic-cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15.5' rx='2.4'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E");--er-ic-intel:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v3M12 17v3M4 12h3M17 12h3M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2'/%3E%3C/svg%3E");}
+/* El fondo no compite con el contenido */
+#pcanvas,#particles,canvas.bg-canvas{opacity:0.3;}
+/* Avisos (cargando / sin datos): icono de línea en vez de emoji */
+.week-empty-banner{border-width:1px;border-radius:var(--lbc-r-lg);padding:18px 20px;gap:16px;align-items:flex-start;}
+.week-empty-banner .web-icon{font-size:0;width:44px;height:44px;border-radius:var(--lbc-r-md);border:1px solid var(--border2);background:rgba(201,168,76,0.08);position:relative;flex:0 0 auto;}
+.week-empty-banner .web-icon::before{content:'';position:absolute;inset:10px;background:var(--gold);-webkit-mask:var(--er-ic-cal) center/contain no-repeat;mask:var(--er-ic-cal) center/contain no-repeat;}
+.week-empty-banner .web-title{font-size:12.5px;letter-spacing:0.06em;line-height:1.4;margin-bottom:4px;}
+/* Tarjeta de inteligencia: cabecera con icono de línea */
+.intel-card{border-width:1px;border-radius:var(--lbc-r-lg);box-shadow:var(--lbc-sh-2);}
+.ic-head .ic-icon{font-size:0;width:28px;height:28px;border-radius:var(--lbc-r-sm);background:rgba(201,168,76,0.1);position:relative;display:inline-block;flex:0 0 auto;}
+.ic-head .ic-icon::before{content:'';position:absolute;inset:6px;background:var(--gold);-webkit-mask:var(--er-ic-intel) center/contain no-repeat;mask:var(--er-ic-intel) center/contain no-repeat;}
+.ic-title{font-size:11.5px;letter-spacing:0.12em;}
+/* Navegador de semanas y vistas como componentes del sistema */
+.ctrl-zone.zone-nav{border-radius:var(--lbc-r-lg);}
+.week-label-sub{font-size:11px!important;}
+.view-toggle{border-width:1px;border-radius:var(--lbc-r-md);padding:4px;gap:4px;}
+.view-opt{border-radius:var(--lbc-r-sm);min-height:var(--lbc-h-sm);transition:background-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);-webkit-tap-highlight-color:transparent;}
+.view-opt:active{transform:scale(0.96);}
+/* Tarjetas de empresa: respuesta al toque, sin saltos */
+.ec,.hs-tag{-webkit-tap-highlight-color:transparent;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.ec:hover,.hs-tag:hover{transform:none;}
+.ec:active,.hs-tag:active{transform:scale(0.97);}
+.hs-tag{min-height:var(--lbc-h-md);border-radius:var(--lbc-r-md);}
+@media(max-width:767px){
+  .view-opt{min-height:40px;font-size:11px!important;padding:0 18px!important;}
+  .hs-tag{font-size:12px!important;padding:0 14px!important;}
+}
+@media(prefers-reduced-motion:reduce){.view-opt:active,.ec:active,.hs-tag:active{transform:none;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
