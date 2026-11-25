@@ -1362,6 +1362,25 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 /* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
 /* Tipografía única del sitio: el terminal seguía en Georgia y fuentes del sistema */
 :root{--mono:var(--lbc-font-mono);--sans:var(--lbc-font-sans);--serif:var(--lbc-font-serif);}
+
+/* ══════════ v101 · cierre · todas las pestañas y paneles, también en tema claro ══════════ */
+/* Noticias de alto impacto: las tarjetas llevan colores claros escritos en línea → en tema claro el texto no se veía */
+[data-theme="light"] #lg-pane-movers [style*="color:rgba(239,236,227,0.88)"]{color:#211d16!important;}
+[data-theme="light"] #lg-pane-movers [style*="color:rgba(239,236,227,0.7)"]{color:rgba(33,29,22,0.84)!important;}
+[data-theme="light"] #lg-pane-movers :is([style*="color:rgba(239,236,227,0.38)"],[style*="color:rgba(239,236,227,0.45)"]){color:rgba(33,29,22,0.64)!important;}
+[data-theme="light"] #lg-pane-movers [style*="color:rgba(46,232,164,0.85)"]{color:#15803d!important;}
+[data-theme="light"] #lg-pane-movers [style*="color:rgba(177,151,252,0.85)"]{color:#6b4fd0!important;}
+[data-theme="light"] #lg-pane-movers [data-url]{border-bottom-color:rgba(33,29,22,0.10)!important;}
+/* …y sus rótulos iban a 8–9 px */
+#lg-pane-movers :is([style*="font-size:8px"],[style*="font-size:9px"]){font-size:10px!important;}
+.lg-mv-upd,.lg-mv-px,.lg-mv-col-t,.lg-mv-fn,.mif-n{font-size:10px;}
+.lg-mv-upd,.hmap-leg-item{color:var(--ink-3);}
+.hmap-sym{font-size:10px;}
+/* Tema claro: polos del velocímetro, etiqueta MAX PAIN y enlace del pie con contraste */
+[data-theme="light"] .sm-pole.range{color:#3d5fc4;}
+[data-theme="light"] .sm-pole.trend{color:#15803d;}
+[data-theme="light"] .cx-tag.maxpain{color:#0e7490;border-color:rgba(14,116,144,0.45);}
+[data-theme="light"] .t-footer-m a{color:#7e6323!important;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
