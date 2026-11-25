@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Reuters reporto que la administracion Trump podria anunciar nuevos aranceles a una amplia gama de importaciones de 16 socios comerciales tras una investigacion por exceso de capacidad industrial, lo que esta presionando a la baja los futuros del Nasdaq-100 (caida de mas de 2% en la madrugada) junto con la correccion de las acciones de IA.",
-  "petroleo": "El Brent cae 0.5% a 90.97 USD y el WTI 0.6% a 81.58 USD (CNBC, 01:37 GMT / 20:37 ET) por temores a un exceso de oferta senalado por la AIE que contrarresta las tensiones en Medio Oriente cerca del Estrecho de Ormuz, efecto limitado y mixto sobre el sentimiento de riesgo que mueve al NQ.",
-  "catalizador": "Se espera el dato de inflacion PCE mas tarde en la sesion de hoy, justo antes de la reunion de diciembre de la Fed, lo que anade incertidumbre y puede generar volatilidad adicional en la apertura y durante la sesion del NQ (Reuters).",
+  "geopolitica": "La Casa Blanca prepara una nueva ronda de aranceles amplios (accion Section 301) contra China, la UE y decenas de paises, lo que arrastro a los futuros del Nasdaq-100 hasta -3% y presiona al NQ a la apertura.",
+  "petroleo": "El WTI se mantiene estable sobre 81 USD/barril y el Brent cerca de 91.34 USD (-0.07%), con el mercado vigilando tensiones en Oriente Medio (Estrecho de Ormuz), un contexto que limita el alivio en costos energeticos para el NQ.",
+  "catalizador": "Hoy 25-nov a las 8:30am ET se publica el PCE de octubre junto al PIB revisado del 3T, ultimo dato clave antes de la reunion de la Fed del 9 de diciembre; el consenso ve el PCE subyacente subiendo a ~3.2%, lo que alimenta apuestas por una postura mas restrictiva y pesa sobre el NQ.",
   "sources": [
-    "Reuters (Morning Bid) 04:45 ET",
-    "CNBC 20:37 ET",
-    "CNBC 04:45 ET"
+    "CNBC 24/11 - Nasdaq futures tumble as AI sell-off returns",
+    "Investing.com 24/11 - White House prepares sweeping new tariffs on China, EU and dozens of nations",
+    "FXStreet 25/11 01:30 ET - WTI holds steady above $81.00 as traders weigh Middle East tensions",
+    "Yahoo Finance 25/11 07:24 ET - Stock market today: Dow, S&P 500, Nasdaq futures fall ahead of inflation data",
+    "Kotak Neo / Reuters coverage 25/11 - US PCE inflation and Q3 GDP data due today; key numbers ahead of December Fed decision"
   ],
-  "as_of": "2026-11-25T12:06:01Z"
+  "as_of": "2026-11-25T12:39:44Z"
 }
