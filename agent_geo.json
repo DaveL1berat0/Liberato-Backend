@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Iran reporta ataques con minas a tres petroleros en el Estrecho de Ormuz y EEUU amplia sanciones al sistema financiero irani (CNBC, 24-nov), mientras Trump propone nuevos arenceles de hasta 20% a China, la UE y 12 socios comerciales, lo que desato una fuerte liquidacion en semiconductores y tecnologia (Bloomberg/Yahoo Finance, 25-nov mañana ET) y presiona al NQ a la baja por el riesgo en la cadena de suministro de chips.",
-  "petroleo": "Brent cotiza cerca de 87.5 USD/barril (-1.4% en reportes recientes), ya que las preocupaciones por exceso de oferta global compensan la escalada de tension en Ormuz (Kotak Neo/CNBC, 25-nov), limitando el traspaso de la prima de riesgo energetico hacia la narrativa inflacionaria que pesa sobre el NQ.",
-  "catalizador": "El PCE subyacente de octubre subio 3.3% anual (vs 3.2% esperado) y el PCE general a 3.8%, elevando a ~97-98% la probabilidad de una suba de tasas de la Fed el 9-dic segun CME FedWatch (CNBC, 25-nov 08:30 ET), golpeando al NQ al reducir expectativas de flexibilizacion monetaria.",
+  "geopolitica": "Iran ataca con minas a tres petroleros en el estrecho de Hormuz y EEUU amplia sanciones, mientras Trump propone nuevos aranceles a 14-16 socios comerciales (China, UE, Japon, Taiwan tras investigacion Section 301), golpeando a semiconductores (Nvidia -5.1%, AMD -6.5%, Micron -6%, Marvell -5.7%) y presionando al NQ a la baja (Reuters/CNBC).",
+  "petroleo": "Brent cae 0.5% a 90.97 USD y WTI cae 0.6% a 81.58 USD pese a que el flujo por Hormuz esta al 49% de lo normal por los ataques, ya que el temor a un superavit de oferta global contrarresta el riesgo geopolitico, limitando el impacto alcista en energia sobre el NQ (CNBC).",
+  "catalizador": "El PCE de octubre subio a 3.8% interanual (core 3.3%, por encima del consenso de 3.2%) publicado a las 8:30 ET, disparando ventas generalizadas -Nasdaq Composite cae ~4.4%- al reducir las esperanzas de recortes de tasas y golpeando duro al NQ (CNBC/FXStreet).",
   "sources": [
+    "Reuters 04:08 ET",
     "CNBC 08:30 ET",
-    "Bloomberg 07:00 ET",
-    "CNBC 24-nov",
-    "Yahoo Finance 09:00 ET"
+    "CNBC 20:37 ET (24 nov)",
+    "FXStreet 10:43 ET"
   ],
-  "as_of": "2026-11-25T16:06:23Z"
+  "as_of": "2026-11-25T17:05:30Z"
 }
