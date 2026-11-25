@@ -1,13 +1,13 @@
 {
-  "geopolitica": "Trump prepara los resultados de una investigacion Seccion 301 sobre 16 economias (incl. Taiwan y Corea del Sur) que podria derivar en aranceles a semiconductores, mas aranceles adicionales a China y la UE, lo que hundio a Nvidia, SK Hynix y Samsung en la premarket y presiona al NQ (Reuters/Bloomberg via CNBC/Investing.com, premarket 25-nov).",
-  "petroleo": "Brent cae a aprox. 90.97 USD (-0.5%) y WTI a aprox. 81.58 USD (-0.6%) en la sesion temprana, ya que los temores a un superavit de oferta global compensan el repunte por ataques reportados en el Estrecho de Ormuz (Reuters, aprox. 20:37 ET 24-nov; FXStreet 05:39 ET).",
-  "catalizador": "Ademas de la tension arancelaria, el chip Ambarella se desploma cerca de 40% tras una guia de ingresos muy por debajo de lo esperado, ampliando la ola de ventas en semis que arrastra a los futuros del Nasdaq-100 (-2.9% en premarket) (CNBC, premarket 25-nov).",
+  "geopolitica": "Trump prepara una nueva ronda de aranceles (hasta 20%) contra China y otros ~14 socios comerciales tras el fallo de la Corte Suprema que anuló los aranceles globales previos, con exencion parcial para semiconductores, mientras Washington endurece controles de exportacion de chips avanzados hacia Singapur y Malasia para frenar el desvio a China, lo que presiona a las megacaps tecnologicas y semis del NQ.",
+  "petroleo": "El WTI cotiza por encima de 81 USD/barril y el Brent cerca de 89-90 USD, extendiendo la caida de la sesion previa (Brent -1.4% aprox.) por señales de avance en la diplomacia EEUU-Iran (reunion del vicepresidente Vance con el primer ministro de Catar), lo que reduce la prima de riesgo geopolitico pero resta soporte a las energeticas dentro del Nasdaq.",
+  "catalizador": "El PCE subyacente de octubre subio a 3.3% interanual (headline 3.8%), el ultimo dato relevante antes de la reunion de la Fed del 9 de diciembre, consolidando una probabilidad cercana al 97% de una subida de tasas, lo que presiona a las tecnologicas de alto crecimiento del NQ por mayor descuento de flujos futuros.",
   "sources": [
-    "CNBC premarket, 25 nov 2026 (futuros Nasdaq-100 -2.9%; Ambarella -40%; Nvidia/Anthropic a la baja)",
-    "Reuters via CNBC/Yahoo Finance, 25 nov 2026 (investigacion Seccion 301 sobre 16 economias)",
-    "Bloomberg via Investing.com, 25 nov 2026 (aranceles adicionales a China y la UE)",
-    "FXStreet 05:39 ET (ataques en el Estrecho de Ormuz)",
-    "Reuters 20:37 ET 24-nov (Brent 90.97 USD, WTI 81.58 USD)"
+    "CNN 25-nov (trump-new-tariffs, sin hora exacta)",
+    "FXStreet 20:30 ET aprox (24-nov, WTI)",
+    "Irish Times 24-nov (oil extends decline on US-Iran diplomacy)",
+    "Coindesk 25-nov (Fed's preferred inflation gauge / PCE)",
+    "piqmarkets 25-nov (US PCE inflation rises 3.8%, core 3.3%)"
   ],
-  "as_of": "2026-11-25T13:41:29Z"
+  "as_of": "2026-11-25T14:06:45Z"
 }
