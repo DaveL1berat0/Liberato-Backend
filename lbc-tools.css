@@ -81,3 +81,17 @@
 .theme-fab.theme-fab-innav::after{content:'';position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);}
 /* Options en tema claro: las lecturas llevaban una sombra oscura pensada para el fondo oscuro (quedaba sucia sobre claro) */
 [data-theme="light"] :is(.env-hero-meta .cls,.lc-hero .v,.cstat-v,.ptile-v,.lc-cell .v){text-shadow:none !important;}
+
+/* ─── 6. Cierre v101 (revisión con sesión real, 25-nov) ─────────────── */
+/* El panel «Mi perfil» cerrado dejaba ver su sombra en el borde derecho (una franja gris en tema claro) */
+.profile-drawer:not(.open){box-shadow:none;}
+/* Marca de la navegación de miembro: escrita como en la portada (lbc-brand), no en Georgia cursiva */
+/* (la barra de miembro es oscura en los dos temas: color fijo, no el token de tinta) */
+.lbcn-brand{font-family:var(--lbc-font-serif);font-style:normal;font-weight:400;font-size:19px;letter-spacing:0.08em;line-height:1.2;color:rgba(239,236,227,0.94);}
+.lbcn-brand:hover{color:#ffffff;}
+.lbcn-brand span{font-weight:400;font-style:normal;color:#CCA94F;}
+.lbcn-name{font-family:var(--lbc-font-serif);font-size:17px;}
+@media(max-width:768px){.lbcn-brand{font-size:19px;letter-spacing:0.07em;}}
+/* Botones y campos del panel: la fuente del sitio (salían en Arial: los controles no heredan la fuente) */
+.profile-drawer :is(button,input,select,textarea),.lbcn :is(button,input){font-family:var(--lbc-font-sans);}
+.profile-drawer :is(.pd-title,.pd-sec-t,.ave-title){font-family:var(--lbc-font-serif);}
