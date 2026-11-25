@@ -1,12 +1,13 @@
 {
-  "geopolitica": "EEUU propuso nuevos aranceles (Sección 301) a 14 socios comerciales, incluyendo China (hasta 40% si Pekín no respeta la tregua de Busan), la UE y Japón, lo que presiona a los semiconductores y pesa sobre el NQ en la apertura (CNBC, hoy).",
-  "petroleo": "Brent cerca de 91-92 USD/barril y WTI en torno a 81-82 USD, moviéndose en rango: un presunto ataque hutí a la refinería saudita de Ras Tanura compite con temores de exceso de oferta global, limitando el traslado del riesgo energético al NQ (CNBC, madrugada ET).",
-  "catalizador": "El PCE subyacente de EEUU subió a 3.8% interanual en octubre (más caliente de lo esperado), ampliando las pérdidas de los futuros tras su publicación por temor a que la Fed sea más cautelosa con los recortes, añadiendo presión bajista al NQ en la apertura (CNBC, 08:30 ET).",
+  "geopolitica": "China extendió la pausa en las restricciones a la exportación de minerales críticos (galio, germanio, antimonio) para sostener la tregua comercial con EEUU, mientras la tensión política por las ventas de chips de IA a China (caso Jensen Huang/Nvidia) sigue pesando sobre el sentimiento de semiconductores en el NQ (Bloomberg 24-nov, CNBC 25-nov).",
+  "petroleo": "Brent sube ~1% a USD 92.29 y WTI ~0.4% a USD 82.38 (CNBC 25-nov), con el temor a un exceso de oferta compensando el riesgo de disrupción en el Estrecho de Ormuz, lo que limita el traspaso bajista hacia el sector energético dentro del NQ.",
+  "catalizador": "El indicador de inflación preferido de la Fed (PCE) salió más caliente de lo esperado y el CME FedWatch ya asigna ~98% de probabilidad a una subida de 25pb en diciembre (CNBC 25-nov), presionando a la baja a las tecnológicas de alta valoración del NQ junto al desplome premarket de Nvidia (-4.5%) y SoftBank (-15%).",
   "sources": [
-    "CNBC 08:30 ET - PCE inflation report October 2026",
-    "CNBC - US proposes new tariffs on 14 trading partners (Section 301)",
-    "CNBC - Oil rises after alleged Houthi attack on Saudi refinery",
-    "Bloomberg 08:42 ET - US stock index futures slide as AI worries fuel tech losses"
+    "CNBC 25-nov (premarket ET) - Futures sink further into the red as tech worries resurge",
+    "CNBC 25-nov - Oil, WTI, Brent, Hormuz, Middle East",
+    "CNBC 25-nov - Gold, metals, Federal Reserve inflation",
+    "CNBC 24-nov - Stock market today live updates (Nasdaq -3.3%, AI selloff)",
+    "Bloomberg 24-nov - China halts critical minerals ban to maintain truce with US"
   ],
-  "as_of": "2026-11-25T14:39:58Z"
+  "as_of": "2026-11-25T15:05:51Z"
 }
