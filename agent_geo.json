@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Washington plantea una nueva ronda de aranceles tecnológicos que reaviva la tensión comercial con China y golpea a los semiconductores, principal lastre del Nasdaq 100 hoy (Bloomberg, 24-nov).",
-  "petroleo": "El Brent cotiza cerca de 89 USD/barril y el WTI cerca de 80 USD/barril, en mínimos de tres meses pese a ataques con minas en el Estrecho de Ormuz, por exceso de oferta tras la reapertura del oleoducto libio (CNBC, 24-nov).",
-  "catalizador": "El Nasdaq 100 cae hasta un 3% intradía liderado por semiconductores (Nvidia, Micron, Marvell, AMD, Arm) al desinflarse el rally por el regreso de Jensen Huang y sumarse la amenaza arancelaria (Bloomberg/CNBC, 24-nov).",
+  "geopolitica": "Reuters reporto que la administracion Trump podria anunciar nuevos aranceles a una amplia gama de importaciones de 16 socios comerciales tras una investigacion por exceso de capacidad industrial, lo que esta presionando a la baja los futuros del Nasdaq-100 (caida de mas de 2% en la madrugada) junto con la correccion de las acciones de IA.",
+  "petroleo": "El Brent cae 0.5% a 90.97 USD y el WTI 0.6% a 81.58 USD (CNBC, 01:37 GMT / 20:37 ET) por temores a un exceso de oferta senalado por la AIE que contrarresta las tensiones en Medio Oriente cerca del Estrecho de Ormuz, efecto limitado y mixto sobre el sentimiento de riesgo que mueve al NQ.",
+  "catalizador": "Se espera el dato de inflacion PCE mas tarde en la sesion de hoy, justo antes de la reunion de diciembre de la Fed, lo que anade incertidumbre y puede generar volatilidad adicional en la apertura y durante la sesion del NQ (Reuters).",
   "sources": [
-    "Bloomberg 24-nov",
-    "CNBC 24-nov"
+    "Reuters (Morning Bid) 04:45 ET",
+    "CNBC 20:37 ET",
+    "CNBC 04:45 ET"
   ],
-  "as_of": "2026-11-24T21:07:01Z"
+  "as_of": "2026-11-25T12:06:01Z"
 }
