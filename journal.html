@@ -2040,6 +2040,26 @@ body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-sha
   .titem:active,.cal-day:active,.fchip:active,.cal-mode-btn:active,.unit-opt:active,.acct-btn:active,.sb-cta:active,.btn-save:active,.acc-btn:active,.view-back:active,.cnav:active,.dbtn:active,.bti:active,.bt-fab:active,.empty button:active{transform:none!important;}
   .tdrawer,.doverlay{transition:none;}
 }
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* Cabecera fija en móvil: su relleno era un calc() sin espacios (inválido) y el texto quedaba pegado al borde */
+.mob-nav{padding:calc(var(--safe-top,0px) + 10px) 16px 10px;}
+/* Detalle de un trade · controles del gráfico: los rótulos de ayuda de los chips no tenían estilo base
+   y salían escritos dentro del botón (fila de 1.200 px con textos montados). Ahora son ayudas flotantes. */
+.jch-chip .jtip{position:absolute;white-space:nowrap;background:#0c0f17;border:0.5px solid var(--border);border-radius:7px;padding:6px 9px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text2);opacity:0;pointer-events:none;transition:opacity .18s;z-index:20;box-shadow:0 8px 22px rgba(0,0,0,0.5);}
+.jch-ctrls .jch-tf{flex:0 0 auto;}
+.jch-ctrls{scrollbar-width:none;}
+.jch-ctrls::-webkit-scrollbar{display:none;}
+/* La barra desliza en horizontal y recortaría una ayuda flotante: dentro de ella la ayuda es el title nativo del botón */
+.jch-ctrls .jtip{display:none;}
+/* La barra «← Mis Trades» queda por encima de las herramientas de dibujo al deslizar */
+.tws-topbar{z-index:30;}
+/* Tema claro: tarjetas del calendario y barra de controles del gráfico (seguían oscuras) */
+[data-theme="light"] .cal-stat{background:#ffffff;}
+[data-theme="light"] .jch-ctrls{background:rgba(255,255,255,0.9);border-top-color:rgba(33,29,22,0.12);}
+[data-theme="light"] .jch-chip .jtip{background:#ffffff;color:#3a342a;border-color:rgba(33,29,22,0.16);box-shadow:0 8px 22px rgba(28,22,14,0.16);}
+/* La etiqueta de la fuente de las velas quedaba tapada por la barra de controles */
+.jch-src{bottom:54px;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -4624,11 +4644,11 @@ function jchStageHTML(t){
   var overlay='<div class="jch-ctrls">'
     +'<span id="jch-tfchips" class="jch-tf"></span>'
     +'<span class="jch-spacer"></span>'
-    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()"><span class="jtip">Máximo a favor / en contra</span>MFE/MAE</button>'
-    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()"><span class="jtip">Proyecta si aguantabas</span>¿Y si aguanto?</button>'
-    +'<button class="jch-chip" onclick="jchFit()"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
-    +'<button class="jch-chip" onclick="jchOpenTV()"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
-    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
+    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()" title="Máximo a favor / en contra"><span class="jtip">Máximo a favor / en contra</span>MFE/MAE</button>'
+    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()" title="Proyecta si aguantabas"><span class="jtip">Proyecta si aguantabas</span>¿Y si aguanto?</button>'
+    +'<button class="jch-chip" onclick="jchFit()" title="Encuadrar al trade"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
+    +'<button class="jch-chip" onclick="jchOpenTV()" title="Abrir NQ1! en TradingView"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
+    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()" title="Pantalla completa (Esc para salir)"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
     +'</div>';
   var stage='<div class="jch-stage" id="jch-stage">'
     +toolbar
@@ -5054,7 +5074,7 @@ function jchRenderTfChips(){
     var en=m>=_jchNativeMin&&_jchNativeMin<1440;
     var lbl=m>=60?(m/60)+'h':m+'m';
     if(en)html+='<button class="jch-chip'+(m===_jchTf?' on':'')+'" onclick="jchTf('+m+')">'+lbl+'</button>';
-    else html+='<button class="jch-chip dis" disabled><span class="jtip">Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')</span>'+lbl+'</button>';
+    else html+='<button class="jch-chip dis" disabled title="Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')"><span class="jtip">Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')</span>'+lbl+'</button>';
   });
   if(_jchNativeMin>=1440)html='<span class="jch-chip on">1D</span>';
   host.innerHTML=html;
@@ -5066,7 +5086,7 @@ function jchToggleMfe(){_jchMfe=!_jchMfe;try{localStorage.setItem('lbc_jch_mfe',
 function jchToggleProj(){_jchProj=!_jchProj;try{localStorage.setItem('lbc_jch_proj',_jchProj?'1':'0');}catch(e){}var b=document.getElementById('jch-proj');if(b)b.classList.toggle('on',_jchProj);var bars=jchResample(_jchRaw||[],_jchTf);var eIdx=jchNearestIdx(bars,jchHM(_jchT.time));if(eIdx<0)eIdx=0;jchDrawProj(bars,eIdx);}
 
 // ── Fullscreen (enfoque A: redimensionar el frame, mismo chart/markers/dibujos) ──
-function jchFullBtnLabel(full){var b=document.getElementById('jch-fullbtn');if(b)b.innerHTML='<span class="jtip">'+(full?'Salir de pantalla completa (Esc)':'Pantalla completa (Esc para salir)')+'</span>'+(full?'⤡ Contraer':'⤢ Expandir');}
+function jchFullBtnLabel(full){var b=document.getElementById('jch-fullbtn');if(b){var tx=full?'Salir de pantalla completa (Esc)':'Pantalla completa (Esc para salir)';b.title=tx;b.innerHTML='<span class="jtip">'+tx+'</span>'+(full?'⤡ Contraer':'⤢ Expandir');}}
 function jchFull(){var f=document.getElementById('jch-frame');if(!f)return;var full=!f.classList.contains('full');f.classList.toggle('full',full);document.body.style.overflow=full?'hidden':'';jchFullBtnLabel(full);setTimeout(jchResize,30);}
 function jchExitFull(){var f=document.getElementById('jch-frame');if(f&&f.classList.contains('full')){f.classList.remove('full');document.getElementById('tws')&&document.getElementById('tws').classList.contains('open')?document.body.style.overflow='hidden':document.body.style.overflow='';jchFullBtnLabel(false);setTimeout(jchResize,30);return true;}return false;}
 function jchResize(){var el=document.getElementById('jch-tv');if(jchart&&el){try{jchart.applyOptions({width:el.clientWidth,height:el.clientHeight});}catch(e){}}}
