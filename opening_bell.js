@@ -16,10 +16,10 @@
 
   /* ── CSS del popup (auto-inyectado) ───────────────────────────────────── */
   var css =
-    '.mkt-open-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);z-index:2147483000;display:flex;flex-direction:column;align-items:center;gap:11px;padding:26px 44px;border-radius:18px;background:linear-gradient(145deg,rgba(11,14,23,.98),rgba(8,10,18,.98));border:1px solid rgba(201,168,76,.55);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 44px rgba(201,168,76,.28);opacity:0;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1);pointer-events:none;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;}' +
+    '.mkt-open-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);z-index:2147483000;display:flex;flex-direction:column;align-items:center;gap:11px;padding:26px 44px;border-radius:18px;background:linear-gradient(145deg,rgba(11,14,23,.98),rgba(8,10,18,.98));border:1px solid rgba(204,169,79,.55);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 44px rgba(204,169,79,.28);opacity:0;transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1);pointer-events:none;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;}' +
     '.mkt-open-pop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}' +
     '.mkt-open-bell{font-size:46px;line-height:1;animation:lbcBellRing .9s ease-in-out;}' +
-    '.mkt-open-txt{font-family:ui-monospace,"DM Mono",SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#C9A84C;}' +
+    '.mkt-open-txt{font-family:ui-monospace,"DM Mono",SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#CCA94F;}' +
     '@keyframes lbcBellRing{0%,100%{transform:rotate(0)}12%{transform:rotate(17deg)}26%{transform:rotate(-14deg)}40%{transform:rotate(10deg)}54%{transform:rotate(-7deg)}68%{transform:rotate(4deg)}82%{transform:rotate(-2deg)}}';
   try {
     var st = document.createElement('style');
