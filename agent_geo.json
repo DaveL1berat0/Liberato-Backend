@@ -1,13 +1,11 @@
 {
-  "geopolitica": "La Casa Blanca prepara una nueva ronda de aranceles amplios (accion Section 301) contra China, la UE y decenas de paises, lo que arrastro a los futuros del Nasdaq-100 hasta -3% y presiona al NQ a la apertura.",
-  "petroleo": "El WTI se mantiene estable sobre 81 USD/barril y el Brent cerca de 91.34 USD (-0.07%), con el mercado vigilando tensiones en Oriente Medio (Estrecho de Ormuz), un contexto que limita el alivio en costos energeticos para el NQ.",
-  "catalizador": "Hoy 25-nov a las 8:30am ET se publica el PCE de octubre junto al PIB revisado del 3T, ultimo dato clave antes de la reunion de la Fed del 9 de diciembre; el consenso ve el PCE subyacente subiendo a ~3.2%, lo que alimenta apuestas por una postura mas restrictiva y pesa sobre el NQ.",
+  "geopolitica": "Reuters/CNBC: la administracion Trump esta a punto de anunciar los resultados de una investigacion comercial (Seccion 301) sobre 16 economias, incluidas Taiwan y Corea del Sur, que podria derivar en nuevos aranceles sobre semiconductores; Bloomberg (via Investing.com) suma que se preparan aranceles adicionales a China y la UE, lo que llevo los futuros del Nasdaq-100 a caer hasta un 2.5-2.8% en la premarket de hoy por tension comercial y en el sector tech/semis (Nvidia -5%, Anthropic -4% bajo su precio de IPO, SK Hynix -9.1%, Samsung -9.3%).",
+  "petroleo": "",
+  "catalizador": "",
   "sources": [
-    "CNBC 24/11 - Nasdaq futures tumble as AI sell-off returns",
-    "Investing.com 24/11 - White House prepares sweeping new tariffs on China, EU and dozens of nations",
-    "FXStreet 25/11 01:30 ET - WTI holds steady above $81.00 as traders weigh Middle East tensions",
-    "Yahoo Finance 25/11 07:24 ET - Stock market today: Dow, S&P 500, Nasdaq futures fall ahead of inflation data",
-    "Kotak Neo / Reuters coverage 25/11 - US PCE inflation and Q3 GDP data due today; key numbers ahead of December Fed decision"
+    "CNBC premarket, 25 nov 2026 (stock-market-today-live-updates)",
+    "Reuters via CNBC/Yahoo Finance, 25 nov 2026 (investigacion Seccion 301 sobre 16 economias)",
+    "Bloomberg via Investing.com, 25 nov 2026 (aranceles a China y la UE)"
   ],
-  "as_of": "2026-11-25T12:39:44Z"
+  "as_of": "2026-11-25T13:06:19Z"
 }
