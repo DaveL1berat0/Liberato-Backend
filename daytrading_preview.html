@@ -31,6 +31,7 @@
 <meta name="theme-color" content="#06070D">
 <title>Liberato Community — Terminal Institucional</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <!-- Fuentes del sistema — sin dependencia externa, funciona en file:// y en server -->
 <style>
@@ -1173,6 +1174,121 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 .ave-actions{display:flex;gap:10px;width:100%;justify-content:center;}
 .ave-save{background:rgba(201,168,76,0.16);border-color:#C9A84C;color:#E7CC74;font-weight:600;}
 .ave-save:hover{background:rgba(201,168,76,0.26);}
+</style>
+<!-- v101 · capa de herramientas de miembros (nav, perfil) + afinado propio de Day Trading. Solo presentación: no toca datos ni lógica. -->
+<link rel="stylesheet" href="lbc-tools.css">
+<script src="lbc-tools.js" defer></script>
+<style id="v101-herramientas">
+/* Medidas y movimiento del terminal alineados con el sistema compartido (lbc-ui) */
+:root{--r-xl:var(--lbc-r-xl);--r-lg:var(--lbc-r-lg);--r-md:var(--lbc-r-md);--r-sm:var(--lbc-r-sm);}
+
+/* Cifras: tabulares en todo el terminal (no bailan al actualizarse) */
+.rg-price-px,.rg-price-chg,.rg-ms-v,.iro-v,.hmap-chg,.bar-clock,.cxh-r,.cxh-px,.lg-ev-time,.lg-ev-data,.lg-day-tab-n,.mif-n,.lg-next,.sm-ctr-v,.rg-vol,#chart-tv{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
+
+/* Etiquetas: mínimo 10 px y contraste legible (antes 8–9 px en gris casi invisible) */
+.rg-price-lbl,.rg-price-live,.sm-pole,.rg-ms-k,.rg-vol-l,.g-sub,.cxh-symsub,.iro-k,.lg-next-tag,.lg-day-tab-d,.t-footer-m,.hmap-leg-item,.g-live,.rg-gex-int,.sm-ai,.legacy-divider-txt,.cxh-regime{font-size:10px;}
+.rg-price-lbl,.rg-vol-l,.g-sub,.cxh-symsub,.iro-k,.lg-day-tab-d,.t-footer-m,.g-live.off{color:var(--ink-3);}
+.rg-ms-k{letter-spacing:0.06em;}
+.iro-k{letter-spacing:0.08em;}
+
+/* Barra de estado: una sola línea con sentido (hora de mercado a la izquierda, sesión y alertas a la derecha) */
+.bar-in{height:48px;}
+.bar .brand:empty{display:none;}
+.bar-r{flex:1;justify-content:flex-end;gap:12px;}
+.bar-clock{margin-right:auto;font-size:12px;letter-spacing:0.04em;color:var(--ink-2);}
+.bar-st{font-size:10px;padding:6px 12px;}
+#lbc-sound-btn{width:36px!important;height:36px!important;display:inline-flex;align-items:center;justify-content:center;transition:border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);-webkit-tap-highlight-color:transparent;}
+#lbc-sound-btn:active{transform:scale(0.94);}
+
+/* Régimen: filas de métricas con ritmo de tabla (etiqueta a la izquierda, cifra a la derecha, línea fina entre filas) */
+.rg-ms{min-height:30px;}
+.rg-ms:hover{transform:none;}
+.rg-ms-v{text-align:right;white-space:nowrap;}
+.rg-price{border-radius:var(--lbc-r-md);}
+.rg-price-px.empty,.rg-price-chg.empty{letter-spacing:0.04em;}
+
+/* KPIs bajo el gráfico: sin «zoom» decorativo al pasar; la cifra manda */
+.iro:hover .iro-v{transform:none;}
+.iro{gap:6px;padding-top:12px;padding-bottom:12px;}
+.iro-v{line-height:1.1;}
+
+/* Controles del gráfico: mismos estados que el resto del sistema */
+.tf,.gf-0dte,.cxd,.mif,.lg-wk-btn,.lg-day-tab,.lg-tab{-webkit-tap-highlight-color:transparent;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+.tf:active,.gf-0dte:active,.mif:active,.lg-wk-btn:active,.lg-day-tab:active{transform:scale(0.96);}
+.cxd:active{transform:scale(0.92);}
+.gf-0dte{min-height:32px;padding:0 14px;font-size:10px;}
+.cxh-tf{border-radius:var(--lbc-r-sm);padding:3px;}
+.cxh-tf .tf{min-height:28px;padding:0 12px;border-radius:var(--lbc-r-xs);font-size:11px;}
+.app :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-shadow:var(--lbc-ring);}
+.info-i{position:relative;}
+.info-i::after{content:'';position:absolute;inset:-12px;}   /* zona táctil de la «i» de ayuda */
+
+/* Mapa de calor: el toque no «infla» la tesela (tapaba a las vecinas); solo resalta el borde */
+.hmap-tile:hover{transform:none;}
+.hmap-leg-item{letter-spacing:0.06em;}
+
+/* Catalizadores */
+.lg-tab{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.lg-wk-btn{min-height:36px;min-width:40px;border-width:1px;border-radius:var(--lbc-r-sm);}
+.lg-day-tab{border-width:1px;border-radius:var(--lbc-r-sm);min-height:48px;justify-content:center;gap:4px;}
+.mif{min-height:36px;padding:0 14px;border-width:1px;}
+
+/* Tarjetas de evento: etiquetas legibles y cifras alineadas */
+.lg-ev-cell-k,.lg-ev-status,.lg-ev-diff{font-size:10px;}
+.lg-ev-cell-k{color:var(--ink-3);letter-spacing:0.08em;}
+.lg-ev-badge,.lg-ev-cls,.lg-ev-next-badge{font-size:9.5px;letter-spacing:0.06em;}
+.gf-timestamp{font-size:10px!important;}
+.cx-tag{font-size:10px;}
+.cat-empty-t{font-size:12px;line-height:1.5;}
+
+/* Tema claro: lo que quedaba con colores fijos del oscuro */
+[data-theme="light"] .chart-stage{background:rgba(255,255,255,0.55);}
+[data-theme="light"] .lg-wk-btn{color:var(--ink-2);border-color:var(--hair);}
+[data-theme="light"] .lg-wk-btn:hover{color:var(--ink);border-color:var(--gold);background:var(--gold-faint);}
+[data-theme="light"] .lg-day-tab{border-color:var(--hair);background:rgba(33,29,22,0.02);}
+[data-theme="light"] .lg-day-tab.active .lg-day-tab-n{color:var(--gold);}
+[data-theme="light"] #lbc-sound-btn{background:rgba(255,255,255,0.7)!important;border-color:var(--hair)!important;}
+[data-theme="light"] .cx-tag{background:rgba(255,255,255,0.92);}
+
+/* Fondo de partículas: presente pero por detrás de los datos */
+#particle-canvas{opacity:0.45;}
+
+/* ── Móvil: como una app de trading (objetivos táctiles ≥ 44 px, una mano) ── */
+@media(max-width:680px){
+  .bar-in{height:48px;padding:0 14px;}
+  .bar-clock{display:inline;}
+  #lbc-sound-btn{width:40px!important;height:40px!important;}
+  .wrap{padding:12px 12px calc(48px + env(safe-area-inset-bottom,0px));gap:14px;}
+  .rg-hd{padding:14px 16px 0;}
+  .rg-hd-title{letter-spacing:0.14em;flex-wrap:wrap;row-gap:4px;}
+  .rg-meter-stats{max-width:none;}
+  .gf-timestamp{display:flex;flex-wrap:wrap;column-gap:6px;row-gap:2px;padding:5px 10px;}
+  .rg-ms{min-height:32px;}
+  .rg-ms-k{letter-spacing:0.03em;}
+  .gf-0dte{position:relative;min-height:36px;padding:0 14px;}
+  .gf-0dte::after,.cxh-tf .tf::before,.mif::after{content:'';position:absolute;inset:-4px 0;}   /* zona táctil de 44 px */
+  .cxh-tf .tf{min-height:36px;padding:0 13px;font-size:11.5px;}
+  .mif{position:relative;}
+  .cxd{width:36px;height:36px;}
+  .iro{padding:12px 14px;}
+  .iro-v{font-size:17px;}
+  .lg-tab{font-size:10.5px;letter-spacing:0.04em;padding-left:8px;padding-right:8px;line-height:1.25;}
+  .lg-wk-btn{min-height:44px;min-width:44px;padding:0 12px;}
+  .lg-day-tab{min-height:52px;}
+  .lg-day-tab-n{font-size:15px;}
+  .mif{min-height:36px;}
+  /* Mapa de calor en 3 columnas: símbolo y variación legibles en todas las teselas */
+  .hmap-grid{grid-auto-rows:62px!important;gap:3px!important;}
+  .hmap-grid .hmap-tile .hmap-sym{font-size:11px!important;}
+  .hmap-grid .hmap-tile .hmap-chg{font-size:12px!important;}
+  .hmap-grid .hmap-tile .hmap-name{display:none;}
+  /* Pie: en columna, sin montarse */
+  .t-footer{flex-direction:column;align-items:flex-start;gap:10px;padding:24px 16px calc(28px + env(safe-area-inset-bottom,0px));}
+  .t-footer-m{line-height:1.7;}
+}
+@media(prefers-reduced-motion:reduce){
+  .tf:active,.gf-0dte:active,.mif:active,.lg-wk-btn:active,.lg-day-tab:active,.cxd:active,#lbc-sound-btn:active{transform:none;}
+}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
