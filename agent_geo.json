@@ -1,13 +1,14 @@
 {
-  "geopolitica": "Trump propuso nuevos aranceles Section 301 de hasta 40% a China (y gravamenes a la UE) que podrian golpear a semiconductores y tecnologia, alimentando el riesgo de escalada comercial que presiona al Nasdaq-100 (CNN, 25 nov 2026).",
-  "petroleo": "El Brent cotiza cerca de USD 91.34/bbl (-0.07%) y el WTI cerca de USD 81.77 (-0.34%) tras un rebote parcial desde minimos de la sesion, con preocupacion por un superavit de oferta que limita el impulso inflacionario para el NQ (CMB News, 25 nov 2026).",
-  "catalizador": "Los futuros del Nasdaq-100 cayeron hasta un 2.8% en la premarket por el temor a los nuevos aranceles y a los datos de inflacion PCE, mientras el mercado de tasas (CME FedWatch) asigna un 96% de probabilidad a un recorte de 25 puntos basicos de la Fed en diciembre, un trasfondo mixto para el NQ intradia (Reuters/AOL/Investing.com, 25 nov 2026).",
+  "geopolitica": "Los hutíes reclamaron un nuevo ataque contra la refinería saudí de Ras Tanura y el distrito financiero de Riad, mientras Irán denuncia más minas contra petroleros en el estrecho de Ormuz, elevando el riesgo geopolítico que presiona el sentimiento de riesgo sobre el NQ (CNBC/Bloomberg, 25 nov 2026).",
+  "petroleo": "El Brent repuntó brevemente hasta unos 92.29 USD/barril (+0.97%) tras el ataque hutí a Arabia Saudí, pero luego cedió a cerca de 90.97 USD/barril (-0.5%) por temores de superávit de oferta global, limitando el traspaso del riesgo geopolítico hacia el NQ (CNBC, 25 nov 2026).",
+  "catalizador": "El PCE subyacente de octubre se aceleró a 3.3% (por encima de lo esperado), reforzando la expectativa casi plena de una subida de 25 pb de la Fed el 8-9 de diciembre bajo el presidente Kevin Warsh, lo que presiona a la baja al NQ por el riesgo de tasas más altas para el sector tecnológico (CNBC, 25 nov 2026).",
   "sources": [
-    "CNN 25 nov 2026",
-    "CMB News (commodity-board.com) 25 nov 2026",
-    "AOL 25 nov 2026",
-    "Investing.com 25 nov 2026",
-    "Reuters (via Startup Fortune) 01:01 ET"
+    "CNBC 25 nov 2026 'Oil rises after alleged Houthi attack on Saudi refinery'",
+    "CNBC 25 nov 2026 'Oil prices fall as supply glut concerns offset Middle East disruption fears'",
+    "Bloomberg 25 nov 2026 'Oil Edges Lower as Expanding Supply Vies With Hormuz Attacks'",
+    "CNBC 25 nov 2026 'PCE inflation report October 2026: Fed's preferred inflation gauge accelerated to 3.8%'",
+    "CNBC 25 nov 2026 'Futures sink further into the red as tech worries resurge'",
+    "Bloomberg 25 nov 2026 'Nasdaq 100 Slumps as AI Worries Fuel Selloff in Tech Shares'"
   ],
-  "as_of": "2026-11-25T18:07:02Z"
+  "as_of": "2026-11-25T19:05:23Z"
 }
