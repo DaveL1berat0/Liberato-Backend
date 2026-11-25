@@ -1250,8 +1250,6 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 [data-theme="light"] #lbc-sound-btn{background:rgba(255,255,255,0.7)!important;border-color:var(--hair)!important;}
 [data-theme="light"] .cx-tag{background:rgba(255,255,255,0.92);}
 
-/* Fondo de partículas: presente pero por detrás de los datos */
-#particle-canvas{opacity:0.45;}
 
 /* ── Móvil: como una app de trading (objetivos táctiles ≥ 44 px, una mano) ── */
 @media(max-width:680px){
@@ -1289,6 +1287,73 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 @media(prefers-reduced-motion:reduce){
   .tf:active,.gf-0dte:active,.mif:active,.lg-wk-btn:active,.lg-day-tab:active,.cxd:active,#lbc-sound-btn:active{transform:none;}
 }
+
+/* ══════════ v101 · segunda vuelta: paneles, métricas y estados con el lenguaje del sistema ══════════ */
+:root{--dt-skel:rgba(242,239,232,0.09);--dt-ic-cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15.5' rx='2.4'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E");}
+[data-theme="light"]{--dt-skel:rgba(33,29,22,0.10);}
+#particle-canvas{opacity:0.26;}
+
+/* Paneles: misma tarjeta que el resto del producto, sin elevarse ni girar iconos al pasar */
+.g,.regime{border-radius:var(--lbc-r-lg);box-shadow:var(--lbc-sh-2);}
+.g:hover{transform:none;box-shadow:var(--lbc-sh-2);border-color:var(--glass-brd);}
+.g:hover .g-ic{transform:none;background:var(--gold-faint);}
+.g-hd{padding:14px 18px;min-height:58px;background:transparent;}
+.g-hd-l{gap:12px;}
+.g-ic{width:32px;height:32px;border-radius:var(--lbc-r-sm);flex:0 0 auto;}
+.g-ic svg{width:15px;height:15px;}
+.g-ttl{font-size:12.5px;letter-spacing:0.1em;color:var(--ink);}
+.rg-hd{padding:16px 22px 0;}
+.rg-hd-title{font-size:11px;}
+.sm-ai{font-size:10px;min-height:28px;padding:0 12px;}
+.sm-inner{padding:18px 20px 20px;}
+.legacy-divider{margin:14px 0 2px;}
+.legacy-divider-txt{font-size:11px;color:var(--ink-3);letter-spacing:0.16em;}
+
+/* Régimen: lecturas en filas de tabla (línea fina, etiqueta a la izquierda, cifra a la derecha) */
+.rg-meter-stats{gap:0;}
+.rg-ms{padding:8px 0;border-bottom:1px solid var(--hair);}
+.rg-meter-stats>.rg-ms:last-child{border-bottom:none;}
+.rg-ms-v{font-size:16px;letter-spacing:-0.01em;}
+
+/* KPIs del gráfico: etiqueta pequeña, cifra grande */
+.iro{padding:14px 16px;gap:8px;}
+.iro-v{font-size:20px!important;letter-spacing:-0.01em;}
+
+/* Carga del gráfico: esqueleto de velas en vez de un aro con texto */
+.chart-load{gap:14px;}
+.chart-load .chart-ring{display:none;}
+.chart-load::before{content:'';width:min(78%,560px);height:52%;background-image:linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel)),linear-gradient(var(--dt-skel),var(--dt-skel));background-position:0% 60%,7% 30%,15% 60%,23% 45%,30% 20%,38% 20%,46% 50%,53% 60%,61% 30%,69% 50%,76% 35%,84% 50%,92% 45%,100% 30%;background-size:4.2% 30%,4.2% 54%,4.2% 38%,4.2% 46%,4.2% 54%,4.2% 54%,4.2% 26%,4.2% 38%,4.2% 30%,4.2% 34%,4.2% 54%,4.2% 54%,4.2% 46%,4.2% 26%;background-repeat:no-repeat;animation:dtSkel 1.6s var(--lbc-ease-in-out) infinite;}
+.chart-load-t{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);}
+@keyframes dtSkel{0%,100%{opacity:0.55;}50%{opacity:1;}}
+
+/* Mapa de calor */
+.hmap-tile{border-radius:var(--lbc-r-sm);}
+.hmap-legend{gap:8px 14px;}
+
+/* Catalizadores: pestañas como control segmentado, navegación de semana y estados vacíos cuidados */
+.lg-tabs{margin:14px 14px 0;padding:4px;gap:4px;border:1px solid var(--hair);border-bottom:1px solid var(--hair);border-radius:var(--lbc-r-md);background:rgba(127,127,127,0.05);}
+.lg-tab{border-bottom:none;border-radius:var(--lbc-r-sm);min-height:40px;padding:0 10px;}
+.lg-tab:hover{background:transparent;}
+.lg-tab.active{background:rgba(204,169,79,0.14);box-shadow:inset 0 0 0 1px rgba(204,169,79,0.38);border-bottom-color:transparent;}
+.lg-macro-nav{border-width:1px;border-radius:var(--lbc-r-md);padding:8px;}
+.lg-ev{border-radius:var(--lbc-r-md);}
+.lg-ev-time{font-size:22px;}
+.cat-empty{position:relative;padding:36px 20px!important;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.cat-empty::before{content:'';width:52px;height:52px;border-radius:var(--lbc-r-lg);border:1px solid var(--hair);background:var(--gold-faint);flex:0 0 auto;box-sizing:border-box;}
+.cat-empty::after{content:'';position:absolute;top:50px;left:calc(50% - 12px);width:24px;height:24px;background:var(--gold);-webkit-mask:var(--dt-ic-cal) center/contain no-repeat;mask:var(--dt-ic-cal) center/contain no-repeat;}
+.cat-empty-t{font-family:var(--sans);font-size:13.5px;color:var(--ink-2);max-width:280px;}
+
+@media(max-width:680px){
+  .g-hd{padding:14px 16px;}
+  .g-ttl{font-size:12.5px;}
+  .sm-inner{padding:16px;}
+  .sm-brief{font-size:13.5px!important;line-height:1.65!important;}
+  .rg-ms-v{font-size:16px;}
+  .iro-v{font-size:20px!important;}
+  .lg-tabs{margin:12px 12px 0;}
+  .lg-tab{min-height:44px;}
+}
+@media(prefers-reduced-motion:reduce){.chart-load::before{animation:none;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
