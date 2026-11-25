@@ -95,3 +95,13 @@
 /* Botones y campos del panel: la fuente del sitio (salían en Arial: los controles no heredan la fuente) */
 .profile-drawer :is(button,input,select,textarea),.lbcn :is(button,input){font-family:var(--lbc-font-sans);}
 .profile-drawer :is(.pd-title,.pd-sec-t,.ave-title){font-family:var(--lbc-font-serif);}
+
+/* ─── 7. Opiniones · widget «Review Collector» de Trustpilot (lo monta lbc-tools.js en «Mi perfil») ─── */
+.lbc-opina__widget{min-height:52px;}
+.lbc-opina__widget .trustpilot-widget{display:block;width:100%;}
+.lbc-opina__widget .trustpilot-widget > a{font-family:var(--lbc-font-sans);font-size:13px;color:var(--lbc-ink-2);}
+.lbc-opina__btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:var(--lbc-h-md);padding:0 16px;border-radius:var(--lbc-r-md);border:1px solid rgba(204,169,79,0.42);background:rgba(204,169,79,0.06);color:#E7CC74;font-family:var(--lbc-font-sans);font-size:14px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+@media(hover:hover){.lbc-opina__btn:hover{background:rgba(204,169,79,0.12);border-color:rgba(204,169,79,0.6);}}
+.lbc-opina__btn:active{transform:scale(0.98);}
+.lbc-opina__nota{margin:8px 0 0;font-family:var(--lbc-font-sans);font-size:12px;line-height:1.5;color:rgba(232,228,217,0.55);}
+@media(prefers-reduced-motion:reduce){.lbc-opina__btn{transition:none;}.lbc-opina__btn:active{transform:none;}}
