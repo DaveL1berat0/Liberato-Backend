@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Reuters/CNBC: la administracion Trump esta a punto de anunciar los resultados de una investigacion comercial (Seccion 301) sobre 16 economias, incluidas Taiwan y Corea del Sur, que podria derivar en nuevos aranceles sobre semiconductores; Bloomberg (via Investing.com) suma que se preparan aranceles adicionales a China y la UE, lo que llevo los futuros del Nasdaq-100 a caer hasta un 2.5-2.8% en la premarket de hoy por tension comercial y en el sector tech/semis (Nvidia -5%, Anthropic -4% bajo su precio de IPO, SK Hynix -9.1%, Samsung -9.3%).",
-  "petroleo": "",
-  "catalizador": "",
+  "geopolitica": "Trump prepara los resultados de una investigacion Seccion 301 sobre 16 economias (incl. Taiwan y Corea del Sur) que podria derivar en aranceles a semiconductores, mas aranceles adicionales a China y la UE, lo que hundio a Nvidia, SK Hynix y Samsung en la premarket y presiona al NQ (Reuters/Bloomberg via CNBC/Investing.com, premarket 25-nov).",
+  "petroleo": "Brent cae a aprox. 90.97 USD (-0.5%) y WTI a aprox. 81.58 USD (-0.6%) en la sesion temprana, ya que los temores a un superavit de oferta global compensan el repunte por ataques reportados en el Estrecho de Ormuz (Reuters, aprox. 20:37 ET 24-nov; FXStreet 05:39 ET).",
+  "catalizador": "Ademas de la tension arancelaria, el chip Ambarella se desploma cerca de 40% tras una guia de ingresos muy por debajo de lo esperado, ampliando la ola de ventas en semis que arrastra a los futuros del Nasdaq-100 (-2.9% en premarket) (CNBC, premarket 25-nov).",
   "sources": [
-    "CNBC premarket, 25 nov 2026 (stock-market-today-live-updates)",
+    "CNBC premarket, 25 nov 2026 (futuros Nasdaq-100 -2.9%; Ambarella -40%; Nvidia/Anthropic a la baja)",
     "Reuters via CNBC/Yahoo Finance, 25 nov 2026 (investigacion Seccion 301 sobre 16 economias)",
-    "Bloomberg via Investing.com, 25 nov 2026 (aranceles a China y la UE)"
+    "Bloomberg via Investing.com, 25 nov 2026 (aranceles adicionales a China y la UE)",
+    "FXStreet 05:39 ET (ataques en el Estrecho de Ormuz)",
+    "Reuters 20:37 ET 24-nov (Brent 90.97 USD, WTI 81.58 USD)"
   ],
-  "as_of": "2026-11-25T13:06:19Z"
+  "as_of": "2026-11-25T13:41:29Z"
 }
