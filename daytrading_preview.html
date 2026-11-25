@@ -33,7 +33,11 @@
 <link rel="stylesheet" href="theme.css">
 <link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
-<!-- Fuentes del sistema — sin dependencia externa, funciona en file:// y en server -->
+<!-- Tipografía única del sitio (v101): Cormorant Garamond + DM Sans + DM Mono, como el resto de las páginas -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Fuentes del sistema: quedan como reserva si la fuente no llega -->
 <style>
 /* System font stack: visualmente idéntico a Space Grotesk / JetBrains / Cormorant */
 @font-face{font-family:'LBC-Mono';src:local('JetBrains Mono'),local('Fira Code'),local('Cascadia Code'),local('Source Code Pro'),local('Menlo'),local('Consolas'),local('Courier New');}
@@ -1354,6 +1358,10 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   .lg-tab{min-height:44px;}
 }
 @media(prefers-reduced-motion:reduce){.chart-load::before{animation:none;}}
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* Tipografía única del sitio: el terminal seguía en Georgia y fuentes del sistema */
+:root{--mono:var(--lbc-font-mono);--sans:var(--lbc-font-sans);--serif:var(--lbc-font-serif);}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
