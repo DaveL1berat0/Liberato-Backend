@@ -453,3 +453,19 @@ details[open]>.lbc-list__row::after{transform:rotate(45deg) translate(-2px,-2px)
   .lbc-chart.is-loading .lbc-chart__body::after{animation:none !important;}
   .lbc-input-btn,.lbc-linkbtn,.lbc-list__row,.lbc-list__row::after,.lbc-req,.lbc-req::before{transition-duration:0.01ms !important;}
 }
+
+/* ─── 18. PRUEBA SOCIAL · franja de opiniones (p. ej. Trustpilot) ───── */
+/* Franja discreta para enlazar a un perfil público de opiniones o alojar su widget oficial.
+   <div class="lbc-trust"><span class="lbc-trust__label">Opiniones verificadas</span>
+     <a class="lbc-trust__link" href="…perfil real…" target="_blank" rel="noopener">Ver opiniones en Trustpilot ↗</a>
+     <div class="lbc-trust__widget"><!-- widget oficial, si se usa --></div></div>
+   Regla: la nota, las estrellas y el número de opiniones SOLO los pinta el widget oficial o un dato real con su fuente;
+   esta franja no trae ninguno escrito a mano. */
+.lbc-trust{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--lbc-s-2) var(--lbc-s-4);max-width:720px;margin:var(--lbc-s-6) auto 0;padding:var(--lbc-s-3) var(--lbc-s-5);border:1px solid var(--lbc-line);border-radius:var(--lbc-r-lg);background:var(--lbc-fill);text-align:center;}
+.lbc-trust__label{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);}
+.lbc-trust__link{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-family:var(--lbc-font-sans);font-size:var(--lbc-fs-md);font-weight:600;color:var(--lbc-ink);text-decoration:underline;text-decoration-color:var(--lbc-line-2);text-underline-offset:4px;transition:text-decoration-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-trust__link:hover{color:var(--lbc-gold-2);text-decoration-color:currentColor;}}
+.lbc-trust__widget{flex:1 1 100%;min-width:0;}
+.lbc-trust__widget:empty{display:none;}
+.lbc-trust--bare{border:0;background:none;padding-left:0;padding-right:0;}
+@media (max-width:640px){.lbc-trust{margin-left:var(--lbc-s-4);margin-right:var(--lbc-s-4);}}

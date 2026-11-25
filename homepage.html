@@ -2336,6 +2336,17 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 
   </div>
 
+  <!-- TRUSTPILOT · sitio reservado (v101). NO está activo: falta el perfil real de Trustpilot (dirección, nota y
+       número de opiniones los confirma Dave; Regla #1: aquí no se escribe ninguna estrella ni cifra a mano).
+       Para activarlo: quitar este comentario y poner la dirección real del perfil en el href. El estilo ya está
+       en lbc-ui.css (.lbc-trust). Si se usa el widget oficial (TrustBox), va dentro de .lbc-trust__widget.
+  <div class="lbc-trust" id="trustpilot">
+    <span class="lbc-trust__label">Opiniones verificadas</span>
+    <a class="lbc-trust__link" href="DIRECCIÓN-REAL-DEL-PERFIL" target="_blank" rel="noopener">Ver opiniones en Trustpilot <span aria-hidden="true">&#8599;</span></a>
+    <div class="lbc-trust__widget"></div>
+  </div>
+  -->
+
   <div class="stats">
     <div class="stat"><span class="stat-num" id="traders-count">350+</span><span class="stat-label">Traders activos</span></div>
     <div class="stat-div"></div>
@@ -3916,8 +3927,13 @@ async function submitContact(){
       }
       fab.classList.toggle('lc-fab--aparte',tapa);
     };
-    var pedir=function(){ if(!pend){ pend=true; requestAnimationFrame(mirar); } };
+    var cola=null;
+    var pedir=function(){
+      if(!pend){ pend=true; requestAnimationFrame(mirar); }
+      clearTimeout(cola); cola=setTimeout(mirar,520);   // otra mirada al parar: el botón sube o baja con la barra fija (transición de 420 ms)
+    };
     window.addEventListener('scroll',pedir,{passive:true}); window.addEventListener('resize',pedir,{passive:true});
+    fab.addEventListener('transitionend',function(e){ if(e.propertyName==='bottom') mirar(); });
     setTimeout(mirar,600);
   }
 
