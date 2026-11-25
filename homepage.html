@@ -1921,6 +1921,75 @@ html.lbc-v101 .lcs-fill{animation:lcsFill 1s var(--lbc-ease) .15s forwards;}
 @media (prefers-reduced-motion:reduce){
   html.lbc-v101 :is(.modal,.contact-modal,.lbc-home-modal,.lcs-inner){animation:none !important;transition:none !important;}
 }
+/* ══ v101 · bloques nuevos de recorrido (25-nov): pasos del registro, «Qué hay dentro», comparativa y pie en columnas ══ */
+/* Pasos del registro: qué pasa después, en una línea */
+html.lbc-v101 .reg-pasos{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:0 0 18px;padding:0;}
+html.lbc-v101 .reg-pasos li{display:inline-flex;align-items:center;gap:7px;font-size:13px;line-height:1.3;color:rgba(243,240,231,0.72);white-space:nowrap;}
+html.lbc-v101 .reg-n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--lbc-gold-line);color:var(--lbc-gold-2);font-family:var(--lbc-font-mono);font-size:11px;font-weight:500;flex:none;}
+/* «Qué hay dentro» */
+html.lbc-v101 .dentro{position:relative;z-index:1;width:100%;max-width:1320px;margin:0 auto;padding:56px 16px 8px;}
+html.lbc-v101 .dentro-head{text-align:center;margin-bottom:24px;}
+html.lbc-v101 .dentro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+html.lbc-v101 .dentro-card{display:flex;flex-direction:column;gap:6px;padding:10px 10px 14px;border-radius:18px;border:1px solid var(--lbc-line);background:linear-gradient(180deg,var(--lbc-bg-3),var(--lbc-bg-2));box-shadow:var(--lbc-sh-2);text-decoration:none;color:inherit;transition:transform var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){html.lbc-v101 .dentro-card:hover{transform:translateY(-2px);border-color:var(--lbc-gold-line);box-shadow:var(--lbc-sh-3);}}
+html.lbc-v101 .dentro-card:active{transform:scale(0.985);}
+html.lbc-v101 .dentro-card:focus-visible{outline:none;box-shadow:0 0 0 2px var(--lbc-bg),0 0 0 4px var(--lbc-gold-2) !important;}
+/* Hueco de imagen: neutro (trama fina, sin formas que parezcan datos) hasta que exista la captura real */
+html.lbc-v101 .dentro-shot{position:relative;display:block;aspect-ratio:16/10;border-radius:12px;overflow:hidden;border:1px solid var(--lbc-line);background-color:#080A11;background-image:linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px),radial-gradient(120% 90% at 50% 120%,rgba(204,169,79,0.10),transparent 60%);background-size:24px 24px,24px 24px,100% 100%;margin-bottom:6px;}
+html.lbc-v101 .dentro-shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block;}
+html.lbc-v101 .dentro-shot.has-img{background-image:none;}
+html.lbc-v101 .dentro-chip{position:absolute;left:8px;top:8px;z-index:1;display:inline-flex;align-items:center;min-height:22px;padding:0 9px;border-radius:999px;border:1px solid var(--lbc-gold-line);background:rgba(6,7,13,0.72);color:var(--lbc-gold-2);font-family:var(--lbc-font-mono);font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;}
+html.lbc-v101 .dentro-name{padding:0 4px;font-family:'Cormorant Garamond','LBC Serif Reserva',Georgia,serif;font-size:22px;font-weight:700;line-height:1.15;color:var(--lbc-ink);letter-spacing:-0.01em;}
+html.lbc-v101 .dentro-line{padding:0 4px;font-size:13px;line-height:1.4;color:rgba(243,240,231,0.62);}
+/* Comparativa de planes */
+html.lbc-v101 .cmp{max-width:1200px;margin:28px auto 0;padding:0 16px;}
+html.lbc-v101 .cmp-t{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:14px;line-height:1.4;}
+html.lbc-v101 .cmp-t col,html.lbc-v101 .cmp-c0{width:auto;}
+html.lbc-v101 .cmp-t thead th,html.lbc-v101 .cmp-t thead td{position:sticky;top:64px;z-index:2;background:rgba(6,7,13,0.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:12px 6px;border-bottom:1px solid var(--lbc-line-2);vertical-align:bottom;text-align:center;font-weight:400;}
+html.lbc-v101 .cmp-t thead th{width:92px;}
+html.lbc-v101 .cmp-plan{display:block;font-family:'Cormorant Garamond','LBC Serif Reserva',Georgia,serif;font-size:16px;font-weight:700;line-height:1.1;color:var(--lbc-ink);}
+html.lbc-v101 .cmp-gold .cmp-plan,html.lbc-v101 .cmp-gold .cmp-price{color:var(--lbc-gold);}
+html.lbc-v101 .cmp-price{display:block;margin-top:4px;font-family:'Cormorant Garamond','LBC Serif Reserva',Georgia,serif;font-size:24px;font-weight:300;line-height:1;color:var(--lbc-ink);font-variant-numeric:lining-nums tabular-nums;}
+html.lbc-v101 .cmp-per{display:none;font-family:var(--lbc-font-mono);font-size:11px;color:rgba(243,240,231,0.54);margin-top:4px;}
+html.lbc-v101 .cmp-t tbody th{padding:13px 10px 13px 4px;border-bottom:1px solid var(--lbc-line);text-align:left;font-weight:400;color:rgba(243,240,231,0.84);}
+html.lbc-v101 .cmp-t tbody th strong{font-weight:600;color:var(--lbc-ink);}
+html.lbc-v101 .cmp-t tbody td{padding:13px 6px;border-bottom:1px solid var(--lbc-line);text-align:center;font-size:16px;}
+html.lbc-v101 .cmp-t tbody tr:last-child :is(th,td){border-bottom:0;}
+html.lbc-v101 .cmp-t td.si{color:var(--lbc-gold);}
+html.lbc-v101 .cmp-t td.no{color:rgba(243,240,231,0.30);}
+html.lbc-v101 .cmp-t :is(th,td).cmp-gold{background-color:rgba(204,169,79,0.05);}
+html.lbc-v101 .cmp-t thead th.cmp-gold{background:linear-gradient(rgba(204,169,79,0.07),rgba(204,169,79,0.07)),rgba(6,7,13,0.96);border-radius:12px 12px 0 0;}
+html.lbc-v101 .cmp-t tbody tr:last-child td.cmp-gold{border-radius:0 0 12px 12px;}
+/* Pie en columnas */
+html.lbc-v101 .footer-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px;max-width:880px;margin:22px auto 26px;text-align:left;}
+html.lbc-v101 .footer-col{display:flex;flex-direction:column;align-items:flex-start;min-width:0;}
+html.lbc-v101 .footer-h{font-family:var(--lbc-font-mono);font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--lbc-gold);margin-bottom:6px;}
+html.lbc-v101 .footer-col a{display:inline-flex;align-items:center;min-height:40px;font-size:15px;color:rgba(243,240,231,0.74);text-decoration:none;transition:color var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){html.lbc-v101 .footer-col a:hover{color:var(--lbc-gold-2);}}
+html.lbc-v101 .footer-col a:active{color:var(--lbc-gold-2);}
+html.lbc-v101 .footer-lang{margin:0 auto 18px;}
+html.lbc-v101 .footer-lang .lbc-seg__item{min-height:40px;font-family:var(--lbc-font-sans);}
+@media (min-width:768px){
+  html.lbc-v101 .dentro{padding:88px 57.6px 0;}
+  html.lbc-v101 .dentro-head{margin-bottom:36px;}
+  html.lbc-v101 .dentro-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;max-width:1200px;margin:0 auto;}
+  html.lbc-v101 .dentro-card{padding:12px 12px 18px;border-radius:22px;}
+  html.lbc-v101 .dentro-shot{border-radius:14px;}
+  html.lbc-v101 .dentro-name{font-size:26px;padding:4px 6px 0;}
+  html.lbc-v101 .dentro-line{font-size:14px;padding:0 6px;}
+  html.lbc-v101 .reg-pasos li{font-size:13px;}
+  html.lbc-v101 .cmp{margin-top:40px;padding:0;}
+  html.lbc-v101 .cmp-t{font-size:15px;}
+  html.lbc-v101 .cmp-t thead th,html.lbc-v101 .cmp-t thead td{position:static;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:18px 16px;}
+  html.lbc-v101 .cmp-t thead th{width:260px;}
+  html.lbc-v101 .cmp-t thead th.cmp-gold{background:rgba(204,169,79,0.07);}
+  html.lbc-v101 .cmp-plan{font-size:22px;}
+  html.lbc-v101 .cmp-price{font-size:34px;}
+  html.lbc-v101 .cmp-per{display:block;}
+  html.lbc-v101 .cmp-t tbody th{padding:15px 16px;}
+  html.lbc-v101 .cmp-t tbody td{padding:15px 16px;font-size:17px;}
+  html.lbc-v101 .footer-cols{grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:28px auto 30px;}
+}
 /* Teclado abierto en móvil: la hoja se apoya encima del teclado (--lbc-kb lo calcula el script del final) */
 @media (max-width:640px){
   html.lbc-v101 :is(.modal-overlay,.contact-overlay,#lc-login){padding-bottom:var(--lbc-kb,0px) !important;}
@@ -2122,6 +2191,11 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <div class="modal-logo">Liberato <span>Community</span></div>
       <h2 class="modal-title">Crea tu cuenta<br><em>gratuita</em></h2>
       <p class="modal-sub">Acceso por invitación a una comunidad de traders serios. Spots limitados por ciclo.</p>
+      <ol class="reg-pasos" aria-label="Qué pasa después">
+        <li><span class="reg-n">1</span><span>Crea tu cuenta</span></li>
+        <li><span class="reg-n">2</span><span>Verifica tu correo</span></li>
+        <li><span class="reg-n">3</span><span>Entra a la Comunidad Libre</span></li>
+      </ol>
       <div class="modal-divider"></div>
       <div class="modal-field"><label class="modal-label" for="m-name">Nombre</label><input class="modal-input" id="m-name" type="text" placeholder="Tu nombre" autocomplete="given-name" autocapitalize="words" enterkeyhint="next"/></div>
       <div class="modal-field"><label class="modal-label" for="m-email">Correo</label><input class="modal-input" id="m-email" type="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="tu@email.com" autocomplete="email"/></div>
@@ -2267,6 +2341,20 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 })();
 </script>
 
+<!-- QUÉ HAY DENTRO (v101) — una tarjeta por herramienta. Nombres = los del menú; la línea de cada una ya existía en el sitio
+     (tarjeta del plan y título de cada herramienta). El hueco de imagen queda neutro hasta que exista la captura REAL:
+     guardar el archivo en media/home/ y escribir su nombre en DENTRO_IMG (script «QUÉ HAY DENTRO», más abajo).
+     Archivos esperados (JPG o WebP, 16:10, 1600×1000): dentro-daytrading.jpg · dentro-journal.jpg · dentro-earnings.jpg · dentro-options.jpg -->
+<section class="dentro" id="dentro" aria-labelledby="dentro-t">
+  <div class="dentro-head"><h2 class="sec-title" id="dentro-t">Qué hay <em>dentro</em></h2></div>
+  <div class="dentro-grid">
+    <a class="dentro-card" href="#pro-plan" data-go="daytrading_preview.html"><span class="dentro-shot" data-shot="daytrading"><span class="dentro-chip">Miembros</span></span><span class="dentro-name">Day Trading</span><span class="dentro-line">Niveles de Gamma Exposure institucionales Intraday</span></a>
+    <a class="dentro-card" href="#pro-plan" data-go="journal.html"><span class="dentro-shot" data-shot="journal"><span class="dentro-chip">Miembros</span></span><span class="dentro-name">Journal</span><span class="dentro-line">Journal de trading con Inteligencia Artificial</span></a>
+    <a class="dentro-card" href="#pro-plan" data-go="earnings.html"><span class="dentro-shot" data-shot="earnings"><span class="dentro-chip">Miembros</span></span><span class="dentro-name">Earnings</span><span class="dentro-line">Earnings Calendar con noticias de alto impacto</span></a>
+    <a class="dentro-card" href="#pro-plan" data-go="options.html"><span class="dentro-shot" data-shot="options"><span class="dentro-chip">Miembros</span></span><span class="dentro-name">Options</span><span class="dentro-line">Inteligencia LEAPS</span></a>
+  </div>
+</section>
+
 <!-- PLANS -->
 <section class="plans">
   <div class="plans-header" id="planes">
@@ -2334,6 +2422,36 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       <p class="btn-hint-hero">Spots limitados &middot; Solo traders serios</p>
     </div>
 
+  </div>
+
+  <!-- COMPARATIVA (v101) — mismas ventajas, mismas palabras y mismo precio que las dos tarjetas de arriba; ninguna fila nueva.
+       Criterio de las marcas: en Comunidad Libre, ✓ lo que su tarjeta marca con ✓ y ✗ lo que solo trae Trading en Vivo
+       (su tarjeta dice «Sin sesiones en vivo» y «Sin educación estructurada», y las herramientas web llevan candado «Miembros»).
+       OJO, pendiente de confirmar con Dave: las cuatro primeras filas llevan ✓ también en Trading en Vivo porque ese plan
+       se llama «Acceso Completo»; si no fuera así, basta con cambiar esas cuatro celdas. -->
+  <div class="cmp" id="comparativa">
+    <table class="cmp-t">
+      <caption class="lbc-sr-only">Comparativa de planes</caption>
+      <thead><tr>
+        <td class="cmp-c0"></td>
+        <th scope="col"><span class="cmp-plan">Comunidad Libre</span><span class="cmp-price">$0</span><span class="cmp-per">sin compromisos</span></th>
+        <th scope="col" class="cmp-gold"><span class="cmp-plan">Trading en Vivo</span><span class="cmp-price">$199</span><span class="cmp-per">por mes &middot; cancela cuando quieras</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><th scope="row">Discord con traders activos</th><td class="si" aria-label="Incluido">&#10003;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Ideas de bias del día</th><td class="si" aria-label="Incluido">&#10003;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Noticias de alto impacto</th><td class="si" aria-label="Incluido">&#10003;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Resultados compartidos</th><td class="si" aria-label="Incluido">&#10003;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Canal de YouTube con contenido gratuito</th><td class="si" aria-label="Incluido">&#10003;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row"><strong>Day Trading en vivo</strong> &mdash; Sesi&oacute;n del New York Market Open</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Journal de trading con Inteligencia Artificial</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Niveles de Gamma Exposure institucionales Intraday</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Order Flow y lecturas de mercado en tiempo real</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Earnings Calendar con noticias de alto impacto</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Discord Premium con an&aacute;lisis del mercado y lecturas de Order Flow en tiempo real (educativo, sin se&ntilde;ales)</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+        <tr><th scope="row">Estrategias institucionales, Playbooks y mentalidad de trader profesional</th><td class="no" aria-label="No incluido">&#10007;</td><td class="si cmp-gold" aria-label="Incluido">&#10003;</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- TRUSTPILOT · sitio reservado (v101). NO está activo: falta el perfil real de Trustpilot (dirección, nota y
@@ -2411,8 +2529,31 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 
 <footer>
   <div class="footer-logo">Liberato <span>Community</span></div>
-  <div class="footer-links"><a href="https://www.instagram.com/liberatotrader" target="_blank" rel="noopener">📸 Instagram</a><a href="https://www.youtube.com/channel/UC-zyJASC9rcbohzoGU4ljWQ" target="_blank" rel="noopener">🎬 YouTube</a><a href="https://discord.gg/fsxg7SXwTq" target="_blank" rel="noopener">💬 Discord</a><a href="#" onclick="openContactModal(event)">✉️ Contacto</a></div>
-  <p class="footer-copy">&#169; 2026 Liberato Community &middot; Todos los derechos reservados &middot; <a href="politicas.html" style="color:rgba(232,228,217,0.26);text-decoration:none;transition:color 0.25s ease;" onmouseover="this.style.color='#CCA94F'" onmouseout="this.style.color='rgba(232,228,217,0.26)'">Pol&iacute;ticas</a></p>
+  <div class="footer-cols" role="navigation" aria-label="Pie de página">
+    <div class="footer-col"><div class="footer-h">Producto</div>
+      <a href="#pro-plan" data-go="daytrading_preview.html">Day Trading</a>
+      <a href="#pro-plan" data-go="journal.html">Journal</a>
+      <a href="#pro-plan" data-go="earnings.html">Earnings</a>
+      <a href="#pro-plan" data-go="options.html">Options</a>
+    </div>
+    <div class="footer-col"><div class="footer-h">Comunidad</div>
+      <a href="https://www.instagram.com/liberatotrader" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/channel/UC-zyJASC9rcbohzoGU4ljWQ" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://discord.gg/fsxg7SXwTq" target="_blank" rel="noopener">Discord</a>
+    </div>
+    <div class="footer-col"><div class="footer-h">Legal</div>
+      <a href="politicas.html">Políticas y avisos legales</a>
+    </div>
+    <div class="footer-col"><div class="footer-h">Contacto</div>
+      <a href="#" onclick="openContactModal(event)">Contacto</a>
+      <a href="https://wa.me/971529218605" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+    </div>
+  </div>
+  <div class="lbc-seg footer-lang" role="group" aria-label="Idioma / Language">
+    <button type="button" class="lbc-seg__item" data-lang="es" aria-pressed="true">Español</button>
+    <button type="button" class="lbc-seg__item" data-lang="en" aria-pressed="false">English</button>
+  </div>
+  <p class="footer-copy">&#169; 2026 Liberato Community &middot; Todos los derechos reservados</p>
 </footer>
 
 <!-- STICKY CTA flotante -->
@@ -3477,6 +3618,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Inicio': 'Home',
     'Day Trading': 'Day Trading',
     'Miembros': 'Members',
+    'Qué hay': "What's",
+    'dentro': 'inside',
+    'Verifica tu correo': 'Verify your email',
+    'Entra a la Comunidad Libre': 'Enter the Free Community',
+    'Producto': 'Product',
+    'Comunidad': 'The community',   // (no «Community» a secas: al volver a ES cambiaría el logotipo)
+    'Inteligencia LEAPS': 'LEAPS intelligence',
+    'Comparativa de planes': 'Plan comparison',
     'Journal': 'Journal',
     'Earnings': 'Earnings',
     'Options': 'Options',
@@ -3914,7 +4063,7 @@ async function submitContact(){
   // 5) El botón flotante del asistente nunca pisa una acción: si fuera a taparla, se aparta hasta que pase.
   var fab=$('lc-fab'), win=$('lc-window');
   if(fab){
-    var SEL='.hero-cta,.btn-free-2,.btn-hero-2,.cd-btn,.cd-spots a,.footer-links a,.footer-copy a,.hero-play-btn';
+    var SEL='.hero-cta,.btn-free-2,.btn-hero-2,.cd-btn,.cd-spots a,.footer-col a,.footer-lang button,.hero-play-btn';
     var pend=false;
     var mirar=function(){
       pend=false;
@@ -3935,6 +4084,34 @@ async function submitContact(){
     window.addEventListener('scroll',pedir,{passive:true}); window.addEventListener('resize',pedir,{passive:true});
     fab.addEventListener('transitionend',function(e){ if(e.propertyName==='bottom') mirar(); });
     setTimeout(mirar,600);
+  }
+
+  // 6) «Qué hay dentro» y pie: cada tarjeta o enlace de herramienta hace EXACTAMENTE lo mismo que su enlace del menú
+  //    (sin sesión lleva a los planes; con acceso abre la herramienta), sin duplicar esa lógica.
+  d.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('a[data-go]'):null; if(!a) return;
+    var nav=d.querySelector('.nav-desktop-links a[data-app="'+a.getAttribute('data-go')+'"]');
+    if(nav){ e.preventDefault(); nav.click(); }
+  });
+  // QUÉ HAY DENTRO — capturas reales de cada herramienta. Mientras el nombre esté vacío se ve el hueco neutro.
+  // Para poner una: guardar el archivo en media/home/ y escribir aquí su ruta, p. ej. daytrading:'media/home/dentro-daytrading.jpg'
+  var DENTRO_IMG={ daytrading:'', journal:'', earnings:'', options:'' };
+  Object.keys(DENTRO_IMG).forEach(function(k){
+    var src=DENTRO_IMG[k], hueco=d.querySelector('.dentro-shot[data-shot="'+k+'"]'); if(!src||!hueco) return;
+    var im=new Image(); im.loading='lazy'; im.decoding='async'; im.alt='';
+    im.onload=function(){ hueco.classList.add('has-img'); };
+    im.onerror=function(){ if(im.parentNode) im.parentNode.removeChild(im); };   // si el archivo falla, se queda el hueco neutro
+    im.src=src; hueco.insertBefore(im,hueco.firstChild);
+  });
+  // Selector de idioma del pie: mismo estado que la bandera de la cabecera (los dos llaman a toggleLang).
+  var segs=d.querySelectorAll('.footer-lang [data-lang]');
+  function idiomaActual(){ try{ return localStorage.getItem('lbc_lang')||'es'; }catch(e){ return 'es'; } }
+  function pintarIdioma(){ var l=idiomaActual(); for(var i=0;i<segs.length;i++){ var on=segs[i].getAttribute('data-lang')===l; segs[i].classList.toggle('is-active',on); segs[i].setAttribute('aria-pressed',on?'true':'false'); } }
+  if(segs.length){
+    var _tl=window.toggleLang;
+    if(typeof _tl==='function') window.toggleLang=function(){ var r=_tl.apply(this,arguments); pintarIdioma(); return r; };
+    for(var i=0;i<segs.length;i++) segs[i].addEventListener('click',function(){ if(this.getAttribute('data-lang')!==idiomaActual()) window.toggleLang(); });
+    pintarIdioma();
   }
 
   // 4) Móvil: con el teclado abierto, las hojas suben para que el botón de enviar siga a la vista.
