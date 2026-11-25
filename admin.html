@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="theme.css">
 <link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     /* v101: los colores, textos y fuentes salen de los tokens del sistema compartido (lbc-ui.css): oro de marca #CCA94F. */
@@ -35,13 +37,14 @@
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 
   .gate{max-width:400px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px;}
-  .gate-brand{font-family:var(--serif);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
+  .gate-brand span{color:var(--gold);}
+  .gate-brand{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:0.1em;color:var(--ink);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
   .gate-ring{width:64px;height:64px;margin:0 auto 26px;position:relative;opacity:0;animation:fade 0.7s 0.2s forwards;}
   .gate-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
   .gate-ring-c{fill:none;stroke:var(--brd-gold);stroke-width:1.5;}
   .gate-ring-p{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:190;stroke-dashoffset:150;animation:ring 2.5s ease-in-out infinite;}
   .gate-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
-  .gate-title{font-family:var(--serif);font-size:25px;font-weight:600;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
+  .gate-title{font-family:var(--serif);font-size:32px;font-weight:400;letter-spacing:-0.01em;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
   .gate-title span{color:var(--gold);}
   .gate-sub{font-size:12px;color:var(--ink-3);text-align:center;margin-bottom:30px;font-family:var(--mono);letter-spacing:0.04em;opacity:0;animation:fade 0.7s 0.35s forwards;}
   .gate-form{opacity:0;animation:fade 0.7s 0.45s forwards;}
@@ -58,8 +61,8 @@
   .brand-row{display:flex;align-items:center;gap:14px;}
   .brand-mark{width:34px;height:34px;border:1px solid var(--brd-gold);border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
   .brand-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,var(--gold-dim) 50%,transparent 60%);animation:sweep 4s ease-in-out infinite;}
-  .brand-mark span{font-family:var(--serif);font-size:16px;color:var(--gold);font-weight:600;}
-  .brand-txt .t{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1;}
+  .brand-mark span{font-family:var(--serif);font-size:20px;color:var(--gold);font-weight:400;}
+  .brand-txt .t{font-family:var(--serif);font-size:24px;font-weight:400;line-height:1;}
   .brand-txt .t span{color:var(--gold);}
   .brand-txt .s{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;}
   .topbar-r{display:flex;align-items:center;gap:14px;}
@@ -71,7 +74,7 @@
   .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
   .kpi{background:var(--panel);border:1px solid var(--brd);border-radius:14px;padding:18px;position:relative;overflow:hidden;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
   .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.5;}
-  .kpi-v{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1;letter-spacing:-0.01em;}
+  .kpi-v{font-family:var(--serif);font-size:40px;font-weight:300;line-height:1;letter-spacing:-0.01em;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
   .kpi-k{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:9px;}
   .kpi.gold .kpi-v{color:var(--gold-2);}
   .kpi.up .kpi-v{color:var(--up);}
@@ -95,11 +98,11 @@
   .ring-bg{fill:none;stroke:var(--bg-3);stroke-width:10;}
   .ring-fill{fill:none;stroke:url(#rgrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);}
   .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .ring-v{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--gold-2);line-height:1;}
+  .ring-v{font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;font-family:var(--serif);font-size:46px;font-weight:300;color:var(--gold-2);line-height:1;}
   .ring-l{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;}
   .ring-split{display:flex;gap:24px;margin-top:22px;}
   .ring-split div{text-align:center;}
-  .ring-split .n{font-family:var(--serif);font-size:20px;font-weight:600;}
+  .ring-split .n{font-family:var(--serif);font-size:26px;font-weight:400;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
   .ring-split .n.p{color:var(--gold-2);}
   .ring-split .n.f{color:var(--ink-2);}
   .ring-split .lbl{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
@@ -181,7 +184,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <body>
 
 <div id="gate" class="gate">
-  <div class="gate-brand">Liberato Community</div>
+  <div class="gate-brand">Liberato <span>Community</span></div>
   <div class="gate-ring">
     <svg viewBox="0 0 68 68"><circle class="gate-ring-c" cx="34" cy="34" r="30"/><circle class="gate-ring-p" cx="34" cy="34" r="30"/></svg>
     <div class="gate-dot"></div>

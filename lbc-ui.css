@@ -7,6 +7,11 @@
    Guía de uso: ~/Projects/liberato-web-capturas/SISTEMA_UI.md
    ══════════════════════════════════════════════════════════════════════ */
 
+/* ─── 0. FUENTES DE RESERVA (mismas medidas que las de marca mientras cargan) ─── */
+@font-face{font-family:'LBC Serif Reserva';font-style:normal;src:local('Times New Roman'),local('TimesNewRomanPSMT'),local('Georgia');size-adjust:95%;}
+@font-face{font-family:'LBC Serif Reserva';font-style:italic;src:local('Times New Roman Italic'),local('TimesNewRomanPS-ItalicMT'),local('Georgia Italic');size-adjust:85%;}
+@font-face{font-family:'LBC Sans Reserva';src:local('Arial'),local('ArialMT'),local('Helvetica Neue'),local('Roboto');size-adjust:103%;}
+
 /* ─── 1. TOKENS ─────────────────────────────────────────────────────── */
 :root{
   /* Paleta (la de siempre: no es una paleta nueva) */
@@ -39,10 +44,13 @@
   --lbc-glass:rgba(6,7,13,0.92);        /* barras con desenfoque: casi opacas, para que el contenido de debajo no las tiña */
   --lbc-scrim:rgba(3,4,8,0.62);         /* velo detrás de modales */
 
-  /* Tipografía: cada página usa las fuentes que ya carga (no se cargan aquí) */
-  --lbc-font-sans:'Space Grotesk','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  --lbc-font-mono:'JetBrains Mono','DM Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --lbc-font-serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  /* Tipografía ÚNICA de todo el sitio (decisión de Dave, 25-nov): Cormorant Garamond (títulos y marca) + DM Sans (texto)
+     + DM Mono (cifras y rótulos). Cada página las carga con el MISMO enlace de Google Fonts que la portada:
+     https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap
+     Las «Reserva» son fuentes del sistema ajustadas en ancho: el texto ocupa lo mismo antes y después de llegar la fuente (sin salto). */
+  --lbc-font-sans:'DM Sans','LBC Sans Reserva',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --lbc-font-mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --lbc-font-serif:'Cormorant Garamond','LBC Serif Reserva',Georgia,'Times New Roman',serif;
   --lbc-fs-2xs:10px; --lbc-fs-xs:11px; --lbc-fs-sm:13px; --lbc-fs-md:15px;
   --lbc-fs-lg:17px;  --lbc-fs-xl:21px; --lbc-fs-2xl:28px; --lbc-fs-3xl:36px;
   --lbc-lh-tight:1.15; --lbc-lh-snug:1.35; --lbc-lh-body:1.55;
@@ -305,8 +313,8 @@ button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="tru
 }
 .lbc-nav.is-scrolled{border-bottom-color:var(--lbc-line);}
 .lbc-nav--fixed{position:fixed;left:0;right:0;}
-.lbc-nav__brand{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--lbc-font-serif);font-size:var(--lbc-fs-xl);letter-spacing:0.08em;color:var(--lbc-ink);text-decoration:none;}
-.lbc-nav__brand span,.lbc-nav__brand em{color:var(--lbc-gold-2);font-style:normal;}
+.lbc-nav__brand{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--lbc-font-serif);font-size:var(--lbc-fs-xl);font-weight:400;letter-spacing:0.1em;color:var(--lbc-ink);text-decoration:none;}
+.lbc-nav__brand span,.lbc-nav__brand em{color:var(--lbc-gold);font-style:normal;}
 .lbc-nav__links{display:flex;align-items:center;gap:var(--lbc-s-1);flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .lbc-nav__links::-webkit-scrollbar{display:none;}
 .lbc-nav__link{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 var(--lbc-s-3);border-radius:var(--lbc-r-sm);color:var(--lbc-ink-3);font-family:var(--lbc-font-sans);font-size:var(--lbc-fs-sm);font-weight:500;text-decoration:none;white-space:nowrap;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
@@ -469,3 +477,15 @@ details[open]>.lbc-list__row::after{transform:rotate(45deg) translate(-2px,-2px)
 .lbc-trust__widget:empty{display:none;}
 .lbc-trust--bare{border:0;background:none;padding-left:0;padding-right:0;}
 @media (max-width:640px){.lbc-trust{margin-left:var(--lbc-s-4);margin-right:var(--lbc-s-4);}}
+
+/* ─── 19. MARCA Y TÍTULOS (una sola forma de escribirlos en todo el sitio) ─── */
+/* Marca: <a class="lbc-brand" href="homepage.html">Liberato <span>Community</span></a>  (--lg para cabeceras de página) */
+.lbc-brand{display:inline-block;font-family:var(--lbc-font-serif);font-size:20px;font-weight:400;letter-spacing:0.1em;line-height:1.2;color:var(--lbc-ink);text-decoration:none;white-space:nowrap;}
+.lbc-brand :is(span,b,em){color:var(--lbc-gold);font-weight:400;font-style:normal;}
+.lbc-brand--lg{font-size:25px;}
+/* Título con serifa: <h1 class="lbc-title">Crea tu <em>cuenta</em></h1>  (--sm para títulos de tarjeta) */
+.lbc-title{font-family:var(--lbc-font-serif);font-size:clamp(30px,8vw,40px);font-weight:300;line-height:1.12;letter-spacing:-0.01em;color:var(--lbc-ink);text-wrap:balance;margin:0;}
+.lbc-title em{font-style:italic;color:var(--lbc-gold);}
+.lbc-title--sm{font-size:24px;font-weight:400;line-height:1.2;}
+/* Cifra grande con serifa (precios, contadores, KPI): cifras alineadas y de altura uniforme */
+.lbc-figure{font-family:var(--lbc-font-serif);font-weight:300;line-height:1;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}

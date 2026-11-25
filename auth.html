@@ -10,7 +10,7 @@
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ═══ LIBERATO · ACCESO (v101) ═══
    Los componentes (botón, campo, tarjeta, mensaje, segmentado, esqueleto) son los del sistema compartido lbc-ui.css.
@@ -41,7 +41,7 @@ body{
 .screen.active{display:block;animation:screen-in var(--lbc-t-3) var(--lbc-ease) both;}
 @keyframes screen-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 .eyebrow{display:block;text-align:center;margin-bottom:10px;}
-.screen-title{font-family:var(--lbc-font-serif);font-size:25px;font-weight:600;color:var(--lbc-ink);margin-bottom:8px;text-align:center;line-height:1.2;outline:none;text-wrap:balance;}
+.screen-title{font-family:var(--lbc-font-serif);font-size:32px;font-weight:400;letter-spacing:-0.01em;color:var(--lbc-ink);margin-bottom:8px;text-align:center;line-height:1.2;outline:none;text-wrap:balance;}
 .screen-sub{font-size:var(--lbc-fs-md);color:var(--lbc-ink-2);text-align:center;margin-bottom:26px;line-height:var(--lbc-lh-body);text-wrap:pretty;overflow-wrap:anywhere;}
 .screen-note{font-size:var(--lbc-fs-sm);color:var(--lbc-ink-3);text-align:center;margin-top:14px;line-height:var(--lbc-lh-body);}
 /* Campos: afinado sobre lbc-field / lbc-input */
@@ -109,7 +109,7 @@ body{
 .badge{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:var(--lbc-r-full);border:1px solid var(--lbc-line-2);background:var(--lbc-fill);color:var(--lbc-ink-2);font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:0.08em;white-space:nowrap;}
 .badge.premium{border-color:var(--lbc-gold-line);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
 .upgrade-box{margin-top:var(--lbc-s-5);padding:22px 20px 20px;box-shadow:none;}
-.upgrade-title{font-family:var(--lbc-font-serif);font-size:19px;font-weight:600;color:var(--lbc-gold-2);margin-bottom:8px;line-height:1.25;text-wrap:balance;}
+.upgrade-title{font-family:var(--lbc-font-serif);font-size:24px;font-weight:400;color:var(--lbc-gold-2);margin-bottom:8px;line-height:1.25;text-wrap:balance;}
 .upgrade-text{font-size:14px;color:var(--lbc-ink-2);line-height:1.6;margin-bottom:var(--lbc-s-4);}
 .upgrade-box .lbc-btn{--_px:10px;--_fs:15px;white-space:normal;text-wrap:balance;}
 .coupon-field{margin-top:18px;padding-top:var(--lbc-s-4);border-top:1px solid var(--lbc-line);display:flex;flex-direction:column;gap:var(--lbc-s-2);}
@@ -195,8 +195,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <main class="auth-shell">
 <div class="auth-card lbc-card lbc-card--raised">
   <a class="brand" href="homepage.html" aria-label="Liberato Community · Inicio">
-    <div class="brand-name">LIBERATO</div>
-    <div class="brand-sub">Community</div>
+    <span class="lbc-brand lbc-brand--lg">Liberato <span>Community</span></span>
   </a>
 
   <!-- ══ CARGANDO PERFIL (hay sesión guardada): esqueleto en vez de enseñar el registro un instante ══ -->

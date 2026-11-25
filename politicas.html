@@ -10,7 +10,7 @@
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* Políticas (v101): SOLO lectura más cómoda. El texto legal no cambia ni una palabra.
    Tokens del sistema compartido (lbc-ui.css); --warn y --risk son los de los avisos de este documento. */
@@ -31,12 +31,12 @@ a{color:var(--gold-2);text-underline-offset:3px;text-decoration-color:var(--lbc-
 .top{display:flex;align-items:center;gap:var(--lbc-s-2);min-height:calc(56px + var(--lbc-safe-t));padding:var(--lbc-safe-t) 104px 0 8px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);z-index:20;}
 .back{order:-1;--_px:var(--lbc-s-3);border-radius:var(--lbc-r-full);flex:none;}
 .back svg{width:18px;height:18px;flex:none;margin-left:-4px;}
-.logo{font-family:var(--serif);font-size:19px;letter-spacing:0.04em;color:var(--ink-2);white-space:nowrap;cursor:pointer;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-left:var(--lbc-s-2);border-left:1px solid var(--hair);line-height:28px;}
-.logo b{font-weight:600;color:var(--gold-2);}
+.logo{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:0.1em;color:var(--ink);white-space:nowrap;cursor:pointer;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-left:var(--lbc-s-2);border-left:1px solid var(--hair);line-height:28px;}
+.logo b{font-weight:400;color:var(--gold);}
 /* Composición: índice fijo a la izquierda en pantallas anchas; columna de lectura de ~70 caracteres */
 .wrap{max-width:720px;margin:0 auto;padding:40px var(--lbc-gutter) 96px;}
 .doc-tag{font-family:var(--mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);}
-h1{font-family:var(--serif);font-size:clamp(30px,7vw,40px);font-weight:600;line-height:1.12;margin:10px 0 10px;letter-spacing:-0.01em;text-wrap:balance;}
+h1{font-family:var(--serif);font-size:clamp(36px,9.6vw,52px);font-weight:300;line-height:1.08;margin:10px 0 10px;letter-spacing:-0.01em;text-wrap:balance;}
 .meta{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink-3);letter-spacing:0.02em;}
 .lead{color:var(--ink-2);font-size:16px;margin:24px 0 8px;padding:18px 20px;border-radius:var(--lbc-r-lg);border:1px solid var(--hair);background:var(--panel);box-shadow:var(--lbc-sh-1);}
 /* Índice */
@@ -77,7 +77,7 @@ p,li,.lead,.callout,.accept{overflow-wrap:break-word;text-wrap:pretty;}
   .toc a:hover{background:none;}
 }
 @media (max-width:520px){
-  .logo b{display:none;}
+  .logo{font-size:17px;letter-spacing:0.07em;}
   .wrap{padding-top:28px;}
   section.doc{margin-top:32px;padding-top:26px;}
   section.doc h2{font-size:20px;}
