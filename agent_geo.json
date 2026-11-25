@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Tension tech/semis: la suspension china a la exportacion de galio, germanio y antimonio a EEUU (acordada en la tregua comercial) vence el 27-nov-2026, a solo 2 dias, lo que mantiene en vilo la cadena de suministro de chips y pesa sobre el sentimiento de semiconductores del NQ (Bloomberg 03-nov-2025 sobre el acuerdo; Mining.com 09-nov-2025 sobre el plazo).",
-  "petroleo": "Brent ronda USD 90-91/barril y WTI USD 80-82 (caida de entre 0.5% y 4% segun el reporte del dia) porque el temor a un exceso de oferta global en 2026 supera el riesgo geopolitico en Oriente Medio/estrecho de Ormuz, lo que modera la presion inflacionaria y es un viento de cola leve para el NQ.",
-  "catalizador": "El PCE subyacente de octubre se acelero a 3.3% interanual (vs 3.2% esperado) y el PCE general a 3.8%, elevando a cerca de 98% (CME FedWatch) la probabilidad de una subida de tasas de la Fed en diciembre, dato que presiona a la baja al NQ al reducir expectativas de alivio monetario (Coindesk 25-nov-2026).",
+  "geopolitica": "Iran reporta ataques con minas a tres petroleros en el Estrecho de Ormuz y EEUU amplia sanciones al sistema financiero irani (CNBC, 24-nov), mientras Trump propone nuevos arenceles de hasta 20% a China, la UE y 12 socios comerciales, lo que desato una fuerte liquidacion en semiconductores y tecnologia (Bloomberg/Yahoo Finance, 25-nov mañana ET) y presiona al NQ a la baja por el riesgo en la cadena de suministro de chips.",
+  "petroleo": "Brent cotiza cerca de 87.5 USD/barril (-1.4% en reportes recientes), ya que las preocupaciones por exceso de oferta global compensan la escalada de tension en Ormuz (Kotak Neo/CNBC, 25-nov), limitando el traspaso de la prima de riesgo energetico hacia la narrativa inflacionaria que pesa sobre el NQ.",
+  "catalizador": "El PCE subyacente de octubre subio 3.3% anual (vs 3.2% esperado) y el PCE general a 3.8%, elevando a ~97-98% la probabilidad de una suba de tasas de la Fed el 9-dic segun CME FedWatch (CNBC, 25-nov 08:30 ET), golpeando al NQ al reducir expectativas de flexibilizacion monetaria.",
   "sources": [
-    "Bloomberg 08:42 ET (25-nov-2026) - US stock index futures slide as AI worries fuel tech losses, Nasdaq 100 futures -3.3%, VIX >30",
-    "Coindesk 25-nov-2026 - Fed's preferred inflation gauge lands with a December rate increase already priced in",
-    "FinScans 25-nov-2026 - Brent slips to $90 and WTI to $80 as supply recovery outweighs Gulf risks",
-    "Bloomberg 03-nov-2025 - White House says China set to restart some metals exports to US",
-    "Mining.com 09-nov-2025 - China lifts export ban on gallium, germanium and antimony to US (suspension vence 27-nov-2026)"
+    "CNBC 08:30 ET",
+    "Bloomberg 07:00 ET",
+    "CNBC 24-nov",
+    "Yahoo Finance 09:00 ET"
   ],
-  "as_of": "2026-11-25T15:40:53Z"
+  "as_of": "2026-11-25T16:06:23Z"
 }
