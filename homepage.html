@@ -1607,7 +1607,7 @@ html.lbc-v101 .menu-cta button.menu-cta-alt{font-size:15px !important;min-height
 html.lbc-v101 :is(.btn-free-2,.menu-cta button.menu-cta-alt,.nav-login,.nav-cta,.nav-lang,.hamburger,.modal-close,.menu-drawer-close,.contact-close):active{transform:scale(0.96) !important;}
 
 /* ── Cabecera ── */
-html.lbc-v101 nav{background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);border-bottom:1px solid rgba(204,169,79,0.10);padding-top:calc(10px + var(--lbc-safe-t));padding-bottom:10px;min-height:64px;}
+html.lbc-v101 nav{background:rgba(6,7,13,0.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--lbc-line);padding-top:calc(10px + var(--lbc-safe-t));padding-bottom:10px;min-height:64px;}
 html.lbc-v101 :is(.nav-lang,.hamburger){width:44px;height:44px;min-height:44px;padding:0 !important;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--lbc-line-2);background:var(--lbc-fill);cursor:pointer;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease);}
 html.lbc-v101 .hamburger{gap:5px;}
 html.lbc-v101 .hamburger span{width:18px;margin:0 auto;}
@@ -1714,10 +1714,11 @@ html.lbc-v101 .footer-copy{font-size:12px;line-height:1.7;color:rgba(243,240,231
 html.lbc-v101 .footer-copy a{color:rgba(243,240,231,0.74) !important;text-decoration:underline !important;text-underline-offset:3px;text-decoration-color:rgba(243,240,231,0.3) !important;}
 
 /* ── Barra fija inferior y botón del asistente ── */
-html.lbc-v101 .sticky-cta{background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);border-top:1px solid rgba(204,169,79,0.20);padding:10px 16px calc(10px + var(--lbc-safe-b));transition:transform var(--lbc-t-4) var(--lbc-ease);}
+html.lbc-v101 .sticky-cta{background:rgba(6,7,13,0.94);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1px solid var(--lbc-line-2);padding:10px 16px calc(10px + var(--lbc-safe-b));transition:transform var(--lbc-t-4) var(--lbc-ease);}
 html.lbc-v101 .sticky-cta-text{font-size:13px;color:rgba(243,240,231,0.74);min-width:0;}
 html.lbc-v101 .sticky-cta-text strong{color:var(--lbc-gold-2);font-size:15px;}
-html.lbc-v101 .lc-fab{right:20px;bottom:calc(24px + var(--lbc-safe-b));transition:bottom var(--lbc-t-4) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease);}
+html.lbc-v101 .lc-fab{right:20px;bottom:calc(24px + var(--lbc-safe-b));transition:bottom var(--lbc-t-4) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-2) var(--lbc-ease);}
+html.lbc-v101 .lc-fab.lc-fab--aparte{opacity:0;transform:scale(0.86);pointer-events:none;}   /* lo pone el script del final cuando taparía un botón o un enlace */
 html.lbc-v101 .sticky-cta.show ~ .lc-fab{bottom:calc(84px + var(--lbc-safe-b));}   /* sube con la barra: nunca la tapa */
 html.lbc-v101 .lc-btn{background:rgba(16,20,31,0.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--lbc-gold-line);box-shadow:0 12px 30px -12px rgba(0,0,0,0.85),0 0 0 1px rgba(0,0,0,0.4);transition:transform var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease);}
 html.lbc-v101 .lc-pulse{display:none;}
@@ -1751,12 +1752,16 @@ html.lbc-v101 :is(.modal-close,.contact-close,.lbc-home-x){position:absolute;top
 @media (hover:hover){html.lbc-v101 :is(.menu-drawer-close,.modal-close,.contact-close,.lbc-home-x):hover{background:var(--lbc-fill-2);color:var(--lbc-ink) !important;}}
 
 /* ── Panel «Mi perfil» (miembros): mismos campos y botones ── */
-html.lbc-v101 .pd-close{width:44px;height:44px;border-radius:50%;border:0;background:var(--lbc-fill);color:rgba(243,240,231,0.62);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
+html.lbc-v101 .pd-close{width:44px;height:44px;border-radius:var(--lbc-r-md);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
 html.lbc-v101 .pd-close:active{transform:scale(0.96);}
-html.lbc-v101 .pd-input{font-size:16px;min-height:48px;border-radius:12px;}
+html.lbc-v101 .pd-input{font-size:16px;min-height:44px;border-radius:12px;}
 html.lbc-v101 :is(.pd-btn,.pd-avatar-btn,.pd-lang-btn,.pd-logout){min-height:44px;border-radius:12px;transition:transform var(--lbc-t-1) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease);}
 html.lbc-v101 :is(.pd-btn,.pd-avatar-btn,.pd-lang-btn,.pd-logout):active{transform:scale(0.97);}
-html.lbc-v101 .pd-btn{min-height:48px;font-size:15px;}
+@media (max-width:768px){
+  html.lbc-v101 .profile-drawer{width:100vw;border-left:none;}
+  html.lbc-v101 .pd-head{padding-top:calc(16px + var(--lbc-safe-t));}
+  html.lbc-v101 .pd-scroll{padding-bottom:calc(28px + var(--lbc-safe-b));-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+}
 
 /* ── Modales: un solo lenguaje (registro, acceso, aviso, contacto). En móvil suben como hoja. ── */
 html.lbc-v101 :is(.modal-overlay,.contact-overlay,#lc-login,#newsletter-overlay){background:var(--lbc-scrim) !important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px) !important;}
@@ -1868,13 +1873,16 @@ html.lbc-v101 .lcs-fill{animation:lcsFill 1s var(--lbc-ease) .15s forwards;}
   html.lbc-v101 .cd-btn{width:100%;}
   html.lbc-v101 footer{padding-bottom:calc(96px + var(--lbc-safe-b)) !important;}
   html.lbc-v101 .footer-links{display:grid;grid-template-columns:repeat(2,max-content);justify-content:center;gap:0 28px;}
-  html.lbc-v101 .sticky-cta-text{font-size:11.5px !important;white-space:nowrap;}
-  html.lbc-v101 .sticky-cta-text strong{font-size:13.5px !important;}
-  html.lbc-v101 .sticky-cta-btn{font-size:13px !important;padding:0 14px !important;}
-  html.lbc-v101 .sticky-cta-inner{gap:10px;}
+  html.lbc-v101 .sticky-cta-text{font-size:12px !important;gap:10px;}
+  html.lbc-v101 .sticky-cta-text .sc-txt{display:flex;flex-direction:column;line-height:1.3;white-space:nowrap;}
+  html.lbc-v101 .sticky-cta-text .sc-sep{display:none;}
+  html.lbc-v101 .sticky-cta-text .sc-sub{color:rgba(243,240,231,0.60);}
+  html.lbc-v101 .sticky-cta-text strong{font-size:14.5px !important;}
+  html.lbc-v101 .sticky-cta-btn{font-size:14px !important;padding:0 16px !important;}
+  html.lbc-v101 .sticky-cta-inner{gap:16px;}
   html.lbc-v101 .lc-fab{right:16px;bottom:calc(20px + var(--lbc-safe-b));}
-  html.lbc-v101 .sticky-cta.show ~ .lc-fab{bottom:calc(80px + var(--lbc-safe-b));}
-  html.lbc-v101 .lc-btn{width:48px !important;height:48px !important;}
+  html.lbc-v101 .sticky-cta.show ~ .lc-fab{bottom:calc(82px + var(--lbc-safe-b));}
+  html.lbc-v101 .lc-btn{width:44px !important;height:44px !important;font-size:17px !important;}
 }
 /* ══ ESCRITORIO (≥ 768 px) ══ */
 @media (min-width:768px){
@@ -2401,7 +2409,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   <div class="sticky-cta-inner">
     <div class="sticky-cta-text">
       <span class="sticky-cta-dot"></span>
-      <span><strong>Ciclo de enero</strong> &middot; plazas limitadas</span>
+      <span class="sc-txt"><strong>Ciclo de enero</strong><span class="sc-sep"> &middot; </span><span class="sc-sub">plazas limitadas</span></span>
     </div>
     <button class="sticky-cta-btn" onclick="window.open('https://whop.com/dave-liberato-group/live-day-trading-52/','_blank')">Reservar mi lugar &#8594;</button>
   </div>
@@ -3890,6 +3898,27 @@ async function submitContact(){
     ['modal-overlay','lc-login','newsletter-modal','contact-overlay','menu-drawer','profile-drawer'].forEach(function(id){
       var el=$(id); if(el) ob.observe(el,{attributes:true,attributeFilter:['class','style']});
     });
+  }
+
+  // 5) El botón flotante del asistente nunca pisa una acción: si fuera a taparla, se aparta hasta que pase.
+  var fab=$('lc-fab'), win=$('lc-window');
+  if(fab){
+    var SEL='.hero-cta,.btn-free-2,.btn-hero-2,.cd-btn,.cd-spots a,.footer-links a,.footer-copy a,.hero-play-btn';
+    var pend=false;
+    var mirar=function(){
+      pend=false;
+      if(win&&win.style.display!=='none'){ fab.classList.remove('lc-fab--aparte'); return; }   // con el chat abierto es su botón de cerrar
+      var b=fab.querySelector('.lc-btn')||fab, f=b.getBoundingClientRect(), m=10, tapa=false;
+      var els=d.querySelectorAll(SEL);
+      for(var i=0;i<els.length&&!tapa;i++){
+        var r=els[i].getBoundingClientRect();
+        if(r.width&&r.bottom>f.top-m&&r.top<f.bottom+m&&r.right>f.left-m&&r.left<f.right+m) tapa=true;
+      }
+      fab.classList.toggle('lc-fab--aparte',tapa);
+    };
+    var pedir=function(){ if(!pend){ pend=true; requestAnimationFrame(mirar); } };
+    window.addEventListener('scroll',pedir,{passive:true}); window.addEventListener('resize',pedir,{passive:true});
+    setTimeout(mirar,600);
   }
 
   // 4) Móvil: con el teclado abierto, las hojas suben para que el botón de enviar siga a la vista.

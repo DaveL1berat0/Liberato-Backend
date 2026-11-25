@@ -82,5 +82,25 @@
   // Al corregir un campo marcado con error, el error se retira solo.
   d.addEventListener('input',function(e){ var t=e.target; if(t&&t.getAttribute&&t.getAttribute('aria-invalid')==='true'&&t.classList.contains('lbc-input')) fieldError(t,''); });
 
+  // Ver/ocultar contraseña: <button class="lbc-input-btn" data-lbc-toggle-pass> dentro de .lbc-input-wrap.
+  // Etiquetas accesibles opcionales: data-label-show / data-label-hide (por defecto, en español).
+  d.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('[data-lbc-toggle-pass]'):null; if(!b) return;
+    var wrap=b.closest('.lbc-input-wrap'), inp=wrap?wrap.querySelector('input'):null; if(!inp) return;
+    var ver=inp.type==='password';
+    inp.type=ver?'text':'password';
+    b.setAttribute('aria-pressed', ver?'true':'false');
+    b.setAttribute('aria-label', ver ? (b.getAttribute('data-label-hide')||'Ocultar contraseña') : (b.getAttribute('data-label-show')||'Mostrar contraseña'));
+    try{ inp.focus({preventScroll:true}); }catch(err){}
+  });
+  // Código de 6 dígitos: solo cifras (también al pegar).
+  d.addEventListener('input',function(e){
+    var t=e.target; if(t&&t.classList&&t.classList.contains('lbc-input--code')){ var v=t.value.replace(/\D+/g,''); if(v!==t.value) t.value=v; }
+  });
+  // Tabla fija: sombra en la primera columna solo cuando hay contenido deslizado por debajo.
+  d.addEventListener('scroll',function(e){
+    var t=e.target; if(t&&t.classList&&t.classList.contains('lbc-table-wrap')) t.classList.toggle('is-scrolled-x', t.scrollLeft>2);
+  },{passive:true,capture:true});
+
   window.LBCUI={ busy:busy, openModal:openModal, closeModal:closeModal, toast:toast, fieldError:fieldError };
 })();

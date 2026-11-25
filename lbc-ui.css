@@ -19,6 +19,7 @@
   --lbc-gold-dim:rgba(204,169,79,0.12);
   --lbc-gold-line:rgba(204,169,79,0.28);
   --lbc-on-gold:#0B0B12;       /* texto sobre oro */
+  --lbc-primary-bg:linear-gradient(180deg,#E7CC74 0%,#CCA94F 58%,#B8933A 130%);   /* fondo del botón primario */
   --lbc-up:#2EE8A4;            /* alcista */
   --lbc-down:#B197FC;          /* bajista: morado, nunca rojo */
   --lbc-cyan:#4FD6E0;          /* informativo */
@@ -35,7 +36,7 @@
   --lbc-line-2:rgba(255,255,255,0.14);  /* bordes con más presencia */
   --lbc-fill:rgba(255,255,255,0.04);    /* relleno de controles */
   --lbc-fill-2:rgba(255,255,255,0.07);  /* relleno al pasar por encima */
-  --lbc-glass:rgba(9,11,18,0.72);       /* barras con desenfoque */
+  --lbc-glass:rgba(6,7,13,0.92);        /* barras con desenfoque: casi opacas, para que el contenido de debajo no las tiña */
   --lbc-scrim:rgba(3,4,8,0.62);         /* velo detrás de modales */
 
   /* Tipografía: cada página usa las fuentes que ya carga (no se cargan aquí) */
@@ -90,12 +91,13 @@
   --lbc-gold:#9c7c2c; --lbc-gold-2:#7e6323; --lbc-gold-3:#6c541c;
   --lbc-gold-dim:rgba(168,132,47,0.12); --lbc-gold-line:rgba(168,132,47,0.34);
   --lbc-on-gold:#ffffff;
+  --lbc-primary-bg:linear-gradient(180deg,#8f7128 0%,#7e6323 58%,#6c541c 130%);   /* blanco encima: 4,6:1 en el punto más claro (AA); con el oro #9c7c2c se quedaba en 3,9:1 */
   --lbc-up:#15913f; --lbc-down:#6d4bd8; --lbc-cyan:#0e7490;
   --lbc-up-dim:rgba(21,145,63,0.10); --lbc-down-dim:rgba(109,75,216,0.10); --lbc-cyan-dim:rgba(14,116,144,0.10);
   --lbc-ink:#211d16; --lbc-ink-2:rgba(33,29,22,0.74); --lbc-ink-3:rgba(33,29,22,0.58); --lbc-ink-4:rgba(33,29,22,0.38);
   --lbc-line:rgba(33,29,22,0.10); --lbc-line-2:rgba(33,29,22,0.18);
   --lbc-fill:rgba(33,29,22,0.035); --lbc-fill-2:rgba(33,29,22,0.07);
-  --lbc-glass:rgba(246,243,237,0.78); --lbc-scrim:rgba(33,29,22,0.38);
+  --lbc-glass:rgba(246,243,237,0.92); --lbc-scrim:rgba(33,29,22,0.38);
   --lbc-sh-1:0 1px 2px rgba(28,22,14,0.06);
   --lbc-sh-2:0 1px 2px rgba(28,22,14,0.05), 0 10px 24px -12px rgba(28,22,14,0.16);
   --lbc-sh-3:0 2px 4px rgba(28,22,14,0.06), 0 28px 60px -24px rgba(28,22,14,0.28);
@@ -142,7 +144,7 @@
 
 /* Primario: oro. La acción principal de la pantalla. */
 .lbc-btn--primary{
-  background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%);
+  background:var(--lbc-primary-bg);
   color:var(--lbc-on-gold);border-color:rgba(255,255,255,0.10);box-shadow:var(--lbc-sh-gold);font-weight:700;
 }
 @media (hover:hover){
@@ -255,7 +257,7 @@ select.lbc-input{padding-right:40px;background-image:linear-gradient(45deg,trans
 .lbc-chip--up{border-color:color-mix(in srgb,var(--lbc-up) 36%,transparent);background:var(--lbc-up-dim);color:var(--lbc-up);}
 .lbc-chip--down{border-color:color-mix(in srgb,var(--lbc-down) 36%,transparent);background:var(--lbc-down-dim);color:var(--lbc-down);}
 .lbc-chip--cyan{border-color:color-mix(in srgb,var(--lbc-cyan) 36%,transparent);background:var(--lbc-cyan-dim);color:var(--lbc-cyan);}
-.lbc-chip--solid{border-color:transparent;background:var(--lbc-gold);color:var(--lbc-on-gold);}
+.lbc-chip--solid{border-color:transparent;background:var(--lbc-primary-bg);color:var(--lbc-on-gold);}
 button.lbc-chip,a.lbc-chip{min-height:32px;padding:0 14px;cursor:pointer;text-decoration:none;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
 button.lbc-chip:active,a.lbc-chip:active{transform:scale(0.96);}
 button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="true"]{border-color:var(--lbc-gold);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
@@ -274,7 +276,7 @@ button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="tru
 @media (hover:hover){.lbc-seg__item:hover{color:var(--lbc-ink);}}
 .lbc-seg__item:active{transform:scale(0.97);}
 .lbc-seg__item.is-active,.lbc-seg__item[aria-selected="true"]{background:var(--lbc-bg-3);color:var(--lbc-gold-2);box-shadow:0 0 0 1px var(--lbc-gold-line),var(--lbc-sh-1);}
-@media (pointer:coarse){.lbc-seg__item{min-height:40px;}}
+@media (pointer:coarse){.lbc-seg__item{min-height:44px;}}
 
 /* ─── 9. ESTADOS DE CARGA Y VACÍO ───────────────────────────────────── */
 /* Esqueleto: reserva el hueco exacto del contenido para que nada salte al llegar los datos */
@@ -298,7 +300,7 @@ button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="tru
 .lbc-nav{
   position:sticky;top:0;z-index:var(--lbc-z-nav);display:flex;align-items:center;gap:var(--lbc-s-4);
   min-height:calc(56px + var(--lbc-safe-t));padding:var(--lbc-safe-t) var(--lbc-gutter) 0;
-  background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);
+  background:var(--lbc-glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
   border-bottom:1px solid transparent;transition:border-color var(--lbc-t-3) var(--lbc-ease),background-color var(--lbc-t-3) var(--lbc-ease);
 }
 .lbc-nav.is-scrolled{border-bottom-color:var(--lbc-line);}
@@ -313,7 +315,7 @@ button.lbc-chip.is-active,a.lbc-chip.is-active,button.lbc-chip[aria-pressed="tru
 .lbc-nav__actions{display:flex;align-items:center;gap:var(--lbc-s-2);margin-left:auto;flex:none;}
 @media (pointer:coarse){.lbc-nav__link{min-height:44px;}}
 /* Barra inferior de acción (móvil): respeta el margen seguro del iPhone */
-.lbc-actionbar{position:fixed;left:0;right:0;bottom:0;z-index:var(--lbc-z-sticky);display:flex;align-items:center;gap:var(--lbc-s-3);padding:var(--lbc-s-3) var(--lbc-gutter) calc(var(--lbc-s-3) + var(--lbc-safe-b));background:var(--lbc-glass);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);border-top:1px solid var(--lbc-line);transform:translateY(110%);transition:transform var(--lbc-t-4) var(--lbc-ease);}
+.lbc-actionbar{position:fixed;left:0;right:0;bottom:0;z-index:var(--lbc-z-sticky);display:flex;align-items:center;gap:var(--lbc-s-3);padding:var(--lbc-s-3) var(--lbc-gutter) calc(var(--lbc-s-3) + var(--lbc-safe-b));background:var(--lbc-glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1px solid var(--lbc-line);transform:translateY(110%);transition:transform var(--lbc-t-4) var(--lbc-ease);}
 .lbc-actionbar.is-visible{transform:none;}
 
 /* ─── 11. MODAL · HOJA INFERIOR EN MÓVIL ────────────────────────────── */
@@ -358,4 +360,96 @@ html.lbc-lock,html.lbc-lock body{overflow:hidden !important;}
   .lbc-btn:active,.lbc-card--interactive:active,.lbc-btn--primary:hover,.lbc-card--interactive:hover{transform:none !important;}
   .lbc-skel::after,.lbc-dot,.lbc-fade-in{animation:none !important;}
   .lbc-modal{transform:none !important;}
+}
+
+/* ═══ AÑADIDOS 25-nov (peticiones de las páginas de herramientas y de cuenta). Solo clases nuevas. ═══ */
+
+/* ─── 15. FORMULARIOS · piezas de cuenta ────────────────────────────── */
+/* Campo con botón dentro (ver/ocultar contraseña): <div class="lbc-input-wrap"><input class="lbc-input" type="password">
+   <button type="button" class="lbc-input-btn" data-lbc-toggle-pass aria-label="Mostrar contraseña">…icono…</button></div> */
+.lbc-input-wrap{position:relative;display:block;}
+.lbc-input-wrap>.lbc-input{padding-right:52px;}
+.lbc-input-btn{position:absolute;top:50%;right:4px;width:44px;height:44px;margin-top:-22px;display:grid;place-items:center;border:0;border-radius:var(--lbc-r-sm);background:transparent;color:var(--lbc-ink-3);cursor:pointer;-webkit-appearance:none;appearance:none;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+@media (hover:hover){.lbc-input-btn:hover{color:var(--lbc-ink);background:var(--lbc-fill);}}
+.lbc-input-btn:active{transform:scale(0.92);}
+.lbc-input-btn[aria-pressed="true"]{color:var(--lbc-gold-2);}
+.lbc-input-btn svg{width:20px;height:20px;display:block;}
+/* Código de 6 dígitos: <input class="lbc-input lbc-input--code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*"> */
+.lbc-input--code{min-height:64px;padding:0 var(--lbc-s-3);text-align:center;font-family:var(--lbc-font-mono);font-size:28px;font-weight:600;letter-spacing:0.42em;text-indent:0.42em;font-variant-numeric:tabular-nums;color:var(--lbc-gold-2);}
+.lbc-input--code::placeholder{letter-spacing:0.42em;color:var(--lbc-ink-4);}
+/* Válido discreto: una marca dentro del campo, sin teñir todo el borde. <div class="lbc-field is-valid">… o .lbc-input.is-valid */
+.lbc-input.is-valid,.lbc-field.is-valid .lbc-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%232EE8A4' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 10.5l3.6 3.6 7.4-8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px 18px;padding-right:44px;}
+[data-theme="light"] .lbc-input.is-valid,[data-theme="light"] .lbc-field.is-valid .lbc-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2315913f' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 10.5l3.6 3.6 7.4-8'/%3E%3C/svg%3E");}
+.lbc-input-wrap>.lbc-input.is-valid,.lbc-field.is-valid .lbc-input-wrap>.lbc-input{background-position:right 52px center;padding-right:84px;}
+/* Requisito que se marca solo: <p class="lbc-req">Mínimo 8 caracteres</p> → añadir .is-met cuando se cumple */
+.lbc-req{display:flex;align-items:center;gap:var(--lbc-s-2);margin:0;font-size:var(--lbc-fs-sm);line-height:var(--lbc-lh-snug);color:var(--lbc-ink-3);transition:color var(--lbc-t-2) var(--lbc-ease);}
+.lbc-req::before{content:"";flex:none;width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 5px var(--lbc-bg-2),inset 0 0 0 8px var(--lbc-ink-4);transition:background-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+.lbc-req.is-met{color:var(--lbc-up);}
+.lbc-req.is-met::before{box-shadow:none;background:var(--lbc-up) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2306070D' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.2 8.4l2.5 2.5 5-5.4'/%3E%3C/svg%3E") center/12px 12px no-repeat;}
+/* Enlace de acción hecho con <button>: aspecto de enlace, zona táctil de 44 px. <button type="button" class="lbc-linkbtn">Reenviar código</button> */
+.lbc-linkbtn{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:0 2px;border:0;background:none;font:inherit;font-weight:600;color:var(--lbc-gold-2);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;cursor:pointer;-webkit-appearance:none;appearance:none;transition:text-decoration-color var(--lbc-t-2) var(--lbc-ease),color var(--lbc-t-2) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease);}
+@media (hover:hover){.lbc-linkbtn:hover{text-decoration-color:currentColor;}}
+.lbc-linkbtn:active{opacity:0.7;}
+.lbc-linkbtn:disabled{color:var(--lbc-ink-4);cursor:not-allowed;text-decoration:none;}
+.lbc-linkbtn--inline{min-height:0;}
+.lbc-linkbtn--inline::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:44px;transform:translateY(-50%);}   /* en línea con el texto, pero se toca a 44 px */
+/* Zona táctil ampliada para controles que deben VERSE pequeños (temporalidades, «i» de ayuda): se tocan a 44 px */
+.lbc-hit{position:relative;}
+.lbc-hit::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);}
+
+/* ─── 16. LISTAS DE CUENTA ──────────────────────────────────────────── */
+/* Clave–valor: <dl class="lbc-kv"><div class="lbc-kv__row"><dt>Plan</dt><dd>Comunidad Libre</dd></div>…</dl> */
+.lbc-kv{margin:0;border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-fill);overflow:hidden;}
+.lbc-kv__row{display:flex;align-items:center;justify-content:space-between;gap:var(--lbc-s-4);min-height:52px;padding:var(--lbc-s-2) var(--lbc-s-4);border-bottom:1px solid var(--lbc-line);}
+.lbc-kv__row:last-child{border-bottom:0;}
+.lbc-kv dt{flex:none;font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-3);}
+.lbc-kv dd{margin:0;min-width:0;text-align:right;font-size:var(--lbc-fs-md);font-weight:500;color:var(--lbc-ink);overflow-wrap:anywhere;}
+/* Ajustes plegables: <div class="lbc-list"><details class="lbc-list__item"><summary class="lbc-list__row">Cambiar contraseña</summary><div class="lbc-list__body">…</div></details>
+   o una fila que navega: <a class="lbc-list__row" href="…">Políticas</a> */
+.lbc-list{border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-fill);overflow:hidden;}
+.lbc-list__item{border-bottom:1px solid var(--lbc-line);}
+.lbc-list__item:last-child,.lbc-list>.lbc-list__row:last-child{border-bottom:0;}
+.lbc-list>.lbc-list__row{border-bottom:1px solid var(--lbc-line);}
+.lbc-list__row{display:flex;align-items:center;justify-content:space-between;gap:var(--lbc-s-3);width:100%;min-height:54px;padding:0 var(--lbc-s-4);border:0;background:none;font:inherit;font-size:var(--lbc-fs-md);font-weight:500;color:var(--lbc-ink);text-align:left;text-decoration:none;cursor:pointer;list-style:none;transition:background-color var(--lbc-t-2) var(--lbc-ease);}
+.lbc-list__row::-webkit-details-marker{display:none;}
+.lbc-list__row::after{content:"";flex:none;width:8px;height:8px;margin-right:4px;border-right:1.8px solid var(--lbc-ink-3);border-bottom:1.8px solid var(--lbc-ink-3);transform:rotate(-45deg);transition:transform var(--lbc-t-2) var(--lbc-ease);}
+details[open]>.lbc-list__row::after{transform:rotate(45deg) translate(-2px,-2px);}
+@media (hover:hover){.lbc-list__row:hover{background:var(--lbc-fill);}}
+.lbc-list__row:active{background:var(--lbc-fill-2);}
+.lbc-list__body{padding:var(--lbc-s-2) var(--lbc-s-4) var(--lbc-s-5);}
+
+/* ─── 17. DATOS · tabla densa fija y marco de gráfico ───────────────── */
+/* Tabla larga en móvil: cabecera y primera columna se quedan a la vista. <div class="lbc-table-wrap lbc-table-wrap--sticky"><table class="lbc-table lbc-table--sticky">
+   El alto lo pone la página (max-height en el envoltorio). LBCUI marca .is-scrolled-x al deslizar para dar sombra a la primera columna. */
+.lbc-table-wrap--sticky{max-height:min(70vh,640px);overflow:auto;overscroll-behavior:contain;}
+.lbc-table--sticky th{top:0;z-index:2;}
+.lbc-table--sticky :is(th,td):first-child{position:sticky;left:0;z-index:1;background:var(--lbc-bg-2);}
+.lbc-table--sticky th:first-child{z-index:3;background:var(--lbc-bg-3);}
+.lbc-table--sticky :is(th,td):first-child::after{content:"";position:absolute;top:0;bottom:0;right:-12px;width:12px;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,0.35),transparent);opacity:0;transition:opacity var(--lbc-t-2) var(--lbc-ease);}
+[data-theme="light"] .lbc-table--sticky :is(th,td):first-child::after{background:linear-gradient(90deg,rgba(28,22,14,0.14),transparent);}
+.lbc-table-wrap.is-scrolled-x .lbc-table--sticky :is(th,td):first-child::after{opacity:1;}
+@media (hover:hover){.lbc-table--sticky tbody tr:hover td:first-child{background:var(--lbc-bg-3);}}
+/* Marco de gráfico: <figure class="lbc-chart"><figcaption class="lbc-chart__head"><span class="lbc-chart__title">Gamma por strike</span>
+   <span class="lbc-chart__legend"><span class="lbc-chart__key" style="--k:var(--lbc-up)">Calls</span></span></figcaption>
+   <div class="lbc-chart__body">…lienzo…<div class="lbc-chart__empty">— Sin dato</div></div></figure>
+   Estados en .lbc-chart: .is-loading (brillo de carga sobre el lienzo) · .is-empty (muestra __empty y atenúa el lienzo) */
+.lbc-chart{margin:0;border:1px solid var(--lbc-line);border-radius:var(--lbc-r-lg);background:linear-gradient(180deg,var(--lbc-bg-3),var(--lbc-bg-2));box-shadow:var(--lbc-sh-2);overflow:hidden;}
+.lbc-chart__head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--lbc-s-2) var(--lbc-s-4);padding:var(--lbc-s-3) var(--lbc-s-4);border-bottom:1px solid var(--lbc-line);}
+.lbc-chart__title{font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);font-weight:600;letter-spacing:var(--lbc-track-caps);text-transform:uppercase;color:var(--lbc-ink-2);}
+.lbc-chart__legend{display:flex;flex-wrap:wrap;gap:var(--lbc-s-1) var(--lbc-s-4);}
+.lbc-chart__key{display:inline-flex;align-items:center;gap:6px;font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-xs);color:var(--lbc-ink-3);white-space:nowrap;}
+.lbc-chart__key::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--k,var(--lbc-gold));}
+.lbc-chart__body{position:relative;min-height:220px;}
+.lbc-chart__body>:is(canvas,svg,img){display:block;max-width:100%;}
+.lbc-chart__empty{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:var(--lbc-s-2);padding:var(--lbc-s-4);text-align:center;font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-sm);color:var(--lbc-ink-3);}
+.lbc-chart.is-empty .lbc-chart__empty{display:flex;}
+.lbc-chart.is-empty .lbc-chart__body>:not(.lbc-chart__empty){opacity:0.18;}
+.lbc-chart.is-loading .lbc-chart__body::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);background-size:200% 100%;animation:lbc-sweep 1.5s var(--lbc-ease-in-out) infinite;pointer-events:none;}
+[data-theme="light"] .lbc-chart.is-loading .lbc-chart__body::after{background-image:linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent);}
+.lbc-chart.is-loading .lbc-chart__body>:not(.lbc-chart__empty){opacity:0.35;}
+@keyframes lbc-sweep{from{background-position:200% 0;}to{background-position:-200% 0;}}
+.lbc-chart__foot{padding:var(--lbc-s-2) var(--lbc-s-4);border-top:1px solid var(--lbc-line);font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);color:var(--lbc-ink-3);}
+@media (prefers-reduced-motion:reduce){
+  .lbc-chart.is-loading .lbc-chart__body::after{animation:none !important;}
+  .lbc-input-btn,.lbc-linkbtn,.lbc-list__row,.lbc-list__row::after,.lbc-req,.lbc-req::before{transition-duration:0.01ms !important;}
 }
