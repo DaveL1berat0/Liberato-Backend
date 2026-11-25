@@ -2342,7 +2342,8 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <!-- QUÉ HAY DENTRO (v101) — una tarjeta por herramienta. Nombres = los del menú; la línea de cada una ya existía en el sitio
      (tarjeta del plan y título de cada herramienta). El hueco de imagen queda neutro hasta que exista la captura REAL:
      guardar el archivo en media/home/ y escribir su nombre en DENTRO_IMG (script «QUÉ HAY DENTRO», más abajo).
-     Archivos esperados (JPG o WebP, 16:10, 1600×1000): dentro-daytrading.jpg · dentro-journal.jpg · dentro-earnings.jpg · dentro-options.jpg -->
+     Archivos (JPG, 16:10): dentro-daytrading.jpg · dentro-earnings.jpg · dentro-options.jpg ya puestos (capturas reales, 25-nov);
+     dentro-journal.jpg NO existe a propósito (datos personales): decide Dave. -->
 <section class="dentro" id="dentro" aria-labelledby="dentro-t">
   <div class="dentro-head"><h2 class="sec-title" id="dentro-t">Qué hay <em>dentro</em></h2></div>
   <div class="dentro-grid">
@@ -4093,7 +4094,9 @@ async function submitContact(){
   });
   // QUÉ HAY DENTRO — capturas reales de cada herramienta. Mientras el nombre esté vacío se ve el hueco neutro.
   // Para poner una: guardar el archivo en media/home/ y escribir aquí su ruta, p. ej. daytrading:'media/home/dentro-daytrading.jpg'
-  var DENTRO_IMG={ daytrading:'', journal:'', earnings:'', options:'' };
+  // 25-nov: Day Trading, Earnings y Options llevan captura real (datos de mercado). Journal queda neutro a propósito:
+  // sus pantallas son operaciones personales; qué imagen poner ahí lo decide Dave.
+  var DENTRO_IMG={ daytrading:'media/home/dentro-daytrading.jpg', journal:'', earnings:'media/home/dentro-earnings.jpg', options:'media/home/dentro-options.jpg' };
   Object.keys(DENTRO_IMG).forEach(function(k){
     var src=DENTRO_IMG[k], hueco=d.querySelector('.dentro-shot[data-shot="'+k+'"]'); if(!src||!hueco) return;
     var im=new Image(); im.loading='lazy'; im.decoding='async'; im.alt='';
