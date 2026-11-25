@@ -1,12 +1,13 @@
 {
-  "geopolitica": "Iran ataca con minas a tres petroleros en el estrecho de Hormuz y EEUU amplia sanciones, mientras Trump propone nuevos aranceles a 14-16 socios comerciales (China, UE, Japon, Taiwan tras investigacion Section 301), golpeando a semiconductores (Nvidia -5.1%, AMD -6.5%, Micron -6%, Marvell -5.7%) y presionando al NQ a la baja (Reuters/CNBC).",
-  "petroleo": "Brent cae 0.5% a 90.97 USD y WTI cae 0.6% a 81.58 USD pese a que el flujo por Hormuz esta al 49% de lo normal por los ataques, ya que el temor a un superavit de oferta global contrarresta el riesgo geopolitico, limitando el impacto alcista en energia sobre el NQ (CNBC).",
-  "catalizador": "El PCE de octubre subio a 3.8% interanual (core 3.3%, por encima del consenso de 3.2%) publicado a las 8:30 ET, disparando ventas generalizadas -Nasdaq Composite cae ~4.4%- al reducir las esperanzas de recortes de tasas y golpeando duro al NQ (CNBC/FXStreet).",
+  "geopolitica": "Trump propuso nuevos aranceles Section 301 de hasta 40% a China (y gravamenes a la UE) que podrian golpear a semiconductores y tecnologia, alimentando el riesgo de escalada comercial que presiona al Nasdaq-100 (CNN, 25 nov 2026).",
+  "petroleo": "El Brent cotiza cerca de USD 91.34/bbl (-0.07%) y el WTI cerca de USD 81.77 (-0.34%) tras un rebote parcial desde minimos de la sesion, con preocupacion por un superavit de oferta que limita el impulso inflacionario para el NQ (CMB News, 25 nov 2026).",
+  "catalizador": "Los futuros del Nasdaq-100 cayeron hasta un 2.8% en la premarket por el temor a los nuevos aranceles y a los datos de inflacion PCE, mientras el mercado de tasas (CME FedWatch) asigna un 96% de probabilidad a un recorte de 25 puntos basicos de la Fed en diciembre, un trasfondo mixto para el NQ intradia (Reuters/AOL/Investing.com, 25 nov 2026).",
   "sources": [
-    "Reuters 04:08 ET",
-    "CNBC 08:30 ET",
-    "CNBC 20:37 ET (24 nov)",
-    "FXStreet 10:43 ET"
+    "CNN 25 nov 2026",
+    "CMB News (commodity-board.com) 25 nov 2026",
+    "AOL 25 nov 2026",
+    "Investing.com 25 nov 2026",
+    "Reuters (via Startup Fortune) 01:01 ET"
   ],
-  "as_of": "2026-11-25T17:05:30Z"
+  "as_of": "2026-11-25T18:07:02Z"
 }
