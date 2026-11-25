@@ -1,14 +1,12 @@
 {
-  "geopolitica": "Los hutíes reclamaron un nuevo ataque contra la refinería saudí de Ras Tanura y el distrito financiero de Riad, mientras Irán denuncia más minas contra petroleros en el estrecho de Ormuz, elevando el riesgo geopolítico que presiona el sentimiento de riesgo sobre el NQ (CNBC/Bloomberg, 25 nov 2026).",
-  "petroleo": "El Brent repuntó brevemente hasta unos 92.29 USD/barril (+0.97%) tras el ataque hutí a Arabia Saudí, pero luego cedió a cerca de 90.97 USD/barril (-0.5%) por temores de superávit de oferta global, limitando el traspaso del riesgo geopolítico hacia el NQ (CNBC, 25 nov 2026).",
-  "catalizador": "El PCE subyacente de octubre se aceleró a 3.3% (por encima de lo esperado), reforzando la expectativa casi plena de una subida de 25 pb de la Fed el 8-9 de diciembre bajo el presidente Kevin Warsh, lo que presiona a la baja al NQ por el riesgo de tasas más altas para el sector tecnológico (CNBC, 25 nov 2026).",
+  "geopolitica": "Los huties reivindicaron un ataque con misiles y drones contra la refineria saudi de Ras Tanura y el distrito financiero de Riad, y la Casa Blanca anuncio nuevos aranceles del 20% a 14 socios comerciales, dos focos de riesgo que presionan al NQ a la baja en la sesion de hoy (CNBC/Reuters, 25-nov).",
+  "petroleo": "El Brent sube 0.97% a unos 92.29 USD/barril y el WTI +0.4% a 82.38 USD/barril tras el ataque huti a Ras Tanura y nuevos incidentes con minas en el estrecho de Ormuz, aunque ambos crudos siguen cerca de minimos de tres meses, lo que limita el traspaso de la prima de riesgo geopolitico al NQ (Reuters/CNBC, 25-nov).",
+  "catalizador": "El PCE subyacente de octubre subio 3.3% a/a (vs 3.2% esperado) y el PCE general 3.8%, reforzando una probabilidad de ~97% de una nueva subida de tasas de la Fed en diciembre bajo el presidente Warsh; los futuros del Nasdaq 100 llegaron a caer 3.11% hacia las 08:34 ET, el principal catalizador bajista del NQ hoy (CNBC/Piqmarkets).",
   "sources": [
-    "CNBC 25 nov 2026 'Oil rises after alleged Houthi attack on Saudi refinery'",
-    "CNBC 25 nov 2026 'Oil prices fall as supply glut concerns offset Middle East disruption fears'",
-    "Bloomberg 25 nov 2026 'Oil Edges Lower as Expanding Supply Vies With Hormuz Attacks'",
-    "CNBC 25 nov 2026 'PCE inflation report October 2026: Fed's preferred inflation gauge accelerated to 3.8%'",
-    "CNBC 25 nov 2026 'Futures sink further into the red as tech worries resurge'",
-    "Bloomberg 25 nov 2026 'Nasdaq 100 Slumps as AI Worries Fuel Selloff in Tech Shares'"
+    "CNBC 25-nov (Ras Tanura/Hormuz)",
+    "Reuters/CNBC (Brent 92.29 / WTI 82.38)",
+    "Piqmarkets 08:34 ET (NQ -3.11%)",
+    "Unbiasedheadlines (PCE 3.8%, aranceles 20% a 14 paises)"
   ],
-  "as_of": "2026-11-25T19:05:23Z"
+  "as_of": "2026-11-25T20:07:50Z"
 }
