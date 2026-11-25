@@ -800,6 +800,29 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   .cstat-v{font-size:16px;}
 }
 @media(prefers-reduced-motion:reduce){.chart-pick button:active{transform:none;}}
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* Lecturas del panel Market: 5 celdas en una rejilla de 3 dejaban un hueco gris. En móvil 2+2 y el Rango a lo ancho;
+   en el resto, las celdas de la última fila se reparten el ancho. */
+.chart-stats{display:flex;flex-wrap:wrap;}
+.chart-stats .cstat{flex:1 1 115px;min-width:0;}
+@media(max-width:700px){
+  .chart-stats{display:grid;grid-template-columns:1fr 1fr;}
+  .chart-stats .cstat:last-child{grid-column:1 / -1;}
+}
+/* La nota «N velas · Yahoo» se montaba sobre las fechas del eje */
+.lchart-note{bottom:34px;}
+/* Velocímetros: la cifra se lee aunque la aguja pase por encima */
+:is(.gcell,.env-hero-g) svg text{paint-order:stroke fill;stroke:var(--panel-2);stroke-width:3.5px;stroke-linejoin:round;}
+.env-hero-g svg text{stroke:var(--panel);}
+/* Tema claro: aguja, eje y marcas del velocímetro (iban en blanco y no se veían) y buscador del scanner (salía negro) */
+[data-theme="light"] :is(.gcell,.env-hero-g) svg line[stroke="#EFECE3"]{stroke:#211d16;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg circle{fill:#ffffff;stroke:#211d16;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg polyline[stroke="rgba(255,255,255,0.07)"]{stroke:rgba(33,29,22,0.10);}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg line[stroke="rgba(255,255,255,0.13)"]{stroke:rgba(33,29,22,0.22);}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text{stroke:#ffffff;}
+[data-theme="light"] .scan-search{background:#ffffff;border-color:rgba(33,29,22,0.16);color:var(--ink);}
+[data-theme="light"] .scan-search:focus{background:#ffffff;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
