@@ -33,10 +33,10 @@
           + '<div style="font-size:30px;margin-bottom:12px;">🔒</div>'
           + '<div style="font-size:17px;font-weight:700;margin-bottom:10px;color:#C9A84C;">Sesión abierta en otro dispositivo</div>'
           + '<div style="font-size:13.5px;line-height:1.6;color:rgba(232,228,217,0.75);margin-bottom:22px;">Por seguridad solo permitimos <strong>una sesión activa</strong> por cuenta. Tu acceso aquí se cerró porque iniciaste sesión en otro lugar. Vuelve a entrar para continuar.</div>'
-          + '<a href="auth.html" style="display:inline-block;background:#C9A84C;color:#0B0B12;font-weight:700;text-decoration:none;padding:12px 26px;border-radius:10px;font-size:14px;">Volver a iniciar sesión →</a>'
+          + '<a href="auth.html?login=1" style="display:inline-block;background:#C9A84C;color:#0B0B12;font-weight:700;text-decoration:none;padding:12px 26px;border-radius:10px;font-size:14px;">Volver a iniciar sesión →</a>'
           + '</div>';
         (document.body || document.documentElement).appendChild(o);
-      }catch(e){ try{ location.href = 'auth.html'; }catch(_){} }
+      }catch(e){ try{ location.href = 'auth.html?login=1'; }catch(_){} }
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
   }
