@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Los huties reivindicaron un ataque con misiles y drones contra la refineria saudi de Ras Tanura y el distrito financiero de Riad, y la Casa Blanca anuncio nuevos aranceles del 20% a 14 socios comerciales, dos focos de riesgo que presionan al NQ a la baja en la sesion de hoy (CNBC/Reuters, 25-nov).",
-  "petroleo": "El Brent sube 0.97% a unos 92.29 USD/barril y el WTI +0.4% a 82.38 USD/barril tras el ataque huti a Ras Tanura y nuevos incidentes con minas en el estrecho de Ormuz, aunque ambos crudos siguen cerca de minimos de tres meses, lo que limita el traspaso de la prima de riesgo geopolitico al NQ (Reuters/CNBC, 25-nov).",
-  "catalizador": "El PCE subyacente de octubre subio 3.3% a/a (vs 3.2% esperado) y el PCE general 3.8%, reforzando una probabilidad de ~97% de una nueva subida de tasas de la Fed en diciembre bajo el presidente Warsh; los futuros del Nasdaq 100 llegaron a caer 3.11% hacia las 08:34 ET, el principal catalizador bajista del NQ hoy (CNBC/Piqmarkets).",
+  "geopolitica": "La USTR anuncio hoy nuevos aranceles de hasta 20% a China, la UE y otros 12 socios comerciales (China podria llegar a 40-45% en total), mientras Iran reporto nuevos petroleros alcanzados por minas navales en el Estrecho de Ormuz (no verificado por Reuters); ambos focos reavivan la aversion al riesgo y presionan a las tecnologicas del Nasdaq.",
+  "petroleo": "Brent cotiza en torno a 90-91 USD/barril y WTI cerca de 80-82 USD/barril, con leve baja en la sesion por expectativas de superavit de oferta en 2027 que compensan las tensiones en Ormuz, lo que limita el traspaso de la prima de riesgo geopolitico al NQ.",
+  "catalizador": "El PCE de octubre salio caliente (interanual 3.8%, nucleo 3.3% vs 3.2% esperado), elevando a mas de 90% la probabilidad de una subida de tasas de la Fed en diciembre bajo el presidente Kevin Warsh, lo que desato una fuerte venta de semiconductores y del Nasdaq (caida intradia de hasta 4.6%) antes de una recuperacion parcial.",
   "sources": [
-    "CNBC 25-nov (Ras Tanura/Hormuz)",
-    "Reuters/CNBC (Brent 92.29 / WTI 82.38)",
-    "Piqmarkets 08:34 ET (NQ -3.11%)",
-    "Unbiasedheadlines (PCE 3.8%, aranceles 20% a 14 paises)"
+    "CBS News/CNN/Yahoo 25-nov-2026 (USTR anuncia aranceles a China, UE y 12 socios)",
+    "Reuters via Al Arabiya/gcaptain 25-nov-2026 (Iran reporta petroleros alcanzados por minas en Ormuz, no verificado)",
+    "Trading Economics/stockmarketwatch 25-nov-2026 (Brent ~90-91 USD, WTI ~80-82 USD)",
+    "CNBC 25-nov-2026 (PCE caliente, Nasdaq -4.6% intradia, Dow recupera perdida de 1100 puntos)"
   ],
-  "as_of": "2026-11-25T20:07:50Z"
+  "as_of": "2026-11-25T21:06:12Z"
 }
