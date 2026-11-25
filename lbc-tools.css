@@ -71,3 +71,13 @@
   .lbcn-item,.lbcn-profile,.pd-close,.pd-btn,.pd-logout,.pd-lang-btn{transition:none!important;}
   .lbcn-item.lbcn-pill:active,.lbcn-profile:active,.pd-close:active,.pd-btn:active,.pd-logout:active,.pd-lang-btn:active{transform:none!important;}
 }
+
+/* ─── 5. Remate de alineación (25-nov) ──────────────────────────────── */
+/* Tema claro: el texto claro sobre oro macizo se quedaba en 3,2:1. Mismo fondo y texto que el botón primario del sistema (4,6:1, AA). */
+[data-theme="light"] :is(.view-opt.active,.bt-fab,.btn-save),
+[data-theme="light"] button[style*="background:var(--gold)"]{background:var(--lbc-primary-bg) !important;color:var(--lbc-on-gold) !important;}
+/* Interruptor de tema dentro de la navegación: se toca a 44 px aunque se vea más pequeño (el Journal no carga theme.css) */
+.theme-fab.theme-fab-innav{position:relative !important;}
+.theme-fab.theme-fab-innav::after{content:'';position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);}
+/* Options en tema claro: las lecturas llevaban una sombra oscura pensada para el fondo oscuro (quedaba sucia sobre claro) */
+[data-theme="light"] :is(.env-hero-meta .cls,.lc-hero .v,.cstat-v,.ptile-v,.lc-cell .v){text-shadow:none !important;}
