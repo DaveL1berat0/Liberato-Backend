@@ -2,129 +2,165 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06070D">
 <title>Liberato Community · Acceso</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══ LIBERATO DESIGN SYSTEM ═══ */
-:root{
-  --bg:#06070D; --bg-2:#0B0E17; --bg-3:#0E1119;
-  --gold:#C9A84C; --gold-2:#E7CC74; --gold-dim:rgba(204,169,79,0.12);
-  --up:#2EE8A4; --down:#B197FC; --cyan:#4FD6E0;
-  --ink:#F3F0E7; --ink-2:#9CA3AF; --ink-3:#6B7280; --ink-4:#4B5563;
-  --brd:rgba(255,255,255,0.06); --brd-gold:rgba(204,169,79,0.25);
-  --serif:Georgia,'Times New Roman',serif;
-  --sans:'Space Grotesk',-apple-system,sans-serif;
-  --mono:'JetBrains Mono',monospace;
-}
-/* ── Tema claro (paleta canónica Liberato) ── */
-[data-theme="light"]{
-  --bg:#eae6dc; --bg-2:#ffffff; --bg-3:#f6f3ed;
-  --gold:#9c7c2c; --gold-2:#7e6323; --gold-dim:rgba(168,132,47,0.12);
-  --up:#15913f; --down:#6d4bd8; --cyan:#0e7490;
-  --ink:#211d16; --ink-2:rgba(33,29,22,0.62); --ink-3:rgba(33,29,22,0.42); --ink-4:rgba(33,29,22,0.30);
-  --brd:rgba(33,29,22,0.10); --brd-gold:rgba(168,132,47,0.30);
-}
-[data-theme="light"] .code-box,[data-theme="light"] .field-input{background:#ffffff !important;}
+/* ═══ LIBERATO · ACCESO (v101) ═══
+   Los componentes (botón, campo, tarjeta, mensaje, segmentado, esqueleto) son los del sistema compartido lbc-ui.css.
+   Aquí solo va lo propio de esta página, siempre con los tokens --lbc-*. */
 *{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 body{
-  background:var(--bg);color:var(--ink);font-family:var(--sans);
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  padding:24px;line-height:1.5;
-  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(204,169,79,0.06),transparent);
+  background:var(--lbc-bg);color:var(--lbc-ink);font-family:var(--lbc-font-sans);line-height:1.5;
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative;
+  padding:max(72px,calc(var(--lbc-safe-t) + 64px)) var(--lbc-s-6) max(28px,calc(var(--lbc-safe-b) + 20px));
+  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(204,169,79,0.07),transparent);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
 }
-.auth-card{
-  width:100%;max-width:420px;background:linear-gradient(160deg,var(--bg-2),var(--bg-3));
-  border:1px solid var(--brd);border-radius:20px;padding:40px 36px;
-  box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 0 1px rgba(204,169,79,0.04);
-  position:relative;overflow:hidden;
+/* Centrado seguro: con margin:auto la tarjeta se centra si cabe y, si no cabe (teclado abierto), empieza arriba sin cortarse. */
+.auth-shell{width:100%;max-width:424px;margin:auto;}
+/* Volver a la portada */
+.back-home{position:absolute;top:max(14px,var(--lbc-safe-t));left:8px;--_px:var(--lbc-s-3);border-radius:var(--lbc-r-full);}
+.back-home svg{width:18px;height:18px;flex:none;margin-left:-4px;}
+.auth-card{border-radius:var(--lbc-r-xl);padding:40px 36px 34px;}
+.auth-card.is-morphing{overflow:hidden;}
+.auth-card::before{content:'';position:absolute;top:-1px;left:28px;right:28px;height:1px;background:linear-gradient(90deg,transparent,var(--lbc-gold-line),transparent);}
+/* Marca */
+.brand{display:block;text-align:center;margin-bottom:28px;text-decoration:none;border-radius:var(--lbc-r-sm);}
+.brand-name{font-family:var(--lbc-font-serif);font-size:27px;font-weight:700;letter-spacing:0.08em;color:var(--lbc-gold-2);line-height:1.1;}
+.brand-sub{font-family:var(--lbc-font-mono);font-size:9.5px;font-weight:600;letter-spacing:0.32em;color:var(--lbc-ink-3);text-transform:uppercase;margin-top:7px;padding-left:0.32em;}
+/* Pantallas */
+.screen{display:none;}
+.screen.active{display:block;animation:screen-in var(--lbc-t-3) var(--lbc-ease) both;}
+@keyframes screen-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.eyebrow{display:block;text-align:center;margin-bottom:10px;}
+.screen-title{font-family:var(--lbc-font-serif);font-size:25px;font-weight:600;color:var(--lbc-ink);margin-bottom:8px;text-align:center;line-height:1.2;outline:none;text-wrap:balance;}
+.screen-sub{font-size:var(--lbc-fs-md);color:var(--lbc-ink-2);text-align:center;margin-bottom:26px;line-height:var(--lbc-lh-body);text-wrap:pretty;overflow-wrap:anywhere;}
+.screen-note{font-size:var(--lbc-fs-sm);color:var(--lbc-ink-3);text-align:center;margin-top:14px;line-height:var(--lbc-lh-body);}
+/* Campos: afinado sobre lbc-field / lbc-input */
+.field-wrap{position:relative;}
+.field-input:-webkit-autofill,.field-input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--lbc-ink);caret-color:var(--lbc-ink);
+  -webkit-box-shadow:0 0 0 1000px var(--lbc-bg-3) inset;transition:background-color 9999s ease-out 0s;
 }
-.auth-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(204,169,79,0.4),transparent);
+.field-input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 1000px var(--lbc-bg-3) inset,var(--lbc-ring);}
+.field.has-toggle .field-input{padding-right:54px;}
+/* Válido: una marca discreta dentro del campo (sin pintar todo el borde de verde) */
+.field.is-valid:not(.has-toggle) .field-input{
+  padding-right:44px;background-repeat:no-repeat;background-position:right 15px center;background-size:18px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%232EE8A4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 10.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E");
 }
-/* Logo */
-.brand{text-align:center;margin-bottom:32px;}
-.brand-name{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:0.08em;color:var(--gold-2);}
-.brand-sub{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.3em;color:var(--ink-3);text-transform:uppercase;margin-top:5px;}
-/* Screens */
-.screen{display:none;animation:fade 0.4s ease;}
-.screen.active{display:block;}
-@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.screen-title{font-family:var(--serif);font-size:23px;font-weight:600;color:var(--ink);margin-bottom:8px;text-align:center;}
-.screen-sub{font-size:13px;color:var(--ink-2);text-align:center;margin-bottom:28px;line-height:1.6;}
-/* Inputs */
-.field{margin-bottom:16px;}
-.field-label{display:block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.08em;color:var(--ink-3);text-transform:uppercase;margin-bottom:7px;}
-.field-input{
-  width:100%;background:rgba(8,9,15,0.6);border:1px solid var(--brd);border-radius:10px;
-  padding:13px 15px;color:var(--ink);font-family:var(--sans);font-size:14px;
-  transition:border-color 0.2s,box-shadow 0.2s;
+[data-theme="light"] .field.is-valid:not(.has-toggle) .field-input{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2315913f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 10.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E");
 }
-.field-input:focus{outline:none;border-color:var(--brd-gold);box-shadow:0 0 0 3px rgba(204,169,79,0.08);}
-.field-input::placeholder{color:var(--ink-4);}
-/* Buttons */
-.btn{
-  width:100%;padding:14px;border:none;border-radius:10px;font-family:var(--sans);
-  font-size:14px;font-weight:600;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s,opacity 0.2s;
+/* Mostrar / ocultar contraseña */
+.pw-toggle{position:absolute;top:4px;right:4px;width:44px;height:44px;border:0;background:none;border-radius:var(--lbc-r-sm);color:var(--lbc-ink-3);cursor:pointer;display:grid;place-items:center;transition:color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
+.pw-toggle svg{width:20px;height:20px;grid-area:1/1;transition:opacity var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-2) var(--lbc-ease);}
+.pw-toggle .ic-off{opacity:0;transform:scale(.85);}
+.pw-toggle[aria-pressed="true"] .ic-on{opacity:0;transform:scale(.85);}
+.pw-toggle[aria-pressed="true"] .ic-off{opacity:1;transform:none;}
+.pw-toggle[aria-pressed="true"]{color:var(--lbc-gold-2);}
+.pw-toggle:active{background:var(--lbc-gold-dim);}
+/* Requisito de la contraseña (se marca solo) y error junto al campo */
+.field-hint{display:flex;align-items:center;gap:7px;transition:color var(--lbc-t-2) var(--lbc-ease);}
+.field-hint .dot{width:14px;height:14px;flex:none;border-radius:50%;border:1.5px solid var(--lbc-ink-4);display:grid;place-items:center;transition:border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease);}
+.field-hint .dot svg{width:9px;height:9px;opacity:0;transform:scale(.5);transition:opacity var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-3) var(--lbc-ease);color:var(--lbc-bg);}
+.field-hint.ok{color:var(--lbc-up);}
+.field-hint.ok .dot{border-color:var(--lbc-up);background:var(--lbc-up);}
+.field-hint.ok .dot svg{opacity:1;transform:none;}
+.field-err{display:none;}
+.field.has-error .field-err{display:block;animation:screen-in var(--lbc-t-2) var(--lbc-ease) both;}
+.field.has-error .field-hint{display:none;}
+/* Botones: los del sistema. El oro macizo es uno por pantalla. */
+.btn + .btn{margin-top:10px;}
+/* Enlaces de acción (son botones): zona táctil de 44 px sin mover el texto */
+.link{-webkit-appearance:none;appearance:none;background:none;border:0;font:inherit;font-weight:600;cursor:pointer;padding:13px 4px;margin:-13px -2px;border-radius:var(--lbc-r-sm);touch-action:manipulation;}
+.link:disabled{color:var(--lbc-ink-3);cursor:default;text-decoration:none;}
+.foot-link{text-align:center;margin-top:22px;font-size:var(--lbc-fs-md);color:var(--lbc-ink-2);}
+.foot-link + .foot-link{margin-top:16px;}
+.field-aside{display:flex;justify-content:flex-end;margin:-4px 0 18px;font-size:14px;}
+.legal-accept{font-size:12.5px;line-height:var(--lbc-lh-body);color:var(--lbc-ink-3);margin-top:14px;text-align:center;text-wrap:pretty;}
+.legal-accept .link{font-weight:500;padding:12px 0;margin:-12px 0;}
+/* Mensajes: lbc-msg (el JS le pone la variante); vacío no ocupa sitio */
+.msg{display:none;margin-bottom:var(--lbc-s-4);}
+.msg.lbc-msg{display:flex;font-size:14px;animation:screen-in var(--lbc-t-2) var(--lbc-ease) both;}
+.resend-timer{text-align:center;font-family:var(--lbc-font-mono);font-size:12px;color:var(--lbc-ink-3);margin-top:8px;font-variant-numeric:tabular-nums;}
+.resend-timer:empty{display:none;}
+/* Código de 6 dígitos */
+.code-input{min-height:64px;text-align:center;font-family:var(--lbc-font-mono);font-size:28px;font-weight:600;letter-spacing:0.38em;padding:0 0 0 0.38em;font-variant-numeric:tabular-nums;color:var(--lbc-gold-2);}
+.code-input::placeholder{letter-spacing:0.38em;color:var(--lbc-ink-4);font-weight:400;}
+/* Idioma: segmentado del sistema, con zona táctil de 44 px */
+.lbc-seg__item{min-width:76px;}
+@media (pointer:coarse),(max-width:520px){.lbc-seg__item{min-height:44px;}}
+.auth-foot{display:flex;justify-content:center;margin-top:20px;}
+/* Cuenta */
+.acct{border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-fill);padding:2px var(--lbc-s-4);}
+.acct-row{display:flex;justify-content:space-between;align-items:center;gap:var(--lbc-s-4);min-height:50px;padding:10px 0;}
+.acct-row + .acct-row{border-top:1px solid var(--lbc-line);}
+.acct-key{font-size:var(--lbc-fs-sm);color:var(--lbc-ink-3);flex:none;}
+.acct-val{font-size:var(--lbc-fs-md);color:var(--lbc-ink);font-weight:500;text-align:right;min-width:0;overflow-wrap:anywhere;}
+.badge{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:var(--lbc-r-full);border:1px solid var(--lbc-line-2);background:var(--lbc-fill);color:var(--lbc-ink-2);font-family:var(--lbc-font-mono);font-size:var(--lbc-fs-2xs);font-weight:600;letter-spacing:0.08em;white-space:nowrap;}
+.badge.premium{border-color:var(--lbc-gold-line);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);}
+.upgrade-box{margin-top:var(--lbc-s-5);padding:22px 20px 20px;box-shadow:none;}
+.upgrade-title{font-family:var(--lbc-font-serif);font-size:19px;font-weight:600;color:var(--lbc-gold-2);margin-bottom:8px;line-height:1.25;text-wrap:balance;}
+.upgrade-text{font-size:14px;color:var(--lbc-ink-2);line-height:1.6;margin-bottom:var(--lbc-s-4);}
+.upgrade-box .lbc-btn{--_px:10px;--_fs:15px;white-space:normal;text-wrap:balance;}
+.coupon-field{margin-top:18px;padding-top:var(--lbc-s-4);border-top:1px solid var(--lbc-line);display:flex;flex-direction:column;gap:var(--lbc-s-2);}
+.coupon-row{display:flex;gap:var(--lbc-s-2);}
+.coupon-row .field-input{flex:1;min-width:0;text-transform:uppercase;}
+.coupon-row .lbc-btn{--_px:18px;flex:none;}
+.coupon-feedback{font-size:var(--lbc-fs-sm);color:var(--lbc-gold-2);}
+.coupon-feedback:empty{display:none;}
+/* Ajustes del perfil: se abren al tocarlos; el oro macizo queda para la acción principal */
+.prof-sec{margin-top:26px;display:flex;flex-direction:column;gap:var(--lbc-s-2);}
+.settings{margin-top:26px;border:1px solid var(--lbc-line);border-radius:var(--lbc-r-md);background:var(--lbc-fill);overflow:hidden;}
+.settings details + details{border-top:1px solid var(--lbc-line);}
+.settings summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:var(--lbc-s-3);min-height:54px;padding:0 var(--lbc-s-4);font-size:var(--lbc-fs-md);font-weight:500;color:var(--lbc-ink);cursor:pointer;user-select:none;-webkit-user-select:none;transition:background-color var(--lbc-t-2) var(--lbc-ease);}
+.settings summary::-webkit-details-marker{display:none;}
+.settings summary svg{width:18px;height:18px;color:var(--lbc-ink-3);flex:none;transition:transform var(--lbc-t-3) var(--lbc-ease);}
+.settings details[open] summary svg{transform:rotate(90deg);}
+.settings summary:active{background:var(--lbc-fill-2);}
+.settings .set-body{padding:6px var(--lbc-s-4) 18px;}
+.logout{margin-top:var(--lbc-s-5);}
+/* Esqueleto de carga (perfil): reserva el hueco de lo que va a llegar */
+.skel-title{height:28px;width:46%;margin:0 auto 12px;}
+.skel-sub{height:16px;width:62%;margin:0 auto 28px;}
+.skel-box{height:154px;border-radius:var(--lbc-r-md);margin-bottom:var(--lbc-s-4);}
+.skel-btn{height:52px;border-radius:14px;}
+/* Foco visible con teclado */
+:focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:3px;}
+.lbc-input:focus-visible,.lbc-btn:focus-visible,.screen-title:focus,.screen-title:focus-visible{outline:none;}
+@media (hover:hover){
+  .pw-toggle:hover{color:var(--lbc-ink);}
+  .settings summary:hover{background:var(--lbc-fill-2);}
 }
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--bg);}
-.btn-gold:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(204,169,79,0.25);}
-.btn-gold:active{transform:translateY(0);}
-.btn-gold:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-.btn-ghost{background:rgba(255,255,255,0.03);color:var(--ink-2);border:1px solid var(--brd);margin-top:10px;}
-.btn-ghost:hover{background:rgba(255,255,255,0.06);color:var(--ink);}
-/* Language selection */
-.lang-opt{
-  width:100%;padding:18px;border-radius:12px;border:1px solid var(--brd);
-  background:rgba(255,255,255,0.02);color:var(--ink);font-family:var(--sans);
-  font-size:15px;font-weight:500;cursor:pointer;margin-bottom:12px;
-  transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;
+/* Móvil: sensación de app nativa. La tarjeta deja de «flotar»: el formulario ocupa la pantalla. */
+@media (max-width:520px){
+  body{padding-left:var(--lbc-s-5);padding-right:var(--lbc-s-5);padding-top:max(64px,calc(var(--lbc-safe-t) + 56px));background-image:radial-gradient(ellipse 120% 38% at 50% -6%,rgba(204,169,79,0.09),transparent);}
+  .auth-card{background:none;border:0;box-shadow:none;border-radius:0;padding:0;}
+  .auth-card::before{display:none;}
+  .brand{margin-bottom:26px;}
+  .screen-title{font-size:26px;}
+  .screen-sub{margin-bottom:24px;}
+  .lbc-input:not(.code-input){min-height:54px;}
+  .lbc-btn--lg{--_h:54px;}
+  .pw-toggle{top:5px;right:5px;}
+  .code-input{min-height:66px;}
+  .auth-foot{margin-top:28px;}
+  .upgrade-box{padding:20px 16px 18px;}
 }
-.lang-opt:hover,.lang-opt.selected{border-color:var(--brd-gold);background:var(--gold-dim);}
-.lang-opt.selected{color:var(--gold-2);}
-/* Code input (6 boxes) */
-.code-boxes{display:flex;gap:10px;justify-content:center;margin-bottom:24px;}
-.code-box{
-  width:46px;height:56px;text-align:center;font-family:var(--mono);font-size:24px;font-weight:700;
-  background:rgba(8,9,15,0.6);border:1px solid var(--brd);border-radius:10px;color:var(--gold-2);
-  transition:border-color 0.2s,box-shadow 0.2s;
+@media (max-width:350px){.code-input{font-size:24px;letter-spacing:0.3em;padding-left:0.3em;}}
+@media (prefers-reduced-motion:reduce){
+  .screen.active,.msg.lbc-msg,.field.has-error .field-err{animation:none !important;}
+  .pw-toggle,.pw-toggle svg,.field-hint,.field-hint .dot,.field-hint .dot svg,.settings summary,.settings summary svg{transition-duration:.01ms !important;}
 }
-.code-box:focus{outline:none;border-color:var(--brd-gold);box-shadow:0 0 0 3px rgba(204,169,79,0.1);}
-/* Links + helpers */
-.link{color:var(--gold);text-decoration:none;font-size:13px;cursor:pointer;}
-.link:hover{color:var(--gold-2);text-decoration:underline;}
-.foot-link{text-align:center;margin-top:22px;font-size:13px;color:var(--ink-3);}
-.msg{padding:11px 14px;border-radius:9px;font-size:13px;margin-bottom:16px;display:none;}
-.msg.error{background:rgba(177,151,252,0.1);border:1px solid rgba(177,151,252,0.3);color:var(--down);display:block;}
-.msg.success{background:rgba(46,232,164,0.1);border:1px solid rgba(46,232,164,0.3);color:var(--up);display:block;}
-.msg.info{background:var(--gold-dim);border:1px solid var(--brd-gold);color:var(--gold-2);display:block;}
-.resend-timer{text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:6px;}
-/* Account screen */
-.acct-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--brd);}
-.acct-row:last-child{border-bottom:none;}
-.acct-key{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-3);text-transform:uppercase;}
-.acct-val{font-size:14px;color:var(--ink);font-weight:500;}
-.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.05em;}
-.badge.free{background:rgba(156,163,175,0.12);color:var(--ink-2);}
-.badge.premium{background:linear-gradient(135deg,rgba(204,169,79,0.2),rgba(231,204,116,0.15));color:var(--gold-2);border:1px solid var(--brd-gold);}
-.upgrade-box{background:rgba(204,169,79,0.05);border:1px solid rgba(204,169,79,0.2);border-radius:14px;padding:22px;margin-top:24px;}
-.upgrade-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--gold-2);margin-bottom:8px;}
-.upgrade-text{font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:16px;}
-/* Profile config sections */
-.prof-sec{margin-top:24px;padding-top:22px;border-top:1px solid var(--brd);}
-.prof-sec-t{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--gold-2);margin-bottom:14px;}
-.lang-seg{display:flex;gap:10px;}
-.lang-seg-btn{flex:1;padding:13px;border-radius:10px;border:1px solid var(--brd);background:rgba(255,255,255,0.02);color:var(--ink-2);font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.lang-seg-btn:hover{border-color:var(--brd-gold);background:var(--gold-dim);}
-.lang-seg-btn.selected{border-color:var(--brd-gold);background:var(--gold-dim);color:var(--gold-2);font-weight:600;}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(6,7,13,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@media (max-width:460px){.auth-card{padding:32px 24px;}.code-box{width:42px;height:52px;font-size:21px;}}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -145,130 +181,177 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <!-- End Meta Pixel Code -->
 </head>
 <body>
-<div class="auth-card">
-  <div class="brand">
+<!-- Iconos (una sola vez; se usan con <use>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16"/><path d="M9.9 5.8A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.500 9.500 6.500a17 17 0 0 1-2.900 3.700M6.300 7.400A16.500 16.500 0 0 0 2.500 12S6 18.500 12 18.500a9.300 9.300 0 0 0 4-.900"/><path d="M9.900 9.900a3 3 0 0 0 4.200 4.200"/></symbol>
+  <symbol id="i-check" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.500 6.300l2.300 2.300 4.700-5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.500 4.500L13 10l-5.500 5.500"/></symbol>
+  <symbol id="i-back" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.500 4.500L7 10l5.500 5.500"/></symbol>
+</svg>
+
+<a class="back-home lbc-btn lbc-btn--quiet" href="homepage.html"><svg aria-hidden="true"><use href="#i-back"/></svg><span data-es="Inicio" data-en="Home">Inicio</span></a>
+
+<main class="auth-shell">
+<div class="auth-card lbc-card lbc-card--raised">
+  <a class="brand" href="homepage.html" aria-label="Liberato Community · Inicio">
     <div class="brand-name">LIBERATO</div>
     <div class="brand-sub">Community</div>
-  </div>
+  </a>
 
-  <!-- ══ PANTALLA 0: IDIOMA ══ -->
-  <div class="screen active" id="screen-lang">
-    <div class="screen-title" id="t-lang">Idioma / Language</div>
-    <div class="screen-sub" id="s-lang">Elige tu idioma preferido</div>
-    <button class="lang-opt selected" id="lang-es" onclick="selectLang('es')">🇪🇸 Español</button>
-    <button class="lang-opt" id="lang-en" onclick="selectLang('en')">🇬🇧 English</button>
-    <button class="btn btn-gold" style="margin-top:12px;" onclick="goScreen('register')" id="btn-lang-next">Siguiente →</button>
+  <!-- ══ CARGANDO PERFIL (hay sesión guardada): esqueleto en vez de enseñar el registro un instante ══ -->
+  <div class="screen" id="screen-loading" aria-busy="true">
+    <span class="lbc-sr-only" role="status" data-es="Cargando tu cuenta…" data-en="Loading your account…">Cargando tu cuenta…</span>
+    <div class="lbc-skel skel-title"></div>
+    <div class="lbc-skel skel-sub"></div>
+    <div class="lbc-skel skel-box"></div>
+    <div class="lbc-skel skel-btn"></div>
   </div>
 
   <!-- ══ PANTALLA 1: REGISTRO ══ -->
-  <div class="screen" id="screen-register">
-    <div class="screen-title" data-es="Crea tu cuenta" data-en="Create your account">Crea tu cuenta</div>
-    <div class="screen-sub" data-es="Empieza gratis. Escala cuando estés listo." data-en="Start free. Scale when you're ready.">Empieza gratis. Escala cuando estés listo.</div>
-    <div class="msg" id="reg-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Nombre" data-en="Name">Nombre</label>
-      <input class="field-input" id="reg-name" type="text" placeholder="Tu nombre" autocomplete="name">
-    </div>
-    <div class="field">
-      <label class="field-label" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
-      <input class="field-input" id="reg-email" type="email" placeholder="tu@correo.com" autocomplete="email">
-    </div>
-    <div class="field">
-      <label class="field-label" data-es="Contraseña" data-en="Password">Contraseña</label>
-      <input class="field-input" id="reg-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
-    </div>
-    <button class="btn btn-gold" id="btn-register" onclick="doRegister()" data-es="Crear cuenta" data-en="Create account">Crear cuenta</button>
-    <div class="legal-accept" style="font-size:11px;line-height:1.5;color:rgba(232,228,217,0.55);margin-top:10px;text-align:center;">
+  <div class="screen active" id="screen-register">
+    <!-- ROTULILLO DEL PLAN: «Comunidad Libre» es el nombre del plan gratuito en la portada (tarjeta «Gratis · Siempre»). Para quitarlo, borrar esta línea. -->
+    <span class="eyebrow lbc-eyebrow" data-es="Comunidad Libre · Gratis" data-en="Free Community · Free">Comunidad Libre · Gratis</span>
+    <h1 class="screen-title" tabindex="-1" data-es="Crea tu cuenta" data-en="Create your account">Crea tu cuenta</h1>
+    <p class="screen-sub" data-es="Empieza gratis. Escala cuando estés listo." data-en="Start free. Scale when you're ready.">Empieza gratis. Escala cuando estés listo.</p>
+    <form id="form-register" novalidate onsubmit="return submitForm(event, doRegister)">
+      <div class="field lbc-field">
+        <label class="field-label lbc-label" for="reg-name" data-es="Nombre" data-en="Name">Nombre</label>
+        <input class="field-input lbc-input" id="reg-name" name="name" type="text" placeholder="Tu nombre" data-ph-es="Tu nombre" data-ph-en="Your name" autocomplete="name" autocapitalize="words" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-describedby="reg-name-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="reg-name-err" role="alert"></div>
+      </div>
+      <div class="field lbc-field">
+        <label class="field-label lbc-label" for="reg-email" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+        <input class="field-input lbc-input" id="reg-email" name="email" type="email" inputmode="email" placeholder="tu@correo.com" data-ph-es="tu@correo.com" data-ph-en="you@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-describedby="reg-email-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="reg-email-err" role="alert"></div>
+      </div>
+      <div class="field lbc-field has-toggle">
+        <label class="field-label lbc-label" for="reg-password" data-es="Contraseña" data-en="Password">Contraseña</label>
+        <div class="field-wrap">
+          <input class="field-input lbc-input" id="reg-password" name="new-password" type="password" placeholder="Crea una contraseña" data-ph-es="Crea una contraseña" data-ph-en="Create a password" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" data-min="8" aria-describedby="reg-password-hint reg-password-err">
+          <button type="button" class="pw-toggle" data-target="reg-password" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+        </div>
+        <div class="field-hint lbc-hint" id="reg-password-hint"><span class="dot" aria-hidden="true"><svg><use href="#i-check"/></svg></span><span data-es="Mínimo 8 caracteres" data-en="At least 8 characters">Mínimo 8 caracteres</span></div>
+        <div class="field-err lbc-hint lbc-hint--error" id="reg-password-err" role="alert"></div>
+      </div>
+      <div class="msg" id="reg-msg"></div>
+      <button type="submit" class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-register" data-es="Crear cuenta" data-en="Create account">Crear cuenta</button>
+    </form>
+    <div class="legal-accept">
       <span data-es="Al crear tu cuenta aceptas nuestras" data-en="By creating your account you accept our">Al crear tu cuenta aceptas nuestras</span>
-      <a class="link" href="politicas.html" target="_blank" data-es="Políticas y Avisos Legales" data-en="Terms &amp; Legal Notices">Políticas y Avisos Legales</a>.
+      <a class="link lbc-link" href="politicas.html" target="_blank" rel="noopener" data-es="Políticas y Avisos Legales" data-en="Terms &amp; Legal Notices">Políticas y Avisos Legales</a>.
     </div>
     <div class="foot-link">
       <span data-es="¿Ya tienes cuenta?" data-en="Already have an account?">¿Ya tienes cuenta?</span>
-      <a class="link" onclick="goScreen('login')" data-es="Inicia sesión" data-en="Sign in">Inicia sesión</a>
+      <button type="button" class="link lbc-link" onclick="goScreen('login')" data-es="Inicia sesión" data-en="Sign in">Inicia sesión</button>
     </div>
   </div>
 
   <!-- ══ PANTALLA: VERIFICAR CÓDIGO ══ -->
   <div class="screen" id="screen-verify">
-    <div class="screen-title" data-es="Verifica tu correo" data-en="Verify your email">Verifica tu correo</div>
-    <div class="screen-sub" id="verify-sub">Ingresa el código de 6 dígitos que enviamos a tu correo.</div>
-    <div class="msg" id="verify-msg"></div>
-    <div class="field">
-      <input class="field-input" id="verify-code" type="text" inputmode="numeric" maxlength="6" placeholder="______"
-             style="text-align:center;letter-spacing:12px;font-family:var(--mono);font-size:26px;"
-             onkeydown="if(event.key==='Enter')doVerify()">
-    </div>
-    <button class="btn btn-gold" id="btn-verify" onclick="doVerify()" data-es="Verificar" data-en="Verify">Verificar</button>
+    <h1 class="screen-title" tabindex="-1" data-es="Verifica tu correo" data-en="Verify your email">Verifica tu correo</h1>
+    <p class="screen-sub" id="verify-sub">Ingresa el código de 6 dígitos que enviamos a tu correo.</p>
+    <form id="form-verify" novalidate onsubmit="return submitForm(event, doVerify)">
+      <div class="field lbc-field">
+        <label class="lbc-sr-only" for="verify-code" data-es="Código de 6 dígitos" data-en="6-digit code">Código de 6 dígitos</label>
+        <input class="field-input lbc-input code-input" id="verify-code" name="code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" autocomplete="one-time-code" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-describedby="verify-code-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="verify-code-err" role="alert" style="text-align:center;"></div>
+      </div>
+      <div class="msg" id="verify-msg"></div>
+      <button type="submit" class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-verify" data-es="Verificar" data-en="Verify">Verificar</button>
+    </form>
     <div class="foot-link">
       <span data-es="¿No te llegó?" data-en="Didn't get it?">¿No te llegó?</span>
-      <a class="link" id="resend-link" onclick="doResend()" data-es="Reenviar código" data-en="Resend code">Reenviar código</a>
+      <button type="button" class="link lbc-link" id="resend-link" onclick="doResend()" data-es="Reenviar código" data-en="Resend code">Reenviar código</button>
+      <div class="resend-timer" id="resend-timer" aria-live="polite"></div>
     </div>
-    <div class="screen-sub" style="font-size:11px;opacity:0.6;margin-top:10px;" data-es="El código expira en 10 minutos. Si no llega, revisa spam o pulsa Reenviar." data-en="The code expires in 10 minutes. If it doesn't arrive, check spam or tap Resend.">El código expira en 10 minutos. Si no llega, revisa spam o pulsa Reenviar.</div>
+    <p class="screen-note" data-es="El código expira en 10 minutos. Si no llega, revisa spam o pulsa Reenviar." data-en="The code expires in 10 minutes. If it doesn't arrive, check spam or tap Resend.">El código expira en 10 minutos. Si no llega, revisa spam o pulsa Reenviar.</p>
+    <div class="foot-link" id="verify-wrong">
+      <span data-es="¿Correo equivocado?" data-en="Wrong email?">¿Correo equivocado?</span>
+      <button type="button" class="link lbc-link" onclick="goScreen('register')" data-es="Cambiarlo" data-en="Change it">Cambiarlo</button>
+    </div>
   </div>
 
   <!-- ══ PANTALLA 3: LOGIN ══ -->
   <div class="screen" id="screen-login">
-    <div class="screen-title" data-es="Bienvenido de vuelta" data-en="Welcome back">Bienvenido de vuelta</div>
-    <div class="screen-sub" data-es="Inicia sesión en tu cuenta" data-en="Sign in to your account">Inicia sesión en tu cuenta</div>
-    <div class="msg" id="login-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
-      <input class="field-input" id="login-email" type="email" placeholder="tu@correo.com" autocomplete="email">
-    </div>
-    <div class="field">
-      <label class="field-label" data-es="Contraseña" data-en="Password">Contraseña</label>
-      <input class="field-input" id="login-password" type="password" placeholder="Tu contraseña" autocomplete="current-password">
-    </div>
-    <button class="btn btn-gold" id="btn-login" onclick="doLogin()" data-es="Iniciar sesión" data-en="Sign in">Iniciar sesión</button>
-    <div class="foot-link">
-      <a class="link" onclick="goScreen('forgot')" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</a>
-    </div>
+    <h1 class="screen-title" tabindex="-1" data-es="Bienvenido de vuelta" data-en="Welcome back">Bienvenido de vuelta</h1>
+    <p class="screen-sub" data-es="Inicia sesión en tu cuenta" data-en="Sign in to your account">Inicia sesión en tu cuenta</p>
+    <form id="form-login" novalidate onsubmit="return submitForm(event, doLogin)">
+      <div class="field lbc-field">
+        <label class="field-label lbc-label" for="login-email" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+        <input class="field-input lbc-input" id="login-email" name="email" type="email" inputmode="email" placeholder="tu@correo.com" data-ph-es="tu@correo.com" data-ph-en="you@email.com" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-describedby="login-email-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="login-email-err" role="alert"></div>
+      </div>
+      <div class="field lbc-field has-toggle">
+        <label class="field-label lbc-label" for="login-password" data-es="Contraseña" data-en="Password">Contraseña</label>
+        <div class="field-wrap">
+          <input class="field-input lbc-input" id="login-password" name="password" type="password" placeholder="Tu contraseña" data-ph-es="Tu contraseña" data-ph-en="Your password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-describedby="login-password-err">
+          <button type="button" class="pw-toggle" data-target="login-password" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+        </div>
+        <div class="field-err lbc-hint lbc-hint--error" id="login-password-err" role="alert"></div>
+      </div>
+      <div class="field-aside">
+        <button type="button" class="link lbc-link" onclick="goScreen('forgot')" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</button>
+      </div>
+      <div class="msg" id="login-msg"></div>
+      <button type="submit" class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-login" data-es="Iniciar sesión" data-en="Sign in">Iniciar sesión</button>
+    </form>
     <div class="foot-link">
       <span data-es="¿No tienes cuenta?" data-en="No account yet?">¿No tienes cuenta?</span>
-      <a class="link" onclick="goScreen('register')" data-es="Regístrate" data-en="Sign up">Regístrate</a>
+      <button type="button" class="link lbc-link" onclick="goScreen('register')" data-es="Regístrate" data-en="Sign up">Regístrate</button>
     </div>
   </div>
 
   <!-- ══ PANTALLA: OLVIDÉ CONTRASEÑA (pedir email) ══ -->
   <div class="screen" id="screen-forgot">
-    <div class="screen-title" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</div>
-    <div class="screen-sub" data-es="Ingresa tu correo y te enviaremos un código para restablecerla." data-en="Enter your email and we'll send you a code to reset it.">Ingresa tu correo y te enviaremos un código para restablecerla.</div>
-    <div class="msg" id="forgot-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
-      <input class="field-input" id="forgot-email" type="email" placeholder="tu@correo.com" autocomplete="email" onkeydown="if(event.key==='Enter')doForgot()">
-    </div>
-    <button class="btn btn-gold" id="btn-forgot" onclick="doForgot()" data-es="Enviar código" data-en="Send code">Enviar código</button>
+    <h1 class="screen-title" tabindex="-1" data-es="¿Olvidaste tu contraseña?" data-en="Forgot your password?">¿Olvidaste tu contraseña?</h1>
+    <p class="screen-sub" data-es="Ingresa tu correo y te enviaremos un código para restablecerla." data-en="Enter your email and we'll send you a code to reset it.">Ingresa tu correo y te enviaremos un código para restablecerla.</p>
+    <form id="form-forgot" novalidate onsubmit="return submitForm(event, doForgot)">
+      <div class="field lbc-field">
+        <label class="field-label lbc-label" for="forgot-email" data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+        <input class="field-input lbc-input" id="forgot-email" name="email" type="email" inputmode="email" placeholder="tu@correo.com" data-ph-es="tu@correo.com" data-ph-en="you@email.com" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-describedby="forgot-email-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="forgot-email-err" role="alert"></div>
+      </div>
+      <div class="msg" id="forgot-msg"></div>
+      <button type="submit" class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-forgot" data-es="Enviar código" data-en="Send code">Enviar código</button>
+    </form>
     <div class="foot-link">
-      <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
+      <button type="button" class="link lbc-link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</button>
     </div>
   </div>
 
   <!-- ══ PANTALLA: NUEVA CONTRASEÑA (código + password) ══ -->
   <div class="screen" id="screen-reset">
-    <div class="screen-title" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</div>
-    <div class="screen-sub" id="reset-sub">Ingresa el código que te enviamos y tu nueva contraseña.</div>
-    <div class="msg" id="reset-msg"></div>
-    <div class="field">
-      <label class="field-label" data-es="Código" data-en="Code">Código</label>
-      <input class="field-input" id="reset-code" type="text" inputmode="numeric" maxlength="6" placeholder="______"
-             style="text-align:center;letter-spacing:12px;font-family:var(--mono);font-size:24px;">
-    </div>
-    <div class="field">
-      <label class="field-label" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
-      <input class="field-input" id="reset-password" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReset()">
-    </div>
-    <button class="btn btn-gold" id="btn-reset" onclick="doReset()" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</button>
+    <h1 class="screen-title" tabindex="-1" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</h1>
+    <p class="screen-sub" id="reset-sub">Ingresa el código que te enviamos y tu nueva contraseña.</p>
+    <form id="form-reset" novalidate onsubmit="return submitForm(event, doReset)">
+      <div class="field lbc-field">
+        <label class="field-label lbc-label" for="reset-code" data-es="Código" data-en="Code">Código</label>
+        <input class="field-input lbc-input code-input" id="reset-code" name="code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" autocomplete="one-time-code" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-describedby="reset-code-err">
+        <div class="field-err lbc-hint lbc-hint--error" id="reset-code-err" role="alert"></div>
+      </div>
+      <div class="field lbc-field has-toggle">
+        <label class="field-label lbc-label" for="reset-password" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
+        <div class="field-wrap">
+          <input class="field-input lbc-input" id="reset-password" name="new-password" type="password" placeholder="Crea una contraseña" data-ph-es="Crea una contraseña" data-ph-en="Create a password" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go" data-min="8" aria-describedby="reset-password-hint reset-password-err">
+          <button type="button" class="pw-toggle" data-target="reset-password" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+        </div>
+        <div class="field-hint lbc-hint" id="reset-password-hint"><span class="dot" aria-hidden="true"><svg><use href="#i-check"/></svg></span><span data-es="Mínimo 8 caracteres" data-en="At least 8 characters">Mínimo 8 caracteres</span></div>
+        <div class="field-err lbc-hint lbc-hint--error" id="reset-password-err" role="alert"></div>
+      </div>
+      <div class="msg" id="reset-msg"></div>
+      <button type="submit" class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-reset" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</button>
+    </form>
     <div class="foot-link">
-      <a class="link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</a>
+      <button type="button" class="link lbc-link" onclick="goScreen('login')" data-es="← Volver a iniciar sesión" data-en="← Back to sign in">← Volver a iniciar sesión</button>
     </div>
   </div>
 
   <!-- ══ PANTALLA 4: CUENTA ══ -->
   <div class="screen" id="screen-account">
-    <div class="screen-title" data-es="Mi perfil" data-en="My profile">Mi perfil</div>
-    <div class="screen-sub" data-es="Detalles de tu membresía" data-en="Your membership details">Detalles de tu membresía</div>
-    <div style="margin-top:8px;">
+    <h1 class="screen-title" tabindex="-1" data-es="Mi perfil" data-en="My profile">Mi perfil</h1>
+    <p class="screen-sub" data-es="Detalles de tu membresía" data-en="Your membership details">Detalles de tu membresía</p>
+    <div class="acct">
       <div class="acct-row">
         <span class="acct-key" data-es="Nombre" data-en="Name">Nombre</span>
         <span class="acct-val" id="acct-name">—</span>
@@ -287,65 +370,90 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
       </div>
     </div>
     <!-- Caja de upgrade (solo para free) -->
-    <div class="upgrade-box" id="upgrade-box" style="display:none;">
+    <div class="upgrade-box lbc-card lbc-card--gold" id="upgrade-box" style="display:none;">
       <div class="upgrade-title" data-es="¿Listo para operar como profesional?" data-en="Ready to trade like a pro?">¿Listo para operar como profesional?</div>
       <div class="upgrade-text" data-es="Acceso Completo desbloquea trading en vivo, niveles institucionales de Gamma, order flow en tiempo real, journal con IA y la plataforma completa." data-en="Full Access unlocks live trading, institutional Gamma levels, real-time order flow, the AI journal and the full platform.">Acceso Completo desbloquea trading en vivo, niveles institucionales de Gamma, order flow en tiempo real, journal con IA y la plataforma completa.</div>
-      <div class="coupon-field" style="margin:14px 0;">
-        <div style="display:flex;gap:8px;">
-          <input class="field-input" id="coupon-code" placeholder="Código de descuento (opcional)" style="flex:1;text-transform:uppercase;" onkeydown="if(event.key==='Enter')applyCoupon()">
-          <button class="btn" id="btn-coupon-apply" onclick="applyCoupon()" style="width:auto;padding:0 18px;margin:0;background:var(--bg-3);border:1px solid var(--brd-gold);color:var(--gold-2);" data-es="Aplicar" data-en="Apply">Aplicar</button>
+      <button class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" id="btn-upgrade" onclick="doUpgrade()" data-es="Mejorar a Acceso Completo · $199/mes" data-en="Upgrade to Full Access · $199/mo">Mejorar a Acceso Completo · $199/mes</button>
+      <button class="btn lbc-btn lbc-btn--ghost lbc-btn--lg lbc-btn--block" id="btn-refresh-access" onclick="refreshAccess()" data-es="Ya pagué — actualizar mi acceso" data-en="I already paid — refresh my access">Ya pagué — actualizar mi acceso</button>
+      <div class="coupon-field">
+        <label class="field-label lbc-label" for="coupon-code" data-es="Código de descuento (opcional)" data-en="Discount code (optional)">Código de descuento (opcional)</label>
+        <div class="coupon-row">
+          <input class="field-input lbc-input" id="coupon-code" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="done" onkeydown="if(event.key==='Enter')applyCoupon()">
+          <button class="btn lbc-btn lbc-btn--secondary lbc-btn--lg" id="btn-coupon-apply" onclick="applyCoupon()" data-es="Aplicar" data-en="Apply">Aplicar</button>
         </div>
-        <div id="coupon-feedback" style="font-size:12px;margin-top:8px;font-family:var(--mono);"></div>
+        <div class="coupon-feedback" id="coupon-feedback" role="status"></div>
       </div>
-      <button class="btn btn-gold" id="btn-upgrade" onclick="doUpgrade()" data-es="Mejorar a Acceso Completo · $199/mes" data-en="Upgrade to Full Access · $199/mo">Mejorar a Acceso Completo · $199/mes</button>
-      <button class="btn btn-ghost" id="btn-refresh-access" onclick="refreshAccess()" style="margin-top:10px;" data-es="Ya pagué — actualizar mi acceso" data-en="I already paid — refresh my access">Ya pagué — actualizar mi acceso</button>
     </div>
     <!-- Acceso a plataforma (solo premium) -->
-    <div id="platform-access" style="display:none;margin-top:24px;">
-      <button class="btn btn-gold" onclick="window.location.href='daytrading_preview.html'" data-es="Entrar a la plataforma →" data-en="Enter the platform →">Entrar a la plataforma →</button>
+    <div id="platform-access" style="display:none;margin-top:20px;">
+      <button class="btn lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" onclick="window.location.href='daytrading_preview.html'" data-es="Entrar a la plataforma →" data-en="Enter the platform →">Entrar a la plataforma →</button>
     </div>
 
     <!-- ══ CONFIGURACIÓN DE CUENTA ══ -->
     <div class="prof-sec">
-      <div class="prof-sec-t" data-es="Idioma" data-en="Language">Idioma</div>
-      <div class="lang-seg">
-        <button type="button" class="lang-seg-btn" id="prof-lang-es" onclick="doSetLanguage('es')">🇪🇸 Español</button>
-        <button type="button" class="lang-seg-btn" id="prof-lang-en" onclick="doSetLanguage('en')">🇬🇧 English</button>
+      <div class="prof-sec-t lbc-label" data-es="Idioma" data-en="Language">Idioma</div>
+      <div class="lbc-seg lbc-seg--block lang-seg" role="group" aria-label="Idioma / Language">
+        <button type="button" class="lbc-seg__item lang-seg-btn" id="prof-lang-es" onclick="doSetLanguage('es')">Español</button>
+        <button type="button" class="lbc-seg__item lang-seg-btn" id="prof-lang-en" onclick="doSetLanguage('en')">English</button>
       </div>
-      <div class="msg" id="lang-msg" style="margin-top:14px;margin-bottom:0;"></div>
+      <div class="msg" id="lang-msg"></div>
     </div>
 
-    <div class="prof-sec">
-      <div class="prof-sec-t" data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</div>
-      <div class="msg" id="pw-msg"></div>
-      <div class="field">
-        <label class="field-label" data-es="Contraseña actual" data-en="Current password">Contraseña actual</label>
-        <input class="field-input" id="pw-current" type="password" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <div class="field">
-        <label class="field-label" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
-        <input class="field-input" id="pw-new" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
-      </div>
-      <button class="btn btn-gold" id="btn-change-pw" onclick="doChangePassword()" data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+    <div class="settings">
+      <details>
+        <summary><span data-es="Cambiar contraseña" data-en="Change password">Cambiar contraseña</span><svg aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <form class="set-body" novalidate onsubmit="return submitForm(event, doChangePassword)">
+          <div class="field lbc-field has-toggle">
+            <label class="field-label lbc-label" for="pw-current" data-es="Contraseña actual" data-en="Current password">Contraseña actual</label>
+            <div class="field-wrap">
+              <input class="field-input lbc-input" id="pw-current" type="password" placeholder="••••••••" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false">
+              <button type="button" class="pw-toggle" data-target="pw-current" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+            </div>
+          </div>
+          <div class="field lbc-field has-toggle">
+            <label class="field-label lbc-label" for="pw-new" data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
+            <div class="field-wrap">
+              <input class="field-input lbc-input" id="pw-new" type="password" placeholder="Crea una contraseña" data-ph-es="Crea una contraseña" data-ph-en="Create a password" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" data-min="8" aria-describedby="pw-new-hint">
+              <button type="button" class="pw-toggle" data-target="pw-new" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+            </div>
+            <div class="field-hint lbc-hint" id="pw-new-hint"><span class="dot" aria-hidden="true"><svg><use href="#i-check"/></svg></span><span data-es="Mínimo 8 caracteres" data-en="At least 8 characters">Mínimo 8 caracteres</span></div>
+          </div>
+          <div class="msg" id="pw-msg"></div>
+          <button type="submit" class="btn lbc-btn lbc-btn--secondary lbc-btn--lg lbc-btn--block" id="btn-change-pw" data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+        </form>
+      </details>
+      <details>
+        <summary><span data-es="Cambiar correo" data-en="Change email">Cambiar correo</span><svg aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <form class="set-body" novalidate onsubmit="return submitForm(event, doChangeEmail)">
+          <div class="field lbc-field">
+            <label class="field-label lbc-label" for="em-new" data-es="Nuevo correo" data-en="New email">Nuevo correo</label>
+            <input class="field-input lbc-input" id="em-new" type="email" inputmode="email" placeholder="nuevo@correo.com" data-ph-es="nuevo@correo.com" data-ph-en="new@email.com" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false">
+          </div>
+          <div class="field lbc-field has-toggle">
+            <label class="field-label lbc-label" for="em-pass" data-es="Contraseña (para confirmar)" data-en="Password (to confirm)">Contraseña (para confirmar)</label>
+            <div class="field-wrap">
+              <input class="field-input lbc-input" id="em-pass" type="password" placeholder="••••••••" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false">
+              <button type="button" class="pw-toggle" data-target="em-pass" aria-pressed="false" aria-label="Mostrar contraseña"><svg class="ic-on" aria-hidden="true"><use href="#i-eye"/></svg><svg class="ic-off" aria-hidden="true"><use href="#i-eye-off"/></svg></button>
+            </div>
+          </div>
+          <div class="msg" id="em-msg"></div>
+          <button type="submit" class="btn lbc-btn lbc-btn--secondary lbc-btn--lg lbc-btn--block" id="btn-change-email" data-es="Actualizar correo" data-en="Update email">Actualizar correo</button>
+        </form>
+      </details>
     </div>
 
-    <div class="prof-sec">
-      <div class="prof-sec-t" data-es="Cambiar correo" data-en="Change email">Cambiar correo</div>
-      <div class="msg" id="em-msg"></div>
-      <div class="field">
-        <label class="field-label" data-es="Nuevo correo" data-en="New email">Nuevo correo</label>
-        <input class="field-input" id="em-new" type="email" placeholder="nuevo@correo.com" autocomplete="email">
-      </div>
-      <div class="field">
-        <label class="field-label" data-es="Contraseña (para confirmar)" data-en="Password (to confirm)">Contraseña (para confirmar)</label>
-        <input class="field-input" id="em-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="btn btn-gold" id="btn-change-email" onclick="doChangeEmail()" data-es="Actualizar correo" data-en="Update email">Actualizar correo</button>
-    </div>
-
-    <button class="btn btn-ghost" onclick="doLogout()" style="margin-top:20px;" data-es="Cerrar sesión" data-en="Sign out">Cerrar sesión</button>
+    <button class="btn logout lbc-btn lbc-btn--ghost lbc-btn--lg lbc-btn--block" onclick="doLogout()" data-es="Cerrar sesión" data-en="Sign out">Cerrar sesión</button>
   </div>
 </div>
+
+<!-- Idioma: ya no es un paso previo; se cambia aquí sin salir de la pantalla -->
+<div class="auth-foot" id="auth-foot">
+  <div class="lbc-seg" role="group" aria-label="Idioma / Language">
+    <button type="button" class="lbc-seg__item is-active" id="lang-es" onclick="selectLang('es')" aria-pressed="true">Español</button>
+    <button type="button" class="lbc-seg__item" id="lang-en" onclick="selectLang('en')" aria-pressed="false">English</button>
+  </div>
+</div>
+</main>
 
 <script>
 'use strict';
@@ -361,27 +469,68 @@ function applyLang(){
     var txt = el.getAttribute('data-'+state.lang);
     if(txt) el.textContent = txt;
   });
+  document.querySelectorAll('[data-ph-es]').forEach(function(el){
+    var ph = el.getAttribute('data-ph-'+state.lang);
+    if(ph) el.setAttribute('placeholder', ph);
+  });
+  document.querySelectorAll('.pw-toggle').forEach(syncPwToggle);
+  var les = document.getElementById('lang-es'), len = document.getElementById('lang-en');
+  if(les){ les.classList.toggle('is-active', state.lang==='es'); les.setAttribute('aria-pressed', state.lang==='es'); }
+  if(len){ len.classList.toggle('is-active', state.lang==='en'); len.setAttribute('aria-pressed', state.lang==='en'); }
   document.documentElement.lang = state.lang;
 }
 function selectLang(lang){
   state.lang = lang;
-  document.getElementById('lang-es').classList.toggle('selected', lang==='es');
-  document.getElementById('lang-en').classList.toggle('selected', lang==='en');
-  var next = document.getElementById('btn-lang-next');
-  next.textContent = lang==='es' ? 'Siguiente →' : 'Next →';
+  try{ localStorage.setItem('lbc_lang', lang); }catch(e){}
+  applyLang();
 }
 
 // ═══ NAVEGACIÓN ═══
+var _reduceMotion = false;
+try{ _reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
 function goScreen(name){
+  var next = document.getElementById('screen-'+name);
+  if(!next) return;
+  var card = document.querySelector('.auth-card');
+  var cur = document.querySelector('.screen.active');
+  var h0 = card ? card.offsetHeight : 0;
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  document.getElementById('screen-'+name).classList.add('active');
+  next.classList.add('active');
   applyLang();
+  // El selector de idioma de abajo sobra dentro del perfil (allí tiene el suyo, que además lo guarda en la cuenta).
+  var foot = document.getElementById('auth-foot');
+  if(foot) foot.style.display = (name==='account' || name==='loading') ? 'none' : '';
+  if(cur === next) return;
+  if(cur){
+    // Altura de la tarjeta: de la anterior a la nueva, sin salto.
+    if(card && card.animate && !_reduceMotion && h0){
+      var h1 = card.offsetHeight;
+      if(Math.abs(h1-h0) > 2){
+        card.classList.add('is-morphing');
+        var an = card.animate([{height:h0+'px'},{height:h1+'px'}], {duration:280, easing:'cubic-bezier(.2,.8,.2,1)'});
+        an.onfinish = an.oncancel = function(){ card.classList.remove('is-morphing'); };
+      }
+    }
+    try{ window.scrollTo(0, 0); }catch(e){}
+    // Lectores de pantalla y teclado: el foco pasa al título de la pantalla nueva (no abre el teclado del móvil).
+    var t = next.querySelector('.screen-title');
+    if(t){ try{ t.focus({preventScroll:true}); }catch(e){} }
+  }
+}
+// Envío de formularios: «Intro»/«Ir» del teclado hace lo mismo que el botón; nunca recarga la página.
+function submitForm(ev, fn){
+  if(ev && ev.preventDefault) ev.preventDefault();
+  var btn = ev && ev.target ? ev.target.querySelector('button[type="submit"]') : null;
+  if(btn && (btn.disabled || btn.classList.contains('is-loading'))) return false;   // ya hay un envío en curso
+  fn();
+  return false;
 }
 
 // ═══ HELPERS ═══
 function showMsg(id, text, type){
   var el = document.getElementById(id);
-  el.className = 'msg '+type;
+  el.className = 'msg '+type+' lbc-msg lbc-msg--'+(type==='success' ? 'ok' : type);   // componente del sistema
+  el.setAttribute('role', type==='error' ? 'alert' : 'status');
   el.textContent = text;
 }
 function clearMsg(id){
@@ -390,14 +539,107 @@ function clearMsg(id){
 }
 function setLoading(btnId, loading, originalText){
   var btn = document.getElementById(btnId);
+  // Estado «cargando» del sistema (lbc-btn.is-loading): el botón conserva su tamaño; gira el indicador y no admite otro envío.
   if(loading){
-    btn.disabled = true;
-    btn.dataset._orig = btn.textContent;
-    btn.innerHTML = '<span class="spinner"></span>';
+    btn.classList.add('is-loading');
+    btn.setAttribute('aria-busy', 'true');
   } else {
-    btn.disabled = false;
-    btn.textContent = originalText || btn.dataset._orig || '';
+    btn.classList.remove('is-loading');
+    btn.removeAttribute('aria-busy');
+    if(originalText) btn.textContent = originalText;
   }
+}
+// ═══ CAMPOS: error junto al campo, estado válido, requisito de contraseña, ver/ocultar ═══
+function L(es, en){ return state.lang==='es' ? es : en; }
+function fieldOf(input){ return input && input.closest ? input.closest('.field') : null; }
+function fieldErr(inputId, text){
+  var input = document.getElementById(inputId), f = fieldOf(input), err = document.getElementById(inputId+'-err');
+  if(f){ f.classList.add('has-error'); f.classList.remove('is-valid'); }
+  if(input) input.setAttribute('aria-invalid', 'true');
+  if(err) err.textContent = text;
+  return input;
+}
+function fieldClear(input){
+  var f = fieldOf(input), err = input ? document.getElementById(input.id+'-err') : null;
+  if(f) f.classList.remove('has-error');
+  if(input) input.removeAttribute('aria-invalid');
+  if(err) err.textContent = '';
+}
+function clearFields(ids){ ids.forEach(function(id){ fieldClear(document.getElementById(id)); }); }
+// Enseña todos los errores de una vez y lleva el foco al primero.
+function failFields(list){
+  var first = null;
+  list.forEach(function(p){ var i = fieldErr(p[0], p[1]); if(!first) first = i; });
+  if(first){ try{ first.focus(); }catch(e){} }
+}
+function looksLikeEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+// Errores de red o del servidor, dichos en humano (el detalle que manda el backend se respeta tal cual).
+function humanErr(e){
+  var m = (e && e.message) ? String(e.message) : '';
+  if(!m || /failed to fetch|networkerror|load failed|network request failed/i.test(m))
+    return L('No pudimos conectar. Revisa tu conexión e inténtalo de nuevo.', 'We couldn\'t connect. Check your connection and try again.');
+  if(/^Error 429$/.test(m))
+    return L('Demasiados intentos seguidos. Espera un momento e inténtalo de nuevo.', 'Too many attempts. Wait a moment and try again.');
+  if(/^Error 5\d\d$/.test(m))
+    return L('El servidor no respondió. Inténtalo de nuevo en un momento.', 'The server didn\'t respond. Try again in a moment.');
+  if(/^Error \d+$/.test(m))
+    return L('Algo no salió bien. Inténtalo de nuevo.', 'Something went wrong. Try again.');
+  return m;
+}
+function syncPwToggle(btn){
+  var on = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-label', on ? L('Ocultar contraseña', 'Hide password') : L('Mostrar contraseña', 'Show password'));
+}
+function syncHint(input){
+  var min = Number(input.getAttribute('data-min')||0), hint = document.getElementById(input.id+'-hint');
+  if(min && hint) hint.classList.toggle('ok', input.value.length >= min);
+}
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest ? ev.target.closest('.pw-toggle') : null;
+  if(!b) return;
+  var input = document.getElementById(b.getAttribute('data-target'));
+  if(!input) return;
+  var show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  b.setAttribute('aria-pressed', show ? 'true' : 'false');
+  syncPwToggle(b);
+  // El cursor se queda donde estaba: en el móvil el teclado no se cierra.
+  try{ input.focus({preventScroll:true}); var n = input.value.length; input.setSelectionRange(n, n); }catch(e){}
+});
+document.addEventListener('input', function(ev){
+  var el = ev.target;
+  if(!el || !el.classList || !el.classList.contains('field-input')) return;
+  fieldClear(el);
+  if(el.hasAttribute('data-min')) syncHint(el);
+  if(el.type === 'email'){ var f = fieldOf(el); if(f) f.classList.toggle('is-valid', looksLikeEmail(el.value.trim())); }
+  if(el.classList.contains('code-input')){
+    var d = el.value.replace(/\D+/g, '').slice(0, 6);
+    if(d !== el.value) el.value = d;
+    // Código completo (escrito o autorrellenado desde el correo): se verifica solo.
+    if(d.length === 6 && el.id === 'verify-code') doVerify();
+  }
+});
+// Al salir de un correo mal escrito se avisa junto al campo, sin esperar al envío.
+document.addEventListener('focusout', function(ev){
+  var el = ev.target;
+  if(!el || el.type !== 'email' || !el.classList.contains('field-input')) return;
+  var v = el.value.trim();
+  if(v && !looksLikeEmail(v)) fieldErr(el.id, L('Revisa el correo: parece incompleto.', 'Check the email: it looks incomplete.'));
+});
+// Reenvío del código: espera corta para no pedir varios seguidos (cada reenvío invalida el anterior).
+var _resendT;
+function startResendCooldown(sec){
+  var link = document.getElementById('resend-link'), out = document.getElementById('resend-timer');
+  clearInterval(_resendT);
+  if(!link) return;
+  link.disabled = true;
+  function paint(){
+    if(sec <= 0){ clearInterval(_resendT); link.disabled = false; if(out) out.textContent = ''; return; }
+    if(out) out.textContent = L('Podrás pedir otro en ', 'You can request another in ') + sec + ' s';
+    sec--;
+  }
+  paint();
+  _resendT = setInterval(paint, 1000);
 }
 async function api(path, method, body){
   var opts = {method:method, headers:{'Content-Type':'application/json'}};
@@ -418,14 +660,14 @@ async function doRegister(){
   var name = document.getElementById('reg-name').value.trim();
   var email = document.getElementById('reg-email').value.trim();
   var password = document.getElementById('reg-password').value;
-  if(!name || !email || !password){
-    showMsg('reg-msg', state.lang==='es'?'Completa todos los campos':'Fill all fields', 'error');
-    return;
-  }
-  if(password.length < 8){
-    showMsg('reg-msg', state.lang==='es'?'La contraseña debe tener al menos 8 caracteres':'Password must be at least 8 characters', 'error');
-    return;
-  }
+  clearFields(['reg-name','reg-email','reg-password']);
+  var bad = [];
+  if(!name) bad.push(['reg-name', L('Escribe tu nombre.', 'Enter your name.')]);
+  if(!email) bad.push(['reg-email', L('Escribe tu correo.', 'Enter your email.')]);
+  else if(!looksLikeEmail(email)) bad.push(['reg-email', L('Revisa el correo: parece incompleto.', 'Check the email: it looks incomplete.')]);
+  if(!password) bad.push(['reg-password', L('Crea una contraseña de al menos 8 caracteres.', 'Create a password with at least 8 characters.')]);
+  else if(password.length < 8) bad.push(['reg-password', L('Le faltan ', 'It needs ') + (8-password.length) + L(password.length===7?' carácter.':' caracteres.', password.length===7?' more character.':' more characters.')]);
+  if(bad.length){ failFields(bad); return; }
   setLoading('btn-register', true);
   try{
     var _trial=(new URLSearchParams(location.search).get('trial')||'').trim();  // link de evento ?trial=CODE
@@ -453,7 +695,7 @@ async function doRegister(){
     showMsg('reg-msg', state.lang==='es'?'Cuenta creada. Inicia sesión.':'Account created. Sign in.', 'success');
     setTimeout(function(){ goScreen('login'); }, 1200);
   }catch(e){
-    showMsg('reg-msg', e.message, 'error');
+    showMsg('reg-msg', humanErr(e), 'error');
   }finally{
     setLoading('btn-register', false);
   }
@@ -462,9 +704,10 @@ async function doRegister(){
 // ═══ VERIFICACIÓN POR CÓDIGO ═══
 async function doVerify(){
   clearMsg('verify-msg');
+  if(document.getElementById('btn-verify').classList.contains('is-loading')) return;   // ya se está verificando
   var code = (document.getElementById('verify-code').value||'').trim();
   if(code.length !== 6){
-    showMsg('verify-msg', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits', 'error');
+    failFields([['verify-code', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits']]);
     return;
   }
   setLoading('btn-verify', true);
@@ -474,11 +717,12 @@ async function doVerify(){
       state.token = data.token;
       localStorage.setItem('lbc_token', data.token);
       pxTrack('CompleteRegistration');  // correo verificado = registro completo
+      try{ localStorage.setItem('lbc_known', '1'); }catch(e){}
       showMsg('verify-msg', state.lang==='es'?'¡Cuenta verificada!':'Account verified!', 'success');
       setTimeout(function(){ loadAccount(true); }, 700);
     }
   }catch(e){
-    showMsg('verify-msg', e.message, 'error');
+    showMsg('verify-msg', humanErr(e), 'error');
   }finally{
     setLoading('btn-verify', false);
   }
@@ -490,8 +734,9 @@ async function doResend(){
     // Limpiar el código anterior (ya quedó invalidado en el backend).
     var c=document.getElementById('verify-code'); if(c){ c.value=''; c.focus(); }
     showMsg('verify-msg', state.lang==='es'?'Nuevo código enviado. El anterior ya no sirve.':'New code sent. The previous one no longer works.', 'info');
+    startResendCooldown(30);
   }catch(e){
-    showMsg('verify-msg', e.message, 'error');
+    showMsg('verify-msg', humanErr(e), 'error');
   }
 }
 
@@ -500,7 +745,7 @@ async function doForgot(){
   clearMsg('forgot-msg');
   var email = document.getElementById('forgot-email').value.trim();
   if(!email || email.indexOf('@') < 1){
-    showMsg('forgot-msg', state.lang==='es'?'Ingresa un correo válido':'Enter a valid email', 'error'); return;
+    failFields([['forgot-email', state.lang==='es'?'Ingresa un correo válido':'Enter a valid email']]); return;
   }
   setLoading('btn-forgot', true);
   try{
@@ -511,7 +756,7 @@ async function doForgot(){
     showMsg('forgot-msg', state.lang==='es'?'Si existe una cuenta, te enviamos un código.':'If an account exists, we sent a code.', 'info');
     setTimeout(function(){ goScreen('reset'); var c=document.getElementById('reset-code'); if(c)c.focus(); }, 900);
   }catch(e){
-    showMsg('forgot-msg', e.message, 'error');
+    showMsg('forgot-msg', humanErr(e), 'error');
   }finally{ setLoading('btn-forgot', false); }
 }
 async function doReset(){
@@ -519,15 +764,18 @@ async function doReset(){
   var code = (document.getElementById('reset-code').value||'').trim();
   var npw = document.getElementById('reset-password').value;
   var email = state.resetEmail || document.getElementById('forgot-email').value.trim();
-  if(code.length !== 6){ showMsg('reset-msg', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits', 'error'); return; }
-  if(npw.length < 8){ showMsg('reset-msg', state.lang==='es'?'Mínimo 8 caracteres':'At least 8 characters', 'error'); return; }
+  clearFields(['reset-code','reset-password']);
+  var bad = [];
+  if(code.length !== 6) bad.push(['reset-code', state.lang==='es'?'Ingresa los 6 dígitos':'Enter all 6 digits']);
+  if(npw.length < 8) bad.push(['reset-password', state.lang==='es'?'Mínimo 8 caracteres':'At least 8 characters']);
+  if(bad.length){ failFields(bad); return; }
   setLoading('btn-reset', true);
   try{
     await api('/api/auth/reset-password', 'POST', {email:email, code:code, new_password:npw});
     showMsg('reset-msg', state.lang==='es'?'Contraseña actualizada. Inicia sesión.':'Password updated. Sign in.', 'success');
     setTimeout(function(){ goScreen('login'); }, 1400);
   }catch(e){
-    showMsg('reset-msg', e.message, 'error');
+    showMsg('reset-msg', humanErr(e), 'error');
   }finally{ setLoading('btn-reset', false); }
 }
 
@@ -536,18 +784,20 @@ async function doLogin(){
   clearMsg('login-msg');
   var email = document.getElementById('login-email').value.trim();
   var password = document.getElementById('login-password').value;
-  if(!email || !password){
-    showMsg('login-msg', state.lang==='es'?'Completa todos los campos':'Fill all fields', 'error');
-    return;
-  }
+  clearFields(['login-email','login-password']);
+  var bad = [];
+  if(!email) bad.push(['login-email', L('Escribe tu correo.', 'Enter your email.')]);
+  if(!password) bad.push(['login-password', L('Escribe tu contraseña.', 'Enter your password.')]);
+  if(bad.length){ failFields(bad); return; }
   setLoading('btn-login', true);
   try{
     var data = await api('/api/auth/login', 'POST', {email:email, password:password});
     state.token = data.token;
     localStorage.setItem('lbc_token', data.token);
+    try{ localStorage.setItem('lbc_known', '1'); }catch(e){}
     loadAccount(true);
   }catch(e){
-    showMsg('login-msg', e.message, 'error');
+    showMsg('login-msg', humanErr(e), 'error');
   }finally{
     setLoading('btn-login', false);
   }
@@ -669,8 +919,8 @@ function doLogout(){
 function syncProfileLang(){
   var es = document.getElementById('prof-lang-es');
   var en = document.getElementById('prof-lang-en');
-  if(es) es.classList.toggle('selected', state.lang==='es');
-  if(en) en.classList.toggle('selected', state.lang==='en');
+  if(es){ es.classList.toggle('selected', state.lang==='es'); es.classList.toggle('is-active', state.lang==='es'); es.setAttribute('aria-pressed', state.lang==='es'); }
+  if(en){ en.classList.toggle('selected', state.lang==='en'); en.classList.toggle('is-active', state.lang==='en'); en.setAttribute('aria-pressed', state.lang==='en'); }
 }
 
 // 1) Cambiar idioma → set-language + applyLang() al instante.
@@ -685,7 +935,7 @@ async function doSetLanguage(lang){
     syncProfileLang();
     showMsg('lang-msg', state.lang==='es'?'Idioma actualizado.':'Language updated.', 'success');
   }catch(e){
-    showMsg('lang-msg', e.message, 'error');
+    showMsg('lang-msg', humanErr(e), 'error');
   }
 }
 
@@ -707,7 +957,7 @@ async function doChangePassword(){
     document.getElementById('pw-new').value = '';
     showMsg('pw-msg', state.lang==='es'?'Contraseña actualizada.':'Password updated.', 'success');
   }catch(e){
-    showMsg('pw-msg', e.message, 'error');
+    showMsg('pw-msg', humanErr(e), 'error');
   }finally{
     setLoading('btn-change-pw', false);
   }
@@ -741,7 +991,7 @@ async function doChangeEmail(){
     document.getElementById('em-pass').value = '';
     showMsg('em-msg', state.lang==='es'?'Correo actualizado.':'Email updated.', 'success');
   }catch(e){
-    showMsg('em-msg', e.message, 'error');
+    showMsg('em-msg', humanErr(e), 'error');
   }finally{
     setLoading('btn-change-email', false);
   }
@@ -765,12 +1015,24 @@ async function doChangeEmail(){
     setTimeout(function(){ var c=document.getElementById('verify-code'); if(c)c.focus(); }, 200);
     return;
   }
-  // Si hay token guardado, ir directo a la cuenta
+  // Si hay token guardado, ir directo a la cuenta (esqueleto mientras responde; nunca se ve el registro de paso)
   if(state.token){
+    goScreen('loading');
     loadAccount();
+    return;
   }
+  // Sin sesión: registro por defecto (y siempre con un enlace de prueba ?trial=). Va directo al acceso quien lo pide
+  // (?login=1), quien ya entró antes en este navegador o quien viene de una herramienta de miembros.
+  var known = false;
+  try{ known = !!(localStorage.getItem('lbc_known') || localStorage.getItem('lbc_user_email') || localStorage.getItem('lbc_session')); }catch(e){}
+  var fromTool = false;
+  try{ fromTool = /\/(journal|earnings|community|daytrading_preview|options)\.html/.test(new URL(document.referrer).pathname) && new URL(document.referrer).origin === location.origin; }catch(e){}
+  if(params.get('trial') || params.get('registro')) goScreen('register');
+  else if(params.get('login') || known || fromTool) goScreen('login');
+  else goScreen('register');
 })();
 </script>
+<script src="lbc-ui.js" defer></script>
 <script src="consent.js"></script>
 </body>
 </html>
