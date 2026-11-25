@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06070D">
+<title>Liberato · Comunidad Premium</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
+<script src="theme.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* Comunidad (v101): componentes del sistema lbc-ui.css; aquí solo la composición de la página, con tokens --lbc-*. */
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{background:var(--lbc-bg);color:var(--lbc-ink);font-family:var(--lbc-font-sans);line-height:1.5;min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+    background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(204,169,79,0.07),transparent);background-repeat:no-repeat;}
+  .hidden{display:none !important;}
+  /* Estados de acceso (cargando, sin sesión, sin plan): una tarjeta centrada, una sola acción principal */
+  .center{position:relative;display:flex;min-height:100vh;min-height:100dvh;padding:max(72px,calc(var(--lbc-safe-t) + 64px)) var(--lbc-s-5) max(28px,calc(var(--lbc-safe-b) + 20px));}
+  .back-home{position:absolute;top:max(14px,var(--lbc-safe-t));left:8px;--_px:var(--lbc-s-3);border-radius:var(--lbc-r-full);}
+  .back-home svg{width:18px;height:18px;flex:none;margin-left:-4px;}
+  .card{width:100%;max-width:424px;margin:auto;text-align:center;border-radius:var(--lbc-r-xl);padding:40px 32px 34px;}
+  .state-ic{width:56px;height:56px;margin:0 auto var(--lbc-s-5);display:grid;place-items:center;border-radius:var(--lbc-r-lg);background:var(--lbc-gold-dim);border:1px solid var(--lbc-gold-line);color:var(--lbc-gold-2);}
+  .state-ic svg{width:26px;height:26px;}
+  .title{font-family:var(--lbc-font-serif);font-size:32px;font-weight:400;letter-spacing:-0.01em;line-height:1.15;margin-bottom:10px;text-wrap:balance;}
+  .title span{color:var(--lbc-gold-2);}
+  .text{font-size:var(--lbc-fs-md);color:var(--lbc-ink-2);line-height:1.65;margin-bottom:var(--lbc-s-6);text-wrap:pretty;}
+  .card .lbc-btn + .lbc-btn{margin-top:10px;}
+  .loading-row{display:flex;flex-direction:column;align-items:center;gap:var(--lbc-s-4);color:var(--lbc-ink-2);font-size:var(--lbc-fs-md);}
+  .loading-row .lbc-spinner{width:28px;height:28px;}
+  /* Vista de miembro */
+  .wrap{max-width:1040px;margin:0 auto;padding:var(--lbc-s-8) var(--lbc-gutter) var(--lbc-s-16);container-type:inline-size;}
+  .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--lbc-s-5);flex-wrap:wrap;margin-bottom:var(--lbc-s-8);}
+  .hd-l{font-family:var(--lbc-font-serif);font-size:40px;font-weight:300;letter-spacing:-0.01em;line-height:1.15;margin-top:var(--lbc-s-2);}
+  .hd-l span{color:var(--lbc-gold-2);}
+  .welcome{font-size:var(--lbc-fs-md);color:var(--lbc-ink-2);margin-top:var(--lbc-s-2);overflow-wrap:anywhere;}
+  /* 4 fichas: pasos limpios 4→2×2→1 según el ancho REAL del contenedor. Nunca 3 columnas (evita el huérfano 3+1). */
+  .grid{display:grid;grid-template-columns:1fr;gap:var(--lbc-s-4);}
+  @container (min-width:520px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @container (min-width:900px){.grid{grid-template-columns:repeat(4,1fr);}}
+  @supports not (container-type:inline-size){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    @media(min-width:940px){.grid{grid-template-columns:repeat(4,1fr);}}
+    @media(max-width:519px){.grid{grid-template-columns:1fr;}}
+  }
+  .tile-ic{width:40px;height:40px;display:grid;place-items:center;border-radius:var(--lbc-r-md);background:var(--lbc-gold-dim);color:var(--lbc-gold-2);margin-bottom:var(--lbc-s-4);}
+  .tile-ic svg{width:20px;height:20px;}
+  .tile-t{font-size:var(--lbc-fs-lg);font-weight:600;line-height:var(--lbc-lh-snug);margin-bottom:6px;}
+  .tile-d{font-size:14px;color:var(--lbc-ink-2);line-height:1.6;}
+  @media (max-width:520px){
+    .card{background:none;border:0;box-shadow:none;padding:0;}
+    .wrap{padding-top:var(--lbc-s-6);}
+    .hero{flex-direction:column;align-items:stretch;margin-bottom:var(--lbc-s-6);}
+    .hd-l{font-size:28px;}
+    /* En el móvil cada ficha es una fila: icono a la izquierda, texto a la derecha (se lee de un vistazo) */
+    .tile{display:grid;grid-template-columns:40px 1fr;column-gap:var(--lbc-s-4);align-items:start;}
+    .tile-ic{margin-bottom:0;grid-row:span 2;}
+  }
+  /* La cabecera deja sitio al interruptor de tema (fijo arriba a la derecha) y da 44 px táctiles a marca y salida */
+  .lbc-nav{padding-right:calc(var(--lbc-gutter) + 84px);justify-content:space-between;}
+  .lbc-nav__brand{line-height:44px;}
+  @media (max-width:520px){.lbc-nav__brand span{display:none;}}
+  @media (pointer:coarse),(max-width:640px){.lbc-nav .lbc-btn--sm{--_h:44px;}}
+  :focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:3px;}
+  .lbc-btn:focus-visible{outline:none;}
+</style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1170040262018171');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-back" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4.5L7 10l5.5 5.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8l2.5 5.1 5.6.8-4 4 1 5.6-5.1-2.7-5.100 2.700 1-5.600-4-4 5.600-.800z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5h16"/><path d="M7 16v-4M12 16V7M17 16v-6"/></symbol>
+  <symbol id="i-live" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6.5" width="12" height="11" rx="2.5"/><path d="M15.5 10.500l5-2.500v8l-5-2.500"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5h14a1.500 1.500 0 0 1 1.500 1.500v8a1.500 1.500 0 0 1-1.500 1.500h-7l-4.500 3.500v-3.500H5A1.500 1.500 0 0 1 3.500 15V7A1.500 1.500 0 0 1 5 5.500z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.500C10.500 5.300 8 4.800 4.500 5v13c3.500-.200 6 .300 7.500 1.500 1.500-1.200 4-1.700 7.500-1.500V5c-3.500-.200-6 .300-7.500 1.500z"/><path d="M12 6.500v13"/></symbol>
+</svg>
+
+<!-- CARGANDO: verificando acceso -->
+<div id="loading" class="center">
+  <div class="card">
+    <div class="loading-row" role="status"><span class="lbc-spinner" aria-hidden="true"></span><div>Verificando acceso…</div></div>
+  </div>
+</div>
+
+<!-- BLOQUEADO: no autenticado -->
+<div id="no-auth" class="center hidden">
+  <a class="back-home lbc-btn lbc-btn--quiet" href="homepage.html"><svg aria-hidden="true"><use href="#i-back"/></svg>Inicio</a>
+  <main class="card lbc-card lbc-card--raised">
+    <div class="state-ic" aria-hidden="true"><svg><use href="#i-lock"/></svg></div>
+    <h1 class="title">Inicia <span>sesión</span></h1>
+    <p class="text">Necesitas iniciar sesión para acceder a la comunidad premium.</p>
+    <a class="lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" href="auth.html?login=1">Iniciar sesión</a>
+  </main>
+</div>
+
+<!-- BLOQUEADO: no es premium -->
+<div id="no-premium" class="center hidden">
+  <a class="back-home lbc-btn lbc-btn--quiet" href="homepage.html"><svg aria-hidden="true"><use href="#i-back"/></svg>Inicio</a>
+  <main class="card lbc-card lbc-card--raised">
+    <div class="state-ic" aria-hidden="true"><svg><use href="#i-star"/></svg></div>
+    <h1 class="title">Área <span>Premium</span></h1>
+    <p class="text">Esta comunidad es exclusiva para miembros con Acceso Completo. Mejora tu plan para entrar al trading en vivo, los niveles institucionales y la comunidad.</p>
+    <a class="lbc-btn lbc-btn--primary lbc-btn--lg lbc-btn--block" href="auth.html">Mejorar a Acceso Completo</a>
+    <button type="button" class="lbc-btn lbc-btn--ghost lbc-btn--lg lbc-btn--block" onclick="logout()">Cerrar sesión</button>
+  </main>
+</div>
+
+<!-- ACCESO CONCEDIDO: contenido de la comunidad -->
+<div id="granted" class="hidden">
+  <header class="lbc-nav">
+    <a class="lbc-nav__brand" href="homepage.html">Liberato <span>Community</span></a>
+    <div class="lbc-nav__actions"><button type="button" class="lbc-btn lbc-btn--ghost lbc-btn--sm logout" onclick="logout()">Cerrar sesión</button></div>
+  </header>
+  <main class="wrap">
+    <div class="hero">
+      <div>
+        <div class="lbc-eyebrow">Acceso Completo</div>
+        <h1 class="hd-l">Comunidad <span>Premium</span></h1>
+        <div class="welcome" id="welcome">—</div>
+      </div>
+      <a class="lbc-btn lbc-btn--primary lbc-btn--lg" href="daytrading_preview.html">Entrar al dashboard <span class="lbc-btn__arrow">&#8594;</span></a>
+    </div>
+    <div class="grid">
+      <div class="tile lbc-card">
+        <div class="tile-ic" aria-hidden="true"><svg><use href="#i-chart"/></svg></div>
+        <div class="tile-t">Dashboard en vivo</div>
+        <div class="tile-d">Niveles GEX institucionales, régimen de mercado y order flow en tiempo real.</div>
+      </div>
+      <div class="tile lbc-card">
+        <div class="tile-ic" aria-hidden="true"><svg><use href="#i-live"/></svg></div>
+        <div class="tile-t">Trading en vivo</div>
+        <div class="tile-d">Sesiones diarias operando NQ con análisis de gamma y order flow.</div>
+      </div>
+      <div class="tile lbc-card">
+        <div class="tile-ic" aria-hidden="true"><svg><use href="#i-chat"/></svg></div>
+        <div class="tile-t">Discord privado</div>
+        <div class="tile-d">Comunidad de traders, alertas y discusión de setups.</div>
+      </div>
+      <div class="tile lbc-card">
+        <div class="tile-ic" aria-hidden="true"><svg><use href="#i-book"/></svg></div>
+        <div class="tile-t">Educación</div>
+        <div class="tile-d">Cursos de order flow, gamma exposure y gestión de riesgo.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  var API = window.LBC_AUTH_API || 'https://web-production-33671.up.railway.app';
+
+  function $(id){return document.getElementById(id);}
+  function show(id){
+    ['loading','no-auth','no-premium','granted'].forEach(function(s){
+      $(s).classList.toggle('hidden', s!==id);
+    });
+  }
+
+  function logout(){
+    var token = localStorage.getItem('lbc_token');
+    // Avisar al backend para invalidar la sesión (best-effort)
+    if(token){
+      fetch(API+'/api/auth/logout', {method:'POST', headers:{'Authorization':'Bearer '+token}}).catch(function(){});
+    }
+    localStorage.removeItem('lbc_token');
+    window.location.href='auth.html';
+  }
+
+  async function checkAccess(){
+    var token = localStorage.getItem('lbc_token');
+    if(!token){ show('no-auth'); return; }
+    try{
+      var r = await fetch(API+'/api/community/access', {
+        headers:{'Authorization':'Bearer '+token}
+      });
+      if(r.status===401){
+        // Token inválido/expirado o sesión cerrada en otro dispositivo
+        localStorage.removeItem('lbc_token');
+        show('no-auth');
+        return;
+      }
+      if(r.status===403){
+        // Autenticado pero no premium
+        show('no-premium');
+        return;
+      }
+      if(!r.ok){ show('no-auth'); return; }
+      var d = await r.json();
+      $('welcome').textContent = 'Bienvenido, ' + (d.name || d.email);
+      show('granted');
+    }catch(e){
+      show('no-auth');
+    }
+  }
+
+  checkAccess();
+</script>
+<script src="lbc-ui.js" defer></script>
+<script src="consent.js"></script>
+<script>
+/* GUARDA ANTI-SALTO DE SCROLL — si un refresco de datos en segundo plano (polls cada
+   pocos segundos) reinicia el scroll hacia ARRIBA sin que el usuario lo pida, lo
+   devolvemos a su posicion. Solo actua ante un salto INVOLUNTARIO al tope (y<80) desde
+   una posicion alta (>300) y SIN gesto reciente del usuario -> nunca pelea con el scroll
+   manual ni con un scroll-al-top legitimo (clic de menu / cambio de vista, que van con
+   gesto). 'restoring' ignora el propio scroll de la restauracion (sin bucles); reintenta
+   por rAF hasta 800ms por si la altura de la pagina tarda un frame en volver. */
+(function(){
+  if(window.__lbcScrollGuard)return; window.__lbcScrollGuard=1;
+  var lastGesture=0, target=0, restoring=false;
+  ['wheel','touchstart','touchmove','keydown','pointerdown','mousedown'].forEach(function(ev){
+    addEventListener(ev,function(){lastGesture=Date.now(); if(restoring)restoring=false;},{passive:true,capture:true});
+  });
+  addEventListener('scroll',function(){
+    if(restoring)return;
+    var y=window.pageYOffset;
+    if(y>=target-4 || (Date.now()-lastGesture)<1400){ target=y; return; }
+    if(y<80 && target>300){
+      var goal=target, t0=Date.now(); restoring=true;
+      (function retry(){
+        if(!restoring)return;
+        if((Date.now()-lastGesture)<200){ restoring=false; return; }
+        window.scrollTo(0,goal);
+        if(Math.abs(window.pageYOffset-goal)>4 && (Date.now()-t0)<800){ requestAnimationFrame(retry); }
+        else { restoring=false; }
+      })();
+    } else { target=y; }
+  },{passive:true});
+})();
+</script>
+
+</body>
+</html>

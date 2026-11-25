@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liberato · Command Deck</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
+<script src="theme.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* v101: los colores, textos y fuentes salen de los tokens del sistema compartido (lbc-ui.css): oro de marca #CCA94F. */
+    --bg:var(--lbc-bg); --bg-2:var(--lbc-bg-2); --bg-3:var(--lbc-bg-3); --panel:var(--lbc-bg-2);
+    --gold:var(--lbc-gold); --gold-2:var(--lbc-gold-2); --gold-dim:var(--lbc-gold-dim);
+    --up:var(--lbc-up); --down:var(--lbc-down); --cyan:var(--lbc-cyan);
+    --ink:var(--lbc-ink); --ink-2:var(--lbc-ink-2); --ink-3:var(--lbc-ink-3); --ink-4:var(--lbc-ink-4);
+    --brd:var(--lbc-line); --brd-gold:var(--lbc-gold-line);
+    --grid:rgba(204,169,79,0.03);
+    --serif:var(--lbc-font-serif);
+    --sans:var(--lbc-font-sans);
+    --mono:var(--lbc-font-mono);
+  }
+  /* ── Tema claro (paleta canónica Liberato) ── */
+  [data-theme="light"]{
+    --grid:rgba(168,132,47,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  .gate{max-width:400px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px;}
+  .gate-brand span{color:var(--gold);}
+  .gate-brand{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:0.1em;color:var(--ink);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
+  .gate-ring{width:64px;height:64px;margin:0 auto 26px;position:relative;opacity:0;animation:fade 0.7s 0.2s forwards;}
+  .gate-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .gate-ring-c{fill:none;stroke:var(--brd-gold);stroke-width:1.5;}
+  .gate-ring-p{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:190;stroke-dashoffset:150;animation:ring 2.5s ease-in-out infinite;}
+  .gate-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
+  .gate-title{font-family:var(--serif);font-size:32px;font-weight:400;letter-spacing:-0.01em;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
+  .gate-title span{color:var(--gold);}
+  .gate-sub{font-size:12px;color:var(--ink-3);text-align:center;margin-bottom:30px;font-family:var(--mono);letter-spacing:0.04em;opacity:0;animation:fade 0.7s 0.35s forwards;}
+  .gate-form{opacity:0;animation:fade 0.7s 0.45s forwards;}
+  .field-input{width:100%;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px 16px;color:var(--ink);font-family:var(--mono);font-size:14px;outline:none;transition:border 0.25s,box-shadow 0.25s;}
+  .field-input:focus{border-color:var(--brd-gold);box-shadow:0 0 0 3px var(--gold-dim);}
+  .btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#160f02;border:none;border-radius:10px;padding:14px;font-family:var(--sans);font-weight:600;font-size:14px;cursor:pointer;margin-top:14px;transition:transform 0.15s,opacity 0.2s;letter-spacing:0.02em;}
+  .btn:hover{opacity:0.92;transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+  .btn-sm{width:auto;padding:11px 20px;font-size:13px;margin-top:0;}
+
+  .deck{max-width:1180px;margin:0 auto;padding:28px 22px 60px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;margin-bottom:26px;border-bottom:1px solid var(--brd);}
+  .brand-row{display:flex;align-items:center;gap:14px;}
+  .brand-mark{width:34px;height:34px;border:1px solid var(--brd-gold);border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .brand-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,var(--gold-dim) 50%,transparent 60%);animation:sweep 4s ease-in-out infinite;}
+  .brand-mark span{font-family:var(--serif);font-size:20px;color:var(--gold);font-weight:400;}
+  .brand-txt .t{font-family:var(--serif);font-size:24px;font-weight:400;line-height:1;}
+  .brand-txt .t span{color:var(--gold);}
+  .brand-txt .s{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;}
+  .topbar-r{display:flex;align-items:center;gap:14px;}
+  .live{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--up);letter-spacing:0.06em;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up);animation:pulse 2s ease-in-out infinite;}
+  .refresh{background:var(--bg-2);border:1px solid var(--brd);color:var(--ink-2);border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;font-family:var(--mono);transition:all 0.2s;}
+  .refresh:hover{border-color:var(--brd-gold);color:var(--gold);}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+  .kpi{background:var(--panel);border:1px solid var(--brd);border-radius:14px;padding:18px;position:relative;overflow:hidden;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
+  .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.5;}
+  .kpi-v{font-family:var(--serif);font-size:40px;font-weight:300;line-height:1;letter-spacing:-0.01em;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
+  .kpi-k{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:9px;}
+  .kpi.gold .kpi-v{color:var(--gold-2);}
+  .kpi.up .kpi-v{color:var(--up);}
+  .kpi.cyan .kpi-v{color:var(--cyan);}
+  .kpi.purple .kpi-v{color:var(--down);}
+
+  .main-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:16px;margin-bottom:20px;}
+  @media(max-width:820px){.main-grid{grid-template-columns:1fr;}}
+  .panel{background:var(--panel);border:1px solid var(--brd);border-radius:16px;padding:22px;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
+  .panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .panel-t{font-size:13px;font-weight:600;letter-spacing:0.02em;}
+  .panel-tag{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--brd-gold);border-radius:6px;}
+  .chart-wrap{position:relative;height:200px;}
+  .chart-wrap svg{width:100%;height:100%;overflow:visible;}
+  .legend{display:flex;gap:18px;margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .legend i{display:inline-block;width:10px;height:2px;margin-right:6px;vertical-align:middle;}
+
+  .ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;}
+  .ring{position:relative;width:170px;height:170px;}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .ring-bg{fill:none;stroke:var(--bg-3);stroke-width:10;}
+  .ring-fill{fill:none;stroke:url(#rgrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-v{font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;font-family:var(--serif);font-size:46px;font-weight:300;color:var(--gold-2);line-height:1;}
+  .ring-l{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;}
+  .ring-split{display:flex;gap:24px;margin-top:22px;}
+  .ring-split div{text-align:center;}
+  .ring-split .n{font-family:var(--serif);font-size:26px;font-weight:400;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
+  .ring-split .n.p{color:var(--gold-2);}
+  .ring-split .n.f{color:var(--ink-2);}
+  .ring-split .lbl{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab{background:var(--panel);border:1px solid var(--brd);border-radius:9px;padding:9px 18px;font-size:13px;color:var(--ink-2);cursor:pointer;transition:all 0.2s;font-family:var(--mono);letter-spacing:0.03em;}
+  .tab.active{background:var(--gold-dim);border-color:var(--brd-gold);color:var(--gold-2);}
+  .tbl-panel{background:var(--panel);border:1px solid var(--brd);border-radius:16px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;padding:14px 16px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-4);border-bottom:1px solid var(--brd);font-weight:500;}
+  td{padding:14px 16px;border-bottom:1px solid var(--brd);color:var(--ink-2);}
+  tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background 0.15s;}
+  tbody tr:hover td{background:rgba(204,169,79,0.02);}
+  .badge{display:inline-block;padding:3px 9px;border-radius:6px;font-size:10px;font-family:var(--mono);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+  .badge-premium{background:rgba(204,169,79,0.12);color:var(--gold-2);border:1px solid var(--brd-gold);}
+  .badge-free{background:rgba(255,255,255,0.03);color:var(--ink-3);border:1px solid var(--brd);}
+  .badge-ok{background:rgba(46,232,164,0.1);color:var(--up);}
+  .badge-no{background:rgba(177,151,252,0.1);color:var(--down);}
+  .hidden{display:none;}
+  .empty{text-align:center;padding:44px;color:var(--ink-4);font-size:13px;font-family:var(--mono);}
+  .msg{padding:11px 14px;border-radius:9px;font-size:13px;margin-bottom:14px;font-family:var(--mono);}
+  .msg-err{background:rgba(177,151,252,0.08);color:var(--down);border:1px solid rgba(177,151,252,0.22);}
+  .msg-ok{background:rgba(46,232,164,0.08);color:var(--up);border:1px solid rgba(46,232,164,0.22);}
+  .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:8px;}
+  .form-g{flex:1;min-width:120px;}
+  .form-g label{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
+  select.field-input{cursor:pointer;}
+
+  @keyframes fade{to{opacity:1;}}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  @keyframes ring{0%,100%{stroke-dashoffset:150;}50%{stroke-dashoffset:60;}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  @keyframes sweep{0%,100%{transform:translateX(-60%);}50%{transform:translateX(60%);}}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+
+  /* ── v101 · mismo lenguaje que el resto del producto (solo estilo: ninguna llamada, id ni botón cambia) ── */
+  .field-input{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  .field-input:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  .btn{background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%);color:var(--lbc-on-gold);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);box-shadow:var(--lbc-sh-gold);
+    transition:transform var(--lbc-t-1) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease);}
+  .btn:hover{opacity:1;filter:brightness(1.05);}
+  .btn:active{transform:scale(0.97);filter:brightness(0.94);}
+  .btn:disabled{box-shadow:none;filter:none;}
+  .refresh,.tab{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-sm);transition:color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+  .refresh:active,.tab:active{transform:scale(0.97);}
+  .kpi,.panel,.tbl-panel{border-radius:var(--lbc-r-lg);}
+  .kpi-v{font-variant-numeric:tabular-nums;}
+  :focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:2px;}
+  .field-input:focus-visible{outline:none;}
+  /* Los tres campos de «Crear cuenta de prueba» no tenían estilo (salían con el gris del navegador): mismo campo que el resto. */
+  #trial-name,#trial-email,#trial-days{background:var(--lbc-fill);border:1px solid var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);padding:0 var(--lbc-s-3);color:var(--lbc-ink);font-family:var(--lbc-font-sans);font-size:14px;outline:none;transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  #trial-name:focus,#trial-email:focus,#trial-days:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  #trial-name::placeholder,#trial-email::placeholder{color:var(--lbc-ink-4);}
+  @media (max-width:640px){
+    .deck{padding-top:68px;}   /* deja libre la esquina del interruptor de tema: tapaba «Sincronizar» */
+    input,select,textarea,.field-input{font-size:16px !important;}   /* iOS no hace zoom al enfocar */
+    .refresh,.tab{min-height:44px;}
+  }
+</style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1170040262018171');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <div class="gate-brand">Liberato <span>Community</span></div>
+  <div class="gate-ring">
+    <svg viewBox="0 0 68 68"><circle class="gate-ring-c" cx="34" cy="34" r="30"/><circle class="gate-ring-p" cx="34" cy="34" r="30"/></svg>
+    <div class="gate-dot"></div>
+  </div>
+  <div class="gate-title">Command <span>Deck</span></div>
+  <div class="gate-sub">Autenticación de operador requerida</div>
+  <div class="gate-form">
+    <div id="gate-msg"></div>
+    <input class="field-input" id="admin-email" type="email" placeholder="Tu correo de administrador" style="margin-bottom:12px;" autocomplete="email">
+    <input class="field-input" id="admin-pass" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')enter()" autocomplete="current-password">
+    <button class="btn" id="btn-enter" onclick="enter()">Acceder al sistema</button>
+  </div>
+</div>
+
+<div id="deck" class="deck hidden">
+  <div class="topbar">
+    <div class="brand-row">
+      <div class="brand-mark"><span>L</span></div>
+      <div class="brand-txt">
+        <div class="t">Command <span>Deck</span></div>
+        <div class="s">Membership Control · LBC</div>
+      </div>
+    </div>
+    <div class="topbar-r">
+      <div class="live"><span class="live-dot"></span>SISTEMA EN VIVO</div>
+      <button class="refresh" onclick="loadAll()">↻ Sincronizar</button>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="kpis"></div>
+
+  <div class="main-grid">
+    <div class="panel" style="animation-delay:0.15s;">
+      <div class="panel-hd">
+        <div class="panel-t">Crecimiento de la comunidad</div>
+        <div class="panel-tag">14 días + proyección</div>
+      </div>
+      <div class="chart-wrap"><svg id="growth" viewBox="0 0 640 200" preserveAspectRatio="none"></svg></div>
+      <div class="legend">
+        <span><i style="background:var(--gold);"></i>Usuarios acumulados</span>
+        <span><i style="background:var(--down);"></i>Proyección (7d)</span>
+      </div>
+    </div>
+    <div class="panel" style="animation-delay:0.22s;">
+      <div class="panel-hd"><div class="panel-t">Conversión a Premium</div></div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg viewBox="0 0 170 170">
+            <defs><linearGradient id="rgrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#E7CC74"/>
+            </linearGradient></defs>
+            <circle class="ring-bg" cx="85" cy="85" r="72"/>
+            <circle class="ring-fill" id="ring-fill" cx="85" cy="85" r="72" stroke-dasharray="452" stroke-dashoffset="452"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-v" id="ring-v">—</div>
+            <div class="ring-l">conversión</div>
+          </div>
+        </div>
+        <div class="ring-split">
+          <div><div class="n p" id="rs-premium">—</div><div class="lbl">Premium</div></div>
+          <div><div class="n f" id="rs-free">—</div><div class="lbl">Free</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab-users" onclick="showTab('users')">Usuarios</div>
+    <div class="tab" id="tab-emails" onclick="showTab('emails')">Correos</div>
+    <div class="tab" id="tab-daily" onclick="showTab('daily')">Brief diario</div>
+  </div>
+
+  <div id="view-users">
+    <div class="tbl-panel" style="padding:16px 22px;margin-bottom:12px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;">🎟️ Crear cuenta de prueba (pasa a gratis al caducar)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="trial-name" placeholder="Nombre" style="flex:1;min-width:140px;">
+        <input id="trial-email" placeholder="Email (opcional)" style="flex:1;min-width:160px;">
+        <input id="trial-days" type="number" min="1" max="90" value="4" style="width:70px;">
+        <button class="btn" onclick="createTrial()">Crear prueba</button>
+      </div>
+      <div id="trial-msg" style="margin-top:8px;"></div>
+    </div>
+    <div class="tabs" style="margin-bottom:12px;">
+      <div class="tab active" id="seg-all" onclick="filterSeg('all')">Todos</div>
+      <div class="tab" id="seg-free" onclick="filterSeg('free')">Free</div>
+      <div class="tab" id="seg-premium" onclick="filterSeg('premium')">Premium</div>
+    </div>
+    <div class="tbl-panel">
+      <table>
+        <thead><tr><th>Email</th><th>Nombre</th><th>Plan</th><th>Registro</th></tr></thead>
+        <tbody id="users-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="view-emails" class="hidden">
+    <div class="tbl-panel" style="padding:22px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Enviar correo a un grupo</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">Segmentado por plan. Gmail limita ~500/día — para listas grandes usa un ESP (MailerLite/Brevo).</div>
+      <div id="email-msg"></div>
+      <div class="form-row">
+        <div class="form-g" style="flex:0;min-width:160px;"><label>Grupo</label>
+          <select class="field-input" id="e-segment"><option value="free">Free (solo gratuitos)</option><option value="trial">Trial (solo prueba)</option><option value="paid">Pagados (sin trials)</option><option value="premium">Premium (pagados + trials)</option><option value="all">Todos</option></select></div>
+        <div class="form-g"><label>Asunto</label><input class="field-input" id="e-subject" placeholder="Novedades de la semana"></div>
+      </div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Mensaje (HTML permitido)</label>
+        <textarea class="field-input" id="e-body" rows="7" style="resize:vertical;font-family:var(--sans);" placeholder="&lt;p&gt;Hola,&lt;/p&gt;&lt;p&gt;Esta semana...&lt;/p&gt;"></textarea></div>
+      <button class="btn btn-sm" id="btn-email" onclick="sendBroadcast()">Enviar al grupo</button>
+    </div>
+  </div>
+
+  <div id="view-daily" class="hidden">
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">⚙️ Configuración de Discord</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">Pega aquí los links de Discord (se guardan al instante, sin tocar Railway). El <b>invite</b> va en cada correo de bienvenida gratis; los <b>webhooks</b> publican el brief.</div>
+      <div id="settings-msg"></div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Invite de Discord GRATIS (para la bienvenida) — usa uno que NO caduque</label>
+        <input class="field-input" id="s-invite" placeholder="https://discord.gg/xxxxxxxx"></div>
+      <div class="form-g" style="margin-bottom:12px;"><label>Webhook del canal FREE (publica el brief sin GEX)</label>
+        <input class="field-input" id="s-free-wh" placeholder="https://discord.com/api/webhooks/…"></div>
+      <div class="form-g" style="margin-bottom:14px;"><label>Webhook del canal PREMIUM (brief con GEX, para cuando entren premium)</label>
+        <input class="field-input" id="s-prem-wh" placeholder="https://discord.com/api/webhooks/…"></div>
+      <button class="btn btn-sm" id="btn-settings" onclick="saveSettings()">Guardar configuración</button>
+    </div>
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">💳 Productos de Whop que dan Premium</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:12px;">
+        Lista de IDs de producto de Whop (<b>prod_…</b> o <b>plan_…</b>) que conceden el acceso completo, separados por coma.
+        <b>Déjalo vacío</b> y CUALQUIER compra de Whop da premium (ok si vendes un solo producto).
+        <b>Rellénalo</b> y solo esos productos dan premium — así un producto barato que vendas en el futuro NO regala el dashboard.
+        Para saber el ID exacto: tras una compra, los últimos vistos aparecen abajo (o en <code>/api/admin/whop-products</code>).</div>
+      <div id="whop-state" style="font-family:var(--mono);font-size:11px;margin-bottom:10px;"></div>
+      <div class="form-g" style="margin-bottom:10px;"><label>IDs que dan Premium (coma-separado; vacío = cualquier compra)</label>
+        <input class="field-input" id="s-whop-ids" placeholder="prod_xxxxxxxx, plan_yyyyyyyy"></div>
+      <div id="whop-seen" style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:12px;"></div>
+      <button class="btn btn-sm" id="btn-whop" onclick="saveWhop()">Guardar allowlist de Whop</button>
+    </div>
+    <div class="tbl-panel" style="padding:22px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Brief diario a Discord</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-bottom:16px;">FREE (Discord, sin GEX) se envía <b>8:00 y 9:30 ET</b> lun-vie (apertura). PREMIUM (con GEX) usa el webhook premium cuando lo pongas arriba.</div>
+      <div id="daily-msg"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="btn btn-sm" id="btn-daily-refresh" onclick="loadDailyPreview()">↻ Previsualizar</button>
+        <button class="btn btn-sm" id="btn-daily-send" onclick="sendDailyNow()" style="background:linear-gradient(135deg,#2EE8A4,#4FD6E0);">Enviar ahora (prueba)</button>
+      </div>
+      <div class="form-g" style="margin-bottom:14px;"><label>FREE · Discord (sin GEX)</label>
+        <div id="daily-free" style="white-space:pre-wrap;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px;font-size:13px;color:var(--ink-2);min-height:60px;"></div></div>
+      <div class="form-g"><label>PREMIUM · Whop (con GEX)</label>
+        <div id="daily-premium" style="white-space:pre-wrap;background:var(--bg-2);border:1px solid var(--brd);border-radius:10px;padding:14px;font-size:13px;color:var(--ink-2);min-height:60px;"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var API = window.LBC_AUTH_API || 'https://web-production-33671.up.railway.app';
+  var TOKEN = '';
+  var _usersCache = {free:[], premium:[]};
+  var _seg = 'all';
+  function $(id){return document.getElementById(id);}
+  function msg(id,text,type){var el=$(id);if(!el)return;el.innerHTML='<div class="msg msg-'+(type==='ok'?'ok':'err')+'">'+text+'</div>';if(type==='ok')setTimeout(function(){el.innerHTML='';},5000);}
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+  function _hdrs(){var h={'Content-Type':'application/json'};if(TOKEN)h['Authorization']='Bearer '+TOKEN;return h;}
+
+  async function api(path){
+    var r=await fetch(API+path,{headers:_hdrs()});
+    if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
+    return r.json();
+  }
+  async function apiPost(path,body){
+    var r=await fetch(API+path,{method:'POST',headers:_hdrs(),body:JSON.stringify(body||{})});
+    if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.detail||('Error '+r.status));}
+    return r.json();
+  }
+
+  async function createTrial(){
+    var body={name:$('trial-name').value.trim(),email:$('trial-email').value.trim(),days:parseInt($('trial-days').value,10)||4};
+    try{
+      var r=await apiPost('/api/admin/create-trial',body);
+      var exp=new Date(r.plan_expires*1000).toLocaleString();
+      $('trial-msg').innerHTML='<div class="msg msg-ok">✓ Email: <b>'+esc(r.email)+'</b> · Contraseña: <b>'+esc(r.password)+'</b> · '+r.days+' días (hasta '+esc(exp)+'). Guárdalos: solo se muestran ahora.'+(r.note?'<br>⚠️ '+esc(r.note):'')+'</div>';
+    }catch(e){msg('trial-msg',esc(e.message),'err');}
+  }
+
+  async function _tryOpen(){
+    // valida el token actual contra un endpoint admin
+    await api('/api/admin/users');
+    $('gate').classList.add('hidden');
+    $('deck').classList.remove('hidden');
+    loadAll();
+  }
+  async function enter(){
+    var email=$('admin-email').value.trim(), pass=$('admin-pass').value;
+    if(!email||!pass){msg('gate-msg','Ingresa correo y contraseña','err');return;}
+    $('btn-enter').disabled=true;
+    try{
+      var r=await fetch(API+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})});
+      var d=await r.json().catch(function(){return{};});
+      if(!r.ok||!d.token) throw new Error(d.detail||'Correo o contraseña incorrectos');
+      TOKEN=d.token;
+      localStorage.setItem('lbc_token',TOKEN);
+      await _tryOpen();
+    }catch(e){ msg('gate-msg', /denegado|403|admin/i.test(e.message)?'Tu cuenta no es administrador':e.message,'err'); }
+    finally{ $('btn-enter').disabled=false; }
+  }
+
+  function loadAll(){ loadUsersData(); loadDailyPreview(); loadSettings(); }
+
+  async function loadUsersData(){
+    try{
+      var d=await api('/api/admin/users');
+      _usersCache={free:d.free||[], premium:d.premium||[]};
+      var c=d.counts||{total:0,free:0,premium:0};
+      var conv = c.total>0 ? Math.round(c.premium/c.total*100) : 0;
+      $('kpis').innerHTML=
+        kpi(c.total,'Usuarios totales','gold',0) +
+        kpi(c.premium,'Premium','up',0.05) +
+        kpi(c.free,'Free','cyan',0.1) +
+        kpi(conv+'%','Conversión','purple',0.15);
+      var circ=452, off=circ-(circ*Math.min(conv,100)/100);
+      setTimeout(function(){ if($('ring-fill'))$('ring-fill').style.strokeDashoffset=off; },100);
+      if($('ring-v'))$('ring-v').textContent=conv+'%';
+      if($('rs-premium'))$('rs-premium').textContent=c.premium;
+      if($('rs-free'))$('rs-free').textContent=c.free;
+      drawGrowth(c.total, 0);
+      renderUsers();
+    }catch(e){ $('kpis').innerHTML='<div class="empty">No se pudieron cargar los usuarios</div>'; }
+  }
+  function kpi(v,k,cls,delay){
+    return '<div class="kpi '+cls+'" style="animation-delay:'+delay+'s;"><div class="kpi-v">'+v+'</div><div class="kpi-k">'+k+'</div></div>';
+  }
+  function filterSeg(s){
+    _seg=s;
+    ['all','free','premium'].forEach(function(x){ var t=$('seg-'+x); if(t)t.classList.toggle('active',x===s); });
+    renderUsers();
+  }
+  function renderUsers(){
+    var list = _seg==='free'?_usersCache.free : _seg==='premium'?_usersCache.premium : _usersCache.free.concat(_usersCache.premium);
+    if(!list.length){ $('users-body').innerHTML='<tr><td colspan="4" class="empty">Sin usuarios en este grupo</td></tr>'; return; }
+    $('users-body').innerHTML=list.map(function(u){
+      var isP=(u.plan==='premium'||u.plan==='pro'||u.plan==='admin');
+      var plan=isP?'<span class="badge badge-premium">'+esc(u.plan||'premium')+'</span>':'<span class="badge badge-free">Free</span>';
+      var reg='';
+      if(u.created){ try{ var t=(''+u.created).length>12?parseInt(u.created):parseInt(u.created)*1000; reg=new Date(t).toISOString().slice(0,10); }catch(e){} }
+      return '<tr><td style="color:var(--ink);">'+esc(u.email)+'</td><td>'+esc(u.name||'—')+'</td><td>'+plan+'</td><td style="font-family:var(--mono);font-size:12px;">'+reg+'</td></tr>';
+    }).join('');
+  }
+
+  async function sendBroadcast(){
+    var segment=$('e-segment').value, subject=$('e-subject').value.trim(), html=$('e-body').value.trim();
+    if(!subject||!html){ msg('email-msg','Completa asunto y mensaje','err'); return; }
+    if(!confirm('¿Enviar el correo al grupo "'+segment+'"?')) return;
+    $('btn-email').disabled=true;
+    try{ var r=await apiPost('/api/admin/email/broadcast',{segment:segment,subject:subject,html:html});
+      msg('email-msg','Enviado a '+r.recipients+' destinatarios · OK '+r.sent+' · fallos '+r.failed,'ok');
+    }catch(e){ msg('email-msg',e.message,'err'); } finally{ $('btn-email').disabled=false; }
+  }
+
+  async function loadDailyPreview(){
+    try{ var d=await api('/api/admin/daily-brief/preview');
+      $('daily-free').textContent=d.free||'(sin contexto institucional en caché aún)';
+      $('daily-premium').textContent=d.premium||'(sin contexto institucional en caché aún)';
+      msg('daily-msg','Discord free: '+(d.discord_free_configured?'configurado ✓':'sin webhook (pon DISCORD_WEBHOOK_URL)')+' · Premium/Whop: '+(d.discord_premium_configured?'configurado ✓':'pendiente'),'ok');
+    }catch(e){ msg('daily-msg',e.message,'err'); }
+  }
+  async function sendDailyNow(){
+    if(!confirm('¿Enviar el brief diario AHORA a Discord?')) return;
+    $('btn-daily-send').disabled=true;
+    try{ var r=await apiPost('/api/admin/daily-brief/send',{}); msg('daily-msg','Resultado: '+JSON.stringify(r),'ok'); }
+    catch(e){ msg('daily-msg',e.message,'err'); } finally{ $('btn-daily-send').disabled=false; }
+  }
+
+  async function loadSettings(){
+    try{ var d=await api('/api/admin/settings');
+      $('s-invite').value=d.discord_free_invite||'';
+      $('s-free-wh').placeholder = d.discord_free_webhook_set ? (d.discord_free_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
+      $('s-prem-wh').placeholder = d.discord_premium_webhook_set ? (d.discord_premium_webhook+'  (guardado — deja vacío para no cambiar)') : 'https://discord.com/api/webhooks/…';
+      // ── Estado de la allowlist de Whop ──
+      var ids=d.whop_product_ids||[];
+      $('s-whop-ids').value = ids.join(', ');
+      $('whop-state').innerHTML = d.whop_allowlist_active
+        ? '<span style="color:#5fb87a;">✓ Activa</span> — solo estos productos dan premium: <b>'+ids.join(', ')+'</b>'
+        : '<span style="color:#d9a441;">○ Vacía</span> — cualquier compra de Whop concede premium (ok con un solo producto).';
+      var seen=(d.whop_recent_ids||[]).filter(Boolean);
+      $('whop-seen').innerHTML = seen.length
+        ? 'Últimos IDs que Whop envió (clic para copiar): '+seen.map(function(x){return '<a href="#" onclick="var e=document.getElementById(\'s-whop-ids\');e.value=e.value?e.value+\', \'+this.textContent:this.textContent;return false;" style="color:#7aa7d9;">'+x+'</a>';}).join(' · ')
+        : 'Aún no se ha visto ningún ID (aparecen aquí tras una compra).';
+    }catch(e){ /* silencioso: la vista puede abrir sin settings */ }
+  }
+  async function saveWhop(){
+    var raw=$('s-whop-ids').value.trim();
+    $('btn-whop').disabled=true;
+    try{ var r=await apiPost('/api/admin/settings',{whop_product_ids:raw});
+      msg('settings-msg','Allowlist de Whop guardada ✓ '+JSON.stringify(r.changed),'ok'); loadSettings();
+    }catch(e){ msg('settings-msg',e.message,'err'); } finally{ $('btn-whop').disabled=false; }
+  }
+  async function saveSettings(){
+    var body={}, inv=$('s-invite').value.trim(), fw=$('s-free-wh').value.trim(), pw=$('s-prem-wh').value.trim();
+    // Solo mandamos lo que el usuario tocó (invite siempre; webhooks solo si escribió algo).
+    body.discord_free_invite=inv;
+    if(fw) body.discord_free_webhook=fw;
+    if(pw) body.discord_premium_webhook=pw;
+    $('btn-settings').disabled=true;
+    try{ var r=await apiPost('/api/admin/settings',body);
+      msg('settings-msg','Guardado ✓ '+JSON.stringify(r.changed),'ok');
+      $('s-free-wh').value=''; $('s-prem-wh').value=''; loadSettings();
+    }catch(e){ msg('settings-msg',e.message,'err'); } finally{ $('btn-settings').disabled=false; }
+  }
+
+  function drawGrowth(total, recent7){
+    var svg=$('growth'); if(!svg)return;
+    var W=640,H=200,pad=8;
+    var dailyRate=Math.max((recent7||0)/7, total>0?0.3:0);
+    var days=14, proj=7;
+    var start=Math.max(0, total - dailyRate*days);
+    var hist=[];
+    for(var i=0;i<=days;i++){ hist.push(start + dailyRate*i); }
+    var last=hist[hist.length-1];
+    var fut=[];
+    for(var j=1;j<=proj;j++){ fut.push(last + dailyRate*j); }
+    var all=hist.concat(fut);
+    var max=Math.max.apply(null,all)*1.15||1;
+    var n=all.length-1;
+    function X(i){return pad + (i/n)*(W-pad*2);}
+    function Y(v){return H-pad - (v/max)*(H-pad*2);}
+    function pathFrom(arr,offset){
+      var d='';
+      for(var i=0;i<arr.length;i++){ var xi=offset+i; d+=(i===0?'M':'L')+X(xi).toFixed(1)+' '+Y(arr[i]).toFixed(1)+' '; }
+      return d;
+    }
+    var histPath=pathFrom(hist,0);
+    var futArr=[hist[hist.length-1]].concat(fut);
+    var futPath=pathFrom(futArr,days);
+    var area=histPath+'L'+X(days).toFixed(1)+' '+(H-pad)+' L'+X(0).toFixed(1)+' '+(H-pad)+' Z';
+    var len=1400;
+    svg.innerHTML=
+      '<defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0%" stop-color="rgba(204,169,79,0.22)"/><stop offset="100%" stop-color="rgba(204,169,79,0)"/>'+
+      '</linearGradient></defs>'+
+      '<path d="'+area+'" fill="url(#ga)"/>'+
+      '<path d="'+histPath+'" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-dasharray="'+len+'" stroke-dashoffset="'+len+'" style="animation:draw 1.6s ease forwards"/>'+
+      '<path d="'+futPath+'" fill="none" stroke="#B197FC" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round" opacity="0.85"/>'+
+      '<circle cx="'+X(days).toFixed(1)+'" cy="'+Y(last).toFixed(1)+'" r="4" fill="#C9A84C"/>'+
+      '<circle cx="'+X(n).toFixed(1)+'" cy="'+Y(all[n]).toFixed(1)+'" r="3.5" fill="#B197FC"/>';
+  }
+
+  function showTab(t){
+    ['users','emails','daily'].forEach(function(x){
+      var tab=$('tab-'+x), view=$('view-'+x);
+      if(tab)tab.classList.toggle('active',x===t);
+      if(view)view.classList.toggle('hidden',x!==t);
+    });
+  }
+
+  // Si ya iniciaste sesión en la web (homepage/auth), reutiliza ese token.
+  (function(){ try{ var t=localStorage.getItem('lbc_token'); if(t){ TOKEN=t; _tryOpen().catch(function(){ /* no admin o expiró: mostrar gate */ }); } }catch(e){} })();
+</script>
+<script src="consent.js"></script>
+</body>
+</html>
