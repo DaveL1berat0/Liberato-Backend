@@ -1,13 +1,12 @@
 {
-  "geopolitica": "Trump prepara una nueva ronda de aranceles (hasta 20%) contra China y otros ~14 socios comerciales tras el fallo de la Corte Suprema que anuló los aranceles globales previos, con exencion parcial para semiconductores, mientras Washington endurece controles de exportacion de chips avanzados hacia Singapur y Malasia para frenar el desvio a China, lo que presiona a las megacaps tecnologicas y semis del NQ.",
-  "petroleo": "El WTI cotiza por encima de 81 USD/barril y el Brent cerca de 89-90 USD, extendiendo la caida de la sesion previa (Brent -1.4% aprox.) por señales de avance en la diplomacia EEUU-Iran (reunion del vicepresidente Vance con el primer ministro de Catar), lo que reduce la prima de riesgo geopolitico pero resta soporte a las energeticas dentro del Nasdaq.",
-  "catalizador": "El PCE subyacente de octubre subio a 3.3% interanual (headline 3.8%), el ultimo dato relevante antes de la reunion de la Fed del 9 de diciembre, consolidando una probabilidad cercana al 97% de una subida de tasas, lo que presiona a las tecnologicas de alto crecimiento del NQ por mayor descuento de flujos futuros.",
+  "geopolitica": "EEUU propuso nuevos aranceles (Sección 301) a 14 socios comerciales, incluyendo China (hasta 40% si Pekín no respeta la tregua de Busan), la UE y Japón, lo que presiona a los semiconductores y pesa sobre el NQ en la apertura (CNBC, hoy).",
+  "petroleo": "Brent cerca de 91-92 USD/barril y WTI en torno a 81-82 USD, moviéndose en rango: un presunto ataque hutí a la refinería saudita de Ras Tanura compite con temores de exceso de oferta global, limitando el traslado del riesgo energético al NQ (CNBC, madrugada ET).",
+  "catalizador": "El PCE subyacente de EEUU subió a 3.8% interanual en octubre (más caliente de lo esperado), ampliando las pérdidas de los futuros tras su publicación por temor a que la Fed sea más cautelosa con los recortes, añadiendo presión bajista al NQ en la apertura (CNBC, 08:30 ET).",
   "sources": [
-    "CNN 25-nov (trump-new-tariffs, sin hora exacta)",
-    "FXStreet 20:30 ET aprox (24-nov, WTI)",
-    "Irish Times 24-nov (oil extends decline on US-Iran diplomacy)",
-    "Coindesk 25-nov (Fed's preferred inflation gauge / PCE)",
-    "piqmarkets 25-nov (US PCE inflation rises 3.8%, core 3.3%)"
+    "CNBC 08:30 ET - PCE inflation report October 2026",
+    "CNBC - US proposes new tariffs on 14 trading partners (Section 301)",
+    "CNBC - Oil rises after alleged Houthi attack on Saudi refinery",
+    "Bloomberg 08:42 ET - US stock index futures slide as AI worries fuel tech losses"
   ],
-  "as_of": "2026-11-25T14:06:45Z"
+  "as_of": "2026-11-25T14:39:58Z"
 }
