@@ -157,7 +157,24 @@
   #trial-name,#trial-email,#trial-days{background:var(--lbc-fill);border:1px solid var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);padding:0 var(--lbc-s-3);color:var(--lbc-ink);font-family:var(--lbc-font-sans);font-size:14px;outline:none;transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
   #trial-name:focus,#trial-email:focus,#trial-days:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
   #trial-name::placeholder,#trial-email::placeholder{color:var(--lbc-ink-4);}
+  /* v101 · cierre: una sola acción principal por bloque. En «Brief diario», «Previsualizar» pasa a secundaria
+     y «Enviar ahora» es la única dorada (iba en verde y cian); ningún botón ni llamada cambia. */
+  #btn-daily-refresh{background:transparent;color:var(--lbc-gold-2);border:1px solid var(--lbc-gold-line);box-shadow:none;}
+  #btn-daily-send{background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%)!important;}
+  [data-theme="light"] #btn-daily-refresh{color:#7e6323;border-color:rgba(126,99,35,0.45);}
+  /* v101 · cierre: cabecera, etiquetas y pestañas que no se parten */
+  .brand-txt .t,.live,.refresh,.tab,.panel-tag{white-space:nowrap;}
+  .panel-hd{gap:10px;flex-wrap:wrap;}
+  .tabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto;}
   @media (max-width:640px){
+    /* Cabecera en dos filas: marca arriba; estado y «Sincronizar» debajo, cada uno en una línea */
+    .topbar{flex-wrap:wrap;gap:14px 12px;}
+    .brand-row{flex:1 1 100%;min-width:0;}
+    .topbar-r{flex:1 1 100%;justify-content:space-between;}
+    .refresh{padding-left:16px;padding-right:16px;}
+    .tab{padding-left:16px;padding-right:16px;}
     .deck{padding-top:68px;}   /* deja libre la esquina del interruptor de tema: tapaba «Sincronizar» */
     input,select,textarea,.field-input{font-size:16px !important;}   /* iOS no hace zoom al enfocar */
     .refresh,.tab{min-height:44px;}
