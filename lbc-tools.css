@@ -105,3 +105,10 @@
 .lbc-opina__btn:active{transform:scale(0.98);}
 .lbc-opina__nota{margin:8px 0 0;font-family:var(--lbc-font-sans);font-size:12px;line-height:1.5;color:rgba(232,228,217,0.55);}
 @media(prefers-reduced-motion:reduce){.lbc-opina__btn{transition:none;}.lbc-opina__btn:active{transform:none;}}
+
+/* ─── 8. Tipografía única también en controles (cierre v101) ────────────── */
+/* Los botones, campos y selectores no heredan la fuente por defecto del navegador y salían en Arial.
+   Especificidad cero: cualquier regla propia de la página sigue ganando. */
+:where(button,input,select,textarea,optgroup){font-family:inherit;}
+/* Navegación de miembro: la misma fuente de texto que la portada (heredaba la del sistema) */
+.lbcn,.lbcn-item,.lbcn-soon-tag,.lbcn-soon-label{font-family:var(--lbc-font-sans);}

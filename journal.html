@@ -2060,6 +2060,36 @@ body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-sha
 [data-theme="light"] .jch-chip .jtip{background:#ffffff;color:#3a342a;border-color:rgba(33,29,22,0.16);box-shadow:0 8px 22px rgba(28,22,14,0.16);}
 /* La etiqueta de la fuente de las velas quedaba tapada por la barra de controles */
 .jch-src{bottom:54px;}
+/* Título de los diálogos de confirmación: pedía una fuente que el sitio no carga (Playfair) */
+.lbc-cfm-title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:21px;}
+/* Rótulos mínimos a 10 px */
+.rr-lab,.eq-lg,.tws .k{font-size:10px;}
+
+/* ══════════ v101 · cierre · tema claro del Journal pantalla por pantalla ══════════ */
+/* Texto de apoyo: en claro se quedaba en 2,5:1 (etiquetas, fechas, rótulos de formulario). Ahora ≥ 4,5:1 sobre blanco. */
+[data-theme="light"]{--text2:rgba(33,29,22,0.78);--text3:rgba(33,29,22,0.64);}
+/* Cajas con fondo negro translúcido escrito en línea (detalle del día, editores de checklist y de contexto, fichas):
+   en claro salían como bloques grises. */
+[data-theme="light"] :is([style*="background:rgba(0,0,0,0.18"],[style*="background:rgba(0,0,0,0.2"],[style*="background:rgba(0,0,0,0.3"],[style*="background: rgba(0, 0, 0, 0.2"],[style*="background: rgba(0, 0, 0, 0.3"]){background:rgba(33,29,22,0.045)!important;}
+[data-theme="light"] :is(input,select,textarea):is([style*="background:rgba(0,0,0,0."],[style*="background: rgba(0, 0, 0, 0."]){background:#ffffff!important;color:#211d16!important;border-color:rgba(33,29,22,0.16)!important;}
+/* Colores de acento escritos en línea para fondo oscuro (oro, verde y morado claros): versión legible sobre blanco */
+[data-theme="light"] :is([style*="color:#CCA94F"],[style*="color:#E7CC74"],[style*="color: rgb(204, 169, 79)"]):not(button){color:#7e6323!important;}
+[data-theme="light"] :is([style*="color:#22c55e"],[style*="color:#2EE8A4"]){color:#15803d!important;}
+[data-theme="light"] :is([style*="color:#B197FC"],[style*="color:var(--purple)"]){color:#6b4fd0!important;}
+[data-theme="light"] :is(.tws-dir.short,.ctx-tag.vwap-below,.ctx-tag.gamma-down,.ctx-tag.bear){color:#6b4fd0;background:rgba(107,79,208,0.10);}
+[data-theme="light"] .acct-btn{color:#211d16;background:#ffffff;border-color:rgba(33,29,22,0.16);}
+[data-theme="light"] .acct-btn .acct-cur{color:#7e6323;}
+/* Diálogo de confirmación y «Tamaño de cuenta»: el texto era claro sobre tarjeta blanca */
+[data-theme="light"] .lbc-cfm-title{color:#211d16;}
+[data-theme="light"] .lbc-cfm-msg{color:rgba(33,29,22,0.72);}
+[data-theme="light"] .lbc-cfm-msg :is(b,strong){color:#211d16;}
+[data-theme="light"] .lbc-cfm-btn.cancel{background:rgba(33,29,22,0.04);border-color:rgba(33,29,22,0.16);color:#3a342a;}
+[data-theme="light"] .lbc-cfm-card :is(input,select){background:#ffffff!important;color:#211d16!important;border-color:rgba(33,29,22,0.2)!important;}
+[data-theme="light"] .lbc-cfm-bg{background:rgba(33,29,22,0.42);}
+[data-theme="light"] :is(.tws-tab.on,.dfp-ok){color:#7e6323;}
+[data-theme="light"] :is(.tws-result.loss,.tws .v.neg){color:#c22525;}
+[data-theme="light"] :is([style*="color:#f59e0b"]){color:#a16207!important;}
+[data-theme="light"] :is([style*="color:#60a5fa"]){color:#1d4ed8!important;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
