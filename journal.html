@@ -23,10 +23,10 @@
   function _lbcCachedPrem(){ try{var s=JSON.parse(localStorage.getItem('lbc_session')||'{}');return !!(s&&s.is_premium===true);}catch(e){return false;} }
 })();
 
-function lbcToggleAdmin(){ window.location.href='auth.html'; }
-function lbcSubmit(){ window.location.href='auth.html'; }
+function lbcToggleAdmin(){ window.location.href='auth.html?login=1'; }
+function lbcSubmit(){ window.location.href='auth.html?login=1'; }
 function lbcKeydown(e){ if(e.key==='Enter') lbcSubmit(); }
-function adminUnlock(){ window.location.href='auth.html'; }
+function adminUnlock(){ window.location.href='auth.html?login=1'; }
 </script>
 
 
@@ -2016,7 +2016,7 @@ body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-sha
   .view-back{min-height:40px;margin-bottom:6px;}
   .cnav{width:var(--lbc-h-md);height:var(--lbc-h-md);}
   /* Barra inferior: respuesta al toque, icono de línea y nada tapado */
-  .btabs{border-top-width:1px;-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);}
+  .btabs{border-top-width:1px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);}
   .btabs-row{padding:6px 6px 6px;}
   .bti{min-width:58px;min-height:52px;gap:4px;font-size:10px;letter-spacing:0.04em;}
   .bti:active{transform:scale(0.94);}
@@ -2430,7 +2430,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
     <a href="https://whop.com/dave-liberato-group/live-day-trading-52/" target="_blank" style="display:block;background:linear-gradient(135deg,#C9A84C,#a07828);color:#06080D;font-weight:700;font-size:13px;padding:14px 24px;border-radius:10px;text-decoration:none;margin-bottom:12px;letter-spacing:0.04em;">Activar Acceso Completo — $199/mes</a>
     <a href="homepage.html" style="display:block;font-size:12px;color:rgba(232,228,217,0.35);text-decoration:none;padding:8px 0;margin-bottom:20px;">← Volver al inicio</a>
     <div style="border-top:0.5px solid rgba(255,255,255,0.06);padding-top:16px;">
-      <a href="auth.html" style="font-size:12px;color:rgba(201,168,76,0.6);text-decoration:none;letter-spacing:0.03em;">¿Ya tienes cuenta? <span style="color:#C9A84C;font-weight:600;">Inicia sesión →</span></a>
+      <a href="auth.html?login=1" style="font-size:12px;color:rgba(201,168,76,0.6);text-decoration:none;letter-spacing:0.03em;">¿Ya tienes cuenta? <span style="color:#C9A84C;font-weight:600;">Inicia sesión →</span></a>
     </div>
   </div>
 </div>
