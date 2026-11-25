@@ -1160,6 +1160,13 @@ body :is(a,button,input,[role="button"],[tabindex]):focus-visible{outline:none;b
   .hs-tag{font-size:12px!important;padding:0 14px!important;}
 }
 @media(prefers-reduced-motion:reduce){.view-opt:active,.ec:active,.hs-tag:active{transform:none;}}
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* La ficha de una empresa se abría por debajo de la navegación de miembro (z 8000): su cabecera y el botón
+   de cerrar quedaban tapados en móvil. Va por encima de la nav y por debajo del panel «Mi perfil». */
+.drawer-overlay{z-index:8900;}
+.drawer{z-index:8901;}
+@media(max-width:700px){.drawer-close{width:44px;height:44px;}}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
