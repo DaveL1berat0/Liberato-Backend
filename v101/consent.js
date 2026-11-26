@@ -28,15 +28,16 @@
       +'box-shadow:var(--lbc-sh-3,0 28px 64px -24px rgba(0,0,0,0.8));padding:16px 18px;'
       +'font-family:var(--lbc-font-sans,-apple-system,system-ui,"DM Sans",sans-serif);color:var(--lbc-ink,#F3F0E7);'
       +'display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;';
+    var EN=false; try{ EN=localStorage.getItem('lbc_lang')==='en'; }catch(e){}   // v101 · cierre: el aviso salía en español con la web en inglés
     var BTN='cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;padding:0 18px;border-radius:12px;flex:1 1 0;white-space:nowrap;-webkit-appearance:none;appearance:none;';
     d.innerHTML=
       '<div style="flex:1 1 300px;min-width:230px;font-size:14px;line-height:1.5;color:var(--lbc-ink-2,rgba(243,240,231,0.74));">'
-      +'Usamos cookies esenciales para tu sesión y, con tu permiso, analítica para mejorar el sitio. '
-      +'<a href="politicas.html#privacidad" style="color:var(--lbc-gold-2,#E7CC74);text-decoration:underline;text-underline-offset:3px;">Más información</a>.'
+      +(EN?'We use essential cookies for your session and, with your permission, analytics to improve the site. ':'Usamos cookies esenciales para tu sesión y, con tu permiso, analítica para mejorar el sitio. ')
+      +'<a href="politicas.html#privacidad" style="color:var(--lbc-gold-2,#E7CC74);text-decoration:underline;text-underline-offset:3px;">'+(EN?'Learn more':'Más información')+'</a>.'
       +'</div>'
       +'<div style="display:flex;gap:8px;flex:1 1 220px;max-width:340px;margin-left:auto;">'
-      +'<button type="button" id="lbc-cc-no" style="'+BTN+'font-weight:600;border:1px solid var(--lbc-line-2,rgba(255,255,255,0.14));background:var(--lbc-fill,rgba(255,255,255,0.04));color:var(--lbc-ink-2,rgba(243,240,231,0.74));">Rechazar</button>'
-      +'<button type="button" id="lbc-cc-yes" style="'+BTN+'font-weight:700;border:1px solid rgba(255,255,255,0.10);background:var(--lbc-primary-bg,linear-gradient(180deg,#E7CC74 0%,#CCA94F 58%,#B8933A 130%));color:var(--lbc-on-gold,#0B0B12);">Aceptar</button>'
+      +'<button type="button" id="lbc-cc-no" style="'+BTN+'font-weight:600;border:1px solid var(--lbc-line-2,rgba(255,255,255,0.14));background:var(--lbc-fill,rgba(255,255,255,0.04));color:var(--lbc-ink-2,rgba(243,240,231,0.74));">'+(EN?'Decline':'Rechazar')+'</button>'
+      +'<button type="button" id="lbc-cc-yes" style="'+BTN+'font-weight:700;border:1px solid rgba(255,255,255,0.10);background:var(--lbc-primary-bg,linear-gradient(180deg,#E7CC74 0%,#CCA94F 58%,#B8933A 130%));color:var(--lbc-on-gold,#0B0B12);">'+(EN?'Accept':'Aceptar')+'</button>'
       +'</div>';
     document.body.appendChild(d);
     document.getElementById('lbc-cc-yes').onclick=function(){ set('accepted'); if(d.parentNode)d.parentNode.removeChild(d); loadMetricool(); };

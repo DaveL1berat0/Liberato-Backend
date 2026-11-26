@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" class="lbc-v101">
 <head>
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex, nofollow">
 <meta name="trustpilot-one-time-domain-verification-id" content="f3eb736d-7028-4000-b7ed-521b5e014db1"/>
 <meta charset="UTF-8">
 <meta name="description" content="Liberato Community — Day trading en vivo del mercado de EE.UU. en español: Order Flow, Volume Profile, sesiones del New York Open y Journal con IA.">
@@ -2343,7 +2343,8 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <!-- QUÉ HAY DENTRO (v101) — una tarjeta por herramienta. Nombres = los del menú; la línea de cada una ya existía en el sitio
      (tarjeta del plan y título de cada herramienta). El hueco de imagen queda neutro hasta que exista la captura REAL:
      guardar el archivo en media/home/ y escribir su nombre en DENTRO_IMG (script «QUÉ HAY DENTRO», más abajo).
-     Archivos esperados (JPG o WebP, 16:10, 1600×1000): dentro-daytrading.jpg · dentro-journal.jpg · dentro-earnings.jpg · dentro-options.jpg -->
+     Archivos (JPG, 16:10): dentro-daytrading.jpg · dentro-earnings.jpg · dentro-options.jpg ya puestos (capturas reales, 25-nov);
+     dentro-journal.jpg NO existe a propósito (datos personales): decide Dave. -->
 <section class="dentro" id="dentro" aria-labelledby="dentro-t">
   <div class="dentro-head"><h2 class="sec-title" id="dentro-t">Qué hay <em>dentro</em></h2></div>
   <div class="dentro-grid">
@@ -3638,6 +3639,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Acceso por invitación a una comunidad de traders serios. Spots limitados por ciclo.': 'Invitation access to a community of serious traders. Limited spots per cycle.',
     'Nombre': 'Name',
     'Correo': 'Email',
+    '¿Olvidaste tu contraseña?': 'Forgot your password?',
     'Contraseña': 'Password',
     'Crear mi cuenta gratis →': 'Create my free account →',
     'Sin spam. Cancela cuando quieras.': 'No spam. Cancel anytime.',
@@ -3762,6 +3764,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     'Enviar →': 'Send →',
   };
 
+  // v101 · cierre: textos de ayuda de los campos (placeholder), que el recorrido de nodos de texto no veía
+  var PH = {
+    'Tu nombre':'Your name','tu@email.com':'you@email.com','tu@correo.com':'you@email.com',
+    'Mínimo 8 caracteres':'At least 8 characters','Contraseña':'Password',
+    '¿Sobre qué nos escribes?':'What is it about?','Cuéntanos los detalles...':'Tell us the details...'
+  };
+  var PHR = {}; for(var pk in PH){ if(!PHR[PH[pk]]) PHR[PH[pk]] = pk; }
+  function translatePlaceholders(toLang){
+    var d = toLang === 'en' ? PH : PHR;
+    document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(function(el){
+      if(el.closest('#lc-window')) return;   // el asistente responde solo en español: su campo se queda en español
+      var t = el.getAttribute('placeholder'); if(d[t]) el.setAttribute('placeholder', d[t]);
+    });
+  }
   // Construir el diccionario inverso (inglés → español) para volver
   var reverse = {};
   for(var k in translations){ reverse[translations[k]] = k; }
@@ -3782,6 +3798,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
         node.textContent = node.textContent.replace(txt, dict[txt]);
       }
     });
+    translatePlaceholders(toLang);
     document.documentElement.lang = toLang;
   }
 
@@ -4094,7 +4111,9 @@ async function submitContact(){
   });
   // QUÉ HAY DENTRO — capturas reales de cada herramienta. Mientras el nombre esté vacío se ve el hueco neutro.
   // Para poner una: guardar el archivo en media/home/ y escribir aquí su ruta, p. ej. daytrading:'media/home/dentro-daytrading.jpg'
-  var DENTRO_IMG={ daytrading:'', journal:'', earnings:'', options:'' };
+  // 25-nov: Day Trading, Earnings y Options llevan captura real (datos de mercado). Journal queda neutro a propósito:
+  // sus pantallas son operaciones personales; qué imagen poner ahí lo decide Dave.
+  var DENTRO_IMG={ daytrading:'media/home/dentro-daytrading.jpg', journal:'', earnings:'media/home/dentro-earnings.jpg', options:'media/home/dentro-options.jpg' };
   Object.keys(DENTRO_IMG).forEach(function(k){
     var src=DENTRO_IMG[k], hueco=d.querySelector('.dentro-shot[data-shot="'+k+'"]'); if(!src||!hueco) return;
     var im=new Image(); im.loading='lazy'; im.decoding='async'; im.alt='';

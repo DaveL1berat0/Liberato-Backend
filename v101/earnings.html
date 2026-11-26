@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex, nofollow">
 <script src="authgate.js"></script>
 <script>
 // GATE REAL: exige sesión premium verificada contra el backend. Sin atajos de
@@ -1161,6 +1161,54 @@ body :is(a,button,input,[role="button"],[tabindex]):focus-visible{outline:none;b
   .hs-tag{font-size:12px!important;padding:0 14px!important;}
 }
 @media(prefers-reduced-motion:reduce){.view-opt:active,.ec:active,.hs-tag:active{transform:none;}}
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* La ficha de una empresa se abría por debajo de la navegación de miembro (z 8000): su cabecera y el botón
+   de cerrar quedaban tapados en móvil. Va por encima de la nav y por debajo del panel «Mi perfil». */
+.drawer-overlay{z-index:8900;}
+.drawer{z-index:8901;}
+@media(max-width:700px){.drawer-close{width:44px;height:44px;}}
+
+/* ══════════ v101 · cierre · barrido de 4 variantes (26-nov) ══════════ */
+/* Gris de apoyo: iba al 28 % (≈2:1). Al 50 % en oscuro y 62 % en claro se lee (≥4,5:1 sobre la tarjeta) */
+:root{--text3:rgba(232,228,217,0.50);}
+[data-theme="light"]{--text3:rgba(33,29,22,0.62);}
+/* Rótulos a 10 px como mínimo (había de 7 a 9 px) */
+.ec-impact,.ti2-when,.ti2-imp,.sr-impact,.month-count,.month-more,.d-pending-tag,.ec-day-tab-d,.today-tag,.hs-kbd,.view-opt,.sum-lbl{font-size:10px;}
+.sess-head{font-size:10px;}
+.month-tk{font-size:10px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+@media(max-width:768px){.month-tk{font-size:10px;padding:1px 3px;letter-spacing:0;}}
+@media(max-width:560px){.month-cell-num{font-size:11px;}}
+@media(min-width:769px){.lbc-logo .section{font-size:10px!important;}}
+/* Móvil: la regla táctil «[class*="tab"]» daba 40 px de alto también al punto y a los textos de las pestañas de día
+   (el punto salía como una gota alargada y cada pestaña medía el triple). Solo la pestaña es táctil. */
+@media(max-width:768px){.ec-day-tabs,.ec-day-tab-d,.ec-day-tab-n,.ec-day-tab-dot{min-height:0;}.ec-day-tab{min-height:44px;justify-content:center;}}
+/* Tema claro: la barra propia de la página seguía negra y su texto no se leía */
+[data-theme="light"] .navbar{background:rgba(255,255,255,0.92);border-bottom-color:rgba(33,29,22,0.10);}
+[data-theme="light"] .lbc-logo{color:var(--text);}
+/* Tema claro: la cinta de empresas con fondo y bordes de desvanecido claros (eran negros) */
+[data-theme="light"] .tape-wrap{background:#ffffff;}
+[data-theme="light"] .tape-wrap::before{background:linear-gradient(90deg,#ffffff,rgba(255,255,255,0));}
+[data-theme="light"] .tape-wrap::after{background:linear-gradient(270deg,#ffffff,rgba(255,255,255,0));}
+/* Tema claro: etiquetas de impacto con su tono oscuro (rosa, ámbar y azul claros sobre blanco no se leían) */
+[data-theme="light"] :is(.ec-impact,.ti2-imp,.sr-impact,.nq-level-badge).extreme,[data-theme="light"] .month-tk.high{color:#b42323;background:rgba(180,35,35,0.10);}
+[data-theme="light"] :is(.ec-impact,.ti2-imp,.sr-impact,.nq-level-badge).high,[data-theme="light"] .month-tk.medium{color:#8a4b06;background:rgba(168,90,10,0.10);}
+[data-theme="light"] :is(.ec-impact,.ti2-imp,.sr-impact,.nq-level-badge).med{color:#1d4fc4;background:rgba(35,88,216,0.10);}
+/* Tema claro: día elegido de la semana visible */
+[data-theme="light"] .ec-day-tab.active .ec-day-tab-d,[data-theme="light"] .ec-day-tab.active .ec-day-tab-n{color:#6c541c;}
+/* Ficha de una empresa: «No disponible» y «Este ticker no tiene historial…» iban casi invisibles */
+.drawer [style*="opacity:0.35"]:not(:has(*)){opacity:1!important;color:var(--text3);font-size:10px!important;}
+.drawer [style*="color:rgba(239,236,227,0.28)"]{color:var(--text3)!important;}
+.drawer [style*="font-size:9px"],.intel-card [style*="font-size:9px"]{font-size:10px!important;}
+/* Tema claro: la ficha seguía con el fondo negro y el texto oscuro del tema claro encima (no se leía nada) */
+[data-theme="light"] .drawer{background:linear-gradient(180deg,#f6f3ed,#eae6dc);}
+[data-theme="light"] .drawer.open{box-shadow:-20px 0 60px rgba(28,22,14,0.22);}
+[data-theme="light"] .drawer-head{background:rgba(255,255,255,0.95);}
+[data-theme="light"] .drawer-close{background:#ffffff;border-color:rgba(33,29,22,0.16);}
+[data-theme="light"] :is(.sum-item,.news-item){background:#ffffff;}
+[data-theme="light"] .nq-impact-box{background:linear-gradient(135deg,rgba(168,132,47,0.08),#ffffff);}
+[data-theme="light"] .drawer-overlay{background:rgba(33,29,22,0.35);}
+[data-theme="light"] .drawer-live-note{color:var(--text3);}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>

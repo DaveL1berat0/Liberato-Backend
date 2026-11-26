@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex, nofollow">
 <script src="authgate.js"></script>
 <meta charset="UTF-8">
 <script>
@@ -801,6 +801,52 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
   .cstat-v{font-size:16px;}
 }
 @media(prefers-reduced-motion:reduce){.chart-pick button:active{transform:none;}}
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* Lecturas del panel Market: 5 celdas en una rejilla de 3 dejaban un hueco gris. En móvil 2+2 y el Rango a lo ancho;
+   en el resto, las celdas de la última fila se reparten el ancho. */
+.chart-stats{display:flex;flex-wrap:wrap;}
+.chart-stats .cstat{flex:1 1 115px;min-width:0;}
+@media(max-width:700px){
+  .chart-stats{display:grid;grid-template-columns:1fr 1fr;}
+  .chart-stats .cstat:last-child{grid-column:1 / -1;}
+}
+/* La nota «N velas · Yahoo» se montaba sobre las fechas del eje */
+.lchart-note{bottom:34px;}
+/* Velocímetros: la cifra se lee aunque la aguja pase por encima */
+:is(.gcell,.env-hero-g) svg text{paint-order:stroke fill;stroke:var(--panel-2);stroke-width:3.5px;stroke-linejoin:round;}
+.env-hero-g svg text{stroke:var(--panel);}
+/* Tema claro: aguja, eje y marcas del velocímetro (iban en blanco y no se veían) y buscador del scanner (salía negro) */
+[data-theme="light"] :is(.gcell,.env-hero-g) svg line[stroke="#EFECE3"]{stroke:#211d16;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg circle{fill:#ffffff;stroke:#211d16;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg polyline[stroke="rgba(255,255,255,0.07)"]{stroke:rgba(33,29,22,0.10);}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg line[stroke="rgba(255,255,255,0.13)"]{stroke:rgba(33,29,22,0.22);}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text{stroke:#ffffff;}
+[data-theme="light"] .scan-search{background:#ffffff;border-color:rgba(33,29,22,0.16);color:var(--ink);}
+[data-theme="light"] .scan-search:focus{background:#ffffff;}
+
+/* ══════════ v101 · cierre · barrido de 4 variantes (26-nov) ══════════ */
+/* Velocímetros: la aguja es corta (gauge(): 17 de 46) y ya no cruza la cifra; el final del arco marca el valor */
+/* Rótulos que iban en ink-4 (≈2:1) y son información: a ink-3 */
+.gcell .gv,.lchart-note,.scan-sec{color:var(--ink-3);}
+#brief-sub{color:var(--ink-3)!important;font-size:10px!important;}
+/* Móvil: «ver análisis completo» y el enlace a OptionStrat con zona táctil de 44 px */
+@media(max-width:700px){.brief-more{min-height:44px;padding:0 14px;}#lc-optionstrat{min-height:44px;display:inline-flex;align-items:center;}}
+.g-tag{font-size:10px;}
+.lchart-note{background:var(--panel);padding:1px 6px;border-radius:4px;}
+/* Tema claro: el gris de apoyo baja a ≥4,5:1 sobre blanco y los colores neón de las cifras y etiquetas se oscurecen */
+[data-theme="light"]{--ink-3:rgba(33,29,22,0.62);--ink-4:rgba(33,29,22,0.42);}
+[data-theme="light"] .g-tag-g{background:rgba(21,128,61,0.10);color:#15803d;border-color:rgba(21,128,61,0.32);}
+[data-theme="light"] .g-tag-r{background:rgba(109,75,216,0.10);color:#5b3fc4;border-color:rgba(109,75,216,0.32);}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#2EE8A4"]{fill:#15803d;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#F5A623"]{fill:#a85a0a;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#FF6B81"]{fill:#c0283f;}
+/* Textos secundarios escritos en línea con ink-4 («· 63/100», «~$4/día»): a ink-3 */
+.panel [style*="color:var(--ink-4)"]{color:var(--ink-3)!important;}
+/* Tema claro: «Tasa nominal» en el oro oscuro del tema (el oro de marca se quedaba en 2,2:1) */
+[data-theme="light"] .yc-lbl[style*="#CCA94F"]{color:var(--gold-2)!important;}
+.brief-narr .bl{font-size:10px;}
+.scan-tbl .sort-ind{font-size:10px;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -1026,7 +1072,7 @@ function gauge(score,big){
     +'<polyline points="'+arc(180,0)+'" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="'+sw+'" stroke-linecap="round"/>'
     +(sc!=null?'<polyline points="'+arc(180,vEnd)+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round"/>':'')
     +ticks
-    +'<line x1="'+cx+'" y1="'+cy+'" x2="'+np[0].toFixed(2)+'" y2="'+np[1].toFixed(2)+'" stroke="#EFECE3" stroke-width="1.6" stroke-linecap="round"/>'
+    +'<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+17*Math.cos(vEnd*Math.PI/180)).toFixed(2)+'" y2="'+(cy-17*Math.sin(vEnd*Math.PI/180)).toFixed(2)+'" stroke="#EFECE3" stroke-width="1.6" stroke-linecap="round"/>'
     +'<circle cx="'+cx+'" cy="'+cy+'" r="3.2" fill="#0C0F16" stroke="#EFECE3" stroke-width="1.2"/>'
     +'<text x="60" y="40" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="600" font-size="'+fs+'" fill="'+col+'">'+((sc!=null&&isFinite(sc))?Math.round(sc):'—')+'</text>'
     +'</svg>';

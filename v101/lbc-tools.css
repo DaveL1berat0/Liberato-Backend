@@ -81,3 +81,43 @@
 .theme-fab.theme-fab-innav::after{content:'';position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);}
 /* Options en tema claro: las lecturas llevaban una sombra oscura pensada para el fondo oscuro (quedaba sucia sobre claro) */
 [data-theme="light"] :is(.env-hero-meta .cls,.lc-hero .v,.cstat-v,.ptile-v,.lc-cell .v){text-shadow:none !important;}
+
+/* ─── 6. Cierre v101 (revisión con sesión real, 25-nov) ─────────────── */
+/* El panel «Mi perfil» cerrado dejaba ver su sombra en el borde derecho (una franja gris en tema claro) */
+.profile-drawer:not(.open){box-shadow:none;}
+/* Marca de la navegación de miembro: escrita como en la portada (lbc-brand), no en Georgia cursiva */
+/* (la barra de miembro es oscura en los dos temas: color fijo, no el token de tinta) */
+.lbcn-brand{font-family:var(--lbc-font-serif);font-style:normal;font-weight:400;font-size:19px;letter-spacing:0.08em;line-height:1.2;color:rgba(239,236,227,0.94);}
+.lbcn-brand:hover{color:#ffffff;}
+.lbcn-brand span{font-weight:400;font-style:normal;color:#CCA94F;}
+.lbcn-name{font-family:var(--lbc-font-serif);font-size:17px;}
+@media(max-width:768px){.lbcn-brand{font-size:19px;letter-spacing:0.07em;}}
+/* Botones y campos del panel: la fuente del sitio (salían en Arial: los controles no heredan la fuente) */
+.profile-drawer :is(button,input,select,textarea),.lbcn :is(button,input){font-family:var(--lbc-font-sans);}
+.profile-drawer :is(.pd-title,.pd-sec-t,.ave-title){font-family:var(--lbc-font-serif);}
+
+/* ─── 7. Opiniones · widget «Review Collector» de Trustpilot (lo monta lbc-tools.js en «Mi perfil») ─── */
+.lbc-opina__widget{min-height:52px;}
+.lbc-opina__widget .trustpilot-widget{display:block;width:100%;}
+.lbc-opina__widget .trustpilot-widget > a{font-family:var(--lbc-font-sans);font-size:13px;color:var(--lbc-ink-2);}
+.lbc-opina__btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:var(--lbc-h-md);padding:0 16px;border-radius:var(--lbc-r-md);border:1px solid rgba(204,169,79,0.42);background:rgba(204,169,79,0.06);color:#E7CC74;font-family:var(--lbc-font-sans);font-size:14px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+@media(hover:hover){.lbc-opina__btn:hover{background:rgba(204,169,79,0.12);border-color:rgba(204,169,79,0.6);}}
+.lbc-opina__btn:active{transform:scale(0.98);}
+.lbc-opina__nota{margin:8px 0 0;font-family:var(--lbc-font-sans);font-size:12px;line-height:1.5;color:rgba(232,228,217,0.55);}
+@media(prefers-reduced-motion:reduce){.lbc-opina__btn{transition:none;}.lbc-opina__btn:active{transform:none;}}
+
+/* ─── 8. Tipografía única también en controles (cierre v101) ────────────── */
+/* Los botones, campos y selectores no heredan la fuente por defecto del navegador y salían en Arial.
+   Especificidad cero: cualquier regla propia de la página sigue ganando. */
+:where(button,input,select,textarea,optgroup){font-family:inherit;}
+/* Navegación de miembro: la misma fuente de texto que la portada (heredaba la del sistema) */
+.lbcn,.lbcn-item,.lbcn-soon-tag,.lbcn-soon-label{font-family:var(--lbc-font-sans);}
+/* Etiqueta «pronto» de Educación: 10 px como el resto de rótulos (iba a 7–8 px) */
+.lbcn .lbcn-soon-tag{font-size:10px;line-height:1.3;padding:0 5px;}
+
+/* ─── 9. «Mi perfil»: un solo tipo de botón (cierre v101) ───────────────── */
+/* Eran cinco botones de oro macizo en columna; la regla del sistema es un primario por pantalla.
+   En el panel no hay una acción principal: todos pasan a secundarios (contorno oro), como «Opiniones». */
+.profile-drawer .pd-btn{background:rgba(204,169,79,0.06);border:1px solid rgba(204,169,79,0.42);color:#E7CC74;font-weight:600;box-shadow:none;}
+@media(hover:hover){.profile-drawer .pd-btn:hover{background:rgba(204,169,79,0.12);border-color:rgba(204,169,79,0.6);box-shadow:none;}}
+.profile-drawer .pd-btn:disabled{opacity:0.5;}

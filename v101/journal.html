@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta name="robots" content="noindex,nofollow">
+<meta name="robots" content="noindex, nofollow">
 <script src="authgate.js"></script>
 <script>
 // GATE REAL: exige sesión premium verificada contra el backend. Sin atajos de
@@ -2041,6 +2041,56 @@ body :is(a,button,[role="button"],[tabindex]):focus-visible{outline:none;box-sha
   .titem:active,.cal-day:active,.fchip:active,.cal-mode-btn:active,.unit-opt:active,.acct-btn:active,.sb-cta:active,.btn-save:active,.acc-btn:active,.view-back:active,.cnav:active,.dbtn:active,.bti:active,.bt-fab:active,.empty button:active{transform:none!important;}
   .tdrawer,.doverlay{transition:none;}
 }
+
+/* ══════════ v101 · cierre (revisión con datos reales, 25-nov) ══════════ */
+/* Cabecera fija en móvil: su relleno era un calc() sin espacios (inválido) y el texto quedaba pegado al borde */
+.mob-nav{padding:calc(var(--safe-top,0px) + 10px) 16px 10px;}
+/* Detalle de un trade · controles del gráfico: los rótulos de ayuda de los chips no tenían estilo base
+   y salían escritos dentro del botón (fila de 1.200 px con textos montados). Ahora son ayudas flotantes. */
+.jch-chip .jtip{position:absolute;white-space:nowrap;background:#0c0f17;border:0.5px solid var(--border);border-radius:7px;padding:6px 9px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text2);opacity:0;pointer-events:none;transition:opacity .18s;z-index:20;box-shadow:0 8px 22px rgba(0,0,0,0.5);}
+.jch-ctrls .jch-tf{flex:0 0 auto;}
+.jch-ctrls{scrollbar-width:none;}
+.jch-ctrls::-webkit-scrollbar{display:none;}
+/* La barra desliza en horizontal y recortaría una ayuda flotante: dentro de ella la ayuda es el title nativo del botón */
+.jch-ctrls .jtip{display:none;}
+/* La barra «← Mis Trades» queda por encima de las herramientas de dibujo al deslizar */
+.tws-topbar{z-index:30;}
+/* Tema claro: tarjetas del calendario y barra de controles del gráfico (seguían oscuras) */
+[data-theme="light"] .cal-stat{background:#ffffff;}
+[data-theme="light"] .jch-ctrls{background:rgba(255,255,255,0.9);border-top-color:rgba(33,29,22,0.12);}
+[data-theme="light"] .jch-chip .jtip{background:#ffffff;color:#3a342a;border-color:rgba(33,29,22,0.16);box-shadow:0 8px 22px rgba(28,22,14,0.16);}
+/* La etiqueta de la fuente de las velas quedaba tapada por la barra de controles */
+.jch-src{bottom:54px;}
+/* Título de los diálogos de confirmación: pedía una fuente que el sitio no carga (Playfair) */
+.lbc-cfm-title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:21px;}
+/* Rótulos mínimos a 10 px */
+.rr-lab,.eq-lg,.tws .k{font-size:10px;}
+
+/* ══════════ v101 · cierre · tema claro del Journal pantalla por pantalla ══════════ */
+/* Texto de apoyo: en claro se quedaba en 2,5:1 (etiquetas, fechas, rótulos de formulario). Ahora ≥ 4,5:1 sobre blanco. */
+[data-theme="light"]{--text2:rgba(33,29,22,0.78);--text3:rgba(33,29,22,0.64);}
+/* Cajas con fondo negro translúcido escrito en línea (detalle del día, editores de checklist y de contexto, fichas):
+   en claro salían como bloques grises. */
+[data-theme="light"] :is([style*="background:rgba(0,0,0,0.18"],[style*="background:rgba(0,0,0,0.2"],[style*="background:rgba(0,0,0,0.3"],[style*="background: rgba(0, 0, 0, 0.2"],[style*="background: rgba(0, 0, 0, 0.3"]){background:rgba(33,29,22,0.045)!important;}
+[data-theme="light"] :is(input,select,textarea):is([style*="background:rgba(0,0,0,0."],[style*="background: rgba(0, 0, 0, 0."]){background:#ffffff!important;color:#211d16!important;border-color:rgba(33,29,22,0.16)!important;}
+/* Colores de acento escritos en línea para fondo oscuro (oro, verde y morado claros): versión legible sobre blanco */
+[data-theme="light"] :is([style*="color:#CCA94F"],[style*="color:#E7CC74"],[style*="color: rgb(204, 169, 79)"]):not(button){color:#7e6323!important;}
+[data-theme="light"] :is([style*="color:#22c55e"],[style*="color:#2EE8A4"]){color:#15803d!important;}
+[data-theme="light"] :is([style*="color:#B197FC"],[style*="color:var(--purple)"]){color:#6b4fd0!important;}
+[data-theme="light"] :is(.tws-dir.short,.ctx-tag.vwap-below,.ctx-tag.gamma-down,.ctx-tag.bear){color:#6b4fd0;background:rgba(107,79,208,0.10);}
+[data-theme="light"] .acct-btn{color:#211d16;background:#ffffff;border-color:rgba(33,29,22,0.16);}
+[data-theme="light"] .acct-btn .acct-cur{color:#7e6323;}
+/* Diálogo de confirmación y «Tamaño de cuenta»: el texto era claro sobre tarjeta blanca */
+[data-theme="light"] .lbc-cfm-title{color:#211d16;}
+[data-theme="light"] .lbc-cfm-msg{color:rgba(33,29,22,0.72);}
+[data-theme="light"] .lbc-cfm-msg :is(b,strong){color:#211d16;}
+[data-theme="light"] .lbc-cfm-btn.cancel{background:rgba(33,29,22,0.04);border-color:rgba(33,29,22,0.16);color:#3a342a;}
+[data-theme="light"] .lbc-cfm-card :is(input,select){background:#ffffff!important;color:#211d16!important;border-color:rgba(33,29,22,0.2)!important;}
+[data-theme="light"] .lbc-cfm-bg{background:rgba(33,29,22,0.42);}
+[data-theme="light"] :is(.tws-tab.on,.dfp-ok){color:#7e6323;}
+[data-theme="light"] :is(.tws-result.loss,.tws .v.neg){color:#c22525;}
+[data-theme="light"] :is([style*="color:#f59e0b"]){color:#a16207!important;}
+[data-theme="light"] :is([style*="color:#60a5fa"]){color:#1d4ed8!important;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -4625,11 +4675,11 @@ function jchStageHTML(t){
   var overlay='<div class="jch-ctrls">'
     +'<span id="jch-tfchips" class="jch-tf"></span>'
     +'<span class="jch-spacer"></span>'
-    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()"><span class="jtip">Máximo a favor / en contra</span>MFE/MAE</button>'
-    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()"><span class="jtip">Proyecta si aguantabas</span>¿Y si aguanto?</button>'
-    +'<button class="jch-chip" onclick="jchFit()"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
-    +'<button class="jch-chip" onclick="jchOpenTV()"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
-    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
+    +'<button class="jch-chip'+(_jchMfe?' on':'')+'" id="jch-mfe" onclick="jchToggleMfe()" title="Máximo a favor / en contra"><span class="jtip">Máximo a favor / en contra</span>MFE/MAE</button>'
+    +'<button class="jch-chip'+(_jchProj?' on':'')+'" id="jch-proj" onclick="jchToggleProj()" title="Proyecta si aguantabas"><span class="jtip">Proyecta si aguantabas</span>¿Y si aguanto?</button>'
+    +'<button class="jch-chip" onclick="jchFit()" title="Encuadrar al trade"><span class="jtip">Encuadrar al trade</span>⟲ Fit</button>'
+    +'<button class="jch-chip" onclick="jchOpenTV()" title="Abrir NQ1! en TradingView"><span class="jtip">Abrir NQ1! en TradingView</span>TV ↗</button>'
+    +'<button class="jch-chip accent" id="jch-fullbtn" onclick="jchFull()" title="Pantalla completa (Esc para salir)"><span class="jtip">Pantalla completa (Esc para salir)</span>⤢ Expandir</button>'
     +'</div>';
   var stage='<div class="jch-stage" id="jch-stage">'
     +toolbar
@@ -5055,7 +5105,7 @@ function jchRenderTfChips(){
     var en=m>=_jchNativeMin&&_jchNativeMin<1440;
     var lbl=m>=60?(m/60)+'h':m+'m';
     if(en)html+='<button class="jch-chip'+(m===_jchTf?' on':'')+'" onclick="jchTf('+m+')">'+lbl+'</button>';
-    else html+='<button class="jch-chip dis" disabled><span class="jtip">Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')</span>'+lbl+'</button>';
+    else html+='<button class="jch-chip dis" disabled title="Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')"><span class="jtip">Sin velas de '+lbl+' tan atrás para esta fecha (disponible: '+_jchInterval+')</span>'+lbl+'</button>';
   });
   if(_jchNativeMin>=1440)html='<span class="jch-chip on">1D</span>';
   host.innerHTML=html;
@@ -5067,7 +5117,7 @@ function jchToggleMfe(){_jchMfe=!_jchMfe;try{localStorage.setItem('lbc_jch_mfe',
 function jchToggleProj(){_jchProj=!_jchProj;try{localStorage.setItem('lbc_jch_proj',_jchProj?'1':'0');}catch(e){}var b=document.getElementById('jch-proj');if(b)b.classList.toggle('on',_jchProj);var bars=jchResample(_jchRaw||[],_jchTf);var eIdx=jchNearestIdx(bars,jchHM(_jchT.time));if(eIdx<0)eIdx=0;jchDrawProj(bars,eIdx);}
 
 // ── Fullscreen (enfoque A: redimensionar el frame, mismo chart/markers/dibujos) ──
-function jchFullBtnLabel(full){var b=document.getElementById('jch-fullbtn');if(b)b.innerHTML='<span class="jtip">'+(full?'Salir de pantalla completa (Esc)':'Pantalla completa (Esc para salir)')+'</span>'+(full?'⤡ Contraer':'⤢ Expandir');}
+function jchFullBtnLabel(full){var b=document.getElementById('jch-fullbtn');if(b){var tx=full?'Salir de pantalla completa (Esc)':'Pantalla completa (Esc para salir)';b.title=tx;b.innerHTML='<span class="jtip">'+tx+'</span>'+(full?'⤡ Contraer':'⤢ Expandir');}}
 function jchFull(){var f=document.getElementById('jch-frame');if(!f)return;var full=!f.classList.contains('full');f.classList.toggle('full',full);document.body.style.overflow=full?'hidden':'';jchFullBtnLabel(full);setTimeout(jchResize,30);}
 function jchExitFull(){var f=document.getElementById('jch-frame');if(f&&f.classList.contains('full')){f.classList.remove('full');document.getElementById('tws')&&document.getElementById('tws').classList.contains('open')?document.body.style.overflow='hidden':document.body.style.overflow='';jchFullBtnLabel(false);setTimeout(jchResize,30);return true;}return false;}
 function jchResize(){var el=document.getElementById('jch-tv');if(jchart&&el){try{jchart.applyOptions({width:el.clientWidth,height:el.clientHeight});}catch(e){}}}
