@@ -3258,86 +3258,122 @@ updateCD();setInterval(updateCD,1000);
 
 <script>
 // ── LIBERATO AI CHAT WIDGET ──
+// v101 · 26-nov: el asistente sigue el idioma de la portada (ES/EN). Mismo contenido en los dos idiomas;
+// si se cambia de idioma con el chat abierto, se vuelven a pintar sus mensajes, botones y textos.
 var _lcOpen=false, _lcMsgs=[], _lcTyping=false, _lcWaShown=false;
-
-var LC_CHIPS=[
-  '¿Qué incluye la membresía?','¿Cuánto cuesta?','¿Cuándo son los lives?',
-  '¿Cómo empiezo?','¿Qué es el Bias Engine?','¿Tienen prueba gratis?'
-];
 
 // NOTE: El bot responde SOLO con contenido predefinido de Liberato Community.
 // No usa la API de Claude — es un sistema FAQ offline, sin costo por usuario,
 // sin riesgo de que pregunten sobre la implementación interna de la plataforma.
 
-function getFAQReply(q){
-  var Q=q.toLowerCase();
-
-  // Precio / costo
-  if(/precio|costo|cuesta|cuánto|cuanto|valor|pagar|inversión|inversion|cuánto.*mes|mes.*cuánto/i.test(Q))
-    return 'El plan <strong>Acceso Completo es $199/mes</strong>. Sin contratos anuales obligatorios — cancelas cuando quieras. También hay una <strong>Comunidad Libre gratuita</strong> con Discord, análisis diario y noticias de mercado.';
-
-  // Qué incluye
-  if(/incluye|contiene|tiene|funciona|acceso|qué es|que es|ofrece|beneficio|todo/i.test(Q))
-    return '🧠 <strong>Bias Engine institucional</strong> del Nasdaq-100 en tiempo real · 📓 <strong>Trading Journal</strong> con análisis IA · 📅 <strong>Earnings Dashboard</strong> · 📺 <strong>Lives de trading diarios</strong> (sesión NY) · 💬 <strong>Discord Pro</strong> con análisis en vivo · 📚 <strong>Biblioteca educativa</strong> de Order Flow y Market Profile.';
-
-  // Lives / horario
-  if(/live|clase|sesion|sesión|horario|cuando|cuándo|hora|trading.*vivo|vivo/i.test(Q))
-    return 'Los lives son <strong>casi todos los días</strong> durante la sesión de Nueva York (9:30am–12:00pm ET). Se graban automáticamente — si no puedes en vivo, los ves después. Luis David hace el análisis del mercado en vivo y tradea en tiempo real.';
-
-  // Cómo empezar
-  if(/empez|start|unir|entrar|inscrib|registr|cómo|como|proceso|pasos/i.test(Q))
-    return 'Muy simple: <strong>1)</strong> Haz clic en "Reservar mi Spot" arriba · <strong>2)</strong> Completa el pago de $199 de forma segura · <strong>3)</strong> En minutos entras al dashboard y al Discord Pro; el ciclo de lives en vivo arranca el 4 de enero.';
-
-  // Bias Engine
-  if(/bias|engine|sesgo|algorit|calcul|cómo.*analiz|indicador/i.test(Q))
-    return 'El <strong>Bias Engine institucional</strong> es el corazón de la plataforma. Analiza estructura de Gamma, Price Action, correlaciones macro y datos históricos de sesiones reales de NQ para darte un sesgo direccional antes de cada sesión. Incluye Regime Engine y Confidence Score.';
-
-  // Discord
-  if(/discord|comunidad|grupo|chat|server/i.test(Q))
-    return '<strong>Comunidad Libre (gratis):</strong> Discord con análisis diario, noticias de alto impacto y discusión general. <strong>Discord Pro (miembros):</strong> análisis del mercado y order flow en vivo (educativo, sin señales), Q&A directo con el equipo y alertas de eventos macro.';
-
-  // Garantía / reembolso
-  if(/garantía|garantia|devolucion|reembolso|riesgo|prueba|probar|gratis/i.test(Q))
-    return 'Puedes empezar por la <strong>Comunidad Libre (gratis)</strong> para conocernos, y subir a Acceso Completo cuando estés listo. Sin contratos: cancelas cuando quieras.';
-
-  // NQ / Nasdaq / futuros
-  if(/nq|nasdaq|futuros|futures|contrato|emini|mnq/i.test(Q))
-    return 'Operamos el <strong>mercado de EE.UU.</strong> en la apertura de Nueva York. Las herramientas de la plataforma (Bias Engine y análisis de Gamma/GEX) leen el <strong>Nasdaq-100</strong>, el índice que mueve a las grandes tecnológicas. Es educación: aprendes a leer el mercado, no a copiar operaciones.';
-
-  // Order flow
-  if(/order flow|orderflow|delta|cvd|volumen|cinta|tape|footprint/i.test(Q))
-    return 'Enseñamos <strong>Order Flow institucional</strong>: Delta, CVD, Big Trades, VWAP interaction, Market Profile y Gamma Structure. El objetivo: leer quién controla la subasta en tiempo real como lo hacen los traders institucionales, sin indicadores rezagados.';
-
-  // Fundador / Luis David
-  if(/luis|liberato|fundador|founder|quién|quien|creador|trader.*detras/i.test(Q))
-    return '<strong>Luis David Sosa Liberato</strong> es el fundador — trader del mercado de EE.UU. con 7 años de experiencia. La filosofía de la comunidad: <em>"Freedom through discipline and skill."</em> Toda la plataforma y los contenidos están creados por él directamente.';
-
-  // Resultados / ganancias
-  if(/resultado|ganancia|cuanto.*ganar|rentabilidad|retorno|profit|pierde/i.test(Q))
-    return 'En Liberato no prometemos ganancias garantizadas — eso sería deshonesto. Lo que sí ofrecemos: <strong>estructura, disciplina y metodología institucional</strong> probada. Los resultados dependen de tu consistencia, gestión de riesgo y práctica.';
-
-  // Experiencia requerida
-  if(/principiante|básico|basico|empez.*trading|nivel|experiencia|novato|nuevo/i.test(Q))
-    return 'La plataforma es ideal para traders <strong>intermedios</strong> — que ya conocen los conceptos básicos pero quieren una metodología institucional estructurada. Si eres principiante absoluto, la Comunidad Libre gratuita es un buen punto de partida antes de Pro.';
-
-  // Pago / Stripe
-  if(/pago|stripe|tarjeta|paypal|cobro|factura|cancelar/i.test(Q))
-    return 'El pago se procesa de forma <strong>100% segura</strong> con nuestro proveedor de checkout. Aceptamos tarjeta de crédito/débito. Puedes gestionar o cancelar tu suscripción cuando quieras.';
-
-  // Diferencia con otras comunidades
-  if(/diferenci|mejor|otros|compet|plataforma.*otra|vale.*pena/i.test(Q))
-    return 'La diferencia principal: <strong>no somos un curso grabado ni un grupo de señales</strong>. Es una plataforma activa con tools institucionales reales (Bias Engine, Journal con IA, Earnings Intelligence) + Luis David tradea en vivo todos los días con su propio dinero.';
-
-  // Default — escala a WhatsApp
-  return '¡Buena pregunta! Para darte la respuesta más precisa, escríbenos directamente en WhatsApp — respondemos en minutos 👇';
+// Idioma = el que muestra la portada (translatePage pone <html lang>); si no, el guardado.
+function lcLang(){
+  var l=(document.documentElement.getAttribute('lang')||'').slice(0,2);
+  if(l!=='en'&&l!=='es'){ try{ l=localStorage.getItem('lbc_lang')||'es'; }catch(e){ l='es'; } }
+  return l==='en'?'en':'es';
 }
 
-function callClaude(userMsg){
+// Respuestas (es/en con el mismo contenido). Precios y planes, como en la web.
+var LC_R={
+  precio:{
+    es:'El plan <strong>Acceso Completo es $199/mes</strong>. Sin contratos anuales obligatorios — cancelas cuando quieras. También hay una <strong>Comunidad Libre gratuita</strong> con Discord, análisis diario y noticias de mercado.',
+    en:'The <strong>Full Access plan is $199/month</strong>. No mandatory annual contracts — cancel anytime. There is also the <strong>Free Community</strong>, at no cost, with Discord, daily analysis and market news.'},
+  incluye:{
+    es:'🧠 <strong>Bias Engine institucional</strong> del Nasdaq-100 en tiempo real · 📓 <strong>Trading Journal</strong> con análisis IA · 📅 <strong>Earnings Dashboard</strong> · 📺 <strong>Lives de trading diarios</strong> (sesión NY) · 💬 <strong>Discord Pro</strong> con análisis en vivo · 📚 <strong>Biblioteca educativa</strong> de Order Flow y Market Profile.',
+    en:'🧠 <strong>Institutional Bias Engine</strong> for the Nasdaq-100 in real time · 📓 <strong>Trading Journal</strong> with AI analysis · 📅 <strong>Earnings Dashboard</strong> · 📺 <strong>Daily live trading sessions</strong> (NY session) · 💬 <strong>Discord Pro</strong> with live analysis · 📚 <strong>Educational library</strong> on Order Flow and Market Profile.'},
+  lives:{
+    es:'Los lives son <strong>casi todos los días</strong> durante la sesión de Nueva York (9:30am–12:00pm ET). Se graban automáticamente — si no puedes en vivo, los ves después. Luis David hace el análisis del mercado en vivo y tradea en tiempo real.',
+    en:'Live sessions run <strong>almost every day</strong> during the New York session (9:30am–12:00pm ET). They are recorded automatically — if you can\'t join live, you watch them later. Luis David analyzes the market live and trades in real time.'},
+  empezar:{
+    es:'Muy simple: <strong>1)</strong> Haz clic en "Reservar mi lugar" arriba · <strong>2)</strong> Completa el pago de $199 de forma segura · <strong>3)</strong> En minutos entras al dashboard y al Discord Pro; el ciclo de lives en vivo arranca el 4 de enero.',
+    en:'Very simple: <strong>1)</strong> Click "Reserve my spot" above · <strong>2)</strong> Complete the $199 payment securely · <strong>3)</strong> Within minutes you get into the dashboard and Discord Pro; the live session cycle starts on January 4.'},
+  bias:{
+    es:'El <strong>Bias Engine institucional</strong> es el corazón de la plataforma. Analiza estructura de Gamma, Price Action, correlaciones macro y datos históricos de sesiones reales de NQ para darte un sesgo direccional antes de cada sesión. Incluye Regime Engine y Confidence Score.',
+    en:'The <strong>institutional Bias Engine</strong> is the core of the platform. It analyzes Gamma structure, Price Action, macro correlations and historical data from real NQ sessions to give you a directional bias before each session. It includes the Regime Engine and Confidence Score.'},
+  discord:{
+    es:'<strong>Comunidad Libre (gratis):</strong> Discord con análisis diario, noticias de alto impacto y discusión general. <strong>Discord Pro (miembros):</strong> análisis del mercado y order flow en vivo (educativo, sin señales), Q&A directo con el equipo y alertas de eventos macro.',
+    en:'<strong>Free Community (free):</strong> Discord with daily analysis, high-impact news and general discussion. <strong>Discord Pro (members):</strong> live market and order flow analysis (educational, no signals), direct Q&A with the team and macro event alerts.'},
+  prueba:{
+    es:'Puedes empezar por la <strong>Comunidad Libre (gratis)</strong> para conocernos, y subir a Acceso Completo cuando estés listo. Sin contratos: cancelas cuando quieras.',
+    en:'You can start with the <strong>Free Community (free)</strong> to get to know us, and move up to Full Access when you\'re ready. No contracts: cancel anytime.'},
+  nq:{
+    es:'Operamos el <strong>mercado de EE.UU.</strong> en la apertura de Nueva York. Las herramientas de la plataforma (Bias Engine y análisis de Gamma/GEX) leen el <strong>Nasdaq-100</strong>, el índice que mueve a las grandes tecnológicas. Es educación: aprendes a leer el mercado, no a copiar operaciones.',
+    en:'We trade the <strong>US market</strong> at the New York open. The platform\'s tools (Bias Engine and Gamma/GEX analysis) read the <strong>Nasdaq-100</strong>, the index that moves the big tech stocks. It\'s education: you learn to read the market, not to copy trades.'},
+  orderflow:{
+    es:'Enseñamos <strong>Order Flow institucional</strong>: Delta, CVD, Big Trades, VWAP interaction, Market Profile y Gamma Structure. El objetivo: leer quién controla la subasta en tiempo real como lo hacen los traders institucionales, sin indicadores rezagados.',
+    en:'We teach <strong>institutional Order Flow</strong>: Delta, CVD, Big Trades, VWAP interaction, Market Profile and Gamma Structure. The goal: read who controls the auction in real time, the way institutional traders do, without lagging indicators.'},
+  fundador:{
+    es:'<strong>Luis David Sosa Liberato</strong> es el fundador — trader del mercado de EE.UU. con 7 años de experiencia. La filosofía de la comunidad: <em>"Freedom through discipline and skill."</em> Toda la plataforma y los contenidos están creados por él directamente.',
+    en:'<strong>Luis David Sosa Liberato</strong> is the founder — a US market trader with 7 years of experience. The community\'s philosophy: <em>"Freedom through discipline and skill."</em> The whole platform and all the content are created by him directly.'},
+  resultados:{
+    es:'En Liberato no prometemos ganancias garantizadas — eso sería deshonesto. Lo que sí ofrecemos: <strong>estructura, disciplina y metodología institucional</strong> probada. Los resultados dependen de tu consistencia, gestión de riesgo y práctica.',
+    en:'At Liberato we don\'t promise guaranteed profits — that would be dishonest. What we do offer: proven <strong>structure, discipline and institutional methodology</strong>. Results depend on your consistency, risk management and practice.'},
+  nivel:{
+    es:'La plataforma es ideal para traders <strong>intermedios</strong> — que ya conocen los conceptos básicos pero quieren una metodología institucional estructurada. Si eres principiante absoluto, la Comunidad Libre gratuita es un buen punto de partida antes de Pro.',
+    en:'The platform is ideal for <strong>intermediate</strong> traders — who already know the basics but want a structured institutional methodology. If you\'re a complete beginner, the Free Community, at no cost, is a good starting point before Pro.'},
+  pago:{
+    es:'El pago se procesa de forma <strong>100% segura</strong> con nuestro proveedor de checkout. Aceptamos tarjeta de crédito/débito. Puedes gestionar o cancelar tu suscripción cuando quieras.',
+    en:'Payment is processed <strong>100% securely</strong> through our checkout provider. We accept credit/debit cards. You can manage or cancel your subscription anytime.'},
+  diferencia:{
+    es:'La diferencia principal: <strong>no somos un curso grabado ni un grupo de señales</strong>. Es una plataforma activa con tools institucionales reales (Bias Engine, Journal con IA, Earnings Intelligence) + Luis David tradea en vivo todos los días con su propio dinero.',
+    en:'The main difference: <strong>we are not a recorded course or a signals group</strong>. It\'s an active platform with real institutional tools (Bias Engine, AI Journal, Earnings Intelligence) + Luis David trades live every day with his own money.'},
+  // Default — escala a WhatsApp
+  otro:{
+    es:'¡Buena pregunta! Para darte la respuesta más precisa, escríbenos directamente en WhatsApp — respondemos en minutos 👇',
+    en:'Good question! For the most accurate answer, message us directly on WhatsApp — we reply within minutes 👇'},
+  hola:{
+    es:'¡Hola! 👋 Soy el asistente de Liberato Community. ¿En qué puedo ayudarte hoy?',
+    en:'Hi! 👋 I\'m the Liberato Community assistant. How can I help you today?'}
+};
+
+// Botones de pregunta rápida: cada uno va directo a su respuesta (no pasa por la búsqueda de palabras).
+var LC_CHIPS=[
+  {k:'incluye', es:'¿Qué incluye la membresía?', en:'What does the membership include?'},
+  {k:'precio',  es:'¿Cuánto cuesta?',            en:'How much does it cost?'},
+  {k:'lives',   es:'¿Cuándo son los lives?',     en:'When are the live sessions?'},
+  {k:'empezar', es:'¿Cómo empiezo?',             en:'How do I start?'},
+  {k:'bias',    es:'¿Qué es el Bias Engine?',    en:'What is the Bias Engine?'},
+  {k:'prueba',  es:'¿Tienen prueba gratis?',     en:'Is there a free trial?'}
+];
+
+// Textos fijos del panel (el título, el aviso y el botón de WhatsApp los traduce translatePage).
+var LC_UI={
+  es:{ph:'Escribe tu pregunta...', abrir:'Abrir chat', cerrar:'Cerrar chat', enviar:'Enviar',
+      wa:'https://wa.me/971529218605?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20Liberato%20Community'},
+  en:{ph:'Type your question...', abrir:'Open chat', cerrar:'Close chat', enviar:'Send',
+      wa:'https://wa.me/971529218605?text=Hi%2C%20I%20have%20a%20question%20about%20Liberato%20Community'}
+};
+
+// Qué respuesta toca a una pregunta escrita (palabras en español y en inglés; mismo orden de antes).
+function getFAQKey(q){
+  var Q=q.toLowerCase();
+  if(/precio|costo|cuesta|cuánto|cuanto|valor|pagar|inversión|inversion|cuánto.*mes|mes.*cuánto|price|pricing|cost|how much|fee/i.test(Q)) return 'precio';
+  if(/incluye|contiene|tiene|funciona|acceso|qué es|que es|ofrece|beneficio|todo|include|what do i get|features|membership|benefit/i.test(Q)) return 'incluye';
+  if(/live|clase|sesion|sesión|horario|cuando|cuándo|hora|trading.*vivo|vivo|session|schedule|\bwhen\b|what time/i.test(Q)) return 'lives';
+  if(/empez|start|unir|entrar|inscrib|registr|cómo|como|proceso|pasos|join|sign up|signup|how do i|steps/i.test(Q)) return 'empezar';
+  if(/bias|engine|sesgo|algorit|calcul|cómo.*analiz|indicador|indicator/i.test(Q)) return 'bias';
+  if(/discord|comunidad|grupo|chat|server|community|group/i.test(Q)) return 'discord';
+  if(/garantía|garantia|devolucion|reembolso|riesgo|prueba|probar|gratis|guarantee|refund|trial|free|\btry\b/i.test(Q)) return 'prueba';
+  if(/nq|nasdaq|futuros|futures|contrato|emini|mnq|contract/i.test(Q)) return 'nq';
+  if(/order flow|orderflow|delta|cvd|volumen|cinta|tape|footprint|volume/i.test(Q)) return 'orderflow';
+  if(/luis|liberato|fundador|founder|quién|quien|creador|trader.*detras|\bwho\b|creator/i.test(Q)) return 'fundador';
+  if(/resultado|ganancia|cuanto.*ganar|rentabilidad|retorno|profit|pierde|result|earn|return|make money|\blose\b/i.test(Q)) return 'resultados';
+  if(/principiante|básico|basico|empez.*trading|nivel|experiencia|novato|nuevo|beginner|level|experience|novice|new to/i.test(Q)) return 'nivel';
+  if(/pago|stripe|tarjeta|paypal|cobro|factura|cancelar|payment|card|billing|invoice|cancel/i.test(Q)) return 'pago';
+  if(/diferenci|mejor|otros|compet|plataforma.*otra|vale.*pena|differen|better|other|worth/i.test(Q)) return 'diferencia';
+  return 'otro';
+}
+function lcText(key,lang){ var r=LC_R[key]||LC_R.otro; return r[lang||lcLang()]||r.es; }
+// Compatibilidad: devuelve el texto de la respuesta en el idioma actual.
+function getFAQReply(q){ return lcText(getFAQKey(q)); }
+
+// chipKey: botón de pregunta rápida → su respuesta directa; si no, búsqueda por palabras.
+function callClaude(userMsg,chipKey){
   setTimeout(function(){
     removeTyping();
-    var reply=getFAQReply(userMsg);
-    _lcMsgs.push({role:'assistant',content:reply});
-    addMsg('bot',reply);
+    var key=chipKey||getFAQKey(userMsg);
+    _lcMsgs.push({role:'assistant',key:key});
+    addMsg('bot',lcText(key));
     var userCount=_lcMsgs.filter(function(m){return m.role==='user';}).length;
     if(userCount>=2&&!_lcWaShown){
       _lcWaShown=true;
@@ -3345,6 +3381,48 @@ function callClaude(userMsg){
     }
   }, 700+Math.random()*400);
 }
+
+function lcChipLabel(c){ return c[lcLang()]||c.es; }
+function lcDrawChips(){
+  var chipsEl=document.getElementById('lc-chips'); if(!chipsEl)return;
+  chipsEl.innerHTML='';
+  LC_CHIPS.forEach(function(c){
+    var b=document.createElement('button');
+    b.className='lc-chip';
+    b.textContent=lcChipLabel(c);
+    b.onclick=function(){ chipsEl.innerHTML=''; sendMsg(lcChipLabel(c), c.k); };
+    chipsEl.appendChild(b);
+  });
+}
+
+// Textos fijos del panel en el idioma actual
+function lcApplyUI(){
+  var t=LC_UI[lcLang()];
+  var inp=document.getElementById('lc-input'); if(inp) inp.setAttribute('placeholder',t.ph);
+  var wa=document.getElementById('lc-wa'); if(wa) wa.setAttribute('href',t.wa);
+  var ob=document.querySelector('#lc-fab .lc-btn'); if(ob) ob.setAttribute('aria-label',_lcOpen?t.cerrar:t.abrir);
+  var cb=document.querySelector('#lc-window .lc-close'); if(cb) cb.setAttribute('aria-label',t.cerrar);
+  var sb=document.querySelector('#lc-window .lc-send'); if(sb) sb.setAttribute('aria-label',t.enviar);
+}
+
+// Cambio de idioma con el chat abierto: se vuelve a pintar la conversación en el idioma nuevo
+// (lo que el usuario escribió a mano se queda tal cual; sus botones de pregunta sí cambian).
+function lcRelang(){
+  lcApplyUI();
+  var container=document.getElementById('lc-messages'); if(!container||!_lcMsgs.length)return;
+  var typing=document.getElementById('lc-typing');
+  container.innerHTML='';
+  _lcMsgs.forEach(function(m){
+    if(m.role==='assistant') addMsg('bot',lcText(m.key),true);
+    else if(m.chip){ var c=LC_CHIPS.filter(function(x){return x.k===m.chip;})[0]; addMsg('user',c?lcChipLabel(c):m.content,true); }
+    else addMsg('user',m.content,true);
+  });
+  if(typing) container.appendChild(typing);
+  var chipsEl=document.getElementById('lc-chips');
+  if(chipsEl&&chipsEl.children.length) lcDrawChips();
+  container.scrollTop=container.scrollHeight;
+}
+document.addEventListener('lbc:lang',lcRelang);
 
 // ── Core widget functions ──
 function toggleChat(){
@@ -3356,26 +3434,13 @@ function toggleChat(){
   win.style.display=_lcOpen?'flex':'none';
   if(btn)btn.textContent=_lcOpen?'✕':'🧠';
   if(tip)tip.style.opacity='0';
+  lcApplyUI();
   if(_lcOpen&&_lcMsgs.length===0){
     // Mensaje de bienvenida
-    var welcome='¡Hola! 👋 Soy el asistente de Liberato Community. ¿En qué puedo ayudarte hoy?';
-    _lcMsgs.push({role:'assistant',content:welcome});
-    addMsg('bot',welcome);
+    _lcMsgs.push({role:'assistant',key:'hola'});
+    addMsg('bot',lcText('hola'));
     // Mostrar chips
-    var chipsEl=document.getElementById('lc-chips');
-    if(chipsEl){
-      chipsEl.innerHTML='';
-      LC_CHIPS.forEach(function(c){
-        var b=document.createElement('button');
-        b.className='lc-chip';
-        b.textContent=c;
-        b.onclick=function(){
-          chipsEl.innerHTML='';
-          sendMsg(c);
-        };
-        chipsEl.appendChild(b);
-      });
-    }
+    lcDrawChips();
     setTimeout(function(){
       var m=document.getElementById('lc-messages');
       if(m)m.scrollTop=m.scrollHeight;
@@ -3383,15 +3448,15 @@ function toggleChat(){
   }
 }
 
-function addMsg(role,html){
+function addMsg(role,html,sinAnim){
   var container=document.getElementById('lc-messages');
   if(!container)return;
   var div=document.createElement('div');
   div.className='lc-msg lc-msg-'+role;
-  div.innerHTML=html;
+  if(role==='user') div.textContent=html; else div.innerHTML=html;   // lo que escribe el usuario, siempre como texto
   div.style.cssText='padding:10px 13px;border-radius:'+
     (role==='user'?'14px 4px 14px 14px':'4px 14px 14px 14px')+
-    ';max-width:82%;font-size:13px;line-height:1.55;animation:lcmsg .22s ease;'+
+    ';max-width:82%;font-size:13px;line-height:1.55;'+(sinAnim?'animation:none;':'animation:lcmsg .22s ease;')+
     'background:'+(role==='user'?'linear-gradient(135deg,rgba(204,169,79,0.22),rgba(204,169,79,0.12))':'rgba(255,255,255,0.07)')+
     ';color:#E8E4D9;align-self:'+(role==='user'?'flex-end':'flex-start')+';word-break:break-word;';
   container.appendChild(div);
@@ -3404,7 +3469,7 @@ function removeTyping(){
   _lcTyping=false;
 }
 
-function sendMsg(text){
+function sendMsg(text,chipKey){
   var input=document.getElementById('lc-input');
   var msg=(text||'').trim()||(input?input.value.trim():'');
   if(!msg)return;
@@ -3412,7 +3477,7 @@ function sendMsg(text){
   // Limpiar chips tras primer mensaje del usuario
   var chips=document.getElementById('lc-chips');
   if(chips)chips.innerHTML='';
-  _lcMsgs.push({role:'user',content:msg});
+  _lcMsgs.push(chipKey?{role:'user',content:msg,chip:chipKey}:{role:'user',content:msg});
   addMsg('user',msg);
   // Typing indicator
   if(!_lcTyping){
@@ -3429,7 +3494,7 @@ function sendMsg(text){
       container.scrollTop=container.scrollHeight;
     }
   }
-  callClaude(msg);
+  callClaude(msg,chipKey);
 }
 
 // Auto-hide tooltip after 4 seconds
@@ -3774,7 +3839,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
   function translatePlaceholders(toLang){
     var d = toLang === 'en' ? PH : PHR;
     document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(function(el){
-      if(el.closest('#lc-window')) return;   // el asistente responde solo en español: su campo se queda en español
+      if(el.closest('#lc-window')) return;   // el campo del asistente lo traduce el propio asistente (lcApplyUI)
       var t = el.getAttribute('placeholder'); if(d[t]) el.setAttribute('placeholder', d[t]);
     });
   }
@@ -3793,6 +3858,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     var nodes = [];
     while(walker.nextNode()){ nodes.push(walker.currentNode); }
     nodes.forEach(function(node){
+      var pe = node.parentElement; if(pe && pe.closest && pe.closest('#lc-messages,#lc-chips')) return;   // el asistente pinta sus mensajes en su idioma
       var txt = node.textContent.trim();
       if(dict[txt]){
         node.textContent = node.textContent.replace(txt, dict[txt]);
@@ -3813,6 +3879,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
     }
     currentLang = newLang;
     localStorage.setItem('lbc_lang', newLang);
+    try{ document.dispatchEvent(new CustomEvent('lbc:lang',{detail:{lang:newLang}})); }catch(e){}   // el asistente se vuelve a pintar en el idioma nuevo
     var codeEl = document.getElementById('lang-code');
     var flagEl = document.querySelector('.lang-flag');
     if(codeEl) codeEl.textContent = newLang.toUpperCase();
@@ -3823,6 +3890,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNewslet
   document.addEventListener('DOMContentLoaded', function(){
     if(currentLang === 'en'){
       translatePage('en');
+      try{ document.dispatchEvent(new CustomEvent('lbc:lang',{detail:{lang:'en'}})); }catch(e){}
       var codeEl = document.getElementById('lang-code');
       var flagEl = document.querySelector('.lang-flag');
       if(codeEl) codeEl.textContent = 'EN';

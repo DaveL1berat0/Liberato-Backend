@@ -32,7 +32,7 @@
   --bg:#06080D; --panel:#0C0F16; --panel-2:#0E121B; --hair:rgba(255,255,255,0.055);
   --brd:rgba(255,255,255,0.075); --gold:#CCA94F; --gold-2:#E7CC74;
   --ink:#EFECE3; --ink-2:rgba(239,236,227,0.70); --ink-3:rgba(239,236,227,0.42); --ink-4:rgba(239,236,227,0.24);
-  --up:#2EE8A4; --down:#B197FC; --warn:#F5A623; --risk:#FF6B81;
+  --up:#2EE8A4; --down:#B197FC; --warn:#F5A623; --risk:#B197FC;   /* alerta = morado de marca (antes rojo #FF6B81): el rojo queda solo para pérdidas del Journal */
   --mono:'DM Mono',ui-monospace,Menlo,monospace; --sans:'DM Sans',-apple-system,system-ui,sans-serif; --serif:'Cormorant Garamond',Georgia,serif;
   --r:14px; --r-sm:9px; --gap:16px; --pad:18px;
 }
@@ -41,7 +41,7 @@
   --bg:#eae6dc; --panel:#ffffff; --panel-2:#f6f3ed; --hair:rgba(33,29,22,0.13);
   --brd:rgba(33,29,22,0.14); --gold:#9c7c2c; --gold-2:#7e6323;
   --ink:#211d16; --ink-2:rgba(33,29,22,0.66); --ink-3:rgba(33,29,22,0.46); --ink-4:rgba(33,29,22,0.28);
-  --up:#15913f; --down:#6d4bd8; --warn:#a85a0a; --risk:#d42e2e;
+  --up:#15913f; --down:#6d4bd8; --warn:#a85a0a; --risk:#6d4bd8;   /* morado oscuro: 5,8:1 sobre blanco */
   --sh-1:0 1px 2px rgba(28,22,14,0.06);
   --sh-2:0 10px 26px -10px rgba(28,22,14,0.22);
   --shadow-card:0 1px 2px rgba(28,22,14,0.06),0 8px 20px -8px rgba(28,22,14,0.13);
@@ -62,7 +62,7 @@
 [data-theme="light"] .gcell{background:#ffffff !important;}
 [data-theme="light"] .gcell.g-good{background:rgba(22,163,74,0.08) !important;}
 [data-theme="light"] .gcell.g-warn{background:rgba(180,83,9,0.08) !important;}
-[data-theme="light"] .gcell.g-risk{background:rgba(220,38,38,0.07) !important;}
+[data-theme="light"] .gcell.g-risk{background:rgba(109,75,216,0.07) !important;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
   background-image:radial-gradient(1100px 560px at 84% -10%,rgba(204,169,79,0.045),transparent 60%);}
@@ -113,7 +113,7 @@ a{color:inherit;text-decoration:none;}
 .brief-narr b{color:var(--ink);font-weight:600;}
 .brief-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
 .chip{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.03em;padding:4px 10px;border-radius:999px;border:0.5px solid var(--hair);}
-.chip.warn{color:var(--risk);background:rgba(255,107,129,0.08);border-color:rgba(255,107,129,0.25);}
+.chip.warn{color:var(--risk);background:rgba(177,151,252,0.08);border-color:rgba(177,151,252,0.25);}
 .chip.ok{color:var(--up);background:rgba(46,232,164,0.08);border-color:rgba(46,232,164,0.25);}
 .brief-more{margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.05em;color:var(--ink-3);background:transparent;border:0.5px solid var(--brd);border-radius:7px;padding:6px 11px;cursor:pointer;transition:all 0.15s;}
 .brief-more:hover{color:var(--gold);border-color:rgba(204,169,79,0.4);}
@@ -156,10 +156,10 @@ a{color:inherit;text-decoration:none;}
 .lc-panel .lc-card{max-width:none;}
 .gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;}
 .gcell{background:var(--panel-2);border:0.5px solid var(--hair);border-radius:10px;padding:7px 5px 6px;text-align:center;}
-/* Cada tarjeta se tiñe por su PROPIO score (mismo criterio que el velocímetro): verde=sano, ámbar=vigilar, rojo=presión. Sin tarjetas "sin color". */
+/* Cada tarjeta se tiñe por su PROPIO score (mismo criterio que el velocímetro): verde=sano, ámbar=vigilar, morado=presión. Sin tarjetas "sin color". */
 .gcell.g-good{background:rgba(46,232,164,0.05);border-color:rgba(46,232,164,0.20);}
 .gcell.g-warn{background:rgba(245,166,35,0.05);border-color:rgba(245,166,35,0.20);}
-.gcell.g-risk{background:rgba(255,107,129,0.05);border-color:rgba(255,107,129,0.22);}
+.gcell.g-risk{background:rgba(177,151,252,0.05);border-color:rgba(177,151,252,0.22);}
 .gcell svg{width:100%;height:auto;max-height:52px;display:block;}
 .gcell .gn{font-family:var(--mono);font-size:10px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink-3);margin-top:3px;line-height:1.15;}
 .gcell .gv{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:1px;}
@@ -168,7 +168,7 @@ a{color:inherit;text-decoration:none;}
 .g-tag-g{background:rgba(46,232,164,0.14);color:#2EE8A4;border:0.5px solid rgba(46,232,164,0.35);}   /* RELAJADA = verde (amplia) */
 .gg-leg{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.03em;color:var(--ink-3);text-transform:none;font-weight:500;}
 .gg-leg i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;vertical-align:middle;}
-.gg-leg .d-good{background:#2EE8A4;} .gg-leg .d-warn{background:#F5A623;} .gg-leg .d-risk{background:#FF6B81;}
+.gg-leg .d-good{background:#2EE8A4;} .gg-leg .d-warn{background:#F5A623;} .gg-leg .d-risk{background:#B197FC;}
 .env-conflicts{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,0.06);border:0.5px solid rgba(245,166,35,0.22);}
 .env-conflicts-t{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn);margin-bottom:4px;}
 .env-conflicts li{font-size:11.5px;color:var(--ink-2);margin-left:15px;line-height:1.5;}
@@ -596,7 +596,7 @@ body::before{
 /* MOTORES · reforzar la lectura de estado con un filo superior teñido por su score */
 .gcell.g-good{box-shadow:inset 0 2px 0 rgba(46,232,164,0.28),inset 0 1px 0 rgba(255,255,255,0.04);}
 .gcell.g-warn{box-shadow:inset 0 2px 0 rgba(245,166,35,0.30),inset 0 1px 0 rgba(255,255,255,0.04);}
-.gcell.g-risk{box-shadow:inset 0 2px 0 rgba(255,107,129,0.30),inset 0 1px 0 rgba(255,255,255,0.04);}
+.gcell.g-risk{box-shadow:inset 0 2px 0 rgba(177,151,252,0.30),inset 0 1px 0 rgba(255,255,255,0.04);}
 
 /* ESTRUCTURA · las sub-secciones se separan con un filo de luz (rhythm vertical claro) */
 .sec-label{padding-bottom:8px;border-bottom:1px solid var(--hair);}
@@ -840,7 +840,9 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 [data-theme="light"] .g-tag-r{background:rgba(109,75,216,0.10);color:#5b3fc4;border-color:rgba(109,75,216,0.32);}
 [data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#2EE8A4"]{fill:#15803d;}
 [data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#F5A623"]{fill:#a85a0a;}
-[data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#FF6B81"]{fill:#c0283f;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg text[fill="#B197FC"]{fill:#5b3fc4;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg polyline[stroke="#B197FC"]{stroke:#6d4bd8;}   /* arco de «presión» con 5,8:1 sobre blanco */
+[data-theme="light"] .yc-lbl[style*="#B197FC"]{color:#5b3fc4!important;} [data-theme="light"] .yc-svg polyline[stroke="#B197FC"]{stroke:#6d4bd8;}   /* curva invertida */
 /* Textos secundarios escritos en línea con ink-4 («· 63/100», «~$4/día»): a ink-3 */
 .panel [style*="color:var(--ink-4)"]{color:var(--ink-3)!important;}
 /* Tema claro: «Tasa nominal» en el oro oscuro del tema (el oro de marca se quedaba en 2,2:1) */
@@ -1057,7 +1059,7 @@ var API='https://web-production-33671.up.railway.app';
 var ENV=null, SCAN_ROWS={}, LC_STATS=null, LC_PREFILLED=false, USER_PICKED=false;
 
 /* ── VELOCÍMETRO ── */
-function scColor(s){ if(s==null)return 'rgba(239,236,227,0.24)'; if(s>=65)return '#2EE8A4'; if(s>=45)return '#F5A623'; return '#FF6B81'; }
+function scColor(s){ if(s==null)return 'rgba(239,236,227,0.24)'; if(s>=65)return '#2EE8A4'; if(s>=45)return '#F5A623'; return '#B197FC'; }
 function classColor(c){ if(/HEALTHY|CONSTRUCTIVE/.test(c))return 'var(--up)'; if(/CAUTION/.test(c))return 'var(--warn)'; if(/RISK|DEFENSIVE/.test(c))return 'var(--risk)'; return 'var(--ink-3)'; }
 function gauge(score,big){
   var cx=60,cy=62,r=46,sw=8;
@@ -1162,7 +1164,7 @@ function renderYieldCurve(curve, infl){
   var pw=W-padL-padR,ph=H-padT-padB,n=curve.length,xw=pw/(n-1);
   function X(i){return padL+i*xw;} function Y(v){return padT+ph-((v-mn)/rng)*ph;}
   var y2=curve.find(function(p){return p.label==='2Y';}),y10=curve.find(function(p){return p.label==='10Y';});
-  var inv=(y2&&y10&&y2.yield>y10.yield); var col=inv?'#FF6B81':'#CCA94F';
+  var inv=(y2&&y10&&y2.yield>y10.yield); var col=inv?'#B197FC':'#CCA94F';
   var grid='',yaxis='',nt=4;
   for(var t=0;t<=nt;t++){var v=mn+rng*t/nt;var yy=Y(v);
     grid+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
@@ -1342,7 +1344,7 @@ function lcCalc(){
   if(q){
     if(rec!=null&&pctm!=null&&expp!=null){
       var good=(rec<=8&&pctm<1.5&&expp<40), bad=(rec>18||pctm>=3.5||expp>=60);
-      var lab=good?'✓ ÓPTIMA':bad?'✕ NO ÓPTIMA':'~ REVISAR', c=good?'var(--up)':bad?'var(--risk)':'var(--warn)', bg=good?'rgba(46,232,164,0.14)':bad?'rgba(255,107,129,0.14)':'rgba(245,166,35,0.14)';
+      var lab=good?'✓ ÓPTIMA':bad?'✕ NO ÓPTIMA':'~ REVISAR', c=good?'var(--up)':bad?'var(--risk)':'var(--warn)', bg=good?'rgba(46,232,164,0.14)':bad?'rgba(177,151,252,0.14)':'rgba(245,166,35,0.14)';
       var why;
       if(good){ why='Bien construido para operar: recupera poco ('+rec.toFixed(0)+'%), theta baja y poco valor extrínseco ('+expp.toFixed(0)+'%).'; }
       else { var pr=[]; if(rec>18)pr.push('necesita recuperar mucho ('+rec.toFixed(0)+'%)'); if(pctm>=3.5)pr.push('theta alta, se derrite rápido'); else if(pctm>=1.5)pr.push('theta moderada'); if(expp>=60)pr.push('demasiado valor extrínseco ('+expp.toFixed(0)+'%)'); else if(expp>=40)pr.push('valor extrínseco elevado ('+expp.toFixed(0)+'%)'); why=(bad?'Mal construido — ':'Operable con reservas — ')+(pr.join('; ')||'revisa los números')+'.'; }
