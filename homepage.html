@@ -1919,6 +1919,18 @@ html.lbc-v101 .lcs-fill{animation:lcsFill 1s var(--lbc-ease) .15s forwards;}
 @media (prefers-reduced-motion:reduce){
   html.lbc-v101 :is(.modal,.contact-modal,.lbc-home-modal,.lcs-inner){animation:none !important;transition:none !important;}
 }
+/* ══ v101 · titular del hero en dos líneas (26-nov, Dave: en pantallas grandes se partía en 4-5 líneas «como un cuadro en el medio»).
+   Causa: el tope de 112px no cabía en el ancho del hero (≤1320px menos márgenes). Ahora el tamaño sale del ancho disponible:
+   la línea más larga (EN «The difference is how they learn.») mide ~11,5em → divisor 11,8. Una frase por línea desde tablet. ══ */
+@media (min-width:768px){
+  html.lbc-v101 .hero-title{font-size:min(112px, calc((min(100vw, 1320px) - 10rem) / 11.8)) !important;text-wrap:initial;padding-left:0;padding-right:0;}
+  html.lbc-v101 .hero-title .ht-l{white-space:nowrap;}
+  html.lbc-v101 .hw-text{font-size:min(48px, calc((min(100vw, 1320px) - 10rem) / 26));}
+}
+/* En móvil «cómo aprenden.» no se parte (antes quedaba «aprenden.» sola en otra línea) */
+html.lbc-v101 .hero-title em{white-space:nowrap;}
+/* El nombre del saludo, en el oro de la marca (antes verde), como «cómo aprenden.» */
+html.lbc-v101 .hw-name{color:var(--lbc-gold-2, #CCA94F);text-shadow:0 0 30px rgba(204,169,79,0.28);}
 /* ══ v101 · bloques nuevos de recorrido (25-nov): pasos del registro, «Qué hay dentro», comparativa y pie en columnas ══ */
 /* Pasos del registro: qué pasa después, en una línea */
 html.lbc-v101 .reg-pasos{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:0 0 18px;padding:0;}
@@ -2245,7 +2257,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
     <span class="hw-text">Bienvenido, <span class="hw-name" id="hw-name">Dave</span></span>
   </div>
 
-  <h1 class="hero-title">9 de cada 10 traders pierden.<br>La diferencia es <em>cómo aprenden.</em></h1>
+  <h1 class="hero-title"><span class="ht-l">9 de cada 10 traders pierden.</span><br><span class="ht-l">La diferencia es <em>cómo aprenden.</em></span></h1>
   <p class="hero-sub">Herramientas avanzadas y trading en vivo para traders que buscan <strong>consistencia real y un edge en el mercado.</strong></p>
   <div class="video-wrap">
     <div class="video-box" id="video-box">
