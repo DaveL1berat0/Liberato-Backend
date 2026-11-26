@@ -1381,6 +1381,22 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 [data-theme="light"] .sm-pole.trend{color:#15803d;}
 [data-theme="light"] .cx-tag.maxpain{color:#0e7490;border-color:rgba(14,116,144,0.45);}
 [data-theme="light"] .t-footer-m a{color:#7e6323!important;}
+
+/* ══════════ v101 · cierre · escritorio (hojas H-dt-escritorio) ══════════ */
+/* Tema claro: el velo oscuro del fondo (pensado para el negro) agrisaba la página arriba y abajo */
+[data-theme="light"] body::before{background:radial-gradient(ellipse 120% 50% at 50% -5%,rgba(168,132,47,0.07),transparent 55%);}
+[data-theme="light"] body::after{opacity:0.5;}
+/* Pie: la segunda mitad iba a opacidad 0,55 → ilegible en los dos temas */
+.t-footer-m span{opacity:1!important;}
+/* Rótulos a 10 px como mínimo también en las celdas pequeñas del mapa y en «→ intensidad» */
+.hmap-tile[data-tier="3"] .hmap-sym{font-size:10px;}
+.rg-ms-source .rg-ms-k em{font-size:10px;opacity:1;}
+/* Precio sin dato: un «—» legible (antes «—.—» a 34 px, casi invisible) */
+.rg-price-px.empty,.rg-price-chg.empty{color:var(--ink-3)!important;}
+/* Día elegido de la semana de catalizadores visible en tema claro */
+[data-theme="light"] .lg-day-tab.active{border-color:var(--gold)!important;background:rgba(168,132,47,0.10)!important;}
+/* «· hace 45h 23m» del sello de actualización iba en ink-4 (2:1) */
+.gf-timestamp [style*="color:var(--ink-4)"]{color:var(--ink-3)!important;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -1777,7 +1793,7 @@ window.profileSetLang=profileSetLang;window.profileChangePassword=profileChangeP
               <span class="rg-price-live"><span class="d"></span>En vivo</span>
             </div>
             <div class="rg-price-row">
-              <span class="rg-price-px neut empty" id="rg-price">—.—</span>
+              <span class="rg-price-px neut empty" id="rg-price">—</span>
               <span class="rg-price-chg empty" id="rg-price-chg">—</span>
             </div>
           </div>

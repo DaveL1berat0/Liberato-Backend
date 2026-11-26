@@ -112,3 +112,12 @@
 :where(button,input,select,textarea,optgroup){font-family:inherit;}
 /* Navegación de miembro: la misma fuente de texto que la portada (heredaba la del sistema) */
 .lbcn,.lbcn-item,.lbcn-soon-tag,.lbcn-soon-label{font-family:var(--lbc-font-sans);}
+/* Etiqueta «pronto» de Educación: 10 px como el resto de rótulos (iba a 7–8 px) */
+.lbcn .lbcn-soon-tag{font-size:10px;line-height:1.3;padding:0 5px;}
+
+/* ─── 9. «Mi perfil»: un solo tipo de botón (cierre v101) ───────────────── */
+/* Eran cinco botones de oro macizo en columna; la regla del sistema es un primario por pantalla.
+   En el panel no hay una acción principal: todos pasan a secundarios (contorno oro), como «Opiniones». */
+.profile-drawer .pd-btn{background:rgba(204,169,79,0.06);border:1px solid rgba(204,169,79,0.42);color:#E7CC74;font-weight:600;box-shadow:none;}
+@media(hover:hover){.profile-drawer .pd-btn:hover{background:rgba(204,169,79,0.12);border-color:rgba(204,169,79,0.6);box-shadow:none;}}
+.profile-drawer .pd-btn:disabled{opacity:0.5;}
