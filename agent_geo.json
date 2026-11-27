@@ -1,11 +1,10 @@
 {
-  "geopolitica": "Irán sigue atacando buques que transitan el Estrecho de Ormuz y los hutíes golpearon infraestructura saudí, elevando el riesgo de suministro de petróleo en Medio Oriente, un factor que presiona el apetito por riesgo y puede pesar sobre el NQ intradía (Reuters, vía CP24, 07:39 ET).",
-  "petroleo": "El Brent sube a ~$96.60/barril (+1.2%/+1.7% según fuente) por temores de suministro en Medio Oriente tras los ataques a buques en Ormuz, camino a cortar una racha de tres semanas en baja; el WTI avanza ~1.7% desde el cierre del miércoles por el feriado de Acción de Gracias. Petróleo más caro = presión de costos que puede restar soporte al NQ (Reuters, vía CP24, 07:39 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 suben ~2.4% en la sesión reducida de Black Friday, liderados por un rebote técnico de semiconductores/IA tras un noviembre volátil; analistas lo califican de técnico, no de recuperación duradera, por lo que el impulso al NQ podría ser de corto plazo (CNBC, vía TradersUnion, 08:42 ET).",
+  "geopolitica": "Los huties atacaron una refineria saudi e Iran reporto minas/ataques a buques en el estrecho de Ormuz, elevando la prima de riesgo geopolitico en Oriente Medio, factor que puede frenar el apetito por riesgo y pesar sobre el NQ intradia (Reuters, ~07:39 ET).",
+  "petroleo": "El Brent cotiza cerca de 96.60 USD/barril (maximo desde el 9 de noviembre) y el WTI en torno a 85.78 USD/barril, ambos al alza tras los ataques a infraestructura saudi y buques en Ormuz, cortando una racha de tres semanas en baja; petroleo mas caro resta soporte al NQ via presion de costos (Reuters, ~07:39 ET).",
+  "catalizador": "Los futuros del Nasdaq-100 suben en la sesion reducida de Black Friday (cierre a la 1pm ET), impulsados por un rebote tecnico de semiconductores/IA tras un noviembre volatil; el volumen es bajo por el feriado, por lo que el impulso al NQ podria ser de corto plazo (CNBC/Reuters, sesion matutina ET).",
   "sources": [
-    "Reuters (vía CP24) 07:39 ET",
-    "CNBC (vía mlq.ai) 08:06 ET",
-    "CNBC (vía TradersUnion) 08:42 ET"
+    "Reuters ~07:39 ET",
+    "CNBC/Reuters sesion matutina ET (Black Friday, cierre 1pm ET)"
   ],
-  "as_of": "2026-11-27T19:05:25Z"
+  "as_of": "2026-11-27T20:06:42Z"
 }
