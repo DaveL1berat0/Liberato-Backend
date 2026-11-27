@@ -1,13 +1,11 @@
 {
-  "geopolitica": "Nuevas restricciones de EE.UU. a la exportacion de semiconductores avanzados a China y ataques renovados contra infraestructura energetica y naviera en Oriente Medio (Estrecho de Ormuz) elevan la aversion al riesgo y presionan a los valores tecnologicos del NQ.",
-  "petroleo": "El WTI sube cerca de 2.5% hasta unos 85.8 USD/barril y el Brent se mantiene estable en torno a 96 USD, impulsados por el riesgo de suministro en Oriente Medio, lo que puede generar presion inflacionaria y pesar sobre el NQ.",
-  "catalizador": "Los futuros de tasas (CME FedWatch) asignan una probabilidad de entorno al 95-96% a una subida de tasas de la Fed en la reunion de diciembre, un giro hawkish que anade volatilidad a las acciones tecnologicas del NQ.",
+  "geopolitica": "EE.UU. propone nuevos aranceles (20% a China, 15% a UE/Japon/Corea/Suiza, con riesgo de escalar hasta 40% si fallan las negociaciones) por supuesta sobrecapacidad industrial, lo que presiona a la baja a las bolsas asiaticas y a los futuros tecnologicos globales.",
+  "petroleo": "Brent sube cerca de 2% a 96.48 USD/barril y WTI a 84.71 USD tras ataques hutíes contra la mayor refineria saudi y minas iranies contra buques cerca del Estrecho de Ormuz, reviviendo el temor a una disrupcion de suministro.",
+  "catalizador": "",
   "sources": [
-    "CNBC 27 nov 2026",
-    "Yahoo Finance 27 nov 2026",
-    "Oilprice.com/Angel One 27 nov 2026",
-    "24/7 Wall St 18 nov 2026",
-    "conservativedailynews nov 2026"
+    "Reuters 12:41 ET (petroleo, ataques en Ormuz)",
+    "CNBC 2026-11-25 (aranceles EE.UU.-China-UE)",
+    "Axios 2026-11-25 (aranceles EE.UU.-China-UE)"
   ],
-  "as_of": "2026-11-27T14:06:54Z"
+  "as_of": "2026-11-27T14:39:14Z"
 }
