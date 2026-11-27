@@ -1882,6 +1882,13 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 .radar-svg{overflow:visible;}
 [data-theme="light"] .radar-svg polygon[fill="none"]{stroke:rgba(33,29,22,0.13);}
 [data-theme="light"] .radar-svg line{stroke:rgba(33,29,22,0.10);}
+/* Tema claro (27-nov): cifras de los ejes y rejilla de las gráficas (P&L acumulado, P&L diario, últimos trades, setups)
+   iban en blanco roto y casi no se leían sobre claro */
+[data-theme="light"] svg text[fill="rgba(232,228,217,0.78)"]{fill:rgba(33,29,22,0.78);}
+[data-theme="light"] svg text[fill="rgba(232,228,217,0.55)"],[data-theme="light"] svg text[fill="rgba(232,228,217,0.5)"]{fill:rgba(33,29,22,0.62);}
+[data-theme="light"] svg text:is([fill="rgba(232,228,217,0.45)"],[fill="rgba(232,228,217,0.4)"],[fill="rgba(232,228,217,0.35)"],[fill="rgba(232,228,217,0.3)"]){fill:rgba(33,29,22,0.55);}
+[data-theme="light"] svg line[stroke="rgba(255,255,255,0.05)"]{stroke:rgba(33,29,22,0.08);}
+[data-theme="light"] svg line[stroke="rgba(255,255,255,0.14)"]{stroke:rgba(33,29,22,0.22);}
 /* Cifras tabulares */
 .kpi-value,.stat-value,.tz-kpi-value,.dist-val,.pnl-total,.radar-score-num,td,.dfp-seg{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;}
 /* Controles: objetivos táctiles y estados */
@@ -7446,6 +7453,24 @@ function filterTradesByDate(arr){return getFilteredT(_dfShared);}
       })();
     } else { target=y; }
   },{passive:true});
+})();
+</script>
+<script>
+/* 27-nov · La barra lateral y la cabecera fija del Journal empiezan en top:0 y, con la página arriba, quedaban debajo de
+   la navegación de miembros: «Liberato Journal» asomaba cortado detrás. La barra lateral (escritorio) arranca justo
+   bajo la navegación y sube al desplazarse; la cabecera fija (móvil y tablet) solo aparece cuando la navegación ya
+   salió de la pantalla, como antes. */
+(function(){
+  var nav=document.querySelector('.lbcn'); if(!nav)return;
+  var sb=document.querySelector('.sidebar'), mob=document.querySelector('.mob-nav');
+  var pend=false;
+  function place(){ pend=false; var b=Math.max(0,Math.round(nav.getBoundingClientRect().bottom));
+    if(sb) sb.style.top=b+'px';
+    if(mob){ var tapada=b>0; mob.style.visibility=tapada?'hidden':''; mob.style.opacity=tapada?'0':''; } }
+  function soon(){ if(!pend){ pend=true; requestAnimationFrame(place); } }
+  window.addEventListener('scroll',soon,{passive:true}); window.addEventListener('resize',soon);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(soon);
+  place();
 })();
 </script>
 
