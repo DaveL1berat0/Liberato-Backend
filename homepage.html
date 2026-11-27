@@ -3574,6 +3574,19 @@ function irAPlanes(e){
 h1,h2,h3{text-wrap:balance;}
 p{text-wrap:pretty;}
 
+/* ── Cabecera a ancho intermedio (27-nov) ──
+   La rejilla de escritorio es logo | enlaces | usuario. Entre 768 y 1023 los enlaces se ocultan y el bloque de usuario
+   caía en la columna central, pegado al logo: se fija a la columna derecha. Además, entre 1024 y 1199 las cinco
+   pastillas no caben y los candados salían aplastados y cortados: la hamburguesa se usa hasta 1199 px. */
+@media(min-width:768px){
+  nav>.nav-right{grid-column:3;justify-self:end;}
+  .nav-desktop-links .lock-icon{flex-shrink:0;}
+}
+@media(min-width:768px) and (max-width:1199px){
+  .nav-desktop-links{display:none !important;}
+  .hamburger{display:flex !important;}
+}
+
 </style>
 <script>
 function openLoginModal(){var m=document.getElementById('lc-login');if(m)m.style.display='flex';setTimeout(function(){var i=document.getElementById('lc-login-email');if(i)i.focus();},100);}
