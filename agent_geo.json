@@ -1,12 +1,12 @@
 {
-  "geopolitica": "Los ataques huties a petroleros en el estrecho de Ormuz y a la refineria saudi de Jazan elevan la tension geopolitica en Oriente Medio, un factor de aversion al riesgo que puede limitar el apetito por activos como el NQ en la sesion de hoy.",
-  "petroleo": "El Brent cotiza en torno a 96.6-97.0 USD/barril y el WTI cerca de 85 USD/barril (+0.82%), impulsados por el temor a una interrupcion de suministro en Oriente Medio, lo que presiona el sentimiento de riesgo que pesa indirectamente sobre el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (aprox. +2.5/2.8%) en una sesion de bajo volumen tras el feriado de Accion de Gracias, con el nerviosismo por la IA (Nvidia) estabilizandose, lo que da soporte alcista inmediato al NQ.",
+  "geopolitica": "Iran afirma que nuevos petroleros fueron alcanzados por minas en el Estrecho de Ormuz y el CENTCOM de EE.UU. desmiente la denuncia como falsa, mientras un ataque con drones atribuido a Iran mato a dos tecnicos italianos en Kuwait, lo que eleva la prima de riesgo geopolitico y puede presionar al NQ a la baja en la apertura.",
+  "petroleo": "El Brent cotiza cerca de 96,6 USD/barril y el WTI cerca de 85,8 USD/barril (+2,5%), en maximos de varias semanas por los ataques a petroleros en Ormuz y a infraestructura energetica saudi, un alza del crudo que tiende a pesar sobre el sentimiento de riesgo del NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 2,8% tras el feriado de Accion de Gracias por un rebote en acciones de IA (AMD +7%, Nvidia +4,7% en premarket), aunque el mercado ya descuenta con ~99% de probabilidad una subida de tasas de la Fed en la reunion del 8-9 de diciembre, lo que podria limitar el optimismo mas adelante en la sesion.",
   "sources": [
-    "Reuters ~02:13 ET (27 nov) - futuros Nasdaq 100 +2.47%",
-    "CNBC (27 nov) - live blog, futuros Nasdaq +2.8%",
-    "Bloomberg (27 nov) - Brent ~96.6-97 USD, WTI ~85 USD +0.82%",
-    "Yahoo Finance (27 nov) - AI jitters steady, futuros Nasdaq al alza"
+    "CNBC 2026-11-24 (Iran/Hormuz tanker claims)",
+    "ABC News 23:50 ET 2026-11-26 (Kuwait drone strike, Italians killed)",
+    "Oilprice.com/UNN 23:50 ET 2026-11-26 (Brent/WTI levels)",
+    "Reuters via Investing.com 00:30 ET 2026-11-27 (Nasdaq-100 futures, Fed hike odds)"
   ],
-  "as_of": "2026-11-27T11:06:20Z"
+  "as_of": "2026-11-27T11:39:59Z"
 }
