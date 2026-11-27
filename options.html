@@ -53,8 +53,8 @@
 [data-theme="light"] .scan-search{box-shadow:inset 0 1px 2px rgba(28,22,14,0.05);}
 [data-theme="light"] .dtoolbar,[data-theme="light"] .lc-f input,[data-theme="light"] .oh{background:#ffffff !important;}
 [data-theme="light"] .scan-tbl th,[data-theme="light"] .rot-table th{background:rgba(33,29,22,0.04) !important;}
-/* SVG de rotación (RRG): colores fijos claro-sobre-oscuro -> inset oscuro deliberado */
-[data-theme="light"] #rot-body>svg{background:#0b0e15;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05);}
+/* SVG de rotación (RRG): en claro, superficie clara (los colores del gráfico se adaptan abajo, bloque 27-nov) */
+[data-theme="light"] #rot-body>svg{background:var(--panel-2);border-radius:12px;box-shadow:inset 0 0 0 1px rgba(33,29,22,0.08);}
 /* celdas que no siguieron el token (redesign Level-3): fuerza superficie clara */
 [data-theme="light"] .env-rs-col,[data-theme="light"] .lc-cell{background:#ffffff !important;}
 [data-theme="light"] .lc-hero{background:linear-gradient(135deg,rgba(168,132,47,0.10),#ffffff) !important;}
@@ -851,6 +851,43 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 [data-theme="light"] .yc-lbl[style*="#CCA94F"]{color:var(--gold-2)!important;}
 .brief-narr .bl{font-size:10px;}
 .scan-tbl .sort-ind{font-size:10px;}
+
+/* ══════════ Tema claro · barrido 27-nov ══════════ */
+/* Curva del Tesoro: rejilla, ejes y cifras iban en blanco (invisibles sobre claro) y la línea en el oro de marca (2,2:1) */
+[data-theme="light"] .yc-svg line[stroke="rgba(255,255,255,0.05)"]{stroke:rgba(33,29,22,0.08);}
+[data-theme="light"] .yc-svg line[stroke="rgba(255,255,255,0.12)"]{stroke:rgba(33,29,22,0.22);}
+[data-theme="light"] .yc-svg text[fill="rgba(239,236,227,0.42)"],[data-theme="light"] .yc-svg text[fill="rgba(239,236,227,0.55)"]{fill:rgba(33,29,22,0.62);}
+[data-theme="light"] .yc-svg text[fill="rgba(239,236,227,0.82)"]{fill:#211d16;}
+[data-theme="light"] .yc-svg polyline[stroke="#CCA94F"]{stroke:#9c7c2c;}
+[data-theme="light"] .yc-svg circle[fill="#CCA94F"]{fill:#9c7c2c;}
+[data-theme="light"] .yc-svg stop[stop-color="#CCA94F"]{stop-color:#9c7c2c;}
+[data-theme="light"] .yc-svg polyline[stroke="#5B9DF9"]{stroke:#2563c9;}
+[data-theme="light"] .yc-svg circle[fill="#5B9DF9"]{fill:#2563c9;}
+[data-theme="light"] .yc-svg text[fill="#5B9DF9"]{fill:#1f55ad;}
+[data-theme="light"] .yc-legend .yc-dot[style*="#5B9DF9"]{background:#2563c9!important;}
+[data-theme="light"] .yc-lbl[style*="#5B9DF9"]{color:#1f55ad!important;}
+[data-theme="light"] .yc-legend .yc-dot[style*="#CCA94F"]{background:#9c7c2c!important;}
+/* Rotación (RRG): ejes, cuadrantes, rótulos y burbujas con los colores oscuros del tema claro */
+[data-theme="light"] #rot-body svg rect[stroke="rgba(255,255,255,0.08)"]{stroke:rgba(33,29,22,0.14);}
+[data-theme="light"] #rot-body svg line[stroke="rgba(255,255,255,0.12)"]{stroke:rgba(33,29,22,0.22);}
+[data-theme="light"] #rot-body svg rect[fill="rgba(239,236,227,0.5)"]{fill:rgba(33,29,22,0.5);}
+[data-theme="light"] #rot-body svg text[fill="#2EE8A4"]{fill:#15803d;}
+[data-theme="light"] #rot-body svg text[fill="#CCA94F"]{fill:#7e6323;}
+[data-theme="light"] #rot-body svg text[fill="#B197FC"]{fill:#5b3fc4;}
+[data-theme="light"] #rot-body svg text[fill^="rgba(239,236,227"]{fill:rgba(33,29,22,0.62);}
+[data-theme="light"] #rot-body svg circle[stroke="#2EE8A4"]{stroke:#15913f;fill:#15913f;}
+[data-theme="light"] #rot-body svg circle[stroke="#CCA94F"]{stroke:#9c7c2c;fill:#9c7c2c;}
+[data-theme="light"] #rot-body svg circle[stroke="#B197FC"]{stroke:#6d4bd8;fill:#6d4bd8;}
+[data-theme="light"] #rot-body svg circle[stroke^="rgba(239,236,227"]{stroke:rgba(33,29,22,0.45);fill:rgba(33,29,22,0.45);}
+/* Textos con color de marca escritos en línea (tabla y frase de la rotación, avisos): versión legible sobre claro */
+[data-theme="light"] .panel [style*="color:#2EE8A4"]{color:#15803d!important;}
+[data-theme="light"] .panel [style*="color:#CCA94F"]{color:#7e6323!important;}
+[data-theme="light"] .panel [style*="color:#B197FC"]{color:#5b3fc4!important;}
+[data-theme="light"] .panel [style*="color:rgba(239,236,227"]{color:rgba(33,29,22,0.62)!important;}
+/* Velocímetros: arcos de «sano» y «vigilar» en neón sobre blanco → tonos del tema claro */
+[data-theme="light"] :is(.gcell,.env-hero-g) svg polyline[stroke="#2EE8A4"]{stroke:#15913f;}
+[data-theme="light"] :is(.gcell,.env-hero-g) svg polyline[stroke="#F5A623"]{stroke:#c47a12;}
+[data-theme="light"] .gg-leg .d-good{background:#15913f;} [data-theme="light"] .gg-leg .d-warn{background:#c47a12;} [data-theme="light"] .gg-leg .d-risk{background:#6d4bd8;}
 </style>
 <nav class="lbcn" aria-label="Navegación">
   <a class="lbcn-brand" href="homepage.html">Liberato <span>Community</span></a>
@@ -1448,6 +1485,8 @@ function themeChart(){
     crosshair:{vertLine:{color: light?'rgba(26,29,36,0.35)':'rgba(239,236,227,0.28)',labelBackgroundColor: light?'#a8842f':'#14110b'},
                horzLine:{color: light?'rgba(26,29,36,0.35)':'rgba(239,236,227,0.28)',labelBackgroundColor: light?'#a8842f':'#14110b'}}
   }); }catch(e){}
+  // Velas: verde alcista / morado bajista; en claro, los tonos oscuros del tema (el neón se perdía sobre el fondo claro)
+  try{ if(lseries) lseries.applyOptions(light?{upColor:'#15913f',downColor:'#6d4bd8',wickUpColor:'rgba(21,145,63,0.7)',wickDownColor:'rgba(109,75,216,0.7)'}:{upColor:'#2EE8A4',downColor:'#B197FC',wickUpColor:'rgba(46,232,164,0.6)',wickDownColor:'rgba(177,151,252,0.6)'}); }catch(e){}
 }
 window.addEventListener('lbc:theme', themeChart);
 function renderChartStats(bars){
