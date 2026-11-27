@@ -3846,7 +3846,7 @@ function lbcHeadlineEs(h){
     var bear=0;if(d.vxn&&d.vxn.dir==='up')bear++;if(d.dxy&&d.dxy.dir==='up')bear++;if(d.us10y&&d.us10y.dir==='up')bear++;
     var risk,rc,interp,ic;
     if(bear>=2){risk='HIGH';rc='high';interp='Macro headwinds — presión Risk-Off sobre el NQ.';ic='bear';}
-    else if(bear===1){risk='MEDIUM';rc='med';interp='Señales mixtas — vigilar niveles clave de cerca.';ic='';}
+    else if(bear===1){risk='MEDIUM';rc='med';interp='Lecturas mixtas — vigilar niveles clave de cerca.';ic='';}
     else{risk='LOW';rc='low';interp='Supports Risk-On — macro favorable para largos en NQ.';ic='bull';}
     var b=$('cr-risk');if(b)b.className='cr-risk-b '+rc;var rv=$('cr-risk-v');if(rv)rv.textContent=risk;
     var ie=$('cr-interp');if(ie){ie.textContent=interp;ie.className='cr-interp '+ic;}
@@ -3897,7 +3897,7 @@ function lbcHeadlineEs(h){
     var vx=cdir('vxn'); if(vx==='up') mb.push('volatilidad subiendo'); else if(vx==='down') mb.push('volatilidad cediendo');
     var dx=cdir('dxy'); if(dx==='up') mb.push('dólar firme'); else if(dx==='down') mb.push('dólar débil');
     var tone=bear>=2?'<span class="hl-dn">Risk-Off</span>':bull>=2?'<span class="hl-up">Risk-On</span>':'mixta';
-    parts.push('<strong>Macro:</strong> '+tone+(mb.length?' — '+mb.join(', '):' — sin señales macro cruzadas claras')+'.');
+    parts.push('<strong>Macro:</strong> '+tone+(mb.length?' — '+mb.join(', '):' — sin lecturas macro cruzadas claras')+'.');
 
     // ── CATALIZADOR DEL DÍA (driver dominante: noticia de mayor impacto + dato
     //    macro publicado hoy). S.movers ya combina ambos: el backend inyecta los
