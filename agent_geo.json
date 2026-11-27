@@ -1,12 +1,12 @@
 {
-  "geopolitica": "La USTR anuncio hoy nuevos aranceles de hasta 20% a China, la UE y otros 12 socios comerciales (China podria llegar a 40-45% en total), mientras Iran reporto nuevos petroleros alcanzados por minas navales en el Estrecho de Ormuz (no verificado por Reuters); ambos focos reavivan la aversion al riesgo y presionan a las tecnologicas del Nasdaq.",
-  "petroleo": "Brent cotiza en torno a 90-91 USD/barril y WTI cerca de 80-82 USD/barril, con leve baja en la sesion por expectativas de superavit de oferta en 2027 que compensan las tensiones en Ormuz, lo que limita el traspaso de la prima de riesgo geopolitico al NQ.",
-  "catalizador": "El PCE de octubre salio caliente (interanual 3.8%, nucleo 3.3% vs 3.2% esperado), elevando a mas de 90% la probabilidad de una subida de tasas de la Fed en diciembre bajo el presidente Kevin Warsh, lo que desato una fuerte venta de semiconductores y del Nasdaq (caida intradia de hasta 4.6%) antes de una recuperacion parcial.",
+  "geopolitica": "Los ataques huties a petroleros en el estrecho de Ormuz y a la refineria saudi de Jazan elevan la tension geopolitica en Oriente Medio, un factor de aversion al riesgo que puede limitar el apetito por activos como el NQ en la sesion de hoy.",
+  "petroleo": "El Brent cotiza en torno a 96.6-97.0 USD/barril y el WTI cerca de 85 USD/barril (+0.82%), impulsados por el temor a una interrupcion de suministro en Oriente Medio, lo que presiona el sentimiento de riesgo que pesa indirectamente sobre el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (aprox. +2.5/2.8%) en una sesion de bajo volumen tras el feriado de Accion de Gracias, con el nerviosismo por la IA (Nvidia) estabilizandose, lo que da soporte alcista inmediato al NQ.",
   "sources": [
-    "CBS News/CNN/Yahoo 25-nov-2026 (USTR anuncia aranceles a China, UE y 12 socios)",
-    "Reuters via Al Arabiya/gcaptain 25-nov-2026 (Iran reporta petroleros alcanzados por minas en Ormuz, no verificado)",
-    "Trading Economics/stockmarketwatch 25-nov-2026 (Brent ~90-91 USD, WTI ~80-82 USD)",
-    "CNBC 25-nov-2026 (PCE caliente, Nasdaq -4.6% intradia, Dow recupera perdida de 1100 puntos)"
+    "Reuters ~02:13 ET (27 nov) - futuros Nasdaq 100 +2.47%",
+    "CNBC (27 nov) - live blog, futuros Nasdaq +2.8%",
+    "Bloomberg (27 nov) - Brent ~96.6-97 USD, WTI ~85 USD +0.82%",
+    "Yahoo Finance (27 nov) - AI jitters steady, futuros Nasdaq al alza"
   ],
-  "as_of": "2026-11-25T21:06:12Z"
+  "as_of": "2026-11-27T11:06:20Z"
 }
