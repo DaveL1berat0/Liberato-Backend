@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Persiste la tension comercial: EEUU propuso aranceles de hasta 40% a China y nuevos gravamenes a UE, India y Japon (anunciado 25-nov tras probe por exceso de capacidad), lo que ya provoco una caida bursatil y sigue pesando como riesgo de fondo sobre el NQ.",
-  "petroleo": "WTI cotiza en torno a 85,3 USD/barril (+~2%) y Brent cerca de 96,7 USD/barril, impulsados por los ataques a petroleros en el Estrecho de Ormuz y la expectativa de la reunion de la OPEP+ del 29-nov, lo que anade prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (+2,3%) en la sesion reducida de Black Friday, liderados por un rebote de Nvidia (+4% premarket) y del sector de semiconductores tras una semana volatil, el principal motor alcista del NQ en el intradia de hoy.",
+  "geopolitica": "",
+  "petroleo": "El Brent cotiza plano en torno a 96,51 USD/barril y el WTI sube 2,97% a 85,75 USD tras el ataque hutí del 25-nov a una refinería saudí, lo que compensa los temores de exceso de oferta global y mantiene un sesgo de riesgo geopolítico que puede contagiar al sentimiento del NQ.",
+  "catalizador": "La Fed (ahora bajo Kevin Warsh) ve casi 100% de probabilidad de una subida de tasas en diciembre segun el mercado, pese a lo cual un rally tecnologico impulsa los futuros (Nasdaq-100 +2,3% premarket) para cerrar una semana volatil, un contraste que puede generar volatilidad adicional en el NQ en la apertura.",
   "sources": [
-    "CNBC 27-nov (premarket)",
-    "Al Jazeera 25-nov",
-    "Oil Price API ~07:01 ET (12:01 UTC) 27-nov"
+    "CNBC 2026-11-27",
+    "CNBC 2026-11-25",
+    "CNBC 2026-11-23"
   ],
-  "as_of": "2026-11-27T15:07:02Z"
+  "as_of": "2026-11-27T15:39:35Z"
 }
