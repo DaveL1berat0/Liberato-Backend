@@ -1,10 +1,11 @@
 {
-  "geopolitica": "Los huties atacaron una refineria saudi e Iran reporto minas/ataques a buques en el estrecho de Ormuz, elevando la prima de riesgo geopolitico en Oriente Medio, factor que puede frenar el apetito por riesgo y pesar sobre el NQ intradia (Reuters, ~07:39 ET).",
-  "petroleo": "El Brent cotiza cerca de 96.60 USD/barril (maximo desde el 9 de noviembre) y el WTI en torno a 85.78 USD/barril, ambos al alza tras los ataques a infraestructura saudi y buques en Ormuz, cortando una racha de tres semanas en baja; petroleo mas caro resta soporte al NQ via presion de costos (Reuters, ~07:39 ET).",
-  "catalizador": "Los futuros del Nasdaq-100 suben en la sesion reducida de Black Friday (cierre a la 1pm ET), impulsados por un rebote tecnico de semiconductores/IA tras un noviembre volatil; el volumen es bajo por el feriado, por lo que el impulso al NQ podria ser de corto plazo (CNBC/Reuters, sesion matutina ET).",
+  "geopolitica": "Ataques en Oriente Medio (proyectil contra la refineria Jazan de Saudi Aramco y dron que mato a dos tecnicos italianos de Rheinmetall en Kuwait, 26 nov) elevan la prima de riesgo geopolitico de cara a la reunion de la OPEP+ del 29 de noviembre, presionando el apetito por riesgo del NQ.",
+  "petroleo": "Brent cotiza en torno a 97 USD/barril (+0.5%/+0.9%) por riesgo de suministro tras los ataques a instalaciones energeticas y de defensa en Arabia Saudita y Kuwait, un alza del crudo que encarece insumos y pesa sobre el sentimiento de riesgo del Nasdaq.",
+  "catalizador": "Los futuros del Nasdaq-100 suben hasta +2.7% en la sesion reducida de Black Friday, liderados por el rebote de semiconductores (Micron, Marvell, SanDisk) mientras Nvidia rezaga tras reportes de freno de envios al sudeste asiatico por la nueva regla de exportacion del Departamento de Comercio de EE.UU.",
   "sources": [
-    "Reuters ~07:39 ET",
-    "CNBC/Reuters sesion matutina ET (Black Friday, cierre 1pm ET)"
+    "Reuters/Saudi Energy Ministry 26 nov",
+    "Energynews.pro 05:40 ET",
+    "Yahoo Finance 03:36 ET"
   ],
-  "as_of": "2026-11-27T20:06:42Z"
+  "as_of": "2026-11-27T21:06:19Z"
 }
