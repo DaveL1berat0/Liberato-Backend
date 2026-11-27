@@ -1,11 +1,11 @@
 {
-  "geopolitica": "Los hutíes (respaldados por Irán) reivindicaron nuevos ataques con dron/misil contra la refinería saudí de Aramco en Jazan y persisten los incidentes con petroleros cerca del estrecho de Ormuz, elevando la prima de riesgo geopolítico que puede frenar el apetito por riesgo en el NQ si se intensifica.",
-  "petroleo": "El Brent cotiza cerca de 96,6 USD/barril (+2% aprox. en 24h) y el WTI en torno a 85,8 USD, impulsados por el temor a disrupciones de suministro en Oriente Medio, lo que añade presión inflacionaria que el mercado vigila como viento en contra para el NQ.",
-  "catalizador": "Las apuestas de una subida de tasas de la Fed en diciembre subieron a ~97-98% tras el dato de inflación PCE subyacente de octubre en 3,3% interanual, el más alto en tres años, un giro hawkish que presiona las valoraciones tech y es negativo para el NQ.",
+  "geopolitica": "Los hutíes reivindicaron un nuevo ataque con dron/misil contra la refinería saudí de Aramco en Jazán, reavivando el temor a disrupciones de suministro en Oriente Medio justo antes de la reunión de la OPEP+ del domingo; el riesgo geopolítico persistente puede limitar el apetito por riesgo en el NQ si se agrava.",
+  "petroleo": "El Brent cotiza en torno a 96,3-96,6 USD/barril (-0,28% frente al cierre previo de 96,57) y el WTI cerca de 85,2-85,6 USD, sostenidos por el riesgo de suministro en Oriente Medio (ataques hutíes) y la expectativa de la reunión de la OPEP+ este domingo; un petróleo firme añade presión inflacionaria vigilada como viento en contra para el NQ.",
+  "catalizador": "",
   "sources": [
-    "Reuters 23:50 ET (Brent/WTI, vía The National News 27-nov)",
-    "The National News (citando Reuters) 27-nov (ataques hutíes a refinería de Jazan)",
-    "CME FedWatch vía BigGo Finance 26-nov (probabilidad de subida de tasas Fed en diciembre)"
+    "Forbes Advisor 27-nov (Brent ~96,6 USD, WTI ~85 USD, riesgo de suministro Oriente Medio)",
+    "FinanceFeeds 08:00 ET (Brent 96,30 USD, -0,28%, previa reunión OPEP+ del domingo)",
+    "The Fifth Skill / Vietnam.vn 27-nov (hutíes atacan refinería saudí de Jazán, Brent por encima de 96 USD)"
   ],
-  "as_of": "2026-11-27T13:06:40Z"
+  "as_of": "2026-11-27T13:40:42Z"
 }
