@@ -3161,8 +3161,12 @@ function lbcHeadlineEs(h){
       rightPriceScale:{borderColor: light?'rgba(33,29,22,0.12)':'rgba(239,236,227,0.07)'},
       timeScale:{borderColor: light?'rgba(33,29,22,0.12)':'rgba(239,236,227,0.07)'}
     }); }catch(e){}
+    // Velas: en claro, los tonos oscuros del tema (el neón se perdía sobre el fondo claro)
+    try{ if(series) series.applyOptions(light?{upColor:'#15913f',downColor:'#6d4bd8',wickUpColor:'rgba(21,145,63,0.85)',wickDownColor:'rgba(109,75,216,0.85)'}:{upColor:'#2EE8A4',downColor:'#B197FC',wickUpColor:'rgba(46,232,164,0.85)',wickDownColor:'rgba(177,151,252,0.85)'}); }catch(e){}
   }
-  window.addEventListener('lbc:theme', function(){ themeGammaChart(); });
+  // Color de los niveles (Call/Put/Flip/Max Pain) según el tema: en claro, las versiones oscuras de la marca
+  function _tc(c){ if(document.documentElement.getAttribute('data-theme')!=='light')return c; return ({'#2EE8A4':'#15913f','#B197FC':'#6d4bd8','#CCA94F':'#9c7c2c','#4FD6E0':'#0e7490'})[c]||c; }
+  window.addEventListener('lbc:theme', function(){ themeGammaChart(); try{ drawLines(); }catch(e){} });
   function buildChart(){
     if(chart)return;   // guard de re-entrada: si el usuario toca un TF mientras el CDN carga, evita 2º createChart + 2ª suscripción (leak)
     var el=$('chart-tv');if(!el||!window.LightweightCharts)return;var l=$('chart-load');if(l)l.style.display='none';el.style.display='block';
@@ -3221,7 +3225,7 @@ function lbcHeadlineEs(h){
   function _actCW(){return (S.show0dte&&S.zero&&S.zero.call!=null)?S.zero.call:S.callWall;}
   function _actPW(){return (S.show0dte&&S.zero&&S.zero.put!=null)?S.zero.put:S.putWall;}
   function _actGF(){return (S.show0dte&&S.zero&&S.zero.flip!=null)?S.zero.flip:S.gammaFlip;}
-  function drawLines(){if(!chart||!series)return;var LS=LightweightCharts.LineStyle;
+  function drawLines(){if(!chart||!series)return;var LS=LightweightCharts.LineStyle;themeGammaChart();
     Object.keys(lines).forEach(function(k){try{series.removePriceLine(lines[k]);}catch(e){}});lines={};
     var _z=(S.show0dte&&S.zero); var _st=_z?LS.Dotted:LS.Solid; // 0DTE punteado para distinguir
     var _cw=_actCW(),_pw=_actPW(),_gf=_actGF();
@@ -3237,10 +3241,10 @@ function lbcHeadlineEs(h){
     if(_lo==null&&typeof S.price==='number'&&S.price>0){_lo=S.price*0.985;_hi=S.price*1.015;}
     function _inView(p){return _lo==null||(p>=_lo&&p<=_hi);}
     // PRIMARIOS + flip + maxpain: línea nítida + PRECIO en el eje (axisLabelVisible).
-    if(_cw!=null&&_inView(_cw))lines.call=series.createPriceLine({price:_cw,color:'#2EE8A4',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
-    if(_gf!=null&&_inView(_gf))lines.flip=series.createPriceLine({price:_gf,color:'#CCA94F',lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
-    if(_pw!=null&&_inView(_pw))lines.put=series.createPriceLine({price:_pw,color:'#B197FC',lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
-    if(S.maxPain!=null&&_inView(S.maxPain))lines.maxpain=series.createPriceLine({price:S.maxPain,color:'#4FD6E0',lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
+    if(_cw!=null&&_inView(_cw))lines.call=series.createPriceLine({price:_cw,color:_tc('#2EE8A4'),lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(_gf!=null&&_inView(_gf))lines.flip=series.createPriceLine({price:_gf,color:_tc('#CCA94F'),lineWidth:1,lineStyle:LS.Dashed,axisLabelVisible:true,title:''});
+    if(_pw!=null&&_inView(_pw))lines.put=series.createPriceLine({price:_pw,color:_tc('#B197FC'),lineWidth:2,lineStyle:_st,axisLabelVisible:true,title:''});
+    if(S.maxPain!=null&&_inView(S.maxPain))lines.maxpain=series.createPriceLine({price:S.maxPain,color:_tc('#4FD6E0'),lineWidth:1,lineStyle:LS.Dotted,axisLabelVisible:true,title:''});
     try{_updateVwapLine();}catch(e){}   // VWAP como LÍNEA (estilo EMA) que sigue la sesión, no una priceLine horizontal
     // MUROS SECUNDARIOS de gamma por volumen (Dave): también con PRECIO en el eje para que el
     // trader identifique el nivel exacto, no solo el perfil. Línea sparse tenue (color atenuado).
