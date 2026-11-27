@@ -1,10 +1,7 @@
 {
-  "geopolitica": "China anunció promesas de apoyo a su mercado accionario y tecnológico, lo que ayudó a calmar los temores por una desaceleración del gasto en IA e impulsó un rebote de los futuros del Nasdaq (~+2.8%) tras el fuerte selloff tecnológico del jueves (Nasdaq cayó hasta 4.5% intradía antes de cerrar -0.6%).",
-  "petroleo": "El Brent cotizaba en torno a 96.6 USD/barril (04:50 GMT / ~23:50 ET del 26-nov) presionado al alza por el riesgo de suministro en Medio Oriente, con el mercado atento a la reunión de la OPEP+ del domingo que podría llevarlo hacia 100 USD.",
+  "geopolitica": "",
+  "petroleo": "",
   "catalizador": "",
-  "sources": [
-    "Yahoo Finance 27-nov (hora no especificada en la fuente)",
-    "Invezz / Vietnam.vn 23:50 ET (26-nov, dato de 04:50 GMT)"
-  ],
-  "as_of": "2026-11-27T12:06:39Z"
+  "sources": [],
+  "as_of": "2026-11-27T12:39:18Z"
 }
