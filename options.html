@@ -147,6 +147,9 @@ a{color:inherit;text-decoration:none;}
 .env-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--hair);align-items:start;}
 .env-topL{min-width:0;}
 .env-topR{min-width:0;border-left:1px solid var(--hair);padding-left:24px;}
+/* Escritorio: si el AI Market Brief es más alto que el medidor, la curva del Tesoro sube a la columna izquierda (balanceEnvTop) */
+.env-topL .env-yc>.sec-label{margin-top:2px!important;}
+.env-topL .env-conflicts{margin:0 0 16px;}
 .env-grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:start;}
 @media(max-width:900px){.env-top{grid-template-columns:1fr;} .env-topR{border-left:none;padding-left:0;border-top:1px solid var(--hair);padding-top:16px;} .env-grid2{grid-template-columns:1fr;}}
 .mrow{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--gap);align-items:start;}
@@ -959,6 +962,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
               </div>
             </div>
             <div class="env-rs" id="env-rs"></div>
+            <div id="env-topL-slot"></div>
           </div>
           <div class="env-topR">
             <div class="sec-label"><span>◆ AI Market Brief <span class="info-i" title="Lectura macro por IA (Groq) que narra EXCLUSIVAMENTE las cifras reales del Environment y el scanner. No inventa datos (Regla #1). El análisis completo se expande.">&#9432;</span></span><span id="brief-sub" style="font-family:var(--mono);font-size:9px;color:var(--ink-4);letter-spacing:0.04em;">—</span></div>
@@ -969,13 +973,17 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
           <div class="env-col">
             <div class="sec-label"><span>12 motores macro</span><span class="gg-leg"><span><i class="d-good"></i>sano</span><span><i class="d-warn"></i>vigilar</span><span><i class="d-risk"></i>presión</span></span></div>
             <div class="gg" id="env-gg"></div>
+            <div id="cf-home"></div>
             <div class="env-conflicts" id="env-conflicts" style="display:none;">
               <div class="env-conflicts-t">⚠ Señales en conflicto</div>
               <ul id="env-conflicts-list"></ul>
             </div>
-            <div class="sec-label" style="margin-top:18px;"><span>Curva de rendimientos · US Treasury</span><span class="yc-spread" id="yc-spread">—</span></div>
-            <div class="yc-svg" id="yc-svg"><div class="stub">Cargando curva…</div></div>
-            <div class="yc-legend" id="yc-legend"></div>
+            <div id="yc-home"></div>
+            <div class="env-yc" id="env-yc">
+              <div class="sec-label" style="margin-top:18px;"><span>Curva de rendimientos · US Treasury</span><span class="yc-spread" id="yc-spread">—</span></div>
+              <div class="yc-svg" id="yc-svg"><div class="stub">Cargando curva…</div></div>
+              <div class="yc-legend" id="yc-legend"></div>
+            </div>
           </div>
           <div class="env-col">
             <div class="sec-label"><span>Sector Rotation <span class="info-i" title="Mapa RRG: cada sector por su fuerza relativa (3m vs SPY) y su momentum. Muestra de dónde a dónde se mueve el dinero.">&#9432;</span></span><span class="p-sub" id="rot-sub" style="text-align:left;">—</span></div>
@@ -1151,7 +1159,31 @@ function renderEnv(d){
   var cf=document.getElementById('env-conflicts'), cl2=document.getElementById('env-conflicts-list');
   if(cf&&cl2){ if(d.conflicts&&d.conflicts.length){ cf.style.display='block'; cl2.innerHTML=d.conflicts.map(function(x){return '<li>'+x+'</li>';}).join(''); } else cf.style.display='none'; }
   renderYieldCurve(d.yield_curve, d.inflation_curve);
+  balanceEnvTopSoon();
 }
+/* ① Equilibrio de columnas (27-nov). En escritorio la columna izquierda (medidor + Riesgos/Soportes) es mucho más
+   corta que el AI Market Brief y dejaba un cuadro vacío. Si sobra hueco, la curva del Tesoro (dato real que ya está en
+   el panel) sube bajo Riesgos/Soportes; si no sobra (brief corto, cargando) o en móvil, se queda junto a los motores. */
+function balanceEnvTop(){
+  var slot=document.getElementById('env-topL-slot'), L=document.querySelector('.env-topL'), R=document.querySelector('.env-topR');
+  var yc=document.getElementById('env-yc'), ycHome=document.getElementById('yc-home');
+  var cf=document.getElementById('env-conflicts'), cfHome=document.getElementById('cf-home');
+  if(!slot||!L||!R||!yc||!ycHome)return;
+  // vuelven a su sitio para medir
+  if(yc.previousElementSibling!==ycHome) ycHome.parentNode.insertBefore(yc, ycHome.nextSibling);
+  if(cf&&cfHome&&cf.previousElementSibling!==cfHome) cfHome.parentNode.insertBefore(cf, cfHome.nextSibling);
+  if(window.innerWidth<=900)return;
+  var h=yc.offsetHeight;
+  if(!(h>0 && R.offsetHeight-L.offsetHeight>=h*0.6))return;
+  slot.appendChild(yc);
+  // Si aún sobra hueco, las «Lecturas en conflicto» (resumen del entorno) suben también, encima de la curva
+  if(cf&&cf.offsetHeight>0 && R.offsetHeight-L.offsetHeight>=cf.offsetHeight*0.8) slot.insertBefore(cf, yc);
+}
+var _envBalT=null;
+function balanceEnvTopSoon(){ clearTimeout(_envBalT); _envBalT=setTimeout(balanceEnvTop,60); }
+window.addEventListener('resize',balanceEnvTopSoon);
+window.addEventListener('load',balanceEnvTopSoon);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(balanceEnvTopSoon);
 function renderYieldCurve(curve, infl){
   var host=document.getElementById('yc-svg'); if(!host)return;
   if(!curve||curve.length<3){ host.innerHTML='<div class="stub">Curva no disponible.</div>'; return; }
@@ -1268,19 +1300,21 @@ function renderBrief(d, fullHtml, isAI){
     +'<div class="brief-chips">'+chips+'</div>'
     +'<button class="brief-more" id="brief-more-btn" onclick="toggleBriefFull()">▾ Investment Committee Brief · análisis completo</button>'
     +'<div class="brief-full" id="brief-full" style="display:none;"></div>';
+  balanceEnvTopSoon();
 }
 var COMMITTEE_LOADED=false, BRIEF_FALLBACK='';
 function toggleBriefFull(){
   var f=document.getElementById('brief-full'), btn=document.getElementById('brief-more-btn'); if(!f)return;
   var open=(f.style.display!=='none'&&f.style.display!=='');
-  if(open){ f.style.display='none'; if(btn)btn.textContent='▾ Investment Committee Brief'; return; }
+  if(open){ f.style.display='none'; if(btn)btn.textContent='▾ Investment Committee Brief'; balanceEnvTopSoon(); return; }
   f.style.display='block'; if(btn)btn.textContent='▴ Ocultar análisis';
   if(!COMMITTEE_LOADED) loadCommittee(f);
+  balanceEnvTopSoon();
 }
 function loadCommittee(f){
   f.innerHTML='<p class="loading">Generando el Investment Committee Brief (macro completo)…</p>';
   fetch(API+'/api/leaps/committee').then(function(r){return r.json();}).then(function(d){
-    if(d&&d.brief){ COMMITTEE_LOADED=true; f.innerHTML=renderCommittee(d.brief, d.mode); }
+    if(d&&d.brief){ COMMITTEE_LOADED=true; f.innerHTML=renderCommittee(d.brief, d.mode); balanceEnvTopSoon(); }
     else { f.innerHTML=(BRIEF_FALLBACK||'<p class="loading">Análisis completo no disponible ahora. Reintenta en unos minutos.</p>'); }
   }).catch(function(){ f.innerHTML=BRIEF_FALLBACK||'<p class="loading">No disponible ahora.</p>'; });
 }
