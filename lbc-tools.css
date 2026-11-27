@@ -42,6 +42,17 @@
   .lbcn-profile{width:40px;height:40px;font-size:16px;}
   .lbcn .theme-fab.theme-fab-innav{min-height:40px;padding:6px 10px 6px 12px!important;}
 }
+/* Ancho intermedio (769–1199 px, 27-nov): la marca, las cinco pastillas y el bloque de cuenta no caben en una fila y se
+   partían en tres (la cuenta caía sola debajo, a la derecha). Igual que en móvil: marca a la izquierda y cuenta a la
+   derecha en la primera fila; las herramientas, en su propia fila completa. */
+@media(min-width:769px) and (max-width:1199px){
+  .lbcn{flex-wrap:wrap;row-gap:8px;}
+  .lbcn-brand{order:1;flex:1 1 auto;min-width:0;margin:0;padding:0;border:none;}
+  .lbcn-right{order:2;flex:0 0 auto;margin-left:auto;}
+  .lbcn-links{order:3;flex:0 0 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:2px 0 2px;}
+  .lbcn-links::-webkit-scrollbar{display:none;}
+  .lbcn-item.lbcn-pill{flex:0 0 auto;}
+}
 
 /* ─── 2. Panel «Mi perfil» ──────────────────────────────────────────── */
 /* El panel va por encima de la navegación (antes la nav, con z-index 8000, tapaba su título y el botón de cerrar) */

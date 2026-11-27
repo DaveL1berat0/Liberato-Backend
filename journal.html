@@ -7448,6 +7448,24 @@ function filterTradesByDate(arr){return getFilteredT(_dfShared);}
   },{passive:true});
 })();
 </script>
+<script>
+/* 27-nov · La barra lateral y la cabecera fija del Journal empiezan en top:0 y, con la página arriba, quedaban debajo de
+   la navegación de miembros: «Liberato Journal» asomaba cortado detrás. La barra lateral (escritorio) arranca justo
+   bajo la navegación y sube al desplazarse; la cabecera fija (móvil y tablet) solo aparece cuando la navegación ya
+   salió de la pantalla, como antes. */
+(function(){
+  var nav=document.querySelector('.lbcn'); if(!nav)return;
+  var sb=document.querySelector('.sidebar'), mob=document.querySelector('.mob-nav');
+  var pend=false;
+  function place(){ pend=false; var b=Math.max(0,Math.round(nav.getBoundingClientRect().bottom));
+    if(sb) sb.style.top=b+'px';
+    if(mob){ var tapada=b>0; mob.style.visibility=tapada?'hidden':''; mob.style.opacity=tapada?'0':''; } }
+  function soon(){ if(!pend){ pend=true; requestAnimationFrame(place); } }
+  window.addEventListener('scroll',soon,{passive:true}); window.addEventListener('resize',soon);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(soon);
+  place();
+})();
+</script>
 
 </body>
 </html>
