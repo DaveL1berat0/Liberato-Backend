@@ -1,11 +1,13 @@
 {
-  "geopolitica": "Los hutíes reivindicaron un nuevo ataque con dron/misil contra la refinería saudí de Aramco en Jazán, reavivando el temor a disrupciones de suministro en Oriente Medio justo antes de la reunión de la OPEP+ del domingo; el riesgo geopolítico persistente puede limitar el apetito por riesgo en el NQ si se agrava.",
-  "petroleo": "El Brent cotiza en torno a 96,3-96,6 USD/barril (-0,28% frente al cierre previo de 96,57) y el WTI cerca de 85,2-85,6 USD, sostenidos por el riesgo de suministro en Oriente Medio (ataques hutíes) y la expectativa de la reunión de la OPEP+ este domingo; un petróleo firme añade presión inflacionaria vigilada como viento en contra para el NQ.",
-  "catalizador": "",
+  "geopolitica": "Nuevas restricciones de EE.UU. a la exportacion de semiconductores avanzados a China y ataques renovados contra infraestructura energetica y naviera en Oriente Medio (Estrecho de Ormuz) elevan la aversion al riesgo y presionan a los valores tecnologicos del NQ.",
+  "petroleo": "El WTI sube cerca de 2.5% hasta unos 85.8 USD/barril y el Brent se mantiene estable en torno a 96 USD, impulsados por el riesgo de suministro en Oriente Medio, lo que puede generar presion inflacionaria y pesar sobre el NQ.",
+  "catalizador": "Los futuros de tasas (CME FedWatch) asignan una probabilidad de entorno al 95-96% a una subida de tasas de la Fed en la reunion de diciembre, un giro hawkish que anade volatilidad a las acciones tecnologicas del NQ.",
   "sources": [
-    "Forbes Advisor 27-nov (Brent ~96,6 USD, WTI ~85 USD, riesgo de suministro Oriente Medio)",
-    "FinanceFeeds 08:00 ET (Brent 96,30 USD, -0,28%, previa reunión OPEP+ del domingo)",
-    "The Fifth Skill / Vietnam.vn 27-nov (hutíes atacan refinería saudí de Jazán, Brent por encima de 96 USD)"
+    "CNBC 27 nov 2026",
+    "Yahoo Finance 27 nov 2026",
+    "Oilprice.com/Angel One 27 nov 2026",
+    "24/7 Wall St 18 nov 2026",
+    "conservativedailynews nov 2026"
   ],
-  "as_of": "2026-11-27T13:40:42Z"
+  "as_of": "2026-11-27T14:06:54Z"
 }
