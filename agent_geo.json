@@ -1,12 +1,10 @@
 {
-  "geopolitica": "Iran afirma que nuevos petroleros fueron alcanzados por minas en el Estrecho de Ormuz y el CENTCOM de EE.UU. desmiente la denuncia como falsa, mientras un ataque con drones atribuido a Iran mato a dos tecnicos italianos en Kuwait, lo que eleva la prima de riesgo geopolitico y puede presionar al NQ a la baja en la apertura.",
-  "petroleo": "El Brent cotiza cerca de 96,6 USD/barril y el WTI cerca de 85,8 USD/barril (+2,5%), en maximos de varias semanas por los ataques a petroleros en Ormuz y a infraestructura energetica saudi, un alza del crudo que tiende a pesar sobre el sentimiento de riesgo del NQ.",
-  "catalizador": "Los futuros del Nasdaq-100 suben cerca de 2,8% tras el feriado de Accion de Gracias por un rebote en acciones de IA (AMD +7%, Nvidia +4,7% en premarket), aunque el mercado ya descuenta con ~99% de probabilidad una subida de tasas de la Fed en la reunion del 8-9 de diciembre, lo que podria limitar el optimismo mas adelante en la sesion.",
+  "geopolitica": "China anunció promesas de apoyo a su mercado accionario y tecnológico, lo que ayudó a calmar los temores por una desaceleración del gasto en IA e impulsó un rebote de los futuros del Nasdaq (~+2.8%) tras el fuerte selloff tecnológico del jueves (Nasdaq cayó hasta 4.5% intradía antes de cerrar -0.6%).",
+  "petroleo": "El Brent cotizaba en torno a 96.6 USD/barril (04:50 GMT / ~23:50 ET del 26-nov) presionado al alza por el riesgo de suministro en Medio Oriente, con el mercado atento a la reunión de la OPEP+ del domingo que podría llevarlo hacia 100 USD.",
+  "catalizador": "",
   "sources": [
-    "CNBC 2026-11-24 (Iran/Hormuz tanker claims)",
-    "ABC News 23:50 ET 2026-11-26 (Kuwait drone strike, Italians killed)",
-    "Oilprice.com/UNN 23:50 ET 2026-11-26 (Brent/WTI levels)",
-    "Reuters via Investing.com 00:30 ET 2026-11-27 (Nasdaq-100 futures, Fed hike odds)"
+    "Yahoo Finance 27-nov (hora no especificada en la fuente)",
+    "Invezz / Vietnam.vn 23:50 ET (26-nov, dato de 04:50 GMT)"
   ],
-  "as_of": "2026-11-27T11:39:59Z"
+  "as_of": "2026-11-27T12:06:39Z"
 }
