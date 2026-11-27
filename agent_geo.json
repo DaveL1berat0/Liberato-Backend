@@ -1,11 +1,11 @@
 {
-  "geopolitica": "EE.UU. propone nuevos aranceles (20% a China, 15% a UE/Japon/Corea/Suiza, con riesgo de escalar hasta 40% si fallan las negociaciones) por supuesta sobrecapacidad industrial, lo que presiona a la baja a las bolsas asiaticas y a los futuros tecnologicos globales.",
-  "petroleo": "Brent sube cerca de 2% a 96.48 USD/barril y WTI a 84.71 USD tras ataques hutíes contra la mayor refineria saudi y minas iranies contra buques cerca del Estrecho de Ormuz, reviviendo el temor a una disrupcion de suministro.",
-  "catalizador": "",
+  "geopolitica": "Persiste la tension comercial: EEUU propuso aranceles de hasta 40% a China y nuevos gravamenes a UE, India y Japon (anunciado 25-nov tras probe por exceso de capacidad), lo que ya provoco una caida bursatil y sigue pesando como riesgo de fondo sobre el NQ.",
+  "petroleo": "WTI cotiza en torno a 85,3 USD/barril (+~2%) y Brent cerca de 96,7 USD/barril, impulsados por los ataques a petroleros en el Estrecho de Ormuz y la expectativa de la reunion de la OPEP+ del 29-nov, lo que anade prima de riesgo geopolitico que puede limitar el apetito por riesgo en el NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 suben con fuerza (+2,3%) en la sesion reducida de Black Friday, liderados por un rebote de Nvidia (+4% premarket) y del sector de semiconductores tras una semana volatil, el principal motor alcista del NQ en el intradia de hoy.",
   "sources": [
-    "Reuters 12:41 ET (petroleo, ataques en Ormuz)",
-    "CNBC 2026-11-25 (aranceles EE.UU.-China-UE)",
-    "Axios 2026-11-25 (aranceles EE.UU.-China-UE)"
+    "CNBC 27-nov (premarket)",
+    "Al Jazeera 25-nov",
+    "Oil Price API ~07:01 ET (12:01 UTC) 27-nov"
   ],
-  "as_of": "2026-11-27T14:39:14Z"
+  "as_of": "2026-11-27T15:07:02Z"
 }
