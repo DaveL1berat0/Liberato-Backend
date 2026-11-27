@@ -1,11 +1,10 @@
 {
   "geopolitica": "",
-  "petroleo": "El Brent cotiza plano en torno a 96,51 USD/barril y el WTI sube 2,97% a 85,75 USD tras el ataque hutí del 25-nov a una refinería saudí, lo que compensa los temores de exceso de oferta global y mantiene un sesgo de riesgo geopolítico que puede contagiar al sentimiento del NQ.",
-  "catalizador": "La Fed (ahora bajo Kevin Warsh) ve casi 100% de probabilidad de una subida de tasas en diciembre segun el mercado, pese a lo cual un rally tecnologico impulsa los futuros (Nasdaq-100 +2,3% premarket) para cerrar una semana volatil, un contraste que puede generar volatilidad adicional en el NQ en la apertura.",
+  "petroleo": "Brent se mantiene cerca de 96-97 USD y WTI sobre 85 USD por barril, al alza por temor a nuevas disrupciones de suministro en Medio Oriente (ataques a infraestructura petrolera saudi y tension en el Estrecho de Ormuz) antes de la reunion de la OPEP+ del domingo, lo que presiona el sentimiento de riesgo para el NQ.",
+  "catalizador": "Las acciones de chips e IA (Marvell, Sandisk, Nvidia) repuntan en el premarket tras resultados mejores de lo esperado, impulsando los futuros del Nasdaq-100 cerca de +2.4% en la sesion corta de Black Friday.",
   "sources": [
-    "CNBC 2026-11-27",
-    "CNBC 2026-11-25",
-    "CNBC 2026-11-23"
+    "FXStreet 06:34 ET",
+    "CNBC 08:32 ET"
   ],
-  "as_of": "2026-11-27T15:39:35Z"
+  "as_of": "2026-11-27T16:06:19Z"
 }
