@@ -1055,7 +1055,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
         </div>
       </section>
       <section class="panel step lc-panel">
-        <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable sobre los datos que introduces desde tu broker — la web no genera premium, delta ni theta (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es señal de trading.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
+        <div class="p-hd"><span class="p-ttl"><span class="stepn">3</span> LEAPS Structure <span id="lc-poshdr" style="color:var(--ink-2);font-weight:400;"></span> <span class="info-i" title="Introduce los datos del LEAP desde tu broker. Calcula recovery distance, theta burden, break-even y eficiencia — matemática verificable sobre los datos que introduces desde tu broker — la web no genera premium, delta ni theta (Regla #1). La 'Calidad estructural' describe la salud del contrato (recovery/theta/extrínseco), NO es una recomendación de compra o venta.">&#9432;</span></span><span class="p-sub" id="lc-quality">—</span></div>
         <div class="p-bd">
          <div class="lc-card">
           <div class="lc-grid">
@@ -1387,7 +1387,7 @@ function renderPosture(){
     +ptile('Riesgo',rl[0],rl[1])
     +'</div>'
     +'<p class="posture-stance">'+stance+'</p>'
-    +'<div class="posture-note">Síntesis contextual — los umbrales de entrada/salida esperan el estudio MAE/MFE (Pullback→Stress→Recovery). No es señal de compra/venta.</div>';
+    +'<div class="posture-note">Síntesis contextual — los umbrales de entrada/salida esperan el estudio MAE/MFE (Pullback→Stress→Recovery). No es una recomendación de compra o venta.</div>';
 }
 
 /* ── ⑤ LEAPS STRUCTURE ── */
@@ -1409,7 +1409,7 @@ function lcCalc(){
   } else setT('lc-thetab','—');
   if(delta!=null&&spot!=null){ setT('lc-dexp',money(delta*mult*qty*spot)); } else setT('lc-dexp','—');
   if(prem!=null){ setT('lc-total',money(prem*mult*qty)); } else setT('lc-total','—');
-  // Calidad estructural del LEAP (describe el contrato, NO es señal de trading)
+  // Calidad estructural del LEAP (describe el contrato, NO es una recomendación de compra o venta)
   var q=document.getElementById('lc-quality');
   if(q){
     if(rec!=null&&pctm!=null&&expp!=null){
