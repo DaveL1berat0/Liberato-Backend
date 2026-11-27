@@ -1,10 +1,11 @@
 {
-  "geopolitica": "",
-  "petroleo": "Brent se mantiene cerca de 96-97 USD y WTI sobre 85 USD por barril, al alza por temor a nuevas disrupciones de suministro en Medio Oriente (ataques a infraestructura petrolera saudi y tension en el Estrecho de Ormuz) antes de la reunion de la OPEP+ del domingo, lo que presiona el sentimiento de riesgo para el NQ.",
-  "catalizador": "Las acciones de chips e IA (Marvell, Sandisk, Nvidia) repuntan en el premarket tras resultados mejores de lo esperado, impulsando los futuros del Nasdaq-100 cerca de +2.4% en la sesion corta de Black Friday.",
+  "geopolitica": "Escalada del conflicto en Oriente Medio (West Asia) eleva la aversion al riesgo geopolitico, lo que puede limitar el apetito comprador en el NQ intradia.",
+  "petroleo": "El Brent se acerca/supera los 97 USD/barril por el repunte de la tension en Oriente Medio, un encarecimiento energetico que presiona margenes y puede lastrar al NQ.",
+  "catalizador": "Los futuros del Nasdaq-100 llegaron a subir cerca de 2.8% en premarket liderados por Nvidia y Micron en un rebote de IA, pero las ganancias se moderaron tras la apertura por dudas sobre la rentabilidad de las inversiones en IA, en una sesion corta de Black Friday.",
   "sources": [
-    "FXStreet 06:34 ET",
-    "CNBC 08:32 ET"
+    "Business Standard / NewsX 27-nov (Brent cerca de $97 por conflicto en West Asia/Oriente Medio)",
+    "StockTitan 27-nov (futuros Nasdaq-100 +2.8% premarket, liderados por Nvidia/Micron)",
+    "Eurasia Business News 27-nov (rebote tech en sesion corta de Black Friday)"
   ],
-  "as_of": "2026-11-27T16:06:19Z"
+  "as_of": "2026-11-27T17:05:50Z"
 }
