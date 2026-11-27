@@ -21,19 +21,23 @@
     if(document.getElementById('lbc-cc'))return;
     var d=document.createElement('div');
     d.id='lbc-cc'; d.setAttribute('role','dialog'); d.setAttribute('aria-live','polite'); d.setAttribute('aria-label','Aviso de cookies');
-    d.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:720px;margin:0 auto;'
-      +'background:#0C0F17;border:0.5px solid rgba(201,168,76,0.30);border-radius:14px;'
-      +'box-shadow:0 10px 40px -8px rgba(0,0,0,0.6);padding:16px 18px;'
-      +'font-family:-apple-system,system-ui,"DM Sans",sans-serif;color:#EFECE3;'
-      +'display:flex;flex-wrap:wrap;align-items:center;gap:12px;';
+    // v101: mismo lenguaje que el resto del sitio (tokens de lbc-ui.css, con valor de reserva donde no esté cargado);
+    // los dos botones miden 44 px y lo mismo de ancho en móvil. El texto y la lógica no cambian.
+    d.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:2147483000;max-width:720px;margin:0 auto;box-sizing:border-box;'
+      +'background:var(--lbc-bg-3,#10141F);border:1px solid var(--lbc-line-2,rgba(255,255,255,0.14));border-radius:16px;'
+      +'box-shadow:var(--lbc-sh-3,0 28px 64px -24px rgba(0,0,0,0.8));padding:16px 18px;'
+      +'font-family:var(--lbc-font-sans,-apple-system,system-ui,"DM Sans",sans-serif);color:var(--lbc-ink,#F3F0E7);'
+      +'display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;';
+    var EN=false; try{ EN=localStorage.getItem('lbc_lang')==='en'; }catch(e){}   // v101 · cierre: el aviso salía en español con la web en inglés
+    var BTN='cursor:pointer;font-family:inherit;font-size:14px;min-height:44px;padding:0 18px;border-radius:12px;flex:1 1 0;white-space:nowrap;-webkit-appearance:none;appearance:none;';
     d.innerHTML=
-      '<div style="flex:1 1 300px;min-width:230px;font-size:13px;line-height:1.5;color:rgba(239,236,227,0.82);">'
-      +'Usamos cookies esenciales para tu sesión y, con tu permiso, analítica para mejorar el sitio. '
-      +'<a href="politicas.html#privacidad" style="color:#E7CC74;text-decoration:underline;">Más información</a>.'
+      '<div style="flex:1 1 300px;min-width:230px;font-size:14px;line-height:1.5;color:var(--lbc-ink-2,rgba(243,240,231,0.74));">'
+      +(EN?'We use essential cookies for your session and, with your permission, analytics to improve the site. ':'Usamos cookies esenciales para tu sesión y, con tu permiso, analítica para mejorar el sitio. ')
+      +'<a href="politicas.html#privacidad" style="color:var(--lbc-gold-2,#E7CC74);text-decoration:underline;text-underline-offset:3px;">'+(EN?'Learn more':'Más información')+'</a>.'
       +'</div>'
-      +'<div style="display:flex;gap:8px;flex:0 0 auto;">'
-      +'<button type="button" id="lbc-cc-no" style="cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:9px;border:0.5px solid rgba(255,255,255,0.14);background:transparent;color:rgba(239,236,227,0.7);">Rechazar</button>'
-      +'<button type="button" id="lbc-cc-yes" style="cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 18px;border-radius:9px;border:none;background:#C9A84C;color:#0C0F17;">Aceptar</button>'
+      +'<div style="display:flex;gap:8px;flex:1 1 220px;max-width:340px;margin-left:auto;">'
+      +'<button type="button" id="lbc-cc-no" style="'+BTN+'font-weight:600;border:1px solid var(--lbc-line-2,rgba(255,255,255,0.14));background:var(--lbc-fill,rgba(255,255,255,0.04));color:var(--lbc-ink-2,rgba(243,240,231,0.74));">'+(EN?'Decline':'Rechazar')+'</button>'
+      +'<button type="button" id="lbc-cc-yes" style="'+BTN+'font-weight:700;border:1px solid rgba(255,255,255,0.10);background:var(--lbc-primary-bg,linear-gradient(180deg,#E7CC74 0%,#CCA94F 58%,#B8933A 130%));color:var(--lbc-on-gold,#0B0B12);">'+(EN?'Accept':'Aceptar')+'</button>'
       +'</div>';
     document.body.appendChild(d);
     document.getElementById('lbc-cc-yes').onclick=function(){ set('accepted'); if(d.parentNode)d.parentNode.removeChild(d); loadMetricool(); };

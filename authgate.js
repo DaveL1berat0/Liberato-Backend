@@ -29,14 +29,14 @@
         var o = document.createElement('div');
         o.id = 'lbc-kick';
         o.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:rgba(8,8,14,0.92);display:flex;align-items:center;justify-content:center;padding:24px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;';
-        o.innerHTML = '<div style="max-width:420px;width:100%;text-align:center;background:#12121C;border:1px solid rgba(201,168,76,0.35);border-radius:16px;padding:32px 26px;color:#E8E4D9;box-shadow:0 20px 60px rgba(0,0,0,0.5);">'
+        o.innerHTML = '<div style="max-width:420px;width:100%;text-align:center;background:#12121C;border:1px solid rgba(204,169,79,0.35);border-radius:16px;padding:32px 26px;color:#E8E4D9;box-shadow:0 20px 60px rgba(0,0,0,0.5);">'
           + '<div style="font-size:30px;margin-bottom:12px;">🔒</div>'
-          + '<div style="font-size:17px;font-weight:700;margin-bottom:10px;color:#C9A84C;">Sesión abierta en otro dispositivo</div>'
+          + '<div style="font-size:17px;font-weight:700;margin-bottom:10px;color:#CCA94F;">Sesión abierta en otro dispositivo</div>'
           + '<div style="font-size:13.5px;line-height:1.6;color:rgba(232,228,217,0.75);margin-bottom:22px;">Por seguridad solo permitimos <strong>una sesión activa</strong> por cuenta. Tu acceso aquí se cerró porque iniciaste sesión en otro lugar. Vuelve a entrar para continuar.</div>'
-          + '<a href="auth.html" style="display:inline-block;background:#C9A84C;color:#0B0B12;font-weight:700;text-decoration:none;padding:12px 26px;border-radius:10px;font-size:14px;">Volver a iniciar sesión →</a>'
+          + '<a href="auth.html?login=1" style="display:inline-block;background:#CCA94F;color:#0B0B12;font-weight:700;text-decoration:none;padding:12px 26px;border-radius:10px;font-size:14px;">Volver a iniciar sesión →</a>'
           + '</div>';
         (document.body || document.documentElement).appendChild(o);
-      }catch(e){ try{ location.href = 'auth.html'; }catch(_){} }
+      }catch(e){ try{ location.href = 'auth.html?login=1'; }catch(_){} }
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
   }

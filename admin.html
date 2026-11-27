@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liberato · Command Deck</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="lbc-ui.css">
 <script src="theme.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#050608; --bg-2:#0A0C12; --bg-3:#0E1119; --panel:#0B0E16;
-    --gold:#C9A84C; --gold-2:#E7CC74; --gold-dim:rgba(204,169,79,0.12);
-    --up:#2EE8A4; --down:#B197FC; --cyan:#4FD6E0;
-    --ink:#F3F0E7; --ink-2:#9CA3AF; --ink-3:#6B7280; --ink-4:#3B4252;
-    --brd:rgba(255,255,255,0.05); --brd-gold:rgba(204,169,79,0.22);
+    /* v101: los colores, textos y fuentes salen de los tokens del sistema compartido (lbc-ui.css): oro de marca #CCA94F. */
+    --bg:var(--lbc-bg); --bg-2:var(--lbc-bg-2); --bg-3:var(--lbc-bg-3); --panel:var(--lbc-bg-2);
+    --gold:var(--lbc-gold); --gold-2:var(--lbc-gold-2); --gold-dim:var(--lbc-gold-dim);
+    --up:var(--lbc-up); --down:var(--lbc-down); --cyan:var(--lbc-cyan);
+    --ink:var(--lbc-ink); --ink-2:var(--lbc-ink-2); --ink-3:var(--lbc-ink-3); --ink-4:var(--lbc-ink-4);
+    --brd:var(--lbc-line); --brd-gold:var(--lbc-gold-line);
     --grid:rgba(204,169,79,0.03);
-    --serif:Georgia,'Times New Roman',serif;
-    --sans:'Space Grotesk',-apple-system,sans-serif;
-    --mono:'JetBrains Mono',monospace;
+    --serif:var(--lbc-font-serif);
+    --sans:var(--lbc-font-sans);
+    --mono:var(--lbc-font-mono);
   }
   /* ── Tema claro (paleta canónica Liberato) ── */
   [data-theme="light"]{
-    --bg:#eae6dc; --bg-2:#ffffff; --bg-3:#f6f3ed; --panel:#ffffff;
-    --gold:#9c7c2c; --gold-2:#7e6323; --gold-dim:rgba(168,132,47,0.12);
-    --up:#15913f; --down:#6d4bd8; --cyan:#0e7490;
-    --ink:#211d16; --ink-2:rgba(33,29,22,0.62); --ink-3:rgba(33,29,22,0.42); --ink-4:rgba(33,29,22,0.30);
-    --brd:rgba(33,29,22,0.10); --brd-gold:rgba(168,132,47,0.28); --grid:rgba(168,132,47,0.05);
+    --grid:rgba(168,132,47,0.05);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{-webkit-font-smoothing:antialiased;}
@@ -37,13 +37,14 @@
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 
   .gate{max-width:400px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:24px;}
-  .gate-brand{font-family:var(--serif);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
+  .gate-brand span{color:var(--gold);}
+  .gate-brand{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:0.1em;color:var(--ink);text-align:center;margin-bottom:38px;opacity:0;animation:fade 0.7s 0.1s forwards;}
   .gate-ring{width:64px;height:64px;margin:0 auto 26px;position:relative;opacity:0;animation:fade 0.7s 0.2s forwards;}
   .gate-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
   .gate-ring-c{fill:none;stroke:var(--brd-gold);stroke-width:1.5;}
   .gate-ring-p{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:190;stroke-dashoffset:150;animation:ring 2.5s ease-in-out infinite;}
   .gate-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
-  .gate-title{font-family:var(--serif);font-size:25px;font-weight:600;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
+  .gate-title{font-family:var(--serif);font-size:32px;font-weight:400;letter-spacing:-0.01em;text-align:center;margin-bottom:8px;opacity:0;animation:fade 0.7s 0.3s forwards;}
   .gate-title span{color:var(--gold);}
   .gate-sub{font-size:12px;color:var(--ink-3);text-align:center;margin-bottom:30px;font-family:var(--mono);letter-spacing:0.04em;opacity:0;animation:fade 0.7s 0.35s forwards;}
   .gate-form{opacity:0;animation:fade 0.7s 0.45s forwards;}
@@ -60,8 +61,8 @@
   .brand-row{display:flex;align-items:center;gap:14px;}
   .brand-mark{width:34px;height:34px;border:1px solid var(--brd-gold);border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
   .brand-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,var(--gold-dim) 50%,transparent 60%);animation:sweep 4s ease-in-out infinite;}
-  .brand-mark span{font-family:var(--serif);font-size:16px;color:var(--gold);font-weight:600;}
-  .brand-txt .t{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1;}
+  .brand-mark span{font-family:var(--serif);font-size:20px;color:var(--gold);font-weight:400;}
+  .brand-txt .t{font-family:var(--serif);font-size:24px;font-weight:400;line-height:1;}
   .brand-txt .t span{color:var(--gold);}
   .brand-txt .s{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;}
   .topbar-r{display:flex;align-items:center;gap:14px;}
@@ -73,7 +74,7 @@
   .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
   .kpi{background:var(--panel);border:1px solid var(--brd);border-radius:14px;padding:18px;position:relative;overflow:hidden;opacity:0;transform:translateY(12px);animation:rise 0.6s forwards;}
   .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0.5;}
-  .kpi-v{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1;letter-spacing:-0.01em;}
+  .kpi-v{font-family:var(--serif);font-size:40px;font-weight:300;line-height:1;letter-spacing:-0.01em;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
   .kpi-k{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:9px;}
   .kpi.gold .kpi-v{color:var(--gold-2);}
   .kpi.up .kpi-v{color:var(--up);}
@@ -97,11 +98,11 @@
   .ring-bg{fill:none;stroke:var(--bg-3);stroke-width:10;}
   .ring-fill{fill:none;stroke:url(#rgrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);}
   .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .ring-v{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--gold-2);line-height:1;}
+  .ring-v{font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;font-family:var(--serif);font-size:46px;font-weight:300;color:var(--gold-2);line-height:1;}
   .ring-l{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.12em;margin-top:6px;}
   .ring-split{display:flex;gap:24px;margin-top:22px;}
   .ring-split div{text-align:center;}
-  .ring-split .n{font-family:var(--serif);font-size:20px;font-weight:600;}
+  .ring-split .n{font-family:var(--serif);font-size:26px;font-weight:400;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;}
   .ring-split .n.p{color:var(--gold-2);}
   .ring-split .n.f{color:var(--ink-2);}
   .ring-split .lbl{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
@@ -137,6 +138,50 @@
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
   @keyframes sweep{0%,100%{transform:translateX(-60%);}50%{transform:translateX(60%);}}
   @keyframes draw{to{stroke-dashoffset:0;}}
+
+  /* ── v101 · mismo lenguaje que el resto del producto (solo estilo: ninguna llamada, id ni botón cambia) ── */
+  .field-input{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  .field-input:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  .btn{background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%);color:var(--lbc-on-gold);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);box-shadow:var(--lbc-sh-gold);
+    transition:transform var(--lbc-t-1) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease),filter var(--lbc-t-2) var(--lbc-ease),opacity var(--lbc-t-2) var(--lbc-ease);}
+  .btn:hover{opacity:1;filter:brightness(1.05);}
+  .btn:active{transform:scale(0.97);filter:brightness(0.94);}
+  .btn:disabled{box-shadow:none;filter:none;}
+  .refresh,.tab{border-color:var(--lbc-line-2);border-radius:var(--lbc-r-sm);transition:color var(--lbc-t-2) var(--lbc-ease),border-color var(--lbc-t-2) var(--lbc-ease),background-color var(--lbc-t-2) var(--lbc-ease),transform var(--lbc-t-1) var(--lbc-ease);}
+  .refresh:active,.tab:active{transform:scale(0.97);}
+  .kpi,.panel,.tbl-panel{border-radius:var(--lbc-r-lg);}
+  .kpi-v{font-variant-numeric:tabular-nums;}
+  :focus-visible{outline:2px solid var(--lbc-gold-2);outline-offset:2px;}
+  .field-input:focus-visible{outline:none;}
+  /* Los tres campos de «Crear cuenta de prueba» no tenían estilo (salían con el gris del navegador): mismo campo que el resto. */
+  #trial-name,#trial-email,#trial-days{background:var(--lbc-fill);border:1px solid var(--lbc-line-2);border-radius:var(--lbc-r-md);min-height:var(--lbc-h-md);padding:0 var(--lbc-s-3);color:var(--lbc-ink);font-family:var(--lbc-font-sans);font-size:14px;outline:none;transition:border-color var(--lbc-t-2) var(--lbc-ease),box-shadow var(--lbc-t-2) var(--lbc-ease);}
+  #trial-name:focus,#trial-email:focus,#trial-days:focus{border-color:var(--lbc-gold);box-shadow:var(--lbc-ring);}
+  #trial-name::placeholder,#trial-email::placeholder{color:var(--lbc-ink-4);}
+  /* v101 · cierre: una sola acción principal por bloque. En «Brief diario», «Previsualizar» pasa a secundaria
+     y «Enviar ahora» es la única dorada (iba en verde y cian); ningún botón ni llamada cambia. */
+  #btn-daily-refresh{background:transparent;color:var(--lbc-gold-2);border:1px solid var(--lbc-gold-line);box-shadow:none;}
+  #btn-daily-send{background:linear-gradient(180deg,var(--lbc-gold-2) 0%,var(--lbc-gold) 58%,var(--lbc-gold-3) 130%)!important;}
+  [data-theme="light"] #btn-daily-refresh{color:#7e6323;border-color:rgba(126,99,35,0.45);}
+  /* v101 · cierre: cabecera, etiquetas y pestañas que no se parten */
+  .brand-txt .t,.live,.refresh,.tab,.panel-tag{white-space:nowrap;}
+  .panel-hd{gap:10px;flex-wrap:wrap;}
+  .tabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:0 0 auto;}
+  @media (max-width:640px){
+    /* Cabecera en dos filas: marca arriba; estado y «Sincronizar» debajo, cada uno en una línea */
+    .topbar{flex-wrap:wrap;gap:14px 12px;}
+    .brand-row{flex:1 1 100%;min-width:0;}
+    .topbar-r{flex:1 1 100%;justify-content:space-between;}
+    .refresh{padding-left:16px;padding-right:16px;}
+    .tab{padding-left:16px;padding-right:16px;}
+    .deck{padding-top:68px;}   /* deja libre la esquina del interruptor de tema: tapaba «Sincronizar» */
+    input,select,textarea,.field-input{font-size:16px !important;}   /* iOS no hace zoom al enfocar */
+    .refresh,.tab{min-height:44px;}
+  }
+  /* v101 · cierre: cabeceras de la tabla en ink-3 (en ink-4 se quedaban en 2,3:1) y rótulos del anillo a 10 px */
+  th{color:var(--ink-3);}
+  .ring-l,.ring-split .lbl{font-size:10px;}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -159,7 +204,7 @@ src="https://www.facebook.com/tr?id=1170040262018171&ev=PageView&noscript=1"
 <body>
 
 <div id="gate" class="gate">
-  <div class="gate-brand">Liberato Community</div>
+  <div class="gate-brand">Liberato <span>Community</span></div>
   <div class="gate-ring">
     <svg viewBox="0 0 68 68"><circle class="gate-ring-c" cx="34" cy="34" r="30"/><circle class="gate-ring-p" cx="34" cy="34" r="30"/></svg>
     <div class="gate-dot"></div>

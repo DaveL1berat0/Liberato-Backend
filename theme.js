@@ -39,7 +39,11 @@
     b.addEventListener('click',function(){ window.toggleTheme(); });
     b.innerHTML='<span class="theme-fab-track"><span class="theme-fab-knob"></span></span>'
       +'<span class="theme-fab-icons"><span class="tfi tfi-moon">🌙</span><span class="tfi tfi-sun">☀️</span></span>';
-    var tail=document.getElementById('lbcn-right');
+    // Sitio del interruptor, por orden: la nav de miembro (#lbcn-right), una ranura que marque la página
+    // ([data-theme-slot], p. ej. dentro de su cabecera) y, si no hay ninguna, flotante arriba a la derecha.
+    var tail=document.getElementById('lbcn-right')||document.querySelector('[data-theme-slot]');
+    b.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme')==='light' ? 'true' : 'false');
+    window.addEventListener('lbc:theme',function(ev){ try{ b.setAttribute('aria-pressed', ev.detail&&ev.detail.theme==='light' ? 'true' : 'false'); }catch(e){} });
     if(tail){ b.classList.add('theme-fab-innav'); tail.insertBefore(b, tail.firstChild); }
     else if(document.body){ document.body.appendChild(b); }
   }
